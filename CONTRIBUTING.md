@@ -32,6 +32,21 @@ consumers: `kiwi-ui/public/sdk/v1/kiwi-app-sdk.js` and
 `kiwi-app-developer-guide-example/kiwi-app-sdk/kiwi-app-sdk.js`. They must stay
 byte-identical.
 
+## Known: the test suites are not yet a CI gate
+
+Both suites have failures that predate the open-source release, so CI currently
+runs them as non-gating and only *builds* are required to pass:
+
+- `kiwi-ui` — 9 failing tests (`Theme.test.ts` chart palette, 4 in
+  `GoogleRedirectHandler.test.tsx`, 2 in `MCPServerDialog.test.tsx`, 2 in
+  `BatchMaterialsUpload.test.tsx`)
+- `kiwi` — 39 failing tests across 29 suites, several of which are TypeScript
+  errors in the spec files themselves (e.g. `ConsentGuard` constructor arity,
+  a missing `FeatureFlagsGuard` export)
+
+Fixing these and making the suites gating is a good first contribution. Please
+don't add new failures in the meantime — run the tests locally and compare.
+
 ## Commit messages
 
 Follow [Conventional Commits](https://www.conventionalcommits.org/):
