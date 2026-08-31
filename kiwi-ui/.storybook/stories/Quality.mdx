@@ -1,0 +1,242 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { DoAvoid } from '../components/DoAvoid.tsx';
+import {
+  AccessibilityExample,
+  AsyncStateExample,
+  DensityExample,
+  FieldGrowthExample,
+  QualityRuleBlock,
+  ViewportExample,
+} from '../components/QualityExamples.tsx';
+import designSystem from '../design-system/catalog.json';
+
+export const delivery = designSystem.qualityGuides.delivery;
+
+<Meta title="Guidelines/Quality/Delivery Checklist" />
+
+# Delivery quality
+
+> **Scope: Kiwi Design System.** These checks define the quality expected from Kiwi interfaces. Storybook is the place where much of that quality is documented and verified; it is not the owner of the product rules.
+
+Use this chapter before treating a Kiwi UI change as complete. Quality evidence must cover the isolated component and the composed product surface, with realistic content and failure states.
+
+Each core section has two complementary layers:
+
+- **AI contract:** concise, explicit rules that an agent can retrieve and turn into implementation or review checks. These lists are stored in the [machine-readable catalog](./design-system/catalog.json) under `qualityGuides.delivery.contracts` and rendered here — the catalog is the single source.
+- **Human visual example:** a diagram that makes the intended behavior scannable. The diagram illustrates the rule; it does not replace executable stories or product-specific evidence.
+
+## Accessibility
+
+<QualityRuleBlock
+  visualLabel="Visible focus, stable labels, and actionable errors"
+  contract={delivery.contracts.accessibility}
+>
+  <AccessibilityExample />
+</QualityRuleBlock>
+
+## Screen-size visual checks
+
+Check the smallest relevant component story and at least one composed product surface. Resize the actual Storybook viewport; changing only the width of an inner wrapper does not test viewport media queries, fixed UI, dialogs, or the Storybook Docs layout.
+
+<QualityRuleBlock
+  visualLabel="Responsive composition across representative viewports"
+  contract={delivery.contracts.viewport}
+>
+  <ViewportExample />
+</QualityRuleBlock>
+
+### Required viewport matrix
+
+<ul>
+  {delivery.viewportChecks.map((check) => (
+    <li key={check.width}>
+      <strong>{check.width} px — {check.label}:</strong> {check.purpose}
+    </li>
+  ))}
+</ul>
+
+Add 375 px or 414 px when a device-specific bug, dense toolbar, or mobile-only feature makes those widths material.
+
+### Pass criteria at every width
+
+- The page has no unintended horizontal scroll; tables and charts use an explicit responsive treatment when they genuinely need overflow.
+- Fixed, sticky, and floating UI does not cover headings, actions, focused controls, dialogs, or the final content row.
+- Long labels, translated copy, identifiers, numbers, units, and unbroken technical strings wrap or truncate intentionally.
+- Primary, secondary, and destructive action hierarchy remains clear after controls wrap or stack.
+- Dialogs and menus fit inside the viewport, remain dismissible, and do not place their primary action off-screen.
+- Focus order follows the visual order, and mobile targets remain comfortably operable by touch.
+- Loading, empty, error, validation, hover, focus, selected, and disabled visuals remain distinguishable at the new density.
+
+<DoAvoid
+  ariaLabel="Screen-size visual quality guidance"
+  headingLevel="h3"
+  doItems={[
+    'Test exact viewport widths with realistic long and dense content, then inspect both the component and its composed surface.',
+    'Record the width, story or route, state, and evidence for every issue found.',
+  ]}
+  avoidItems={[
+    'Drag the browser to one arbitrary narrow width and call the interface responsive.',
+    'Hide overflow globally when the underlying content or fixed-position overlap is still broken.',
+  ]}
+/>
+
+## Network environment checks
+
+Network quality changes the UI contract. Test initial page load, an in-place refresh, and at least one user-triggered mutation under each relevant condition. Loading, empty, offline, and server-error states must remain visually and semantically distinct.
+
+<QualityRuleBlock
+  visualLabel="Loading, settled, and offline surfaces"
+  contract={delivery.contracts.network}
+>
+  <AsyncStateExample />
+</QualityRuleBlock>
+
+### Normal connection
+
+- Confirm the settled state is the baseline and brief requests do not create unnecessary spinner flicker.
+- Verify actions cannot be submitted twice while the first request is still active.
+- Confirm cached or previously loaded data is not discarded during an ordinary background refresh.
+
+### Weak network and slow responses
+
+- Throttle the connection before the initial load, then repeat after content is already visible and trigger Refresh or another request.
+- Show a skeleton, progress indicator, or stable processing state instead of a blank or frozen surface.
+- Reserve the final content dimensions so headings, cards, actions, and surrounding layout do not jump when data arrives.
+- Keep the action label, accessible name, and control dimensions stable while work is pending.
+- Prevent duplicate submissions and explain which part of the surface is still loading.
+- Preserve already available content during a background refresh; indicate that it may be stale rather than replacing the whole page with a loading screen.
+- When a request can take materially longer, provide an appropriate cancel, timeout, or retry path instead of an indefinite spinner.
+
+### Offline and failed requests
+
+- Go offline before the initial request and separately while refreshing or submitting an action.
+- Show an explicit message that explains what failed and what the user can do next; do not render a successful empty state.
+- Put Retry near the error and make it keyboard accessible. A recovered connection should not require a full-page reload unless the flow genuinely cannot resume.
+- Preserve user input and previously loaded content whenever it is safe. Label stale data rather than silently presenting it as current.
+- Announce the error with appropriate live-region or alert semantics, then move focus only when the error blocks the current task.
+- Distinguish offline, timeout, permission, validation, and server failures when the recovery action differs.
+
+### Recovery sequence and required evidence
+
+Walk the states in order — settled baseline, throttled initial load, throttled in-place refresh, offline initial load, offline during an action, then recovery — and capture the evidence each state requires:
+
+<ol>
+  {delivery.networkChecks.map((check) => (
+    <li key={check.state}>
+      <strong>{check.state}:</strong> {check.evidence}
+    </li>
+  ))}
+</ol>
+
+<DoAvoid
+  ariaLabel="Network-state quality guidance"
+  headingLevel="h3"
+  doItems={[
+    'Model initial loading, background refresh, successful empty, offline, timeout, and server-error states separately.',
+    'Keep useful content and user input visible when a failed request does not invalidate them.',
+    'Provide clear status, a recovery action, and accessible announcement behavior.',
+  ]}
+  avoidItems={[
+    'Use one spinner for every asynchronous state or leave it running indefinitely.',
+    'Turn an offline or failed request into a misleading no-results empty state.',
+    'Clear the whole page or discard user input when only one request or region failed.',
+  ]}
+/>
+
+## Information density and layout resilience
+
+The goal is not to place every possible detail above the fold. The goal is to let a user understand status, make the primary decision, and reach the primary action within one representative working viewport. Secondary detail may scroll when that creates a clearer and more stable surface.
+
+<QualityRuleBlock
+  visualLabel="Sparse, balanced, and overcrowded information density"
+  contract={delivery.contracts.density}
+>
+  <DensityExample />
+</QualityRuleBlock>
+
+### Density review
+
+- Identify the representative working viewport and the information that must be understood without scrolling.
+- Keep related fields close enough to scan as a group; use stronger spacing between different groups than within a group.
+- Give primary status and actions more visual weight than labels, metadata, or secondary explanation.
+- Keep body copy within a readable measure. Extra horizontal space should improve grouping or comparison, not stretch prose across the screen.
+- Treat compact mode as a supported variant with preserved focus indicators and touch targets, not as a global reduction of every gap and font size.
+- Check both extremes: sparse data must not make the page feel unfinished, while dense data must not collapse hierarchy, clip controls, or force the entire page to scroll sideways.
+
+### Plan for fields to grow and shrink
+
+Field count is part of the layout contract. Test zero, one, typical, expected maximum, and beyond-maximum counts before deciding grid columns, minimum heights, or overflow behavior.
+
+<QualityRuleBlock
+  visualLabel="Stable details region as field count grows"
+  contract={delivery.contracts.fieldGrowth}
+>
+  <FieldGrowthExample />
+</QualityRuleBlock>
+
+### Required density evidence
+
+<ul>
+  {delivery.densityChecks.map((check) => (
+    <li key={check.state}>
+      <strong>{check.state}:</strong> {check.evidence}
+    </li>
+  ))}
+</ul>
+
+Use bounded containers intentionally:
+
+- Set a meaningful `min-height` only when reserving near-term capacity prevents disruptive jumps; do not preserve large empty regions indefinitely.
+- Set a `max-height` and `overflow: auto` for variable secondary lists, tables, logs, or detail fields once they cross a documented threshold.
+- Give every scroll region an accessible name, visible boundary, keyboard reachability, and a stable scrollbar gutter where supported.
+- Keep headers or column labels visible when scrolling dense comparisons, and keep the primary page action outside the variable scroll region.
+- Prefer page flow for short primary content. A scroll container is not a shortcut for avoiding responsive composition.
+- On narrow screens, choose deliberately between wrapping, stacking, card conversion, and a labelled horizontal data scroller. Never let wide content break the page by accident.
+
+<DoAvoid
+  ariaLabel="Information density and field growth guidance"
+  headingLevel="h3"
+  doItems={[
+    'Test 0, 1, typical, expected-maximum, and beyond-maximum fields with realistic long labels and values.',
+    'Document which information remains visible, which region may scroll, and the exact threshold where the behavior changes.',
+    'Reserve enough stable geometry for likely change while allowing the surrounding page to use space efficiently.',
+  ]}
+  avoidItems={[
+    'Spread a small amount of information across the whole screen only to make the interface look spacious.',
+    'Fit everything into one screen by shrinking type, targets, or gaps until the hierarchy and layout break.',
+    'Let optional fields push primary actions unpredictably or add nested scroll regions without a clear owner.',
+  ]}
+/>
+
+## State and story coverage
+
+- Include the canonical settled state and only meaningful variants.
+- Add explicit stories for the required states when relevant: {delivery.requiredStoryStates.join(', ')}.
+- Add field-count stories for zero, typical, expected maximum, and beyond maximum when schemas or metadata are variable.
+- Use realistic data density, long content, and action labels rather than idealized placeholders.
+- Keep Controls limited to supported public inputs.
+- Add a `play` interaction test for behavior that can regress without a visual difference.
+- Assert semantic status, disabled behavior, retry availability, input preservation, and important layout invariants where applicable.
+
+## Visual stability
+
+- Reserve space for loading content to avoid layout shift.
+- Match skeleton structure to the final surface rather than using generic bars that change the page geometry when content arrives.
+- Keep already loaded content mounted during background refresh unless displaying it would be unsafe or misleading.
+- Use semantic theme values instead of component-local raw colors.
+- Verify that focus, hover, selected, disabled, and error states remain distinguishable.
+- Keep motion purposeful and respect reduced-motion preferences.
+- Check that fonts, icons, charts, and images loading late do not move actions or change the reading order.
+
+## Definition of done
+
+1. Run the narrowest relevant tests and interaction stories.
+2. Run `npm run build-storybook`.
+3. Review the changed Docs and Canvas pages at the required viewport matrix and inspect page scroll width.
+4. Exercise normal, weak-network, offline, and recovery flows for every affected asynchronous surface.
+5. Review information density with sparse, typical, maximum, and beyond-maximum field counts.
+6. Verify that every bounded scroll region has a documented threshold, accessible name, keyboard path, and stable relationship to primary actions.
+7. Run the Accessibility panel on canonical, loading, and error states.
+8. Confirm the browser console has no new errors, hydration warnings, or repeated failed requests.
+9. Update the [machine-readable catalog](./design-system/catalog.json) when a public contract changes.
+10. Record any untested width, field count, network condition, or environment as residual risk instead of treating it as passed.

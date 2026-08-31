@@ -1,0 +1,611 @@
+import {
+  BarChart3,
+  ClipboardCheck,
+  Flag,
+  GraduationCap,
+  LayoutGrid,
+  Mail,
+  MailCheck,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Server,
+  Users,
+  Webhook,
+} from "lucide-react";
+import { Box, useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
+import React, { useEffect, useMemo, useState } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import NavigationSidebar from "../../components/NavigationSidebar/NavigationSidebar.tsx";
+import TopNav, {
+  TOP_NAV_BRAND_AREA_WIDTH,
+  TOP_NAV_HEIGHT,
+  type ClassSwitcherOption,
+} from "../../components/TopNav/TopNav.tsx";
+import {
+  AdminNavigationContext,
+  type AdminAppNavigation,
+  type AdminClassNavigation,
+} from "../../context/AdminNavigationContext.tsx";
+import apiClient, { kiwiAppsApiClient } from "../../utils/api.ts";
+import type { AppResponseDto, AppUIResponseDto } from "../../services/models";
+import { useContentResize } from "../../hooks/useContentResize";
+import {
+  ALL_CLASSES_ADMIN_LABEL,
+  ALL_CLASSES_SCOPE_ID,
+  canRoleSeeAdminUI,
+  getActiveAdminAppSlug,
+  getAdminAppPath,
+  getAdminClassScopeRoute,
+  getVisibleClassScopeOptions,
+} from "../../apps/adminNavigation.ts";
+
+const allSidebarItems = [
+  {
+    label: "Classes",
+    path: "/admin/classes",
+    icon: <GraduationCap />,
+    roles: ["admin", "instructor"],
+  },
+  {
+    label: "User Management",
+    path: "/admin/user-management",
+    icon: <Users />,
+    roles: ["admin"],
+  },
+  {
+    label: "System Analytics",
+    path: "/admin/analytics",
+    icon: <BarChart3 />,
+    roles: ["admin"],
+  },
+  {
+    label: "System Email",
+    path: "/admin/email",
+    icon: <Mail />,
+    roles: ["admin"],
+  },
+  {
+    label: "Email Audit",
+    path: "/admin/email-audit",
+    icon: <MailCheck />,
+    roles: ["admin"],
+  },
+  {
+    label: "System Flags",
+    path: "/admin/feature-flags",
+    icon: <Flag />,
+    roles: ["admin"],
+  },
+  {
+    label: "MCP Server Registry",
+    path: "/admin/mcp-servers",
+    icon: <Server />,
+    roles: ["admin"],
+  },
+  {
+    label: "App Registry",
+    path: "/admin/kiwi-apps",
+    icon: <LayoutGrid />,
+    roles: ["admin"],
+  },
+  {
+    label: "Webhooks",
+    path: "/admin/webhooks",
+    icon: <Webhook />,
+    roles: ["admin"],
+  },
+  {
+    label: "Webhook Approvals",
+    path: "/admin/webhooks/approvals",
+    icon: <ClipboardCheck />,
+    roles: ["admin"],
+  },
+];
+
+interface AdminAppItem {
+  slug: string;
+  name: string;
+  uiUrl: string;
+  uiSlug?: string;
+}
+
+const ADMIN_SIDEBAR_WIDTH = TOP_NAV_BRAND_AREA_WIDTH;
+
+const AdminSidebarSkeleton = () => (
+  <aside
+    aria-label="Loading admin navigation"
+    aria-busy="true"
+    className="flex shrink-0 flex-col overflow-hidden border-r border-border bg-card"
+    style={{ width: ADMIN_SIDEBAR_WIDTH }}
+  >
+    <div className="grow py-2">
+      {Array.from({ length: allSidebarItems.length }).map((_, index) => (
+        <div key={index} className="mx-2 flex min-h-11 items-center gap-3 px-2">
+          <div className="flex w-6 shrink-0 justify-center">
+            <Skeleton className="size-5 rounded-full" />
+          </div>
+          <Skeleton
+            className="h-4 rounded-md"
+            style={{ width: index % 3 === 0 ? 112 : index % 3 === 1 ? 136 : 96 }}
+          />
+        </div>
+      ))}
+    </div>
+
+    <div className="shrink-0 border-t border-border p-2">
+      <Skeleton className="size-10 rounded-lg" />
+    </div>
+  </aside>
+);
+
+const AdminLayout: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [drawerOpen, setDrawerOpen] = useState(true);
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [adminApps, setAdminApps] = useState<AdminAppItem[]>([]);
+  const [classOptions, setClassOptions] = useState<ClassSwitcherOption[]>([]);
+  const [classOptionsLoading, setClassOptionsLoading] = useState(false);
+  const [classOptionsLoaded, setClassOptionsLoaded] = useState(false);
+  const [classNavigation, setClassNavigation] =
+    useState<AdminClassNavigation | null>(null);
+  const [appNavigation, setAppNavigation] =
+    useState<AdminAppNavigation | null>(null);
+  const contentResizeStyles = useContentResize();
+  const adminNavigationContextValue = useMemo(
+    () => ({ setClassNavigation, setAppNavigation }),
+    [],
+  );
+
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const response = await apiClient.authControllerGetUserRole();
+        setUserRole(response.role || null);
+      } catch (error) {
+        console.error("Error fetching user role:", error);
+        setUserRole(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserRole();
+  }, []);
+
+  // Fetch apps with admin-panel UIs
+  useEffect(() => {
+    const fetchAdminApps = async () => {
+      try {
+        // Get all registered apps
+        const apps = await kiwiAppsApiClient.kiwiAppControllerListApps({});
+
+        // For each app, check if it has an admin-panel UI
+        const appsWithAdminUI: AdminAppItem[] = [];
+
+        for (const app of apps) {
+          try {
+            const uis = await kiwiAppsApiClient.kiwiAppControllerGetAppUIs({
+              slug: app.slug,
+            });
+
+            const adminUI = uis.find(
+              (ui) => ui.placement === "admin-panel" && ui.isEnabled,
+            );
+
+            const roleCanSeeUI = canRoleSeeAdminUI(
+              userRole,
+              adminUI?.allowedRoles,
+            );
+
+            if (adminUI && roleCanSeeUI) {
+              appsWithAdminUI.push({
+                slug: app.slug,
+                name: adminUI.uiName || app.name,
+                uiUrl: adminUI.uiUrl,
+                uiSlug: adminUI.uiSlug,
+              });
+            }
+          } catch (err) {
+            // App might not have UIs registered yet
+            console.debug(`No UIs found for app ${app.slug}`);
+          }
+        }
+
+        setAdminApps(appsWithAdminUI);
+      } catch (error) {
+        console.error("Error fetching admin apps:", error);
+      }
+    };
+
+    if (userRole === "admin" || userRole === "instructor") {
+      fetchAdminApps();
+    }
+  }, [userRole]);
+
+  const toggleDrawer = () => {
+    setDrawerOpen((open) => !open);
+  };
+
+  useEffect(() => {
+    setMobileDrawerOpen(false);
+  }, [location.pathname]);
+
+  // Filter sidebar items based on user role
+  const sidebarItems = allSidebarItems.filter(
+    (item) => userRole && item.roles.includes(userRole),
+  );
+
+  const shouldShowSidebar =
+    !isLoading && (userRole === "admin" || userRole === "instructor");
+  const navigateFromSidebar = (path: string) => {
+    navigate(path);
+    if (isMobile) setMobileDrawerOpen(false);
+  };
+  const classNavigationExpanded = location.pathname.startsWith("/admin/class/");
+  const classScopeRoute = getAdminClassScopeRoute(location.pathname);
+  const selectedClassId = classScopeRoute.classId
+    ? classScopeRoute.classId
+    : userRole === "admin"
+      ? ALL_CLASSES_SCOPE_ID
+      : undefined;
+  const classRouteSuffix = classScopeRoute.legacyClassSuffix;
+  const activeAdminAppSlug = getActiveAdminAppSlug(location.pathname);
+  const canSelectClassScope =
+    userRole === "admin" || userRole === "instructor";
+
+  useEffect(() => {
+    if (!userRole || (userRole !== "admin" && userRole !== "instructor")) {
+      setClassOptionsLoading(false);
+      setClassOptionsLoaded(false);
+      setClassOptions([]);
+      return;
+    }
+
+    let cancelled = false;
+
+    const fetchClassOptions = async () => {
+      setClassOptionsLoading(true);
+      setClassOptionsLoaded(false);
+
+      try {
+        let classIds: string[] = [];
+
+        if (userRole === "instructor") {
+          const response =
+            await apiClient.instructorClassControllerGetInstructorClasses();
+          classIds = (response.classes as unknown[])
+            .map((entry) => {
+              if (typeof entry === "string") return entry;
+              if (entry && typeof entry === "object") {
+                const classEntry = entry as { classID?: string; id?: string };
+                return classEntry.classID ?? classEntry.id;
+              }
+              return undefined;
+            })
+            .filter((id): id is string => Boolean(id));
+        } else {
+          const response = await apiClient.classControllerList();
+          classIds = response.classIds;
+        }
+
+        const options = await Promise.all(
+          classIds.map(async (classId) => {
+            try {
+              const classInfo = await apiClient.classControllerGetById({
+                classID: classId,
+              });
+              return {
+                id: classInfo.id,
+                label: classInfo.className || "Unnamed class",
+              };
+            } catch (error) {
+              console.warn(
+                `[AdminLayout] Could not load class ${classId}:`,
+                error,
+              );
+              return null;
+            }
+          }),
+        );
+
+        if (!cancelled) {
+          const sortedClasses = options
+            .filter((option): option is ClassSwitcherOption => option !== null)
+            .sort((a, b) => a.label.localeCompare(b.label));
+          setClassOptions(getVisibleClassScopeOptions(userRole, sortedClasses));
+        }
+      } catch (error) {
+        console.error("[AdminLayout] Could not load class switcher:", error);
+        if (!cancelled) setClassOptions([]);
+      } finally {
+        if (!cancelled) {
+          setClassOptionsLoading(false);
+          setClassOptionsLoaded(true);
+        }
+      }
+    };
+
+    fetchClassOptions();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [userRole]);
+
+  // The classless app route is the admin-wide scope. If an instructor reaches
+  // it through a bookmark or browser history, keep the UI inside the scopes
+  // offered by the selector instead of loading an admin-only global panel.
+  useEffect(() => {
+    if (
+      userRole !== "instructor" ||
+      !activeAdminAppSlug ||
+      classScopeRoute.classId ||
+      !classOptionsLoaded
+    ) {
+      return;
+    }
+
+    const firstAssignedClass = classOptions[0];
+    navigate(
+      firstAssignedClass
+        ? getAdminAppPath(activeAdminAppSlug, firstAssignedClass.id)
+        : "/admin/classes",
+      { replace: true },
+    );
+  }, [
+    activeAdminAppSlug,
+    classOptions,
+    classOptionsLoaded,
+    classScopeRoute.classId,
+    navigate,
+    userRole,
+  ]);
+
+  const handleClassChange = (classId: string) => {
+    const selectedOption = classOptions.find((option) => option.id === classId);
+
+    if (classId === ALL_CLASSES_SCOPE_ID) {
+      navigate({
+        pathname: activeAdminAppSlug
+          ? getAdminAppPath(activeAdminAppSlug)
+          : "/admin/classes",
+        search: location.search,
+        hash: location.hash,
+      });
+      return;
+    }
+
+    const encodedClassId = encodeURIComponent(classId);
+    const pathname = activeAdminAppSlug
+      ? getAdminAppPath(activeAdminAppSlug, classId)
+      : classNavigationExpanded
+        ? `/admin/class/${encodedClassId}${classRouteSuffix}`
+        : `/admin/class/${encodedClassId}`;
+
+    navigate(
+      {
+        pathname,
+        search: location.search,
+        hash: location.hash,
+      },
+      { state: { className: selectedOption?.label } },
+    );
+  };
+
+  // If the rail/drawer is already hidden there is no visible exit animation to
+  // wait for, so release the retained class menu immediately. When it is
+  // visible, NavigationSidebar clears it from Collapse.onExited instead.
+  useEffect(() => {
+    const navigationIsHidden = isMobile ? !mobileDrawerOpen : !drawerOpen;
+    if (classNavigation && !classNavigationExpanded && navigationIsHidden) {
+      setClassNavigation(null);
+    }
+  }, [
+    classNavigation,
+    classNavigationExpanded,
+    drawerOpen,
+    isMobile,
+    mobileDrawerOpen,
+  ]);
+
+  const sidebarSections = [
+    {
+      items: [
+        ...sidebarItems.map((item) => {
+          const isClassesItem = item.path === "/admin/classes";
+          return {
+            key: item.path,
+            label: isClassesItem && userRole === "instructor" ? "My Classes" : item.label,
+            icon: item.icon,
+            selected: location.pathname === item.path,
+            active: isClassesItem && classNavigationExpanded,
+            expanded: isClassesItem ? classNavigationExpanded : undefined,
+            children: isClassesItem ? classNavigation?.items : undefined,
+            onChildrenExited: isClassesItem
+              ? () => setClassNavigation(null)
+              : undefined,
+            onClick: () => navigateFromSidebar(item.path),
+          };
+        }),
+        ...adminApps.map((app) => {
+          const appPath = `/admin/app/${app.slug}`;
+          const appNavigationExpanded =
+            activeAdminAppSlug === app.slug && appNavigation?.appSlug === app.slug;
+          return {
+            key: appPath,
+            label: app.name,
+            icon: <LayoutGrid />,
+            selected: activeAdminAppSlug === app.slug,
+            active: appNavigationExpanded,
+            expanded: appNavigationExpanded ? true : undefined,
+            children: appNavigationExpanded ? appNavigation.items : undefined,
+            onClick: () => {
+              if (selectedClassId && selectedClassId !== ALL_CLASSES_SCOPE_ID) {
+                navigateFromSidebar(
+                  getAdminAppPath(app.slug, selectedClassId),
+                );
+                return;
+              }
+
+              if (userRole === "instructor") {
+                const firstAssignedClass = classOptions[0];
+                navigateFromSidebar(
+                  firstAssignedClass
+                    ? getAdminAppPath(app.slug, firstAssignedClass.id)
+                    : "/admin/classes",
+                );
+                return;
+              }
+
+              navigateFromSidebar(appPath);
+            },
+          };
+        }),
+      ],
+    },
+  ];
+
+  return (
+    <AdminNavigationContext.Provider value={adminNavigationContextValue}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100vh",
+          ...contentResizeStyles,
+        }}
+      >
+        {/* Top Navigation - spans full width */}
+        <TopNav
+          brandAreaWidth={!isMobile ? ADMIN_SIDEBAR_WIDTH : undefined}
+          onMenuToggle={
+            isMobile && shouldShowSidebar
+              ? () => setMobileDrawerOpen((open) => !open)
+              : undefined
+          }
+          contextLabel={
+            !canSelectClassScope
+              ? undefined
+              : selectedClassId === ALL_CLASSES_SCOPE_ID
+              ? ALL_CLASSES_ADMIN_LABEL
+              : classNavigationExpanded
+              ? classNavigation?.className ||
+                (classNavigation && !classNavigation.classNameLoading
+                  ? "Unnamed class"
+                  : undefined)
+              : selectedClassId
+                ? classOptions.find((option) => option.id === selectedClassId)
+                    ?.label
+                : "Select a class"
+          }
+          contextLoading={
+            canSelectClassScope &&
+            (!classOptionsLoaded || classOptionsLoading ||
+              (classNavigationExpanded &&
+                (classNavigation?.classNameLoading ?? true)))
+          }
+          classOptions={classOptions}
+          classOptionsLoading={classOptionsLoading}
+          selectedClassId={selectedClassId}
+          selectedClassKind={
+            selectedClassId === ALL_CLASSES_SCOPE_ID
+              ? "admin-all-classes"
+              : undefined
+          }
+          onClassChange={canSelectClassScope ? handleClassChange : undefined}
+          classEmptyLabel={
+            userRole === "instructor"
+              ? "No assigned classes"
+              : "No classes found"
+          }
+        />
+
+        {/* Content area with sidebar */}
+        <Box
+          sx={{
+            display: "flex",
+            flexGrow: 1,
+            minHeight: 0,
+            height: `calc(100vh - ${TOP_NAV_HEIGHT}px)`,
+            overflow: "hidden",
+          }}
+        >
+          {/* Primary admin navigation */}
+          {isLoading && !isMobile && <AdminSidebarSkeleton />}
+
+          {shouldShowSidebar && !isMobile && (
+            <NavigationSidebar
+              ariaLabel="Admin navigation"
+              open={drawerOpen}
+              width={ADMIN_SIDEBAR_WIDTH}
+              footer={
+                <div className="flex justify-start p-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={toggleDrawer}
+                    className="size-10 rounded-full text-muted-foreground"
+                    aria-label={
+                      drawerOpen
+                        ? "Collapse admin navigation"
+                        : "Expand admin navigation"
+                    }
+                  >
+                    {drawerOpen ? <PanelLeftClose /> : <PanelLeftOpen />}
+                  </Button>
+                </div>
+              }
+              sections={sidebarSections}
+            />
+          )}
+
+          {shouldShowSidebar && isMobile && (
+            <Dialog open={mobileDrawerOpen} onOpenChange={setMobileDrawerOpen}>
+              <DialogContent
+                showCloseButton={false}
+                aria-label="Admin navigation"
+                className="right-auto bottom-0 left-0 flex h-auto w-auto max-w-none translate-x-0 translate-y-0 gap-0 rounded-none p-0 ring-0 data-open:zoom-in-100 data-open:slide-in-from-left-4 data-closed:zoom-out-100 data-closed:slide-out-to-left-4"
+                style={{ top: TOP_NAV_HEIGHT }}
+              >
+                <NavigationSidebar
+                  ariaLabel="Admin navigation"
+                  open
+                  width={260}
+                  sections={sidebarSections}
+                />
+              </DialogContent>
+            </Dialog>
+          )}
+
+          {/* Main content */}
+          <Box
+            component="main"
+            sx={{
+              flexGrow: 1,
+              minWidth: 0,
+              width: isMobile ? "100%" : "auto",
+              p: 0,
+              ml: shouldShowSidebar ? 0 : 0,
+              overflow: "auto",
+              height: `calc(100vh - ${TOP_NAV_HEIGHT}px)`,
+              bgcolor: "grey.50",
+            }}
+          >
+            <Outlet />
+          </Box>
+        </Box>
+      </Box>
+    </AdminNavigationContext.Provider>
+  );
+};
+
+export default AdminLayout;

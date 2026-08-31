@@ -1,0 +1,51 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Contributing/Authoring Rules" />
+
+# Storybook authoring rules
+
+> **Scope: Storybook Guide.** These are repository-level conventions for maintaining this Kiwi Storybook. They are not official Storybook framework requirements and they do not define the visual or interaction behavior of Kiwi products.
+
+## What this scope owns
+
+- Sidebar information architecture, page naming, and stable Storybook routes.
+- The division between readable MDX, interactive stories, and machine-readable catalog entries.
+- Story descriptions, supported Controls, meaningful scenarios, and `play` tests.
+- Documentation UI/UX conventions and reusable components under `.storybook/components/`.
+- Storybook accessibility checks, static builds, publishing, and catalog availability.
+
+## What this scope does not own
+
+- Kiwi colors, typography, spacing, component variants, or content guidance.
+- Kiwi product patterns, responsive behavior, interaction rules, or domain semantics.
+- Behavior that is not supported by component source and executable tests.
+
+Those contracts live under **Foundations**, **Guidelines**, **Patterns**, and **Components** in the sidebar.
+
+## Authoring contract
+
+1. Put repository documentation rules under **Contributing**.
+2. Put product and interface rules under **Foundations**, **Guidelines**, **Patterns**, or **Components**; park MUI-era implementations awaiting migration under **Deprecated**.
+3. Use MDX for readable onboarding, long-form guidance, and checklists.
+4. Use stories for interactive states and executable examples.
+5. Keep Controls limited to supported public inputs.
+6. Add a `play` test when behavior could regress without an obvious visual difference.
+7. Treat `.storybook/design-system/catalog.json` as the single source for contract lists: edit the contract in the catalog and let MDX pages and story docs render it. Never hand-write a second copy of the same contract in MDX, stories, or docs descriptions.
+8. Update the catalog when a public route or contract changes.
+9. Reuse documentation components instead of copying presentation markup between guides.
+
+## Evidence model
+
+- The machine-readable catalog is the retrieval index and the canonical text of every contract list.
+- Docs explain the intended contract.
+- Stories and tests provide executable evidence.
+- Component source remains the final implemented behavior.
+
+When these disagree, surface the contradiction instead of treating one surface as automatically authoritative.
+
+## Publishing checks
+
+1. Run the relevant interaction and accessibility checks.
+2. Run `npm run build-storybook`.
+3. Inspect representative Docs and Canvas pages at desktop and narrow widths.
+4. Confirm the welcome page, sidebar order, brand link, and catalog URL.

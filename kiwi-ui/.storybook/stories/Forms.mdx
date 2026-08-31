@@ -1,0 +1,83 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import designSystem from '../design-system/catalog.json';
+import * as Examples from './FormExamples.stories.tsx';
+
+export const forms = designSystem.patterns.forms;
+
+<Meta title="Patterns/Forms/Overview" />
+
+# Forms
+
+> **Design guide, not component.** This section defines shared form structure, behavior, and feedback across Kiwi. Product-specific compositions such as Admin Form implement this guidance; they do not define it.
+
+{forms.purpose}
+
+{forms.definition}
+
+## Principles
+
+<ul>
+  {forms.principles.map((item) => <li key={item}>{item}</li>)}
+</ul>
+
+## Anatomy
+
+<ol>
+  {forms.anatomy.map((item) => <li key={item}>{item}</li>)}
+</ol>
+
+## Layout and hierarchy
+
+<ul>
+  {forms.layout.map((item) => <li key={item}>{item}</li>)}
+</ul>
+
+## Fields and supporting content
+
+<ul>
+  {forms.fields.map((item) => <li key={item}>{item}</li>)}
+</ul>
+
+## Validation and recovery
+
+<ul>
+  {forms.validation.map((item) => <li key={item}>{item}</li>)}
+</ul>
+
+## Actions and submission
+
+<ul>
+  {forms.actions.map((item) => <li key={item}>{item}</li>)}
+</ul>
+
+## Required states
+
+<ul>
+  {forms.states.map((item) => <li key={item}>{item}</li>)}
+</ul>
+
+## Accessibility
+
+<ul>
+  {forms.accessibility.map((item) => <li key={item}>{item}</li>)}
+</ul>
+
+## Examples
+
+### Basic form
+
+A content-neutral baseline with persistent labels, one field column, supporting text, and one primary completion action.
+
+<Canvas of={Examples.BasicForm} />
+
+### Admin form composition
+
+Admin Form is one product implementation of this guide. Its surface, sections, and action bar are optional composition helpers for complex Admin pages.
+
+<Canvas of={Examples.AdminFormComposition} />
+
+### Field states
+
+Default, error, and disabled fields must remain visually and semantically distinct.
+
+<Canvas of={Examples.FieldStates} />

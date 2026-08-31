@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [development, master]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: backend (kiwi)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: kiwi
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: kiwi/package-lock.json
+      - run: npm ci || npm install
+      - run: npx prisma generate
+      - run: npm test
+      - run: npm run build
+
+  frontend:
+    name: frontend (kiwi-ui)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: kiwi-ui
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: kiwi-ui/package-lock.json
+      - run: npm ci || npm install
+      - run: npm run test:run
+      - run: npm run build
+
+  sdk:
+    name: app sdk
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: kiwi-app-sdk
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: kiwi-app-sdk/package-lock.json
+      - run: npm ci || npm install
+      - run: npm run typecheck
+      - run: npm run build
+      # The single-file build is vendored into two consumers; they must not drift.
+      - name: Vendored SDK copies are in sync
+        working-directory: .
+        run: |
+          diff kiwi-app-sdk/dist/kiwi-app-sdk.global.js kiwi-ui/public/sdk/v1/kiwi-app-sdk.js
+          diff kiwi-app-sdk/dist/kiwi-app-sdk.global.js \
+               kiwi-app-developer-guide-example/kiwi-app-sdk/kiwi-app-sdk.js

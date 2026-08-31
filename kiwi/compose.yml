@@ -1,0 +1,59 @@
+services:
+  db:
+    image: pgvector/pgvector:0.7.2-pg16
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: kiwi
+      POSTGRES_PASSWORD: kiwi
+      POSTGRES_DB: kiwi
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - 127.0.0.1:5432:5432
+
+  redis:
+    image: redis:7.2.5-alpine
+    restart: always
+    ports:
+      - '127.0.0.1:6379:6379'
+    command: 'redis-server --save 20 1 --loglevel warning'
+    volumes:
+      - redis-data:/data
+
+  adminer: # Dev only
+    image: adminer
+    restart: always
+    ports:
+      - 127.0.0.1:8081:8080
+
+  # unstructured:
+  #   image: downloads.unstructured.io/unstructured-io/unstructured-api:0.0.71
+  #   restart: always
+  #   environment:
+  #     PORT: 9500
+  #   ports:
+  #     - 127.0.0.1:9500:9500
+
+
+  oss: # Dev only, use S3 in production
+    image: minio/minio:RELEASE.2024-12-18T13-15-44Z
+    restart: always
+    environment:
+      MINIO_ACCESS_KEY: kiwi
+      MINIO_SECRET_KEY: kiwikiwi
+    entrypoint: sh
+    command: -c 'mkdir -p /data/kiwi && /usr/bin/minio server /data --console-address ":9001"'
+    volumes:
+      - oss-data:/data
+    ports:
+      - 127.0.0.1:9000:9000 # Endpoint
+      - 127.0.0.1:9001:9001 # Console
+
+volumes:
+  db-data:
+    driver: local
+  redis-data:
+    driver: local
+  oss-data:
+    driver: local

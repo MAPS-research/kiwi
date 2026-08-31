@@ -1,0 +1,17 @@
+# gitleaks configuration for the Kiwi monorepo.
+# Run locally with:  gitleaks dir .
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "generic-api-key"
+[rules.allowlist]
+description = "Self-describing test fixtures, not real credentials"
+regexes = [
+  '''a-very-long-secret-that-is-at-least-32-chars''',
+]
+paths = [
+  '''.*\.spec\.ts$''',
+  '''.*\.test\.tsx?$''',
+]

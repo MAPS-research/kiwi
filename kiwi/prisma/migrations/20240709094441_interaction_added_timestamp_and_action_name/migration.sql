@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "UserInteraction" ADD COLUMN     "actionName" TEXT NOT NULL DEFAULT '',
+ADD COLUMN     "timestamp" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

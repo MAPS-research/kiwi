@@ -1,0 +1,50 @@
+{
+  "capturedAt": "2026-04-13T00:00:00.000Z",
+  "schemaVersion": "example-migration-name",
+  "tables": {
+    "User": [
+      {
+        "id": "00000000-0000-0000-0000-000000000001",
+        "email": "example-admin@example.com",
+        "oauthId": "example-oauth-admin",
+        "oauth": true,
+        "passwordHash": null,
+        "passwordSalt": null,
+        "consent": true,
+        "systemRole": "admin",
+        "researchNotes": null,
+        "researchNotesForUser": null,
+        "intTag": 0,
+        "stringTag": ""
+      }
+    ],
+    "UserWhitelist": [
+      {
+        "id": "00000000-0000-0000-0000-000000000010",
+        "email": "example-admin@example.com",
+        "status": "enabled",
+        "createdAt": "2026-04-13T00:00:00.000Z",
+        "updatedAt": "2026-04-13T00:00:00.000Z"
+      }
+    ],
+    "PendingAdmin": [],
+    "Class": [
+      {
+        "id": "00000000-0000-0000-0000-000000000100",
+        "classMetadata": { "name": "Example Class" },
+        "createdDate": "2026-04-13T00:00:00.000Z",
+        "professorId": "00000000-0000-0000-0000-000000000001"
+      }
+    ],
+    "InstructorClass": [],
+    "Enrollment": [],
+    "PendingEnrollment": [],
+    "FeatureFlag": [],
+    "ClassMaterial": [],
+    "Document": [],
+    "DocumentComment": [],
+    "DocumentSummary": [],
+    "Embedding": [],
+    "LectureKeyword": []
+  }
+}

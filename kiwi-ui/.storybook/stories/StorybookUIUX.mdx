@@ -1,0 +1,63 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { DoAvoid } from '../components/DoAvoid.tsx';
+
+<Meta title="Contributing/Documentation UIUX" />
+
+# Storybook documentation UI/UX
+
+> **Scope: Storybook Guide.** These rules govern the navigation, readability, examples, and documentation-only components inside this Storybook. They are repository conventions, not official Storybook framework rules and not Kiwi product UI requirements.
+
+## Design goals
+
+- Make the correct chapter and contract scope obvious from the sidebar and page heading.
+- Keep long-form guidance readable for people and structurally predictable for AI retrieval.
+- Pair intended behavior with interactive stories, accessibility checks, and focused tests.
+- Work from narrow screens upward without horizontal page scrolling.
+
+## Information hierarchy
+
+Use one page `h1`, stable `h2` section anchors, and `h3` headings inside examples. Keep repository authoring content under **Contributing** and product design content under the **Foundations / Guidelines / Patterns / Components** sections. Page titles should describe the reader's task instead of the file or implementation type.
+
+<DoAvoid
+  ariaLabel="Storybook information hierarchy guidance"
+  headingLevel="h3"
+  doItems={[
+    'Use headings and sidebar nesting to expose ownership and reading order.',
+    'Put repository authoring rules under Contributing and product rules under the design-system sections.',
+  ]}
+  avoidItems={[
+    'Mix Storybook authoring conventions and Kiwi product rules in one unlabeled chapter.',
+    'Use visual size alone to communicate heading hierarchy.',
+  ]}
+/>
+
+## Writing and examples
+
+Lead with purpose, decision rules, supported states, and constraints. Use short paragraphs, lists, and meaningful examples. Prefer one canonical story plus important scenarios over a story for every prop combination.
+
+<DoAvoid
+  ariaLabel="Storybook writing guidance"
+  headingLevel="h3"
+  doItems={[
+    'Explain what decision an example proves and keep the example executable.',
+    'Use Do and Avoid guidance when two concrete choices need direct comparison.',
+  ]}
+  avoidItems={[
+    'Describe only colors, borders, or layout without explaining intent.',
+    'Repeat the same long contract independently in MDX, stories, and JSON.',
+  ]}
+/>
+
+## Documentation components
+
+Components under `.storybook/components/` are documentation primitives. They may render Kiwi guidance, but they do not become part of the Kiwi product component API.
+
+The reusable [Do Avoid component](?path=/docs/contributing-components-do-avoid--docs) uses semantic sections and lists, visible text labels in addition to semantic colors, content-driven height, and a two-column layout that stacks on narrow surfaces.
+
+## Accessibility and responsive behavior
+
+- Keep text contrast at least 4.5:1 and never rely on color alone.
+- Preserve keyboard navigation, visible focus, semantic headings, lists, and regions.
+- Use readable line lengths and allow technical strings and translations to wrap.
+- Test at narrow mobile, tablet, and desktop widths.
+- Avoid static `role="alert"` on ordinary guidance cards; reserve live announcement semantics for changing status.

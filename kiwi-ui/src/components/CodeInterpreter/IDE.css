@@ -1,0 +1,73 @@
+
+.clicks {
+    display: inline-block;
+    padding: 12px 24px;
+    font-size: 18px;
+    text-align: center;
+    text-decoration: none;
+    background-color: #4CAF50; /* Green background color */
+    color: white; /* White text color */
+    border-radius: 4px; /* Rounded corners */
+    border: none; /* No border */
+    cursor: pointer;
+    transition: background-color 0.3s; /* Smooth background color transition */
+
+    /* Optional: Add box shadow for a subtle lift */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.clicks:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+
+#interpreter-container{
+    background-color:black;
+    height: 100px;
+    
+
+}
+#code-output {
+    height: 130px;
+    font-size: 18px;
+    line-height: 1.5;
+    background-color: azure;
+    color: #333;
+    margin-bottom: 15px;
+    overflow: auto;
+}
+
+#code-output a {
+    color: #007bff;
+    text-decoration: none;
+    border-bottom: 1px solid #007bff;
+    transition: border-bottom 0.3s ease-in-out;
+}
+
+#code-output a:hover {
+    border-bottom: 2px solid #007bff;
+}
+
+#editor *{
+    
+    font-family : monospace !important;
+    font-size: 16px !important;
+    direction:ltr !important;
+    text-align:left !important; 
+    height: 400px;
+    /* overflow: auto; */
+}
+#tab{
+    flex:1;
+    background-color: #717171;
+    /* width: 40%; */
+    height: 100%;
+    overflow: auto;
+}
+
+#editor-tab{
+    display: flex;
+    flex-direction: row;
+
+
+}

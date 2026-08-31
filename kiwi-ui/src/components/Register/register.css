@@ -1,0 +1,50 @@
+.register .form-container {
+    width: 350px;
+    padding: 30px 20px;
+    background-color: #1f262f;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.register form {
+    display: flex;
+    flex-direction: column;
+}
+
+.register h2 {
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.register label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.register input[type="text"],
+.register input[type="password"] {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #292d36;
+    color: #ffffff;
+}
+
+.register input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.register input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.register .error-message {
+    color: red;
+    margin-top: 10px;
+}

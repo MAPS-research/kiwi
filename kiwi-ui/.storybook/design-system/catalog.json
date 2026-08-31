@@ -1,0 +1,675 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "system": {
+    "name": "Kiwi Design System",
+    "purpose": "A Storybook workspace that separates repository authoring rules from product-facing Kiwi design contracts.",
+    "framework": "React 19 with shadcn/ui (Base UI) and Tailwind CSS 4; legacy surfaces are migrating off Material UI 7",
+    "storybook": "Storybook 10 with React and Vite",
+    "sourceOfTruth": "This catalog is the canonical source for contract lists. MDX pages and story docs import and render these entries; do not hand-edit a duplicated copy in MDX or stories.",
+    "sourceFields": {
+      "docSource": "The MDX file that renders the readable chapter.",
+      "storySource": "The stories file that provides executable examples and docs.",
+      "componentSource": "The implementation file that remains the final behavior."
+    }
+  },
+  "contractScopes": {
+    "storybookGuide": {
+      "label": "Storybook Guide",
+      "kind": "repository-authoring-contract",
+      "storybookTitle": "Contributing/Authoring Rules",
+      "docSource": ".storybook/stories/StorybookGuide.mdx",
+      "owns": [
+        "navigation and page naming",
+        "documentation UI/UX and documentation-only components",
+        "MDX and story authoring conventions",
+        "Controls and interaction-test conventions",
+        "Storybook build, accessibility checks, and publishing"
+      ],
+      "doesNotOwn": [
+        "Kiwi visual foundations",
+        "Kiwi component behavior",
+        "Kiwi product patterns and domain semantics"
+      ]
+    },
+    "kiwiDesignSystem": {
+      "label": "Kiwi Design System",
+      "kind": "product-design-contract",
+      "storybookTitle": "Foundations / Guidelines / Patterns / Components",
+      "owns": [
+        "visual foundations and tokens",
+        "component and pattern contracts",
+        "accessibility and responsive behavior",
+        "product-specific interface guidance"
+      ],
+      "doesNotOwn": [
+        "Storybook repository structure",
+        "Storybook authoring and publishing workflow"
+      ]
+    }
+  },
+  "audiences": {
+    "kiwi-ui": {
+      "label": "React inside Kiwi UI",
+      "contract": "Use shadcn components from src/components/ui and Tailwind semantic tokens (bg-primary, text-muted-foreground, ...). Legacy MUI surfaces keep semantic values from src/Theme.ts until they migrate.",
+      "avoid": "Do not repeat raw color values in product components, mix MUI and Tailwind styling inside one surface, or use the external-app token contract."
+    },
+    "external-kiwi-app": {
+      "label": "External Kiwi App",
+      "contract": "Load public/kiwi-design-tokens.css and use var(--kiwi-*).",
+      "avoid": "Do not import internal Kiwi UI theme modules."
+    },
+    "reusable-interface-work": {
+      "label": "Reusable interface element",
+      "contract": "Start with the closest documented component or pattern in this catalog.",
+      "avoid": "Do not create a local primitive before checking this catalog."
+    }
+  },
+  "evidencePriority": [
+    "current product requirements",
+    "Storybook design and usage contract",
+    "component source and tests",
+    "adjacent established patterns",
+    "general UI heuristics"
+  ],
+  "navigation": [
+    "Getting Started/About",
+    "Foundations/Colors",
+    "Foundations/Typography",
+    "Guidelines/Analytics",
+    "Guidelines/Quality",
+    "Guidelines/User Management",
+    "Patterns/Forms",
+    "Patterns/Small Popups",
+    "Components/Actions/Button",
+    "Components/Layout/Admin Page",
+    "Components/Layout/Admin Page Header",
+    "Components/Layout/Navigation Sidebar",
+    "Contributing/Authoring Rules",
+    "Contributing/Documentation UIUX",
+    "Contributing/Components/Do Avoid",
+    "Deprecated/Analytics Date Range"
+  ],
+  "storybookGuides": {
+    "uiux": {
+      "scope": "storybookGuide",
+      "storybookTitle": "Contributing/Documentation UIUX",
+      "docSource": ".storybook/stories/StorybookUIUX.mdx",
+      "topics": [
+        "information hierarchy",
+        "documentation readability",
+        "examples and decision guidance",
+        "accessibility",
+        "responsive documentation",
+        "documentation component ownership"
+      ]
+    }
+  },
+  "storybookComponents": {
+    "do-avoid": {
+      "scope": "storybookGuide",
+      "status": "stable",
+      "storybookTitle": "Contributing/Components/Do Avoid",
+      "componentSource": ".storybook/components/DoAvoid.tsx",
+      "storySource": ".storybook/stories/DoAvoid.stories.tsx",
+      "purpose": "Present directly comparable recommended and discouraged guidance in Storybook documentation.",
+      "useWhen": [
+        "Readers need to compare two concrete choices or authoring decisions.",
+        "Both sides can be expressed as short, independently scannable items."
+      ],
+      "avoidWhen": [
+        "The content is a warning, error, or changing system status that needs alert semantics.",
+        "The guidance requires a sequence, decision tree, or more than two categories."
+      ],
+      "accessibility": [
+        "Use visible Do and Avoid labels in addition to semantic colors.",
+        "Choose a heading level that preserves the surrounding document hierarchy.",
+        "Provide a concise aria label for the paired guidance region."
+      ],
+      "responsive": "Two columns when the component container can fit two 280px panels; otherwise stacked, independent of the iframe viewport."
+    }
+  },
+  "foundations": {
+    "colors": {
+      "scope": "kiwiDesignSystem",
+      "storybookId": "foundations-colors--overview",
+      "storySource": ".storybook/stories/Theme.stories.tsx",
+      "summary": "Product color comes exclusively from the Tailwind semantic tokens defined in `src/index.css`.",
+      "rules": [
+        "Build product UI with the Tailwind semantic token utilities (`bg-primary`, `text-muted-foreground`, `border-border`, `text-destructive`, ...); never hard-code color in product components — no raw hex/rgb values and no Tailwind palette classes such as `amber-500`.",
+        "`src/index.css` is the single source of truth: token values live on `:root` and reach utilities through the `@theme inline` block.",
+        "To add or change a color role, define the custom property in `src/index.css` and expose it in `@theme inline`; do not create component-local palettes or one-off values.",
+        "Pick the role that matches meaning: `primary` for main actions, `secondary` for supporting filled actions, `muted`/`accent` for subdued and hover fills, `destructive` for errors and destructive actions, `success` for positive confirmation, `warning` for caution states, `border`/`input`/`ring` for chrome and focus, `chart-1`…`chart-5` for chart series.",
+        "Do not add a new token when an existing role already expresses the meaning; surface-specific token sets (a sidebar palette, a per-feature palette) are not allowed unless the surface genuinely diverges from the shared roles.",
+        "There is no dark palette yet: `dark:` variants stay inert until a `.dark` token set is defined in `src/index.css`."
+      ]
+    },
+    "typography": {
+      "scope": "kiwiDesignSystem",
+      "storybookId": "foundations-typography--overview",
+      "storySource": ".storybook/stories/Typography.stories.tsx",
+      "summary": "Uses Montserrat for ordinary UI, composed as a small set of shadcn/Tailwind type roles.",
+      "fontFamily": "Montserrat through the `--font-sans` token (aliased by `--font-heading`), self-hosted from @fontsource-variable/montserrat via src/fonts/montserrat.css; `sans-serif` is only a generic fallback for glyphs Montserrat does not cover (e.g. CJK).",
+      "roles": [
+        {
+          "role": "page-title",
+          "label": "Page title",
+          "classes": "text-2xl leading-[1.3] font-semibold tracking-[-0.02em]",
+          "ownedBy": "src/components/AdminPage/AdminPageHeader.tsx",
+          "use": "The single h1 of a page. Rendered by AdminPageHeader; do not restyle it locally."
+        },
+        {
+          "role": "dialog-title",
+          "label": "Dialog title",
+          "classes": "font-heading text-base leading-none font-medium",
+          "ownedBy": "src/components/ui/dialog.tsx",
+          "use": "The heading of a dialog. Rendered by DialogTitle; do not restyle it locally."
+        },
+        {
+          "role": "label",
+          "label": "Label / emphasized UI text",
+          "classes": "text-sm font-medium",
+          "use": "Form labels, table headers, buttons, and other short emphasized UI text."
+        },
+        {
+          "role": "body",
+          "label": "Body UI text",
+          "classes": "text-sm text-foreground",
+          "use": "Default text on shadcn surfaces: table cells, dialog content, list items, and form values."
+        },
+        {
+          "role": "supporting",
+          "label": "Supporting text",
+          "classes": "text-sm text-muted-foreground",
+          "use": "Descriptions, helper text, and secondary copy that accompanies body text."
+        },
+        {
+          "role": "metadata",
+          "label": "Metadata",
+          "classes": "text-xs text-muted-foreground",
+          "use": "Timestamps, counts, keyboard hints, and other short annotations. This is the minimum text size; never use it for paragraphs."
+        }
+      ],
+      "rules": [
+        "Montserrat is the only typeface for ordinary UI; never reintroduce Roboto, Arial, Helvetica, or a platform default stack.",
+        "The only exceptions are math (KaTeX/MathJax), monospace for code, commands, IDs, and JSON, the Ace editor, icon fonts, and third-party component internals.",
+        "Compose text from the documented type roles before inventing a new size, weight, or tracking combination. For small anchored overlays, use the documented Small Popup typography roles.",
+        "When a component owns a role (AdminPageHeader for the page title, DialogTitle for dialog titles, Label for form labels), use the component instead of re-creating its classes.",
+        "`text-sm` is the default UI text size on shadcn surfaces; `text-xs` is the minimum and is reserved for short labels and metadata.",
+        "The full Tailwind size scale (`text-xs` through `text-9xl`) stays available, but ordinary product UI uses the documented roles; sizes above `text-2xl` are reserved for hero, marketing, or empty-state display text.",
+        "Keep heading levels meaningful; visual size and document hierarchy are separate concerns.",
+        "Use semantic text color utilities (`text-foreground`, `text-muted-foreground`, `text-primary`, `text-destructive`) instead of hard-coded grays.",
+        "Surfaces still on MUI keep the semantic variants from `src/Theme.ts` until they migrate; do not mix MUI typography and Tailwind text utilities inside one surface."
+      ]
+    }
+  },
+  "components": {
+    "button": {
+      "scope": "kiwiDesignSystem",
+      "status": "stable",
+      "storybookTitle": "Components/Actions/Button",
+      "componentSource": "src/components/ui/button.tsx",
+      "storySource": ".storybook/stories/Button.stories.tsx",
+      "purpose": "Trigger an immediate user action.",
+      "useWhen": [
+        "The user can initiate a discrete action such as create, save, refresh, upload, or delete.",
+        "The result and disabled or processing state can be explained with a concise action label."
+      ],
+      "avoidWhen": [
+        "The destination is navigation; use a link instead.",
+        "The action changes a persistent setting immediately; consider a switch or checkbox.",
+        "An icon alone would make the action ambiguous."
+      ],
+      "variants": {
+        "default": "One primary action in the current surface or a high-confidence confirmation.",
+        "secondary": "A supporting action that still needs a filled surface next to the primary action.",
+        "outline": "Secondary actions with a visible boundary, including toolbar actions such as Refresh.",
+        "ghost": "Tertiary, reversible, or low-emphasis actions and dense toolbars.",
+        "destructive": "Actions that delete or discard data; pair with an explicit confirmation step.",
+        "link": "Inline actions that read as part of surrounding text."
+      },
+      "sizes": {
+        "default": "Standard control height for pages and dialogs.",
+        "sm": "Dense surfaces such as table rows and card toolbars.",
+        "xs": "The most compact chrome, such as inline tag actions.",
+        "lg": "Prominent standalone calls to action.",
+        "icon": "Icon-only actions; requires an aria-label and has icon-xs, icon-sm, and icon-lg counterparts."
+      },
+      "iconSlots": "Mark leading icons with data-icon=\"inline-start\" and trailing icons with data-icon=\"inline-end\" so the button balances its padding.",
+      "states": [
+        "default",
+        "hover",
+        "focus-visible",
+        "disabled",
+        "processing",
+        "full-width"
+      ],
+      "accessibility": [
+        "Use an action-first visible label; icon-only buttons need an aria-label.",
+        "Do not rely on color alone to communicate destructive or status meaning.",
+        "Keep the accessible name and width stable during processing.",
+        "Use native disabled semantics when the action cannot run."
+      ]
+    },
+    "admin-page": {
+      "scope": "kiwiDesignSystem",
+      "status": "stable",
+      "storybookTitle": "Components/Layout/Admin Page",
+      "componentSource": "src/components/AdminPage/AdminPage.tsx",
+      "storySource": ".storybook/stories/AdminPage.stories.tsx",
+      "purpose": "Provide standard content width, responsive gutters, and bottom spacing for Kiwi Admin pages."
+    },
+    "admin-page-header": {
+      "scope": "kiwiDesignSystem",
+      "status": "stable",
+      "storybookTitle": "Components/Layout/Admin Page Header",
+      "componentSource": "src/components/AdminPage/AdminPageHeader.tsx",
+      "storySource": ".storybook/stories/AdminPageHeader.stories.tsx",
+      "purpose": "Provide a semantic page heading, optional description, status, back action, and responsive actions."
+    },
+    "navigation-sidebar": {
+      "scope": "kiwiDesignSystem",
+      "status": "stable",
+      "storybookTitle": "Components/Layout/Navigation Sidebar",
+      "componentSource": "src/components/NavigationSidebar/NavigationSidebar.tsx",
+      "storySource": ".storybook/stories/NavigationSidebar.stories.tsx",
+      "purpose": "Collapsible admin navigation rail on the shared semantic tokens, with fixed icon geometry, tooltip labels when collapsed, and animated nested navigation."
+    },
+    "admin-form": {
+      "scope": "kiwiDesignSystem",
+      "status": "legacy-mui",
+      "storybookTitle": "Patterns/Forms/Examples",
+      "componentSource": "src/components/AdminPage/AdminFormSurface.tsx",
+      "storySource": ".storybook/stories/FormExamples.stories.tsx",
+      "purpose": "Provide Admin-specific composition helpers that implement the general Forms guidance.",
+      "note": "AdminFormSurface, AdminFormSection, and AdminFormActions are still MUI implementations pending shadcn migration; the Storybook form examples compose the same structure from shadcn primitives."
+    }
+  },
+  "patterns": {
+    "forms": {
+      "scope": "kiwiDesignSystem",
+      "status": "stable",
+      "storybookTitle": "Patterns/Forms/Overview",
+      "docSource": ".storybook/stories/Forms.mdx",
+      "storySource": ".storybook/stories/FormExamples.stories.tsx",
+      "purpose": "Define a shared design and interaction contract for forms across Kiwi without prescribing one page-specific component.",
+      "definition": "A form is a structured task that helps users provide, review, validate, and submit related information with a clear outcome.",
+      "principles": [
+        "Ask only for information required to complete the current task; defer advanced or conditional fields until they become relevant.",
+        "Create hierarchy with labels, section headings, spacing, and dividers before adding containers or elevation.",
+        "Keep the path from the first field to the primary action predictable, with one clear completion action per form.",
+        "Preserve entered data through validation errors and explain how each problem can be corrected."
+      ],
+      "anatomy": [
+        "Heading: names the task and briefly explains its outcome when context is not already obvious.",
+        "Sections: group fields by user goal or concept, not by backend model or API shape.",
+        "Fields: use persistent visible labels, appropriate input types, and concise supporting text only when needed.",
+        "Feedback: place validation and recovery guidance beside the related field, with a summary when several errors block submission.",
+        "Actions: present one primary completion action and visually subordinate cancel, back, or secondary actions."
+      ],
+      "layout": [
+        "Use a single vertical field column by default; place fields side by side only when their relationship is obvious and both remain readable at narrower widths.",
+        "Keep a consistent 16–24px rhythm between related fields and 32–48px between major sections.",
+        "Prefer whitespace or dividers between sections. Use an outlined zero-elevation surface only when the form needs a boundary from adjacent content.",
+        "Keep long-form controls within a readable content width instead of stretching inputs across the full page.",
+        "Stack fields and actions before labels, values, or controls become compressed; avoid horizontal page scrolling."
+      ],
+      "fields": [
+        "Use visible labels rather than placeholder-only instructions.",
+        "Mark required and optional expectations consistently, and avoid asking users to infer them from validation failures.",
+        "Choose semantic input types and browser autocomplete values where available.",
+        "Use helper text for format or consequence, not to repeat the label.",
+        "Use disabled for unavailable controls and read-only for inspectable values that cannot be edited."
+      ],
+      "validation": [
+        "Validate after a field loses focus or when the user submits; do not show an error before the user has had a reasonable chance to complete the field.",
+        "State what is wrong and how to fix it beside the related field. Do not rely on color alone.",
+        "On failed submission, preserve all entered values, focus the first invalid field, and provide an error summary when multiple fields are affected.",
+        "For server errors, distinguish field-specific problems from form-level failures and provide a retry or recovery path."
+      ],
+      "actions": [
+        "Use one contained primary action for the form outcome. Use outlined or text treatment for secondary actions.",
+        "Use action-first labels such as Save changes or Create class instead of generic labels such as Submit.",
+        "During submission, prevent duplicate requests, keep the button label and width stable, and show progress without clearing the form.",
+        "Confirm success near the form or destination; do not leave users guessing whether their changes were saved.",
+        "For long forms, actions may remain visible while scrolling if they do not cover content or detach from the form context."
+      ],
+      "states": [
+        "default",
+        "focused field",
+        "field error",
+        "form-level error",
+        "disabled",
+        "read-only",
+        "submitting",
+        "success",
+        "narrow layout"
+      ],
+      "accessibility": [
+        "Associate every control with a visible label and connect helper or error text through the control's accessible description.",
+        "Keep keyboard focus order aligned with the visual sequence and preserve a visible focus indicator.",
+        "Group related choices with fieldset and legend semantics when appropriate.",
+        "Keep interactive controls at least 44px high and ensure text and state indicators meet contrast requirements.",
+        "Announce asynchronous errors and success feedback without unexpectedly moving focus."
+      ],
+      "examples": [
+        {
+          "name": "Basic form",
+          "role": "Content-neutral baseline",
+          "story": "Basic form"
+        },
+        {
+          "name": "Admin form composition",
+          "role": "Admin-specific implementation example",
+          "story": "Admin form composition",
+          "componentSource": "src/components/AdminPage/AdminFormSurface.tsx"
+        },
+        {
+          "name": "Field states",
+          "role": "Default, error, and disabled state example",
+          "story": "Field states"
+        }
+      ]
+    },
+    "small-popup": {
+      "scope": "kiwiDesignSystem",
+      "status": "stable",
+      "storybookTitle": "Patterns/Small Popups/Overview",
+      "docSource": ".storybook/stories/SmallPopup.mdx",
+      "storySource": ".storybook/stories/SmallPopupExamples.stories.tsx",
+      "tokenSource": "src/theme/compactPopup.ts",
+      "motionSource": "src/theme/motion.ts",
+      "purpose": "Define a shared visual and interaction contract for small anchored overlays without prescribing one content-specific component.",
+      "definition": "A transient surface anchored to a trigger for a short local choice, action set, or compact bounded task.",
+      "useWhen": [
+        "A trigger opens a short menu, selector, or bounded local task next to its point of origin.",
+        "The content can be understood and completed without the stronger interruption of a dialog."
+      ],
+      "avoidWhen": [
+        "The flow needs a page-level decision, destructive confirmation, or long multi-section form; use a dialog or dedicated page.",
+        "The content is only a short explanation with no interaction; use a tooltip.",
+        "The content needs persistent comparison with the page; use an inline panel or dedicated surface."
+      ],
+      "anatomy": [
+        "Trigger: names the choice or action and exposes expanded state when applicable.",
+        "Surface: the anchored floating container with bounded width, elevation, and viewport collision handling.",
+        "Header (optional): a short title or search field only when the content needs orientation or filtering.",
+        "Content: a concise action list, selector, or compact picker using one primary type role.",
+        "Footer (optional): only for bounded tasks that need explicit Apply or Cancel actions."
+      ],
+      "contentPatterns": [
+        {
+          "pattern": "Action menu",
+          "use": "A short list of immediate commands or mutually exclusive choices."
+        },
+        {
+          "pattern": "Searchable selector",
+          "use": "A variable option set that needs filtering before selection."
+        },
+        {
+          "pattern": "Compact picker",
+          "use": "A bounded local task, such as selecting a date range, that may need an explicit apply action."
+        }
+      ],
+      "typography": {
+        "fontFamily": "Inherit Montserrat from the Kiwi theme; do not introduce a popup-local font family.",
+        "roles": [
+          {
+            "role": "title",
+            "label": "Popup title",
+            "fontSize": "0.875rem (14px)",
+            "lineHeight": "1.25rem (20px)",
+            "weight": "600",
+            "use": "Optional short section or picker title. Do not use it for every simple menu."
+          },
+          {
+            "role": "primary",
+            "label": "Primary popup text",
+            "fontSize": "0.875rem (14px)",
+            "lineHeight": "1.25rem (20px)",
+            "weight": "400–600",
+            "use": "Trigger labels, menu options, field values, calendar dates, compact actions, and preset choices."
+          },
+          {
+            "role": "supporting",
+            "label": "Supporting text",
+            "fontSize": "0.75rem (12px)",
+            "lineHeight": "1rem (16px)",
+            "weight": "400–600",
+            "use": "Field labels, keyboard hints, weekday labels, metadata, and brief helper text. This is the minimum text size in a small popup."
+          }
+        ],
+        "rules": [
+          "Keep external trigger text and corresponding internal text on the same role so opening the popup does not create an unexpected type-scale jump.",
+          "Use 0.875rem for popup titles and all primary popup text; do not introduce a 13px intermediate size.",
+          "Use only the title, primary, and supporting roles; do not introduce ad-hoc intermediate sizes.",
+          "Never render popup text below 0.75rem. Small type is for short labels and metadata, not paragraphs or long-form reading.",
+          "Use text.primary for choices and values, text.secondary for supporting content, and preserve at least WCAG 4.5:1 contrast for normal text."
+        ]
+      },
+      "motion": {
+        "property": "opacity only",
+        "enterDuration": "50ms",
+        "exitDuration": "50ms",
+        "reducedMotion": "0ms when prefers-reduced-motion: reduce matches",
+        "rules": [
+          "Use Fade for both entrance and exit.",
+          "Do not add scale, translate, blur, spring, or stagger to small popup surfaces.",
+          "Keep opening and closing geometry stable; motion must not shift the trigger or surrounding layout."
+        ]
+      },
+      "layout": [
+        "Keep the popup anchored to its trigger and inside the viewport with a 12px minimum viewport margin.",
+        "Choose the narrowest width that keeps common labels and controls readable; short menus can start at 184px and searchable selectors can extend to 360px.",
+        "Use compact 8–16px internal spacing and bounded scrolling for variable option lists.",
+        "Keep pointer targets at least 40px high on compact desktop surfaces and 44px high on touch-oriented surfaces.",
+        "Reserve elevation and shadow for the floating surface; static filter bars and trigger groups remain flat or outlined."
+      ],
+      "interaction": [
+        "Open from an explicit trigger and close after a completed immediate choice.",
+        "Close on outside click and Escape; keep draft state until Apply for bounded picker tasks.",
+        "Return focus to the trigger after close and preserve visible focus while navigating inside.",
+        "Do not show a visual Escape badge; keyboard dismissal remains supported without adding persistent UI noise."
+      ],
+      "accessibility": [
+        "Use the matching menu or popover semantics (shadcn DropdownMenu/Select on Base UI; MUI Menu/Popover only on legacy surfaces), preserve keyboard navigation and Escape dismissal, and return focus to the trigger on close.",
+        "Give icon-only triggers an accessible name and expose expanded and controlled state where applicable.",
+        "Do not use color alone for selected, disabled, error, or status meaning."
+      ],
+      "examples": [
+        {
+          "name": "Action menu",
+          "role": "Baseline small popup example (shadcn DropdownMenu)",
+          "story": "Action menu"
+        },
+        {
+          "name": "Option selector",
+          "role": "Selector example (shadcn Select)",
+          "story": "Option selector"
+        },
+        {
+          "name": "Analytics date range",
+          "role": "Compact picker product reference (MUI implementation pending shadcn migration)",
+          "componentSource": "src/components/Analytics/AnalyticsDateRangeControl.tsx",
+          "storybookTitle": "Deprecated/Analytics Date Range"
+        }
+      ]
+    }
+  },
+  "productGuides": {
+    "analytics": {
+      "scope": "kiwiDesignSystem",
+      "storybookTitle": "Guidelines/Analytics/Overview",
+      "docSource": ".storybook/stories/AnalyticsDesign.mdx",
+      "storySource": ".storybook/stories/AnalyticsDesign.stories.tsx",
+      "topics": [
+        "information hierarchy",
+        "metric semantics",
+        "loading stability",
+        "request coordination",
+        "chart density",
+        "responsive composition",
+        "overflow and details",
+        "review checklist"
+      ],
+      "metricContracts": [
+        {
+          "metric": "Range-unique metric",
+          "definition": "Distinct entity identifiers across the full selected range.",
+          "presentation": "Use for a headline total that answers how many distinct entities were in scope."
+        },
+        {
+          "metric": "Daily unique trend",
+          "definition": "Distinct entity identifiers within each calendar day. One entity may appear in multiple daily points.",
+          "presentation": "Use for trend shape. Do not sum daily points and present the result as a range-unique total."
+        },
+        {
+          "metric": "Composition total",
+          "definition": "Every event is assigned to exactly one exhaustive category.",
+          "presentation": "Breakdown categories must be mutually exclusive when their sum is expected to match a headline total."
+        },
+        {
+          "metric": "Ranked aggregate",
+          "definition": "Entities ranked by a primary aggregate, with a secondary count used as supporting context.",
+          "presentation": "State whether the source is range-filtered. Do not imply a filter that the API does not implement."
+        }
+      ],
+      "metricGuidance": {
+        "do": [
+          "Define aggregation, deduplication key, time zone, and range before naming a metric.",
+          "Use one term consistently in card title, tooltip, and empty state.",
+          "Make chart categories exhaustive and mutually exclusive when totals must reconcile."
+        ],
+        "avoid": [
+          "Use two labels for the same metric at different levels of the page.",
+          "Compare a range-unique total with the sum of daily unique values.",
+          "Count one event in both a parent category and one of its subcategories."
+        ]
+      },
+      "chartDensity": {
+        "do": [
+          "Let CardContent own visual padding and keep Recharts margin at zero by default.",
+          "Add a small 8px chart margin only where dots or strokes need clipping protection.",
+          "Set explicit axis width, axis height, and tickMargin; Recharts defaults consume hidden space.",
+          "Use a compact fixed height for time-series cards; longer ranges add horizontal points, not useful height.",
+          "Use horizontal bars when category labels are longer than the available card width."
+        ],
+        "avoid": [
+          "Stack Card padding, chart container padding, and Recharts margin.",
+          "Increase chart height based only on date-range length.",
+          "Rotate long X-axis labels when a horizontal bar chart communicates the same data more clearly.",
+          "Remove every pixel of safety space when visible dots or active dots touch the SVG boundary."
+        ]
+      },
+      "reviewChecklist": [
+        "Do headline totals and detail charts reconcile under the documented aggregation?",
+        "Are section titles categories and card titles exact visualizations?",
+        "Are all card subtitles fixed descriptive copy?",
+        "Does changing the date immediately show Skeleton without flashing old data?",
+        "Can a stale request overwrite data or stop a newer loading state?",
+        "Does Refresh include every persistent page API and preserve button dimensions?",
+        "Are loading, empty, error, and loaded layouts the same size?",
+        "Are Recharts axes and margins explicitly sized?",
+        "Do desktop, tablet, and mobile layouts use the available width intentionally?",
+        "Do long labels, identifiers, units, tooltips, headings, and dialog controls remain accessible?"
+      ]
+    }
+  },
+  "qualityGuides": {
+    "delivery": {
+      "scope": "kiwiDesignSystem",
+      "storybookTitle": "Guidelines/Quality/Delivery Checklist",
+      "docSource": ".storybook/stories/Quality.mdx",
+      "purpose": "Define required evidence for accessible, responsive, visually stable, density-aware, and network-resilient Kiwi interfaces.",
+      "documentationLayers": {
+        "ai": "Concise contract lists stored in qualityGuides.delivery.contracts of this catalog, rendered into the Quality guide and marked with data-ai-contract.",
+        "human": "Responsive visual examples for viewport composition, skeleton geometry, network recovery, information density, and field growth.",
+        "executable": "Product-specific stories, interaction tests, accessibility checks, and composed surface reviews."
+      },
+      "contracts": {
+        "accessibility": [
+          "Navigate every interactive element with the keyboard in a logical order and keep a visible focus indicator.",
+          "Use descriptive accessible names, semantic heading order, native disabled behavior, and sufficient contrast.",
+          "Do not communicate status with color alone. Announce loading and actionable errors with appropriate live semantics.",
+          "Keep recovery actions reachable without a pointer and run the Storybook Accessibility panel on every materially changed state."
+        ],
+        "viewport": [
+          "Test the actual viewport at 320, 390, 768, 1024, and 1440 px unless the product contract defines a more relevant matrix.",
+          "Verify component stories and composed surfaces; inner-wrapper resizing alone is insufficient.",
+          "Fail the review for unintended page-level horizontal scrolling, covered actions, unreachable dialogs, or content that loses hierarchy."
+        ],
+        "network": [
+          "Model initial loading, background refresh, settled, successful empty, offline, timeout, server error, and recovery as distinct states.",
+          "Make the skeleton approximate the final hierarchy and dimensions so loading does not create layout shift.",
+          "Preserve useful content and user input during refresh or failure, prevent duplicate actions, and expose an accessible recovery path."
+        ],
+        "density": [
+          "Plan density around the user task: keep status, decision-critical fields, and primary actions visible in the common working viewport.",
+          "Reject layouts that create large decorative gaps, and reject layouts that compress labels, targets, or hierarchy until they become hard to scan or operate.",
+          "Use a deliberate spacing and type scale; do not solve density by applying one global compact or spacious value."
+        ],
+        "fieldGrowth": [
+          "Define the expected field-count range, longest label, longest value, optional-field behavior, and the threshold that changes the layout.",
+          "Keep titles, summaries, and primary actions anchored when optional fields appear or disappear.",
+          "When a variable secondary region exceeds its planned height, contain it with an accessible labelled scroll area or switch to a dedicated detail view.",
+          "Avoid nested scrolling, hidden focused content, and scroll containers that separate users from the primary action or critical error."
+        ]
+      },
+      "viewportChecks": [
+        {
+          "width": 320,
+          "label": "minimum narrow surface",
+          "purpose": "Detect clipped controls, unreadable wrapping, broken touch targets, and accidental horizontal scrolling."
+        },
+        {
+          "width": 390,
+          "label": "representative phone",
+          "purpose": "Verify the intended mobile composition, action stacking, navigation, dialogs, and keyboard-safe form layout."
+        },
+        {
+          "width": 768,
+          "label": "tablet",
+          "purpose": "Verify transitions between stacked and multi-column layouts and ensure neither mobile nor desktop assumptions leave unused or overlapping space."
+        },
+        {
+          "width": 1024,
+          "label": "compact desktop",
+          "purpose": "Check the layout with navigation, side panels, and tables competing for width."
+        },
+        {
+          "width": 1440,
+          "label": "wide desktop",
+          "purpose": "Enforce readable line length and intentional maximum widths; content should not become sparse or stretched simply because space is available."
+        }
+      ],
+      "networkChecks": [
+        { "state": "normal", "evidence": "Settled baseline, no unnecessary flicker, and no duplicate submission." },
+        { "state": "weak-network-initial-load", "evidence": "Visible loading feedback with reserved final dimensions." },
+        { "state": "weak-network-refresh", "evidence": "Existing content remains available and is marked as refreshing or stale." },
+        { "state": "offline-initial-load", "evidence": "Dedicated actionable error state rather than a successful empty state." },
+        { "state": "offline-during-action", "evidence": "Input preservation, duplicate prevention, and a recoverable retry path." },
+        { "state": "recovered", "evidence": "Retry reaches the valid settled state without duplicated data or actions." }
+      ],
+      "densityChecks": [
+        { "state": "sparse", "evidence": "Small data sets retain grouping and hierarchy without decorative empty expansion." },
+        { "state": "typical", "evidence": "Decision-critical fields and the primary action fit the representative working viewport." },
+        { "state": "expected-maximum", "evidence": "Labels, values, targets, and hierarchy remain readable without page-level horizontal overflow." },
+        { "state": "beyond-maximum", "evidence": "The documented wrap, stack, bounded-scroll, or dedicated-detail fallback activates predictably." },
+        { "state": "field-removal", "evidence": "Optional fields disappear without leaving broken gaps or moving primary anchors unpredictably." },
+        { "state": "field-growth", "evidence": "Variable secondary content is contained at a documented threshold while primary actions remain outside the scroll region." }
+      ],
+      "requiredStoryStates": [
+        "settled",
+        "initial-loading",
+        "background-refresh",
+        "successful-empty",
+        "offline",
+        "server-error",
+        "recovery",
+        "sparse-fields",
+        "maximum-fields",
+        "overflow-boundary"
+      ]
+    }
+  }
+}

@@ -1,0 +1,15 @@
+/* .pdf-container{
+    border: "1px solid rgba(0, 0, 0, 0.9)";
+    height: "100%";
+    width: "50%",
+} */
+
+.pdf-container{
+    border: 1px solid red;
+    height: 80vh; /* Set height to 100% of viewport height */
+    /* height: 60vh; */
+    width: 50vw;
+    text-align: center;
+    margin: auto;
+    overflow: auto; /* Add scrollbars if necessary */
+}

@@ -1,0 +1,79 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import designSystem from '../design-system/catalog.json';
+
+<Meta title="Getting Started/About" />
+
+<div className="mb-8 rounded-2xl bg-linear-to-br from-[#4a148c] via-primary to-[#9c27b0] px-6 py-10 text-primary-foreground sm:px-12 lg:px-18">
+  <div className="text-sm font-bold tracking-[0.12em] uppercase opacity-80">Kiwi Design System</div>
+  <h1 className="my-3 text-[clamp(36px,6vw,64px)] leading-[1.05] text-primary-foreground">Build Kiwi interfaces with confidence.</h1>
+  <div className="max-w-[760px] text-lg leading-relaxed opacity-90">One catalog with two clearly separated scopes: how this Storybook is maintained, and how Kiwi interfaces should be designed.</div>
+</div>
+
+## Know which contract you are reading
+
+<div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(240px,1fr))]">
+  <a href="?path=/docs/foundations-colors--docs" className="rounded-xl border border-primary bg-primary/5 p-5 text-inherit no-underline">
+    <strong className="mb-2 block text-primary">Kiwi Design System</strong>
+    Product-facing rules for Kiwi foundations, guidelines, patterns, and components — accessibility, content, and domain-specific interfaces included.
+  </a>
+  <a href="?path=/docs/contributing-authoring-rules--docs" className="rounded-xl border border-primary/40 bg-background p-5 text-inherit no-underline">
+    <strong className="mb-2 block text-primary">Contributing</strong>
+    Repository-level rules for navigation, documentation, stories, Controls, tests, and publishing. These are not official Storybook framework rules.
+  </a>
+</div>
+
+## Explore the sections
+
+<div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
+  <a href="?path=/story/foundations-colors--overview" className="rounded-xl border p-5 text-inherit no-underline">
+    <strong className="mb-2 block text-primary">Foundations</strong>
+    Color and typography tokens for Kiwi interfaces, built on shadcn/Tailwind semantics.
+  </a>
+  <a href="?path=/docs/components-actions-button--docs" className="rounded-xl border p-5 text-inherit no-underline">
+    <strong className="mb-2 block text-primary">Components</strong>
+    shadcn-based Kiwi UI elements and their public contracts, grouped by category.
+  </a>
+  <a href="?path=/docs/patterns-forms-overview--docs" className="rounded-xl border p-5 text-inherit no-underline">
+    <strong className="mb-2 block text-primary">Patterns</strong>
+    Cross-component contracts: forms and small anchored popups.
+  </a>
+  <a href="?path=/docs/guidelines-analytics-overview--docs" className="rounded-xl border p-5 text-inherit no-underline">
+    <strong className="mb-2 block text-primary">Guidelines</strong>
+    Product-level guidance: analytics behavior, delivery quality, and composed surfaces.
+  </a>
+  <a href="?path=/docs/deprecated-analytics-date-range--docs" className="rounded-xl border p-5 text-inherit no-underline">
+    <strong className="mb-2 block text-primary">Deprecated</strong>
+    MUI-era implementations kept as reference while they migrate to shadcn.
+  </a>
+</div>
+
+## Which contract should I use?
+
+<ul>
+  {Object.values(designSystem.audiences).map((audience) => (
+    <li key={audience.label}>
+      <strong>{audience.label}:</strong> {audience.contract} {audience.avoid}
+    </li>
+  ))}
+</ul>
+
+## How to read a component chapter
+
+1. Start with **Purpose**, **Use when**, and **Avoid when**.
+2. Choose a variant from its semantic role, not its appearance.
+3. Check disabled, processing, error, overflow, responsive, and focus behavior.
+4. Treat stories as executable evidence and the source component as final behavior.
+
+## AI and automation
+
+AI agents should begin with the [machine-readable design-system catalog](./design-system/catalog.json), select either the `storybookGuide` or `kiwiDesignSystem` scope, then open only the referenced `docSource`, `storySource`, and `componentSource` files. The catalog is the single source for contract lists — docs pages render from it — while executable stories and implementation remain the behavioral evidence.
+
+Evidence priority: {designSystem.evidencePriority.join(' → ')}.
+
+## Definition of done
+
+- Use semantic tokens and existing components.
+- Preserve keyboard navigation, visible focus, contrast, and meaningful heading order.
+- Cover important variants and states with stories.
+- Verify representative desktop and narrow viewports.
+- Run Storybook accessibility and interaction checks before publishing.

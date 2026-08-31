@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Competitor" ALTER COLUMN "bestScore" SET DEFAULT 999999999;

@@ -1,0 +1,55 @@
+{
+  "name": "@maps-research/kiwi-app-sdk",
+  "version": "0.1.0",
+  "description": "SDK for external Kiwi Apps \u2014 window-bridge handshake, host-proxied App API ops, streaming AI, and a built-in Simulator.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/kiwi-app-sdk.global.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./browser": "./dist/kiwi-app-sdk.global.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "BRIDGE-OPS.md"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MAPS-research/kiwi.git"
+  },
+  "homepage": "https://github.com/MAPS-research/kiwi/tree/development/kiwi-app-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/MAPS-research/kiwi/issues"
+  },
+  "keywords": [
+    "kiwi",
+    "kiwi-app",
+    "sdk",
+    "postmessage",
+    "bridge"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm run build",
+    "generate-bridge": "node scripts/generate-bridge.mjs --spec ${KIWI_SPEC:-http://localhost:3000/docs-json} --sdk-out src --docs-out BRIDGE-OPS.md"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "typescript": "^5.6.3"
+  }
+}

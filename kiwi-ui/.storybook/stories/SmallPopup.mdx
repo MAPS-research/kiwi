@@ -1,0 +1,124 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import designSystem from '../design-system/catalog.json';
+import * as Examples from './SmallPopupExamples.stories.tsx';
+
+export const popup = designSystem.patterns['small-popup'];
+
+<Meta title="Patterns/Small Popups/Overview" />
+
+# Small popups
+
+> **Pattern, not component.** This section defines the shared behavior of small anchored overlays. It does not prescribe one reusable content component. Menus, searchable selectors, and compact pickers remain separate implementations that follow the same contract.
+
+{popup.purpose}
+
+{popup.definition}
+
+## Use and boundaries
+
+**Use when**
+
+<ul>
+  {popup.useWhen.map((item) => <li key={item}>{item}</li>)}
+</ul>
+
+**Avoid when**
+
+<ul>
+  {popup.avoidWhen.map((item) => <li key={item}>{item}</li>)}
+</ul>
+
+## Anatomy
+
+<ol>
+  {popup.anatomy.map((item) => <li key={item}>{item}</li>)}
+</ol>
+
+The header and footer are optional. A simple menu should usually contain only its options; additional chrome must earn its place.
+
+## Content patterns
+
+<table>
+  <thead>
+    <tr><th>Pattern</th><th>Use</th></tr>
+  </thead>
+  <tbody>
+    {popup.contentPatterns.map((item) => (
+      <tr key={item.pattern}><td>{item.pattern}</td><td>{item.use}</td></tr>
+    ))}
+  </tbody>
+</table>
+
+These patterns share a surface contract, but they do not share the same content model or interaction semantics.
+
+## Typography
+
+{popup.typography.fontFamily}
+
+<table>
+  <thead>
+    <tr><th>Role</th><th>Size / line height</th><th>Weight</th><th>Use</th></tr>
+  </thead>
+  <tbody>
+    {popup.typography.roles.map((role) => (
+      <tr key={role.role}>
+        <td>{role.label}</td>
+        <td>{role.fontSize} / {role.lineHeight}</td>
+        <td>{role.weight}</td>
+        <td>{role.use}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+<ul>
+  {popup.typography.rules.map((item) => <li key={item}>{item}</li>)}
+</ul>
+
+The outside trigger and the matching content inside the popup use the same 14px primary role. Supporting labels use 12px. There is no 13px tier.
+
+## Motion
+
+- **Property:** {popup.motion.property}
+- **Enter:** {popup.motion.enterDuration}
+- **Exit:** {popup.motion.exitDuration}
+- **Reduced motion:** {popup.motion.reducedMotion}
+
+<ul>
+  {popup.motion.rules.map((item) => <li key={item}>{item}</li>)}
+</ul>
+
+## Size and layout
+
+<ul>
+  {popup.layout.map((item) => <li key={item}>{item}</li>)}
+</ul>
+
+Widths are content-driven, not component defaults. For example, a short action or preset menu can use 184px while a searchable selector can use 360px.
+
+## Interaction and accessibility
+
+<ul>
+  {popup.interaction.map((item) => <li key={item}>{item}</li>)}
+  {popup.accessibility.map((item) => <li key={item}>{item}</li>)}
+</ul>
+
+## Examples
+
+### Action menu
+
+The simplest baseline: an immediate choice in a short list, built on the shadcn `DropdownMenu`.
+
+<Canvas of={Examples.ActionMenu} />
+
+### Option selector
+
+A bounded choice among mutually exclusive values, built on the shadcn `Select`.
+
+<Canvas of={Examples.OptionSelector} />
+
+### Compact picker
+
+The compact-picker pattern (a bounded local task with draft state and an explicit Apply) is implemented in product code by
+`AnalyticsDateRangeControl`. Its current implementation is still MUI and is kept under
+[Deprecated / Analytics Date Range](?path=/docs/deprecated-analytics-date-range--docs) until it migrates to shadcn.

@@ -1,0 +1,1084 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions", "extendedIndexes"]
+}
+
+generator types {
+  provider = "prisma-generator-typescript-interfaces"
+  output   = "../src/common/database/database.types.ts"
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [vector]
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}
+
+model OAuthClient {
+  id                      String     @id @default(uuid())
+  clientId                String     @unique
+  clientSecret            String? // Nullable for public clients, bcrypt hashed for confidential clients
+  redirectUris            String[] // Array of allowed redirect URIs
+  grantTypes              String[] // e.g., ["authorization_code", "refresh_token"]
+  responseTypes           String[] // e.g., ["code"]
+  scope                   String // Space-separated scopes
+  tokenEndpointAuthMethod String     @default("none") // "none" for public clients, "client_secret_basic" for confidential
+  createdAt               DateTime   @default(now())
+
+  // Optional link to MCP server - allows MCP OAuth tokens to have separate JTI tracking
+  mcpServerId             String?
+  mcpServer               McpServer? @relation(fields: [mcpServerId], references: [id])
+
+  @@index([clientId])
+  @@index([mcpServerId])
+}
+
+// oauthId refers to userId in the old version
+model User {
+  id                    String                 @id @default(uuid())
+  email                 String                 @unique
+  oauthId               String                 @unique
+  oauth                 Boolean
+  passwordHash          String?
+  passwordSalt          String?
+  consent               Boolean?
+  systemRole            String                 @default("user")
+  researchNotes         Json?
+  sessions              UserSession[]
+  interactions          UserInteraction[]
+  discussions           Discussion[]
+  enrollments           Enrollment[]
+  features              FeatureFlag[]
+  researchNotesForUser  Json?
+  intTag                Int?                   @default(0)
+  stringTag             String?                @default("")
+  upvotes               UpvoteInteraction[]
+  upvotesDiscussion     UpvoteDiscussion[]
+  competitors           Competitor[]
+  emailAuditLogs        EmailAuditLog[]
+  instructorClasses     InstructorClass[]
+  apiTokens             ApiToken[]
+  webhookEndpoints      WebhookEndpoint[]
+  approvedWebhookEvents WebhookEvent[]
+  webhookEventAudits    WebhookEventAudit[]
+  mcpUserConnections    McpUserConnection[]
+  documentComments      DocumentComment[]
+  documentSummaries     DocumentSummary[]
+  experimentAssignments ExperimentAssignment[]
+  conversationSummaries ConversationSummary[]
+  conversations         Conversation[]
+}
+
+model UserWhitelist {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  status    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserSession {
+  id                      String            @id @default(uuid())
+  userId                  String
+  sessionStartTime        DateTime          @default(now())
+  sessionEndTime          DateTime?
+  sessionLastActivateTime DateTime?
+  user                    User              @relation(fields: [userId], references: [id])
+  interactions            UserInteraction[]
+  tokensUsed              Int               @default(0)
+  researchNotesForSession Json?
+  intTag                  Int?              @default(0)
+  stringTag               String?           @default("")
+}
+
+// NOTE: we could have created an inheritance structure for 
+// PromptAnswerInteraction, ChangePage, Discussion and etc.
+// However, given that we have very limited cases here, and for efficiency considerations,
+// we will just create separate tables for now.
+
+// intTags: 
+// for question-answer: 0 means normal question, 1 means instructor approved question
+model UserInteraction {
+  id              String              @id @default(uuid())
+  userId          String
+  sessionId       String
+  classId         String?
+  discussionId    String?
+  timestamp       DateTime            @default(now())
+  type            String              @default("")
+  context         Json                @default("{}")
+  user            User                @relation(fields: [userId], references: [id])
+  session         UserSession         @relation(fields: [sessionId], references: [id])
+  class           Class?              @relation(fields: [classId], references: [id])
+  discussion      Discussion?         @relation(fields: [discussionId], references: [id])
+  pdfId           String?
+  pdfMaterialType String?
+  pdfPage         Int?
+  serverActions   ServerAction[]
+  intTag          Int                 @default(0)
+  /// Legacy thread key. Still written so existing readers keep working; new
+  /// code should prefer `conversationId`.
+  stringTag       String              @default("")
+  /// The thread this turn belongs to. Nullable because this was added
+  /// forward-only — historical turns have none and are found via `stringTag`.
+  conversationId  String?
+  conversation    Conversation?       @relation(fields: [conversationId], references: [id])
+  numUpvotes      Int                 @default(0)
+  upvotes         UpvoteInteraction[]
+
+  @@index([userId])
+  @@index([sessionId])
+  @@index([classId])
+  @@index([discussionId])
+  @@index([type])
+  @@index([pdfId, pdfPage])
+  @@index([pdfId, pdfPage, type])
+  // Reading one conversation's turns back for prompt replay is a hot path — it
+  // runs on every chat turn once history is server-owned. Without this it is a
+  // sequential scan filtered by userId.
+  @@index([userId, stringTag, timestamp])
+  @@index([conversationId, timestamp])
+}
+
+/// A chat thread.
+///
+/// Until now a "conversation" was a convention rather than a thing: the thread
+/// id lived in `UserInteraction.stringTag`, and when a client sent none, code
+/// fell back to the interaction's own id — so every query that wanted a thread's
+/// turns had to ask for "rows tagged X, or the row that IS X". This gives the
+/// thread an identity, somewhere to hang per-thread facts, and a foreign key.
+///
+/// Introduced forward-only: rows are created from here on and existing
+/// interactions are left alone, so reads still fall back to the old convention
+/// for historical threads. See `threadScope()`.
+model Conversation {
+  id String @id @default(uuid())
+
+  /// The id the client sends and keeps sending. Distinct from `id` so a
+  /// client-supplied value can never collide with, or address, another user's
+  /// row — lookups are always (userId, threadKey).
+  threadKey String
+
+  userId  String
+  classId String?
+
+  /// Where the thread originated: 'chat' | 'app' | 'mcp'. Kiwi Apps and MCP
+  /// clients get their own threads rather than sharing the student's chat.
+  source String @default("chat")
+
+  title      String?
+  turnCount  Int      @default(0)
+  lastTurnAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user         User              @relation(fields: [userId], references: [id])
+  class        Class?            @relation(fields: [classId], references: [id])
+  interactions UserInteraction[]
+
+  @@unique([userId, threadKey])
+  @@index([userId, lastTurnAt])
+  @@index([classId])
+}
+
+/// A compacted summary of the oldest turns of one conversation.
+///
+/// Compaction only changes what the model is shown — the full turn history stays
+/// in UserInteraction/ServerAction. This row records how far the summary reaches
+/// (`coversUpToTimestamp`) so replay can stitch "summary of everything before X"
+/// onto the verbatim turns after X without gaps or double-counting.
+model ConversationSummary {
+  id                  String   @id @default(uuid())
+  userId              String
+  /// Thread key: UserInteraction.stringTag, or the interaction id when a client
+  /// did not supply one.
+  conversationId      String
+  summary             String
+  /// Newest turn folded into `summary`; everything after it replays verbatim.
+  coversUpToTimestamp DateTime
+  turnsCovered        Int      @default(0)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, conversationId])
+  @@index([userId])
+}
+
+model UpvoteInteraction {
+  id            String          @id @default(uuid())
+  timestamp     DateTime        @default(now())
+  userId        String
+  interactionId String
+  user          User            @relation(fields: [userId], references: [id])
+  interaction   UserInteraction @relation(fields: [interactionId], references: [id])
+
+  @@unique([userId, interactionId])
+  @@index([userId, interactionId])
+}
+
+model ServerAction {
+  id            String          @id @default(uuid())
+  interactionId String
+  interaction   UserInteraction @relation(fields: [interactionId], references: [id])
+  type          String
+  context       Json
+  botResponse   String
+  timestamp     DateTime        @default(now())
+  engineChoice  String?
+}
+
+model DiscussionRoot {
+  id            String       @id @default(uuid())
+  descendantIds String[] // keep topologically sorted, i.e., new parent left to children
+  descendants   Discussion[]
+  classId       String
+  class         Class        @relation(fields: [classId], references: [id])
+
+  @@index([classId])
+}
+
+// the actual contents are included in the interactions
+// this model (disccusion) mostly works to keep the tree structure
+// the include interactions can include: 
+//   1. user-written post
+//   2. AI query-prompt based on a pdf page
+//   3. add a reference to a pdf in this disccusion
+// the class field below may be unnecessary/redundant. keep it for now... 
+//
+// intTags: 0 means normal discussion, 1 means instructor approved
+model Discussion {
+  id             String             @id @default(uuid())
+  rootId         String
+  parentId       String?
+  userId         String
+  classId        String?
+  timestamp      DateTime           @default(now())
+  type           String             @default("post")
+  user           User               @relation(fields: [userId], references: [id])
+  root           DiscussionRoot     @relation(fields: [rootId], references: [id])
+  parent         Discussion?        @relation("ParentChild", fields: [parentId], references: [id])
+  children       Discussion[]       @relation("ParentChild")
+  class          Class?             @relation(fields: [classId], references: [id])
+  interactionIds String[]
+  interactions   UserInteraction[]
+  intTag         Int                @default(0)
+  stringTag      String             @default("")
+  numUpvotes     Int                @default(0)
+  upvotes        UpvoteDiscussion[]
+
+  @@index([rootId])
+  @@index([userId])
+  @@index([classId])
+  @@index([type])
+}
+
+model UpvoteDiscussion {
+  id           String     @id @default(uuid())
+  timestamp    DateTime   @default(now())
+  userId       String
+  discussionId String
+  user         User       @relation(fields: [userId], references: [id])
+  discussion   Discussion @relation(fields: [discussionId], references: [id])
+
+  @@unique([userId, discussionId])
+  @@index([userId, discussionId])
+}
+
+// need to change to "course"
+model Class {
+  id                 String              @id @default(uuid())
+  classMetadata      Json
+  createdDate        DateTime            @default(now())
+  materials          ClassMaterial[]
+  professorId        String // Keep for backward compatibility
+  instructors        InstructorClass[]
+  enrollments        Enrollment[]
+  pendingEnrollments PendingEnrollment[]
+  features           FeatureFlag[]
+  userInteractions   UserInteraction[]
+  discussions        Discussion[]
+  DiscussionRoot     DiscussionRoot[]
+  lectureKeywords    LectureKeyword[]
+  analyticsTopics    ClassAnalyticsTopics[]
+  emailAuditLogs     EmailAuditLog[]
+  experiments        Experiment[]
+  classMcpServers    ClassMcpServer[] // Assigned MCP servers (via junction table)
+  classToolConfigs   ClassToolConfig[]
+  kiwiApps           ClassKiwiApp[] // Enabled Kiwi Apps for this class
+  conversations      Conversation[]
+}
+
+// Junction table for many-to-many relationship between instructors and classes
+model InstructorClass {
+  id          String   @id @default(uuid())
+  userId      String // The instructor (user with systemRole "instructor")
+  classId     String
+  role        String   @default("instructor") // Could be "instructor", "co-instructor", "assistant", etc.
+  permissions Json     @default("{}") // JSON object with permissions like {"canManageMaterials": true, "canViewAnalytics": true}
+  assignedAt  DateTime @default(now())
+  assignedBy  String? // ID of admin who assigned this instructor
+  isActive    Boolean  @default(true)
+
+  user  User  @relation(fields: [userId], references: [id])
+  class Class @relation(fields: [classId], references: [id])
+
+  @@unique([userId, classId])
+  @@index([userId])
+  @@index([classId])
+  @@index([userId, isActive])
+}
+
+model Competition {
+  id            String       @id @default(uuid())
+  name          String
+  competitorIds String[]
+  competitors   Competitor[]
+  dailyLimit    Int          @default(5)
+  startDate     DateTime     @default(now())
+  endDate       DateTime?
+  public        Boolean      @default(false)
+  description   String       @default("")
+  metaData      Json
+}
+
+model Competitor {
+  id            String            @id @default(uuid())
+  userId        String
+  user          User              @relation(fields: [userId], references: [id])
+  competitionId String
+  competition   Competition       @relation(fields: [competitionId], references: [id])
+  name          String
+  bestScore     Float             @default(999999999)
+  bestScoreTime DateTime          @default(now())
+  metaData      Json
+  entries       CompetitorEntry[]
+  intTag        Int               @default(0)
+  stringTag     String            @default("")
+
+  @@unique([userId, competitionId])
+  @@index([userId, competitionId])
+}
+
+model CompetitorEntry {
+  id           String     @id @default(uuid())
+  competitorId String
+  competitor   Competitor @relation(fields: [competitorId], references: [id])
+  timestamp    DateTime   @default(now())
+  metrics      Json
+  metaData     Json
+  status       String     @default("submitted")
+}
+
+enum Feature {
+  QwenModel
+  TokenLimit
+  RLanguageClass
+}
+
+model FeatureFlag {
+  id      String  @id @default(uuid())
+  feature Feature
+  userId  String?
+  classId String?
+
+  validUntil DateTime? // Optional, null means always valid.
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  user  User?  @relation(fields: [userId], references: [id])
+  class Class? @relation(fields: [classId], references: [id])
+
+  @@unique([feature, userId, classId])
+}
+
+model Enrollment {
+  classId String
+  userId  String
+  role    String
+
+  class Class @relation(fields: [classId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@id([classId, userId])
+}
+
+// A learning experiment scoped to one class. `config` holds the full shareable
+// Config JSON (incl. variants). See EXPERIMENT_SYSTEM_DESIGN.md.
+model Experiment {
+  id          String   @id @default(uuid())
+  classId     String
+  name        String
+  description String?
+  status      String   @default("draft") // draft|active|completed
+  config      Json // full Config JSON incl. variants
+  createdBy   String // userId of instructor/admin who created it
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Holds classId ONLY while this experiment is active (null otherwise). The
+  // unique constraint enforces at most one active experiment per class at the
+  // DB level (Postgres allows many NULLs). See activate()/complete().
+  activeClassId String? @unique
+
+  class       Class                  @relation(fields: [classId], references: [id])
+  assignments ExperimentAssignment[]
+
+  @@index([classId, status])
+}
+
+// Sticky mapping of a student to a variant within an experiment.
+// One row per (experiment, user); never reassigned once written.
+model ExperimentAssignment {
+  experimentId String
+  userId       String
+  variantKey   String
+  method       String   @default("auto") // auto|manual
+  assignedAt   DateTime @default(now())
+
+  experiment Experiment @relation(fields: [experimentId], references: [id])
+  user       User       @relation(fields: [userId], references: [id])
+
+  @@id([experimentId, userId])
+  @@index([experimentId, variantKey])
+}
+
+// Status is the status of the pending enrollment, "not enrolled", "enrolled"
+model PendingEnrollment {
+  id        String @id @default(uuid())
+  classId   String
+  userEmail String
+  role      String
+  status    String
+  class     Class  @relation(fields: [classId], references: [id])
+}
+
+// Status is the status of the material, ie. "waiting", "processing", "processed"
+model ClassMaterial {
+  id               String     @id @default(uuid())
+  classId          String
+  materialType     String
+  materialMetadata Json
+  materialContent  String
+  status           String
+  uploadedDate     DateTime   @default(now())
+  availableDate    DateTime   @default("1970-01-01T00:00:00.000Z") // default to Unix epoch (0)
+  class            Class      @relation(fields: [classId], references: [id])
+  documents        Document[]
+}
+
+model Document {
+  id              String            @id @default(uuid())
+  fileName        String
+  fileUrl         String
+  chunks          Json?
+  embeddings      Embedding[]
+  uploadedDate    DateTime          @default(now())
+  classMaterialId String?
+  classMaterial   ClassMaterial?    @relation(fields: [classMaterialId], references: [id])
+  isStudent       Boolean           @default(false)
+  isLlm           Boolean           @default(false)
+  sortIndex       Int               @default(0)
+  comments        DocumentComment[]
+  summaries       DocumentSummary[]
+}
+
+model DocumentComment {
+  id              String   @id @default(uuid())
+  documentId      String
+  authorId        String
+  pageNumber      Int
+  text            String
+  isVisible       Boolean  @default(true)
+  selectionRegion Json?
+  pinPosition     Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  document        Document @relation(fields: [documentId], references: [id])
+  author          User     @relation(fields: [authorId], references: [id])
+
+  @@index([documentId])
+  @@index([authorId])
+}
+
+model DocumentSummary {
+  id                  String   @id @default(uuid())
+  documentId          String
+  authorId            String
+  summaryNumber       Int      @default(autoincrement())
+  content             String   @db.Text
+  isVisibleToStudents Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  document            Document @relation(fields: [documentId], references: [id])
+  author              User     @relation(fields: [authorId], references: [id])
+
+  @@index([documentId])
+  @@index([authorId])
+}
+
+// todo: change pagenumber to number
+model Embedding {
+  id                 String                       @id @default(uuid())
+  // Legacy single-model column (OpenAI text-embedding-3-small, 1536-dim).
+  // Kept nullable for back-compat/rollback; new vectors live in EmbeddingVector.
+  embedding          Unsupported("vector(1536)")?
+  documentId         String
+  text               String
+  documentPageNumber String
+  chunk              Json
+  document           Document                     @relation(fields: [documentId], references: [id])
+  vectors            EmbeddingVector[]
+}
+
+// Registry of embedding providers/models. `dimensions` is auto-detected on
+// first use (via a one-token probe) and cached here.
+model EmbeddingModel {
+  id         String            @id @default(uuid())
+  provider   String // engineChoice: 'openai' | 'qwen' | ...
+  model      String // e.g. 'text-embedding-3-small', 'bge-m3'
+  dimensions Int? // 1536, 1024, ... (null until probed)
+  isActive   Boolean           @default(true)
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  vectors    EmbeddingVector[]
+
+  @@unique([provider, model])
+}
+
+// One vector per (chunk, model). Uses a PLAIN `vector` column so different
+// dimensions (1536 OpenAI, 1024 bge-m3, ...) coexist. Similarity searches are
+// always filtered by modelId and use a per-model partial HNSW index.
+model EmbeddingVector {
+  id          String                @id @default(uuid())
+  embeddingId String
+  modelId     String
+  embedding   Unsupported("vector")
+  createdAt   DateTime              @default(now())
+  embedding_  Embedding             @relation(fields: [embeddingId], references: [id], onDelete: Cascade)
+  model       EmbeddingModel        @relation(fields: [modelId], references: [id])
+
+  @@unique([embeddingId, modelId])
+  @@index([modelId])
+}
+
+// change the signature 
+model MaterialPersonalization {
+  personalizationId String   @id @default(uuid())
+  timeSpent         String
+  learningStyle     String
+  questionStyle     String
+  studentGoodAt     String
+  studentsImproveAt String
+  startTime         DateTime
+  endTime           DateTime
+  userId            String
+  sessionId         String
+  documentName      String
+}
+
+model LectureKeyword {
+  id        String   @id @default(uuid())
+  lectureId String // PDF document ID
+  classId   String // Class ID for the lecture
+  keywords  Json // JSON array of keyword objects with text, frequency, etc.
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  status    String   @default("pending") // pending, processing, completed, failed
+
+  // Relations
+  class Class @relation(fields: [classId], references: [id])
+
+  @@unique([lectureId, classId])
+  @@index([classId])
+  @@index([lectureId])
+  @@index([status])
+}
+
+// Status is the status of the pending admin, "pending", "activated"
+model PendingAdmin {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model EmailAuditLog {
+  id           String   @id @default(uuid())
+  timestamp    DateTime @default(now())
+  fromEmail    String
+  toEmails     String[]
+  subject      String
+  emailType    String // "direct", "template", "class_announcement", etc.
+  templateName String? // For templated emails
+  status       String // "sent", "failed", "test_mode"
+  errorMessage String? // For failed emails
+  userId       String? // User who triggered the email
+  classId      String? // For class-related emails
+  messageId    String? // From nodemailer response
+  metadata     Json? // Additional context
+
+  user  User?  @relation(fields: [userId], references: [id])
+  class Class? @relation(fields: [classId], references: [id])
+
+  @@index([userId])
+  @@index([classId])
+  @@index([status])
+  @@index([timestamp])
+  @@index([emailType])
+}
+
+// API Token model for webhook authentication
+model ApiToken {
+  id         String    @id @default(uuid())
+  token      String    @unique // The actual API token
+  name       String // Human-readable name
+  userId     String // Owner of the token
+  webhookId  String    @unique // Each webhook endpoint has exactly one token
+  scopes     String[] // Permission scopes
+  isActive   Boolean   @default(true)
+  expiresAt  DateTime? // Optional expiration
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  lastUsedAt DateTime?
+
+  user    User            @relation(fields: [userId], references: [id])
+  webhook WebhookEndpoint @relation(fields: [webhookId], references: [id])
+
+  @@index([token])
+  @@index([userId])
+}
+
+// Webhook endpoint model
+model WebhookEndpoint {
+  id        String   @id @default(uuid())
+  url       String // The webhook URL (will use UUID in path)
+  events    String[] // Events to subscribe to
+  secret    String // Webhook secret for validation
+  isActive  Boolean  @default(true)
+  userId    String // Owner
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user          User              @relation(fields: [userId], references: [id])
+  apiToken      ApiToken?
+  deliveries    WebhookDelivery[]
+  webhookEvents WebhookEvent[]
+
+  @@index([userId])
+}
+
+// Webhook delivery log
+model WebhookDelivery {
+  id         String   @id @default(uuid())
+  endpointId String
+  eventType  String
+  payload    Json
+  response   Json?
+  status     String // success, failed, pending
+  attempts   Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  endpoint WebhookEndpoint @relation(fields: [endpointId], references: [id])
+
+  @@index([endpointId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// Webhook events that require approval before execution
+model WebhookEvent {
+  id           String    @id @default(uuid())
+  webhookId    String // The webhook endpoint that received this event
+  eventType    String // Event type (e.g., "user.enroll")
+  payload      Json // Event payload data
+  status       String    @default("pending") // pending, approved, rejected, executed
+  approvedBy   String? // User ID who approved/rejected
+  approvedAt   DateTime?
+  executedAt   DateTime?
+  enrollmentId String? // Reference to created enrollment (if applicable)
+  errorMessage String? // Error message if execution failed
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  webhook   WebhookEndpoint     @relation(fields: [webhookId], references: [id])
+  approver  User?               @relation(fields: [approvedBy], references: [id])
+  auditLogs WebhookEventAudit[]
+
+  @@index([webhookId])
+  @@index([status])
+  @@index([eventType])
+  @@index([createdAt])
+}
+
+// Audit trail for webhook event approvals/rejections
+model WebhookEventAudit {
+  id             String   @id @default(uuid())
+  webhookEventId String
+  action         String // "approved", "rejected"
+  performedBy    String // User ID who performed the action
+  reason         String? // Optional reason for rejection
+  metadata       Json? // Additional context (IP, user agent, etc.)
+  timestamp      DateTime @default(now())
+
+  webhookEvent WebhookEvent @relation(fields: [webhookEventId], references: [id])
+  performer    User         @relation(fields: [performedBy], references: [id])
+
+  @@index([webhookEventId])
+  @@index([performedBy])
+  @@index([timestamp])
+  @@index([action])
+}
+
+// MCP Server (Model Context Protocol Server)
+// MCP is an open protocol that allows LLMs to connect to external tools and data sources.
+// Each MCP server exposes a set of tools that can be called by the LLM during chat.
+// This table stores GLOBAL MCP server configurations that can be assigned to multiple classes.
+// Examples: A filesystem MCP server, a database query MCP server, a web search MCP server, etc.
+// Admin creates global servers, then assigns them to classes via ClassMcpServer.
+model McpServer {
+  id                String              @id @default(uuid())
+  name              String              // Human-readable name (e.g., "Filesystem Access", "GitHub API")
+  description       String?             // Optional description of what this server provides
+  transport         String              // Transport protocol: "stdio", "sse", or "http"
+  config            Json                // Transport-specific configuration
+                                        // stdio: { command: "node", args: ["server.js"], env: {...} }
+                                        // sse/http: { url: "https://mcp.example.com", headers: {...} }
+  requiresOAuth     Boolean             @default(false) // True if server requires per-user OAuth authentication
+  oauthMetadata     Json?               // OAuth 2.1 configuration if requiresOAuth is true
+                                        // { authorizationUrl, tokenUrl, clientId, scopes, redirectUri }
+  isActive          Boolean             @default(true)  // Whether this server is globally active/enabled
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  createdBy         String?             // User ID of admin who configured this server
+
+  classAssignments  ClassMcpServer[]    // Classes this server is assigned to
+  userConnections   McpUserConnection[] // Per-user OAuth connections (only if requiresOAuth=true)
+  oauthClients      OAuthClient[]       // OAuth clients registered for this MCP server (for internal OAuth)
+
+  @@index([isActive])
+  @@index([transport])
+}
+
+// Class-MCP Server Assignment (Junction Table)
+// Links global MCP servers to specific classes with class-specific settings.
+// This enables a many-to-many relationship where servers can be shared across classes.
+// Example: A "GitHub API" server can be assigned to multiple classes with different settings.
+model ClassMcpServer {
+  id                String              @id @default(uuid())
+  classId           String              // Which class this assignment is for
+  mcpServerId       String              // Which global MCP server is assigned
+  isEnabled         Boolean             @default(true)  // Enable/disable server for this class
+  priority          Int                 @default(0)     // Priority for tool selection in this class
+  displayName       String?             // Optional class-specific display name override
+  configuration     Json?               // Optional class-specific configuration overrides
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  assignedBy        String?             // User ID of admin who assigned this server
+
+  class             Class               @relation(fields: [classId], references: [id])
+  mcpServer         McpServer           @relation(fields: [mcpServerId], references: [id])
+  toolConfigs       ClassToolConfig[]   // Tool enable/disable configurations for this assignment
+
+  @@unique([classId, mcpServerId])      // Each server can only be assigned once per class
+  @@index([classId])
+  @@index([mcpServerId])
+  @@index([classId, isEnabled])
+}
+
+// MCP User Connection (OAuth Tokens)
+// For MCP servers that require OAuth (like GitHub, Google Drive, etc.),
+// each user must authenticate separately. This table stores per-user OAuth tokens.
+// Example: User A connects their GitHub account to use the GitHub MCP server.
+// MCP servers are global - user connects once and the connection works across all classes
+// where the server is assigned. All tokens are encrypted at rest for security.
+model McpUserConnection {
+  id                String           @id @default(uuid())
+  userId            String           // Which user this OAuth connection belongs to
+  mcpServerId       String           // Which MCP server this connection is for
+  accessToken       String           // Encrypted OAuth 2.1 access token
+  refreshToken      String?          // Encrypted OAuth 2.1 refresh token (if provided)
+  tokenType         String           @default("Bearer") // Token type (usually "Bearer")
+  expiresAt         DateTime?        // When the access token expires (for auto-refresh)
+  scope             String?          // OAuth scopes granted by the user
+  connectionMetadata Json?           // Additional OAuth metadata (token_id, etc.)
+  isActive          Boolean          @default(true)  // Whether connection is active
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  lastUsedAt        DateTime?        // Last time this connection was used
+
+  user              User             @relation(fields: [userId], references: [id])
+  mcpServer         McpServer        @relation(fields: [mcpServerId], references: [id])
+
+  @@unique([userId, mcpServerId])
+  @@index([userId])
+  @@index([mcpServerId])
+  @@index([userId, isActive])
+}
+
+// Tool Type Enum
+// Categorizes the source of tools available to the LLM during chat
+enum ToolType {
+  RAG              // Built-in Retrieval-Augmented Generation tool (searches class documents)
+  CodeInterpreter  // Built-in Code Interpreter tool (helps with programming questions)
+  MCP              // Tool provided by an external MCP server
+}
+
+// Class Tool Configuration
+// Unified management of ALL tools available in a class (built-in + MCP).
+// Admin can enable/disable individual tools and control which chat types can use them.
+// Examples:
+//   - Enable RAG tool for "pdf" chat but not "codegen" chat
+//   - Enable GitHub MCP server tools only for "codegen" chat
+//   - Disable Code Interpreter tool entirely for a class
+model ClassToolConfig {
+  id                String           @id @default(uuid())
+  classId           String           // Which class this tool configuration applies to
+  toolType          ToolType         // Source type: RAG, CodeInterpreter, or MCP
+  toolIdentifier    String           // For MCP: classMcpServerId; for built-in: "rag" or "code-interpreter"
+  toolName          String           // Human-readable tool name for display
+  isEnabled         Boolean          @default(true)  // Whether this tool is currently enabled
+  chatTypes         Json             @default("[]")  // Which chat types can use this tool
+                                                     // [] = all types, ["pdf"] = only PDF chat,
+                                                     // ["pdf", "codegen"] = both types
+  priority          Int              @default(0)     // Tool selection priority (higher = preferred)
+  configuration     Json?            // Optional tool-specific configuration overrides
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  class             Class            @relation(fields: [classId], references: [id])
+  classMcpServer    ClassMcpServer?  @relation(fields: [toolIdentifier], references: [id])
+
+  @@unique([classId, toolType, toolIdentifier])
+  @@index([classId])
+  @@index([classId, isEnabled])
+  @@index([toolType])
+}
+
+// =============================================================================
+// KIWI APPS REGISTRY
+// =============================================================================
+// Models for Kiwi Apps framework - plugin registration, per-class enablement,
+// and configuration. Apps self-register if whitelisted, similar to user registration.
+
+// Whitelist of allowed apps that can self-register (similar to UserWhitelist)
+model KiwiAppWhitelist {
+  id                 String   @id @default(uuid())
+  slug               String   @unique // App identifier (e.g., "codegen")
+  baseUrl            String?          // Optional: expected base URL for validation
+  registrationSecret String           // Secret required for app registration (bcrypt hashed)
+  status             String   @default("pending") // "pending", "approved", "rejected"
+  description        String?          // Why this app is whitelisted
+  maxScopes          String[] @default([]) // Maximum scopes this app can request
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  approvedBy         String?          // Admin who approved
+
+  @@index([slug])
+  @@index([status])
+}
+
+// Registered Kiwi Apps (self-registered by apps if whitelisted)
+model KiwiApp {
+  id           String   @id @default(uuid())
+  slug         String   @unique // "codegen", "analytics", "quiz"
+  name         String           // "Code Exercises"
+  description  String?
+  baseUrl      String           // "http://localhost:8000" - backend URL for full apps
+  iconUrl      String?
+  category     String   @default("plugin") // "plugin", "analytics", "tool"
+  version      String   @default("1.0.0")
+  isActive     Boolean  @default(true)
+  config       Json     @default("{}") // App-level default config
+  capabilities Json     @default("[]") // ["auth", "frontend-actions", "mcp"]
+  appType      String   @default("frontend_only") // "frontend_only" or "full"
+  mcpServerUrl String?          // MCP server URL for full apps
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  lastSeenAt   DateTime?        // Last health check / heartbeat
+
+  classApps ClassKiwiApp[]
+  uis       KiwiAppUI[]
+  prompts   KiwiAppPrompt[]
+
+  @@index([slug])
+  @@index([isActive])
+  @@index([category])
+}
+
+// UI registrations for Kiwi Apps (multiple UIs per app)
+model KiwiAppUI {
+  id           String   @id @default(uuid())
+  appId        String
+  uiSlug       String           // "student", "admin"
+  uiName       String           // "Exercise Runner", "Exercise Manager"
+  uiUrl        String           // URL path for this UI (e.g., "/app/student")
+  placement    String   @default("class-tab") // "class-tab", "admin-panel", "class-admin-panel", "modal", "dashboard-widget"
+  allowedRoles String[] @default(["student", "ta", "instructor", "admin"])
+  tabOrder     Int      @default(0) // Order within placement
+  isEnabled    Boolean  @default(true)
+  config       Json     @default("{}") // UI-specific config
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  app KiwiApp @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  @@unique([appId, uiSlug])
+  @@index([appId])
+  @@index([placement])
+  @@index([appId, placement])
+}
+
+// LLM prompts registered by Kiwi Apps (admin-approved)
+model KiwiAppPrompt {
+  id           String   @id @default(uuid())
+  appId        String
+  promptId     String           // App's identifier for this prompt (e.g., "hint", "explain-error")
+  name         String           // Human-readable name
+  description  String?          // What this prompt does
+  systemPrompt String   @db.Text // The actual system prompt (admin-approved)
+  isActive     Boolean  @default(true)
+  maxTokens    Int?             // Optional token limit for responses
+  temperature  Float?           // Optional temperature override
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  approvedBy   String?          // Admin who approved this prompt
+  approvedAt   DateTime?        // When it was approved
+
+  app KiwiApp @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  @@unique([appId, promptId])
+  @@index([appId])
+  @@index([appId, isActive])
+}
+
+// Per-class app enablement and configuration
+model ClassKiwiApp {
+  id            String   @id @default(uuid())
+  classId       String
+  appId         String
+  tabOrder      Int      @default(0)    // Order in class navigation tabs
+  tabLabel      String?                 // Custom tab label (overrides app.name)
+  isEnabled     Boolean  @default(true)
+  config        Json     @default("{}") // Class-specific config (OVERRIDES app defaults)
+  enabledScopes String[] @default([])   // Scopes enabled for this class (subset of maxScopes)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  enabledBy     String?                 // Professor/admin who enabled
+
+  app   KiwiApp @relation(fields: [appId], references: [id], onDelete: Cascade)
+  class Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@unique([classId, appId])
+  @@index([classId])
+  @@index([appId])
+  @@index([classId, isEnabled])
+}
+
+// =============================================================================
+// WIDGET SYSTEM MODELS
+// =============================================================================
+// Models for Kiwi Apps widget state persistence and user preferences.
+// Widgets are React components in the frontend (kiwi-ui) that communicate
+// via window.kiwiApp bridge. Backend stores state for cross-device sync.
+
+// Per-instance widget state (synced to backend for persistence)
+model WidgetState {
+  id             String   @id @default(uuid())
+  appId          String   // App identifier (e.g., "codegen")
+  widgetId       String   // Unique ID for this widget instance
+  conversationId String?  // Chat conversation context
+  messageId      String?  // Specific message context
+  userId         String
+  classId        String?  // Optional class context
+  exerciseId     String?  // Optional exercise context
+  exerciseSetId  String?  // Optional exercise set context
+  widgetState    Json     @default("{}") // Custom widget state from frontend
+  displayMode    String   @default("expanded") // "compact" | "expanded" | "fullscreen"
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([widgetId, userId])
+  @@index([userId])
+  @@index([appId])
+  @@index([conversationId])
+  @@index([classId])
+  @@index([exerciseId])
+}
+
+// Global per-user widget preferences
+model WidgetUserPreference {
+  id                 String   @id @default(uuid())
+  userId             String   @unique
+  theme              String   @default("system") // "light" | "dark" | "system"
+  codeEditorTheme    String   @default("vs-dark")
+  codeEditorFontSize Int      @default(14)
+  appPreferences     Json     @default("{}") // Per-app preferences
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([userId])
+}
+
+// =============================================================================
+// KIWI APP AUDIT LOGGING
+// =============================================================================
+// Audit log for all Kiwi App actions - token issuance, MCP calls, context updates
+
+model KiwiAppAuditLog {
+  id        String   @id @default(uuid())
+  appSlug   String              // App that performed the action
+  userId    String?             // User context (optional)
+  classId   String?             // Class context (optional)
+  eventType String              // "token_issued", "mcp_call", "context_update", "action"
+  eventData Json     @default("{}") // Event-specific payload
+  ipAddress String?             // Request IP address
+  userAgent String?             // Request user agent
+  createdAt DateTime @default(now())
+
+  @@index([appSlug])
+  @@index([userId])
+  @@index([classId])
+  @@index([eventType])
+  @@index([createdAt])
+}
+
+// =============================================================================
+// CLASS ANALYTICS TOPICS
+// =============================================================================
+// One record per class holding the LLM-extracted topic model over all student
+// chat questions. Topics store interaction IDs only; question details are
+// hydrated at read time so lecture/page/student views stay consistent.
+// Incremental: lastProcessedAt marks the newest interaction already assigned
+// to topics, so refreshes only send new questions to the LLM.
+
+model ClassAnalyticsTopics {
+  id              String    @id @default(uuid())
+  classId         String    @unique
+  topics          Json      @default("[]") // [{ id, label, questionIds: [interactionId] }]
+  status          String    @default("pending") // pending, processing, completed, failed
+  questionCount   Int       @default(0) // questions assigned to topics so far
+  lastProcessedAt DateTime? // timestamp of newest processed interaction
+  error           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  class Class @relation(fields: [classId], references: [id])
+
+  @@index([status])
+}

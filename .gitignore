@@ -1,0 +1,61 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+/kiwi/dist/
+/kiwi-ui/dist/
+/kiwi-app-sdk/dist/
+
+# Environment — never commit a populated .env
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Tests / coverage
+coverage/
+/.nyc_output
+
+# Prisma local dev seed snapshot — per-developer, contains real data, never share
+kiwi/prisma/seed-data.json
+kiwi/prisma/seed-data.backup.dump
+*.dump
+*.sql.gz
+
+# OS
+.DS_Store
+
+# Editors
+/.idea
+.vscode/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Temp
+.temp
+.tmp
+pids
+*.pid
+*.seed
+*.pid.lock
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Local scratch notes
+*.local.md

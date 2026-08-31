@@ -1,0 +1,385 @@
+import React, { useEffect, useRef, useState } from "react";
+import { useParams, useNavigate, useLocation, Outlet } from "react-router-dom";
+import {
+  Box,
+  Tabs,
+  Tab,
+  CircularProgress,
+  useMediaQuery,
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import TopNav, {
+  TOP_NAV_BRAND_AREA_WIDTH,
+  TOP_NAV_HEIGHT,
+  type ClassSwitcherOption,
+} from "../components/TopNav/TopNav.tsx";
+import apiClient, { classAppsApiClient } from "../utils/api.ts";
+import {
+  PageNavigationPlugin,
+  pageNavigationPlugin,
+} from "@react-pdf-viewer/page-navigation";
+import type { ClassAppResponseDto } from "../services/models";
+import { useContentResize } from "../hooks/useContentResize";
+
+// Feature checker import
+import { useAuth } from "../auth/AuthContext.tsx";
+import { featureFlagChecker } from "../utils/featureFlagChecker.ts";
+
+interface KiwiClass {
+  className?: string;
+  classID: string;
+  professorName?: string;
+}
+
+export const ChatContext = React.createContext<{
+  class?: KiwiClass;
+  currentPDFID?: string;
+  setCurrentPDFID?: (pdfID: string) => void;
+  currentPdfName?: string;
+  setCurrentPdfName?: (pdfName: string) => void;
+  currentPDFPage?: number;
+  currentPDFMaterialType?: string;
+  setCurrentPDFMaterialType?: (materialType: string) => void;
+  setCurrentPDFPage?: (pageNumber: number) => void;
+  pageNavigationPluginInstance?: PageNavigationPlugin;
+  pdfContent?: string;
+  setPdfContent?: (content: string) => void;
+  multipleCourses?: boolean;
+  engineChoice?: string;
+  setEngineChoice?: (engine: string) => void;
+}>({});
+
+// Static tab configuration
+// Note: Chat was moved to global floating modal - default view is now PDF-only
+const staticMenuItems = [
+  { label: "Materials", path: "", isApp: false },
+  { label: "Scratchpad", path: "code", isApp: false },
+];
+
+interface MenuItem {
+  label: string;
+  path: string;
+  isApp: boolean;
+  appData?: ClassAppResponseDto;
+}
+
+export const StudentClassLayout: React.FC = () => {
+  const { classID } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const navigationClassName = (location.state as { className?: string } | null)
+    ?.className;
+  const hasUserChangedTabRef = useRef(false);
+
+  // class data
+  const [myClass, setMyClass] = useState<KiwiClass>();
+  const [classContext, setClassContext] = useState({
+    classID,
+    className: navigationClassName,
+  });
+  const [classLoading, setClassLoading] = useState(!navigationClassName);
+  const [multipleCourses, setMultipleCourses] = useState(false);
+  const [classOptions, setClassOptions] = useState<ClassSwitcherOption[]>([]);
+  const [classOptionsLoading, setClassOptionsLoading] = useState(true);
+
+  // enabled apps for this class
+  const [enabledApps, setEnabledApps] = useState<ClassAppResponseDto[]>([]);
+
+  // chat engine — Qwen is available to everyone now (no QwenModel flag gate).
+  const qwenEnabled = true;
+  const [engineChoice, setEngineChoice] = useState(
+    localStorage.getItem("engineChoice") || "openai",
+  );
+
+  // pdf data
+  const [currentPDFID, setCurrentPDFID] = useState<string>("");
+  const [pdfContent, setPdfContent] = useState<string>("");
+  const [currentPdfName, setCurrentPdfName] = useState<string>("");
+  const [currentPDFPage, setCurrentPDFPage] = useState<number>(0);
+  const [currentPDFMaterialType, setCurrentPDFMaterialType] =
+    useState<string>("");
+  const pageNavigationPluginInstance = pageNavigationPlugin();
+  const contentResizeStyles = useContentResize();
+
+  const activePath = location.pathname.split("/").pop();
+
+  // Combine static menu items and enabled apps
+  const menuItems: MenuItem[] = [
+    ...staticMenuItems,
+    ...enabledApps.map((app) => ({
+      label: app.tabLabel || app.name,
+      path: `app/${app.slug}`,
+      isApp: true,
+      appData: app,
+    })),
+  ];
+
+  // Find the current tab index based on the active path
+  const currentTabIndex = menuItems.findIndex((item) => {
+    if (item.path === "" && activePath === classID) return true;
+    if (item.isApp) {
+      // For app paths, check if URL matches app/{slug}
+      const pathParts = location.pathname.split("/");
+      const appIndex = pathParts.indexOf("app");
+      if (appIndex !== -1 && pathParts[appIndex + 1] === item.appData?.slug) {
+        return true;
+      }
+    }
+    return activePath === item.path;
+  });
+
+  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
+    hasUserChangedTabRef.current = true;
+    const selectedItem = menuItems[newValue];
+    navigate(
+      selectedItem.path ? `/${classID}/${selectedItem.path}` : `/${classID}`,
+    );
+  };
+
+  const handleClassChange = (nextClassId: string) => {
+    hasUserChangedTabRef.current = false;
+    const selectedOption = classOptions.find(
+      (option) => option.id === nextClassId,
+    );
+    const routeMatch = location.pathname.match(/^\/[^/]+(\/.*)?$/);
+    const routeSuffix = routeMatch?.[1] ?? "";
+
+    navigate(
+      {
+        pathname: `/${encodeURIComponent(nextClassId)}${routeSuffix}`,
+        search: location.search,
+        hash: location.hash,
+      },
+      { state: { className: selectedOption?.label } },
+    );
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchClassOptions = async () => {
+      setClassOptionsLoading(true);
+
+      try {
+        const { classInfoList } =
+          await apiClient.studentControllerGetEnrolledClassesInfoByStudentId();
+
+        if (!cancelled) {
+          setMultipleCourses(classInfoList.length > 1);
+          setClassOptions(
+            classInfoList
+              .map((classInfo) => ({
+                id: classInfo.id,
+                label: classInfo.className || "Unnamed class",
+              }))
+              .sort((a, b) => a.label.localeCompare(b.label)),
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching enrolled class options:", error);
+        if (!cancelled) setClassOptions([]);
+      } finally {
+        if (!cancelled) setClassOptionsLoading(false);
+      }
+    };
+
+    fetchClassOptions();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!classID || menuItems.length === 0 || hasUserChangedTabRef.current) {
+      return;
+    }
+
+    const basePath = `/${classID}`;
+    const firstItem = menuItems[0];
+    const firstPath = firstItem.path
+      ? `/${classID}/${firstItem.path}`
+      : basePath;
+    const isBaseRoute = location.pathname === basePath;
+
+    if ((isBaseRoute && firstPath !== basePath) || currentTabIndex === -1) {
+      navigate(firstPath, { replace: true });
+    }
+  }, [classID, currentTabIndex, location.pathname, menuItems, navigate]);
+
+  useEffect(() => {
+    const fetchClass = async () => {
+      console.log("ClassLayout: fetchClass called with classID:", classID); // debug log
+      if (!classID) {
+        console.error("No classID provided in URL");
+        setClassLoading(false);
+        return;
+      }
+
+      setClassLoading(true);
+      setMyClass(undefined);
+      setClassContext({ classID, className: navigationClassName });
+
+      try {
+        console.log("ClassLayout: Fetching specific class by ID:", classID); // debug log
+        // Fetch the specific class by ID
+        const classEntry = await apiClient.classControllerGetById({
+          classID: classID,
+        });
+        console.log("ClassLayout: Class entry result:", classEntry); // debug log
+
+        const classData: KiwiClass = {
+          classID: classEntry.id,
+          className: classEntry.className,
+          professorName: classEntry.professorName,
+        };
+
+        console.log("ClassLayout: Setting myClass to:", classData); // debug log
+        setMyClass(classData);
+        setClassContext({ classID, className: classData.className });
+
+        // Notify server of the selected class
+        const response = await apiClient.classControllerSetSelectedClass({
+          setSelectedClassRequest: {
+            classId: classID,
+          },
+        });
+
+        if (response) {
+          console.log("Selected class set successfully");
+        } else {
+          console.error("Failed to set selected class");
+        }
+      } catch (error) {
+        console.error("Error fetching class:", error);
+        // Optionally redirect to a not found page or show error message
+      } finally {
+        setClassLoading(false);
+      }
+    };
+
+    fetchClass();
+
+    // Fetch enabled apps for this class
+    const fetchEnabledApps = async () => {
+      if (!classID) return;
+      try {
+        const apps =
+          await classAppsApiClient.classKiwiAppControllerGetClassApps({
+            classId: classID,
+          });
+        // Sort by tabOrder
+        apps.sort((a, b) => a.tabOrder - b.tabOrder);
+        setEnabledApps(apps);
+      } catch (error) {
+        console.error("Error fetching enabled apps:", error);
+      }
+    };
+
+    fetchEnabledApps();
+  }, [classID]);
+
+  const contextData = {
+    class: myClass,
+    currentPDFID,
+    setCurrentPDFID,
+    currentPdfName,
+    setCurrentPdfName,
+    currentPDFPage,
+    setCurrentPDFPage,
+    currentPDFMaterialType,
+    setCurrentPDFMaterialType,
+    pageNavigationPluginInstance,
+    pdfContent,
+    setPdfContent,
+    multipleCourses,
+    engineChoice,
+    setEngineChoice,
+  };
+  const topNavClassName =
+    classContext.classID === classID
+      ? classContext.className
+      : navigationClassName;
+
+  return (
+    <ChatContext.Provider value={contextData}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          height: "100vh",
+          width: "100%",
+          ...contentResizeStyles,
+        }}
+      >
+        {/* Top Navigation spans the full width */}
+        <TopNav
+          brandAreaWidth={!isMobile ? TOP_NAV_BRAND_AREA_WIDTH : undefined}
+          contextLabel={
+            topNavClassName || (!classLoading ? "Unnamed class" : undefined)
+          }
+          contextLoading={classLoading && !topNavClassName}
+          classOptions={classOptions}
+          classOptionsLoading={classOptionsLoading}
+          selectedClassId={classID}
+          onClassChange={handleClassChange}
+        />
+
+        {/* Tab Navigation (Materials Page Redesign: 44px bar, compact tabs) */}
+        <Box
+          sx={{ borderBottom: "1px solid #E5E1EB", backgroundColor: "#fff" }}
+        >
+          <Tabs
+            value={currentTabIndex >= 0 ? currentTabIndex : 0}
+            onChange={handleTabChange}
+            variant="scrollable"
+            scrollButtons="auto"
+            sx={{
+              px: 1.5,
+              minHeight: 44,
+              "& .MuiTab-root": {
+                minHeight: 44,
+                px: 1.75,
+                fontSize: 12,
+                fontWeight: 600,
+                letterSpacing: "0.8px",
+                color: "#77777F",
+                "&.Mui-selected": { color: "primary.main" },
+              },
+            }}
+          >
+            {menuItems.map((item) => (
+              <Tab key={item.label} label={item.label} />
+            ))}
+          </Tabs>
+        </Box>
+
+        {/* Main Content */}
+        <Box
+          sx={{
+            minHeight: `calc(100vh - ${TOP_NAV_HEIGHT + 44}px)`,
+            backgroundColor: "grey.100",
+            flexGrow: 1,
+          }}
+        >
+          {myClass ? (
+            <Outlet />
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                minHeight: "400px",
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          )}
+        </Box>
+      </Box>
+    </ChatContext.Provider>
+  );
+};

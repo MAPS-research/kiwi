@@ -1,0 +1,38 @@
+.feedback-container {
+    display: flex;
+}
+
+.feedback-container button {
+    font-size: 1rem;
+    padding: 2px 4px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    margin: 5px;
+}
+
+.feedback-container button:hover, .feedback-container button.active {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.feedback-container button:active {
+    transform: scale(0.95);
+}
+
+.feedback-container button.disabled {
+    display: none;
+}
+
+.feedback-container .thumbs-up {
+    /* Styling specific to thumbs up button */
+    background-color: #28a745; /* Green background */
+}
+
+.feedback-container .thumbs-down {
+    /* Styling specific to thumbs down button */
+    background-color: #dc3545; /* Red background */
+}
