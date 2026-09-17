@@ -7,6 +7,7 @@ import {
 import { KiwiAppService } from './kiwi-app.service';
 import { JwtAuthGuard, AdminGuard } from 'src/auth/auth.guard';
 import { Request } from 'express';
+import { InstructorClassService } from 'src/instructor-class/instructor-class.service';
 
 // Mock guards
 const mockGuard = { canActivate: jest.fn(() => true) };
@@ -247,6 +248,10 @@ describe('ClassKiwiAppController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ClassKiwiAppController],
       providers: [
+        {
+          provide: InstructorClassService,
+          useValue: { canManageClass: jest.fn().mockResolvedValue(true) },
+        },
         {
           provide: KiwiAppService,
           useValue: {

@@ -128,8 +128,11 @@ export class ExperimentController {
   @ApiBearerAuth('bearerAuth')
   @ApiOkResponse({ type: ExperimentResponse })
   @Get(':experimentId')
-  async get(@Param('experimentId') experimentId: string) {
-    return this.experimentService.getById(experimentId);
+  async get(
+    @Param('classID') classId: string,
+    @Param('experimentId') experimentId: string,
+  ) {
+    return this.experimentService.getForClass(experimentId, classId);
   }
 
   // Edit an existing experiment's config (name/description/variants/etc).
@@ -139,9 +142,11 @@ export class ExperimentController {
   @ApiOkResponse({ type: ExperimentResponse })
   @Put(':experimentId')
   async update(
+    @Param('classID') classId: string,
     @Param('experimentId') experimentId: string,
     @Body() body: ExperimentConfigBody,
   ) {
+    await this.experimentService.getForClass(experimentId, classId);
     return this.experimentService.updateExperiment(experimentId, body.config);
   }
 
@@ -150,7 +155,11 @@ export class ExperimentController {
   @ApiBearerAuth('bearerAuth')
   @ApiOkResponse({ type: ExperimentResponse })
   @Post(':experimentId/activate')
-  async activate(@Param('experimentId') experimentId: string) {
+  async activate(
+    @Param('classID') classId: string,
+    @Param('experimentId') experimentId: string,
+  ) {
+    await this.experimentService.getForClass(experimentId, classId);
     return this.experimentService.activate(experimentId);
   }
 
@@ -159,7 +168,11 @@ export class ExperimentController {
   @ApiBearerAuth('bearerAuth')
   @ApiOkResponse({ type: ExperimentResponse })
   @Post(':experimentId/complete')
-  async complete(@Param('experimentId') experimentId: string) {
+  async complete(
+    @Param('classID') classId: string,
+    @Param('experimentId') experimentId: string,
+  ) {
+    await this.experimentService.getForClass(experimentId, classId);
     return this.experimentService.complete(experimentId);
   }
 
@@ -168,7 +181,11 @@ export class ExperimentController {
   @ApiBearerAuth('bearerAuth')
   @ApiOkResponse({ type: VariantCountResponse, isArray: true })
   @Get(':experimentId/assignments')
-  async assignmentCounts(@Param('experimentId') experimentId: string) {
+  async assignmentCounts(
+    @Param('classID') classId: string,
+    @Param('experimentId') experimentId: string,
+  ) {
+    await this.experimentService.getForClass(experimentId, classId);
     return this.experimentService.assignmentCounts(experimentId);
   }
 
@@ -177,7 +194,11 @@ export class ExperimentController {
   @ApiBearerAuth('bearerAuth')
   @ApiOkResponse({ type: VariantAnalyticsResponse, isArray: true })
   @Get(':experimentId/analytics')
-  async analytics(@Param('experimentId') experimentId: string) {
+  async analytics(
+    @Param('classID') classId: string,
+    @Param('experimentId') experimentId: string,
+  ) {
+    await this.experimentService.getForClass(experimentId, classId);
     return this.experimentService.analytics(experimentId);
   }
 
@@ -188,7 +209,11 @@ export class ExperimentController {
   @ApiBearerAuth('bearerAuth')
   @ApiOkResponse(CONFIG_RESPONSE)
   @Get(':experimentId/export')
-  async export(@Param('experimentId') experimentId: string) {
+  async export(
+    @Param('classID') classId: string,
+    @Param('experimentId') experimentId: string,
+  ) {
+    await this.experimentService.getForClass(experimentId, classId);
     return this.experimentService.exportConfig(experimentId);
   }
 }

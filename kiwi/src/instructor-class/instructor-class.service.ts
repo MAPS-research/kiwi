@@ -162,6 +162,31 @@ export class InstructorClassService {
     };
   }
 
+  /**
+   * Whether a user may manage a class: a system admin, a professor enrolled in
+   * *this* class, or an instructor actively assigned to *this* class.
+   *
+   * A professor enrollment in some other class does not count.
+   */
+  async canManageClass(userId: string, classId: string): Promise<boolean> {
+    if (!userId || !classId) return false;
+
+    const user = await this.database.user.findUnique({
+      where: { id: userId },
+      select: { systemRole: true },
+    });
+    if (!user) return false;
+    if (user.systemRole === 'admin') return true;
+
+    const enrollment = await this.database.enrollment.findUnique({
+      where: { classId_userId: { classId, userId } },
+      select: { role: true },
+    });
+    if (enrollment?.role === 'professor') return true;
+
+    return this.checkInstructorHasClassAccess(userId, classId);
+  }
+
   async checkInstructorHasClassAccess(
     userId: string,
     classId: string,

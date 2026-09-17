@@ -6,6 +6,7 @@ import { WebhookEventService } from './webhook-event.service';
 import { DatabaseModule } from '../common/database/database.module';
 import { ApiTokensModule } from '../api-tokens/api-tokens.module';
 import { BullModule } from '@nestjs/bullmq';
+import { InstructorClassModule } from '../instructor-class/instructor-class.module';
 import { WebhookEndpointService } from '../common/database/webhook-endpoint.service';
 import { WebhookDeliveryService as DatabaseWebhookDeliveryService } from '../common/database/webhook-delivery.service';
 import { UserService } from '../common/database/user.service';
@@ -19,6 +20,7 @@ import { WebhookEventAuditService } from '../common/database/webhook-event-audit
   imports: [
     DatabaseModule,
     ApiTokensModule,
+    InstructorClassModule,
     BullModule.registerQueue({
       name: 'webhook-delivery',
     }),

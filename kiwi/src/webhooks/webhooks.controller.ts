@@ -340,8 +340,10 @@ export class WebhooksController {
     status: 403,
     description: 'Forbidden - admin or professor only',
   })
-  async getPendingEvents() {
-    const events = await this.webhookEventService.getPendingEvents();
+  async getPendingEvents(@Request() req: any) {
+    const events = await this.webhookEventService.getPendingEventsFor(
+      req.session.userId,
+    );
     return {
       events,
       total: events.length,
@@ -368,8 +370,8 @@ export class WebhooksController {
     description: 'Forbidden - admin or professor only',
   })
   @ApiResponse({ status: 404, description: 'Event not found' })
-  async getWebhookEvent(@Param('id') id: string) {
-    return this.webhookEventService.getWebhookEvent(id);
+  async getWebhookEvent(@Request() req: any, @Param('id') id: string) {
+    return this.webhookEventService.getWebhookEventFor(id, req.session.userId);
   }
 
   // Approve webhook event (admin or professor only)
@@ -394,6 +396,7 @@ export class WebhooksController {
   })
   @ApiResponse({ status: 404, description: 'Event not found' })
   async approveEvent(@Request() req: any, @Param('id') id: string) {
+    await this.webhookEventService.getWebhookEventFor(id, req.session.userId);
     const metadata = {
       ip: req.ip,
       userAgent: req.headers['user-agent'],
@@ -431,6 +434,7 @@ export class WebhooksController {
     @Param('id') id: string,
     @Body() body?: CreateAuditLogDto,
   ) {
+    await this.webhookEventService.getWebhookEventFor(id, req.session.userId);
     const metadata = {
       ip: req.ip,
       userAgent: req.headers['user-agent'],

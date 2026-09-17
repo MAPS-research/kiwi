@@ -22,6 +22,7 @@ import { WhitelistModule } from './whitelist/whitelist.module';
 import { LocalStrategy } from './local.strategy';
 import { OAuthClientService } from './oauth-client.service';
 import { JwtKeysService } from './jwt-keys.service';
+import { isDevAuthEnabled } from './dev-auth';
 
 @Module({
   imports: [
@@ -46,7 +47,7 @@ import { JwtKeysService } from './jwt-keys.service';
             signOptions: {
               algorithm: 'RS256',
               expiresIn:
-                process.env.DEV_AUTH === 'true'
+                isDevAuthEnabled()
                   ? 86400
                   : jwtExpiration.accessToken,
             },
@@ -61,7 +62,7 @@ import { JwtKeysService } from './jwt-keys.service';
             secret,
             signOptions: {
               expiresIn:
-                process.env.DEV_AUTH === 'true'
+                isDevAuthEnabled()
                   ? 86400
                   : jwtExpiration.accessToken,
             },

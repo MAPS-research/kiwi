@@ -228,6 +228,18 @@ export class ExperimentService {
     return this.db.studentRoster(classId);
   }
 
+  /**
+   * Loads an experiment only if it belongs to `classId`. Routes are authorized
+   * per class, so an experiment id from another class must look like a miss.
+   */
+  async getForClass(id: string, classId: string): Promise<Experiment> {
+    const experiment = await this.db.experiment({ id });
+    if (!experiment || experiment.classId !== classId) {
+      throw new NotFoundException('Experiment not found');
+    }
+    return experiment;
+  }
+
   async getById(id: string): Promise<Experiment> {
     const experiment = await this.db.experiment({ id });
     if (!experiment) {

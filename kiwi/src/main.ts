@@ -8,6 +8,7 @@ import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import { PrismaClient } from '@prisma/client';
 import { Logger } from 'nestjs-pino';
 import * as cookieParser from 'cookie-parser';
+import { isDevAuthEnabled } from './auth/dev-auth';
 
 import * as session from 'express-session';
 import { InteractionInterceptor } from './interaction/interaction.interceptor';
@@ -69,7 +70,7 @@ async function bootstrap() {
 
   // Setup Swagger
 
-  const DEV_AUTH = process.env.DEV_AUTH === 'true';
+  const DEV_AUTH = isDevAuthEnabled();
 
   const configBuilder = new DocumentBuilder()
     .setTitle('Kiwi Framework')

@@ -7,6 +7,7 @@ import { AppChunksService } from './app-chunks.service';
 import { AppContextService } from './app-context.service';
 import { AppContextualChatService } from './app-contextual-chat.service';
 import { LlmModule } from 'src/common/llm/llm.module';
+import { InstructorClassModule } from 'src/instructor-class/instructor-class.module';
 import {
   KiwiAppController,
   ClassKiwiAppController,
@@ -15,7 +16,13 @@ import {
 import { AppDataController } from './app-data.controller';
 
 @Module({
-  imports: [DatabaseModule, MaterialModule, ClassModule, LlmModule],
+  imports: [
+    DatabaseModule,
+    MaterialModule,
+    ClassModule,
+    LlmModule,
+    InstructorClassModule,
+  ],
   controllers: [
     KiwiAppController,
     ClassKiwiAppController,

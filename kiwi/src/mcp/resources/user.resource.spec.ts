@@ -15,13 +15,13 @@ describe('UserResource', () => {
     userId?: string,
     appContext?: { appSlug: string; classId: string; scopes: string[]; userId: string },
   ) => {
-    const req: any = {
-      raw: userId ? { user: { sub: userId } } : {},
-    };
+    // Mirrors @rekog/mcp-nest: resources get an adapter whose `.raw` is the
+    // Express request carrying `user` and `appContext`.
+    const raw: any = userId ? { user: { sub: userId } } : {};
     if (appContext) {
-      req.appContext = appContext;
+      raw.appContext = appContext;
     }
-    return req;
+    return { raw };
   };
 
   beforeEach(async () => {
@@ -78,6 +78,50 @@ describe('UserResource', () => {
       expect(content.systemRole).toBe('user');
       // Should not expose sensitive fields
       expect(content.password).toBeUndefined();
+    });
+
+    describe('email visibility', () => {
+      const target = {
+        id: userId,
+        email: 'student@example.edu',
+        systemRole: 'user',
+      } as any;
+      const read = async (req: any) =>
+        JSON.parse(
+          (await resource.getUserProfile({ uri }, mockContext as any, req))
+            .contents[0].text,
+        );
+
+      it('hides the email from another non-admin user', async () => {
+        userService.user.mockImplementation(async ({ id }: any) =>
+          id === userId ? target : ({ id, systemRole: 'user' } as any),
+        );
+        const content = await read(createMockHttpRequest('someone-else'));
+        expect(content.id).toBe(userId);
+        expect(content.email).toBeUndefined();
+      });
+
+      it('shows the email to an admin', async () => {
+        userService.user.mockImplementation(async ({ id }: any) =>
+          id === userId ? target : ({ id, systemRole: 'admin' } as any),
+        );
+        const content = await read(createMockHttpRequest('an-admin'));
+        expect(content.email).toBe('student@example.edu');
+      });
+
+      it('never shows an email to an app token, even for its own user', async () => {
+        userService.user.mockResolvedValue(target);
+        const content = await read(
+          createMockHttpRequest(userId, {
+            appSlug: 'demo',
+            classId: 'c1',
+            scopes: ['user:profile:read'],
+            userId,
+          }),
+        );
+        expect(content.id).toBe(userId);
+        expect(content.email).toBeUndefined();
+      });
     });
 
     it('should return error for invalid URI format', async () => {

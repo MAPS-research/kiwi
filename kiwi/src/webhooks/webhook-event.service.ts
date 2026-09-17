@@ -13,6 +13,7 @@ import { UserWhitelistService } from '../common/database/user-whistelist.service
 import { EnrollmentService } from '../common/database/enrollment.service';
 import { ClassService } from '../common/database/class.service';
 import { Prisma } from '@prisma/client';
+import { InstructorClassService } from '../instructor-class/instructor-class.service';
 
 @Injectable()
 export class WebhookEventService {
@@ -26,6 +27,7 @@ export class WebhookEventService {
     private readonly userWhitelistService: UserWhitelistService,
     private readonly enrollmentService: EnrollmentService,
     private readonly classService: ClassService,
+    private readonly instructorClassService: InstructorClassService,
   ) {}
 
   async createWebhookEvent(data: {
@@ -59,12 +61,59 @@ export class WebhookEventService {
     });
   }
 
+  /**
+   * Whether `userId` may see and decide on `event`. Enrollment events belong to
+   * the class in their payload and can be handled by anyone who manages that
+   * class; any other event type is admin-only.
+   */
+  async canActOnEvent(
+    event: { eventType: string; payload: Prisma.JsonValue },
+    userId: string,
+  ): Promise<boolean> {
+    const classId = (event.payload as { classId?: unknown } | null)?.classId;
+    if (event.eventType === 'user.enroll' && typeof classId === 'string') {
+      return this.instructorClassService.canManageClass(userId, classId);
+    }
+    const user = await this.userService.user({ id: userId });
+    return user?.systemRole === 'admin';
+  }
+
+  /** Pending events the user is allowed to act on. */
+  async getPendingEventsFor(userId: string) {
+    const events = await this.getPendingEvents();
+    const allowed = await Promise.all(
+      events.map((event) => this.canActOnEvent(event, userId)),
+    );
+    return events.filter((_, i) => allowed[i]);
+  }
+
+  /**
+   * Loads an event the user may act on. Events for classes the user doesn't
+   * manage are reported as not found rather than forbidden.
+   */
+  async getWebhookEventFor(id: string, userId: string) {
+    const event = await this.getWebhookEvent(id);
+    if (!(await this.canActOnEvent(event, userId))) {
+      throw new NotFoundException('Webhook event not found');
+    }
+    return event;
+  }
+
   async getWebhookEvent(id: string) {
     const event = await this.webhookEventService.findUnique({
       where: { id },
       include: {
-        webhook: true,
-        approver: true,
+        webhook: {
+          select: {
+            id: true,
+            url: true,
+            events: true,
+            isActive: true,
+            userId: true,
+            createdAt: true,
+          },
+        },
+        approver: { select: { id: true, email: true } },
       },
     });
 

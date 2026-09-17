@@ -10,9 +10,18 @@ import { requireScope } from '../utils/scope-check';
  * Provides read-only access to user information for Kiwi Apps
  *
  * Available resources:
- * - kiwi://users/{userId} - Basic user profile (name, email)
+ * - kiwi://users/{userId} - Basic user profile (email only for the user themselves or an admin)
  * - kiwi://users/{userId}/role/{classId} - User's role in a specific class
  */
+/**
+ * @rekog/mcp-nest hands resource handlers an adapted request; the Express
+ * request (where the auth guard put `user` and `appContext`) is `.raw`.
+ * Reading the adapter directly silently skips every app-token scope check.
+ */
+function expressRequest(httpRequest: HttpRequest): Request {
+  return ((httpRequest as any)?.raw ?? httpRequest) as Request;
+}
+
 @Injectable({ scope: Scope.REQUEST })
 export class UserResource {
   private readonly logger = new Logger(UserResource.name);
@@ -22,11 +31,24 @@ export class UserResource {
     private readonly enrollmentService: EnrollmentService,
   ) {}
 
+  private async mayReadEmail(
+    request: Request,
+    targetUserId: string,
+  ): Promise<boolean> {
+    if (request?.['appContext']) return false;
+    const callerId: string | undefined = (request as any)?.user?.sub;
+    if (!callerId) return false;
+    if (callerId === targetUserId) return true;
+    const caller = await this.userService.user({ id: callerId });
+    return caller?.systemRole === 'admin';
+  }
+
   /**
    * Get basic user profile information
    * URI pattern: kiwi://users/{userId}
    *
-   * Returns: id, email (for display purposes)
+   * Returns: id, systemRole, and email when the caller is that user or an admin
+   * (never for app tokens)
    * Does NOT expose: password hashes, OAuth tokens, etc.
    */
   @Resource({
@@ -42,7 +64,7 @@ export class UserResource {
   ) {
     try {
       // Check scope for app tokens
-      requireScope(httpRequest as Request, 'user:profile:read');
+      requireScope(expressRequest(httpRequest), 'user:profile:read');
 
       // Extract userId from URI
       const match = uri.match(/^kiwi:\/\/users\/([^\/]+)$/);
@@ -75,7 +97,13 @@ export class UserResource {
         };
       }
 
-      // Return only safe, public information
+      // A user id must never resolve to an email for anyone but that user or
+      // an admin, and never for an embedded app (apps see opaque ids only).
+      const includeEmail = await this.mayReadEmail(
+        expressRequest(httpRequest),
+        user.id,
+      );
+
       return {
         contents: [
           {
@@ -84,7 +112,7 @@ export class UserResource {
             text: JSON.stringify(
               {
                 id: user.id,
-                email: user.email,
+                ...(includeEmail ? { email: user.email } : {}),
                 systemRole: user.systemRole,
               },
               null,
@@ -127,7 +155,7 @@ export class UserResource {
   ) {
     try {
       // Check scope for app tokens
-      requireScope(httpRequest as Request, 'class:info:read');
+      requireScope(expressRequest(httpRequest), 'class:info:read');
 
       // Extract userId and classId from URI
       const match = uri.match(/^kiwi:\/\/users\/([^\/]+)\/role\/([^\/]+)$/);
@@ -202,7 +230,7 @@ export class UserResource {
   ) {
     try {
       // Check scope for app tokens
-      requireScope(httpRequest as Request, 'class:enrollments:read');
+      requireScope(expressRequest(httpRequest), 'class:enrollments:read');
 
       // Extract userId from URI
       const match = uri.match(/^kiwi:\/\/users\/([^\/]+)\/enrollments$/);

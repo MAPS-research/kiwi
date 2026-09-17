@@ -13,6 +13,7 @@ import {
   HttpStatus,
   UseGuards,
   ForbiddenException,
+  ValidationPipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -23,7 +24,11 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { Request } from 'express';
-import { AdminGuard, JwtAuthGuard } from 'src/auth/auth.guard';
+import {
+  AdminGuard,
+  InstructorClassGuard,
+  JwtAuthGuard,
+} from 'src/auth/auth.guard';
 import { Public } from 'src/auth/auth.decorator';
 import { KiwiAppService } from './kiwi-app.service';
 import {
@@ -47,6 +52,13 @@ import {
   ContextUpdateResponseDto,
 } from './dto';
 import { isAppTokenRequest } from '../mcp/utils/scope-check';
+
+/**
+ * Global request validation is not enabled, so endpoints whose DTO constraints
+ * matter for security (e.g. the 32-character registration secret) validate
+ * their body explicitly.
+ */
+const validateBody = new ValidationPipe();
 
 @ApiTags('kiwi-apps')
 @Controller('api/kiwi-apps')
@@ -72,7 +84,7 @@ export class KiwiAppController {
   @ApiOperation({ summary: 'Add app to whitelist (Admin)' })
   @ApiResponse({ status: 201, type: WhitelistEntryResponseDto })
   async createWhitelistEntry(
-    @Body() dto: CreateWhitelistEntryDto,
+    @Body(validateBody) dto: CreateWhitelistEntryDto,
     @Req() req: Request,
   ) {
     const user = (req as any).user;
@@ -87,7 +99,7 @@ export class KiwiAppController {
   @ApiResponse({ status: 200, type: WhitelistEntryResponseDto })
   async updateWhitelistEntry(
     @Param('slug') slug: string,
-    @Body() dto: UpdateWhitelistEntryDto,
+    @Body(validateBody) dto: UpdateWhitelistEntryDto,
     @Req() req: Request,
   ) {
     const user = (req as any).user;
@@ -361,6 +373,7 @@ export class ClassKiwiAppController {
   }
 
   @Post()
+  @UseGuards(InstructorClassGuard)
   @ApiOperation({ summary: 'Enable an app for a class (Professor/Admin)' })
   @ApiParam({ name: 'classId', description: 'Class ID' })
   @ApiResponse({ status: 201, type: ClassAppResponseDto })
@@ -370,11 +383,11 @@ export class ClassKiwiAppController {
     @Req() req: Request,
   ) {
     const user = (req as any).user;
-    // TODO: Check if user is professor/admin for this class
     return this.kiwiAppService.enableClassApp(classId, dto, user.sub);
   }
 
   @Patch(':appId')
+  @UseGuards(InstructorClassGuard)
   @ApiOperation({ summary: 'Update class app configuration (Professor/Admin)' })
   @ApiParam({ name: 'classId', description: 'Class ID' })
   @ApiParam({ name: 'appId', description: 'App ID' })
@@ -384,11 +397,11 @@ export class ClassKiwiAppController {
     @Param('appId') appId: string,
     @Body() dto: UpdateClassAppDto,
   ) {
-    // TODO: Check if user is professor/admin for this class
     return this.kiwiAppService.updateClassApp(classId, appId, dto);
   }
 
   @Delete(':appId')
+  @UseGuards(InstructorClassGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Disable an app for a class (Professor/Admin)' })
   @ApiParam({ name: 'classId', description: 'Class ID' })
@@ -398,11 +411,11 @@ export class ClassKiwiAppController {
     @Param('classId') classId: string,
     @Param('appId') appId: string,
   ) {
-    // TODO: Check if user is professor/admin for this class
     await this.kiwiAppService.disableClassApp(classId, appId);
   }
 
   @Put('order')
+  @UseGuards(InstructorClassGuard)
   @ApiOperation({ summary: 'Reorder class app tabs (Professor/Admin)' })
   @ApiParam({ name: 'classId', description: 'Class ID' })
   @ApiResponse({ status: 200, type: [ClassAppResponseDto] })
@@ -410,7 +423,6 @@ export class ClassKiwiAppController {
     @Param('classId') classId: string,
     @Body() dto: ReorderClassAppsDto,
   ) {
-    // TODO: Check if user is professor/admin for this class
     return this.kiwiAppService.reorderClassApps(classId, dto);
   }
 }

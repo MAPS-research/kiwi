@@ -405,7 +405,7 @@ export class AuthController {
     const frontURLs = this.configService.get('FRONTEND_URL').split(',');
     let frontURL = '';
 
-    // Check if redirect is in whitelist, ignored when DEV_AUTH is enabled
+    // The requested frontend must be one of FRONTEND_URL
     if (frontend) {
       if (frontURLs.includes(frontend)) frontURL = frontend;
       else {

@@ -21,6 +21,34 @@ import { RedisService } from 'src/common/redis/redis.service';
 import { AuthService } from './auth.service';
 import { isGoogleOAuthConfigured } from './google.strategy';
 
+/**
+ * The class a request targets, from the route (`:classID` / `:classId`), the
+ * query string, or the body — in that order.
+ */
+export function resolveRequestClassId(request: any): string | undefined {
+  const candidates = [
+    request?.params?.classID,
+    request?.params?.classId,
+    request?.query?.classID,
+    request?.query?.classId,
+    request?.body?.classId,
+    request?.body?.classID,
+  ];
+  const found = candidates.find((v) => typeof v === 'string' && v.length > 0);
+  return found;
+}
+
+/**
+ * Refresh tokens are signed with the same key as access tokens, so a verified
+ * signature alone does not make a token usable as a bearer credential. Only
+ * refresh tokens carry a `jti`; reject them here.
+ */
+export function assertBearerAccessToken(payload: any): void {
+  if (!payload || payload.jti) {
+    throw new UnauthorizedException('Invalid or expired token.');
+  }
+}
+
 @Injectable()
 export class AdminGuard implements CanActivate {
   private readonly logger = new Logger(JwtAuthGuard.name);
@@ -138,6 +166,7 @@ export class JwtAuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         ignoreExpiration: false,
       });
+      assertBearerAccessToken(payload);
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
       request['user'] = payload;
@@ -289,63 +318,30 @@ export class GoogleOAuthGuard extends AuthGuard('google') {
 @Injectable()
 export class InstructorClassGuard implements CanActivate {
   private readonly logger = new Logger(InstructorClassGuard.name);
-  constructor(
-    private userService: UserService,
-    private enrollmentService: EnrollmentService,
-    private instructorClassService: InstructorClassService,
-  ) {}
+  constructor(private instructorClassService: InstructorClassService) {}
 
+  /**
+   * Allows admins, professors enrolled in the requested class, and instructors
+   * assigned to it. The class comes from the route, query or body; a request
+   * that names no class is refused.
+   */
   async canActivate(context: ExecutionContext): Promise<boolean> {
     if (process.env.NO_AUTH === 'true') {
       return true;
     }
 
     const request = context.switchToHttp().getRequest();
-    const userId = request.session.userId;
+    const userId = request.session?.userId;
     if (!userId) {
       throw new UnauthorizedException();
     }
 
-    const user = await this.userService.user({
-      id: userId,
-    });
-    if (!user) {
-      throw new UnauthorizedException();
-    }
-
-    // Admin can always access
-    if (user.systemRole === 'admin') {
-      return true;
-    }
-
-    // Check if user is a professor via enrollment
-    const enrollments = await this.enrollmentService.enrollments({
-      where: {
-        userId: userId,
-      },
-    });
-
-    const isProf = enrollments.some(
-      (enrollment) => enrollment.role === 'professor',
-    );
-
-    if (isProf && enrollments.length > 0) {
-      return true;
-    }
-
-    // Check if user is instructor assigned to this class
-    const classId = request.query.classID || request.params.classID || request.body.classId;
+    const classId = resolveRequestClassId(request);
     if (!classId) {
       throw new UnauthorizedException('Class ID is required');
     }
 
-    // Check if instructor is assigned to this class (any permission level)
-    const hasClassAccess = await this.instructorClassService.checkInstructorHasClassAccess(
-      userId,
-      classId,
-    );
-
-    if (hasClassAccess) {
+    if (await this.instructorClassService.canManageClass(userId, classId)) {
       return true;
     }
 
@@ -548,6 +544,7 @@ export class JwtAuthOptionalSessionGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         ignoreExpiration: false,
       });
+      assertBearerAccessToken(payload);
       // Assign payload to request object for route handlers
       request['user'] = payload;
     } catch (e) {
@@ -605,6 +602,7 @@ export class SmartJwtAuthGuard implements CanActivate {
       payload = await this.jwtService.verifyAsync(token, {
         ignoreExpiration: false,
       });
+      assertBearerAccessToken(payload);
       // Assign payload to request object for route handlers
       request['user'] = payload;
     } catch (e) {
