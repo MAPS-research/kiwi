@@ -70,6 +70,7 @@ export class KiwiAppService {
         baseUrl: dto.baseUrl,
         status: dto.status || 'pending',
         description: dto.description,
+        maxScopes: dto.maxScopes ?? [],
         approvedBy: dto.status === 'approved' ? adminId : null,
       },
       // Exclude the hashed secret from response
@@ -560,6 +561,7 @@ export class KiwiAppService {
           tabOrder: dto.tabOrder ?? existing.tabOrder,
           tabLabel: dto.tabLabel ?? existing.tabLabel,
           config: dto.config ?? (existing.config as object) ?? {},
+          enabledScopes: dto.enabledScopes ?? existing.enabledScopes,
           enabledBy: userId,
         },
         include: { app: true },
@@ -579,6 +581,7 @@ export class KiwiAppService {
         tabOrder: dto.tabOrder ?? (maxOrder._max.tabOrder ?? -1) + 1,
         tabLabel: dto.tabLabel,
         config: dto.config || {},
+        enabledScopes: dto.enabledScopes ?? [],
         enabledBy: userId,
       },
       include: { app: true },
@@ -594,9 +597,12 @@ export class KiwiAppService {
       throw new NotFoundException(`App not enabled for this class`);
     }
 
+    // Only the editable settings; the body is not validated, so never pass it
+    // through wholesale (it could otherwise rewrite classId, enabledBy, ...).
+    const { tabOrder, tabLabel, config, enabledScopes, isEnabled } = dto;
     return this.db.classKiwiApp.update({
       where: { classId_appId: { classId, appId } },
-      data: dto,
+      data: { tabOrder, tabLabel, config, enabledScopes, isEnabled },
       include: { app: true },
     });
   }

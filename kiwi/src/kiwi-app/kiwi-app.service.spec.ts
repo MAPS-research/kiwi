@@ -182,6 +182,24 @@ describe('KiwiAppService', () => {
       description: 'New app',
     };
 
+    it('stores the requested maxScopes', async () => {
+      db.kiwiAppWhitelist.findUnique.mockResolvedValue(null);
+      db.kiwiAppWhitelist.create.mockResolvedValue(mockWhitelistEntry);
+
+      await service.createWhitelistEntry(
+        { ...createDto, maxScopes: ['class:materials:chunks:read'] },
+        'admin-1',
+      );
+
+      expect(db.kiwiAppWhitelist.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            maxScopes: ['class:materials:chunks:read'],
+          }),
+        }),
+      );
+    });
+
     it('should create a new whitelist entry with hashed secret', async () => {
       db.kiwiAppWhitelist.findUnique.mockResolvedValue(null);
       db.kiwiAppWhitelist.create.mockResolvedValue({
@@ -199,6 +217,7 @@ describe('KiwiAppService', () => {
           baseUrl: 'http://localhost:9000',
           status: 'approved',
           description: 'New app',
+          maxScopes: [],
           approvedBy: 'admin-1',
         },
         select: expect.any(Object),

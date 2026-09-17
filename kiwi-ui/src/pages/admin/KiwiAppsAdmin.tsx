@@ -1046,7 +1046,10 @@ export const KiwiAppsAdmin: React.FC = () => {
                                   <TableBody>
                                     {appPrompts[app.slug].map((prompt) => {
                                       const isProcessing = processingPrompt === `${app.slug}:${prompt.promptId}`;
-                                      const isApproved = !!prompt.approvedBy;
+                                      // Revoking keeps approvedBy for the audit trail and only
+                                      // clears isActive, so approval needs both.
+                                      const isApproved = prompt.isActive && !!prompt.approvedBy;
+                                      const isRevoked = !prompt.isActive && !!prompt.approvedBy;
 
                                       return (
                                         <TableRow key={prompt.id}>
@@ -1099,6 +1102,13 @@ export const KiwiAppsAdmin: React.FC = () => {
                                                   color="success"
                                                 />
                                               </Tooltip>
+                                            ) : isRevoked ? (
+                                              <Chip
+                                                icon={<RejectedIcon />}
+                                                label="Revoked"
+                                                size="small"
+                                                color="default"
+                                              />
                                             ) : (
                                               <Chip
                                                 icon={<PendingIcon />}
