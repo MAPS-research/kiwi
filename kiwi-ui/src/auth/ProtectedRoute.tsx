@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext.tsx";
+import { consentRequired } from "../config/branding";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -52,9 +53,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   }
 
   // check for consent
-  console.log("check user consent in routing", user.consent)
-
-  if (!user.consent && location.pathname !== "/consent") {
+  if (consentRequired() && !user.consent && location.pathname !== "/consent") {
     return <Navigate to="/consent"/>;
   }
 

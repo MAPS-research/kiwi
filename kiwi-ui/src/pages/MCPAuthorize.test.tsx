@@ -233,10 +233,18 @@ describe('MCPAuthorize Page', () => {
       expect(screen.getByRole('button', { name: 'Login & Authorize' })).toBeInTheDocument();
     });
 
-    it('shows Google login button for logged-out user', () => {
+    it('hides Google login by default', () => {
+      renderWithRoute(<MCPAuthorize />, '/authorize?oauth_pending=true');
+
+      expect(screen.queryByTestId('google-login-button')).not.toBeInTheDocument();
+    });
+
+    it('shows Google login button when enabled', () => {
+      vi.stubEnv('VITE_ENABLE_GOOGLE_LOGIN', 'true');
       renderWithRoute(<MCPAuthorize />, '/authorize?oauth_pending=true');
 
       expect(screen.getByTestId('google-login-button')).toBeInTheDocument();
+      vi.unstubAllEnvs();
     });
 
     it('does not show Authorize confirmation for logged-out user', () => {

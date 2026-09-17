@@ -5,6 +5,19 @@ import { ConfigService } from '@nestjs/config';
 import { WhitelistService } from './whitelist/whitelist.service';
 import { Request } from 'express';
 
+/**
+ * Google sign-in is optional: it is enabled only when GOOGLE_CLIENT_ID is set.
+ * Password login works without it.
+ */
+export function isGoogleOAuthConfigured(configService: ConfigService): boolean {
+  return Boolean(configService.get<string>('GOOGLE_CLIENT_ID'));
+}
+
+// passport-oauth2 throws at construction without a client id, which would stop
+// the app from booting. When Google is not configured the strategy is built with
+// this placeholder and GoogleOAuthGuard refuses every request before it is used.
+const UNCONFIGURED = 'google-oauth-not-configured';
+
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   constructor(
@@ -12,8 +25,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     private readonly whitelistService: WhitelistService,
   ) {
     super({
-      clientID: configService.get('GOOGLE_CLIENT_ID')!,
-      clientSecret: configService.get('GOOGLE_CLIENT_SECRET')!,
+      clientID: configService.get('GOOGLE_CLIENT_ID') || UNCONFIGURED,
+      clientSecret: configService.get('GOOGLE_CLIENT_SECRET') || UNCONFIGURED,
       callbackURL: configService.get('GOOGLE_CALLBACK_URL'),
       scope: ['email', 'profile'],
       passReqToCallback: true,

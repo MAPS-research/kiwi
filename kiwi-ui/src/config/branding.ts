@@ -54,7 +54,33 @@ export function isSsoEmail(email: string): boolean {
 }
 
 /**
- * URL of the consent document shown on /consent. Empty string means this
- * deployment has no consent form; the page then explains how to configure one.
+ * URL of the consent document shown on /consent. The consent gate (users must
+ * accept before using the app) is only enforced when this is set, so a fresh
+ * install goes straight to the main page.
  */
-export const CONSENT_FORM_URL: string = env.VITE_CONSENT_FORM_URL || "";
+export function consentFormUrl(): string {
+  return import.meta.env.VITE_CONSENT_FORM_URL || "";
+}
+
+/** Whether users must accept the consent document before using the app. */
+export function consentRequired(): boolean {
+  return Boolean(consentFormUrl());
+}
+
+/**
+ * Password login is the default.
+ * (Sign-in flags are read lazily, like ssoEmailDomain, so tests can stub them.)
+ * Deployments that only allow SSO can turn it
+ * off with VITE_DISABLE_PASSWORD_LOGIN=true.
+ */
+export function passwordLoginEnabled(): boolean {
+  return import.meta.env.VITE_DISABLE_PASSWORD_LOGIN !== "true";
+}
+
+/**
+ * Google sign-in is opt-in. The backend also needs GOOGLE_CLIENT_ID; without
+ * it /auth/google returns 404.
+ */
+export function googleLoginEnabled(): boolean {
+  return import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "true";
+}

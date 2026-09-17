@@ -1,4 +1,6 @@
 import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcryptjs';
+import { randomBytes } from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -148,19 +150,81 @@ const STUDENT_EMAIL = 'student@example.com';
 const SEED_CLASS_ID = 'seed-class-001';
 const SEED_MATERIAL_ID = 'seed-material-001';
 
-async function runMinimalBaseline() {
-  console.log('[seed] No prisma/seed-data.json found — applying minimal baseline.');
+// Printed after the seed finishes so the credentials don't scroll away.
+const adminBanner: string[] = [];
+
+/** A readable one-time password, e.g. `tR7k-q2Vx-9xLm`. */
+function generatePassword(): string {
+  const alphabet =
+    'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+  const bytes = randomBytes(12);
+  const chars = Array.from(bytes, (b) => alphabet[b % alphabet.length]);
+  return [0, 4, 8].map((i) => chars.slice(i, i + 4).join('')).join('-');
+}
+
+async function hashPassword(password: string) {
+  const passwordSalt = await bcrypt.genSalt(10);
+  const passwordHash = await bcrypt.hash(password, passwordSalt);
+  return { passwordHash, passwordSalt };
+}
+
+/**
+ * Creates the admin account with a password so a fresh install can log in
+ * without Google. The password comes from SEED_ADMIN_PASSWORD, or is generated
+ * and printed once. An existing admin's password is only changed when
+ * SEED_ADMIN_PASSWORD is set, so re-running the seed never locks anyone out.
+ */
+async function seedAdmin() {
+  const fromEnv = process.env.SEED_ADMIN_PASSWORD;
+  const existing = await prisma.user.findUnique({
+    where: { email: ADMIN_EMAIL },
+  });
+
+  let shownPassword: string | null = null;
+  let credentials: { passwordHash: string; passwordSalt: string } | undefined;
+  if (fromEnv) {
+    credentials = await hashPassword(fromEnv);
+  } else if (!existing?.passwordHash) {
+    shownPassword = generatePassword();
+    credentials = await hashPassword(shownPassword);
+  }
 
   const admin = await prisma.user.upsert({
     where: { email: ADMIN_EMAIL },
-    update: { systemRole: 'admin' },
+    update: { systemRole: 'admin', ...credentials },
     create: {
       email: ADMIN_EMAIL,
       oauthId: `seed-oauth-${ADMIN_EMAIL}`,
-      oauth: true,
+      oauth: false,
       systemRole: 'admin',
+      ...credentials,
     },
   });
+
+  const line = '-'.repeat(44);
+  adminBanner.push(line, 'Admin login', `  email:    ${ADMIN_EMAIL}`);
+  if (shownPassword) {
+    adminBanner.push(
+      `  password: ${shownPassword}   (shown once)`,
+      'Set SEED_ADMIN_PASSWORD to choose it instead.',
+    );
+  } else if (fromEnv) {
+    adminBanner.push('  password: from SEED_ADMIN_PASSWORD');
+  } else {
+    adminBanner.push(
+      '  password: unchanged (already set)',
+      'Set SEED_ADMIN_PASSWORD to reset it.',
+    );
+  }
+  adminBanner.push(line);
+
+  return admin;
+}
+
+async function runMinimalBaseline() {
+  console.log('[seed] No prisma/seed-data.json found — applying minimal baseline.');
+
+  const admin = await seedAdmin();
 
   const instructor = await prisma.user.upsert({
     where: { email: INSTRUCTOR_EMAIL },
@@ -255,6 +319,7 @@ async function main() {
       await runMinimalBaseline();
     }
     console.log('[seed] Done.');
+    adminBanner.forEach((l) => console.log(`[seed] ${l}`));
   } catch (err) {
     console.error('[seed] Fatal error during seed:', err);
     process.exitCode = 1;

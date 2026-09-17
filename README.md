@@ -26,13 +26,14 @@ Requires Node.js 20 (see `kiwi/.nvmrc`) and Docker.
 ```bash
 # 1. Infrastructure: PostgreSQL/pgvector, Redis, MinIO
 cd kiwi
-cp .env.example .env          # then fill in LLM_API_KEY, Google OAuth, etc.
+cp .env.example .env          # then set LLM_API_KEY (Google sign-in is optional)
 docker compose up -d
 
 # 2. Backend
 npm install
 npx prisma generate
 npx prisma migrate deploy
+npx prisma db seed            # creates the admin account and prints its password
 npm run start:dev             # http://localhost:3000  (Swagger at /docs)
 
 # 3. Frontend, in another shell
@@ -41,6 +42,15 @@ cp .env.example .env
 npm install
 npm run dev                   # http://localhost:3001
 ```
+
+Log in at http://localhost:3001 with the admin email and password printed by
+`npx prisma db seed`. To choose the password yourself, set `SEED_ADMIN_PASSWORD`
+before seeding; re-running the seed never changes an existing password unless
+it is set. Further accounts are created from **Admin → User Management**.
+
+Password login is the default. Google sign-in is opt-in: set `GOOGLE_CLIENT_ID`
+and `GOOGLE_CLIENT_SECRET` in `kiwi/.env` and `VITE_ENABLE_GOOGLE_LOGIN=true` in
+`kiwi-ui/.env`.
 
 See [`kiwi/README.md`](kiwi/README.md) and [`kiwi-ui/README.md`](kiwi-ui/README.md)
 for the full setup, and [`docs/`](docs) for deeper topics — retrieval and

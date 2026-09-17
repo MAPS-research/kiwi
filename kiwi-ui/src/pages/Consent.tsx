@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import { Container } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import apiClient from "../utils/api.ts";
 import {
   TextField,
@@ -12,9 +12,10 @@ import {
   Typography,
 } from "@mui/material";
 import { useAuth } from "../auth/AuthContext.tsx";
-import { CONSENT_FORM_URL } from "../config/branding";
+import { consentFormUrl } from "../config/branding";
 
 export const Consent: React.FC = () => {
+  const formUrl = consentFormUrl();
   const todayDate = new Date().toISOString().split("T")[0];
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [text, setText] = useState<string>(todayDate);
@@ -42,6 +43,10 @@ export const Consent: React.FC = () => {
     );
   };
 
+  if (!formUrl) {
+    return <Navigate to="/" replace />;
+  }
+
   return (
     <div>
       <Container>
@@ -52,21 +57,11 @@ export const Consent: React.FC = () => {
           Please read the document below and accept to continue.
         </Typography>
       </Container>
-      {CONSENT_FORM_URL ? (
-        <Container>
-          <Worker workerUrl="/assets/pdf.worker.min.js">
-            <Viewer theme="dark" fileUrl={CONSENT_FORM_URL} />
-          </Worker>
-        </Container>
-      ) : (
-        <Container>
-          <Typography sx={{ my: 2 }}>
-            No consent document is configured for this deployment. Set
-            <code> VITE_CONSENT_FORM_URL </code> to the URL of your
-            institution&apos;s form.
-          </Typography>
-        </Container>
-      )}
+      <Container>
+        <Worker workerUrl="/assets/pdf.worker.min.js">
+          <Viewer theme="dark" fileUrl={formUrl} />
+        </Worker>
+      </Container>
       {user!.consent === false && (
         <Container>
           <form onSubmit={handleSubmit} noValidate autoComplete="off">

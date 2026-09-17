@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext.tsx";
+import { consentRequired } from "../config/branding";
 
 interface UnprotectedRouteProps {
   children: React.ReactNode;
@@ -12,7 +13,7 @@ const UnprotectedRoute: React.FC<UnprotectedRouteProps> = ({ children }) => {
   const token = localStorage.getItem('authToken');
 
    // check for consent
-  if (token && user && !user.consent && location.pathname !== "/consent") {
+  if (token && user && consentRequired() && !user.consent && location.pathname !== "/consent") {
     return <Navigate to="/consent" />;
   }
   if (token && user) {

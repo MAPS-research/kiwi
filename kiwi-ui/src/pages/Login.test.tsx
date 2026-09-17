@@ -98,16 +98,34 @@ describe("Login Page", () => {
     expect(screen.getByRole("button", { name: "Login" })).toBeEnabled();
   });
 
-  it("renders the Google login option", () => {
+  it("offers password login only by default", () => {
+    renderLogin();
+
+    expect(screen.getByRole("button", { name: "Login" })).toBeInTheDocument();
+    expect(screen.queryByTestId("google-login-button")).not.toBeInTheDocument();
+    expect(screen.queryByText("OR")).not.toBeInTheDocument();
+  });
+
+  it("points to the administrator instead of self sign-up by default", () => {
+    renderLogin();
+
+    expect(screen.getByText("Need an account? Ask your administrator.")).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Create one" })).not.toBeInTheDocument();
+  });
+
+  it("renders the Google login option when enabled", () => {
+    vi.stubEnv("VITE_ENABLE_GOOGLE_LOGIN", "true");
     renderLogin();
 
     expect(screen.getByTestId("google-login-button")).toHaveAttribute("data-mode", "login");
     expect(screen.getByTestId("google-login-button")).toHaveAttribute("data-appearance", "neutral");
     expect(screen.getByRole("button", { name: "Continue with Google" })).toBeInTheDocument();
+    expect(screen.getByText("OR")).toBeInTheDocument();
   });
 
   it("supports deployments that disable password login", () => {
     vi.stubEnv("VITE_DISABLE_PASSWORD_LOGIN", "true");
+    vi.stubEnv("VITE_ENABLE_GOOGLE_LOGIN", "true");
     renderLogin();
 
     expect(screen.queryByRole("textbox", { name: "Email" })).not.toBeInTheDocument();
@@ -115,7 +133,15 @@ describe("Login Page", () => {
     expect(screen.getByRole("button", { name: "Continue with Google" })).toBeInTheDocument();
   });
 
-  it("links to account creation", () => {
+  it("warns when every sign-in method is disabled", () => {
+    vi.stubEnv("VITE_DISABLE_PASSWORD_LOGIN", "true");
+    renderLogin();
+
+    expect(screen.getByText(/No sign-in method is enabled/)).toBeInTheDocument();
+  });
+
+  it("links to account creation when Google sign-up is available", () => {
+    vi.stubEnv("VITE_ENABLE_GOOGLE_LOGIN", "true");
     renderLogin();
 
     expect(screen.getByRole("link", { name: "Create one" })).toHaveAttribute("href", "/register");

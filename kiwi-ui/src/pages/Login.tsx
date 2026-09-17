@@ -3,6 +3,7 @@ import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout/AuthLayout.tsx";
 import FormCard from "../components/FormCard/FormCard.tsx";
 import InstitutionLogo from "../components/Brand/InstitutionLogo.tsx";
+import { googleLoginEnabled, passwordLoginEnabled } from "../config/branding";
 import KiwiWordmark from "../components/Brand/KiwiWordmark.tsx";
 import { GoogleLoginButton } from "../components/GoogleLoginButton/GoogleLoginButton.tsx";
 import {
@@ -22,6 +23,8 @@ import { useAuth } from "../auth/AuthContext.tsx";
 import apiClient from "../utils/api.ts";
 
 export const Login: React.FC = () => {
+  const googleLoginOn = googleLoginEnabled();
+  const passwordLoginOn = passwordLoginEnabled();
   const [showTimeoutBanner, setShowTimeoutBanner] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -167,7 +170,7 @@ export const Login: React.FC = () => {
           </Alert>
         )}
 
-        {import.meta.env.VITE_DISABLE_PASSWORD_LOGIN !== "true" && (
+        {passwordLoginOn && (
           <Box
             component="form"
             onSubmit={handleSubmit}
@@ -264,15 +267,26 @@ export const Login: React.FC = () => {
               )}
             </Button>
 
-            <Divider sx={{ my: 1.5, color: "text.secondary", fontSize: 13 }}>
-              OR
-            </Divider>
+            {googleLoginOn && (
+              <Divider sx={{ my: 1.5, color: "text.secondary", fontSize: 13 }}>
+                OR
+              </Divider>
+            )}
           </Box>
         )}
 
-        <Box width="100%">
-          <GoogleLoginButton mode="login" appearance="neutral" />
-        </Box>
+        {googleLoginOn && (
+          <Box width="100%">
+            <GoogleLoginButton mode="login" appearance="neutral" />
+          </Box>
+        )}
+
+        {!passwordLoginOn && !googleLoginOn && (
+          <Alert severity="warning" sx={{ width: "100%", borderRadius: 2 }}>
+            No sign-in method is enabled. Unset VITE_DISABLE_PASSWORD_LOGIN or
+            set VITE_ENABLE_GOOGLE_LOGIN=true.
+          </Alert>
+        )}
 
         <Typography
           variant="body2"
@@ -280,15 +294,21 @@ export const Login: React.FC = () => {
           textAlign="center"
           sx={{ mt: 4 }}
         >
-          Don&apos;t have an account?{" "}
-          <Link
-            component={RouterLink}
-            to="/register"
-            fontWeight={700}
-            underline="hover"
-          >
-            Create one
-          </Link>
+          {googleLoginOn ? (
+            <>
+              Don&apos;t have an account?{" "}
+              <Link
+                component={RouterLink}
+                to="/register"
+                fontWeight={700}
+                underline="hover"
+              >
+                Create one
+              </Link>
+            </>
+          ) : (
+            <>Need an account? Ask your administrator.</>
+          )}
         </Typography>
       </FormCard>
     </AuthLayout>

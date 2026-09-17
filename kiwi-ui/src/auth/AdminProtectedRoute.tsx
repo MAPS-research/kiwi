@@ -2,6 +2,7 @@ import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { CircularProgress, Box } from "@mui/material";
 import { useAuth } from "./AuthContext.tsx";
+import { consentRequired } from "../config/branding";
 
 interface AdminProtectedRouteProps {
   children: React.ReactNode;
@@ -16,7 +17,7 @@ const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) =
   }
 
   // check for consent
-  if (!user.consent && location.pathname !== "/consent") {
+  if (consentRequired() && !user.consent && location.pathname !== "/consent") {
     return <Navigate to="/consent" />;
   }
 

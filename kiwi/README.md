@@ -37,15 +37,25 @@ $ npm install
 
 ### Setup Environment
 
-- Copy the .env.example to .env
-  - change the LLM_CHAT_MODEL to the model you want to use, (we are using "gpt-4o" for now)
-  - set Google Oauth Client ID: https://developers.google.com/identity/protocols/oauth2
-    - Go to https://console.cloud.google.com/apis/credentials
-    - +Create Credentials -> OAuth Client ID -> Type: Web application
-    - set the name and Authorized redirect URIs = http://localhost:3000/auth/google
-    - copy and paste your Client ID and Client secret to GOOGLE_CLIENT_ID  &  GOOGLE_CLIENT_SECRET
-    - GOOGLE_DOMAIN="example.edu" (the domain of your org)
-  - set LLM_API_KEY to your OpenAI key
+- Copy `.env.example` to `.env`
+  - set `LLM_API_KEY` to your OpenAI-compatible key, and `LLM_CHAT_MODEL` to the
+    model you want to use
+  - optionally set `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` for the admin
+    account created by the seed (a password is generated if left empty)
+
+### Google sign-in (Optional)
+
+Password login works out of the box. To also allow Google sign-in:
+
+- Go to https://console.cloud.google.com/apis/credentials
+- **Create Credentials → OAuth client ID → Web application**
+- Add `http://localhost:3000/auth/google` as an authorized redirect URI
+- Put the client ID and secret in `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
+- Set `GOOGLE_DOMAIN` to the Google Workspace domain(s) allowed to sign in,
+  comma-separated, or `*` for any account
+- In `kiwi-ui/.env`, set `VITE_ENABLE_GOOGLE_LOGIN=true`
+
+Without `GOOGLE_CLIENT_ID`, the Google routes return 404 and the button is hidden.
 
 ### JWT Configuration (Optional)
 
@@ -68,7 +78,8 @@ External services can verify Kiwi JWTs by fetching the public key from `/.well-k
 
 ### Setup database
 ```bash
-$ npx prisma db push
+$ npx prisma migrate deploy
+$ npx prisma db seed    # creates the admin account and prints its password
 ```
 ### Run the app
 ```bash
@@ -80,7 +91,7 @@ $ npx prisma studio
 ```
 - Once the app start running, go to http://localhost:3000/docs (Swagger),you can see the API description
 - Set up the frontend app: see `../kiwi-ui`
-- If you are unable to log in with Google OAuth and see the error message "403 Forbidden," please check whether your Google account session has expired in Chrome.
+- If Google sign-in is enabled and returns "403 Forbidden", check whether your Google account session has expired in the browser.
 
 ## License
 

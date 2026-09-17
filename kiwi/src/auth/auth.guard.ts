@@ -5,6 +5,7 @@ import {
   Injectable,
   Logger,
   UnauthorizedException,
+  NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
@@ -18,6 +19,7 @@ import { EnrollmentService } from 'src/common/database/enrollment.service';
 import { InstructorClassService } from 'src/instructor-class/instructor-class.service';
 import { RedisService } from 'src/common/redis/redis.service';
 import { AuthService } from './auth.service';
+import { isGoogleOAuthConfigured } from './google.strategy';
 
 @Injectable()
 export class AdminGuard implements CanActivate {
@@ -268,6 +270,10 @@ export class GoogleOAuthGuard extends AuthGuard('google') {
   }
 
   canActivate(context: ExecutionContext) {
+    if (!isGoogleOAuthConfigured(this.configService)) {
+      throw new NotFoundException('Google sign-in is not configured');
+    }
+
     const request = context.switchToHttp().getRequest();
 
     // Capture the incoming query params in session.

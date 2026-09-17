@@ -9,8 +9,11 @@ import { GoogleLoginButton } from "../components/GoogleLoginButton/GoogleLoginBu
 import { Box, Typography } from "@mui/material";
 import { useAuth } from "../auth/AuthContext.tsx";
 import { basePath } from "../utils/api.ts";
+import { googleLoginEnabled, passwordLoginEnabled } from "../config/branding";
 
 export const MCPAuthorize: React.FC = () => {
+  const googleLoginOn = googleLoginEnabled();
+  const passwordLoginOn = passwordLoginEnabled();
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -205,7 +208,7 @@ export const MCPAuthorize: React.FC = () => {
 
         <LogoBox />
 
-        {import.meta.env.VITE_DISABLE_PASSWORD_LOGIN !== "true" && (
+        {passwordLoginOn && (
           <Box component="form" onSubmit={handlePasswordLogin} width="100%">
             <TextField
               label="Your Email"
@@ -242,9 +245,11 @@ export const MCPAuthorize: React.FC = () => {
           </Box>
         )}
 
-        <Box mt={2} width="100%">
-          <GoogleLoginButton mode="login" />
-        </Box>
+        {googleLoginOn && (
+          <Box mt={2} width="100%">
+            <GoogleLoginButton mode="login" />
+          </Box>
+        )}
       </FormCard>
     </AuthLayout>
   );
