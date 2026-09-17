@@ -3,21 +3,29 @@ import {
   ExecutionContext,
   ForbiddenException,
   Injectable,
-  Logger,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UserService } from 'src/common/database/user.service';
-import { EnrollmentService } from 'src/common/database/enrollment.service';
 import { InstructorClassService } from './instructor-class.service';
+import { resolveRequestClassId } from 'src/auth/auth.guard';
 
+const firstString = (...values: unknown[]): string | undefined =>
+  values.find((v): v is string => typeof v === 'string' && v.length > 0);
+
+/**
+ * Allows managing materials and documents of ONE class: the class named by the
+ * request, or the class that owns the material or document it names.
+ *
+ * Admins always pass; otherwise the user must be a professor enrolled in that
+ * class or an instructor assigned to it with `canManageMaterials`. A request
+ * that doesn't identify a class, material or document is refused.
+ *
+ * Multipart bodies are not parsed yet when guards run, so upload routes check
+ * the material in the handler instead.
+ */
 @Injectable()
 export class MaterialManageGuard implements CanActivate {
-  private readonly logger = new Logger(MaterialManageGuard.name);
-  constructor(
-    private userService: UserService,
-    private enrollmentService: EnrollmentService,
-    private instructorClassService: InstructorClassService,
-  ) {}
+  constructor(private instructorClassService: InstructorClassService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     if (process.env.NO_AUTH === 'true') {
@@ -25,58 +33,48 @@ export class MaterialManageGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    const userId = request.session.userId;
-
+    const userId = request.session?.userId;
     if (!userId) {
       throw new UnauthorizedException();
     }
 
-    const user = await this.userService.user({
-      id: userId,
-    });
-    if (!user) {
-      throw new UnauthorizedException();
+    const classId = await this.resolveClassId(request);
+    if (!(await this.instructorClassService.canManageMaterials(userId, classId))) {
+      throw new ForbiddenException(
+        'User does not have permission to manage materials in this class',
+      );
     }
+    return true;
+  }
 
-    // Admin can always manage materials
-    if (user.systemRole === 'admin') {
-      return true;
-    }
+  private async resolveClassId(request: any): Promise<string> {
+    const direct = resolveRequestClassId(request);
+    if (direct) return direct;
 
-    // Check if user is a professor via enrollment (existing ProfGuard logic)
-    const enrollments = await this.enrollmentService.enrollments({
-      where: {
-        userId: userId,
-      },
-    });
-
-    const isProf = enrollments.some(
-      (enrollment) => enrollment.role === 'professor',
+    const materialId = firstString(
+      request.params?.materialId,
+      request.body?.materialId,
+      request.query?.materialID,
+      request.query?.materialId,
     );
-
-    if (isProf && enrollments.length > 0) {
-      return true;
+    if (materialId) {
+      const classId = await this.instructorClassService.classIdForMaterial(materialId);
+      if (!classId) throw new NotFoundException('Material not found');
+      return classId;
     }
 
-    // Check if user is an instructor with canManageMaterials permission for ANY class
-    if (user.systemRole === 'instructor') {
-      // Get all classes this instructor is assigned to
-      const instructorClasses = await this.instructorClassService.getClassesForInstructor(userId);
-
-      // Check if instructor has canManageMaterials permission for any class
-      for (const instructorClass of instructorClasses) {
-        const hasPermission = await this.instructorClassService.checkInstructorPermission(
-          userId,
-          instructorClass.id,
-          'canManageMaterials',
-        );
-
-        if (hasPermission) {
-          return true;
-        }
-      }
+    const documentId = firstString(
+      request.params?.documentId,
+      request.params?.id,
+      request.body?.documentId,
+      request.body?.id,
+    );
+    if (documentId) {
+      const classId = await this.instructorClassService.classIdForDocument(documentId);
+      if (!classId) throw new NotFoundException('Document not found');
+      return classId;
     }
 
-    throw new ForbiddenException('User does not have permission to manage materials');
+    throw new ForbiddenException('Request does not identify a class');
   }
 }

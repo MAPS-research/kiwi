@@ -187,6 +187,50 @@ export class InstructorClassService {
     return this.checkInstructorHasClassAccess(userId, classId);
   }
 
+  /**
+   * Whether a user may manage a class's materials and documents: a system
+   * admin, a professor enrolled in *this* class, or an instructor assigned to
+   * *this* class with the `canManageMaterials` permission.
+   */
+  async canManageMaterials(userId: string, classId: string): Promise<boolean> {
+    if (!userId || !classId) return false;
+
+    const user = await this.database.user.findUnique({
+      where: { id: userId },
+      select: { systemRole: true },
+    });
+    if (!user) return false;
+    if (user.systemRole === 'admin') return true;
+
+    const enrollment = await this.database.enrollment.findUnique({
+      where: { classId_userId: { classId, userId } },
+      select: { role: true },
+    });
+    if (enrollment?.role === 'professor') return true;
+
+    return this.checkInstructorPermission(userId, classId, 'canManageMaterials');
+  }
+
+  /** The class a material belongs to, or null if it doesn't exist. */
+  async classIdForMaterial(materialId: string): Promise<string | null> {
+    if (!materialId) return null;
+    const material = await this.database.classMaterial.findUnique({
+      where: { id: materialId },
+      select: { classId: true },
+    });
+    return material?.classId ?? null;
+  }
+
+  /** The class a document belongs to (through its material), or null. */
+  async classIdForDocument(documentId: string): Promise<string | null> {
+    if (!documentId) return null;
+    const document = await this.database.document.findUnique({
+      where: { id: documentId },
+      select: { classMaterial: { select: { classId: true } } },
+    });
+    return document?.classMaterial?.classId ?? null;
+  }
+
   async checkInstructorHasClassAccess(
     userId: string,
     classId: string,

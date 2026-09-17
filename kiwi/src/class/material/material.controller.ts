@@ -116,7 +116,7 @@ export class MaterialController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, MaterialManageGuard)
   @ApiBearerAuth('bearerAuth')
   @Post('list')
   @ApiBody({
@@ -136,7 +136,7 @@ export class MaterialController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, MaterialManageGuard)
   @ApiBearerAuth('bearerAuth')
   @Get('/list/id')
   @ApiResponse({

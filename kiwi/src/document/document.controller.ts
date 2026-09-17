@@ -10,6 +10,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   Session,
   UploadedFile,
   UseGuards,
@@ -23,7 +24,11 @@ import {
   ApiBody,
   ApiExtraModels,
 } from '@nestjs/swagger';
-import { AdminGuard, JwtAuthGuard } from 'src/auth/auth.guard';
+import {
+  AdminGuard,
+  InstructorRoleGuard,
+  JwtAuthGuard,
+} from 'src/auth/auth.guard';
 import { MaterialManageGuard } from 'src/instructor-class/material-manage.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import 'multer';
@@ -72,7 +77,9 @@ export class DocumentController {
   constructor(private readonly documentService: DocumentService) {}
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard, MaterialManageGuard)
+  // Multipart bodies aren't parsed when guards run, so the material is checked
+  // in the handler.
+  @UseGuards(JwtAuthGuard, InstructorRoleGuard)
   @ApiBearerAuth('bearerAuth')
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
@@ -86,15 +93,20 @@ export class DocumentController {
     type: DocumentUploadResponse,
   })
   async upload(
+    @Req() req: any,
     @UploadedFile() file: Express.Multer.File,
     @Body() documentUploadDto: DocumentUploadDto,
   ) {
     const { classMaterialId } = documentUploadDto;
+    await this.documentService.assertCanManageMaterial(
+      req.session?.userId,
+      classMaterialId,
+    );
     return await this.documentService.uploadDocument(file, classMaterialId);
   }
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, InstructorRoleGuard)
   @ApiBearerAuth('bearerAuth')
   @Post('uploadNoMaterialId')
   @UseInterceptors(FileInterceptor('file'))
@@ -144,7 +156,7 @@ export class DocumentController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard, MaterialManageGuard)
+  @UseGuards(JwtAuthGuard, InstructorRoleGuard)
   @ApiBearerAuth('bearerAuth')
   @Post('chunk/status')
   @ApiExtraModels(ChunkResponse)
@@ -153,10 +165,16 @@ export class DocumentController {
     description: 'Successful response',
     type: ChunkStatusResponse,
   })
-  async chunkStatus(@Body() chunkQueueRequest: ChunkQueueRequest) {
+  async chunkStatus(
+    @Req() req: any,
+    @Body() chunkQueueRequest: ChunkQueueRequest,
+  ) {
     const { jobId } = chunkQueueRequest;
 
-    return await this.documentService.chunkDocumentStatus(jobId);
+    return await this.documentService.chunkDocumentStatusFor(
+      jobId,
+      req.session?.userId,
+    );
   }
 
   @HttpCode(HttpStatus.OK)
@@ -287,9 +305,9 @@ export class DocumentController {
     description: 'Successful response',
     type: GetDocumentResponse,
   })
-  retrieveDocument(@Body() chunkRequest: ChunkRequest) {
+  async retrieveDocument(@Req() req: any, @Body() chunkRequest: ChunkRequest) {
     const { id } = chunkRequest;
-
+    await this.documentService.assertCanReadDocument(id, req.session?.userId);
     return this.documentService.retrieveDocument(id);
   }
 
@@ -308,7 +326,7 @@ export class DocumentController {
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, MaterialManageGuard)
   @ApiBearerAuth('bearerAuth')
   @Delete('delete')
   @ApiBody({

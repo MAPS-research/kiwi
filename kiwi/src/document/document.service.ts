@@ -4,6 +4,7 @@ import {
   BadRequestException,
   NotFoundException,
   UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { ClassMaterialService } from 'src/common/database/class-material.service';
 import { DocumentService as DatabaseDocumentService } from 'src/common/database/document.service';
@@ -1129,42 +1130,10 @@ export class DocumentService {
     userId: string,
   ): Promise<DocumentWithClassMaterial> {
     const document = await this.loadDocumentWithClass(documentId);
-
-    const user = await this.db.user.findUnique({
-      where: { id: userId },
-      select: { systemRole: true },
-    });
-
-    if (!user) {
-      throw new UnauthorizedException('User not found');
-    }
-
-    if (user.systemRole === 'admin') {
+    const classId = document.classMaterial!.classId;
+    if (await this.instructorClassService.canManageMaterials(userId, classId)) {
       return document;
     }
-
-    const classId = document.classMaterial!.classId;
-
-    if (user.systemRole === 'professor') {
-      const enrollment = await this.db.enrollment.findFirst({
-        where: { classId, userId, role: 'professor' },
-      });
-      if (enrollment) {
-        return document;
-      }
-    }
-
-    if (user.systemRole === 'instructor') {
-      const hasPermission = await this.instructorClassService.checkInstructorPermission(
-        userId,
-        classId,
-        'canManageMaterials',
-      );
-      if (hasPermission) {
-        return document;
-      }
-    }
-
     throw new UnauthorizedException(
       'User does not have permission to manage this document',
     );
@@ -1187,6 +1156,99 @@ export class DocumentService {
     }
 
     return document;
+  }
+
+  /** Throws unless the user may manage materials of the material's class. */
+  async assertCanManageMaterial(userId: string, materialId: string) {
+    const material = materialId
+      ? await this.db.classMaterial.findUnique({
+          where: { id: materialId },
+          select: { classId: true },
+        })
+      : null;
+    if (!material) {
+      throw new NotFoundException('Material not found');
+    }
+    if (
+      !(await this.instructorClassService.canManageMaterials(
+        userId,
+        material.classId,
+      ))
+    ) {
+      throw new ForbiddenException(
+        'User does not have permission to manage materials in this class',
+      );
+    }
+  }
+
+  /**
+   * Whether a user may read a document. Class managers can read every document
+   * in their class. Other members of the class can read only what the student
+   * material list shows them: for an available material, its document flagged
+   * for students, or its newest document if none is flagged. Answer keys and
+   * other staff-only documents are therefore not readable by students.
+   * Anything else is reported as not found.
+   */
+  async assertCanReadDocument(documentId: string, userId: string) {
+    const document = await this.db.document.findUnique({
+      where: { id: documentId },
+      include: { classMaterial: true },
+    });
+    const material = document?.classMaterial;
+    if (!document || !material) {
+      throw new NotFoundException('Document not found');
+    }
+
+    if (
+      await this.instructorClassService.canManageMaterials(
+        userId,
+        material.classId,
+      )
+    ) {
+      return;
+    }
+
+    const enrollment = await this.db.enrollment.findUnique({
+      where: { classId_userId: { classId: material.classId, userId } },
+    });
+    const released =
+      material.status !== 'unavailable' &&
+      new Date() >= new Date(material.availableDate);
+    if (!enrollment || !released) {
+      throw new NotFoundException('Document not found');
+    }
+
+    const siblings = await this.db.document.findMany({
+      where: { classMaterialId: material.id },
+      orderBy: { uploadedDate: 'desc' },
+      select: { id: true, isStudent: true },
+    });
+    const visible = siblings.find((d) => d.isStudent) ?? siblings[0];
+    if (visible?.id !== document.id) {
+      throw new NotFoundException('Document not found');
+    }
+  }
+
+  /** Chunking status, only for managers of the document's class. */
+  async chunkDocumentStatusFor(jobId: string, userId: string) {
+    const job = await this.documentQueue.getJob(jobId);
+    const fileId = job?.data?.fileId as string | undefined;
+    const classId = fileId
+      ? (
+          await this.db.document.findUnique({
+            where: { id: fileId },
+            select: { classMaterial: { select: { classId: true } } },
+          })
+        )?.classMaterial?.classId
+      : undefined;
+    if (
+      !job ||
+      !classId ||
+      !(await this.instructorClassService.canManageMaterials(userId, classId))
+    ) {
+      return { message: 'Job not found' };
+    }
+    return this.chunkDocumentStatus(jobId);
   }
 
   private async loadDocumentWithClass(
