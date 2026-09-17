@@ -1,72 +1,96 @@
 #!/usr/bin/env bash
 #
-# register.sh — get the Hello Kiwi reference app registered with a local Kiwi.
+# register.sh — register the Hello Kiwi reference app with a local Kiwi.
 #
-# The registration order is strict (see KIWI_APP_DEVELOPER_GUIDE.md §4):
+# Registration happens in this order (see KIWI_APP_DEVELOPER_GUIDE.md):
 #
-#     [admin] whitelist (approved)  ->  [dev] register  ->  [admin] enable in a class
+#   1. [admin] whitelist the app (approved)
+#   2. [app]   register the app, its UI and its prompt
+#   3. [admin] approve the prompt
+#   4. [admin] enable the app in a class
 #
-# Steps 1 and 3 are admin-only, so you need an admin JWT. Step 2 is public but
-# checks the whitelist + secret. This script runs whichever steps you have the
-# inputs for and prints every response so you can see exactly what happened.
+# Admin endpoints need a signed-in session, not just a token, so the script
+# logs in with the admin's email and password and reuses that session.
 #
 # Usage:
-#     KIWI=http://localhost:3000 \
-#     ADMIN_TOKEN=eyJ... \
-#     APP_URL=http://localhost:8000/hello-kiwi-app/ \
-#     CLASS_ID=<classId> \
-#     ./register.sh
+#     ADMIN_PASSWORD=... CLASS_ID=seed-class-001 ./register.sh
 #
-# Minimum to register (steps 1+2): ADMIN_TOKEN. Add CLASS_ID to also enable it.
+# Optional overrides:
+#     KIWI            backend URL             (default http://localhost:3000)
+#     ADMIN_EMAIL     admin account           (default admin@example.com)
+#     APP_URL         where you serve the app (default http://localhost:8000/hello-kiwi-app/)
+#     SLUG, SECRET, PROMPT_ID
+#
+# Without ADMIN_PASSWORD only step 2 runs. Without CLASS_ID step 4 is skipped.
 
 set -euo pipefail
 
-# ---- Config (override via env) ----
-KIWI="${KIWI:-http://localhost:3000}"          # Kiwi backend base URL
-SLUG="${SLUG:-demo}"                            # app id (must match the demo's appSlug)
-SECRET="${SECRET:-dev-secret}"                  # plaintext registration secret
-# Where YOU serve index.html — the EXACT URL, origin *and* path. The host
-# targets postMessage at this origin and loads the iframe from this URL, so a
-# value that merely points at the right server (…:8000 instead of
-# …:8000/hello-kiwi-app/) registers a tab that loads the wrong page.
+# ---- Config -----------------------------------------------------------------
+KIWI="${KIWI:-http://localhost:3000}"
+ADMIN_EMAIL="${ADMIN_EMAIL:-admin@example.com}"
+ADMIN_PASSWORD="${ADMIN_PASSWORD:-}"
+CLASS_ID="${CLASS_ID:-}"
+SLUG="${SLUG:-demo}"                                   # must match the demo's appSlug
+# Registration secret: at least 32 characters. Change it for anything but local use.
+SECRET="${SECRET:-hello-kiwi-local-development-secret}"
+# The EXACT URL you serve index.html from, origin and path. The host loads the
+# iframe from here and only accepts messages from this origin.
 APP_URL="${APP_URL:-http://localhost:8000/hello-kiwi-app/}"
-ADMIN_TOKEN="${ADMIN_TOKEN:-}"                  # admin JWT (for whitelist + enable)
-CLASS_ID="${CLASS_ID:-}"                         # optional: enable the app in this class
-
-SCOPES='["user:profile:read","class:info:read","class:enrollments:read","class:materials:chunks:read","context:student_learning:read"]'
-
-# Prompt used by the "Contextual study coach" card (kiwi_app_contextual_chat).
-# Registered inactive; an admin must approve it (step 4) before the
-# llm:prompt:weekly-summary scope resolves.
 PROMPT_ID="${PROMPT_ID:-weekly-summary}"
 
+# The app only uses these. An approved prompt reaches the app token only if its
+# llm:prompt:<id> scope is in maxScopes.
+SCOPES="[\"class:materials:chunks:read\",\"context:student_learning:read\",\"llm:prompt:$PROMPT_ID\"]"
+
+# ---- Helpers ----------------------------------------------------------------
 say()  { printf '\n\033[1;32m▸ %s\033[0m\n' "$*"; }
 warn() { printf '\033[1;33m! %s\033[0m\n' "$*"; }
+die()  { printf '\033[1;31m✗ %s\033[0m\n' "$*" >&2; exit 1; }
+pp()   { if command -v python3 >/dev/null 2>&1; then python3 -m json.tool 2>/dev/null || cat; else cat; fi; }
 
-# Pretty-print JSON if python3 is available, else passthrough.
-pp() { if command -v python3 >/dev/null 2>&1; then python3 -m json.tool 2>/dev/null || cat; else cat; fi; }
+command -v python3 >/dev/null 2>&1 || die "python3 is required"
+[ ${#SECRET} -ge 32 ] || die "SECRET must be at least 32 characters"
 
-# -----------------------------------------------------------------------------
-say "1/3  Whitelist '$SLUG' (admin) — POST /api/kiwi-apps/whitelist"
-if [ -z "$ADMIN_TOKEN" ]; then
-  warn "ADMIN_TOKEN not set — skipping. An admin must whitelist '$SLUG' (status:approved) before you can register."
-else
-  curl -sS -X POST "$KIWI/api/kiwi-apps/whitelist" \
-    -H "Authorization: Bearer $ADMIN_TOKEN" \
+JAR="$(mktemp)"
+trap 'rm -f "$JAR"' EXIT
+TOKEN=""
+
+# admin_call METHOD PATH [JSON]  — prints the body; returns non-zero on HTTP errors
+admin_call() {
+  local args=(-sS --fail-with-body -X "$1" "$KIWI$2" -b "$JAR"
+              -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json")
+  [ $# -ge 3 ] && args+=(-d "$3")
+  curl "${args[@]}"
+}
+
+# ---- Sign in ----------------------------------------------------------------
+if [ -n "$ADMIN_PASSWORD" ]; then
+  say "Signing in as $ADMIN_EMAIL"
+  LOGIN=$(curl -sS --fail-with-body -c "$JAR" -X POST "$KIWI/auth/login" \
     -H "Content-Type: application/json" \
-    -d "{
+    -d "{\"email\":\"$ADMIN_EMAIL\",\"password\":\"$ADMIN_PASSWORD\"}") \
+    || die "login failed: $LOGIN"
+  TOKEN=$(printf '%s' "$LOGIN" | python3 -c 'import sys,json; print(json.load(sys.stdin)["access_token"])')
+else
+  warn "ADMIN_PASSWORD not set: only step 2 will run. An admin must do steps 1, 3 and 4."
+fi
+
+# ---- 1. Whitelist -------------------------------------------------------------
+say "1/4  Whitelist '$SLUG'"
+if [ -n "$TOKEN" ]; then
+  admin_call POST /api/kiwi-apps/whitelist "{
       \"slug\": \"$SLUG\",
       \"registrationSecret\": \"$SECRET\",
       \"baseUrl\": \"$APP_URL\",
       \"status\": \"approved\",
       \"description\": \"Hello Kiwi reference app\",
       \"maxScopes\": $SCOPES
-    }" | pp || warn "whitelist call failed (it may already exist — that's fine)"
+    }" | pp || warn "not created (it may already exist; an existing entry keeps its original secret and scopes)"
 fi
 
-# -----------------------------------------------------------------------------
-say "2/3  Register '$SLUG' (public, idempotent) — POST /api/kiwi-apps/register"
-REG_RESPONSE=$(curl -sS -X POST "$KIWI/api/kiwi-apps/register" \
+# ---- 2. Register ----------------------------------------------------------------
+say "2/4  Register '$SLUG'"
+REG=$(curl -sS --fail-with-body -X POST "$KIWI/api/kiwi-apps/register" \
   -H "Content-Type: application/json" \
   -d "{
     \"slug\": \"$SLUG\",
@@ -75,73 +99,52 @@ REG_RESPONSE=$(curl -sS -X POST "$KIWI/api/kiwi-apps/register" \
     \"description\": \"Reference app showing every Kiwi App capability\",
     \"baseUrl\": \"$APP_URL\",
     \"appType\": \"frontend_only\",
-    \"capabilities\": [\"ai\", \"mcp\"],
-    \"uis\": [
-      {
-        \"uiSlug\": \"student\",
-        \"uiName\": \"Hello Kiwi\",
-        \"uiUrl\": \"$APP_URL\",
-        \"placement\": \"class-tab\",
-        \"allowedRoles\": [\"student\", \"ta\", \"instructor\", \"admin\"],
-        \"tabOrder\": 0
-      }
-    ],
-    \"prompts\": [
-      {
-        \"promptId\": \"$PROMPT_ID\",
-        \"name\": \"Weekly Study Summary\",
-        \"description\": \"Summarizes the student's recent learning and suggests focus areas\",
-        \"systemPrompt\": \"You are a supportive study coach. Using the private learning context Kiwi provides (recent questions, weak concepts, relevant materials), write a short, encouraging weekly summary and concrete focus areas. Never reveal raw data verbatim.\",
-        \"maxTokens\": 600,
-        \"temperature\": 0.4
-      }
-    ]
-  }")
-echo "$REG_RESPONSE" | pp
+    \"capabilities\": [\"ai\"],
+    \"uis\": [{
+      \"uiSlug\": \"student\",
+      \"uiName\": \"Hello Kiwi\",
+      \"uiUrl\": \"$APP_URL\",
+      \"placement\": \"class-tab\",
+      \"allowedRoles\": [\"student\", \"ta\", \"instructor\", \"admin\"],
+      \"tabOrder\": 0
+    }],
+    \"prompts\": [{
+      \"promptId\": \"$PROMPT_ID\",
+      \"name\": \"Weekly Study Summary\",
+      \"description\": \"Summarizes the student's recent learning and suggests focus areas\",
+      \"systemPrompt\": \"You are a supportive study coach. Using the private learning context Kiwi provides (recent questions, weak concepts, relevant materials), write a short, encouraging weekly summary and concrete focus areas. Never reveal raw data verbatim.\",
+      \"maxTokens\": 600,
+      \"temperature\": 0.4
+    }]
+  }") || die "registration failed: $REG"
+echo "$REG" | pp
+APP_ID=$(printf '%s' "$REG" | python3 -c 'import sys,json; print(json.load(sys.stdin).get("id",""))')
 
-# Pull the registered app's id out of the response (needed to enable it in a class).
-APP_ID=$(printf '%s' "$REG_RESPONSE" | python3 -c \
-  'import sys,json; print(json.load(sys.stdin).get("id",""))' 2>/dev/null || true)
-
-# -----------------------------------------------------------------------------
-say "3/3  Enable in class (admin) — POST /api/classes/$CLASS_ID/apps"
-if [ -z "$CLASS_ID" ]; then
-  warn "CLASS_ID not set — skipping. Set CLASS_ID=<id> to enable '$SLUG' as a tab in that class."
-elif [ -z "$ADMIN_TOKEN" ]; then
-  warn "ADMIN_TOKEN not set — skipping the enable step."
-elif [ -z "$APP_ID" ]; then
-  warn "Could not read the app id from the register response — cannot enable. Check step 2 output."
-else
-  curl -sS -X POST "$KIWI/api/classes/$CLASS_ID/apps" \
-    -H "Authorization: Bearer $ADMIN_TOKEN" \
-    -H "Content-Type: application/json" \
-    -d "{
-      \"appId\": \"$APP_ID\",
-      \"tabLabel\": \"Hello Kiwi\",
-      \"enabledScopes\": $SCOPES
-    }" | pp || warn "enable call failed"
+# ---- 3. Approve the prompt -----------------------------------------------------
+say "3/4  Approve prompt '$PROMPT_ID'"
+if [ -n "$TOKEN" ]; then
+  admin_call POST "/api/kiwi-apps/$SLUG/prompts/$PROMPT_ID/approve" | pp \
+    || warn "approval failed"
 fi
 
-# -----------------------------------------------------------------------------
-say "4/4  Approve prompt '$PROMPT_ID' (admin) — POST /api/kiwi-apps/$SLUG/prompts/$PROMPT_ID/approve"
-# Prompts register inactive; the llm:prompt:$PROMPT_ID scope only resolves once
-# an admin approves it. Needed for the "Contextual study coach" card (#217).
-if [ -z "$ADMIN_TOKEN" ]; then
-  warn "ADMIN_TOKEN not set — skipping. An admin must approve '$PROMPT_ID' before kiwi_app_contextual_chat works."
+# ---- 4. Enable in a class ------------------------------------------------------
+say "4/4  Enable in class"
+if [ -z "$TOKEN" ]; then
+  :
+elif [ -z "$CLASS_ID" ]; then
+  warn "CLASS_ID not set: skipped. Set CLASS_ID=<id> to add the app as a class tab."
 else
-  curl -sS -X POST "$KIWI/api/kiwi-apps/$SLUG/prompts/$PROMPT_ID/approve" \
-    -H "Authorization: Bearer $ADMIN_TOKEN" \
-    -H "Content-Type: application/json" | pp || warn "approve call failed (may already be approved — that's fine)"
+  admin_call POST "/api/classes/$CLASS_ID/apps" \
+    "{\"appId\": \"$APP_ID\", \"tabLabel\": \"Hello Kiwi\"}" | pp \
+    || warn "enable failed"
 fi
 
 say "Done."
-echo "Next:"
-echo "  • Serve the REPO ROOT (so /hello-kiwi-app/ and /kiwi-app-sdk/ both resolve):"
-echo "        python3 -m http.server 8000"
-echo "  • Confirm the app loads at exactly:  $APP_URL"
-echo "    That must match the registered uiUrl origin AND path, or the tab loads"
-echo "    the wrong page and the bridge handshake never completes."
-echo "  • Open the class in Kiwi — the \"Hello Kiwi\" tab should appear."
-echo "  • The content/coaching cards go through the window bridge as host-proxied"
-echo "    ops, so no CORS entry and no app token are needed on your side."
-echo "    See KIWI_APP_DEVELOPER_GUIDE.md §8.3b."
+cat <<NEXT
+Next:
+  • Serve kiwi-app-developer-guide-example/ (so /hello-kiwi-app/ and
+    /kiwi-app-sdk/ both resolve), e.g. from that directory:
+        python3 -m http.server 8000
+  • Check the app loads at exactly $APP_URL
+  • Open the class in Kiwi: a "Hello Kiwi" tab should appear.
+NEXT
