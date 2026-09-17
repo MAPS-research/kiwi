@@ -143,8 +143,36 @@ describe('AuthLayout', () => {
     );
 
     expect(screen.getByRole('complementary', { name: 'About Kiwi' })).toBeInTheDocument();
-    expect(screen.getByRole('img', { name: 'Kiwi' })).toBeInTheDocument();
     expect(screen.getByTestId('login-visual-kiwi-wordmark')).toHaveTextContent('Kiwi');
     expect(screen.getByText('Login content')).toBeInTheDocument();
+  });
+  describe('institution branding in the split shell', () => {
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+
+    it('shows only the Kiwi wordmark when no institution is configured', () => {
+      renderWithTheme(
+        <AuthLayout variant="split">
+          <div>Login content</div>
+        </AuthLayout>
+      );
+
+      expect(screen.queryByRole('img', { name: 'Kiwi' })).not.toBeInTheDocument();
+      expect(screen.getByText('An AI learning companion for your courses.')).toBeInTheDocument();
+    });
+
+    it('adds the institution logo when an institution is configured', () => {
+      vi.stubEnv('VITE_INSTITUTION_NAME', 'Example University');
+      renderWithTheme(
+        <AuthLayout variant="split">
+          <div>Login content</div>
+        </AuthLayout>
+      );
+
+      expect(screen.getByTestId('login-visual-kiwi-wordmark')).toBeInTheDocument();
+      expect(screen.getAllByRole('img').length).toBeGreaterThan(0);
+      expect(screen.queryByText('An AI learning companion for your courses.')).not.toBeInTheDocument();
+    });
   });
 });

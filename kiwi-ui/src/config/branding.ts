@@ -14,6 +14,14 @@ export const INSTITUTION_NAME: string =
   env.VITE_INSTITUTION_NAME || "Kiwi";
 
 /**
+ * Whether this deployment names an institution. When it doesn't, UI that would
+ * otherwise sit an institution logo next to the Kiwi wordmark shows Kiwi alone.
+ */
+export function institutionConfigured(): boolean {
+  return Boolean(import.meta.env.VITE_INSTITUTION_NAME);
+}
+
+/**
  * "<Institution> Kiwi", collapsing to just "Kiwi" when no institution is
  * configured, so an unbranded deployment never reads "Kiwi Kiwi".
  */

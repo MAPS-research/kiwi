@@ -2,7 +2,7 @@
 import React from "react";
 import { Box, Container, Typography, useTheme } from "@mui/material";
 import InstitutionLogo from "../Brand/InstitutionLogo.tsx";
-import { INSTITUTION_NAME } from "../../config/branding";
+import { INSTITUTION_NAME, institutionConfigured } from "../../config/branding";
 import KiwiWordmark from "../Brand/KiwiWordmark.tsx";
 
 interface AuthLayoutProps {
@@ -11,6 +11,7 @@ interface AuthLayoutProps {
 }
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children, variant = "centered" }) => {
+  const hasInstitution = institutionConfigured();
   const theme = useTheme();
 
   if (variant === "split") {
@@ -69,7 +70,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, variant = "centered" 
                 gap: 2,
               }}
             >
-              <InstitutionLogo color="common.white" />
+              {hasInstitution && <InstitutionLogo color="common.white" />}
               <KiwiWordmark
                 component="span"
                 data-testid="login-visual-kiwi-wordmark"
@@ -91,7 +92,9 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, variant = "centered" 
                 “Learn deeply. Ask freely. Grow with AI.”
               </Typography>
               <Typography variant="body2" sx={{ mt: 2, opacity: 0.82, lineHeight: 1.6 }}>
-                {`An AI learning companion built for the ${INSTITUTION_NAME} community.`}
+                {hasInstitution
+                  ? `An AI learning companion built for the ${INSTITUTION_NAME} community.`
+                  : "An AI learning companion for your courses."}
               </Typography>
             </Box>
           </Box>
