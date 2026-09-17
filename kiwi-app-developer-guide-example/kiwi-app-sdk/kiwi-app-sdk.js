@@ -33,7 +33,6 @@ var KiwiApp = (() => {
     classId: "demo-class-101",
     className: "Calculus I (simulated)",
     userId: "demo-user-1",
-    username: "ada",
     userRole: "student",
     appId: "demo-app",
     appSlug: "demo",

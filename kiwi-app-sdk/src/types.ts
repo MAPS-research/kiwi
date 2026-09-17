@@ -10,8 +10,8 @@ export type SdkStatus = 'connecting' | 'live' | 'sim';
 export interface KiwiContext {
   classId: string;
   className?: string;
+  /** Opaque Kiwi user id. Apps never receive the user's name or email. */
   userId: string;
-  username?: string;
   /** The viewer's role in this class — already here, no extra call needed. */
   userRole?: string;
   appId?: string;

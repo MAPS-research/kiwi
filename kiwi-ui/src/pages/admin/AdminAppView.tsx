@@ -321,8 +321,8 @@ export const AdminAppView: React.FC<AdminAppViewProps> = ({
               type: 'kiwi:context',
               payload: {
                 classId: effectiveClassId,
+                // Opaque id only: apps never receive a name or email.
                 userId,
-                username: user?.username,
                 // Apps derive their role from this. Previously only `isAdmin`
                 // was sent, so apps had to guess — and the SDK's context type
                 // has no isAdmin field at all.

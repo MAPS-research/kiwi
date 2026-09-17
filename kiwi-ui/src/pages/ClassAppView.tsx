@@ -429,8 +429,8 @@ export const ClassAppView: React.FC<ClassAppViewProps> = ({
               payload: {
                 classId: classID,
                 className: classData?.className,
+                // Opaque id only: apps never receive a name or email.
                 userId: userId,
-                username: user?.username,
                 userRole: userRole || 'student',
                 appId,
                 appSlug,

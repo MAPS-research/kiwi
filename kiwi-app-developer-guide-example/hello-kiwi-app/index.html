@@ -241,7 +241,6 @@
             <b>classId</b><span id="c_classId" class="mono">—</span>
             <b>className</b><span id="c_className">—</span>
             <b>userId</b><span id="c_userId" class="mono">—</span>
-            <b>username</b><span id="c_username">—</span>
             <b>userRole</b><span id="c_userRole">—</span>
             <b>appSlug</b><span id="c_appSlug" class="mono">—</span>
             <b>uiSlug</b><span id="c_uiSlug" class="mono">—</span>
@@ -430,13 +429,12 @@
     $('c_classId').textContent   = ctx.classId   || '—';
     $('c_className').textContent = ctx.className  || '—';
     $('c_userId').textContent    = ctx.userId     || '—';
-    $('c_username').textContent  = ctx.username   || '—';
     $('c_userRole').textContent  = ctx.userRole   || '—';
     $('c_appSlug').textContent   = ctx.appSlug    || '—';
     $('c_uiSlug').textContent    = ctx.uiSlug     || '—';
     $('c_caps').textContent      = (ctx.capabilities || []).join(', ') || '—';
     $('s_class').textContent = ctx.className || ctx.classId || '—';
-    $('s_user').textContent  = ctx.username  || '—';
+    $('s_user').textContent  = ctx.userId    || '—';
     $('s_role').textContent  = ctx.userRole  || '—';
     $('s_app').textContent   = ctx.appSlug   || '—';
     $('s_caps').textContent  = (ctx.capabilities || []).join(', ') || '—';
