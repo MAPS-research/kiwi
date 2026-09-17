@@ -123,14 +123,22 @@ describe("ClassEdit", () => {
     expect(screen.getByText("Updated Class")).toBeInTheDocument();
   });
 
-  it("displays system prompts when enabled", async () => {
+  it("shows the class-specific instructions when set", async () => {
     renderWithProviders(<ClassEdit />);
     
     await waitFor(() => {
-      expect(screen.getByDisplayValue("Test default message")).toBeInTheDocument();
-      expect(screen.getByDisplayValue("Test materials prompt")).toBeInTheDocument();
-      expect(screen.getByDisplayValue("Test recitation prompt")).toBeInTheDocument();
+      expect(screen.getByLabelText("Instructions")).toHaveValue("Test default message");
     });
+  });
+
+  it("does not offer the legacy prompt fields that chat no longer reads", async () => {
+    renderWithProviders(<ClassEdit />);
+
+    await waitFor(() => {
+      expect(screen.getByDisplayValue("Test default message")).toBeInTheDocument();
+    });
+    expect(screen.queryByDisplayValue("Test materials prompt")).not.toBeInTheDocument();
+    expect(screen.queryByDisplayValue("Test recitation prompt")).not.toBeInTheDocument();
   });
 
   it("handles form submission", async () => {
@@ -185,7 +193,7 @@ describe("ClassEdit", () => {
       expect(screen.getByDisplayValue("Test default message")).toBeInTheDocument();
     });
 
-    const checkbox = screen.getByRole("checkbox", { name: /enable custom prompts/i });
+    const checkbox = screen.getByRole("checkbox", { name: /add class-specific instructions/i });
     fireEvent.click(checkbox);
 
     await waitFor(() => {
@@ -230,6 +238,6 @@ describe("ClassEdit", () => {
       expect(screen.getByDisplayValue("Test Class")).toBeInTheDocument();
     });
 
-    expect(screen.getByText("Custom system prompts are disabled. The system will use default prompts.")).toBeInTheDocument();
+    expect(screen.getByText("Kiwi uses only its built-in instructions for this class.")).toBeInTheDocument();
   });
 });

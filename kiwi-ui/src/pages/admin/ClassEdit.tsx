@@ -86,11 +86,11 @@ export const ClassEdit: React.FC = () => {
           },
         });
 
-        setHasCustomSystemPrompts(!!classMetadata.systemPrompts && (
-          !!classMetadata.systemPrompts.defaultSystemMessage ||
-          !!classMetadata.systemPrompts.classMaterialsPrompt ||
-          !!classMetadata.systemPrompts.recitationPrompt
-        ));
+        // Only defaultSystemMessage reaches the chat prompt; the other two
+        // fields were read by the retired v1 chat and are kept as-is on save.
+        setHasCustomSystemPrompts(
+          !!classMetadata.systemPrompts?.defaultSystemMessage,
+        );
 
         if (imageSnippetServerUrl) {
           setSnippetImageUrl(imageSnippetServerUrl);
@@ -362,10 +362,10 @@ export const ClassEdit: React.FC = () => {
                   variant="subtitle1"
                   sx={{ fontWeight: 600 }}
                 >
-                  Custom system prompts
+                  Class-specific instructions
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                  Override the default assistant instructions for this class.
+                  Added to Kiwi&apos;s built-in instructions in every chat for this class.
                 </Typography>
               </Box>
 
@@ -378,14 +378,14 @@ export const ClassEdit: React.FC = () => {
                       onChange={(e) => handleSystemPromptsToggle(e.target.checked)}
                     />
                   }
-                  label="Enable custom prompts"
+                  label="Add class-specific instructions"
                 />
 
                 {hasCustomSystemPrompts ? (
                   <Stack spacing={2.5}>
                     <TextField
                       fullWidth
-                      label="Default System Message"
+                      label="Instructions"
                       value={metadata.systemPrompts?.defaultSystemMessage || ""}
                       onChange={(e) => setMetadata(prev => ({
                         ...prev,
@@ -395,43 +395,13 @@ export const ClassEdit: React.FC = () => {
                         },
                       }))}
                       multiline
-                      rows={4}
-                      helperText="Sets the default behavior for the AI assistant."
-                    />
-                    <TextField
-                      fullWidth
-                      label="Class Materials Prompt"
-                      value={metadata.systemPrompts?.classMaterialsPrompt || ""}
-                      onChange={(e) => setMetadata(prev => ({
-                        ...prev,
-                        systemPrompts: {
-                          ...prev.systemPrompts,
-                          classMaterialsPrompt: e.target.value,
-                        },
-                      }))}
-                      multiline
-                      rows={4}
-                      helperText="Controls how the AI should use class materials."
-                    />
-                    <TextField
-                      fullWidth
-                      label="Recitation Prompt"
-                      value={metadata.systemPrompts?.recitationPrompt || ""}
-                      onChange={(e) => setMetadata(prev => ({
-                        ...prev,
-                        systemPrompts: {
-                          ...prev.systemPrompts,
-                          recitationPrompt: e.target.value,
-                        },
-                      }))}
-                      multiline
-                      rows={4}
-                      helperText="Provides instructions for recitation and discussion sessions."
+                      rows={6}
+                      helperText="Appended after Kiwi's built-in teaching and tool guidance. While an experiment is active, its variant's instructions are used instead."
                     />
                   </Stack>
                 ) : (
                   <Typography color="text.secondary" variant="body2" sx={{ mt: 1 }}>
-                    Custom system prompts are disabled. The system will use default prompts.
+                    Kiwi uses only its built-in instructions for this class.
                   </Typography>
                 )}
               </Box>
