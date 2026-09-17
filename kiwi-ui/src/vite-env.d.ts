@@ -8,7 +8,6 @@ interface ImportMetaEnv {
   // Branding / institution configuration - see src/config/branding.ts
   readonly VITE_INSTITUTION_NAME?: string;
   readonly VITE_SUPPORT_EMAIL?: string;
-  readonly VITE_FRONTEND_URL?: string;
   readonly VITE_SSO_EMAIL_DOMAIN?: string;
   readonly VITE_LOGO_URL?: string;
   readonly VITE_LOGO_LIGHT_URL?: string;

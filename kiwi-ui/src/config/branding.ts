@@ -31,13 +31,11 @@ export const BRAND_LABEL: string =
 /** Support address shown to users. Empty string hides support prompts. */
 export const SUPPORT_EMAIL: string = env.VITE_SUPPORT_EMAIL || "";
 
-/** Public URL of this deployment's frontend. */
-export const FRONTEND_URL: string =
-  env.VITE_FRONTEND_URL || window.location.origin;
 
 /**
- * Email domain routed to SSO instead of password login (e.g. "example.edu").
- * Empty string means no domain-based routing.
+ * Email domain whose accounts sign in with Google (e.g. "example.edu"). In
+ * Admin → User Management these are treated as Google accounts: they are
+ * whitelisted instead of given a password. Empty means no such domain.
  *
  * Read lazily rather than captured at module load so tests (and any runtime
  * override) can change it without re-importing this module.
@@ -46,11 +44,14 @@ export function ssoEmailDomain(): string {
   return import.meta.env.VITE_SSO_EMAIL_DOMAIN || "";
 }
 
-/** Logo shown in the nav and auth screens. */
+/** Square logo image (LogoBox), shown as-is. */
 export const LOGO_URL: string =
   env.VITE_LOGO_URL || "/assets/images/kiwi-mark.svg";
 
-/** Optional wordmark/light-on-dark variant. Falls back to LOGO_URL. */
+/**
+ * Wordmark shown in the nav and on the auth panel. Rendered as a CSS mask, so
+ * only its shape matters; it takes the surrounding text colour.
+ */
 export const LOGO_LIGHT_URL: string =
   env.VITE_LOGO_LIGHT_URL || "/assets/images/kiwi-logo.svg";
 

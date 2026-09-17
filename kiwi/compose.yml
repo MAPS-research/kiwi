@@ -27,13 +27,16 @@ services:
     ports:
       - 127.0.0.1:8081:8080
 
-  # unstructured:
-  #   image: downloads.unstructured.io/unstructured-io/unstructured-api:0.0.71
-  #   restart: always
-  #   environment:
-  #     PORT: 9500
-  #   ports:
-  #     - 127.0.0.1:9500:9500
+  # Document parser used by uploads. Large image; start it with
+  #   docker compose --profile parser up -d
+  unstructured:
+    image: downloads.unstructured.io/unstructured-io/unstructured-api:0.0.71
+    profiles: [parser]
+    restart: always
+    environment:
+      PORT: 9500
+    ports:
+      - 127.0.0.1:9500:9500
 
 
   oss: # Dev only, use S3 in production
