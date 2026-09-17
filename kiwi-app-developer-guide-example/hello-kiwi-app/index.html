@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hello Kiwi — Reference App</title>
     <!--
-    HELLO KIWI — a single-file reference "Kiwi App", built on @kiwi/app-sdk.
+    HELLO KIWI — a single-file reference "Kiwi App", built on @maps-research/kiwi-app-sdk.
 
     A Kiwi App is your OWN web page that Kiwi loads inside an <iframe>. It talks
     to Kiwi ONLY through the window/postMessage bridge — wrapped here by the SDK
@@ -172,7 +172,7 @@
   </head>
   <body>
     <header>
-      <div class="brand">Kiwi App 101 <small>reference app · @kiwi/app-sdk</small></div>
+      <div class="brand">Kiwi App 101 <small>reference app · @maps-research/kiwi-app-sdk</small></div>
       <span id="modepill" class="modepill"
         title="Click to switch between Simulator and Live mode">
         <span class="dot"></span><span id="modetext">detecting…</span>
@@ -199,7 +199,7 @@
           <p>
             A <b>Kiwi App</b> is your own web page that Kiwi loads in an
             <code>&lt;iframe&gt;</code>. It talks to Kiwi only through the
-            <b>window bridge</b>, wrapped by <code>@kiwi/app-sdk</code>. Your app
+            <b>window bridge</b>, wrapped by <code>@maps-research/kiwi-app-sdk</code>. Your app
             never calls the Kiwi backend directly — data/LLM <b>ops</b>
             (<code>kiwi.documentChunks</code>, <code>kiwi.contextualChat</code>)
             are <b>proxied by the host</b>, which makes the real call with the
@@ -384,7 +384,7 @@
     <script src="../kiwi-app-sdk/kiwi-app-sdk.js"></script>
     <script>
   /* =========================================================================
-     Hello Kiwi — reference app logic, built on @kiwi/app-sdk. The SDK owns the
+     Hello Kiwi — reference app logic, built on @maps-research/kiwi-app-sdk. The SDK owns the
      bridge (+ Simulator when standalone); this file is just UI wiring.
      ========================================================================= */
 

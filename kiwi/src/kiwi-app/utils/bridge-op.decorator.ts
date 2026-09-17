@@ -6,7 +6,7 @@ import { ApiExtension } from '@nestjs/swagger';
  * the kiwi-ui window/postMessage proxy (rather than calling the backend
  * directly). It is the single source of truth for the bridge: it surfaces as an
  * `x-kiwi-bridge-op` extension on the operation in `/docs-json`, from which the
- * bridge generator emits the kiwi-ui proxy op-table, the `@kiwi/app-sdk` typed
+ * bridge generator emits the kiwi-ui proxy op-table, the `@maps-research/kiwi-app-sdk` typed
  * methods, and the developer reference — so op params, response types, and
  * scope requirements can never drift from the real endpoint.
  */

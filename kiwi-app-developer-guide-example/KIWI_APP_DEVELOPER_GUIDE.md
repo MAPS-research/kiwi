@@ -1,558 +1,558 @@
-# Kiwi App Developer Guide
+# Kiwi App developer guide
 
-> How to build an **external app** and plug it into Kiwi.
->
-> This guide is written against the actual code on the `kiwi-apps-development`
-> branch. File references point at the source of truth so you can verify every
-> claim. If the code changes, update this doc.
+A Kiwi App is a web page you host yourself. Kiwi shows it in an iframe inside a
+class or in the admin area. This guide is for developers who build those apps.
+It covers how an app is registered, the messages it exchanges with Kiwi, and how
+permissions work.
 
----
+Related references:
 
-## 1. Overview
+- [SDK README](../kiwi-app-sdk/README.md): the full `@maps-research/kiwi-app-sdk` API.
+- [BRIDGE-OPS.md](../kiwi-app-sdk/BRIDGE-OPS.md): the data operations an app can call, generated from the backend.
+- [hello-kiwi-app](./hello-kiwi-app/): a working example app with no build step.
+- [MCP server](../docs/mcp.md): for full MCP clients, which are not iframe apps.
 
-Kiwi is a learning platform. A **Kiwi App** is a *separate web application you
-build and host yourself* that Kiwi embeds inside its UI and grants controlled
-access to its data and AI.
+## Concepts
 
-Think of it like an app store:
+**The host and the bridge.** The host is the Kiwi web UI (`kiwi-ui`). It loads
+your app in an `<iframe>`, and the two talk by sending `window.postMessage`
+messages. This channel is the *bridge*. The app never has to call the Kiwi
+backend itself.
 
-- **Kiwi** = the platform (the site students and instructors use).
-- **Your app** = a third‑party app that wants to appear inside it.
-- **Admin** = the store reviewer + device admin.
-- **You (developer)** = the app author.
+**How an app reads data.** An app reads Kiwi data by sending a named *op* over
+the bridge, for example `documentChunks`. The host calls the backend with an app
+token that it keeps to itself, and then posts the result back. Because of this,
+the app needs no token, no CORS entry and no backend URL.
 
-Your app does **not** live inside Kiwi's codebase. It runs at its own URL (e.g.
-`http://localhost:8000`). Kiwi embeds it in an **`<iframe>`** and the two talk
-over **`window.postMessage`**. With a scoped token your app can additionally
-call Kiwi's **REST API** and **MCP** server.
+**What an app can access.** An app token belongs to the signed-in user and is
+limited to one class. It carries only the scopes the app was granted. An app
+can never read something the user couldn't read themselves.
 
-### Three kinds of "app" in this repo — don't confuse them
+**What apps don't learn about users.** Apps get opaque user IDs and nothing
+more. No message, op or token gives an app a person's name or email, whether
+for the current user or anyone else. If your app has to tell people apart, for
+example in a grading view, show a shortened ID or a label your app assigns.
+Don't try to look up names. This is a deliberate boundary, not a missing
+feature.
 
-| Kind | What it is | This guide? |
-| --- | --- | --- |
-| **External app** | Independent web app, embedded via iframe, registered through the backend | ✅ **Yes** |
-| **Built‑in app** | React code bundled inside `kiwi-ui` (`src/apps/builtins/*`), uses the in‑page `window.kiwiApp` bridge | See `kiwi-ui/KIWI-APPS.md` |
-| **MCP client** | A service that talks to Kiwi purely over MCP/JSON‑RPC | See `docs/MCP_DEVELOPER_GUIDE.md` |
+**Placements.** An app registers one or more UIs, and each UI has a `placement`
+that says where it appears:
 
----
+| Placement | Where it appears |
+| --- | --- |
+| `class-tab` | A tab on the class page, at `/:classID/app/:appSlug`. |
+| `admin-panel` | An entry in the admin sidebar, at `/admin/app/:appSlug` (no class) and `/admin/app/:appSlug/class/:classId`. |
+| `class-admin-panel` | A card on a class's admin page, at `/admin/class/:classID/app/:appSlug`. If the app also has an `admin-panel` UI, the host opens that one instead. |
+| `modal`, `dashboard-widget` | Accepted by the backend but not shown by the host yet. |
 
-## 2. How it works
+Class tabs get the full set of bridge messages. Admin panels get a smaller set
+(see [Admin panels](#admin-panels)).
 
+## Quick start
+
+The example app, `hello-kiwi-app`, demonstrates every class-tab feature. You can
+run it on its own or inside Kiwi.
+
+### On its own (no backend)
+
+When the page isn't embedded in Kiwi, the SDK starts a built-in Simulator that
+fakes every reply from the host. From the repository root:
+
+```bash
+cd kiwi-app-developer-guide-example
+python3 -m http.server 8000
+# open http://localhost:8000/hello-kiwi-app/
 ```
-                         Kiwi UI (kiwi-ui, :3001)
-  ┌──────────────────────────────────────────────────────────┐
-  │  Class page ▸ "My App" tab                                │
-  │  ┌────────────────────────────────────────────────────┐  │
-  │  │  <iframe src="https://your-app/?classId=..&..">     │  │
-  │  │                                                     │  │
-  │  │     YOUR APP  (you host this, e.g. :8000)           │  │
-  │  │                                                     │  │
-  │  │   ── postMessage ──▶  kiwi:ready / kiwi:askAI / ... │  │
-  │  │   ◀── postMessage ──  kiwi:context / kiwi:appToken  │  │
-  │  └────────────────────────────────────────────────────┘  │
-  └───────────────┬──────────────────────────────────────────┘
-                  │  (host proxies AI;  app uses token directly)
-                  ▼
-            Kiwi backend (kiwi, :3000)
-        /api/kiwi-apps/*   /mcp/rpc   /chat/stream   /analytics/*
-```
 
-The render path in code:
+Start the server in `kiwi-app-developer-guide-example/` itself, not in
+`hello-kiwi-app/`, because the page loads the SDK from
+`../kiwi-app-sdk/kiwi-app-sdk.js`.
 
-- Route `:classID/app/:appSlug` → `kiwi-ui/src/pages/ClassAppPage.tsx`
-- `ClassAppPage` looks up the enabled app + its `class-tab` UI, then renders
-  `kiwi-ui/src/pages/ClassAppView.tsx`, which is the iframe host and the
-  postMessage hub.
+### Inside Kiwi
 
----
+You need the Kiwi backend and UI running, plus an admin account.
 
-## 3. Quick Start (a minimal app in ~40 lines)
+1. On a fresh database, run `npx prisma db seed` in `kiwi/`. This creates the
+   admin account `admin@example.com` and the class `seed-class-001`. It prints
+   the admin password, unless you set one with `SEED_ADMIN_PASSWORD`.
+2. Register the app:
 
-A Kiwi App is just a web page that does the handshake. The smallest possible app:
+   ```bash
+   cd kiwi-app-developer-guide-example/hello-kiwi-app
+   ADMIN_PASSWORD=... CLASS_ID=seed-class-001 ./register.sh
+   ```
+
+   The script runs all four [registration](#registration) steps. `APP_URL`
+   (default `http://localhost:8000/hello-kiwi-app/`) must be the exact origin
+   and path you serve the page from. The script's header lists the other
+   settings you can override.
+3. Keep the static server from the previous section running, and open the class
+   in Kiwi.
+
+A **Hello Kiwi** tab appears. When it loads, the app connects to Kiwi and the
+document-chunks card returns data.
+
+### A minimal app
+
+This page loads the SDK from the Kiwi UI and shows the context it receives:
 
 ```html
 <!doctype html>
 <html>
   <body>
-    <h1>Hello Kiwi</h1>
-    <pre id="ctx">waiting for context…</pre>
-
+    <pre id="out">connecting…</pre>
+    <script src="http://localhost:3001/sdk/v1/kiwi-app-sdk.js"></script>
     <script>
-      // 1) Tell Kiwi we are ready (parent origin unknown yet → "*")
-      window.parent.postMessage({ type: 'kiwi:ready', payload: {} }, '*');
-
-      // 2) Receive context and tokens from Kiwi
-      window.addEventListener('message', (event) => {
-        const { type, payload } = event.data || {};
-        if (type === 'kiwi:context') {
-          document.getElementById('ctx').textContent =
-            JSON.stringify(payload, null, 2);
-        }
+      const kiwi = KiwiApp.create({ appSlug: 'my-app' });
+      kiwi.ready().then((ctx) => {
+        document.getElementById('out').textContent = JSON.stringify(ctx, null, 2);
       });
     </script>
   </body>
 </html>
 ```
 
-Host it anywhere reachable by the browser, register it (section 4), enable it in
-a class (section 4.3), open the class — your page now appears as a tab and prints
-the live class/user context.
+## Registration
 
-A **full‑featured reference app** that exercises *every* capability below lives at
-[`examples/hello-kiwi-app/`](../examples/hello-kiwi-app/). Copy it as your starting point.
+An app has to go through four steps, in this order, before it appears in a
+class:
 
-> 💡 **Try it with zero setup.** Open `examples/hello-kiwi-app/index.html`
-> directly in a browser. With no Kiwi embedding it, the page turns on a built‑in
-> **Simulator** that fakes every Kiwi reply (context, token, streaming AI, MCP
-> results) so you can click through the whole protocol and read the code before
-> standing up a backend. The top‑bar pill toggles Simulator ⇄ Live.
+1. **Whitelist:** an admin approves the app's slug.
+2. **Register:** the app sends its details.
+3. **Approve prompts:** an admin approves the app's prompts, if it has any.
+4. **Enable:** a class manager turns the app on in a class.
 
----
+Admins do steps 1 and 3 on the **App Registry** page (`/admin/kiwi-apps`).
 
-## 4. Registration
+Admin endpoints need both a bearer token and a signed-in session cookie; a token
+by itself is rejected. `register.sh` shows how to handle this. It logs in with
+`POST /auth/login`, keeps the session cookie, and sends both the cookie and the
+token on every admin call.
 
-Registration has a strict order. **An admin must whitelist your app before you
-can register it.**
+### 1. Whitelist (admin)
 
-```
-Admin: add to whitelist (approved) ──▶ You: POST /register ──▶ Admin/Instructor: enable in a class
-```
+`POST /api/kiwi-apps/whitelist`
 
-### 4.1 Admin — whitelist the app
-
-`POST /api/kiwi-apps/whitelist` (Admin only) — see
-`src/kiwi-app/kiwi-app.controller.ts:67`.
-
-```jsonc
+```json
 {
-  "slug": "demo",                       // unique app id
-  "registrationSecret": "dev-secret",   // stored bcrypt-hashed; you need the plaintext to register
-  "baseUrl": "http://localhost:8000",   // optional, advisory
-  "status": "approved",                 // MUST be "approved" before you can register
-  "description": "Demo reference app",
-  "maxScopes": ["user:profile:read", "class:info:read", "class:enrollments:read"]
+  "slug": "my-app",
+  "registrationSecret": "at-least-32-characters-shared-out-of-band",
+  "baseUrl": "https://apps.example.edu/my-app/",
+  "status": "approved",
+  "description": "What the app is for",
+  "maxScopes": ["class:materials:chunks:read", "llm:prompt:weekly-summary"]
 }
 ```
 
-- `registrationSecret` is hashed with bcrypt before storage
-  (`kiwi-app.service.ts:64`). The admin shares the **plaintext** with you out of band.
-- `maxScopes` is the **ceiling** of permissions this app may ever request. See
-  section 6 for which scope strings are actually enforced.
+- **`registrationSecret`** must be at least 32 characters. Kiwi stores only a
+  bcrypt hash of it. The admin gives the developer the plain secret separately,
+  not through Kiwi.
+- **`status`** defaults to `pending`. Registration fails until it is `approved`.
+- **`maxScopes`** is the most this app can ever be granted, in any class. See
+  [Scopes and tokens](#scopes-and-tokens).
+- **Changing an entry:** calling this endpoint again for the same slug returns
+  409. Use `PATCH /api/kiwi-apps/whitelist/:slug` instead.
 
-### 4.2 Developer — register your app
+### 2. Register (app)
 
-`POST /api/kiwi-apps/register` — **public endpoint** (no login), but it validates
-the whitelist + secret. See `kiwi-app.controller.ts:119` and
-`kiwi-app.service.ts:176`.
+`POST /api/kiwi-apps/register`
 
-```jsonc
+This endpoint doesn't need a login. Instead, it checks that the slug is
+whitelisted and that the secret matches.
+
+```json
 {
-  "slug": "demo",
-  "registrationSecret": "dev-secret",        // must match the whitelist entry
-  "name": "Demo Reference App",
-  "description": "Shows every Kiwi App capability",
-  "baseUrl": "http://localhost:8000",
-  "appType": "frontend_only",                // or "full" (also exposes an MCP server)
-  "capabilities": ["ai", "mcp"],             // "mcp" => Kiwi auto-sends an app token on ready
-  "mcpServerUrl": "http://localhost:8000/mcp", // only for appType "full"
+  "slug": "my-app",
+  "registrationSecret": "at-least-32-characters-shared-out-of-band",
+  "name": "My App",
+  "baseUrl": "https://apps.example.edu/my-app/",
+  "appType": "frontend_only",
+  "capabilities": ["ai"],
+  "config": { "tutoringMode": "guidance" },
   "uis": [
     {
       "uiSlug": "student",
-      "uiName": "Demo (Student)",
-      "uiUrl": "http://localhost:8000",
-      "placement": "class-tab",              // class-tab | admin-panel | modal | dashboard-widget
+      "uiName": "My App",
+      "uiUrl": "https://apps.example.edu/my-app/",
+      "placement": "class-tab",
       "allowedRoles": ["student", "ta", "instructor", "admin"],
       "tabOrder": 0
     }
   ],
   "prompts": [
     {
-      "promptId": "hint",
-      "name": "Coding Hint",
-      "systemPrompt": "You are a tutor. Give a hint without revealing the answer.",
-      "maxTokens": 500,
-      "temperature": 0.7
+      "promptId": "weekly-summary",
+      "name": "Weekly Study Summary",
+      "systemPrompt": "You are a supportive study coach…",
+      "maxTokens": 600,
+      "temperature": 0.4
     }
   ]
 }
 ```
 
-Notes:
-- Re‑registering with the same `slug` **updates** the existing app (idempotent),
-  so apps can self‑register on every startup (`kiwi-app.service.ts:200`).
-- `prompts` you register are **inactive until an admin approves them**
-  (`POST /api/kiwi-apps/:slug/prompts/:promptId/approve`). Until then the
-  `llm:prompt:<id>` scope won't resolve.
-- DTO definitions: `src/kiwi-app/dto/register-app.dto.ts`.
+- **Registering again** with the same slug updates the app. It also creates or
+  updates the UIs and prompts you list, so an app can safely register every
+  time it starts. If a prompt's `systemPrompt` text has changed, Kiwi turns that
+  prompt off until an admin approves it again.
+- **`uiUrl`** is the page the host loads in the iframe. The host accepts
+  messages only from this URL's origin. If an app has no enabled `class-tab`
+  UI, the class tab loads the app's `baseUrl` instead.
+- **`capabilities`** is mostly informational. The host acts on one value only:
+  `mcp`, which makes the class tab send the app its token (see
+  [When the app gets the token](#when-the-app-gets-the-token)).
+- **`config.tutoringMode`** sets how the AI tutors in your app's AI requests. A
+  class's own `config` can override it.
+- **`allowedRoles`** only controls whether an `admin-panel` entry appears in the
+  admin sidebar. It is not access control, and the class tab doesn't use it.
+- **`appType: "full"` and `mcpServerUrl`** are saved, but nothing uses them yet:
+  Kiwi doesn't call MCP servers that apps provide.
 
-### 4.3 Admin/Instructor — enable the app in a class
+### 3. Approve prompts (admin)
 
-`POST /api/classes/:classId/apps` — see `kiwi-app.controller.ts:350`.
+Kiwi saves every new prompt as inactive. An admin manages prompts with two
+endpoints:
 
-```jsonc
+- `POST /api/kiwi-apps/:slug/prompts/:promptId/approve` turns a prompt on.
+- `POST /api/kiwi-apps/:slug/prompts/:promptId/revoke` turns it off.
+
+An app token includes `llm:prompt:<promptId>` only when both of these are true:
+
+- the prompt is active;
+- the whitelist `maxScopes` contains that exact scope or `llm:prompt:*`.
+
+### 4. Enable in a class (class manager)
+
+`POST /api/classes/:classId/apps`
+
+```json
 {
-  "appId": "<KiwiApp.id>",
-  "tabLabel": "Demo",
-  "enabledScopes": ["user:profile:read", "class:info:read"]  // subset of maxScopes
+  "appId": "<KiwiApp.id returned by register>",
+  "tabLabel": "My App",
+  "tabOrder": 0,
+  "enabledScopes": ["class:materials:chunks:read"],
+  "config": {}
 }
 ```
 
-> ⚠️ **Known gap:** the per‑class enable/disable/reorder handlers are not yet
-> role‑guarded — see the `// TODO: Check if user is professor/admin` comments in
-> `kiwi-app.controller.ts:360,374,388,400`. Treat these endpoints as
-> "trusted caller only" until fixed.
+Related endpoints:
 
-Once enabled, the app shows up for that class via
-`GET /api/classes/:classId/apps?placement=class-tab&userRole=student`
-(`kiwi-app.service.ts:417`), filtered by `placement` and the viewer's role.
-
----
-
-## 5. The Bridge Protocol (postMessage)
-
-This is the heart of an external app and the single source of truth is
-`kiwi-ui/src/pages/ClassAppView.tsx`. All messages are
-`{ type: string, payload: object }`.
-
-### Security model
-- **Incoming (host → app):** the host posts to your iframe using **your app's
-  origin** as `targetOrigin`. You should verify `event.origin` equals Kiwi's
-  origin before trusting a message.
-- **Outgoing (app → host):** the host only accepts messages whose
-  `event.origin` matches your registered app URL (`ClassAppView.tsx:259`).
-- The iframe is sandboxed:
-  `allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox`
-  (`ClassAppView.tsx:436`).
-
-### Context params on the iframe URL
-Kiwi appends these query params when loading your iframe (`ClassAppView.tsx:243`):
-`?classId=<id>&appId=<id>&userId=<id>&uiSlug=<slug>`.
-
-### App → Host
-
-| `type` | `payload` | When / effect |
-| --- | --- | --- |
-| `kiwi:ready` | `{ preferredChatMode? }` | Send once on load. Triggers `kiwi:context`; if app has `mcp` capability, also triggers `kiwi:appToken`. `preferredChatMode` ∈ `modal \| sidepanel \| snap \| fullscreen`. |
-| `kiwi:askAI` | `{ prompt, requestId }` | Ask Kiwi's AI. Host streams the answer back as `kiwi:aiChunk*` then `kiwi:aiComplete`. `requestId` correlates the stream. |
-| `kiwi:updateContext` | `{ context }` | Set the text context that future `kiwi:askAI` calls (and the global chat) are grounded in. |
-| `kiwi:requestToken` | _none_ | Explicitly (re)request an app token, e.g. after expiry. Works even without `mcp` capability (`ClassAppView.tsx:343`). |
-| `kiwi:navigate` | `{ action?: 'back'\|'forward', path? }` | Ask Kiwi to navigate. `path` is restricted to the current class scope. |
-| `kiwi:setChatDisplayMode` | `{ mode, requestId? }` | Change Kiwi's chat panel layout (and open it). Same enum as `preferredChatMode`. Include `requestId` to get a `kiwi:ack`. |
-
-### Host → App
-
-| `type` | `payload` | Meaning |
-| --- | --- | --- |
-| `kiwi:context` | `{ classId, className, userId, username, userRole, appId, appSlug, uiSlug, capabilities }` | The runtime context. Sent in response to `kiwi:ready` (`ClassAppView.tsx:268`). |
-| `kiwi:appToken` | `{ accessToken, scopes, expiresIn, appSlug }` | A scoped JWT (1h) to call Kiwi's API/MCP. See section 6. |
-| `kiwi:aiChunk` | `{ requestId, chunk }` | A streaming token/segment of the AI answer. |
-| `kiwi:aiComplete` | `{ requestId }` | The AI stream finished. |
-| `kiwi:aiError` | `{ requestId, error }` | The AI request failed. |
-| `kiwi:ack` | `{ requestId, ok, error?: { code, message } }` | Result of an acked fire‑and‑forget message (`kiwi:navigate`, `kiwi:setChatDisplayMode`). Only sent when the app included a `requestId`. Codes: `blocked_out_of_scope`, `invalid_mode`, `invalid_request`. |
-
-> **Why `kiwi:ack` exists.** `kiwi:navigate` and `kiwi:setChatDisplayMode` used to
-> be send‑and‑hope: a path outside the class was refused, and a display‑mode
-> request was dropped whenever the user had ever chosen a layout themselves — both
-> looked *identical to success* from the app. Include a `requestId` and await the
-> ack. The SDK does this for you: `await kiwi.navigate({...})` and
-> `await kiwi.setChatDisplayMode(mode)` resolve with `{ ok, error? }` (they never
-> reject, so ignoring the promise is safe).
-
-> Unknown message types are ignored by the host (`ClassAppView.tsx:360`), so you
-> may use your own `type` values for app‑internal messaging without collisions.
-
----
-
-## 6. Permissions & Tokens
-
-### Two locks
-Accessing Kiwi data requires **both**:
-
-1. **App scope** — your app token must carry the required scope. Scopes are
-   computed as the **intersection** of whitelist `maxScopes` and the class's
-   `enabledScopes`, plus active prompt scopes (`kiwi-app.service.ts:742`).
-2. **User identity** — the token is issued **on behalf of the logged‑in user**
-   (`payload.sub`). Many endpoints additionally check the *user's* role. Example:
-   class analytics requires the user to be admin / class professor / assigned
-   instructor (`src/mcp/resources/analytics.resource.ts`), regardless of scope.
-
-So a student using your app cannot pull another student's data even if the app
-has the scope — the user identity gate stops it.
-
-### Getting a token
-- If your app declared `capabilities: ["mcp"]`, Kiwi sends `kiwi:appToken`
-  automatically right after `kiwi:ready` (`ClassAppView.tsx:308`).
-- Otherwise (or after expiry) send `kiwi:requestToken`.
-- Under the hood the host calls `POST /api/kiwi-apps/:slug/token` with the
-  current `classId` (`kiwi-app.service.ts:800`). Token payload:
-  `{ sub: userId, type: 'app_token', appSlug, classId, scopes }`, `expiresIn: 3600`.
-
-### Using a token
-Send it as `Authorization: Bearer <accessToken>` to Kiwi. The guard detects
-`type === 'app_token'`, attaches `request.appContext = { appSlug, classId,
-scopes, userId }`, and skips session checks (`src/auth/auth.guard.ts:609`).
-
-### Which scopes are actually enforced today
-`maxScopes` is a free‑form string array, but only these are currently checked via
-`requireScope()` (`src/mcp/utils/scope-check.ts`, grep `requireScope`):
-
-| Scope | Gates (resource URI) |
+| Endpoint | Purpose |
 | --- | --- |
-| `user:profile:read` | MCP resource `kiwi://users/{userId}` (`user.resource.ts:45`) |
-| `class:info:read` | MCP resource `kiwi://users/{userId}/role/{classId}` (`user.resource.ts:130`) |
-| `class:enrollments:read` | MCP resource `kiwi://users/{userId}/enrollments` (`user.resource.ts:205`) |
-| `llm:prompt:<promptId>` | MCP tool `kiwi_app_chat` for an approved prompt (`kiwi-app-chat.tool.ts:87`) |
-| `class:materials:chunks:read` | App API `GET /api/kiwi-apps/classes/:classId/document-chunks` — parsed document text chunks (`app-data.controller.ts`) |
-| `context:student_learning:read` | App API `POST /api/kiwi-apps/:slug/contextual-chat` — host-mediated LLM over student context; needs **both** this **and** `llm:prompt:<id>` (`app-data.controller.ts`) |
+| `PATCH /api/classes/:classId/apps/:appId` | Changes `tabOrder`, `tabLabel`, `config`, `enabledScopes` or `isEnabled`. |
+| `DELETE /api/classes/:classId/apps/:appId` | Turns the app off in the class. |
+| `PUT /api/classes/:classId/apps/order` | Reorders the class's app tabs. |
+| `GET /api/classes/:classId/apps` | Lists the class's enabled apps. Any signed-in user can call it. |
 
-> ⚠️ **These scope checks run on the *full* MCP server, not `POST /mcp/rpc`.**
-> Kiwi exposes **two MCP surfaces** (see §8.3). The scope‑enforced resources/tools
-> above (`user.resource.ts`, `analytics.resource.ts`, `kiwi_app_chat`) are served
-> by the `@rekog/mcp-nest` server at `/mcp` · `/mcp/sse` · `/mcp/streamable-http`
-> and require a real MCP client handshake. The simple `POST /mcp/rpc` endpoint
-> only serves a small built‑in set and gates on **user identity only** (no scope
-> check) — convenient, but don't mistake it for the enforcement boundary.
+Only three kinds of user can make the write calls:
 
-Wildcards are supported (`class:*` matches `class:info:read`) — see
-`scope-check.ts:25`. Other endpoints (analytics, permissions) gate on **user
-role**, not scope. See section 11 for the known scope‑naming inconsistency.
+- an admin;
+- a professor enrolled in that class;
+- an instructor assigned to that class.
 
----
+In the UI, these settings are on the **Class Apps** page
+(`/admin/class/:classID/kiwi-apps`). The class admin menu hides that page from
+users whose class role is `instructor`, so those users have to use the API.
 
-## 7. Capability Catalog (scope ↔ how to call it)
+### Other app endpoints
 
-MCP entries are tagged **[rpc]** (the simple `POST /mcp/rpc` surface, callable
-with one `fetch` + your app token) or **[full]** (the `@rekog/mcp-nest` server,
-needs an MCP client handshake). See §8.3 for the difference.
+| Endpoint | Purpose |
+| --- | --- |
+| `POST /api/kiwi-apps/:slug/heartbeat` | Records that the app is alive (updates `lastSeenAt`). Needs no login. |
+| `GET /api/kiwi-apps/:slug/scopes` | Shows the app's `maxScopes` and its active prompt scopes. |
+| `GET /api/kiwi-apps/:slug/scopes/:classId` | Shows the class's `enabledScopes` and the resulting effective scopes. |
+| `POST /api/kiwi-apps/:slug/audit/context-update` | Adds an entry to the app's audit log. |
 
-| You want… | Gate | How to call it |
+## Bridge protocol
+
+Every bridge message has the form `{ type, payload }`. The SDK sends and parses
+these messages for you. This section is for debugging and for apps that don't
+use the SDK.
+
+### Security
+
+**Host side.** The host accepts a message only if it comes from the origin of
+the UI's `uiUrl`. On a class tab with no enabled `class-tab` UI, the host checks
+against the app's `baseUrl` instead. Admin panels also check that the message
+came from their own iframe (`event.source`). The host sends replies only to that
+same origin.
+
+**App side.** Before trusting a message, check that
+`event.source === window.parent`, and accept only one origin. The SDK does this
+by locking onto the origin of the first `kiwi:` message it receives from its
+parent window.
+
+**Iframe URL.** The host adds context to your page's query string:
+
+- Class tabs add `classId`, `appId`, `userId` and `uiSlug`.
+- Admin panels add `appId`, `userId` and `placement=admin-panel`, plus `classId`
+  and `uiSlug` when they exist.
+
+**Sandbox.** The iframe's `sandbox` attribute allows `allow-scripts
+allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox`.
+Admin panels also allow `allow-downloads`.
+
+### Messages (class tab)
+
+In this table, "app → host" means your app sends the message and "host → app"
+means Kiwi sends it.
+
+| Direction | Type | Payload | What happens |
+| --- | --- | --- | --- |
+| app → host | `kiwi:ready` | `{ preferredChatMode? }` | The host replies with `kiwi:context` and then `kiwi:requestContext`. If the app declares the `mcp` capability, the host also sends `kiwi:appToken`. `preferredChatMode` is one of `modal`, `sidepanel`, `snap` or `fullscreen`. It only applies if the user hasn't chosen a chat layout themselves. |
+| host → app | `kiwi:context` | `{ classId, className, userId, userRole, appId, appSlug, uiSlug, capabilities }` | Tells the app where it is running and who is viewing. `userId` is an opaque ID. `userRole` is the viewer's role in the class, for example `student`, `ta`, `professor` or `admin`. |
+| host → app | `kiwi:requestContext` | none | Asks the app for its current AI context (see `kiwi:updateContext`). Apps can ignore it. |
+| app → host | `kiwi:contextResponse` | `{ context, tutoringMode? }` | The app's answer to `kiwi:requestContext`. Works the same as `kiwi:updateContext`. |
+| app → host | `kiwi:updateContext` | `{ context, tutoringMode? }` | Gives Kiwi a description of what the user is doing in the app. Kiwi's AI uses it in the app's AI requests and in the Kiwi chat. No reply. For `tutoringMode`, see [AI requests](#ai-requests). |
+| app → host | `kiwi:askAI` | `{ prompt, requestId }` | Asks Kiwi's AI a question. The answer streams back in the next three messages. |
+| host → app | `kiwi:aiChunk` | `{ requestId, chunk, full }` | Part of the answer. `full` is the whole answer so far and can get shorter between messages, so display `full` rather than joining the `chunk`s. |
+| host → app | `kiwi:aiComplete` | `{ requestId }` | The answer is complete. |
+| host → app | `kiwi:aiError` | `{ requestId, error }` | The request failed. `error` is a string. |
+| app → host | `kiwi:apiRequest` | `{ op, params, requestId }` | Runs a data op (see [BRIDGE-OPS.md](../kiwi-app-sdk/BRIDGE-OPS.md)). The host adds `classId` and `appSlug` itself. |
+| host → app | `kiwi:apiResponse` | Success: `{ requestId, ok: true, status, data }`. Failure: `{ requestId, ok: false, status, error: { code, message } }`. | The result of a data op. The host sends exactly one per request. |
+| app → host | `kiwi:navigate` | `{ action?: 'back' \| 'forward', path?, requestId? }` | Moves the Kiwi page. `path` must stay inside the current class. A relative path, or `/`, is resolved within the class. |
+| app → host | `kiwi:setChatDisplayMode` | `{ mode, requestId? }` | Changes the chat layout and opens the chat panel. |
+| host → app | `kiwi:ack` | `{ requestId, ok, error? }` | Confirms whether a `kiwi:navigate` or `kiwi:setChatDisplayMode` worked. Sent only for those two messages, and only if the request included a `requestId`. Error codes: `blocked_out_of_scope`, `invalid_mode`, `invalid_request`. |
+| app → host | `kiwi:requestToken` | none | Asks for the app token. The host replies with `kiwi:appToken`. If the host can't get a token, the class tab sends nothing back. |
+| host → app | `kiwi:appToken` | `{ accessToken, scopes, expiresIn, appSlug }` | The app token itself. |
+
+The host ignores any other message type, so an app can use its own message types
+without conflicts.
+
+`kiwi:apiResponse` can report these error codes:
+
+| Code | Meaning |
+| --- | --- |
+| `unknown_op` | The host doesn't have an op with that name. |
+| `not_ready` | The host doesn't know the class yet. |
+| `token_error` | The host couldn't get an app token, for example because the user isn't in the class or the app isn't enabled there. |
+| `op_not_granted` | The token is missing a scope the op needs. The message lists the missing scopes. |
+| `backend_error` | The backend returned an error. `status` holds the HTTP status code. |
+| `network_error` | The request didn't reach the backend or didn't finish. |
+| `timeout` | The op took longer than its time limit (listed in BRIDGE-OPS.md). |
+
+### Admin panels
+
+Admin panels support fewer messages than class tabs:
+
+| Direction | Type | What happens |
 | --- | --- | --- |
-| Current user's role in a class | _(none; public)_ | REST `GET /api/permissions/class-role?userId&classId` |
-| Current authenticated user (id/email/role) | app token | **[rpc]** `tools/call get_authenticated_user` |
-| User's enrolled classes | app token | **[rpc]** `resources/read kiwi://classes` |
-| Documents for a class | enrolled in class | **[rpc]** `resources/read kiwi://class/{classId}/documents` |
-| Use Kiwi's AI (streaming) | _(none; host‑proxied)_ | bridge `kiwi:askAI` |
-| Use Kiwi's AI (one shot, with token) | app token | **[rpc]** `tools/call chat { input }` |
-| User profile | `user:profile:read` | **[full]** resource `kiwi://users/{userId}` |
-| User's class role/info | `class:info:read` | **[full]** resource `kiwi://users/{userId}/role/{classId}` |
-| User enrollments | `class:enrollments:read` | **[full]** resource `kiwi://users/{userId}/enrollments` |
-| Class analytics / engagement | user is admin/prof/instructor | **[full]** resource `kiwi://analytics/class/{classId}` |
-| Run an approved app prompt | `llm:prompt:<id>` | **[full]** tool `kiwi_app_chat` |
-| Parsed text **chunks** of class documents (for flashcards, podcasts, summaries) | `class:materials:chunks:read` | REST `GET /api/kiwi-apps/classes/:classId/document-chunks` (§8.3b) |
-| **Contextual** LLM over the student's private learning context (host assembles it, returns only the output) | `llm:prompt:<id>` + `context:student_learning:read` | REST `POST /api/kiwi-apps/:slug/contextual-chat` (§8.3b) |
-| Class roster / add users | role‑gated | **[full]** tools `get_class_roster`, `add_users_to_class` |
-| Upload / fetch documents | role‑gated | **[full]** tools `upload_document`, `get_document_signed_url` |
+| app → host | `kiwi:ready` | The host replies with `kiwi:context` and then `kiwi:appToken`. The context is `{ classId?, userId, userRole, appId, appSlug, uiSlug, placement: 'admin-panel', isAdmin }`. |
+| app → host | `kiwi:requestToken` | Payload: `{ reason? }`. The host replies with `kiwi:appToken`. With `reason: 'expired'`, it gets a new token instead of reusing its cached one. |
+| host → app | `kiwi:error` | Sent instead of `kiwi:appToken` when the host can't get a token. Its shape is `{ type: 'kiwi:error', message }`: `message` is at the top level, not inside `payload`. |
+| app → host | `kiwi:adminNavigation` | Payload: `{ items: [{ id, label, path }], activePath? }`. The host adds up to 20 of these items to its admin sidebar. Each `path` must start with `/`. |
+| host → app | `kiwi:adminNavigate` | Payload: `{ path }`. Sent when the user clicks one of those sidebar items. |
+| app → host | `kiwi:navigate` | The host accepts this but does nothing and sends no `kiwi:ack`. |
 
-> The REST analytics endpoints (`GET /analytics/all`, `POST /analytics/user`)
-> are **session + admin‑only** (`AnalyticsAdminGuard` reads `request.session`), so
-> an **app token cannot call them** — use the `kiwi://analytics/*` MCP resources
-> on the full server instead, which gate on the user's role.
+Admin panels don't support `kiwi:askAI`, `kiwi:apiRequest`,
+`kiwi:updateContext` or `kiwi:setChatDisplayMode`.
 
-Full MCP tool/resource/prompt reference + JSON‑RPC examples:
-`docs/MCP_DEVELOPER_GUIDE.md`.
+Admin panels always receive the app token, and use it to call their own backend
+(see [Calling the backend directly](#calling-the-backend-directly)).
 
----
+On `/admin/app/:appSlug`, which has no class, only system admins can get a token.
+That token has `classId: null`, and the data ops reject it because they need a
+class.
 
-## 8. Calling Kiwi
+### AI requests
 
-### 8.1 AI via the bridge (simplest — no token, no CORS)
-```js
-const requestId = crypto.randomUUID();
-window.parent.postMessage({ type: 'kiwi:askAI', payload: { prompt, requestId } }, KIWI_ORIGIN);
-// collect kiwi:aiChunk by requestId, finish on kiwi:aiComplete
+`kiwi:askAI` is sent as an ordinary Kiwi chat message (`POST /student/chat/v2`)
+under the signed-in user's own session. The message includes the app's slug,
+its context text and its tutoring mode.
+
+- **App Mode.** The backend applies the app's details only if the app is enabled
+  in the class. It then answers in App Mode, or in the tutoring mode the app
+  registered.
+- **Context text.** The model receives the app's context text as information
+  from an untrusted source, not as instructions.
+- **Access.** `kiwi:askAI` needs no token and no scope. It lets the app do
+  nothing beyond what the Kiwi chat already lets the user do.
+
+Kiwi picks the tutoring mode as follows:
+
+1. If the app's registration sets a mode, Kiwi uses it. The registered mode is
+   the app's `config.tutoringMode`, or the class's own `config` if that sets
+   one.
+2. If no mode is registered, Kiwi accepts a `tutoringMode` sent by the app, but
+   only the value `guidance`. In `guidance` mode the AI gives hints and never
+   the full solution.
+3. On a recitation worksheet, Kiwi always uses recitation mode, whatever the app
+   asks for.
+
+## Scopes and tokens
+
+### How Kiwi works out a token's scopes
+
+The host asks for an app token by calling `POST /api/kiwi-apps/:slug/token` with
+`{ classId }`. Kiwi then builds the token's scope list in two steps:
+
+1. **Class scopes.** Kiwi takes the scopes that are in both `maxScopes` and the
+   class's `enabledScopes`. If `enabledScopes` is empty, Kiwi uses all of
+   `maxScopes`.
+2. **Prompt scopes.** For each active prompt, Kiwi adds `llm:prompt:<id>`, but
+   only if `maxScopes` contains `llm:prompt:*` or that exact scope.
+   `enabledScopes` has no effect on this step.
+
+Wildcards are copied into the token as they are. A scope ending in `:*` matches
+every scope that starts with the same prefix. For example, `llm:prompt:*`
+matches `llm:prompt:weekly-summary`. A wildcard doesn't unlock unapproved
+prompts, because the backend won't run a prompt that isn't active.
+
+Kiwi refuses to issue a token (403) if the user has no role in the class or the
+app isn't enabled there.
+
+### Scopes the App API checks
+
+| Scope | What it allows |
+| --- | --- |
+| `class:materials:chunks:read` | The `documentChunks` op, which returns the parsed text of the class's documents. |
+| `context:student_learning:read` | The `contextualChat` op. This op also needs the scope of the prompt it runs. |
+| `llm:prompt:<promptId>` | Running that approved prompt. |
+
+[BRIDGE-OPS.md](../kiwi-app-sdk/BRIDGE-OPS.md) lists each op with its parameters
+and the scopes it needs. The MCP server has its own scope checks; see
+[docs/mcp.md](../docs/mcp.md).
+
+Scopes can only narrow what the user is already allowed to do. Every endpoint
+also checks the user's own access, so a student using an app can't read another
+student's data.
+
+### Token contents and lifetime
+
+- **Payload:** `{ sub: <userId>, type: 'app_token', appSlug, classId,
+  tokenScope, scopes }`. For a token issued without a class (admin panels only),
+  `classId` is `null` and `tokenScope` is `'admin'`. For all other tokens,
+  `tokenScope` is `'class'`.
+- **Lifetime:** `APP_TOKEN_TTL_SECONDS` seconds, 3600 by default. The host keeps
+  the token and gets a new one about a minute before it expires.
+- **Only the host can create tokens.** If the token endpoint is called with an
+  app token, it returns 403. New tokens always come from the host, through the
+  user's session.
+- **Sessions:** endpoints that accept app tokens don't need a session cookie.
+  Endpoints that need a session, such as the admin and class-management
+  endpoints, reject app tokens.
+
+### When the app gets the token
+
+On a class tab, the host normally keeps the token to itself. It sends the token
+to the app in two cases only:
+
+- the app declares the `mcp` capability, in which case the host sends
+  `kiwi:appToken` after `kiwi:ready`;
+- the app sends `kiwi:requestToken`, which is what the SDK's `requestToken()`
+  does.
+
+Admin panels always receive the token.
+
+Request the token only if your app calls a backend directly. Never store the
+token or write it to logs.
+
+### Calling the backend directly
+
+Admin panels, and apps with their own backend, can call the App API themselves.
+Send the token in the header `Authorization: Bearer <accessToken>`.
+
+For class endpoints, such as
+`GET /api/kiwi-apps/classes/:classId/document-chunks`, the `classId` must be the
+class the token was issued for.
+
+If a browser page calls the backend from its own origin, add that origin to the
+backend's `FRONTEND_URL` setting, a comma-separated list of origins allowed
+through CORS.
+
+Don't call `GET /api/permissions/class-role` from an app. The viewer's role is
+already in `kiwi:context`, in the `userRole` field.
+
+Full MCP clients connect to the MCP server described in
+[docs/mcp.md](../docs/mcp.md). Apps running in an iframe should use bridge ops
+instead.
+
+## SDK usage
+
+The SDK, `@maps-research/kiwi-app-sdk`, handles the bridge messages for you. The
+[SDK README](../kiwi-app-sdk/README.md) documents its complete API.
+
+### With a bundler
+
+The package isn't published to npm yet, so install it from a local copy of this
+repository:
+
+```bash
+npm install /path/to/kiwi/kiwi-app-sdk
 ```
-The host proxies this to a Kiwi chat endpoint using the *user's* session, so your
-app needs neither a token nor CORS for AI (`ClassAppView.tsx:106`).
 
-> ⚠️ **Host‑wiring caveat (this branch).** `ClassAppView.tsx:129` currently posts
-> to `${basePath}/chat/stream`, but the only matching route is the admin‑guarded
-> `ChatController` (`src/common/chat/chat.controller.ts:39`, body `{ input, image }`),
-> not the student agent (`POST /student/chat/v2`, body `UnifiedChatRequest`). So
-> `kiwi:askAI` may 401/403 for non‑admins until the host proxy is pointed at the
-> student endpoint. Your app code stays the same regardless — and you can always
-> use the token‑based MCP `chat` tool (§8.3) as a fallback, which the reference
-> app demonstrates.
+Once it's published, use `npm install @maps-research/kiwi-app-sdk`.
 
-### 8.2 REST with the app token
-```js
-const res = await fetch(`${KIWI_ORIGIN}/api/permissions/class-role?userId=${userId}&classId=${classId}`, {
-  headers: { Authorization: `Bearer ${appToken}` },
+```ts
+import { createKiwiApp } from '@maps-research/kiwi-app-sdk';
+
+const kiwi = createKiwiApp({ appSlug: 'my-app' });
+const ctx = await kiwi.ready();            // { classId, userId, userRole, ... }
+
+const answer = await kiwi.askAI('Explain recursion briefly', {
+  onChunk: (_delta, full) => render(full),
 });
+
+let cursor: string | undefined;
+do {
+  const page = await kiwi.documentChunks({ limit: 50, cursor });
+  page.documents.forEach(addDocument);
+  cursor = page.nextCursor ?? undefined;
+} while (cursor);
+
+const { ok, error } = await kiwi.navigate({ path: 'materials' });
 ```
 
-### 8.3 MCP — two surfaces, pick the right one
+### Without a bundler
 
-Kiwi exposes MCP **twice**. Know which you're calling:
+Load the single-file build with a `<script>` tag, and then call
+`KiwiApp.create({...})`. The Kiwi UI serves this file at
+`/sdk/v1/kiwi-app-sdk.js`. You can also keep a copy next to your app, as
+`hello-kiwi-app` does.
 
-| | Simple — `POST /mcp/rpc` | Full — `@rekog/mcp-nest` |
+### What the SDK doesn't handle
+
+- **`kiwi:requestContext`.** The SDK ignores this message. To answer it, add
+  your own `message` listener and reply with `kiwi:contextResponse`.
+- **Sending `tutoringMode`.** `updateContext(text)` sends only the context text.
+  To send `tutoringMode` from the app, post `kiwi:updateContext` yourself. You
+  don't need to if the mode is already set in the app's registration.
+- **Admin-panel messages.** The SDK doesn't handle `kiwi:error`,
+  `kiwi:adminNavigation` or `kiwi:adminNavigate`. In an admin panel,
+  `navigate()` always resolves with a `timeout` error.
+
+## Troubleshooting
+
+| Symptom | Likely cause | Fix |
 | --- | --- | --- |
-| Endpoint | `POST /mcp/rpc` (+ `GET /mcp/capabilities`) | `/mcp` · `/mcp/sse` · `/mcp/streamable-http` |
-| How to call | one `fetch`, app token in `Authorization` | a real MCP client (initialize handshake, session) |
-| Auth gate | **user identity only** (no scope check) | **scope‑enforced** via `requireScope()` |
-| Tools | `get_authenticated_user`, `chat` | full catalog: `get_class_roster`, `upload_document`, `kiwi_app_chat`, … |
-| Resources | `kiwi://classes`, `kiwi://class/{id}/documents` | full catalog: `kiwi://users/{id}`, `kiwi://analytics/class/{id}`, … |
-| Source | `src/mcp/mcp.controller.ts` → `mcp-server-impl.service.ts` | `src/mcp/mcp.module.ts` + `resources/*`, `tools/*` |
+| No tab appears in the class. | The app isn't enabled in the class, or the app is inactive. | Enable it (step 4), and check its status on the App Registry page. |
+| The tab is blank or says "refused to connect". | Your server sends an `X-Frame-Options` header, or a CSP `frame-ancestors` rule, that stops Kiwi from embedding the page. | Allow the Kiwi UI's origin to embed your app. |
+| `kiwi:context` never arrives, and the SDK switches to the Simulator. | The page's origin doesn't match the origin of the registered `uiUrl`. | Register again with the exact URL you serve the page from. |
+| `Invalid registration secret` | The secret doesn't match the one in the whitelist entry. | Use the exact secret. An admin can set a new one with `PATCH /api/kiwi-apps/whitelist/:slug`. |
+| `not in the whitelist` or `not approved` | Step 1 hasn't been done, or the whitelist entry's `status` isn't `approved`. | Ask an admin to create or approve the entry. |
+| The whitelist call returns 400. | The secret is shorter than 32 characters. | Use a secret of at least 32 characters. |
+| An admin call returns 401 even though you sent a token. | The call had no session cookie. | Log in with `POST /auth/login` and send the session cookie with each call, as `register.sh` does. |
+| `token_error`, or "User does not have access to this class" | The signed-in user has no role in the class. | Enroll the user in the class, or assign them to it. |
+| `op_not_granted` | The scope is missing from `maxScopes`, excluded by `enabledScopes`, or belongs to a prompt that isn't approved. | Check the effective scopes with `GET /api/kiwi-apps/:slug/scopes/:classId`. |
+| A prompt stopped working after a redeploy. | Its `systemPrompt` text changed, so Kiwi turned the prompt off. | Ask an admin to approve the prompt again. |
+| Scope changes have no effect. | The host is still using a token it saved earlier. It keeps a token for up to an hour. | Reload the class page. |
+| `navigate()` resolves with a `timeout` error. | The app is running in an admin panel, where the host doesn't confirm navigation. | Use `kiwi:adminNavigation` instead. |
+| `kiwi:askAI` fails. | The user's session has expired, or the answer stream broke. | Sign in again, and check the browser console on the Kiwi page for the error. |
 
-For an **iframe app**, the simple endpoint is usually all you need — it's one
-request and works with the app token you already have:
+## Known limitations
 
-```js
-const res = await fetch(`${KIWI_ORIGIN}/mcp/rpc`, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${appToken}` },
-  body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/list', params: {} }),
-});
-// Useful calls on /mcp/rpc:
-//   { method: 'tools/call',     params: { name: 'get_authenticated_user', arguments: {} } }
-//   { method: 'tools/call',     params: { name: 'chat', arguments: { input: 'hello' } } }
-//   { method: 'resources/read', params: { uri: 'kiwi://classes' } }
-```
-
-To reach the **full** catalog (user profile, analytics, roster, uploads) with
-proper scope enforcement, talk to the `@rekog/mcp-nest` server with an MCP
-client — that's the "MCP client" path documented in `docs/MCP_DEVELOPER_GUIDE.md`.
-
-### 8.3b Content & coaching — the App API (REST), not MCP
-
-Two content/LLM capabilities are exposed for apps as **plain REST under
-`/api/kiwi-apps`** — one authenticated `fetch` each, no MCP client, no session
-handshake. They use the same app-token + scope model as the rest of §8.2; an app
-should reach them this way rather than over MCP.
-
-- **`GET /api/kiwi-apps/classes/:classId/document-chunks`** (`#218`) —
-  paginated parsed text chunks of the class's documents. Query
-  `?documentIds=a,b&cursor=…&limit=50`; returns
-  `{ classId, documents:[{ documentId, fileName, totalChunks, chunks:[{ chunkId, index, pageNumber, type, text }] }], nextCursor, hasMore }`.
-  Deterministic order; page with `nextCursor` until `hasMore` is false.
-  Image/table chunks return only their **text description**, never raw image
-  bytes. App token needs scope `class:materials:chunks:read` (and can only read
-  the class the token was issued for); a class member with a user JWT + session
-  may also call it.
-
-  ```js
-  const r = await fetch(
-    `${KIWI_ORIGIN}/api/kiwi-apps/classes/${classId}/document-chunks?limit=50`,
-    { headers: { Authorization: `Bearer ${appToken}` } });
-  const { documents, nextCursor, hasMore } = await r.json();
-  ```
-
-- **`POST /api/kiwi-apps/:slug/contextual-chat`** (`#217`) — host‑mediated LLM.
-  Body `{ promptId, userMessage?, contextRequest:{ kind, scope, timeWindowDays?, include[], retrievalQuery? }, outputSchema? }`.
-  Kiwi assembles the student's *private* learning context server‑side (recent
-  questions, weak concepts, materials) and returns **only** the model output:
-  `{ output, promptId, promptName, contextIncluded, contextOmitted }`. **App‑token
-  only** — the target user & class come from the token, never the body. Needs
-  **both** `llm:prompt:<promptId>` **and** `context:student_learning:read`.
-  Optional `outputSchema` constrains `output` to a JSON instance. Personal
-  `recent_questions` are dropped for a student who hasn't consented (reported in
-  `contextOmitted`).
-
-  ```js
-  const r = await fetch(`${KIWI_ORIGIN}/api/kiwi-apps/${appSlug}/contextual-chat`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${appToken}` },
-    body: JSON.stringify({ promptId: 'weekly-summary', contextRequest: {
-      kind: 'student_learning_context', scope: 'current_user_current_class',
-      include: ['recent_questions', 'weak_concepts', 'relevant_materials'] } }),
-  });
-  const { output, contextIncluded, contextOmitted } = await r.json();
-  ```
-
-The reference app's **"Class content & coaching"** cards reach exactly these two
-endpoints, but they do **not** call them directly — they go through the window
-bridge as host-proxied ops (`kiwi.documentChunks(…)` / `kiwi.contextualChat(…)`).
-Kiwi makes the real request with the app token, so a frontend-only app needs
-**no CORS entry and never handles a token**.
-
-The raw HTTP above is what you use if your app has its own backend, or mints an
-app token itself. That path is a REST call like any in §8.2, so it does need
-your origin in the backend's `FRONTEND_URL` (CORS) — but nothing more: no
-`exposedHeaders`, no MCP handshake.
-
-> These two also exist as MCP tools (`get_class_document_chunks`,
-> `kiwi_app_contextual_chat`) on the full `@rekog` server for genuine MCP
-> *clients* / agents. **Apps should use the REST endpoints above** — the full
-> MCP server is stateful and not practically callable from a browser iframe (see
-> §11, note 8).
-
-### 8.4 Expose your own MCP server (appType `full`)
-Register with `appType: "full"` and `mcpServerUrl`. Kiwi's agent can then call
-*your* tools (reverse direction). Implement the MCP server in your app.
-
----
-
-## 9. Lifecycle & Ops
-
-| Action | Endpoint | Notes |
-| --- | --- | --- |
-| Heartbeat | `POST /api/kiwi-apps/:slug/heartbeat` (public) | Updates `lastSeenAt`. Call periodically. `kiwi-app.controller.ts:211` |
-| Re‑register / update | `POST /api/kiwi-apps/register` | Idempotent by slug. |
-| Report user action (audit) | `POST /api/kiwi-apps/:slug/audit/context-update` | Writes `KiwiAppAuditLog` for accountability. `kiwi-app.controller.ts:283` |
-| Inspect scopes | `GET /api/kiwi-apps/:slug/scopes`, `GET /api/kiwi-apps/:slug/scopes/:classId` | Debug what your app can do. |
-
----
-
-## 10. Local Dev & Troubleshooting
-
-| Symptom | Cause | Fix |
-| --- | --- | --- |
-| REST/MCP call from the iframe blocked by CORS | Backend only allows `FRONTEND_URL` origins (`app.module.ts:84`). Default is just `http://localhost:3001`. | Add your app origin: `FRONTEND_URL="http://localhost:3001,http://localhost:8000"` in `kiwi/.env`, restart backend. |
-| `App "x" is not in the whitelist` / `not approved` | No whitelist row, or `status != approved`. | Admin adds/approves it (4.1). |
-| `Invalid registration secret` | Plaintext ≠ stored bcrypt hash. | Use the exact secret the admin set. |
-| App never appears as a tab | Not enabled for the class, or no `class-tab` UI matching the viewer's role. | Enable (4.3); check `placement`/`allowedRoles`. |
-| `kiwi:context` never arrives | `event.origin` mismatch — your `uiUrl` origin ≠ where the iframe is actually served. | Register the exact origin you serve from. |
-| `Missing required scope: …` | App token lacks the scope. | Add to `maxScopes` (whitelist) **and** `enabledScopes` (class). |
-| AI works but data calls 401/403 | AI is proxied (user session); data calls need the **app token** + the user's role. | Request a token; ensure the user has rights. |
-| Iframe blank / refused to connect | Your app server sends `X-Frame-Options: DENY` or restrictive CSP. | Allow framing from Kiwi's origin. |
-
----
-
-## 11. Reference & Known Issues
-
-### Source of truth
-- Bridge & iframe host: `kiwi-ui/src/pages/ClassAppView.tsx`
-- Route/lookup: `kiwi-ui/src/pages/ClassAppPage.tsx`
-- Backend controller: `kiwi/src/kiwi-app/kiwi-app.controller.ts`
-- Backend service: `kiwi/src/kiwi-app/kiwi-app.service.ts`
-- DTOs: `kiwi/src/kiwi-app/dto/*`
-- Data model: `kiwi/prisma/schema.prisma` (`KiwiApp*`, `ClassKiwiApp`, `WidgetState`, `KiwiAppAuditLog`)
-- Scope enforcement: `kiwi/src/mcp/utils/scope-check.ts`
-- MCP server: `kiwi/src/mcp/*`
-
-### Known issues worth fixing (DX / security)
-1. **No JS SDK for external apps** — every app hand‑rolls the postMessage
-   handshake, token handling and AI streaming. A thin `@kiwi/app-sdk`
-   (`kiwi.ready()`, `kiwi.onContext()`, `kiwi.askAI()`, `kiwi.getToken()`) would
-   remove most boilerplate.
-2. **Scope naming is inconsistent.** Enforced scopes use the colon form
-   (`class:info:read`), but MCP resource *names* and many whitelist examples use
-   hyphen form (`class-analytics`, `user-profile`). A developer cannot guess the
-   right string. Standardize on one convention and publish a canonical list.
-3. **Analytics gates on role, not scope** — so `maxScopes` for analytics is
-   advisory only. Either enforce a scope (`class:analytics:read`) or document
-   clearly that role is the gate.
-4. **Per‑class app management is unguarded** — `// TODO` role checks in
-   `ClassKiwiAppController` (enable/disable/update/reorder). Security gap.
-5. **Secret distribution is manual/undocumented** — define how the registration
-   secret reaches the developer.
-6. **Two MCP surfaces are easy to confuse.** `POST /mcp/rpc` (simple, app‑token,
-   no scope check, small built‑in set) and the `@rekog/mcp-nest` server (full
-   catalog, scope‑enforced, needs a handshake) overlap in name. An app developer
-   who reads "MCP resource `kiwi://users/{id}`" will reasonably try it on
-   `/mcp/rpc` and get *Resource not found*. Consider serving the full catalog
-   over a single app‑friendly endpoint, or documenting the split prominently
-   (done in §8.3).
-7. **AI bridge proxy target is mismatched.** `ClassAppView.tsx:129` posts
-   `kiwi:askAI` to `/chat/stream` (admin‑guarded, `{ input, image }`) instead of
-   the student agent (`POST /student/chat/v2`, `UnifiedChatRequest`). Point the
-   host proxy at the student endpoint so `kiwi:askAI` works for non‑admins. See §8.1.
-8. **The full `/mcp` server isn't practically callable from a browser iframe** —
-   which is *why* apps use the App API (REST) for data/LLM, not MCP. It's stateful
-   and returns the session id in the `Mcp-Session-Id` response header, but the
-   backend CORS (`app.module.ts`) doesn't set `exposedHeaders`, so a browser can't
-   read it and the follow‑up `tools/call` 400s. Rather than paper over that with
-   `exposedHeaders`/`statelessMode`, the content & LLM features are served as
-   plain REST (§8.3b): `GET /api/kiwi-apps/classes/:classId/document-chunks` and
-   `POST /api/kiwi-apps/:slug/contextual-chat`. MCP is reserved for genuine MCP
-   clients / agents. (Corollary of note 6: the "simple" `/mcp/rpc` surface is also
-   unregistered dead code on the current backend — don't rely on it.)
+- **Tokens stay valid after access is removed.** If an app is disabled in a
+  class or its prompts are revoked, tokens issued earlier keep working until
+  they expire, which takes up to `APP_TOKEN_TTL_SECONDS`. This includes any
+  token the app received in `kiwi:appToken`.
+- **Scope changes need a page reload.** The host keeps its token for up to an
+  hour, so users must reload the page before new scopes take effect.
+- **`userRole` can be wrong on class tabs.** If the app sends `kiwi:ready`
+  before the host has looked up the user's role, the context says `student`, and
+  the host doesn't send a correction. Sending `kiwi:ready` again gets a fresh
+  context.
+- **Some registration fields have no effect yet:**
+  - class tabs ignore `allowedRoles`;
+  - the host doesn't show the `modal` and `dashboard-widget` placements;
+  - Kiwi doesn't call MCP servers that apps provide (`appType: "full"`,
+    `mcpServerUrl`).

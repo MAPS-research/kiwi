@@ -5,7 +5,7 @@ Unit tests run on **Vitest** with **React Testing Library** and **jsdom**.
 ```bash
 npm test              # watch mode
 npm run test:run      # single run (CI mode)
-npm run test:ui       # Vitest browser UI
+npm run test:ui       # watch mode with the Vitest web UI
 npm run test:coverage # v8 coverage report (text, JSON, HTML)
 
 npx vitest run src/apps                       # one directory
@@ -84,6 +84,10 @@ Conventions that recur across the suite:
   does not always fire `onSubmit` in jsdom.
 - **MUI internals:** when a component exposes no ARIA role, fall back to
   `container.querySelector()`.
+- **Environment variables:** sign-in, consent, and SSO settings in
+  `src/config/branding.ts` are read when called, so a test can set them with
+  `vi.stubEnv("VITE_ENABLE_GOOGLE_LOGIN", "true")` and undo it with
+  `vi.unstubAllEnvs()`.
 - **Per-test API behaviour:** import the mocked client and override a method with
   `vi.mocked(apiClient.someController).mockResolvedValue(...)` inside the test.
 - **Heavy libraries** (react-slick, react-markdown, PDF viewer, Floating UI) are
@@ -96,6 +100,14 @@ accessibility. They deliberately do not cover internal component state,
 third-party library behaviour, MUI internals, or real network calls.
 
 There is no integration, end-to-end, or visual regression layer yet.
+
+## Known failures
+
+Nine tests currently fail: the chart palette test in `Theme.test.ts`, four in
+`GoogleRedirectHandler.test.tsx`, two in `MCPServerDialog.test.tsx`, and two in
+`BatchMaterialsUpload.test.tsx`. Because of them, CI runs the suite without
+failing the build. Don't add new failures; see
+[CONTRIBUTING.md](../CONTRIBUTING.md#known-the-test-suites-are-not-yet-a-ci-gate).
 
 ## Troubleshooting
 

@@ -1,189 +1,200 @@
-# Experiments — Instructor Guide
+# Experiments: instructor guide
 
-Experiments let you run a controlled comparison ("A/B test") inside Kiwi Chat:
-students are split into **variant groups**, and each group gets a different chat
-configuration (system prompt, model engine, enabled tools). This guide covers
-how to open the feature, create an experiment (with the AI assistant or by
-hand), what each config field means, and how to compare variants yourself from
-the student chat before you launch.
+An experiment is an A/B test of Kiwi Chat in one class. Kiwi splits the class's
+students into variant groups, and each group chats with its own model engine and
+system prompt. This guide shows how to create an experiment, assign students,
+preview the variants yourself, compare them, and turn the experiment off.
 
-> **Who can use it:** class **instructors** and **admins**. Students never see
-> experiment controls — they simply get the configuration of whichever group
-> they land in.
+## Who can use experiments
 
----
+- **Managing experiments** (create, edit, activate, turn off, export) is open to
+  admins, professors enrolled in the class, and instructors assigned to the
+  class. The Experiments pages are in the admin area, which the app shows only
+  to admins and accounts with the instructor role.
+- **Previewing variants in chat** requires the admin or instructor system role.
+- **Students** never see experiment controls. They get the configuration of the
+  group they are in.
+- **Admins and instructors** are never assigned to a live variant. They use
+  preview mode instead.
 
-## 1. Opening the Experiments page
+## Open the Experiments page
 
-1. Log in and navigate to the **admin area** at `/admin`.
-2. Open **Classes** in the admin sidebar and click the class you want.
-3. In the class sidebar, click **Experiments** (flask icon).
-   - Direct URL: `/admin/class/<classId>/experiments`
+1. Go to `/admin`. It opens the class list (**Classes**, or **My Classes** for
+   instructors).
+2. Click the class.
+3. In the class navigation, click **Experiments** (flask icon). The address is
+   `/admin/class/<classId>/experiments`.
 
-The **Learning Experiments** list shows every experiment in the class with its
-status:
+The **Learning Experiments** page lists the class's experiments:
 
 | Status | Meaning |
 | --- | --- |
-| **Draft** | Being designed. Not assigned to any student yet. |
-| **Active** | Live. Students are being assigned to variants. Only **one** experiment can be active per class at a time. |
-| **Completed** | Turned off. No longer assigns students, but can be re-activated. |
+| **Draft** | Saved but not running. No student is assigned. |
+| **Active** | Running. Assigned students chat with their variant's configuration. A class can have only one active experiment. |
+| **Completed** | Turned off. Every student is back on the class defaults. It can be re-activated. |
 
-Each row has **Edit**, plus one status-dependent action: **Activate** on a draft,
-**Turn off** on an active experiment, **Re-activate** on a completed one. Click
-**New Experiment** to create one, or click an experiment to open its **detail
-page** — which shows the variants, the live per-variant assignment counts, the
-same actions, and **Export JSON**.
+Each row has **Edit** and one action that depends on the status: **Activate**
+(draft), **Turn off** (active), or **Re-activate** (completed). Click a row to
+open the experiment's detail page.
 
----
+## Create an experiment
 
-## 2. Creating an experiment
+Click **New Experiment** (or **Create your first experiment** when the list is
+empty). The form has four sections: **Basics**, **Group Assignment**,
+**Variants**, and **Import / export config JSON**.
 
-Click **New Experiment** (or **Create your first experiment**). Both the AI and
-manual paths open the same **New Experiment form**. **Nothing is saved until you
-click Approve / Submit** — you can always review and adjust first.
+Nothing is saved until you click the submit button at the bottom of the form:
 
-### Option A — Draft with the AI assistant
+- **Submit (draft)** saves a new experiment as a draft.
+- Check **Activate immediately** to save and start it at once; the button then
+  reads **Submit & activate**.
+- When editing, the button reads **Save** (or **Save & activate** with
+  **Activate after saving** checked). The checkbox is hidden when the
+  experiment is already active.
 
-1. Open the **AI design assistant** and describe what you want in plain English,
-   e.g.:
-   > "Compare two groups: one with a Socratic tutor that only gives hints, the
-   > other a direct-answer tutor. Split students 50/50."
-2. The assistant drafts a full config and **pre-fills the form** for you. It can
-   also look up the class's enrolled students when you want a manual split.
-3. The draft becomes the baseline: any field **you** change afterwards is
-   **marked red** until you submit, so your edits to the AI's proposal stand out.
-4. Edit anything you like, then **Approve** to create the draft.
+Saving opens the experiment's detail page. **Cancel** returns to the list
+without saving.
 
-### Option B — Create manually
+### Draft with the assistant
 
-Fill the form fields directly (see the field reference below), then **Submit**.
-This is best when you already know exactly what each group should get.
+The **Experiment Assistant** is a floating button with a sparkle icon on the
+list, detail, and form pages.
 
----
+1. Click it and describe the experiment, for example: "Two groups, 50/50. One
+   gives direct answers; the other only gives hints."
+2. The assistant asks follow-up questions if it needs to. It knows the class's
+   current instructions and the enrolled students' email addresses, so it can
+   write prompts and build manual lists.
+3. When the design is complete, the assistant opens the **New Experiment** form
+   filled with its draft. Fields you change afterwards are marked red until you
+   submit, so you can see what differs from the draft.
+4. Review the form and submit it.
 
-## 3. Config field reference
+The assistant uses the chat model configured on the server. If none is
+configured, it replies that it is unavailable.
 
-An experiment is one JSON **Config**. The schema below is the single source of
-truth used by both the form and validation.
+### Fill in the form yourself
 
-### Top level
+Enter a name and optional description under **Basics**, choose how to assign
+students (next section), and set up each variant (see
+[Variant settings](#variant-settings)).
 
-| Field | Required | Rules | What it does |
-| --- | --- | --- | --- |
-| `name` | ✅ | non-empty | Display name of the experiment. |
-| `description` | — | optional | Free-text note about the experiment's purpose. |
-| `variants` | ✅ | **at least 2** | The groups being compared (see below). |
-| `assignment` | ✅ | see below | How students are split across variants. |
+## Assign students to groups
 
-### Group Assignment — how students are split into groups
+Under **Group Assignment**, choose one of two methods.
 
-The **Group Assignment** section (the shuffle icon) is where you decide which
-students land in which group. Pick one of two methods with the radio buttons:
+### Seeded split
 
-| `assignment` field | Values | What it does |
-| --- | --- | --- |
-| `strategy` | `deterministic_hash` (Seeded split) or `manual` (Manual lists) | How students are placed into groups. |
-| `seed` | any text | Required for `deterministic_hash`; ignored for `manual`. |
-| `unit` | `user` (default) or `session` | What gets assigned — the student, or each chat session. |
+> "Random split by your allocation %, exact counts. Same seed reproduces it;
+> Reshuffle re-rolls."
 
-> A legacy `random` strategy exists in older saved configs. The form no longer
-> offers it: opening such an experiment converts it to a seeded split and tells
-> you so.
+- Enter a **Seed**: any text, such as `2026-fall-round1`. It is required.
+- Kiwi shuffles all enrolled students using the seed, then splits them by each
+  variant's **Allocation** (for example `0.5` and `0.5`). The allocations must
+  add up to 1; the Σ chip next to **Variants** turns green when they do.
+- **Student groups** shows who lands in each group. It updates automatically
+  when you change the seed or allocations.
+- **Reshuffle** replaces the seed with a new random one, which gives a new
+  split. The new seed is saved with the experiment, so that split can be
+  reproduced.
 
-#### Seeded split (recommended)
+On activation, Kiwi assigns every enrolled student exactly as the preview shows
+for the roster at that moment. Keep in mind:
 
-> *"Same seed always gives the same roster split."*
+- **Late enrollees.** A student who enrolls after activation is placed the first
+  time they chat, using a hash of their own ID and the seed. Over many students
+  this is roughly proportional to the allocations, but it is not counted into
+  the exact split.
+- **The preview can drift from reality.** Assignments are fixed once made. After
+  the roster, allocations, or seed change, the preview shows the split Kiwi
+  *would* make now, which can differ from the assignments that already exist.
 
-- Enter a **Seed** — any text (e.g. `2026-fall-round1`). It is **required**.
-- The system automatically places **every enrolled student** into a group by
-  hashing them with the seed, weighted by each group's **allocation** (e.g.
-  50 / 50). You don't list anyone by hand.
-- **Same seed → the exact same split, every time** (that's what "reproducible"
-  means). *Keep the seed unchanged* to preserve the split; *change it* to
-  reshuffle the whole class.
-- The **Student groups** preview below shows exactly who lands in each group and
-  how many. Click **Recompute** after changing the seed, allocations, or roster
-  to refresh it. This preview **matches what students actually get** — it is
-  computed the same way the live system assigns them.
-- A student who **enrolls later** is placed automatically by the same rule, and
-  assignment is **sticky** — a given student always ends up in the same group.
-- **Use it when:** you want an unbiased, reproducible split of the whole class.
+### Manual lists
 
-#### Manual lists
+> "Paste student emails for each group"
 
-> *"Paste student emails for each group."*
+- Each variant has a **Members** box. Type or paste student email addresses,
+  separated by commas or new lines.
+- **Random assign** fills the boxes by shuffling the whole roster across the
+  groups (by allocation if the allocations add up to 1, otherwise evenly).
+- Addresses that aren't valid are flagged "Invalid email format (ignored)".
+  Addresses of people not enrolled as students are flagged "Not enrolled in this
+  class (ignored)". Neither blocks saving; these addresses are left out of the
+  groups.
+- **Student groups** shows the lists. Click **Recompute** to refresh it.
+- Only listed students take part. Everyone else keeps the class defaults.
 
-- Type or paste the **student emails** into each group's roster (there's also a
-  one-click random fill to split the roster for you). Emails are checked against
-  the class's enrolled students.
-- **Only the students you list get that group** — nobody else is included, and
-  students who aren't on any list stay out of the experiment.
-- **Use it when:** you need specific people in specific groups (e.g. pilot a
-  config with a few volunteers).
+Manual assignments are written when you activate the experiment, not when you
+save it.
 
-### Adjusting the split after you've set it up
+### Change groups after activation
 
-- **Seeded split**
-  - **Change group sizes** → edit each group's **allocation** (must still add up
-    to 100%) and click **Recompute**.
-  - **Reshuffle everyone** → change the **Seed** and **Recompute**.
-  - **Keep it stable** → leave the seed as-is; new enrollees are auto-placed by
-    the same rule without disturbing anyone already in a group.
-- **Manual lists** → edit the rosters: add or remove emails per group at any
-  time.
-- **After the experiment is Active,** assignment is **sticky**: students already
-  placed keep their group even if you later change the seed. Seed/allocation
-  edits then only affect the preview and students not yet assigned. For a
-  genuinely fresh split, set the seed **before** activating, or create a new
-  experiment.
+Once a student is assigned, that assignment is never overwritten.
 
-### Variants — the groups being compared
+- **Prompt and engine changes** you save on an active experiment apply to the
+  next chat of every assigned student.
+- **Seed or allocation changes** affect only students who are not yet assigned.
+- **Manual list changes** are not applied to a running experiment. To apply
+  them, click **Turn off** and then **Re-activate**: newly listed students are
+  assigned, but students you moved to another list or removed keep their
+  original group.
+- **Removing or renaming a variant** sends students assigned to it to the first
+  variant.
 
-Each entry in `variants` describes one group:
+For a completely fresh split, create a new experiment.
 
-| Field | Required | Rules | What it does |
-| --- | --- | --- | --- |
-| `key` | ✅ | lowercase `a–z`, `0–9`, `_` only; **unique** within the experiment | Stable machine id for the group (e.g. `control`, `treatment`). |
-| `label` | ✅ | non-empty | Human-friendly group name shown in the UI (e.g. "Socratic tutor"). |
-| `allocation` | ✅ (auto strategies) | number `0`–`1`; **all allocations must sum to 1** | Share of students in this group (e.g. `0.5` = 50%). Ignored for `manual`. |
-| `members` | manual only | list of student emails | Students explicitly assigned to this group under `manual`. Resolved to enrolled students when you activate. |
-| `config` | ✅ | see below | The chat configuration this group receives. |
+## Variant settings
 
-### Variant `config` — what each group's chat gets
+Each card under **Variants** is one group:
 
-| Field | Required | Rules | What it does |
-| --- | --- | --- | --- |
-| `engine` | ✅ | `openai` or `qwen` | Which model engine powers the chat for this group. |
-| `systemPrompts.defaultSystemMessage` | — | free text | Overrides the class's default system prompt for this group. **This is the field that actually changes the assistant's behavior** — put your per-group instructions here. |
-| `toolsEnabled.rag` | — | boolean | Enable/disable retrieval over class materials for this group. |
-| `toolsEnabled.codeInterpreter` | — | boolean | Enable/disable the code interpreter for this group. |
+- **Key**: an identifier such as `control` or `treatment`. Lowercase letters,
+  digits, and underscores only; unique within the experiment.
+- **Label**: the name shown in the UI.
+- **Allocation**: the group's share of students, from 0 to 1. Disabled for
+  manual lists ("set by roster").
+- **Engine**: `openai` or `qwen`.
+- **System prompt**: the instructions this group's chat follows.
 
-> **Note:** the form only exposes `engine` and `defaultSystemMessage` per variant.
-> `toolsEnabled` has no form control — set it by pasting or importing config JSON.
-> A blank `defaultSystemMessage` is pre-filled with the class default so you always
-> see the effective baseline text. The legacy `classMaterialsPrompt` and
-> `recitationPrompt` fields are carried through untouched but are not used by chat.
+Every experiment needs at least two variants. **Add variant** adds one; the
+delete button removes one (not below two).
 
-> **Tip:** the most common experiment changes **one thing** between variants —
-> usually `systemPrompts.defaultSystemMessage` — and keeps everything else
-> identical, so the difference you measure is attributable to that one change.
+### How the variant prompt is used
 
-### Validation rules (enforced on save)
+Kiwi always starts from its built-in instructions. A class can add its own
+instructions (Class Edit → **Instructions**), which are appended after the
+built-in ones. For a student in an active experiment, the variant's system
+prompt **replaces** the class's instructions: it is appended in their place,
+under a heading that tells the model to follow it over earlier guidance on
+teaching style and how much to help. See
+[How prompts work](../../docs/prompts.md#experiments).
 
-- `name` must be non-empty.
-- At least **2 variants**.
-- Variant `key`s must be **unique** and lowercase alphanumeric/underscore.
-- For a seeded split (`deterministic_hash`), variant `allocation`s must **sum to
-  1** and a **`seed` is required**.
-- For `manual`, every email you list must belong to an enrolled student.
+- When the form loads, an empty prompt box is filled with the class's
+  instructions, or with a generic Kiwi default message if the class has none.
+  The chip reads **Using default** until you change the text, and **Reset**
+  restores it.
+- Because the prompt replaces the class instructions, write each variant's
+  prompt as the complete set of class-level instructions that group should get.
+- Change one thing between variants (usually the system prompt) and keep the
+  rest identical, so any difference you see comes from that change.
 
-### Example config
+### Choosing the qwen engine
+
+Assigning a student to a `qwen` variant turns on the Qwen model feature flag
+(`QwenModel`) for that student, with no expiry. Turning the experiment off does not remove that access.
+The server must also be configured for Qwen (`QWEN_API_KEY` and related
+settings), or that group's chats won't work.
+
+## Config JSON reference
+
+The form edits a JSON config. You can also paste or import one directly (see
+[Share or reuse a config](#share-or-reuse-a-config)).
 
 ```json
 {
+  "schemaVersion": "1.0",
   "name": "Hints vs. direct answers",
   "description": "Does a hint-only tutor improve retention?",
+  "classId": null,
   "assignment": { "strategy": "deterministic_hash", "seed": "2026-fall-round1", "unit": "user" },
   "variants": [
     {
@@ -192,8 +203,7 @@ Each entry in `variants` describes one group:
       "allocation": 0.5,
       "config": {
         "engine": "openai",
-        "systemPrompts": { "defaultSystemMessage": "You are a helpful tutor. Answer questions directly and completely." },
-        "toolsEnabled": { "rag": true, "codeInterpreter": true }
+        "systemPrompts": { "defaultSystemMessage": "Answer questions directly and completely." }
       }
     },
     {
@@ -202,81 +212,125 @@ Each entry in `variants` describes one group:
       "allocation": 0.5,
       "config": {
         "engine": "openai",
-        "systemPrompts": { "defaultSystemMessage": "You are a Socratic tutor. Never give the final answer; guide the student with hints and questions." },
-        "toolsEnabled": { "rag": true, "codeInterpreter": true }
+        "systemPrompts": { "defaultSystemMessage": "Never give the final answer. Guide the student with hints and questions." }
       }
     }
   ]
 }
 ```
 
----
+### Top level
 
-## 4. Activating an experiment
+| Field | Required | Notes |
+| --- | --- | --- |
+| `schemaVersion` | no | Always `"1.0"`. |
+| `name` | yes | Non-empty. |
+| `description` | no | Free text. |
+| `classId` | no | Set by Kiwi to the class the experiment is saved in. Exports set it to `null`. |
+| `assignment` | yes | See below. |
+| `variants` | yes | At least two. |
 
-1. On the Experiments list, click **Activate** on the draft you want to run.
-2. The experiment becomes **Active** and students start being assigned to
-   variants (for `manual`, the listed emails are resolved to enrolled students).
-3. Only **one** experiment can be active per class at a time.
-4. When you're done, click **Turn off** to stop new assignments. A turned-off
-   experiment can be started again later with **Re-activate**.
+### `assignment`
 
----
+| Field | Values | Notes |
+| --- | --- | --- |
+| `strategy` | `deterministic_hash` (seeded split) or `manual` (manual lists) | Configs using the old `random` strategy are converted to a seeded split when loaded into the form. |
+| `seed` | any text | Required for `deterministic_hash`. Not used by `manual`. |
+| `unit` | `user` | Students are assigned individually. No other unit is supported. |
 
-## 5. Comparison testing from the student chat (preview mode)
+### Each variant
 
-Before (or after) launching, you can experience each variant yourself without
-assigning any real students. This lives in **Kiwi Chat** inside the class.
+| Field | Required | Notes |
+| --- | --- | --- |
+| `key` | yes | Matches `^[a-z0-9_]+$`; unique. |
+| `label` | yes | Non-empty. |
+| `allocation` | yes | A number from 0 to 1, for every variant and every strategy. For `deterministic_hash` the allocations must add up to 1; for `manual` the sum is not checked. |
+| `members` | no | Student email addresses, used only by `manual`. |
+| `config.engine` | yes | `openai` or `qwen`. |
+| `config.systemPrompts.defaultSystemMessage` | no | The variant's system prompt. Empty means the class's own instructions apply. |
 
-1. Open a class as an instructor/admin and open **Kiwi Chat** (the chat button).
-2. Turn on the **EXPERIMENT** toggle at the top of the chat panel. *(Only
-   instructors/admins see this toggle.)*
-3. Pick the **experiment** from the dropdown, then pick a **variant** from the
-   group buttons.
-4. Send a message. The chat runs with **that variant's configuration**
-   (its engine, system prompt, and tools) — so the reply reflects exactly what a
-   student in that group would get.
+The only settings that change a group's chat are `config.engine` and
+`config.systemPrompts.defaultSystemMessage`. The config also accepts
+`config.toolsEnabled` (`rag`, `codeInterpreter`) and the prompt fields
+`classMaterialsPrompt` and `recitationPrompt`, but they have no effect.
 
-### Side-by-side compare
+Kiwi validates the config when you save. It rejects unknown keys at every level,
+duplicate variant keys, a missing seed for a seeded split, and seeded-split
+allocations that don't add up to 1.
 
-With an experiment selected that has **at least 2 variants**, turn on **Compare
-two variants side by side**. Two dropdowns appear — **Variant A** and **Variant
-B** — and the transcript splits into two columns. Each message you send is
-answered by both variants at once, so you read the difference directly instead of
-re-asking. (Picking the same variant in both columns is allowed; the chat warns
-you that both columns will match.)
+## Activate an experiment
 
-While the experiment toggle is on, the manual model picker is hidden — the engine
-comes from the variant's config.
+Click **Activate** on a draft, either on the list or on its detail page, or
+check **Activate immediately** when you submit the form. Activation fails if
+the class already has an active experiment; turn that one off first.
 
-> Preview mode is for **you** to sanity-check the variants. It does not assign
-> or affect real students — that only happens once the experiment is **Active**.
+On activation:
 
----
+- **Seeded split**: every enrolled student is assigned as the preview shows.
+- **Manual lists**: each listed, enrolled student is assigned to their group.
+  Other addresses are skipped.
 
-## 6. Sharing / reusing a config
+## Preview and compare variants in chat
 
-Exported JSON strips the class binding and the per-student member lists but keeps
-the assignment seed, so a seeded split stays reproducible when re-imported into
-another class.
+You can try any experiment in the class, including drafts, without assigning
+anyone.
 
-- **Export** — the experiment detail page has **Export JSON**; the New/Edit
-  Experiment form has the same button in its **Import / export config JSON**
-  section. Both download a `<experiment name>.json` file.
-- **Import** — in that same form section, either paste JSON into the text box and
-  click **Apply JSON**, or click **Import file** and pick a `.json` file. Either
-  way the form is pre-filled and flagged for review before you submit.
+1. Open the class and open Kiwi Chat.
+2. Turn on the **Experiment** toggle at the top of the chat panel.
+3. Choose an experiment, then a variant.
+4. Send a message. The reply uses that variant's engine and system prompt.
 
----
+While the toggle is on, the chat's model picker is hidden; the variant decides
+the engine.
 
-## Quick checklist
+To compare two variants, turn on **Compare two variants side by side** (shown
+for experiments with at least two variants). Choose **Variant A** and **Variant
+B**. The transcript splits into two columns, and each message you send is
+answered by both. If you pick the same variant twice, the chat notes that both
+columns will match.
 
-- [ ] Open **Experiments** for the class.
-- [ ] Create via **AI assistant** or **manually**.
-- [ ] Give it a `name`, **≥2 variants** with unique `key`s.
-- [ ] Change **one thing** per variant (usually `defaultSystemMessage`).
-- [ ] Choose **Seeded split** (set a seed; allocations sum to 100%) or
-      **Manual lists** (paste emails per group).
-- [ ] **Preview** each variant in Kiwi Chat's EXPERIMENT mode — or turn on
-      **Compare two variants side by side**.
-- [ ] **Activate** when ready; **Turn off** when done.
+Preview mode never assigns students or changes what they see.
+
+## Read the results
+
+The detail page shows the assignment method and seed, the actions (**Edit**,
+**Activate**/**Turn off**/**Re-activate**, **Export JSON**), and a card per
+variant with:
+
+- **students**: for seeded splits and manual lists, the number of students the
+  group would contain for the *current* roster and config, not a count of
+  actual assignments. **Students in this group** lists them. See
+  [Seeded split](#seeded-split) for why this can differ from reality.
+- **chats**: the number of chat turns in this class by students assigned to
+  the variant. It includes turns from before the experiment started.
+- **System prompt**: the variant's prompt, marked **Customized** when it
+  differs from the class baseline.
+
+## Turn off an experiment
+
+Click **Turn off** on the list or the detail page. The experiment becomes
+**Completed**, and every student immediately goes back to the class defaults on
+their next message. Assignments are kept: **Re-activate** restores them, and
+assigns students who don't have one yet.
+
+## Share or reuse a config
+
+- **Export**: **Export JSON** on the detail page, or in the form's **Import /
+  export config JSON** section, downloads `<experiment name>.json`. The export
+  sets `classId` to `null` and removes member lists, but keeps the seed.
+- **Import**: in the same form section, paste JSON and click **Apply JSON**, or
+  click **Import file** and choose a `.json` file. The form is filled in and an
+  information message asks you to review it. Imported values are not marked
+  red. Nothing is saved until you submit.
+
+## Checklist
+
+- Open **Experiments** for the class.
+- Create the experiment with the assistant or by hand.
+- Give it a name and at least two variants with unique keys.
+- Change one thing between variants, usually the system prompt, and write each
+  prompt as the group's complete class instructions.
+- Choose **Seeded split** (seed set, allocations add up to 1) or **Manual
+  lists** (emails per group).
+- Preview each variant in Kiwi Chat, or compare two side by side.
+- Activate when ready; turn off when done.

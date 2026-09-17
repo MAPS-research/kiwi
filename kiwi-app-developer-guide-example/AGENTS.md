@@ -1,118 +1,62 @@
 # AGENTS.md
 
-## Project Overview
+Rules for coding agents working on Kiwi Apps in this folder. A Kiwi App is a
+page that Kiwi embeds in an iframe. Full details are in
+[KIWI_APP_DEVELOPER_GUIDE.md](./KIWI_APP_DEVELOPER_GUIDE.md). If this file and
+the guide disagree, the guide is correct.
 
-This repository is a compact reference workspace for building external Kiwi
-Apps. A Kiwi App is a separately hosted web app that Kiwi embeds in an iframe.
-The app talks to Kiwi through `window.postMessage` and, when granted a scoped
-app token, through Kiwi's REST and MCP APIs.
+## References
 
-This repo currently contains:
+- [KIWI_APP_DEVELOPER_GUIDE.md](./KIWI_APP_DEVELOPER_GUIDE.md): concepts,
+  registration, bridge protocol, scopes, troubleshooting.
+- [SDK README](../kiwi-app-sdk/README.md): the SDK API.
+- [BRIDGE-OPS.md](../kiwi-app-sdk/BRIDGE-OPS.md): data ops and the scopes they
+  need.
+- [hello-kiwi-app/index.html](./hello-kiwi-app/index.html): the example app to
+  copy from.
 
-- `KIWI_APP_DEVELOPER_GUIDE.md`: the authoritative Kiwi App specification.
-- `hello-kiwi-app/`: a single-file reference app with a standalone Simulator.
-- `hello-kiwi-app/register.sh`: a reproducible registration helper.
-
-## Source Of Truth
-
-- Read `KIWI_APP_DEVELOPER_GUIDE.md` before changing Kiwi App behavior.
-- When this file and `KIWI_APP_DEVELOPER_GUIDE.md` disagree, the developer guide
-  wins.
-- Use `hello-kiwi-app/index.html` as the reference implementation for new
-  external Kiwi Apps.
-- Keep documentation and examples aligned with the actual protocol described in
-  the guide.
-
-## Scope
-
-These instructions are for external Kiwi Apps only.
-
-Do not apply this workflow to:
-
-- Built-in Kiwi apps bundled inside Kiwi's own frontend.
-- Pure MCP clients that talk to Kiwi only over JSON-RPC.
-
-If the user's request is about either of those, say that this repo is scoped to
-external iframe-based Kiwi Apps and ask for the correct target context.
-
-## Build And Run
-
-The reference app is static and has no build step.
+## Running
 
 ```bash
-cd hello-kiwi-app
-python3 -m http.server 8000
+cd kiwi-app-developer-guide-example   # serve this folder, not hello-kiwi-app/
+python3 -m http.server 8000           # open http://localhost:8000/hello-kiwi-app/
 ```
 
-Then open `http://localhost:8000`.
+The example has no build step. Outside Kiwi it runs in Simulator mode.
 
-Opening `hello-kiwi-app/index.html` directly in a browser should also work. When
-the app is not embedded by Kiwi, it must switch to Simulator mode and fake Kiwi
-replies locally.
+## Rules
 
-## Kiwi App Implementation Rules
+- **Never expose user identity.** Apps get opaque user IDs only. Don't add code
+  or docs that turn an ID into a name or an email, and don't ask for an endpoint
+  that does. When people need telling apart, use a shortened ID or a label the
+  app assigns.
+- **Use the SDK** (`@maps-research/kiwi-app-sdk`) rather than writing your own
+  `postMessage` code. Call `kiwi.ready()` first, then render from the context
+  it returns.
+- **Read data through bridge ops** (`kiwi.documentChunks`,
+  `kiwi.contextualChat`, `kiwi.call`), not through direct backend calls. A
+  frontend-only app needs no token, no CORS entry and no backend URL.
+- **Don't call `requestToken()`, and don't declare the `mcp` capability,**
+  unless the app really calls a backend directly. Never store a token or write
+  it to logs.
+- **Use `userRole` from the context** for role checks. Don't call
+  `/api/permissions/class-role`.
+- **Keep the Simulator working.** Every example must still run without a
+  backend.
+- **Keep registration scripted.** Update `register.sh` when the app's scopes,
+  UIs or prompts change. Request only the scopes the app uses.
+- **Remember `uiUrl` must match exactly.** It must be the exact URL the app is
+  served from, because the host drops messages from any other origin.
+- **Expect prompt changes to need re-approval.** Changing a prompt's
+  `systemPrompt` text turns the prompt off until an admin approves it again.
+- **Don't make up MCP endpoints.** Only full MCP clients use MCP, through the
+  server described in [docs/mcp.md](../docs/mcp.md). Iframe apps use bridge
+  ops.
+- **Never commit secrets.** That includes registration secrets, tokens and
+  `.env` files.
 
-- Implement the bridge handshake first: post `kiwi:ready` on load, then render
-  `kiwi:context` when it arrives.
-- Preserve standalone Simulator mode. New examples should remain demoable
-  without a Kiwi backend.
-- Once Kiwi's origin is known, verify `event.origin` before trusting host
-  messages.
-- Use bridge AI first for simple AI features: send `kiwi:askAI`, accumulate
-  `kiwi:aiChunk` events by `requestId`, and finish on `kiwi:aiComplete`.
-- Use `kiwi:updateContext` when the app has useful state that should ground
-  future bridge AI or global chat responses.
-- For iframe apps, prefer the simple MCP surface `POST /mcp/rpc` unless the
-  request explicitly requires the full MCP server handshake.
-- Send app tokens as `Authorization: Bearer <accessToken>`.
-- Remember that app-token access is gated by both token scopes and the logged-in
-  user's Kiwi role.
-- Use enforced colon-form scopes such as `class:info:read`; avoid hyphen-form
-  examples unless documenting platform naming inconsistencies.
+## Before finishing
 
-## Registration Rules
-
-Registration order is strict:
-
-```text
-admin whitelist -> app register -> admin/instructor enable in class
-```
-
-- Copy and adapt `hello-kiwi-app/register.sh` for new apps.
-- `POST /api/kiwi-apps/register` is idempotent by slug, so startup
-  self-registration is acceptable when the app has the registration secret.
-- Requested scopes must stay within the whitelisted `maxScopes`.
-- Class-enabled scopes must be a subset of the app's `maxScopes`.
-- Register the exact origin the app is served from. Origin mismatches commonly
-  cause missing `kiwi:context` messages.
-
-## Known Platform Notes
-
-- REST and MCP calls from an iframe require the app origin to be allowed by the
-  Kiwi backend CORS configuration.
-- Bridge AI (`kiwi:askAI`) does not need CORS because Kiwi proxies it through
-  the host session.
-- Some branches may have documented gaps around non-admin bridge AI and
-  `/mcp/rpc` availability. Treat the developer guide's known-issues section as
-  authoritative before debugging those as app bugs.
-
-## Verification Checklist
-
-Before finishing a change:
-
-- The app posts `kiwi:ready` on load.
-- The app renders `kiwi:context` when received.
-- Host messages are origin-checked when running embedded.
-- Standalone Simulator mode still works.
-- Registration remains reproducible through a `register.sh`-style script.
-- REST/MCP calls use the intended MCP surface and token scopes.
-- Relevant docs are updated when protocol behavior or run instructions change.
-
-## Agent Guidance
-
-- Keep this file concise and durable. Put detailed protocol explanations in
-  `KIWI_APP_DEVELOPER_GUIDE.md`.
-- Prefer editing existing examples over inventing a second reference pattern.
-- Do not remove the Simulator path when adding live Kiwi features.
-- Avoid committing secrets, JWTs, app registration secrets, or local `.env`
-  files.
+- The app still works embedded in Kiwi and in Simulator mode.
+- If you changed messages, ops, scopes or run steps, update the guide, and the
+  example README if it covers them.

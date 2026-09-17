@@ -5,70 +5,159 @@ directory but solve different problems, so read the split first.
 
 | Layer | What it is | Status |
 | --- | --- | --- |
-| **External apps** | Separately hosted web apps, registered with the backend, embedded by Kiwi in an iframe and talked to over `window.postMessage` | In use — this is what "a Kiwi App" means to instructors and app developers |
+| **External apps** | Web apps hosted outside Kiwi. They are registered with the backend, shown in an iframe, and talk to Kiwi over `window.postMessage` | In use. This is what "a Kiwi App" means to instructors and app developers |
 | **In-page widget framework** | A client-side registry of app manifests, tools, and React widgets (`src/apps/{types,registry,bridge,host}`) | Wired into `App.tsx`, but ships **no built-in apps** (`builtinApps` is `[]`) |
 
 ---
 
 ## 1. External apps (iframe + postMessage)
 
-An external app is registered and whitelisted on the backend, enabled per class,
-and then rendered by Kiwi inside an iframe.
+This section covers how kiwi-ui hosts external apps. The app-facing protocol,
+registration and scope model are documented in the
+[Kiwi App developer guide](../kiwi-app-developer-guide-example/KIWI_APP_DEVELOPER_GUIDE.md).
+Keep the guide's message tables in sync when you change a handler here.
 
 ### Routes and components
 
-| Route | Component | Context |
+| Route | Component | Placement used |
 | --- | --- | --- |
-| `/:classID/app/:appSlug` | `src/pages/ClassAppPage.tsx` → `ClassAppView.tsx` | Student/class placement |
-| `/admin/app/:appSlug` and `/admin/app/:appSlug/class/:classId` | `src/pages/admin/AdminAppPage.tsx` → `AdminAppView.tsx` | Admin/faculty placement |
-| `/admin/class/:classID/app/:appSlug` | `AdminAppPage.tsx` | App opened in a class admin context |
+| `/:classID/app/:appSlug` | `src/pages/ClassAppPage.tsx` → `ClassAppView.tsx` | `class-tab`. If the app has no enabled `class-tab` UI, the page uses the app's `baseUrl`. |
+| `/admin/app/:appSlug` | `src/pages/admin/AdminAppPage.tsx` → `AdminAppView.tsx` | `admin-panel`, with no class context. |
+| `/admin/app/:appSlug/class/:classId` | `AdminAppPage.tsx` | `admin-panel`, with a class context. |
+| `/admin/class/:classID/app/:appSlug` | `AdminAppPage.tsx` | `admin-panel` if the app has one, otherwise `class-admin-panel`. |
 
-`ClassAppPage` resolves the slug to an app plus its UI record (apps may expose
-several UIs, filtered by placement), then hands the resolved URL to `ClassAppView`,
-which owns the iframe and the bridge.
+In more detail:
 
-Admin management pages:
+- **Class tabs.** `ClassLayout` lists the class's enabled apps
+  (`GET /api/classes/:classId/apps`, called without the `placement` or
+  `userRole` filters) and shows each one as a tab. `ClassAppPage` finds the
+  app's enabled `class-tab` UI and passes its URL to `ClassAppView`.
+  `ClassAppView` owns the iframe and the bridge.
+- **Admin sidebar.** `AdminLayout` adds sidebar entries for apps that have an
+  enabled `admin-panel` UI. It uses `canRoleSeeAdminUI` to filter the entries
+  by `allowedRoles`.
+- **Class admin page.** `ClassManagement` shows a card for each enabled
+  `class-admin-panel` UI.
+- **Not rendered.** No host code renders the `modal` and `dashboard-widget`
+  placements yet.
 
-- `/admin/kiwi-apps` — `KiwiAppsAdmin.tsx` (system-wide app registry, admin only)
-- `/admin/class/:classID/kiwi-apps` — `ClassKiwiAppsSettings.tsx` (enable/order apps
-  for one class)
+The two management pages:
 
-### Bridge protocol
+- **App Registry** (`/admin/kiwi-apps`, `KiwiAppsAdmin.tsx`). Only admins can
+  see it. It has **Whitelist** and **Registered Apps** tabs.
+- **Class Apps** (`/admin/class/:classID/kiwi-apps`, `ClassKiwiAppsSettings.tsx`).
+  Enables apps for one class and sets their order. The class admin menu in
+  `ClassLayout.tsx` hides this page from users whose class role is
+  `instructor`. The card on the class management page shows it only to
+  admins. The backend lets any class manager make the underlying calls: an
+  admin, a professor in that class, or an instructor assigned to it.
 
-`ClassAppView` listens for messages from the iframe and posts replies back. The
-message types currently handled:
+### Bridge handlers
 
-| Direction | Message | Purpose |
-| --- | --- | --- |
-| app → host | `kiwi:ready` | App booted; host replies with `kiwi:context` |
-| host → app | `kiwi:context` | Class, user, and placement context |
-| host → app | `kiwi:ack` | Acknowledges a message that carried a `requestId`, so the app can tell "done" from "silently dropped" |
-| host → app | `kiwi:requestContext` | Host pulls the app's current context; apps that don't implement it simply ignore it |
-| app → host | `kiwi:contextResponse` | Reply to that pull |
-| app → host | `kiwi:updateContext` | App pushes its context (also carries the tutoring-mode hint used for AI requests) |
-| app → host | `kiwi:askAI` | Ask Kiwi's LLM; host streams back `kiwi:aiChunk`, then `kiwi:aiComplete` or `kiwi:aiError` |
-| app → host | `kiwi:apiRequest` | Proxied backend call; host replies with exactly one `kiwi:apiResponse` correlated by `requestId` |
-| app → host | `kiwi:requestToken` | Host replies `kiwi:appToken` |
-| app → host | `kiwi:navigate`, `kiwi:setChatDisplayMode` | Drive host navigation and the chat panel |
+**Origin checks.** Both views accept a message only when its `event.origin`
+matches the origin of the iframe URL. `AdminAppView` also requires
+`event.source` to be its own iframe. Both views send replies only to that same
+origin.
 
-Because `kiwi:askAI` travels through the iframe rather than a direct `fetch`, it
-does not need a CORS entry. Direct REST/MCP calls from the app's own origin do —
-that origin must be listed in the backend's `FRONTEND_URL`.
+**`ClassAppView` (class tab).** It handles these messages:
 
-### Token and scope model
+- `kiwi:ready` → sends `kiwi:context`, then `kiwi:requestContext`. It also
+  sends `kiwi:appToken` if the app declares the `mcp` capability.
+- `kiwi:updateContext` and `kiwi:contextResponse` → store the context text
+  (older apps send it as `codeContext`, which is also accepted) and
+  `tutoringMode` in `GlobalChatContext`.
+- `kiwi:askAI` → streams the answer from `POST /student/chat/v2`, using the
+  user's token and session cookie. The request carries the app's slug, context
+  text and `tutoringMode`. The view relays the stream as `kiwi:aiChunk` (which
+  includes the cumulative `full` text), then `kiwi:aiComplete` or
+  `kiwi:aiError`.
+- `kiwi:apiRequest` → runs the op and posts exactly one `kiwi:apiResponse`.
+- `kiwi:navigate` → moves the page, but only to paths within the class.
+- `kiwi:setChatDisplayMode` → changes the chat layout.
+- `kiwi:requestToken` → sends `kiwi:appToken`. If minting the token fails, the
+  view logs the error and sends nothing.
 
-The app token is **held by the host** in `ClassAppView` and never handed to the
-app for the `kiwi:apiRequest` path. Each proxied op is dispatched through
-`src/apps/classApps/bridgeOps.generated.ts`, which maps an op name to a typed
-`KiwiAppsApi` method along with its `requiredScopes`, `dynamicScopes`, and a
-timeout. `classId` and `appSlug` are injected from trusted host context, never
-taken from the app's message, so an app cannot address another class or app.
+`kiwi:ack` is sent only for `kiwi:navigate` and `kiwi:setChatDisplayMode`, and
+only when the request included a `requestId`. The view ignores message types it
+doesn't know.
 
-> `bridgeOps.generated.ts` is generated (its header names a
-> `scripts/generate-bridge.mjs` generator and an `npm run generate-bridge`
-> command). Neither the script nor the npm script is present in this repo today,
-> so the file is effectively checked-in output — treat it as generated and
-> regenerate it from wherever the generator lives rather than hand-editing.
+The context the view sends contains `classId`, `className`, `userId`,
+`userRole`, `appId`, `appSlug`, `uiSlug` and `capabilities`. **It must never
+include a username, name or email**, because apps get opaque IDs only.
+`userRole` comes from `GET /api/permissions/class-role`, and the view falls back
+to `student` if that lookup hasn't finished or fails.
+
+**`AdminAppView` (admin panel).** It renders the iframe only after the user ID
+and role are resolved. It handles these messages:
+
+- `kiwi:ready` → sends `kiwi:context` (which adds `placement: 'admin-panel'` and
+  `isAdmin`), then `kiwi:appToken`.
+- `kiwi:requestToken` → sends `kiwi:appToken`. When the payload is
+  `{ reason: 'expired' }`, the view skips its cached token. If minting fails, it
+  sends `{ type: 'kiwi:error', message }`.
+- `kiwi:adminNavigation` → validates the items with
+  `parseAppAdminNavigation` in `src/apps/adminNavigation.ts` (at most 20 items,
+  and every path must be internal). The items go into the admin sidebar, and
+  clicking one sends `kiwi:adminNavigate` to the app.
+- `kiwi:navigate` → logged only. The view does nothing and sends no ack.
+
+The view doesn't handle `kiwi:askAI`, `kiwi:apiRequest` or
+`kiwi:updateContext`.
+
+### Token handling
+
+**Token held by the class tab.** `ClassAppView` keeps its own app token for the
+`kiwi:apiRequest` proxy. It mints the token with
+`POST /api/kiwi-apps/:slug/token` and `{ classId }`, caches it, and fetches a
+new one about 60 seconds before it expires. If the backend returns 401, the view
+clears the cache. Concurrent requests share a single mint. This token never
+leaves the host.
+
+**Token sent to the app.** When the class tab sends `kiwi:appToken` (for the
+`mcp` capability or `kiwi:requestToken`), it mints a separate token that
+bypasses the cache.
+
+**Admin panel tokens.** `AdminAppView` always gives the app a token. It caches
+that token per class, and also shares a single mint between concurrent
+requests. Without a class, it requests a token with no `classId`, which the
+backend issues only to system admins.
+
+**How the proxy runs an op.** Each op is looked up in
+`src/apps/classApps/bridgeOps.generated.ts`. That file maps the op name to a
+`KiwiAppsApi` method, its `requiredScopes` and `dynamicScopes`, and a time limit.
+Before calling the method, the view checks the token's scopes against the
+op's static scopes and its dynamic scopes resolved from the params (for
+example, `llm:prompt:{promptId}`). If a scope is missing, it answers
+`op_not_granted` without calling the backend. The backend still enforces the
+scopes itself.
+
+The host always takes `classId` and `appSlug` from its own state, never from
+the app's message.
+
+Proxied calls go through `bridgeKiwiAppsApiClient` in `src/utils/api.ts`. That
+client has no auth middleware and doesn't send credentials, so an app-token call
+never falls back to the user's token or cookie.
+
+**Regenerating the op table.** `bridgeOps.generated.ts` is generated; don't
+edit it by hand. Regenerate it from this directory with the backend running, after
+`npm run generate-openapi`:
+
+```bash
+node ../kiwi-app-sdk/scripts/generate-bridge.mjs \
+  --spec http://localhost:3000/docs-json --host-out src/apps/classApps
+```
+
+The SDK's `src/ops.generated.ts` and `BRIDGE-OPS.md` are generated from the same
+spec (`npm run generate-bridge` in `kiwi-app-sdk/`). Regenerate all three
+together.
+
+### SDK copy served to apps
+
+`public/sdk/v1/kiwi-app-sdk.js` is the SDK's single-file build
+(`kiwi-app-sdk/dist/kiwi-app-sdk.global.js`). Kiwi serves it at
+`/sdk/v1/kiwi-app-sdk.js`. Keep it byte-identical to the build. If a change
+breaks compatibility with apps that already load this file, serve the new build
+under a new version path instead of replacing it.
 
 ### Class app configuration
 
@@ -79,24 +168,32 @@ taken from the app's message, so an app cannot address another class or app.
 - `types.ts` — re-exports the generated DTOs (`ClassAppResponseDto` and friends)
   under friendlier aliases
 
-The provider is exported from `src/apps` but is not currently mounted in the tree;
-`ClassAppPage` and the admin pages call `classAppsApiClient` / `kiwiAppsApiClient`
-directly.
+The provider is exported from `src/apps`, but nothing in the component tree
+mounts it. `ClassLayout`, `ClassAppPage` and the admin pages call
+`classAppsApiClient` and `kiwiAppsApiClient` directly.
 
 ### Matching Kiwi's look
 
-`public/kiwi-design-tokens.css` is served from the Kiwi origin for embedded apps
-to link. Its `--kiwi-font-family` names **Montserrat only** — the single typeface
-Kiwi uses for ordinary UI (see [README.md](README.md#typography-montserrat-only)).
+`public/kiwi-design-tokens.css` is served from the Kiwi origin, and embedded apps
+can link to it. Its `--kiwi-font-family` names **Montserrat only**, the single
+typeface Kiwi uses for ordinary UI (see
+[README.md](README.md#typography-montserrat-only)).
 
-The token file carries no `@font-face`, so an embedded app has to load the font
-itself or it will fall back to the iframe's default. Self-host it the way Kiwi
-does: install `@fontsource-variable/montserrat`, then mirror the `@font-face`
-aliases in `src/fonts/montserrat.css` so the package's files are exposed under
-the family name `Montserrat`. Do not import the package's root stylesheet alone:
-it names the family `Montserrat Variable`, which does not match the token. For a
-build-less app, link Google Fonts and accept the third-party request. Keep
-`--kiwi-font-family-mono` for code, commands, IDs, and JSON.
+The token file has no `@font-face` rule, so an embedded app must load the font
+itself. Otherwise the app falls back to the iframe's default font. Self-host the
+font the way Kiwi does:
+
+1. Install `@fontsource-variable/montserrat`.
+2. Copy the `@font-face` aliases in `src/fonts/montserrat.css`, so the package's
+   files are available under the family name `Montserrat`.
+
+Don't import only the package's root stylesheet: it names the family
+`Montserrat Variable`, which doesn't match the token.
+
+An app with no build step can link Google Fonts instead, which means the
+browser makes a request to Google.
+
+Use `--kiwi-font-family-mono` for code, commands, IDs and JSON.
 
 ---
 
@@ -128,7 +225,8 @@ src/apps/
 │   ├── WidgetContainer.tsx     # Widget wrapper
 │   └── __tests__/ToolExecutor.test.ts
 ├── builtins/index.ts           # `builtinApps: KiwiAppManifest[]` — currently empty
-└── classApps/                  # External app config (see section 1)
+├── adminNavigation.ts          # Admin-panel sidebar helpers for external apps (see section 1)
+└── classApps/                  # External app config and bridge op table (see section 1)
 ```
 
 ### App manifest
@@ -235,6 +333,12 @@ Widgets running inside the bridge get `window.kiwiApp` (installed by
 npx vitest run src/apps
 ```
 
-Three suites cover this area: `AppRegistry.test.ts`, `KiwiAppBridge.test.ts`, and
-`ToolExecutor.test.ts` (70 tests total). The external-app iframe path in
-`ClassAppView` / `AdminAppView` has no unit tests yet.
+This command runs four test suites:
+
+- `AppRegistry.test.ts`
+- `KiwiAppBridge.test.ts`
+- `ToolExecutor.test.ts`
+- `adminNavigation.test.ts`, which tests the admin sidebar parsing
+
+The message handlers in `ClassAppView` and `AdminAppView` have no unit tests
+yet.

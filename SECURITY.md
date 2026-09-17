@@ -31,9 +31,10 @@ interested in reports concerning:
 
 ## Deployment note
 
-Kiwi ships with development defaults. Before running it in production, set
-strong `JWT_SECRET` and `SESSION_SECRET` values, configure RS256 JWT keys, and
-review `.env.example` in full. Never commit a populated `.env`.
+Kiwi ships with development defaults. Before running it in production, work
+through the [production checklist](docs/administration.md#before-going-to-production)
+— in particular strong secrets, RS256 JWT keys, `DEV_AUTH=false`, and never
+`NO_AUTH=true`. Never commit a populated `.env`.
 
 ## Bug bounty
 

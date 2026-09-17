@@ -11,7 +11,7 @@ the UI through a sandboxed postMessage bridge.
 | Directory | What it is | License |
 |---|---|---|
 | [`kiwi/`](kiwi) | Backend — NestJS + Prisma (PostgreSQL/pgvector), BullMQ, MCP server | MIT |
-| [`kiwi-ui/`](kiwi-ui) | Frontend — React 19 + TypeScript, Vite, MUI | MIT |
+| [`kiwi-ui/`](kiwi-ui) | Frontend — React 19 + TypeScript, Vite, MUI, Tailwind | MIT |
 | [`kiwi-app-sdk/`](kiwi-app-sdk) | SDK for building embedded Kiwi Apps | MIT |
 | [`kiwi-app-developer-guide-example/`](kiwi-app-developer-guide-example) | Zero-build reference app + developer guide | MIT |
 | [`docs/`](docs) | Project documentation | CC BY 4.0 |
@@ -21,13 +21,16 @@ CC BY 4.0 (see [docs/LICENSE](docs/LICENSE)).
 
 ## Quick start
 
-Requires Node.js 20 (see `kiwi/.nvmrc`) and Docker.
+Requires Docker and Node.js 20 or later (`kiwi/.nvmrc` pins 20.14; `kiwi-ui/.nvmrc`
+pins 22.16, and the UI also builds on 20).
 
 ```bash
-# 1. Infrastructure: PostgreSQL/pgvector, Redis, MinIO
+# 1. Infrastructure: PostgreSQL/pgvector, Redis, MinIO, Adminer
 cd kiwi
 cp .env.example .env          # then set LLM_API_KEY (Google sign-in is optional)
 docker compose up -d
+# Document parsing (needed to process uploaded materials; large image):
+docker compose --profile parser up -d
 
 # 2. Backend
 npm install
@@ -53,15 +56,21 @@ and `GOOGLE_CLIENT_SECRET` in `kiwi/.env` and `VITE_ENABLE_GOOGLE_LOGIN=true` in
 `kiwi-ui/.env`.
 
 See [`kiwi/README.md`](kiwi/README.md) and [`kiwi-ui/README.md`](kiwi-ui/README.md)
-for the full setup, and [`docs/`](docs) for deeper topics — retrieval and
-embeddings, webhooks, JWT configuration, and the MCP developer guide.
+for the full setup.
+
+## Documentation
+
+The [documentation index](docs/README.md) covers administration and a
+production checklist, [how prompts work](docs/prompts.md), learning
+experiments, the MCP server, building Kiwi Apps, and backend development.
 
 ## Configuring Kiwi for your institution
 
 Kiwi ships unbranded. Institution name, logo, support address, SSO email domain
-and consent document are all supplied through `VITE_*` environment variables —
-see [`kiwi-ui/src/config/branding.ts`](kiwi-ui/src/config/branding.ts) and
-`kiwi-ui/.env.example`. Nothing institution-specific is hardcoded.
+and consent document are supplied through `VITE_*` environment variables — see
+[`kiwi-ui/.env.example`](kiwi-ui/.env.example) and
+[Administration](docs/administration.md#branding). Course-specific guidance for
+the assistant is set per class; see [How prompts work](docs/prompts.md).
 
 ## Contributing
 

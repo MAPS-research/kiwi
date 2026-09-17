@@ -1,307 +1,221 @@
-# Webhook System Documentation
+# Inbound webhooks
 
-## Overview
+Kiwi can receive events from external systems, such as a registration system
+that asks for students to be enrolled. This document is for operators and
+integrators setting up such a connection. The code lives in
+`kiwi/src/webhooks/` and `kiwi/src/api-tokens/`.
 
-The Kiwi Framework now includes a webhook system that allows external services to receive real-time notifications when certain events occur in the system. Each webhook endpoint is protected by an API token for secure authentication. Certain sensitive events, such as user enrollment, require admin approval before being executed.
+## What the feature does
 
-## Features
+The webhook system is an **inbound receiver**. An external system sends an HTTP
+`POST` to a webhook URL on Kiwi, authenticated with an API token.
 
-- **UUID-based webhook endpoints**: Each webhook has a unique UUID in its URL path
-- **API Token Authentication**: Each webhook endpoint has exactly one API token for secure access
-- **Event Subscription**: Webhooks can subscribe to specific events or all events (using `*`)
-- **Delivery Logging**: All webhook deliveries are logged for auditing and debugging
-- **Queue-based Processing**: Webhook events are processed asynchronously using BullMQ
-- **Admin Approval Workflow**: Sensitive events like user enrollment require admin approval
+- Kiwi does not emit events of its own. Nothing in the app fires `user.created`,
+  `class.created` or the other event names when those things happen.
+- Only `user.enroll` has an effect. It is queued for approval, and on approval
+  the user is enrolled in a class.
+- Any other subscribed event is recorded as a "delivery" and handed to a BullMQ
+  worker (`kiwi/src/webhooks/webhook-delivery.service.ts`). The worker only logs
+  the payload and marks the delivery `success`. It makes no outbound HTTP
+  request.
+- Each webhook has a `secret`, but Kiwi never checks it. HMAC signatures and an
+  `X-Webhook-Signature` header are **not implemented**. The API token is the
+  only authentication.
 
-## API Endpoints
+## Setup
 
-### Webhooks Management
+Management endpoints need a signed-in user: a bearer access token plus the
+session cookie (see [Exploring the API](development.md#exploring-the-api)).
 
-#### Create Webhook
+### 1. Create a webhook
+
+`POST /webhooks` is allowed for admins and for users who are a professor in at
+least one class.
+
 ```http
 POST /webhooks
-Authorization: Bearer {jwt-token}
+Authorization: Bearer <access-token>
 Content-Type: application/json
 
 {
-  "events": ["user.created", "class.enrollment"],
-  "secret": "optional-secret-for-hmac-validation"
+  "events": ["user.enroll"]
 }
 ```
 
-Response:
+`events` lists the event names to accept; `"*"` accepts all. `secret` is
+optional and generated if omitted. It is returned only in this response, and
+nothing uses it.
+
+Response (`201`):
+
 ```json
 {
-  "id": "webhook-uuid",
-  "url": "/webhooks/webhook/unique-uuid",
-  "events": ["user.created", "class.enrollment"],
+  "id": "3f0c9a52-8d6e-4a55-9a7e-0b1c2d3e4f50",
+  "url": "/webhooks/webhook/3f0c9a52-8d6e-4a55-9a7e-0b1c2d3e4f50",
+  "events": ["user.enroll"],
   "isActive": true,
-  "createdAt": "2024-01-01T00:00:00Z",
-  "secret": "your-webhook-secret"
+  "createdAt": "2026-01-01T00:00:00.000Z",
+  "secret": "9b1e..."
 }
 ```
 
-#### List Webhooks
-```http
-GET /webhooks
-Authorization: Bearer {jwt-token}
-```
+The receiver URL is always `/webhooks/webhook/<webhook id>`.
 
-#### Get Webhook Details
-```http
-GET /webhooks/{id}
-Authorization: Bearer {jwt-token}
-```
+### 2. Create an API token
 
-#### Update Webhook
-```http
-PATCH /webhooks/{id}
-Authorization: Bearer {jwt-token}
-Content-Type: application/json
+`POST /api-tokens` is open to any signed-in user, but only for a webhook that
+user created.
 
-{
-  "events": ["user.created", "document.uploaded"],
-  "isActive": false
-}
-```
-
-#### Delete Webhook
-```http
-DELETE /webhooks/{id}
-Authorization: Bearer {jwt-token}
-```
-
-### API Tokens Management
-
-#### Create API Token
 ```http
 POST /api-tokens
-Authorization: Bearer {jwt-token}
+Authorization: Bearer <access-token>
 Content-Type: application/json
 
 {
-  "name": "Production Webhook Token",
-  "webhookId": "webhook-uuid",
-  "scopes": ["webhook:receive"],
-  "expiresAt": "2025-01-01T00:00:00Z" // optional
+  "name": "Registration system",
+  "webhookId": "3f0c9a52-8d6e-4a55-9a7e-0b1c2d3e4f50",
+  "expiresAt": "2027-01-01T00:00:00Z"
 }
 ```
 
-Response:
+`expiresAt` and `scopes` are optional. `scopes` defaults to
+`["webhook:receive"]`; scopes are stored but not enforced.
+
+Response (`201`):
+
 ```json
 {
-  "id": "token-uuid",
-  "name": "Production Webhook Token",
-  "token": "raw-token-only-shown-once",
+  "id": "a1d4...",
+  "name": "Registration system",
   "scopes": ["webhook:receive"],
-  "webhookId": "webhook-uuid",
-  "createdAt": "2024-01-01T00:00:00Z"
+  "expiresAt": "2027-01-01T00:00:00.000Z",
+  "createdAt": "2026-01-01T00:00:00.000Z",
+  "webhookId": "3f0c9a52-8d6e-4a55-9a7e-0b1c2d3e4f50",
+  "token": "5c2f..."
 }
 ```
 
-**Important**: The raw token is only shown once when created. Store it securely!
+- The token is 64 hex characters (32 random bytes). Kiwi stores only a bcrypt
+  hash, so the raw value appears only in this response.
+- A webhook has at most one token. Creating a new one deletes the old one; this
+  is how you rotate a token.
+- `GET /api-tokens`, `GET /api-tokens/:id`, `PATCH /api-tokens/:id` (`name`,
+  `scopes`, `isActive`) and `DELETE /api-tokens/:id` (permanent) act on your own
+  tokens only.
 
-#### List API Tokens
-```http
-GET /api-tokens
-Authorization: Bearer {jwt-token}
-```
+### 3. Send events
 
-#### Update API Token
-```http
-PATCH /api-tokens/{id}
-Authorization: Bearer {jwt-token}
-Content-Type: application/json
-
-{
-  "name": "Updated Token Name",
-  "isActive": false
-}
-```
-
-#### Delete API Token
-```http
-DELETE /api-tokens/{id}
-Authorization: Bearer {jwt-token}
-```
-
-## Receiving Webhook Events
-
-External services send events to your webhook endpoint using the API token:
+The external system posts to the webhook URL with the token:
 
 ```http
-POST /webhooks/webhook/{webhook-uuid}
-Authorization: Bearer {api-token}
-Content-Type: application/json
-X-Webhook-Signature: {hmac-sha256-signature} // optional
-
-{
-  "event": "user.created",
-  "data": {
-    "user": {
-      "id": "user-123",
-      "email": "user@example.com",
-      "systemRole": "user"
-    },
-    "timestamp": "2024-01-01T00:00:00Z"
-  }
-}
-```
-
-## Available Events
-
-The following events can be subscribed to:
-
-- `user.created` - When a new user is created
-- `user.updated` - When user information is updated
-- `user.enroll` - Request to enroll a user (requires admin approval)
-- `class.created` - When a new class is created
-- `class.enrollment` - When a user enrolls in a class
-- `interaction.created` - When a new user interaction is recorded
-- `document.uploaded` - When a document is uploaded
-- `test.event` - For testing webhook functionality
-- `*` - Subscribe to all events
-
-## User Enrollment Webhook
-
-### Overview
-
-The `user.enroll` event allows external services to request user enrollment in classes. This is particularly useful for integrating with external registration systems. Unlike other events, `user.enroll` requires admin approval before execution.
-
-### Sending an Enrollment Request
-
-```http
-POST /webhooks/webhook/{webhook-uuid}
-Authorization: Bearer {api-token}
+POST /webhooks/webhook/3f0c9a52-8d6e-4a55-9a7e-0b1c2d3e4f50
+Authorization: Bearer 5c2f...
 Content-Type: application/json
 
 {
   "event": "user.enroll",
   "data": {
-    "email": "student@example.com",
-    "classId": "class-uuid-123"
+    "email": "student@example.edu",
+    "classId": "seed-class-001"
   }
 }
 ```
 
-### Approval Workflow
+The request gets `401` if the token is missing, unknown, inactive or expired,
+belongs to a different webhook, or the webhook is inactive.
 
-1. **Event Reception**: The webhook receives the `user.enroll` event and stores it with `pending` status
-2. **Admin Review**: Admin users can view pending events via the admin endpoints
-3. **Approval/Rejection**: Admin approves or rejects the enrollment request
-4. **Execution**: Upon approval, the system:
-   - Adds the user to the whitelist (if not already present)
-   - Creates a user account (if not already exists)
-   - Enrolls the user in the specified class
-   - Updates the event status to `executed`
+Successful responses are `201`:
 
-### Admin Endpoints for Event Management
+| Case | Body |
+|---|---|
+| `user.enroll` | `{"message": "User enrollment event received and pending admin approval", "eventId": "<id>", "status": "pending_approval"}` |
+| Any other subscribed event | `{"message": "Webhook event received and queued for processing", "deliveryId": "<id>"}` |
+| Event not in the webhook's `events` | `{"message": "Event ignored - not subscribed"}` |
 
-#### List Pending Events
-```http
-GET /webhooks/events/pending
-Authorization: Bearer {admin-jwt-token}
+Swagger lists further event names (`user.created`, `user.updated`,
+`class.created`, `class.enrollment`, `interaction.created`, `document.uploaded`,
+`test.event`). They are accepted but only produce the logged delivery. The
+receiver does not validate `data`.
+
+## Enrollment approval
+
+A `user.enroll` event is stored as a `WebhookEvent` with status `pending`. Its
+`data` must contain `email` and `classId`.
+
+Who can list, view, approve and reject an event:
+
+- `user.enroll` with a `classId`: admins, and managers of that class (a
+  `professor` enrollment or an instructor assignment). The endpoints also
+  require the caller to pass the professor check described under
+  [Endpoint reference](#endpoint-reference).
+- Any other event, or one without a `classId`: admins only.
+
+Events you may not act on return `404`.
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /webhooks/events/pending` | Pending events you may act on, as `{"events": [...], "total": n}` |
+| `GET /webhooks/events/:id` | One event, with its webhook and the approver's id and email |
+| `POST /webhooks/events/:id/approve` | Approve and execute; returns `{"message": "Event approved and executed successfully"}` |
+| `POST /webhooks/events/:id/reject` | Reject, with optional body `{"reason": "..."}`; returns the updated event |
+
+Approving or rejecting an event that is not `pending` returns `400`.
+
+On approval Kiwi:
+
+1. Checks that the class exists.
+2. Adds the email to the whitelist, or re-enables a disabled entry.
+3. Creates the user if no account has that email. The new account has system
+   role `user` and no password. An admin must set a password
+   (`POST /auth/resetpassword`) before the user can log in.
+4. Enrolls the user as `student`, unless already enrolled.
+5. Marks the event `executed`.
+
+If a step fails, the event becomes `failed` with an `errorMessage`, and the
+approve call returns the error.
+
+```
+pending → approved → executed
+                   ↘ failed
+pending → rejected
 ```
 
-#### Get Event Details
-```http
-GET /webhooks/events/{event-id}
-Authorization: Bearer {admin-jwt-token}
-```
+## Endpoint reference
 
-#### Approve Event
-```http
-POST /webhooks/events/{event-id}/approve
-Authorization: Bearer {admin-jwt-token}
-```
+"Professor" means an admin, or a user with a `professor` enrollment in any
+class. "Owner" means the user who created the webhook. A failed role check
+returns `401`; a failed ownership check returns `403`.
 
-#### Reject Event
-```http
-POST /webhooks/events/{event-id}/reject
-Authorization: Bearer {admin-jwt-token}
-```
+| Method and path | Access |
+|---|---|
+| `POST /webhooks` | Professor |
+| `GET /webhooks` | Professor; lists your own webhooks with a token summary and delivery count |
+| `GET /webhooks/:id` | Admin who owns it; includes the 10 most recent deliveries, not the secret |
+| `PATCH /webhooks/:id` | Admin who owns it; body `events` and/or `isActive` |
+| `DELETE /webhooks/:id` | Admin who owns it; soft delete (sets `isActive` to `false`) |
+| `GET /webhooks/:id/deliveries` | Owner; the 100 most recent delivery records |
+| `GET /webhooks/:id/events` | Admin who owns it; the 50 most recent `WebhookEvent` rows |
+| `POST /webhooks/trigger-test` | Admin; see below |
+| `POST /webhooks/webhook/:webhookId` | API token only, no user session |
+| `GET /webhooks/events/pending`, `GET /webhooks/events/:id`, `POST /webhooks/events/:id/approve`, `POST /webhooks/events/:id/reject` | Professor, then scoped per event as above |
+| `GET /webhooks/events/:id/audit` | Professor; approval and rejection history of one event |
+| `GET /webhooks/audit` | Professor; all audit records. Query: `action`, `page`, `limit` (max 100), `startDate`, `endDate` |
+| `GET /webhooks/audit/my` | Professor; records of actions you performed. Query: `action`, `page`, `limit` |
 
-#### Get Events for a Webhook
-```http
-GET /webhooks/{webhook-id}/events
-Authorization: Bearer {jwt-token}
-```
+Audit records hold the action (`approved` or `rejected`), who performed it, an
+optional reason, and the caller's IP address and user agent.
 
-### Event Status Flow
+### Test trigger
 
-```
-pending → approved → executed (success)
-       ↘ rejected (admin rejection)
-       ↘ failed (execution error)
-```
+`POST /webhooks/trigger-test` with `{"event": "...", "data": {...}}` runs the
+receiver logic, without a token, for every active webhook subscribed to that
+event. It returns `{"event": "...", "webhooksTriggered": n}`. Triggering
+`user.enroll` this way creates a pending event on each subscribed webhook.
 
-## Security Considerations
+## Security notes
 
-1. **API Token Storage**: Store API tokens securely and never expose them in client-side code
-2. **HTTPS**: Always use HTTPS in production to encrypt token transmission
-3. **Token Rotation**: Regularly rotate API tokens by deleting old ones and creating new ones
-4. **IP Whitelisting**: Consider implementing IP whitelisting for additional security (future feature)
-5. **HMAC Validation**: Use the webhook secret to validate payload integrity (optional)
-6. **Rate Limiting**: Implement rate limiting on your webhook endpoints to prevent abuse
-
-## Testing Webhooks
-
-### Using the Test Endpoint
-
-You can trigger test events to verify your webhook is working:
-
-```http
-POST /webhooks/trigger-test
-Authorization: Bearer {jwt-token}
-Content-Type: application/json
-
-{
-  "event": "test.event",
-  "data": {
-    "message": "Testing webhook",
-    "timestamp": "2024-01-01T00:00:00Z"
-  }
-}
-```
-
-### Local Development
-
-For local development, you can use tools like ngrok to expose your local webhook endpoint:
-
-```bash
-# Start your local server
-npm run start:dev
-
-# In another terminal, expose it with ngrok
-ngrok http 3000
-
-# Use the ngrok URL for webhook testing
-```
-
-## Implementation Example
-
-See the example files in `/frontend-examples/`:
-- `WebhookManager.tsx` - React component for managing webhooks
-- `webhook-client-example.ts` - Example TypeScript client for sending webhook events
-
-## Current Limitations
-
-1. **Logging Only**: Currently, webhook events are only logged to the console. In production, you would modify the `WebhookDeliveryService` to make actual HTTP requests to external URLs.
-
-2. **One Token Per Webhook**: Each webhook endpoint can only have one active API token at a time. Creating a new token will replace the existing one.
-
-3. **No Retry Logic**: Failed webhook deliveries are not automatically retried (this can be added in the `WebhookDeliveryService`).
-
-## Future Enhancements
-
-Potential improvements for the webhook system:
-
-- [ ] Actual HTTP delivery to external URLs
-- [ ] Retry logic with exponential backoff
-- [ ] Webhook event filtering by resource IDs
-- [ ] IP whitelisting for additional security
-- [ ] Webhook health checks
-- [ ] Event batching for high-volume scenarios
-- [ ] Webhook templates for common integrations
-- [ ] Rate limiting per webhook endpoint
-- [ ] Detailed delivery metrics and analytics
+- Treat API tokens like passwords, and use HTTPS in production.
+- Rotate a token by creating a new one for the same webhook. Disable a webhook
+  with `PATCH /webhooks/:id` and `{"isActive": false}`.
+- Signature verification, IP allowlists, rate limiting and retries are not
+  implemented.

@@ -1,81 +1,56 @@
-# JWT Configuration Guide
+# JWT configuration
 
-This guide covers JWT (JSON Web Token) configuration for Kiwi and how external services can verify Kiwi-issued tokens.
+How Kiwi signs its JSON Web Tokens, how to configure the signing keys, and how an
+external service can verify Kiwi tokens. For operators and for developers of
+services that accept Kiwi tokens (Kiwi Apps, MCP servers).
 
-## Overview
+## Signing modes
 
-Kiwi uses **RS256** (RSA Signature with SHA-256) for JWT signing. This asymmetric algorithm uses:
-- **Private key**: Used by Kiwi to sign JWTs (kept secret)
-- **Public key**: Used by external services to verify JWTs (publicly available via JWKS)
+Kiwi picks the algorithm at startup (`kiwi/src/auth/auth.module.ts`):
 
-This approach allows external services to verify Kiwi tokens without sharing secrets.
+| Configuration | Algorithm | JWKS |
+|---|---|---|
+| `JWT_PRIVATE_KEY` and `JWT_PUBLIC_KEY` both set | RS256 with those keys | Publishes the matching public key |
+| Either key missing | HS256 with `JWT_SECRET` | Publishes an **unrelated** key; see below |
 
-## Configuration Options
+Without both keys, `/.well-known/jwks.json` still responds.
+`kiwi/src/auth/jwt-keys.service.ts` generates a throwaway RSA key pair at each
+startup and publishes its public half, but no token is signed with it. JWKS
+verification therefore only works when both keys are set.
 
-### Development (Default)
+In HS256 mode, tokens stay valid across restarts because `JWT_SECRET` does not
+change. `JWT_SECRET` must be set to a long random value; the value in
+`kiwi/.env.example` is a placeholder. Verifying HS256 tokens elsewhere means
+sharing the secret, so use RS256 whenever another service needs to verify
+tokens.
 
-No configuration required. Kiwi auto-generates ephemeral RSA keys on startup.
+## Configuring RS256
 
-**Note**: Ephemeral keys are regenerated on each restart, which invalidates all previously issued tokens.
-
-### Production
-
-For production, set persistent keys via environment variables:
+Generate a key pair and base64-encode both PEM files. Run these anywhere; the
+commands work on macOS and Linux.
 
 ```bash
-# .env
-JWT_PRIVATE_KEY=<base64-encoded-private-key>
-JWT_PUBLIC_KEY=<base64-encoded-public-key>
-```
-
-#### Generating Keys
-
-```bash
-# Generate 2048-bit RSA key pair
 openssl genrsa -out private.pem 2048
 openssl rsa -in private.pem -pubout -out public.pem
 
-# Base64 encode for environment variables
 echo "JWT_PRIVATE_KEY=$(base64 < private.pem | tr -d '\n')"
 echo "JWT_PUBLIC_KEY=$(base64 < public.pem | tr -d '\n')"
-
-# Clean up (or store securely)
-rm private.pem public.pem
 ```
 
-#### macOS Note
+Put the two lines in `kiwi/.env`, restart the backend, and delete or securely
+store the PEM files.
 
-On macOS, use `base64` without the `-w0` flag (it's the default behavior).
+Kiwi holds one key pair at a time. The JWKS contains a single key whose `kid` is
+derived from the public key. To rotate, restart with new keys. Every
+outstanding access, refresh and app token becomes invalid, and users must sign
+in again.
 
-#### Linux Note
-
-On Linux, you may need to use `base64 -w0` to avoid line wrapping:
-
-```bash
-echo "JWT_PRIVATE_KEY=$(base64 -w0 < private.pem)"
-echo "JWT_PUBLIC_KEY=$(base64 -w0 < public.pem)"
-```
-
-### Fallback to HS256
-
-If RS256 keys are not configured, Kiwi falls back to HS256 using `JWT_SECRET`:
-
-```bash
-# .env (fallback - not recommended for production)
-JWT_SECRET=your-secret-key
-```
-
-**Warning**: HS256 requires sharing the secret with external services, which is a security risk.
-
-## JWKS Endpoint
-
-Kiwi exposes a JWKS (JSON Web Key Set) endpoint for public key distribution:
+## JWKS endpoint
 
 ```
 GET /.well-known/jwks.json
 ```
 
-Example response:
 ```json
 {
   "keys": [
@@ -91,7 +66,57 @@ Example response:
 }
 ```
 
-## Verifying Kiwi JWTs
+The endpoint is public. It is also advertised as `jwks_uri` in
+`/.well-known/oauth-authorization-server`.
+
+Signed tokens do not include a `kid` header. Because the set holds exactly one
+key, verifiers should use that key rather than look it up by `kid`; the
+examples below do this.
+
+## Token types
+
+All tokens are signed with the same key. None carries `iss` or `aud`.
+
+| Token | Claims | Lifetime |
+|---|---|---|
+| Access token | `sub` (user id), `email`, `iat`, `exp` | 60 s; 86400 s when dev auth is enabled (`DEV_AUTH=true` and `NODE_ENV` not `production`) |
+| Refresh token | Access claims plus `jti` | 7 days |
+| MCP refresh token | Refresh claims plus `mcp_server_id` and `token_type: "mcp"` | 7 days |
+| Kiwi App token | `sub`, `type: "app_token"`, `appSlug`, `classId` (or `null`), `tokenScope` (`"class"` or `"admin"`), `scopes`, `iat`, `exp`; no `email` | `APP_TOKEN_TTL_SECONDS`, default 3600 s |
+
+Sources: `generateAccessToken` and the refresh-token functions in
+`kiwi/src/auth/auth.service.ts`, lifetimes in `kiwi/src/auth/auth.constants.ts`
+and `kiwi/src/auth/dev-auth.ts`, and `generateAppToken` in
+`kiwi/src/kiwi-app/kiwi-app.service.ts`.
+
+Tokens contain no role claim. A user's system role (`user`, `instructor` or
+`admin`) is read from the database by the guards that need it.
+
+Kiwi's own guards reject tokens that carry a `jti`, so a refresh token cannot be
+used as a bearer token.
+
+Example access token payload:
+
+```json
+{
+  "sub": "550e8400-e29b-41d4-a716-446655440000",
+  "email": "student@example.edu",
+  "iat": 1767225600,
+  "exp": 1767225660
+}
+```
+
+## Verifying Kiwi tokens
+
+Rules for an external verifier:
+
+- Require RS256 and fetch keys from the JWKS. Do not accept HS256.
+- Reject tokens that have a `jti` claim; those are refresh tokens.
+- Reject tokens with `type: "app_token"` unless your service is a Kiwi App that
+  expects them. Conversely, a Kiwi App should require `type: "app_token"`.
+- Do not check `iss` or `aud`; Kiwi does not set them. Pin the JWKS URL to your
+  Kiwi server instead.
+- Check `exp` and allow for the short access-token lifetime.
 
 ### Python (PyJWT)
 
@@ -99,194 +124,103 @@ Example response:
 import jwt
 from jwt import PyJWKClient
 
-KIWI_JWKS_URL = "https://your-kiwi-server/.well-known/jwks.json"
+jwks_client = PyJWKClient("https://kiwi.example.edu/.well-known/jwks.json")
 
-# Initialize JWKS client (caches keys automatically)
-jwks_client = PyJWKClient(KIWI_JWKS_URL)
-
-def verify_kiwi_token(token: str) -> dict:
-    """Verify a Kiwi JWT and return the payload."""
-    signing_key = jwks_client.get_signing_key_from_jwt(token)
+def verify_kiwi_access_token(token: str) -> dict:
+    # Kiwi tokens have no `kid` header, so take the single published key
+    # instead of get_signing_key_from_jwt().
+    key = jwks_client.get_signing_keys()[0]
     payload = jwt.decode(
         token,
-        signing_key.key,
+        key.key,
         algorithms=["RS256"],
-        options={"verify_aud": False}  # Kiwi doesn't set audience
+        options={"verify_aud": False},
     )
+    if "jti" in payload or payload.get("type") == "app_token":
+        raise jwt.InvalidTokenError("not an access token")
     return payload
-
-# Usage
-try:
-    payload = verify_kiwi_token(access_token)
-    user_id = payload["sub"]
-    email = payload.get("email")
-    print(f"Authenticated user: {user_id} ({email})")
-except jwt.ExpiredSignatureError:
-    print("Token has expired")
-except jwt.InvalidTokenError as e:
-    print(f"Invalid token: {e}")
 ```
 
-### TypeScript/Node.js (jose)
+### TypeScript (jose)
 
 ```typescript
 import { createRemoteJWKSet, jwtVerify, JWTPayload } from 'jose';
 
-const KIWI_JWKS_URL = 'https://your-kiwi-server/.well-known/jwks.json';
+const JWKS = createRemoteJWKSet(
+  new URL('https://kiwi.example.edu/.well-known/jwks.json'),
+);
 
-// Initialize JWKS client (caches keys automatically)
-const JWKS = createRemoteJWKSet(new URL(KIWI_JWKS_URL));
-
-interface KiwiJWTPayload extends JWTPayload {
+interface KiwiAccessToken extends JWTPayload {
   sub: string;
-  email?: string;
-  systemRole?: string;
+  email: string;
 }
 
-async function verifyKiwiToken(token: string): Promise<KiwiJWTPayload> {
-  const { payload } = await jwtVerify(token, JWKS, {
-    algorithms: ['RS256'],
-  });
-  return payload as KiwiJWTPayload;
-}
-
-// Usage
-try {
-  const payload = await verifyKiwiToken(accessToken);
-  console.log(`Authenticated user: ${payload.sub}`);
-} catch (error) {
-  console.error('Token verification failed:', error.message);
+export async function verifyKiwiAccessToken(
+  token: string,
+): Promise<KiwiAccessToken> {
+  const { payload } = await jwtVerify(token, JWKS, { algorithms: ['RS256'] });
+  if (payload.jti !== undefined || payload.type === 'app_token') {
+    throw new Error('not an access token');
+  }
+  return payload as KiwiAccessToken;
 }
 ```
 
-### Go
+jose accepts a token without `kid` when the key set holds a single matching key.
+
+### Go (lestrrat-go/jwx v2)
 
 ```go
-package main
+package kiwiauth
 
 import (
-    "context"
-    "fmt"
-    "github.com/lestrrat-go/jwx/v2/jwk"
-    "github.com/lestrrat-go/jwx/v2/jwt"
+	"context"
+	"errors"
+
+	"github.com/lestrrat-go/jwx/v2/jwa"
+	"github.com/lestrrat-go/jwx/v2/jwk"
+	"github.com/lestrrat-go/jwx/v2/jwt"
 )
 
-const kiwiJWKSURL = "https://your-kiwi-server/.well-known/jwks.json"
+const jwksURL = "https://kiwi.example.edu/.well-known/jwks.json"
 
-func verifyKiwiToken(tokenString string) (jwt.Token, error) {
-    // Fetch JWKS (consider caching in production)
-    keySet, err := jwk.Fetch(context.Background(), kiwiJWKSURL)
-    if err != nil {
-        return nil, fmt.Errorf("failed to fetch JWKS: %w", err)
-    }
-
-    // Parse and verify token
-    token, err := jwt.Parse(
-        []byte(tokenString),
-        jwt.WithKeySet(keySet),
-    )
-    if err != nil {
-        return nil, fmt.Errorf("failed to verify token: %w", err)
-    }
-
-    return token, nil
-}
-
-// Usage
-func main() {
-    token, err := verifyKiwiToken(accessToken)
-    if err != nil {
-        fmt.Printf("Verification failed: %v\n", err)
-        return
-    }
-
-    userID, _ := token.Get("sub")
-    fmt.Printf("Authenticated user: %v\n", userID)
+func VerifyAccessToken(ctx context.Context, raw string) (jwt.Token, error) {
+	set, err := jwk.Fetch(ctx, jwksURL) // cache this in production
+	if err != nil {
+		return nil, err
+	}
+	key, ok := set.Key(0)
+	if !ok {
+		return nil, errors.New("empty JWKS")
+	}
+	tok, err := jwt.Parse([]byte(raw), jwt.WithKey(jwa.RS256, key), jwt.WithValidate(true))
+	if err != nil {
+		return nil, err
+	}
+	if tok.JwtID() != "" {
+		return nil, errors.New("refresh token")
+	}
+	if t, ok := tok.Get("type"); ok && t == "app_token" {
+		return nil, errors.New("app token")
+	}
+	return tok, nil
 }
 ```
-
-## JWT Payload Structure
-
-Kiwi JWTs contain the following claims:
-
-| Claim | Type | Description |
-|-------|------|-------------|
-| `sub` | string | User ID (UUID) |
-| `email` | string | User's email address |
-| `systemRole` | string | User's system role (`student`, `professor`, `admin`) |
-| `iat` | number | Issued at timestamp |
-| `exp` | number | Expiration timestamp |
-
-Example payload:
-```json
-{
-  "sub": "550e8400-e29b-41d4-a716-446655440000",
-  "email": "student@example.edu",
-  "systemRole": "student",
-  "iat": 1704067200,
-  "exp": 1704153600
-}
-```
-
-## Best Practices
-
-### 1. Cache the Public Key
-
-Fetch the JWKS once on startup and cache it. Most JWT libraries handle this automatically.
-
-```python
-# PyJWKClient caches by default
-jwks_client = PyJWKClient(KIWI_JWKS_URL)
-```
-
-### 2. Handle Key Rotation
-
-Periodically refresh the JWKS to handle key rotation (e.g., every 24 hours or on verification failure).
-
-```python
-# Force refresh on unknown key ID
-try:
-    signing_key = jwks_client.get_signing_key_from_jwt(token)
-except jwt.exceptions.PyJWKClientError:
-    # Key not found, might be rotated - create new client to refresh
-    jwks_client = PyJWKClient(KIWI_JWKS_URL)
-    signing_key = jwks_client.get_signing_key_from_jwt(token)
-```
-
-### 3. Validate Token Expiration
-
-Always check the `exp` claim. Most JWT libraries do this automatically.
-
-### 4. Use HTTPS in Production
-
-Always use HTTPS for the JWKS endpoint in production to prevent MITM attacks.
-
-### 5. Don't Store Tokens Insecurely
-
-- Never log full tokens
-- Use secure storage (HTTP-only cookies, secure session storage)
-- Clear tokens on logout
 
 ## Troubleshooting
 
-### "Invalid signature" Error
+- **Signature fails against the JWKS.** Check that both `JWT_PRIVATE_KEY` and
+  `JWT_PUBLIC_KEY` are set. Without them tokens are HS256 and the published key
+  is unrelated. The backend logs `Loaded JWT keys from environment variables`
+  when both are present.
+- **"Unable to find a signing key" or "no key ID".** The library is looking up
+  the key by `kid`, which Kiwi tokens lack. Use the single key from the set.
+- **All tokens rejected after a restart.** The keys changed. Refetch the JWKS;
+  users must sign in again.
+- **Token expired.** Access tokens live 60 seconds; the Kiwi frontend refreshes
+  them with the refresh-token cookie. Check clock synchronization as well.
 
-1. Check if the token was issued by the correct Kiwi instance
-2. Verify the JWKS URL is correct
-3. Try refreshing the JWKS cache
+## Related documentation
 
-### "Token expired" Error
-
-1. Check system clock synchronization
-2. Request a new token using refresh token flow
-
-### JWKS Fetch Timeout
-
-1. Verify network connectivity to Kiwi server
-2. Check firewall rules
-3. Consider increasing timeout or retrying
-
-## Related Documentation
-
-- [MCP Developer Guide](./MCP_DEVELOPER_GUIDE.md) - OAuth flow and MCP client setup
-- [OAuth Configuration](./oauth.md) - Google OAuth setup
+- [MCP](mcp.md): OAuth flow and MCP clients
+- [Google sign-in](../kiwi/README.md#google-sign-in-optional)

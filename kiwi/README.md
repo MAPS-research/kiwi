@@ -1,49 +1,52 @@
-# Kiwi Framework
+# Kiwi backend
 
-## Project Overview
+The Kiwi API server: NestJS with Prisma on PostgreSQL (pgvector), Redis and
+BullMQ for background jobs, S3-compatible storage for documents, and an MCP
+server for external AI clients.
 
-This directory is the back-end service supporting the Kiwi system. The Kiwi Framework uses [Nest](https://github.com/nestjs/nest).
+The frontend lives in [`../kiwi-ui`](../kiwi-ui). Project-wide documentation is
+in [`../docs`](../docs/README.md).
 
-## Development Setup
+## Requirements
 
-### Prerequisites
+- Node.js 20 (see `.nvmrc`)
+- Docker
 
-- **Node.js**
-- **Docker**
+## Setup
 
-### Cloning the Repository
-
-```bash
-$ git clone <repository-url>
-```
-
-### Setup Libraries
+Run everything from this directory.
 
 ```bash
-# first, set up the docker by running:
-$ npm run infra
+# Local services: PostgreSQL/pgvector (5432), Redis (6379),
+# Adminer (8081), MinIO (9000, console 9001)
+docker compose up -d
 
-# once complete, install Node Version Manager (NVM) to install a specific version of Node.js
-$ nvm install
+# Document parser (Unstructured API on 9500). Needed to process uploaded
+# materials; the image is large.
+docker compose --profile parser up -d
 
-# use the same version of Node.js as this repo (.nvmrc)
-$ nvm use
-
-# Node Package Manager (npm) to install dependencies
-
-$ npm install
+cp .env.example .env     # then set LLM_API_KEY
+npm install
+npx prisma generate
+npx prisma migrate deploy
+npx prisma db seed       # creates admin@example.com and prints its password
+npm run start:dev        # http://localhost:3000, API docs at /docs
 ```
 
+`.env.example` is set up to match `compose.yml`; the only value you must
+provide is an LLM API key. Its comments explain the rest.
 
-### Setup Environment
+To stop the services without losing data, use `docker compose stop` (not
+`down -v`, which deletes the volumes).
 
-- Copy `.env.example` to `.env`
-  - set `LLM_API_KEY` to your OpenAI-compatible key, and `LLM_CHAT_MODEL` to the
-    model you want to use
-  - optionally set `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` for the admin
-    account created by the seed (a password is generated if left empty)
+## Signing in
 
-### Google sign-in (Optional)
+The seed creates `admin@example.com` (or `SEED_ADMIN_EMAIL`) with the password
+in `SEED_ADMIN_PASSWORD`, or a generated one printed once. Create further
+accounts in the UI under **Admin → User Management**. See
+[Administration](../docs/administration.md).
+
+### Google sign-in (optional)
 
 Password login works out of the box. To also allow Google sign-in:
 
@@ -52,46 +55,50 @@ Password login works out of the box. To also allow Google sign-in:
 - Add `http://localhost:3000/auth/google` as an authorized redirect URI
 - Put the client ID and secret in `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
 - Set `GOOGLE_DOMAIN` to the Google Workspace domain(s) allowed to sign in,
-  comma-separated, or `*` for any account
+  comma-separated, or `*`
 - In `kiwi-ui/.env`, set `VITE_ENABLE_GOOGLE_LOGIN=true`
+- Whitelist the people who may sign in (Admin → User Management)
 
 Without `GOOGLE_CLIENT_ID`, the Google routes return 404 and the button is hidden.
 
-### JWT Configuration (Optional)
+## JWT signing
 
-Kiwi supports RS256 (asymmetric) JWT signing for secure token verification by external services.
+Without keys, tokens are signed with `JWT_SECRET` (HS256). To let other
+services verify Kiwi tokens through `/.well-known/jwks.json`, configure RS256:
 
-**Development**: No configuration needed - ephemeral keys are auto-generated on startup.
-
-**Production**: Set these environment variables:
 ```bash
-# Generate RSA key pair
 openssl genrsa -out private.pem 2048
 openssl rsa -in private.pem -pubout -out public.pem
-
-# Base64 encode and add to .env
+# then in .env:
 JWT_PRIVATE_KEY=$(base64 < private.pem | tr -d '\n')
 JWT_PUBLIC_KEY=$(base64 < public.pem | tr -d '\n')
 ```
 
-External services can verify Kiwi JWTs by fetching the public key from `/.well-known/jwks.json`.
+See [JWT configuration](../docs/jwt-configuration.md).
 
-### Setup database
-```bash
-$ npx prisma migrate deploy
-$ npx prisma db seed    # creates the admin account and prints its password
-```
-### Run the app
-```bash
-$ npm run dev
+## Useful commands
 
-# to view the database on the browser, run
-$ npx prisma studio
+| Command | What it does |
+|---|---|
+| `npm run start:dev` | Start with file watching |
+| `npm run start:debug` | Start with watching and the Node inspector |
+| `npm run build` | Compile to `dist/` (also the type check) |
+| `npm run start:prod` | Run the compiled build |
+| `npm test` | Unit tests |
+| `npx prisma studio` | Browse the database |
+| `npx prisma migrate dev --name <change>` | Create a migration after editing `prisma/schema.prisma` |
 
-```
-- Once the app start running, go to http://localhost:3000/docs (Swagger),you can see the API description
-- Set up the frontend app: see `../kiwi-ui`
-- If Google sign-in is enabled and returns "403 Forbidden", check whether your Google account session has expired in the browser.
+More in [docs/development.md](../docs/development.md).
+
+## Troubleshooting
+
+- **Uploaded materials never finish processing.** The document parser isn't
+  running or `UNSTRUCTURED_API_URL` is wrong; start it with
+  `docker compose --profile parser up -d`.
+- **The UI can't reach the API (CORS).** `FRONTEND_URL` must list the UI's
+  exact origin, e.g. `http://localhost:3001`.
+- **Google sign-in is refused.** Check that the email is whitelisted and, for
+  Google Workspace accounts, that its domain is in `GOOGLE_DOMAIN`.
 
 ## License
 

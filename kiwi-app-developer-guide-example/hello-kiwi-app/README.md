@@ -1,162 +1,99 @@
-# Hello Kiwi — Reference App
+# Hello Kiwi
 
-A single-file **external Kiwi App** built on [`@kiwi/app-sdk`](../kiwi-app-sdk/),
-demonstrating the app protocol in [`../KIWI_APP_DEVELOPER_GUIDE.md`](../KIWI_APP_DEVELOPER_GUIDE.md).
-Copy [`index.html`](./index.html) (and the SDK) as the starting point for your own app.
+An example Kiwi App in a single HTML file, built on
+[`@maps-research/kiwi-app-sdk`](../../kiwi-app-sdk/README.md). To start your own
+app, copy [`index.html`](./index.html) along with the SDK file it loads. The
+[developer guide](../KIWI_APP_DEVELOPER_GUIDE.md) explains the protocol this
+app demonstrates.
 
-The app talks to Kiwi **only through the window bridge**, wrapped by the SDK. It
-never calls the Kiwi backend directly: data/LLM **ops** (`kiwi.documentChunks`,
-`kiwi.contextualChat`) are **proxied by the host** (kiwi-ui), which makes the real
-backend call with the app token. So the app needs **no token, no CORS, and no
-backend URL**.
+The app only ever talks to Kiwi's host page, never to the Kiwi backend. When the
+app requests data, for example with `kiwi.documentChunks` or
+`kiwi.contextualChat`, the host makes the backend call with its own app token.
+As a result, the app needs no token, no CORS entry and no backend URL.
 
-## Two ways to run it
+## Run it
 
-The page loads the SDK from `../kiwi-app-sdk/kiwi-app-sdk.js`, so serve the **repo
-root** (one level up), not just this folder.
-
-### A) Standalone — learn the protocol offline (no backend)
-
-```bash
-# from the repo root:
-python3 -m http.server 8000
-# then open http://localhost:8000/hello-kiwi-app/
-```
-
-Nothing is embedding it, so the SDK switches on a built-in **Simulator**: every
-Kiwi reply (context, streaming AI, and op responses) is faked locally and marked
-`✦ sim`. Click around, watch the **Event Log**, read the code. The mode pill in
-the top bar toggles Simulator ⇄ Live.
-
-### B) Live — embedded in a real Kiwi class
+The page loads the SDK from `../kiwi-app-sdk/kiwi-app-sdk.js`. For that path to
+work, serve the parent folder, not this one:
 
 ```bash
-# Serve the repo root (so /hello-kiwi-app/ and /kiwi-app-sdk/ are both reachable)
+cd kiwi-app-developer-guide-example
 python3 -m http.server 8000
 ```
 
-Then enable the app (below) and open the class in Kiwi — a **Hello Kiwi** tab
-appears and the same code runs for real. The op calls (`documentChunks`,
-`contextualChat`) are proxied by the host over the bridge, so **you do not need
-to add the app origin to CORS** for them — the host makes the call.
+Then open <http://localhost:8000/hello-kiwi-app/>. Kiwi isn't embedding the page
+here, so the SDK runs its Simulator: it fakes Kiwi's context, AI answers and
+data responses. The **Event Log** shows every message the app sends and
+receives, and marks the simulated ones. The mode pill in the top bar switches
+between Simulator and Live.
 
-## Enabling the app — what actually has to exist
+## Enable it in Kiwi
 
-Five records must exist before the tab shows up and the ops work. Missing any one
-of them is the usual cause of "no tab" or a 403:
+You need:
 
-| # | Record | Why |
-| --- | --- | --- |
-| 1 | `KiwiAppWhitelist` — `status:'approved'`, `maxScopes` | ceiling of scopes the app may ever get |
-| 2 | `KiwiApp` — the registered app (`slug`) | the app itself |
-| 3 | `KiwiAppUI` — `placement:'class-tab'`, `isEnabled`, `uiUrl` | **without this there is no tab** |
-| 4 | `KiwiAppPrompt` — `isActive:true` (admin-approved) | `llm:prompt:<id>` won't resolve otherwise → `contextualChat` 403s |
-| 5 | `ClassKiwiApp` — `isEnabled:true` for the class | binds the app to that class |
+- the Kiwi backend, by default at `http://localhost:3000`;
+- the Kiwi UI, running as usual;
+- an admin account.
 
-### Route A — the admin API (`register.sh`)
+On a fresh database, `npx prisma db seed` (run in `kiwi/`) creates the admin
+account `admin@example.com` and the class `seed-class-001`. It also prints the
+admin password, unless you set one with `SEED_ADMIN_PASSWORD`.
+
+With the static server still running, register the app:
 
 ```bash
-ADMIN_TOKEN=eyJ... CLASS_ID=<classId> APP_URL=http://localhost:8000/hello-kiwi-app/ ./register.sh
+cd kiwi-app-developer-guide-example/hello-kiwi-app
+ADMIN_PASSWORD=... CLASS_ID=seed-class-001 ./register.sh
 ```
 
-> ⚠️ The admin-only steps (whitelist, class-enable, prompt approve) are guarded by
-> the global auth guard, which for non-`/mcp` routes requires a **server-side
-> session** — a bare minted JWT is not enough. In practice that means driving
-> them as an admin who is actually logged into kiwi-ui. For scripted local setup,
-> use Route B.
+The script signs in as the admin and runs four steps:
 
-### Route B — seed it directly (local dev)
+1. Whitelists the slug `demo`. It grants the scopes
+   `class:materials:chunks:read`, `context:student_learning:read` and
+   `llm:prompt:weekly-summary`.
+2. Registers the app. This covers its `class-tab` UI, the `ai` capability and
+   the `weekly-summary` prompt.
+3. Approves the prompt.
+4. Enables the app in the class.
 
-What was used to enable this app locally. Idempotent; adjust `SLUG`, `CLASS_ID`
-and `APP_URL`, run from the `kiwi` backend repo (it loads `.env` for the DB URL):
+Optional settings: `KIWI`, `ADMIN_EMAIL`, `APP_URL`, `SLUG`, `SECRET` and
+`PROMPT_ID`. The script's header describes them. If `SECRET` is set, it must be
+at least 32 characters.
 
-```js
-// hello-kiwi-enable.cjs — run: node hello-kiwi-enable.cjs
-require('dotenv').config({ path: '/path/to/kiwi/.env' });
-const { PrismaClient } = require('@prisma/client');
-const bcrypt = require('bcryptjs');
-const db = new PrismaClient();
+Open the class in Kiwi. A **Hello Kiwi** tab appears. It shows the context Kiwi
+sends, including an opaque `userId` and the viewer's `userRole`. The
+document-chunks card also loads data from the class.
 
-const SLUG = 'demo';
-const CLASS_ID = '<classId>';
-const APP_URL = 'http://localhost:8000/hello-kiwi-app/';   // EXACT served URL
-const PROMPT_ID = 'weekly-summary';
-const ADMIN = '<an existing systemRole:admin userId>';
-const MAX_SCOPES = ['class:materials:chunks:read', 'context:student_learning:read',
-                    'llm:prompt:*', 'user:profile:read', 'class:info:read'];
+If the class has no documents, the document-chunks card comes back empty. The
+contextual-chat card also needs an AI provider configured on the backend.
 
-(async () => {
-  await db.kiwiAppWhitelist.upsert({ where: { slug: SLUG },
-    update: { status: 'approved', maxScopes: MAX_SCOPES, approvedBy: ADMIN, baseUrl: APP_URL },
-    create: { slug: SLUG, registrationSecret: await bcrypt.hash('dev-secret', 10),
-      status: 'approved', maxScopes: MAX_SCOPES, approvedBy: ADMIN, baseUrl: APP_URL } });
+## If it doesn't work
 
-  const app = await db.kiwiApp.upsert({ where: { slug: SLUG },
-    update: { isActive: true, name: 'Hello Kiwi', baseUrl: APP_URL, appType: 'frontend_only', capabilities: ['ai'] },
-    create: { slug: SLUG, name: 'Hello Kiwi', baseUrl: APP_URL, appType: 'frontend_only', capabilities: ['ai'], isActive: true } });
+- **`APP_URL` must match exactly.** The default is
+  `http://localhost:8000/hello-kiwi-app/`. It must be the exact address you
+  open the page at. The host only accepts messages from that URL's origin, so
+  any other origin looks like "`kiwi:context` never arrives".
+- **An existing whitelist entry isn't changed.** Step 1 only creates new
+  entries. If the slug is already whitelisted, the entry keeps its original
+  secret and scopes. An admin can change them with
+  `PATCH /api/kiwi-apps/whitelist/demo`.
+- **Changing the prompt text turns the prompt off.** It stays off until an admin
+  approves it again, so run `register.sh` again with `ADMIN_PASSWORD` set.
+- **The user needs a role in the class.** Otherwise Kiwi won't issue a token,
+  and the data cards fail with `token_error`.
+- **Scope changes need a page reload.** The Kiwi page keeps its token for up to
+  an hour, so reload it after changing scopes.
 
-  await db.kiwiAppUI.upsert({ where: { appId_uiSlug: { appId: app.id, uiSlug: 'student' } },
-    update: { uiUrl: APP_URL, placement: 'class-tab', isEnabled: true },
-    create: { appId: app.id, uiSlug: 'student', uiName: 'Hello Kiwi', uiUrl: APP_URL,
-      placement: 'class-tab', allowedRoles: ['student','ta','instructor','admin'], tabOrder: 0, isEnabled: true } });
-
-  await db.kiwiAppPrompt.upsert({ where: { appId_promptId: { appId: app.id, promptId: PROMPT_ID } },
-    update: { isActive: true, approvedBy: ADMIN, approvedAt: new Date() },
-    create: { appId: app.id, promptId: PROMPT_ID, name: 'Weekly Study Summary',
-      systemPrompt: 'You are a supportive study coach…', isActive: true,
-      approvedBy: ADMIN, approvedAt: new Date(), maxTokens: 600, temperature: 0.4 } });
-
-  await db.classKiwiApp.upsert({ where: { classId_appId: { classId: CLASS_ID, appId: app.id } },
-    update: { isEnabled: true, enabledScopes: [], tabLabel: 'Hello Kiwi' },
-    create: { classId: CLASS_ID, appId: app.id, isEnabled: true, enabledScopes: [],
-      enabledBy: ADMIN, tabLabel: 'Hello Kiwi' } });
-
-  await db.$disconnect();
-})();
-```
-
-### Gotchas that actually bite
-
-- **`uiUrl` must exactly match where you serve the app** (origin *and* path). The
-  host pins `event.origin` to that URL's origin and drops mismatched messages —
-  the classic "`kiwi:context` never arrives" symptom.
-- **The prompt must be admin-approved** (`isActive:true`). Registering it is not
-  enough; until approved, `llm:prompt:<id>` is not in the token and
-  `contextualChat` fails the scope check.
-- **`enabledScopes: []` means "all `maxScopes`"** — an intentional permissive
-  default while app development is in-house. Set it explicitly to narrow.
-- **No `FRONTEND_URL`/CORS entry is needed** for the proxied ops — the host makes
-  the backend call. The app only has to be reachable and frameable.
-- **The logged-in user needs a role in the class** (enrolled/instructor, or a
-  `systemRole:admin`), or the token mint 403s with "User does not have access to
-  this class".
+For other problems, see the guide's
+[troubleshooting table](../KIWI_APP_DEVELOPER_GUIDE.md#troubleshooting).
 
 ## What it demonstrates
 
-| Section | Capability | SDK call → bridge | Needs |
-| --- | --- | --- | --- |
-| 1 Connect | Handshake & live context | `kiwi.ready()` → `kiwi:context` | — |
-| 2 AI | Ask the AI (streaming) | `kiwi.askAI(prompt, {onChunk})` | host proxy |
-| 2 AI | Ground the AI | `kiwi.updateContext(text)` | — |
-| 3 Ops | Class document chunks | `kiwi.documentChunks({limit})` (op `documentChunks`) | host proxy + scope |
-| 3 Ops | Contextual study coach | `kiwi.contextualChat({promptId, contextRequest})` (op `contextualChat`) | host proxy + scope |
-| 4 UI | Navigate / chat layout | `kiwi.navigate(…)`, `kiwi.setChatDisplayMode(mode)` | — |
-
-## Good to know
-
-- **The app makes no direct backend calls.** Everything goes through the SDK →
-  window bridge. `askAI` is proxied via the user's session; the data/LLM **ops**
-  are proxied by the host with the **app token** (so scope enforcement is intact
-  and the token never touches this app). No CORS, no base URL here.
-- **Ops are scope-gated.** `documentChunks` needs `class:materials:chunks:read`;
-  `contextualChat` needs `context:student_learning:read` + `llm:prompt:<id>`
-  (`register.sh` requests these scopes and approves a `weekly-summary` prompt).
-  The host injects `classId`/`appSlug` from trusted context — the app can't
-  address another class or app.
-- **Access is the user's, narrowed by the app's scopes.** The app token is minted
-  for the logged-in user in the current class, so an app can never read data the
-  user couldn't already see.
-- The same capabilities also exist as backend REST (`/api/kiwi-apps/...`) for
-  apps with their own backend, and as MCP tools for genuine MCP *clients* /
-  agents. Frontend-only apps should use the SDK/bridge proxy shown here. See
-  guide §8.3b.
+| Section | Feature | SDK call |
+| --- | --- | --- |
+| 1 · Connect | Connection to Kiwi and the context it sends | `kiwi.ready()`, `kiwi.onContext()` |
+| 2 · Use Kiwi's AI | Streaming AI answers | `kiwi.askAI(prompt, { onChunk })` |
+| 2 · Use Kiwi's AI | Telling Kiwi's AI what the user is doing | `kiwi.updateContext(text)` |
+| 3 · Class content & coaching | Paging through the class's document chunks | `kiwi.documentChunks({ limit, cursor })` |
+| 3 · Class content & coaching | Running an approved prompt over the student's learning context | `kiwi.contextualChat({ promptId, contextRequest })` |
+| 4 · Drive Kiwi's UI | Moving the Kiwi page and changing the chat layout, with confirmation | `kiwi.navigate(...)`, `kiwi.setChatDisplayMode(mode)` |

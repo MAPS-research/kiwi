@@ -5,27 +5,37 @@ app, and docs live together and are versioned together.
 
 ## Branches
 
-- **`development`** — the default branch and where the next release is built.
-  Open pull requests against this.
-- **`master`** — stable; what production deployments track.
+Work happens on **`development`**, the default branch. Open pull requests
+against it.
 
 ## Getting set up
 
 See the [quick start](README.md#quick-start). In short: `docker compose up -d`
 in `kiwi/` for infrastructure, then `npm install` in `kiwi/` and `kiwi-ui/`.
+[docs/development.md](docs/development.md) covers migrations, seeding, feature
+flags and exploring the API.
 
 ## Before opening a pull request
 
 Run the checks for whatever you touched:
 
 ```bash
-cd kiwi      && npm test && npx tsc --noEmit && npm run build
-cd kiwi-ui   && npm run test:run && npm run build
-cd kiwi-app-sdk && npm run typecheck && npm run build
+# from the repository root
+(cd kiwi         && npx prisma generate && npm test && npm run build)
+(cd kiwi-ui      && npm run test:run && npm run build)
+(cd kiwi-app-sdk && npm run typecheck && npm run build)
 ```
 
+`npm run build` (Nest) is the backend's type gate; a bare `npx tsc --noEmit`
+reports some pre-existing noise. The backend doesn't pass `npm run lint` yet,
+so lint the files you change: `npx eslint --fix src/path/to/file.ts`.
+
+If you change backend endpoints or DTOs, regenerate the frontend client with
+`npm run generate-openapi` in `kiwi-ui/` while the backend is running.
+
 If you change the backend's system prompts, the prompt snapshots will fail —
-review the diff carefully, then update them with `npm test -- -u`.
+review the diff carefully, then update them with `npx jest -u` for that spec.
+See [How prompts work](docs/prompts.md#changing-the-built-in-prompts).
 
 If you change the SDK, rebuild it and re-vendor the single-file build into both
 consumers: `kiwi-ui/public/sdk/v1/kiwi-app-sdk.js` and
