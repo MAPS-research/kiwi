@@ -24,7 +24,7 @@ feature is a module under `kiwi/src/`:
 | `webhooks`, `api-tokens` | Inbound webhooks; see [webhooks.md](webhooks.md) |
 | `feature-flags` | Per-user and per-class feature flags |
 | `health` | Health check |
-| `common` | Shared services: `database` (Prisma wrappers), `llm`, `embedding`, `storage`, `redis`, `unstructured`, `chat`, `agent`, `tools`, `context`, `mcp` |
+| `common` | Shared services: `database` (Prisma wrappers), `llm`, `embedding`, `storage`, `redis`, `parser` (Xberg or Unstructured), `unstructured`, `chat`, `agent`, `tools`, `context`, `mcp` |
 
 The schema is `kiwi/prisma/schema.prisma`; it is the reference for the data
 model.
@@ -35,13 +35,9 @@ Follow the quick start in the [root README](../README.md#quick-start). Details
 on environment variables are in [`kiwi/README.md`](../kiwi/README.md) and
 `kiwi/.env.example`.
 
-`kiwi/compose.yml` starts PostgreSQL, Redis, Adminer (http://localhost:8081)
-and MinIO (API on 9000, console on 9001). The document parser is opt-in:
-
-```bash
-# from kiwi/
-docker compose --profile parser up -d
-```
+`kiwi/compose.yml` starts PostgreSQL, Redis, Adminer (http://localhost:8081),
+MinIO (API on 9000, console on 9001) and the Xberg document parser (8002). To
+parse with Unstructured instead, see [parsers.md](parsers.md).
 
 ## Generating a module
 

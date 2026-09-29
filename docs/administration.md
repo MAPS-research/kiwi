@@ -136,8 +136,9 @@ Leave it empty to turn the consent step off.
       `.env.example`; set `ENCRYPTION_KEY`.
 - [ ] Serve both the UI and the backend over HTTPS.
 - [ ] Configure SMTP and set `EMAIL_TEST_MODE=false` if you want email.
-- [ ] Run the document parser (`docker compose --profile parser up -d`, or your
-      own Unstructured API) and point `UNSTRUCTURED_API_URL` at it.
+- [ ] Run a document parser and point Kiwi at it: Xberg (`PARSER=xberg`,
+      `XBERG_API_URL`) or Unstructured (`PARSER=unstructured`,
+      `UNSTRUCTURED_API_URL`). See [parsers.md](parsers.md).
 - [ ] Back up the database regularly
       ([development.md](development.md#backups)).
 

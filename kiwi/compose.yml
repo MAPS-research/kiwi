@@ -27,16 +27,56 @@ services:
     ports:
       - 127.0.0.1:8081:8080
 
-  # Document parser used by uploads. Large image; start it with
-  #   docker compose --profile parser up -d
-  unstructured:
-    image: downloads.unstructured.io/unstructured-io/unstructured-api:0.0.71
-    profiles: [parser]
-    restart: always
+  # Document parser used by uploads (PARSER=xberg in .env). To use
+  # Unstructured instead, uncomment the service at the end of this list and set
+  # PARSER=unstructured, UNSTRUCTURED_API_URL=http://localhost:9500.
+  xberg:
+    # Pinned: the models baked into the image are version-specific, so an
+    # unpinned upgrade can change extraction output. 1.2.3 is also a floor:
+    # annotation highlights need `pdf_page_coordinate_frames`.
+    image: ghcr.io/xberg-io/xberg:${XBERG_VERSION:-1.2.3}
+    # The entrypoint is `tini -- xberg`, so this is just the subcommand.
+    command: ['serve', '-H', '0.0.0.0', '-p', '8000']
     environment:
-      PORT: 9500
+      # Xberg sizes its concurrency from the host's core count, not the
+      # container's CPU quota, and each extraction loads ONNX models, so an
+      # unbounded value runs out of memory. Keep in step with XBERG_CPUS.
+      XBERG_MAX_CONCURRENT_REQUESTS: ${XBERG_MAX_CONCURRENT:-4}
+      # Must stay below Kiwi's client timeout (XBERG_EXTRACTION_TIMEOUT_SECS + 30s).
+      XBERG_JOB_TIMEOUT_SECS: ${XBERG_JOB_TIMEOUT_SECS:-1200}
+      # Kiwi always posts bytes; the `uri` input is a local-file-read/SSRF surface.
+      XBERG_API_ALLOW_LOCAL_URI_INPUTS: 'false'
+      XBERG_NATIVE_PDF_MAX_DECOMPRESS_MB: ${XBERG_MAX_DECOMPRESS_MB:-512}
+      XBERG_CORS_ORIGINS: ${XBERG_CORS_ORIGINS:-http://localhost:3000}
+      # Both apply: the first caps the request, the second the file part.
+      XBERG_MAX_REQUEST_BODY_BYTES: ${XBERG_MAX_REQUEST_BODY_BYTES:-209715200}
+      XBERG_MAX_MULTIPART_FIELD_BYTES: ${XBERG_MAX_MULTIPART_FIELD_BYTES:-209715200}
+      RUST_LOG: ${XBERG_LOG_LEVEL:-info}
+      XBERG_CACHE_DIR: /app/.xberg
+      HF_HOME: /app/.xberg/huggingface
+    # The API has no authentication of any kind. Keep it on loopback; never
+    # publish it or put it behind a public proxy.
     ports:
-      - 127.0.0.1:9500:9500
+      - 127.0.0.1:${XBERG_PORT:-8002}:8000
+    volumes:
+      # Must stay a named volume: Docker seeds it from the ~1 GB of models baked
+      # into the image. A bind mount would hide them and force a re-download.
+      - xberg-cache:/app/.xberg
+    # Extractions run for minutes; the 10s default would kill them.
+    stop_grace_period: ${XBERG_STOP_GRACE:-120s}
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'curl', '-fsS', 'http://127.0.0.1:8000/health']
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    # Inference is CPU-bound; cap it so parsing cannot starve the API.
+    deploy:
+      resources:
+        limits:
+          cpus: '${XBERG_CPUS:-4}'
+          memory: ${XBERG_MEMORY:-6g}
 
 
   oss: # Dev only, use S3 in production
@@ -53,10 +93,21 @@ services:
       - 127.0.0.1:9000:9000 # Endpoint
       - 127.0.0.1:9001:9001 # Console
 
+  # Unstructured, the alternative document parser (a large image).
+  # unstructured:
+  #   image: downloads.unstructured.io/unstructured-io/unstructured-api:0.0.71
+  #   restart: always
+  #   environment:
+  #     PORT: 9500
+  #   ports:
+  #     - 127.0.0.1:9500:9500
+
 volumes:
   db-data:
     driver: local
   redis-data:
     driver: local
   oss-data:
+    driver: local
+  xberg-cache:
     driver: local

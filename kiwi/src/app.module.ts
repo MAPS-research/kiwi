@@ -9,7 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './common/chat/chat.module';
 import { EmbeddingModule } from './common/embedding/embedding.module';
 import { LlmModule } from './common/llm/llm.module';
-import { UnstructuredModule } from './common/unstructured/unstructured.module';
+import { ParserModule } from './common/parser/parser.module';
 import { ConsentModule } from './consent/consent.module';
 import { DocumentModule } from './document/document.module';
 import { EventsModule } from './events/events.module';
@@ -53,7 +53,7 @@ import { ContextJobsModule } from './context-jobs/context-jobs.module';
     EmbeddingModule,
     LlmModule,
     ChatModule,
-    UnstructuredModule,
+    ParserModule,
     DocumentModule,
     ClassModule,
     StudentModule,

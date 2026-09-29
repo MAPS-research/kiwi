@@ -1,10 +1,11 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { forwardRef, Inject, Logger } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { Job } from 'bullmq';
 import { DatabaseService } from 'src/common/database/database.service';
 import { DocumentService as DatabaseDocumentService } from 'src/common/database/document.service';
 import { StorageService } from 'src/common/storage/storage.service';
-import { UnstructuredService } from 'src/common/unstructured/unstructured.service';
+import { ParserService } from 'src/common/parser/parser.service';
 import { DocumentService } from './document.service';
 
 @Processor('document')
@@ -12,7 +13,7 @@ export class DocumentConsumer extends WorkerHost {
   private readonly logger = new Logger(DocumentConsumer.name);
   constructor(
     private databaseDocumentService: DatabaseDocumentService,
-    private unstructuredService: UnstructuredService,
+    private parserService: ParserService,
     private storageService: StorageService,
     private readonly db: DatabaseService,
     @Inject(forwardRef(() => DocumentService))
@@ -129,64 +130,19 @@ export class DocumentConsumer extends WorkerHost {
 
     // console.log(fileContent);
 
-    const textChunks = await this.unstructuredService.partitionDocument(
-      fileContent,
-      fileType,
-      document.fileName,
-      'ocr_only',
-    );
-
-    const imageChunksAll = await this.unstructuredService.partitionDocument(
-      fileContent,
-      fileType,
-      document.fileName,
-      'hi_res',
-    );
-
-    const imageChunks = imageChunksAll.filter(
-      (chunk) => chunk.type === 'Image' || chunk.type === 'Table',
-    );
-
-    // `ocr_only` can silently return zero elements for some PDFs (a Tesseract
-    // auto-zoom quirk in the unstructured library: when the first OCR pass
-    // finds no text, the median text-height is NaN, and `NaN < min || NaN >
-    // max` is always false, so the retry-with-zoom fallback never fires).
-    // Fall back to hi_res, which reads those PDFs fine.
-    //
-    // This must be its own request with chunking on, *not* a filter over
-    // `imageChunksAll`: that call is deliberately unchunked so Image/Table
-    // survive as discrete elements, and its text comes back as raw
-    // Title/NarrativeText/ListItem. `embedDocument` only embeds
-    // CompositeElement/Image/Table, so reusing those raw elements leaves the
-    // document with chunks that can never be embedded — visible in the UI,
-    // invisible to RAG.
-    let resolvedTextChunks = textChunks;
-    if (resolvedTextChunks.length === 0) {
-      this.logger.warn(
-        `ocr_only returned no elements for ${document.fileName} ` +
-          `(${fileId}); retrying with hi_res + chunking`,
-      );
-      const hiResChunked = await this.unstructuredService.partitionDocument(
-        fileContent,
-        fileType,
-        document.fileName,
-        'hi_res',
-        true,
-      );
-      // `by_title` keeps Table elements discrete rather than folding them into
-      // a CompositeElement, so drop them here — they are already covered by
-      // `imageChunks` from the unchunked pass.
-      resolvedTextChunks = hiResChunked.filter(
-        (chunk) => chunk.type !== 'Image' && chunk.type !== 'Table',
-      );
-    }
-
-    // // Combine text and image chunks
-    const chunks = [...resolvedTextChunks, ...imageChunks];
+    // Parser choice lives in ParserService (PARSER env). Whichever one runs,
+    // it returns the same chunk shape, so nothing below here changes.
+    const { chunks } = await this.parserService.parse({
+      content: fileContent,
+      mimeType: fileType,
+      fileName: document.fileName,
+    });
 
     await this.databaseDocumentService.updateDocument({
       where: { id: fileId },
-      data: { chunks },
+      // `chunks` is a Json column; Prisma's input type does not accept an
+      // interface with optional fields directly.
+      data: { chunks: chunks as unknown as Prisma.InputJsonValue },
     });
 
     return {

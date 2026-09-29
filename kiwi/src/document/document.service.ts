@@ -13,7 +13,6 @@ import { LlmService } from 'src/common/llm/llm.service';
 import { EngineChoice } from 'src/common/llm/interfaces/engine-config';
 import { ConfigService } from '@nestjs/config';
 import { EmbeddingModel, Prisma } from '@prisma/client';
-import { UnstructuredService } from 'src/common/unstructured/unstructured.service';
 import { Chunk } from './dto/chunk-request.dto';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
@@ -50,7 +49,6 @@ export class DocumentService {
   constructor(
     private databaseDocumentService: DatabaseDocumentService,
     private embeddingService: EmbeddingService,
-    private unstructuredService: UnstructuredService,
     private llmService: LlmService,
     private classMaterialService: ClassMaterialService,
     private documentCommentService: DocumentCommentService,

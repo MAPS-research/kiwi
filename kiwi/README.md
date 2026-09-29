@@ -18,12 +18,9 @@ Run everything from this directory.
 
 ```bash
 # Local services: PostgreSQL/pgvector (5432), Redis (6379),
-# Adminer (8081), MinIO (9000, console 9001)
+# Adminer (8081), MinIO (9000, console 9001), and the Xberg document
+# parser (8002; see docs/parsers.md for Unstructured instead)
 docker compose up -d
-
-# Document parser (Unstructured API on 9500). Needed to process uploaded
-# materials; the image is large.
-docker compose --profile parser up -d
 
 cp .env.example .env     # then set LLM_API_KEY
 npm install
@@ -111,8 +108,9 @@ More in [docs/development.md](../docs/development.md).
 ## Troubleshooting
 
 - **Uploaded materials never finish processing.** The document parser isn't
-  running or `UNSTRUCTURED_API_URL` is wrong; start it with
-  `docker compose --profile parser up -d`.
+  running or its URL is wrong. Check `docker compose ps` for the `xberg`
+  service and that `XBERG_API_URL` matches its port (8002); for Unstructured,
+  see [docs/parsers.md](../docs/parsers.md).
 - **The UI can't reach the API (CORS).** `FRONTEND_URL` must list the UI's
   exact origin, e.g. `http://localhost:3001`.
 - **Google sign-in is refused.** Check that the email is whitelisted and, for

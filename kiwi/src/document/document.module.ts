@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { DocumentController } from './document.controller';
 import { DocumentService } from './document.service';
 import { DatabaseModule } from 'src/common/database/database.module';
-import { UnstructuredModule } from 'src/common/unstructured/unstructured.module';
+import { ParserModule } from 'src/common/parser/parser.module';
 import { LlmModule } from 'src/common/llm/llm.module';
 import { BullModule } from '@nestjs/bullmq';
 import { DocumentConsumer } from './document.consumer';
@@ -15,7 +15,7 @@ import { ConfigModule } from '@nestjs/config';
   imports: [
     ConfigModule,
     DatabaseModule,
-    UnstructuredModule,
+    ParserModule,
     LlmModule,
     BullModule.registerQueue({ name: 'document' }),
     StorageModule,

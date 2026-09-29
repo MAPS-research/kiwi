@@ -11,6 +11,7 @@ it locally.
   instructions, and who can change them.
 - [JWT configuration](jwt-configuration.md) — token signing and verifying Kiwi
   tokens from other services.
+- [Document parsers](parsers.md) — Xberg or Unstructured for parsing uploads.
 - [Embeddings](embeddings.md) — embedding providers and re-embedding documents.
 - [Email](email.md) — SMTP settings, templates, and the email endpoints.
 - [Webhooks](webhooks.md) — receiving enrollment and other events from

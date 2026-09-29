@@ -3,7 +3,7 @@ import { Job } from 'bullmq';
 import { DatabaseService } from 'src/common/database/database.service';
 import { DocumentService as DatabaseDocumentService } from 'src/common/database/document.service';
 import { StorageService } from 'src/common/storage/storage.service';
-import { UnstructuredService } from 'src/common/unstructured/unstructured.service';
+import { ParserService } from 'src/common/parser/parser.service';
 import { DocumentConsumer } from './document.consumer';
 import { DocumentService } from './document.service';
 
@@ -12,7 +12,7 @@ describe('DocumentConsumer', () => {
   let db: any;
   let documentService: any;
   let databaseDocumentService: any;
-  let unstructuredService: any;
+  let parserService: any;
 
   beforeEach(async () => {
     db = { document: { updateMany: jest.fn() } };
@@ -30,10 +30,19 @@ describe('DocumentConsumer', () => {
       }),
       updateDocument: jest.fn(),
     };
-    unstructuredService = {
-      partitionDocument: jest
-        .fn()
-        .mockResolvedValue([{ type: 'CompositeElement', text: 'hi' }]),
+    parserService = {
+      parse: jest.fn().mockResolvedValue({
+        parser: 'unstructured',
+        chunks: [
+          {
+            element_id: 'e1',
+            type: 'CompositeElement',
+            text: 'hi',
+            metadata: {},
+          },
+        ],
+        warnings: [],
+      }),
     };
 
     const moduleRef = await Test.createTestingModule({
@@ -44,7 +53,7 @@ describe('DocumentConsumer', () => {
           provide: DatabaseDocumentService,
           useValue: databaseDocumentService,
         },
-        { provide: UnstructuredService, useValue: unstructuredService },
+        { provide: ParserService, useValue: parserService },
         {
           provide: StorageService,
           useValue: {
@@ -105,7 +114,7 @@ describe('DocumentConsumer', () => {
     // claim makes every later job step aside, so re-running cannot rescue it.
     db.document.updateMany.mockResolvedValueOnce({ count: 1 });
     const failure = new Error('Failed to partition document');
-    unstructuredService.partitionDocument.mockRejectedValue(failure);
+    parserService.parse.mockRejectedValue(failure);
 
     await expect(
       consumer.process(job('processDocument', { documentId: 'doc1' })),
@@ -120,7 +129,7 @@ describe('DocumentConsumer', () => {
 
   it('marks FAILED when the legacy chunk-only job throws', async () => {
     const failure = new Error('Failed to partition document');
-    unstructuredService.partitionDocument.mockRejectedValue(failure);
+    parserService.parse.mockRejectedValue(failure);
 
     await expect(
       consumer.process(job('chunkDocument', { fileId: 'doc1' })),
