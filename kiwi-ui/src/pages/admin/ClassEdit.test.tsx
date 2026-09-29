@@ -98,7 +98,7 @@ describe("ClassEdit", () => {
       expect(screen.getByText("Class preview")).toBeInTheDocument();
       expect(screen.getByText("Test Class")).toBeInTheDocument();
       expect(screen.getByText("Dr. Test")).toBeInTheDocument();
-      const previewCard = screen.getByText("Test Class").closest(".MuiCard-root");
+      const previewCard = screen.getByText("Test Class").closest<HTMLElement>(".MuiCard-root");
       expect(
         within(previewCard!).queryByText("test.professor@example.edu"),
       ).not.toBeInTheDocument();
@@ -193,7 +193,7 @@ describe("ClassEdit", () => {
       expect(screen.getByDisplayValue("Test default message")).toBeInTheDocument();
     });
 
-    const checkbox = screen.getByRole("checkbox", { name: /add class-specific instructions/i });
+    const checkbox = screen.getByRole("switch", { name: /add class-specific instructions/i });
     fireEvent.click(checkbox);
 
     await waitFor(() => {

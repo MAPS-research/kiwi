@@ -9,13 +9,13 @@ import React, { Suspense, Component, type ReactNode, type ErrorInfo } from 'reac
 import { Box, CircularProgress, Typography, Button, Paper } from '@mui/material';
 import { Error as ErrorIcon, Refresh as RefreshIcon } from '@mui/icons-material';
 
-import { BridgeProvider } from '../bridge';
+import { BridgeProvider } from '../bridge/index.ts';
 import type {
   KiwiWidgetDefinition,
   WidgetState,
   WidgetPosition,
   DisplayMode,
-} from '../types';
+} from '../types/index.ts';
 
 /**
  * Error boundary for widgets

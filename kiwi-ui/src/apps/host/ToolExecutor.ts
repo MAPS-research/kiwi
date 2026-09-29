@@ -10,16 +10,16 @@
  */
 
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-import { basePath } from '../../utils/api';
-import apiClient from '../../utils/api';
+import { basePath } from '../../utils/api.ts';
+import apiClient from '../../utils/api.ts';
 import type {
   KiwiToolDefinition,
   ToolExecutionContext,
   ToolResult,
   StreamingCallback,
   ToolInvocation,
-} from '../types';
-import { getAppRegistry } from '../registry';
+} from '../types/index.ts';
+import { getAppRegistry } from '../registry/index.ts';
 
 /**
  * Execute a tool by name

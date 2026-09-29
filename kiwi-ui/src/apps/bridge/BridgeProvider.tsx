@@ -20,16 +20,16 @@ import {
   createKiwiAppBridge,
   installBridge,
   uninstallBridge,
-} from './KiwiAppBridge';
-import { useAppRegistry } from '../registry';
-import { executeTool } from '../host/ToolExecutor';
+} from './KiwiAppBridge.ts';
+import { useAppRegistry } from '../registry/index.ts';
+import { executeTool } from '../host/ToolExecutor.ts';
 import type {
   KiwiAppBridge,
   WidgetState,
   ToolResult,
   DisplayMode,
   ToolExecutionContext,
-} from '../types';
+} from '../types/index.ts';
 
 /**
  * Bridge context value

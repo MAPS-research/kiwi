@@ -203,7 +203,7 @@ const router = createBrowserRouter([
 import theme from "./Theme.ts";
 
 // Apps Framework
-import { AppRegistryProvider, builtinApps } from "./apps";
+import { AppRegistryProvider, builtinApps } from "./apps/index.ts";
 
 // Global Chat
 import { GlobalChatProvider } from "./context/GlobalChatContext.tsx";

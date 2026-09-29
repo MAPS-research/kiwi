@@ -171,26 +171,27 @@ const SharedClassCard = ({
       >
         <Typography
           variant="h6"
-          color="text.primary"
           title={resolvedTitle}
           sx={{
+            color: "text.primary",
             fontSize: "1.05rem",
             fontWeight: 600,
             lineHeight: 1.35,
             display: "-webkit-box",
             WebkitBoxOrient: "vertical",
             WebkitLineClamp: 2,
-            overflow: "hidden",
-          }}
-        >
+            overflow: "hidden"
+          }}>
           {resolvedTitle}
         </Typography>
 
         <Typography
           variant="body2"
-          color="text.secondary"
           noWrap
           title={resolvedInstructor}
+          sx={{
+            color: "text.secondary"
+          }}
         >
           {resolvedInstructor}
         </Typography>

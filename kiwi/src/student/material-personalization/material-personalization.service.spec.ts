@@ -20,7 +20,9 @@ describe('MaterialPersonalizationService', () => {
       getLatestMaterialPersonalizationsByUser: jest.fn().mockResolvedValue([]),
     };
     interactionService = {
-      getInteractionsWithServerActionsBySession: jest.fn().mockResolvedValue([]),
+      getInteractionsWithServerActionsBySession: jest
+        .fn()
+        .mockResolvedValue([]),
     };
     llmService = { createChat: jest.fn() };
 
@@ -48,10 +50,9 @@ describe('MaterialPersonalizationService', () => {
     it('caps the rows it reads', async () => {
       await service.getRollingUserProfile('user-1');
 
-      expect(database.getLatestMaterialPersonalizationsByUser).toHaveBeenCalledWith(
-        'user-1',
-        MAX_ROLLING_PROFILE_ROWS,
-      );
+      expect(
+        database.getLatestMaterialPersonalizationsByUser,
+      ).toHaveBeenCalledWith('user-1', MAX_ROLLING_PROFILE_ROWS);
     });
 
     it('renders one merged block instead of one line per session', async () => {

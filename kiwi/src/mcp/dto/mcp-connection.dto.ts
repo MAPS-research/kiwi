@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsUUID, IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
 
 /**
  * Response DTO for OAuth initiation

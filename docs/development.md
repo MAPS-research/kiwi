@@ -64,7 +64,7 @@ Run these from `kiwi/`.
 |---|---|
 | Create a migration after editing `prisma/schema.prisma` | `npx prisma migrate dev --name <change>` |
 | Apply migrations (fresh clone, after pulling, deployment) | `npx prisma migrate deploy` |
-| Regenerate the Prisma client | `npx prisma generate` |
+| Regenerate the Prisma client (`npm install` also does this) | `npx prisma generate` |
 | Browse data | `npx prisma studio`, or Adminer at http://localhost:8081 (system PostgreSQL, server `db`, user, password and database `kiwi`) |
 
 Do not use `npx prisma db push`. It builds tables from the schema and skips the
@@ -175,8 +175,8 @@ Admins manage flags from the UI or through these endpoints
    npx prisma migrate dev --name add_<flag>_feature_flag
    ```
 
-2. Add the value to the `Feature` type in
-   `kiwi/src/common/database/database.types.ts`.
+2. The `Feature` type comes from `@prisma/client`, so `migrate dev` (which
+   regenerates the client) makes the new value available to the code.
 3. Guard the endpoints. `kiwi/src/feature-flags/` provides a generic decorator
    and guard that check user-level flags:
 

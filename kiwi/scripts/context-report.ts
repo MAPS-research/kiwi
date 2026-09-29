@@ -23,9 +23,9 @@
  * is the usual way to look at "what just happened".
  */
 import 'dotenv/config';
-import { PrismaClient } from '@prisma/client';
+import { createPrismaClient } from '../src/common/database/prisma-client.factory';
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 interface SnapshotBlock {
   index: number;

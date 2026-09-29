@@ -3,8 +3,8 @@
  */
 
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { AppRegistry, getAppRegistry } from '../AppRegistry';
-import type { KiwiAppManifest, KiwiToolDefinition } from '../../types';
+import { AppRegistry, getAppRegistry } from '../AppRegistry.ts';
+import type { KiwiAppManifest, KiwiToolDefinition } from '../../types/index.ts';
 
 // Mock tool definition for testing
 const createMockTool = (name: string): KiwiToolDefinition => ({

@@ -23,7 +23,7 @@ import { DevAuthEnabled, Public } from './auth.decorator';
 import { ApiBearerAuth, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { jwtExpiration } from './auth.constants';
+import { refreshCookieOptions } from './auth.cookies';
 import { RegisterDto } from './dto/auth-register.dto';
 import { ResetPasswordDto } from './dto/auth-reset-password.dto';
 import { LoginDto, LoginResponseDto } from './dto/auth-login.dto';
@@ -116,13 +116,14 @@ export class AuthController {
     this.logger.debug('User login from', body.email);
     const token = await this.authService.authenticate(req);
 
-    res.cookie('refreshToken', token.refresh_token, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 1000 * jwtExpiration.refreshToken,
-    });
+    res.cookie(
+      'refreshToken',
+      token.refresh_token,
+      refreshCookieOptions(this.configService, req.hostname),
+    );
 
     return res.json({
+      accessToken: token.access_token,
       access_token: token.access_token,
     });
   }
@@ -364,7 +365,7 @@ export class AuthController {
       // MCP OAuth flow - return authorization code
       this.logger.debug('Processing MCP OAuth authorization code flow');
 
-      const token = await this.authService.authenticate(req);
+      await this.authService.authenticate(req);
       const userId = req.session.userId;
 
       if (!userId) {
@@ -418,11 +419,11 @@ export class AuthController {
       frontURL = frontURLs[0];
     }
 
-    res.cookie('refreshToken', token.refresh_token, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 1000 * jwtExpiration.refreshToken,
-    });
+    res.cookie(
+      'refreshToken',
+      token.refresh_token,
+      refreshCookieOptions(this.configService, req.hostname),
+    );
     return res.redirect(
       `${frontURL}/auth/callback?token=${token.access_token}`,
     );
@@ -533,7 +534,7 @@ export class AuthController {
   }
 
   private async handleRefreshTokenGrant(body: any) {
-    const { refresh_token, client_id } = body;
+    const { refresh_token } = body;
 
     // Validate required parameters
     if (!refresh_token) {
@@ -630,11 +631,11 @@ export class AuthController {
     const user = req.user;
     const newAccessToken = await this.authService.generateAccessToken(user);
     const newRefreshToken = await this.authService.generateRefreshToken(user);
-    res.cookie('refreshToken', newRefreshToken, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 1000 * jwtExpiration.refreshToken,
-    });
+    res.cookie(
+      'refreshToken',
+      newRefreshToken,
+      refreshCookieOptions(this.configService, req.hostname),
+    );
     return { accessToken: newAccessToken };
   }
 

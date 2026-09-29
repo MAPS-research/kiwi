@@ -1,5 +1,14 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsBoolean, IsArray, IsInt, IsOptional, IsEnum, IsUUID, IsObject } from 'class-validator';
+import {
+  IsString,
+  IsBoolean,
+  IsArray,
+  IsInt,
+  IsOptional,
+  IsEnum,
+  IsUUID,
+  IsObject,
+} from 'class-validator';
 
 /**
  * Tool Type Enum
@@ -23,7 +32,8 @@ export class UpsertToolConfigDto {
   toolType: ToolTypeDto;
 
   @ApiProperty({
-    description: 'Tool identifier (MCP server ID for MCP tools, "rag" or "code-interpreter" for built-in)',
+    description:
+      'Tool identifier (MCP server ID for MCP tools, "rag" or "code-interpreter" for built-in)',
     example: '123e4567-e89b-12d3-a456-426614174000',
   })
   @IsString()
@@ -44,7 +54,8 @@ export class UpsertToolConfigDto {
   isEnabled: boolean;
 
   @ApiProperty({
-    description: 'Chat types where this tool is available (empty array = all types)',
+    description:
+      'Chat types where this tool is available (empty array = all types)',
     example: ['pdf', 'codegen'],
     type: [String],
   })

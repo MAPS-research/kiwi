@@ -1,3 +1,4 @@
+import { readFile } from 'fs/promises';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AnalyticsResource } from './analytics.resource';
 import { AnalyticsService } from 'src/analytics/analytics.service';
@@ -20,7 +21,7 @@ describe('AnalyticsResource', () => {
   const mockContext = {};
 
   const createMockHttpRequest = (userId?: string) => ({
-    raw: userId ? { user: { sub: userId } } : {},
+    user: userId ? { sub: userId } : undefined,
   });
 
   beforeEach(async () => {
@@ -271,7 +272,6 @@ describe('AnalyticsResource', () => {
 
     it('should allow professor of the class to access analytics', async () => {
       const professorId = 'professor-123';
-      const fs = require('fs/promises');
 
       userService.user.mockResolvedValue({
         id: professorId,
@@ -286,7 +286,7 @@ describe('AnalyticsResource', () => {
         interactionsFileName: '/tmp/interactions.json',
       } as any);
 
-      fs.readFile.mockResolvedValue(
+      jest.mocked(readFile).mockResolvedValue(
         JSON.stringify([
           { userId: 'student-1', message: 'test' },
           { userId: 'student-2', message: 'test' },
@@ -329,7 +329,6 @@ describe('AnalyticsResource', () => {
 
     it('should allow instructor assigned to the class with canViewAnalytics', async () => {
       const instructorId = 'instructor-123';
-      const fs = require('fs/promises');
 
       userService.user.mockResolvedValue({
         id: instructorId,
@@ -343,7 +342,7 @@ describe('AnalyticsResource', () => {
         interactionsFileName: '/tmp/interactions.json',
       } as any);
 
-      fs.readFile.mockResolvedValue(JSON.stringify([]));
+      jest.mocked(readFile).mockResolvedValue(JSON.stringify([]));
 
       const result = await resource.getClassAnalytics(
         { uri: validUri },
@@ -354,11 +353,9 @@ describe('AnalyticsResource', () => {
       const content = JSON.parse(result.contents[0].text);
       expect(content.classId).toBe(classId);
       expect(content.error).toBeUndefined();
-      expect(instructorClassService.checkInstructorPermission).toHaveBeenCalledWith(
-        instructorId,
-        classId,
-        'canViewAnalytics',
-      );
+      expect(
+        instructorClassService.checkInstructorPermission,
+      ).toHaveBeenCalledWith(instructorId, classId, 'canViewAnalytics');
     });
 
     it('should deny instructor NOT assigned to the class', async () => {
@@ -387,7 +384,6 @@ describe('AnalyticsResource', () => {
 
     it('should allow admin to access any class analytics', async () => {
       const adminId = 'admin-123';
-      const fs = require('fs/promises');
 
       userService.user.mockResolvedValue({
         id: adminId,
@@ -400,7 +396,7 @@ describe('AnalyticsResource', () => {
         interactionsFileName: '/tmp/interactions.json',
       } as any);
 
-      fs.readFile.mockResolvedValue(JSON.stringify([]));
+      jest.mocked(readFile).mockResolvedValue(JSON.stringify([]));
 
       const result = await resource.getClassAnalytics(
         { uri: validUri },

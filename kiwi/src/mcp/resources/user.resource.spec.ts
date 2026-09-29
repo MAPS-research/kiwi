@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserResource } from './user.resource';
 import { UserService } from 'src/common/database/user.service';
 import { EnrollmentService } from 'src/common/database/enrollment.service';
-import { ForbiddenException } from '@nestjs/common';
 
 describe('UserResource', () => {
   let resource: UserResource;
@@ -13,15 +12,20 @@ describe('UserResource', () => {
 
   const createMockHttpRequest = (
     userId?: string,
-    appContext?: { appSlug: string; classId: string; scopes: string[]; userId: string },
+    appContext?: {
+      appSlug: string;
+      classId: string;
+      scopes: string[];
+      userId: string;
+    },
   ) => {
-    // Mirrors @rekog/mcp-nest: resources get an adapter whose `.raw` is the
-    // Express request carrying `user` and `appContext`.
-    const raw: any = userId ? { user: { sub: userId } } : {};
+    // @rekog/mcp-nest 2 hands resources the Express request itself, which
+    // carries `user` and `appContext`.
+    const req: any = userId ? { user: { sub: userId } } : {};
     if (appContext) {
-      raw.appContext = appContext;
+      req.appContext = appContext;
     }
-    return { raw };
+    return req;
   };
 
   beforeEach(async () => {
@@ -329,7 +333,9 @@ describe('UserResource', () => {
     });
 
     it('should handle service errors gracefully', async () => {
-      enrollmentService.enrollment.mockRejectedValue(new Error('Database error'));
+      enrollmentService.enrollment.mockRejectedValue(
+        new Error('Database error'),
+      );
 
       const result = await resource.getUserClassRole(
         { uri },
@@ -416,7 +422,9 @@ describe('UserResource', () => {
     });
 
     it('should handle service errors gracefully', async () => {
-      enrollmentService.enrollments.mockRejectedValue(new Error('Database error'));
+      enrollmentService.enrollments.mockRejectedValue(
+        new Error('Database error'),
+      );
 
       const result = await resource.getUserEnrollments(
         { uri },

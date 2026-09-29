@@ -1,9 +1,11 @@
 import { createHash } from 'crypto';
 import { Injectable, Logger } from '@nestjs/common';
-import { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
-import { SSEClientTransport } from '@modelcontextprotocol/sdk/client/sse.js';
-import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
+import {
+  Client,
+  SSEClientTransport,
+  StreamableHTTPClientTransport,
+} from '@modelcontextprotocol/client';
+import { StdioClientTransport } from '@modelcontextprotocol/client/stdio';
 import type { McpServer } from '@prisma/client';
 import { RedisService } from '../redis/redis.service';
 
@@ -154,7 +156,11 @@ export class McpClientService {
 
       case 'sse':
       case 'http':
-        return await this.createHttpTransport(config, accessToken);
+        return await this.createHttpTransport(
+          config,
+          accessToken,
+          serverConfig.transport,
+        );
 
       default:
         throw new Error(
@@ -185,12 +191,13 @@ export class McpClientService {
 
   /**
    * Create HTTP transport for remote MCP servers
-   * Tries StreamableHTTP first (modern), falls back to SSE (legacy) for compatibility.
+   * Uses the configured Streamable HTTP or legacy SSE transport.
    * Supports custom headers from config and OAuth access tokens.
    */
   private async createHttpTransport(
     config: any,
     accessToken?: string,
+    transportType: 'sse' | 'http' = 'http',
   ): Promise<StreamableHTTPClientTransport | SSEClientTransport> {
     const { url, headers = {} } = config;
 
@@ -211,18 +218,10 @@ export class McpClientService {
 
     const serverUrl = new URL(url);
 
-    // Try StreamableHTTP first (modern), fall back to SSE (legacy)
-    try {
-      const transport = new StreamableHTTPClientTransport(serverUrl, {
-        requestInit,
-      });
-      return transport;
-    } catch (error) {
-      this.logger.warn(
-        `StreamableHTTP transport failed, falling back to SSE: ${error.message}`,
-      );
+    if (transportType === 'sse') {
       return new SSEClientTransport(serverUrl, { requestInit });
     }
+    return new StreamableHTTPClientTransport(serverUrl, { requestInit });
   }
 
   /**
@@ -402,10 +401,7 @@ export class McpClientService {
       try {
         await client.close();
       } catch (error) {
-        this.logger.warn(
-          `Error closing client for server ${serverId}:`,
-          error,
-        );
+        this.logger.warn(`Error closing client for server ${serverId}:`, error);
       }
 
       this.clients.delete(cacheKey);

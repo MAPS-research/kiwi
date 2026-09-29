@@ -115,7 +115,9 @@ export const StandaloneUserActivity: React.FC<StandaloneUserActivityProps> = ({
                         <Typography component="h3" variant="subtitle1" sx={{ fontWeight: 600, mb: 0.25 }}>
                             {series.granularity === "hour" ? "Hourly Active Users" : "Daily Active Users"}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{
+                            color: "text.secondary"
+                        }}>
                             Unique users active each {series.granularity === "hour" ? "hour" : "day"}
                         </Typography>
                     </Box>

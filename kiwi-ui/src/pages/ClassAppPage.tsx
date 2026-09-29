@@ -8,11 +8,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, CircularProgress, Typography, Alert } from '@mui/material';
-import { classAppsApiClient, kiwiAppsApiClient } from '../utils/api';
-import type { ClassAppResponseDto, AppUIResponseDto } from '../services/models';
-import ClassAppView from './ClassAppView';
-import { ChatContext } from './ClassLayout';
-import { useGlobalChat } from '../context/GlobalChatContext';
+import { classAppsApiClient, kiwiAppsApiClient } from '../utils/api.ts';
+import type { ClassAppResponseDto, AppUIResponseDto } from '../services/models/index.ts';
+import ClassAppView from './ClassAppView.tsx';
+import { ChatContext } from './ClassLayout.tsx';
+import { useGlobalChat } from '../context/GlobalChatContext.tsx';
 
 interface AppWithUI {
   app: ClassAppResponseDto;

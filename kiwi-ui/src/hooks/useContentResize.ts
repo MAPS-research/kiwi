@@ -1,5 +1,5 @@
 import { useMediaQuery, useTheme } from '@mui/material';
-import { useGlobalChat } from '../context/GlobalChatContext';
+import { useGlobalChat } from '../context/GlobalChatContext.tsx';
 
 /**
  * Hook to shrink the main content when chat is in snap mode, so the page and

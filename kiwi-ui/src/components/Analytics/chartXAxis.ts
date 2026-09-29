@@ -46,7 +46,7 @@ export function formatAnalyticsDateTick(value: string | number): string {
   const date = typeof value === "number"
     ? new Date(value)
     : new Date(`${value}T00:00:00`);
-  if (Number.isNaN(date.getTime())) return value;
+  if (Number.isNaN(date.getTime())) return String(value);
   return date.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",

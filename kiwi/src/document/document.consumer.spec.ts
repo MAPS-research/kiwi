@@ -18,6 +18,7 @@ describe('DocumentConsumer', () => {
     db = { document: { updateMany: jest.fn() } };
     documentService = {
       markProcessingStage: jest.fn(),
+      markProcessingFailed: jest.fn(),
       describeImageChunks: jest.fn(),
       embedDocument: jest.fn(),
     };
@@ -47,9 +48,10 @@ describe('DocumentConsumer', () => {
         {
           provide: StorageService,
           useValue: {
-            readFile: jest
-              .fn()
-              .mockResolvedValue({ buffer: Buffer.from(''), contentType: 'application/pdf' }),
+            readFile: jest.fn().mockResolvedValue({
+              buffer: Buffer.from(''),
+              contentType: 'application/pdf',
+            }),
           },
         },
         { provide: DocumentService, useValue: documentService },
@@ -59,7 +61,8 @@ describe('DocumentConsumer', () => {
     consumer = moduleRef.get(DocumentConsumer);
   });
 
-  const job = (name: string, data: any) => ({ name, data }) as Job<any, any, string>;
+  const job = (name: string, data: any) =>
+    ({ name, data }) as Job<any, any, string>;
 
   it('runs chunk, describe and embed in order once it claims the document', async () => {
     db.document.updateMany.mockResolvedValueOnce({ count: 1 });
@@ -94,6 +97,39 @@ describe('DocumentConsumer', () => {
     });
     expect(databaseDocumentService.document).not.toHaveBeenCalled();
     expect(documentService.embedDocument).not.toHaveBeenCalled();
+  });
+
+  it('marks the document FAILED when chunking throws', async () => {
+    // Otherwise the document keeps the PROCESSING the claim gave it: the
+    // instructor sees a permanent "processing" badge with no error, and the
+    // claim makes every later job step aside, so re-running cannot rescue it.
+    db.document.updateMany.mockResolvedValueOnce({ count: 1 });
+    const failure = new Error('Failed to partition document');
+    unstructuredService.partitionDocument.mockRejectedValue(failure);
+
+    await expect(
+      consumer.process(job('processDocument', { documentId: 'doc1' })),
+    ).rejects.toThrow('Failed to partition document');
+
+    expect(documentService.markProcessingFailed).toHaveBeenCalledWith(
+      'doc1',
+      failure,
+    );
+    expect(documentService.embedDocument).not.toHaveBeenCalled();
+  });
+
+  it('marks FAILED when the legacy chunk-only job throws', async () => {
+    const failure = new Error('Failed to partition document');
+    unstructuredService.partitionDocument.mockRejectedValue(failure);
+
+    await expect(
+      consumer.process(job('chunkDocument', { fileId: 'doc1' })),
+    ).rejects.toThrow('Failed to partition document');
+
+    expect(documentService.markProcessingFailed).toHaveBeenCalledWith(
+      'doc1',
+      failure,
+    );
   });
 
   it('still records the chunking stage on the legacy chunk-only job', async () => {

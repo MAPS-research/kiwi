@@ -1,7 +1,7 @@
 import { pdfjs } from "react-pdf";
 
 /**
- * Resilient HTTP range loading for pdf.js (react-pdf / pdfjs-dist v5).
+ * Resilient HTTP range loading for pdf.js (react-pdf / pdfjs-dist).
  *
  * pdf.js's built-in range transport fetches inside its Web Worker and has no
  * per-request timeout: a stalled chunk on a spotty connection hangs forever. We
@@ -11,8 +11,7 @@ import { pdfjs } from "react-pdf";
  *   - automatic retry with exponential backoff on timeout / network error
  *
  * Keeps the partial-content win (small 206 chunks, fast first paint, ~256 KB
- * retry unit) AND adds the stall recovery the abandoned @react-pdf-viewer could
- * not provide.
+ * retry unit) and recovers automatically from stalled requests.
  *
  * IMPORTANT: we import `PDFDataRangeTransport` from `react-pdf`'s own pdfjs so it
  * is the SAME pdfjs instance react-pdf uses internally — otherwise pdf.js would

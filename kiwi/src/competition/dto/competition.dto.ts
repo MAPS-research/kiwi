@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { APIClient } from 'openai/core';
 
 export class CompetitionReplyDto {
   @ApiProperty()

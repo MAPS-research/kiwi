@@ -60,7 +60,9 @@ const AnnouncementComposer: React.FC<AnnouncementComposerProps> = ({
 
       <Paper sx={{ p: 3 }} elevation={0} variant="outlined">
         <Box sx={{ mb: 3 }}>
-          <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+          <Typography variant="subtitle2" gutterBottom sx={{
+            color: "text.secondary"
+          }}>
             Class Details
           </Typography>
           <Box sx={{ display: 'flex', gap: 4, mb: 2 }}>

@@ -28,7 +28,10 @@ describe('AgentLoopService overflow recovery', () => {
         { provide: LlmService, useValue: { createChatStream: jest.fn() } },
         { provide: ChatService, useValue: {} },
         { provide: ToolRegistryService, useValue: { executeTool: jest.fn() } },
-        { provide: InteractionService, useValue: { createServerAction: jest.fn() } },
+        {
+          provide: InteractionService,
+          useValue: { createServerAction: jest.fn() },
+        },
         {
           provide: UserSessionService,
           useValue: { incrementUserSessionTokensUsed: jest.fn() },
@@ -40,7 +43,9 @@ describe('AgentLoopService overflow recovery', () => {
   });
 
   const shed = (messages: ChatCompletionMessageParam[]) =>
-    (service as any).shedHistoryForOverflow(messages) as ChatCompletionMessageParam[];
+    (service as any).shedHistoryForOverflow(
+      messages,
+    ) as ChatCompletionMessageParam[];
 
   const sys = (content: string) =>
     ({ role: 'system', content }) as ChatCompletionMessageParam;
@@ -103,7 +108,11 @@ describe('AgentLoopService overflow recovery', () => {
       sys('spine'),
       user('q1'),
       assistant('calling a tool'),
-      { role: 'tool', tool_call_id: 'c1', content: 'result' } as ChatCompletionMessageParam,
+      {
+        role: 'tool',
+        tool_call_id: 'c1',
+        content: 'result',
+      } as ChatCompletionMessageParam,
       user('q2'),
       assistant('a2'),
     ];

@@ -1,5 +1,13 @@
-import { Injectable, Logger, Scope } from '@nestjs/common';
-import { Resource, Context, HttpRequest } from '@rekog/mcp-nest';
+import { Request } from 'express';
+import { Payload, Ctx } from '@nestjs/microservices';
+import { Logger, Scope } from '@nestjs/common';
+import {
+  Resource,
+  ResourceTemplate,
+  McpContext as Context,
+  McpController,
+  McpRawRequest,
+} from '@rekog/mcp-nest';
 import { AnalyticsService } from 'src/analytics/analytics.service';
 import { ClassService } from 'src/class/class.service';
 import { UserService } from 'src/common/database/user.service';
@@ -9,7 +17,7 @@ import { InstructorClassService } from 'src/instructor-class/instructor-class.se
  * MCP Resources for Analytics Data
  * Provides role-based access to analytics and usage metrics
  */
-@Injectable({ scope: Scope.REQUEST })
+@McpController({ scope: Scope.REQUEST })
 export class AnalyticsResource {
   private readonly logger = new Logger(AnalyticsResource.name);
 
@@ -25,26 +33,30 @@ export class AnalyticsResource {
    * URI pattern: kiwi://analytics/user/{userId}
    * Access control: Users can see their own data, instructors/admins can see all
    */
-  @Resource({
+  @ResourceTemplate({
     name: 'user-analytics',
     description: 'Analytics and usage metrics for a specific user',
     mimeType: 'application/json',
-    uri: 'kiwi://analytics/user/{userId}',
+    uriTemplate: 'kiwi://analytics/user/{userId}',
   })
   async getUserAnalytics(
-    { uri }: { uri: string },
-    context: Context,
-    httpRequest: HttpRequest,
+    @Payload() { uri }: { uri: string },
+    @Ctx() context: Context,
+    @McpRawRequest() httpRequest: Request,
   ) {
     try {
-      const currentUserId = (httpRequest.raw as any)?.user?.sub;
+      const currentUserId = (httpRequest as any)?.user?.sub;
       if (!currentUserId) {
         return {
           contents: [
             {
               uri,
               mimeType: 'application/json',
-              text: JSON.stringify({ error: 'User not authenticated' }, null, 2),
+              text: JSON.stringify(
+                { error: 'User not authenticated' },
+                null,
+                2,
+              ),
             },
           ],
         };
@@ -133,27 +145,30 @@ export class AnalyticsResource {
    * URI pattern: kiwi://analytics/class/{classId}
    * Access control: Instructors/admins or professors of the class
    */
-  @Resource({
+  @ResourceTemplate({
     name: 'class-analytics',
-    description:
-      'Analytics and engagement metrics for a specific class',
+    description: 'Analytics and engagement metrics for a specific class',
     mimeType: 'application/json',
-    uri: 'kiwi://analytics/class/{classId}',
+    uriTemplate: 'kiwi://analytics/class/{classId}',
   })
   async getClassAnalytics(
-    { uri }: { uri: string },
-    context: Context,
-    httpRequest: HttpRequest,
+    @Payload() { uri }: { uri: string },
+    @Ctx() context: Context,
+    @McpRawRequest() httpRequest: Request,
   ) {
     try {
-      const userId = (httpRequest.raw as any)?.user?.sub;
+      const userId = (httpRequest as any)?.user?.sub;
       if (!userId) {
         return {
           contents: [
             {
               uri,
               mimeType: 'application/json',
-              text: JSON.stringify({ error: 'User not authenticated' }, null, 2),
+              text: JSON.stringify(
+                { error: 'User not authenticated' },
+                null,
+                2,
+              ),
             },
           ],
         };
@@ -229,13 +244,14 @@ export class AnalyticsResource {
 
       // Read the interactions from the file
       const fs = await import('fs/promises');
-      const fileContent = await fs.readFile(result.interactionsFileName, 'utf-8');
+      const fileContent = await fs.readFile(
+        result.interactionsFileName,
+        'utf-8',
+      );
       const interactions = JSON.parse(fileContent);
 
       // Calculate aggregate metrics
-      const uniqueUsers = new Set(
-        interactions.map((i: any) => i.userId),
-      ).size;
+      const uniqueUsers = new Set(interactions.map((i: any) => i.userId)).size;
       const totalInteractions = interactions.length;
 
       return {
@@ -284,19 +300,23 @@ export class AnalyticsResource {
     uri: 'kiwi://analytics/top-token-users',
   })
   async getTopTokenUsers(
-    { uri }: { uri: string },
-    context: Context,
-    httpRequest: HttpRequest,
+    @Payload() { uri }: { uri: string },
+    @Ctx() context: Context,
+    @McpRawRequest() httpRequest: Request,
   ) {
     try {
-      const userId = (httpRequest.raw as any)?.user?.sub;
+      const userId = (httpRequest as any)?.user?.sub;
       if (!userId) {
         return {
           contents: [
             {
               uri,
               mimeType: 'application/json',
-              text: JSON.stringify({ error: 'User not authenticated' }, null, 2),
+              text: JSON.stringify(
+                { error: 'User not authenticated' },
+                null,
+                2,
+              ),
             },
           ],
         };

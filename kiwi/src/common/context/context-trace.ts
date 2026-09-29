@@ -158,7 +158,9 @@ export class ContextTrace {
     ].join('|');
 
     const sumBy = (tier: ContextTier) =>
-      blocks.filter((b) => b.tier === tier).reduce((n, b) => n + b.estTokens, 0);
+      blocks
+        .filter((b) => b.tier === tier)
+        .reduce((n, b) => n + b.estTokens, 0);
 
     return {
       messages,

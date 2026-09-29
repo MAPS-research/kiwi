@@ -169,7 +169,9 @@ export const StandaloneUserDuration: React.FC<StandaloneUserDurationProps> = ({
             >
               User Duration
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               Estimated active time by activity
             </Typography>
           </Box>
@@ -247,7 +249,9 @@ export const StandaloneUserDuration: React.FC<StandaloneUserDurationProps> = ({
               <Box
                 sx={{ height: "100%", display: "grid", placeItems: "center" }}
               >
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   No duration data for this range
                 </Typography>
               </Box>
@@ -290,7 +294,9 @@ export const StandaloneUserDuration: React.FC<StandaloneUserDurationProps> = ({
                       <Typography variant="body2" sx={{ fontWeight: 500 }}>
                         {item.activity}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                      }}>
                         <Box
                           component="span"
                           sx={{ fontWeight: 600, color: "text.primary" }}

@@ -1,6 +1,6 @@
 import {
   CreateOutlined as AnnotateIcon,
-  DeleteOutline as DeleteIcon,
+  DeleteOutlined as DeleteIcon,
   ErrorOutlineOutlined as ErrorIcon,
   SwapHorizOutlined as ReplaceIcon,
   SyncOutlined as ReprocessIcon,
@@ -119,7 +119,9 @@ export const MaterialSlot: React.FC<SlotProps> = ({
       }}
     >
       <Tooltip title={ROLE_HINTS[role]} placement="left">
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" sx={{
+          color: "text.secondary"
+        }}>
           {label}
         </Typography>
       </Tooltip>
@@ -152,9 +154,10 @@ export const MaterialSlot: React.FC<SlotProps> = ({
                 key={document.id}
                 direction="row"
                 spacing={1}
-                alignItems="center"
-                sx={{ minWidth: 0 }}
-              >
+                sx={{
+                  alignItems: "center",
+                  minWidth: 0
+                }}>
                 <Typography variant="body2" noWrap sx={{ flex: 1 }}>
                   {document.fileName}
                 </Typography>

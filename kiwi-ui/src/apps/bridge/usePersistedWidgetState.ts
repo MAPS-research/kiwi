@@ -6,19 +6,19 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { WidgetsApi } from '../../services/apis/WidgetsApi';
-import { Configuration } from '../../services/runtime';
-import { basePath } from '../../utils/api';
+import { WidgetsApi } from '../../services/apis/WidgetsApi.ts';
+import { Configuration } from '../../services/runtime.ts';
+import { basePath } from '../../utils/api.ts';
 import type {
   SaveWidgetStateDto,
   WidgetStateResponseDto,
-} from '../../services/models';
-import type { WidgetState, DisplayMode } from '../types';
+} from '../../services/models/index.ts';
+import type { WidgetState, DisplayMode } from '../types/index.ts';
 
 /**
  * Options for persisted widget state
  */
-export interface PersistedWidgetStateOptions {
+export interface PersistedWidgetStateOptions<T extends WidgetState = WidgetState> {
   /** App ID */
   appId: string;
   /** Widget ID (unique instance identifier) */
@@ -32,13 +32,13 @@ export interface PersistedWidgetStateOptions {
   /** Conversation ID for chat context */
   conversationId?: string;
   /** Initial/default state before loading from backend */
-  defaultState?: WidgetState;
+  defaultState?: T;
   /** Debounce delay in ms (default: 500) */
   debounceMs?: number;
   /** Enable persistence (default: true) */
   enablePersistence?: boolean;
   /** Callback when state is loaded from backend */
-  onLoaded?: (state: WidgetState) => void;
+  onLoaded?: (state: T) => void;
   /** Callback when state fails to save */
   onSaveError?: (error: Error) => void;
 }
@@ -114,7 +114,7 @@ function createWidgetsApi(): WidgetsApi {
  * ```
  */
 export function usePersistedWidgetState<T extends WidgetState = WidgetState>(
-  options: PersistedWidgetStateOptions
+  options: PersistedWidgetStateOptions<T>
 ): PersistedWidgetStateResult<T> {
   const {
     appId,

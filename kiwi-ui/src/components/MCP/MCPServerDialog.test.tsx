@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { MCPServerDialog } from "./MCPServerDialog";
+import { MCPServerDialog } from "./MCPServerDialog.tsx";
 
 const theme = createTheme();
 
@@ -72,25 +72,37 @@ describe("MCPServerDialog", () => {
     expect(screen.getByLabelText(/Server URL/i)).toBeInTheDocument();
   });
 
-  it("shows transport-specific config for Stdio when selected", async () => {
-    renderWithProviders({});
+  it("keeps the URL config and saves the SSE transport when selected", async () => {
+    const onSave = vi.fn().mockResolvedValue(undefined);
+    renderWithProviders({ onSave });
 
-    // Find and click the Stdio radio button
-    const stdioRadio = screen.getByLabelText(/Stdio/i);
-    fireEvent.click(stdioRadio);
+    fireEvent.click(screen.getByRole("radio", { name: /SSE/i }));
+    expect(screen.getByLabelText(/Server URL/i)).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText(/Server Name/i), {
+      target: { value: "SSE Server" },
+    });
+    fireEvent.change(screen.getByLabelText(/Server URL/i), {
+      target: { value: "https://sse.example.com" },
+    });
+    fireEvent.click(screen.getByText("Create"));
 
     await waitFor(() => {
-      expect(screen.getByLabelText(/Command/i)).toBeInTheDocument();
+      expect(onSave).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: "SSE Server",
+          transport: "sse",
+          config: expect.objectContaining({ url: "https://sse.example.com" }),
+        })
+      );
     });
-
-    expect(screen.getByLabelText(/Arguments/i)).toBeInTheDocument();
   });
 
   it("shows OAuth fields when requiresOAuth is enabled", async () => {
     renderWithProviders({});
 
     // Find and click the OAuth switch
-    const oauthSwitch = screen.getByRole("checkbox", {
+    const oauthSwitch = screen.getByRole("switch", {
       name: /Requires OAuth Authentication/i,
     });
     fireEvent.click(oauthSwitch);
@@ -203,27 +215,6 @@ describe("MCPServerDialog", () => {
 
     await waitFor(() => {
       expect(screen.getByLabelText(/Header Name/i)).toBeInTheDocument();
-    });
-  });
-
-  it("allows adding environment variables for Stdio transport", async () => {
-    renderWithProviders({});
-
-    // Switch to Stdio
-    const stdioRadio = screen.getByLabelText(/Stdio/i);
-    fireEvent.click(stdioRadio);
-
-    await waitFor(() => {
-      expect(
-        screen.getByText("Add Environment Variable")
-      ).toBeInTheDocument();
-    });
-
-    // Click Add Environment Variable button
-    fireEvent.click(screen.getByText("Add Environment Variable"));
-
-    await waitFor(() => {
-      expect(screen.getByLabelText(/Variable Name/i)).toBeInTheDocument();
     });
   });
 });

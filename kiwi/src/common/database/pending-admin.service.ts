@@ -33,8 +33,7 @@ export class PendingAdminService {
 
   async createPendingAdmin(
     data:
-      | Prisma.PendingAdminCreateInput
-      | Prisma.PendingAdminUncheckedCreateInput,
+      Prisma.PendingAdminCreateInput | Prisma.PendingAdminUncheckedCreateInput,
   ): Promise<PendingAdmin> {
     return this.database.pendingAdmin.create({
       data,

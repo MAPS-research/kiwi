@@ -244,14 +244,13 @@ export const StandaloneTopTokenUsers = React.forwardRef<StandaloneTopTokenUsersH
                                 >
                                     <Typography
                                         variant="caption"
-                                        color="text.secondary"
                                         sx={{
+                                            color: "text.secondary",
                                             display: 'grid',
                                             placeItems: 'center',
                                             width: 28,
-                                            fontWeight: 700,
-                                        }}
-                                    >
+                                            fontWeight: 700
+                                        }}>
                                         {index + 1}
                                     </Typography>
 
@@ -264,15 +263,28 @@ export const StandaloneTopTokenUsers = React.forwardRef<StandaloneTopTokenUsersH
                                         <Tooltip title={user.userId} placement="bottom-start">
                                             <Typography
                                                 variant="caption"
-                                                color="text.secondary"
-                                                sx={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
-                                            >
+                                                sx={{
+                                                    color: "text.secondary",
+                                                    display: 'block',
+                                                    overflow: 'hidden',
+                                                    textOverflow: 'ellipsis',
+                                                    whiteSpace: 'nowrap'
+                                                }}>
                                                 {user.userId}
                                             </Typography>
                                         </Tooltip>
-                                        <Stack direction="row" spacing={1} alignItems="center" sx={{ display: { xs: 'flex', sm: 'none' }, mt: 0.5 }}>
+                                        <Stack
+                                            direction="row"
+                                            spacing={1}
+                                            sx={{
+                                                alignItems: "center",
+                                                display: { xs: 'flex', sm: 'none' },
+                                                mt: 0.5
+                                            }}>
                                             {typeof user.sessionCount === 'number' && (
-                                                <Typography variant="caption" color="text.secondary">
+                                                <Typography variant="caption" sx={{
+                                                    color: "text.secondary"
+                                                }}>
                                                     {formatNumber(user.sessionCount)} sessions
                                                 </Typography>
                                             )}
@@ -284,9 +296,12 @@ export const StandaloneTopTokenUsers = React.forwardRef<StandaloneTopTokenUsersH
 
                                     <Typography
                                         variant="body2"
-                                        color="text.secondary"
-                                        sx={{ display: { xs: 'none', sm: 'block' }, textAlign: 'right', whiteSpace: 'nowrap' }}
-                                    >
+                                        sx={{
+                                            color: "text.secondary",
+                                            display: { xs: 'none', sm: 'block' },
+                                            textAlign: 'right',
+                                            whiteSpace: 'nowrap'
+                                        }}>
                                         {typeof user.sessionCount === 'number' ? `${formatNumber(user.sessionCount)} sessions` : '—'}
                                     </Typography>
                                     <Typography
@@ -302,7 +317,9 @@ export const StandaloneTopTokenUsers = React.forwardRef<StandaloneTopTokenUsersH
                         </List>
                     ) : (
                         <Box sx={{ minHeight: { xs: 634, lg: 314 }, px: { xs: 2, sm: 3 }, py: 4, display: 'grid', placeItems: 'center' }}>
-                            <Typography variant="body2" color="text.secondary">
+                            <Typography variant="body2" sx={{
+                                color: "text.secondary"
+                            }}>
                                 No token usage data available.
                             </Typography>
                         </Box>
@@ -312,12 +329,20 @@ export const StandaloneTopTokenUsers = React.forwardRef<StandaloneTopTokenUsersH
 
             <Dialog open={open} onClose={() => setOpen(false)} maxWidth="md" fullWidth fullScreen={isMobile}>
                 <DialogTitle sx={{ pr: 1 }}>
-                    <Stack direction="row" alignItems="flex-start" justifyContent="space-between" spacing={1}>
+                    <Stack
+                        direction="row"
+                        spacing={1}
+                        sx={{
+                            alignItems: "flex-start",
+                            justifyContent: "space-between"
+                        }}>
                         <Box sx={{ minWidth: 0 }}>
                             <Typography variant="h6">Token Usage Detail</Typography>
                             {selectedUserEmail && (
                                 <Tooltip title={selectedUserEmail}>
-                                    <Typography variant="body2" color="text.secondary" noWrap>
+                                    <Typography variant="body2" noWrap sx={{
+                                        color: "text.secondary"
+                                    }}>
                                         {selectedUserEmail}
                                     </Typography>
                                 </Tooltip>
@@ -370,7 +395,9 @@ export const StandaloneTopTokenUsers = React.forwardRef<StandaloneTopTokenUsersH
                                     <React.Fragment key={session.id}>
                                         <ListItem disablePadding>
                                             <Box sx={{ display: 'block', width: '100%', px: 2, py: 1.5, minWidth: 0 }}>
-                                                <Stack direction="row" alignItems="center" spacing={1}>
+                                                <Stack direction="row" spacing={1} sx={{
+                                                    alignItems: "center"
+                                                }}>
                                                     <Tooltip title={session.id}>
                                                         <Typography variant="body2" sx={{ fontWeight: 600, minWidth: 0 }} noWrap>
                                                             {session.id}
@@ -386,21 +413,29 @@ export const StandaloneTopTokenUsers = React.forwardRef<StandaloneTopTokenUsersH
                                                     }}
                                                 >
                                                     <Box sx={{ minWidth: 0 }}>
-                                                        <Typography variant="caption" color="text.secondary">Start</Typography>
+                                                        <Typography variant="caption" sx={{
+                                                            color: "text.secondary"
+                                                        }}>Start</Typography>
                                                         <Typography variant="body2">{new Date(session.sessionStartTime).toLocaleString()}</Typography>
                                                     </Box>
                                                     <Box sx={{ minWidth: 0 }}>
-                                                        <Typography variant="caption" color="text.secondary">End</Typography>
+                                                        <Typography variant="caption" sx={{
+                                                            color: "text.secondary"
+                                                        }}>End</Typography>
                                                         <Typography variant="body2">
                                                             {session.sessionEndTime ? new Date(session.sessionEndTime).toLocaleString() : '—'}
                                                         </Typography>
                                                     </Box>
                                                     <Box>
-                                                        <Typography variant="caption" color="text.secondary">Usage</Typography>
+                                                        <Typography variant="caption" sx={{
+                                                            color: "text.secondary"
+                                                        }}>Usage</Typography>
                                                         <Typography variant="body2">{formatNumber(getInteractionCount(session))} interactions</Typography>
                                                     </Box>
                                                     <Box>
-                                                        <Typography variant="caption" color="text.secondary">Tokens</Typography>
+                                                        <Typography variant="caption" sx={{
+                                                            color: "text.secondary"
+                                                        }}>Tokens</Typography>
                                                         <Typography variant="body2" sx={{ fontWeight: 600 }}>{formatNumber(session.tokensUsed)}</Typography>
                                                     </Box>
                                                 </Box>
@@ -448,7 +483,9 @@ export const StandaloneTopTokenUsers = React.forwardRef<StandaloneTopTokenUsersH
                                         <TableCell sx={{ whiteSpace: 'nowrap' }}>{new Date(s.sessionStartTime).toLocaleString()}</TableCell>
                                         <TableCell sx={{ whiteSpace: 'nowrap' }}>{s.sessionEndTime ? new Date(s.sessionEndTime).toLocaleString() : '—'}</TableCell>
                                         <TableCell sx={{ whiteSpace: 'nowrap' }}>
-                                            <Typography variant="caption" color="text.secondary">
+                                            <Typography variant="caption" sx={{
+                                                color: "text.secondary"
+                                            }}>
                                                 {formatNumber(getInteractionCount(s))} interactions
                                             </Typography>
                                         </TableCell>
@@ -461,7 +498,9 @@ export const StandaloneTopTokenUsers = React.forwardRef<StandaloneTopTokenUsersH
                         )
                     ) : (
                         <Box sx={{ px: { xs: 2, sm: 0 }, py: 2 }}>
-                            <Typography variant="body2" color="text.secondary">No session details.</Typography>
+                            <Typography variant="body2" sx={{
+                                color: "text.secondary"
+                            }}>No session details.</Typography>
                         </Box>
                     )}
                 </DialogContent>

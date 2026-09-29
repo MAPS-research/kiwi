@@ -12,7 +12,7 @@ export type {
   RegisteredApp,
   AppRegistrationOptions,
   AppRegistrationResult,
-} from './app.types';
+} from './app.types.ts';
 
 // Tool types
 export type {
@@ -27,7 +27,7 @@ export type {
   KiwiToolDefinition,
   ToolResult,
   ToolInvocation,
-} from './tool.types';
+} from './tool.types.ts';
 
 // Widget types
 export type {
@@ -39,7 +39,7 @@ export type {
   KiwiWidgetDefinition,
   WidgetInstance,
   WidgetRenderContext,
-} from './widget.types';
+} from './widget.types.ts';
 
 // Bridge types
 export type {
@@ -50,4 +50,4 @@ export type {
   BridgeEventCallback,
   KiwiAppBridge,
   BridgeConfig,
-} from './bridge.types';
+} from './bridge.types.ts';

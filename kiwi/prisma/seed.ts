@@ -1,10 +1,11 @@
-import { PrismaClient } from '@prisma/client';
+import 'dotenv/config';
 import * as bcrypt from 'bcryptjs';
-import { randomBytes } from 'crypto';
+import { randomBytes } from 'node:crypto';
+import { createPrismaClient } from '../src/common/database/prisma-client.factory';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 const SNAPSHOT_PATH = path.resolve(__dirname, 'seed-data.json');
 

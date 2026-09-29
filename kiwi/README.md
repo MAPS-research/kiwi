@@ -76,6 +76,24 @@ JWT_PUBLIC_KEY=$(base64 < public.pem | tr -d '\n')
 
 See [JWT configuration](../docs/jwt-configuration.md).
 
+## Runtime notes
+
+The backend uses NestJS 12 with TypeScript 6 and remains CommonJS. Use the
+Node version in `.nvmrc`. The `npm test`, `test:watch`, `test:cov`, and
+`test:e2e` scripts enable Jest's VM module support to load Nest's ESM packages.
+
+The MCP server uses MCP-Nest v2 and the stable MCP TypeScript SDK v2. Connect
+clients to `/mcp` using Streamable HTTP and a Kiwi bearer token. Authentication
+runs on every HTTP request; app-token scopes and class restrictions still apply.
+The endpoint supports both initialized 2025 protocol sessions (including SSE
+responses) and the sessionless 2026-07-28 protocol. The old server-side
+HTTP+SSE endpoints (`/sse` and `/messages`) are gone; clients using them must
+switch to Streamable HTTP at `/mcp`. Outbound Kiwi connections still support
+configured `http`, `sse`, and `stdio` transports.
+
+LLM engines without API keys are disabled at startup; configure the engine's
+key before using its chat or embedding features.
+
 ## Useful commands
 
 | Command | What it does |

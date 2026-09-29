@@ -14,7 +14,7 @@ Kiwi UI is a client of the Kiwi backend (NestJS, port 3000). Everything under
 
 ## Getting started
 
-`.nvmrc` pins Node.js 22.16.0; CI builds the app on Node 20.
+`.nvmrc` pins Node.js 24.21.0, which CI also uses.
 
 ```bash
 nvm install   # once, if you don't have the pinned version

@@ -4,7 +4,11 @@ import { MaterialAccessService } from './material-access.service';
 
 function mkDb(): any {
   return {
-    document: { findUnique: jest.fn(), findFirst: jest.fn(), findMany: jest.fn() },
+    document: {
+      findUnique: jest.fn(),
+      findFirst: jest.fn(),
+      findMany: jest.fn(),
+    },
     documentComment: { findMany: jest.fn() },
     documentSummary: { findMany: jest.fn() },
   };

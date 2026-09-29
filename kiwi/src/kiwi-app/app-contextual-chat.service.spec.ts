@@ -96,7 +96,10 @@ describe('AppContextualChatService', () => {
   it('passes a sanitized outputSchema as response_format, pinned to openai', async () => {
     await service.run({
       ...baseParams,
-      outputSchema: { type: 'object', properties: { summary: { type: 'string' } } },
+      outputSchema: {
+        type: 'object',
+        properties: { summary: { type: 'string' } },
+      },
     });
 
     const [, temperature, maxTokens, tools, responseFormat, engine] =

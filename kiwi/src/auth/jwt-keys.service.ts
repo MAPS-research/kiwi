@@ -54,7 +54,10 @@ export class JwtKeysService implements OnModuleInit {
     this.logger.log(`JWT Key ID: ${this.keyId}`);
   }
 
-  private generateKeyPair(): Promise<{ privateKey: string; publicKey: string }> {
+  private generateKeyPair(): Promise<{
+    privateKey: string;
+    publicKey: string;
+  }> {
     return new Promise((resolve, reject) => {
       crypto.generateKeyPair(
         'rsa',

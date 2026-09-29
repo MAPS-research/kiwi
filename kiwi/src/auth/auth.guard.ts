@@ -52,7 +52,7 @@ export function assertBearerAccessToken(payload: any): void {
 @Injectable()
 export class AdminGuard implements CanActivate {
   private readonly logger = new Logger(JwtAuthGuard.name);
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     if (process.env.NO_AUTH === 'true') {
@@ -86,7 +86,7 @@ export class ProfGuard implements CanActivate {
   constructor(
     private userService: UserService,
     private enrollmentService: EnrollmentService,
-  ) { }
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     if (process.env.NO_AUTH === 'true') {
@@ -139,7 +139,7 @@ export class JwtAuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private reflector: Reflector,
-  ) { }
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     if (process.env.NO_AUTH === 'true') {
@@ -203,7 +203,7 @@ export class RefreshTokenGuard implements CanActivate {
     private jwtService: JwtService,
     private redisService: RedisService,
     private authService: AuthService,
-  ) { }
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     if (process.env.NO_AUTH === 'true') {

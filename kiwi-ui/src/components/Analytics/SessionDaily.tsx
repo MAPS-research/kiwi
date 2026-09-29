@@ -108,7 +108,9 @@ export const DailyPlot: React.FC<DailyPlotProps> = ({ interactions }) => {
           <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#333' }}>
             Daily Sessions
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             Total Sessions: {chartData.reduce((sum, item) => sum + item.sessions, 0)}
           </Typography>
         </Box>
@@ -133,41 +135,43 @@ export const DailyPlot: React.FC<DailyPlotProps> = ({ interactions }) => {
       </Box>
 
       {/* Chart */}
-      <ResponsiveContainer width="100%" height="calc(100% - 80px)">
-        <AreaChart
-          data={chartData}
-          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-        >
-          <defs>
-            <linearGradient id="colorSessions" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#2196F3" stopOpacity={0.3} />
-              <stop offset="95%" stopColor="#2196F3" stopOpacity={0.05} />
-            </linearGradient>
-          </defs>
-          <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#f0f0f0" />
-          <XAxis
-            dataKey="date"
-            axisLine={false}
-            tickLine={false}
-            tick={{ fontSize: 12, fill: '#666' }}
-          />
-          <YAxis
-            axisLine={false}
-            tickLine={false}
-            tick={{ fontSize: 12, fill: '#666' }}
-          />
-          <Tooltip content={<CustomTooltip />} />
-          <Area
-            type="monotone"
-            dataKey="sessions"
-            stroke="#2196F3"
-            strokeWidth={3}
-            fill="url(#colorSessions)"
-            dot={{ fill: '#2196F3', strokeWidth: 2, r: 4 }}
-            activeDot={{ r: 4, stroke: '#2196F3', strokeWidth: 0, fill: '#2196F3' }}
-          />
-        </AreaChart>
-      </ResponsiveContainer>
+      <Box sx={{ height: "calc(100% - 80px)" }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart
+            data={chartData}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          >
+            <defs>
+              <linearGradient id="colorSessions" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#2196F3" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#2196F3" stopOpacity={0.05} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#f0f0f0" />
+            <XAxis
+              dataKey="date"
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 12, fill: '#666' }}
+            />
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 12, fill: '#666' }}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Area
+              type="monotone"
+              dataKey="sessions"
+              stroke="#2196F3"
+              strokeWidth={3}
+              fill="url(#colorSessions)"
+              dot={{ fill: '#2196F3', strokeWidth: 2, r: 4 }}
+              activeDot={{ r: 4, stroke: '#2196F3', strokeWidth: 0, fill: '#2196F3' }}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </Box>
     </Box>
   );
 };

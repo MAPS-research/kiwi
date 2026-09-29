@@ -7,7 +7,9 @@ describe('DocumentService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [CompetitionService],
-    }).compile();
+    })
+      .useMocker(() => ({ get: jest.fn() }))
+      .compile();
 
     service = module.get<CompetitionService>(CompetitionService);
   });

@@ -103,8 +103,7 @@ export class UserInteractionService {
 
   async createServerAction(
     data:
-      | Prisma.ServerActionCreateInput
-      | Prisma.ServerActionUncheckedCreateInput,
+      Prisma.ServerActionCreateInput | Prisma.ServerActionUncheckedCreateInput,
   ): Promise<ServerAction> {
     return this.database.serverAction.create({
       data,

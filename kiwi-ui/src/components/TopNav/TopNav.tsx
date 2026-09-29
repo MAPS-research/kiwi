@@ -189,11 +189,12 @@ const TopNav = ({
               ) : (
                 <Typography
                   variant="h6"
-                  color="text.primary"
-                  fontWeight={600}
                   noWrap
                   title={contextLabel}
-                >
+                  sx={{
+                    color: "text.primary",
+                    fontWeight: 600
+                  }}>
                   {contextLabel}
                 </Typography>
               )}

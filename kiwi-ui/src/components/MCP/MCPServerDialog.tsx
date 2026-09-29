@@ -29,13 +29,13 @@ import {
 import {
   AddOutlined as AddIcon,
   AutorenewOutlined as DiscoverIcon,
-  DeleteOutline as DeleteIcon,
+  DeleteOutlined as DeleteIcon,
   ExpandMoreOutlined as ExpandMoreIcon,
   ExpandLessOutlined as ExpandLessIcon,
   InfoOutlined as InfoIcon,
 } from "@mui/icons-material";
-import { mcpAdminApiClient } from "../../utils/api";
-import type { McpServerResponseDto, CreateMcpServerDto, UpdateMcpServerDto } from "../../services/models";
+import { mcpAdminApiClient } from "../../utils/api.ts";
+import type { McpServerResponseDto, CreateMcpServerDto, UpdateMcpServerDto } from "../../services/models/index.ts";
 
 interface ClassInfo {
   classID: string;
@@ -467,7 +467,9 @@ export const MCPServerDialog: React.FC<MCPServerDialogProps> = ({
 
           {/* Basic Info */}
           <Box>
-            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+            <Typography variant="subtitle2" gutterBottom sx={{
+              color: "text.secondary"
+            }}>
               Basic Information
             </Typography>
             <TextField
@@ -508,7 +510,9 @@ export const MCPServerDialog: React.FC<MCPServerDialogProps> = ({
                   label={
                     <Box>
                       <Typography variant="body2">HTTP</Typography>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
                         Standard HTTP connection
                       </Typography>
                     </Box>
@@ -520,7 +524,9 @@ export const MCPServerDialog: React.FC<MCPServerDialogProps> = ({
                   label={
                     <Box>
                       <Typography variant="body2">SSE</Typography>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
                         Server-Sent Events
                       </Typography>
                     </Box>
@@ -535,7 +541,9 @@ export const MCPServerDialog: React.FC<MCPServerDialogProps> = ({
           {/* Transport-specific config */}
           {(formData.transport === "http" || formData.transport === "sse") && (
             <Box>
-              <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+              <Typography variant="subtitle2" gutterBottom sx={{
+                color: "text.secondary"
+              }}>
                 Connection Settings
               </Typography>
               <TextField
@@ -690,7 +698,13 @@ export const MCPServerDialog: React.FC<MCPServerDialogProps> = ({
                   </Alert>
                 )}
 
-                <Typography variant="caption" color="text.secondary" sx={{ mb: 2, display: "block" }}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: "text.secondary",
+                    mb: 2,
+                    display: "block"
+                  }}>
                   Configure OAuth 2.1 settings for user authentication with this MCP server.
                   Client secrets are stored securely and will not be displayed after saving.
                 </Typography>
@@ -776,7 +790,9 @@ export const MCPServerDialog: React.FC<MCPServerDialogProps> = ({
                   <Typography variant="body2">
                     Server is {formData.isActive ? "Active" : "Inactive"}
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" sx={{
+                    color: "text.secondary"
+                  }}>
                     Inactive servers will not be available for use
                   </Typography>
                 </Box>

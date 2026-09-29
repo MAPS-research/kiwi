@@ -27,9 +27,7 @@ export class ExperimentDatabaseService {
   }
 
   /** The single active experiment for a class, if any. */
-  async activeExperimentForClass(
-    classId: string,
-  ): Promise<Experiment | null> {
+  async activeExperimentForClass(classId: string): Promise<Experiment | null> {
     return this.database.experiment.findFirst({
       where: { classId, status: 'active' },
     });
@@ -112,7 +110,10 @@ export class ExperimentDatabaseService {
       where: { experimentId },
       _count: { _all: true },
     });
-    return rows.map((r) => ({ variantKey: r.variantKey, count: r._count._all }));
+    return rows.map((r) => ({
+      variantKey: r.variantKey,
+      count: r._count._all,
+    }));
   }
 
   /**
@@ -139,9 +140,7 @@ export class ExperimentDatabaseService {
       },
       _count: { _all: true },
     });
-    const countByUser = new Map(
-      grouped.map((g) => [g.userId, g._count._all]),
-    );
+    const countByUser = new Map(grouped.map((g) => [g.userId, g._count._all]));
 
     const agg = new Map<string, { students: number; interactions: number }>();
     for (const a of assignments) {

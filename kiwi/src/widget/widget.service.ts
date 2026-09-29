@@ -238,7 +238,9 @@ export class WidgetService {
       data: {
         ...(data.theme && { theme: data.theme }),
         ...(data.codeEditorTheme && { codeEditorTheme: data.codeEditorTheme }),
-        ...(data.codeEditorFontSize && { codeEditorFontSize: data.codeEditorFontSize }),
+        ...(data.codeEditorFontSize && {
+          codeEditorFontSize: data.codeEditorFontSize,
+        }),
         ...(appPreferences && { appPreferences }),
       },
     });

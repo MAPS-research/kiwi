@@ -134,7 +134,8 @@ DO NOT USE WHEN:
           properties: {
             query: {
               type: 'string',
-              description: 'Search query - be specific and include key terms from the student question',
+              description:
+                'Search query - be specific and include key terms from the student question',
             },
             scope: {
               type: 'string',
@@ -242,7 +243,8 @@ EXAMPLES:
             },
             reason: {
               type: 'string',
-              description: 'Brief explanation for why this navigation is suggested',
+              description:
+                'Brief explanation for why this navigation is suggested',
             },
           },
           required: ['targetTab'],
@@ -375,10 +377,7 @@ EXAMPLES:
 
       return tools;
     } catch (error) {
-      this.logger.error(
-        `Error loading tools for class ${classId}:`,
-        error,
-      );
+      this.logger.error(`Error loading tools for class ${classId}:`, error);
       return [];
     }
   }
@@ -410,7 +409,8 @@ EXAMPLES:
 
       tools.push({
         id: config?.id ?? `builtin:${identifier}`,
-        source: toolType === 'RAG' ? ToolSource.RAG : ToolSource.CODE_INTERPRETER,
+        source:
+          toolType === 'RAG' ? ToolSource.RAG : ToolSource.CODE_INTERPRETER,
         definition: toolDef,
         isEnabled: config?.isEnabled ?? true,
         priority: config?.priority ?? 0,
@@ -788,7 +788,15 @@ EXAMPLES:
    * Returns a navigation action that the frontend will handle
    */
   private executeNavigateTool(args: Record<string, any>): ToolExecutionResult {
-    const { targetTab, pdfId, pageNumber, exerciseId, exerciseSetId, appSlug, reason } = args;
+    const {
+      targetTab,
+      pdfId,
+      pageNumber,
+      exerciseId,
+      exerciseSetId,
+      appSlug,
+      reason,
+    } = args;
 
     const navigationAction = {
       type: 'navigate' as const,
@@ -803,9 +811,11 @@ EXAMPLES:
 
     // Build a human-readable message for the LLM context
     let message = `Navigating to ${targetTab}`;
-    if (pdfId) message += ` (document: ${pdfId}${pageNumber ? `, page ${pageNumber}` : ''})`;
+    if (pdfId)
+      message += ` (document: ${pdfId}${pageNumber ? `, page ${pageNumber}` : ''})`;
     if (exerciseId) message += ` (exercise: ${exerciseId})`;
-    if (exerciseSetId && !exerciseId) message += ` (exercise set: ${exerciseSetId})`;
+    if (exerciseSetId && !exerciseId)
+      message += ` (exercise set: ${exerciseSetId})`;
     if (appSlug) message += ` (app: ${appSlug})`;
     if (reason) message += ` - ${reason}`;
 
@@ -843,8 +853,7 @@ EXAMPLES:
           args.scope === 'current_page' && (sc as any).pdfId
             ? {
                 documentId: (sc as any).pdfId,
-                pageNumber:
-                  (sc as any).pdfPage ?? (sc as any).pageNumber,
+                pageNumber: (sc as any).pdfPage ?? (sc as any).pageNumber,
               }
             : undefined;
         output = await toolExecutor.ragRetrieve(
@@ -1003,9 +1012,7 @@ EXAMPLES:
           };
         }
       } catch (error) {
-        this.logger.warn(
-          `Failed to check tools from server ${mcpServer.name}`,
-        );
+        this.logger.warn(`Failed to check tools from server ${mcpServer.name}`);
       }
     }
 
@@ -1034,7 +1041,8 @@ EXAMPLES:
         authorizationUrl: oauthMetadata.authorizationUrl,
         clientId: oauthMetadata.clientId,
         scopes: oauthMetadata.scopes,
-        redirectUri: oauthMetadata.redirectUri || this.mcpOAuth.getRedirectUri(),
+        redirectUri:
+          oauthMetadata.redirectUri || this.mcpOAuth.getRedirectUri(),
       },
       userId,
       mcpServer.id,

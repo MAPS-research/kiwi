@@ -2,18 +2,19 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+
 import helmet from 'helmet';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
-import { PrismaClient } from '@prisma/client';
-import { Logger } from 'nestjs-pino';
-import * as cookieParser from 'cookie-parser';
 import { isDevAuthEnabled } from './auth/dev-auth';
 
-import * as session from 'express-session';
+import cookieParser from 'cookie-parser';
+
+import session from 'express-session';
 import { InteractionInterceptor } from './interaction/interaction.interceptor';
 import { InteractionService } from './interaction/interaction.service';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { createPrismaClient } from './common/database/prisma-client.factory';
+import { mcpStrategy } from './mcp/mcp-http.controller';
 
 async function bootstrap() {
   // Gate verbose logs: in production only log/warn/error; in dev also emit
@@ -50,7 +51,7 @@ async function bootstrap() {
         httpOnly: true,
         secure: !!process.env.API_DOMAIN,
       },
-      store: new PrismaSessionStore(new PrismaClient(), {
+      store: new PrismaSessionStore(createPrismaClient(), {
         checkPeriod: 2 * 60 * 1000, //ms
         dbRecordIdIsSessionId: true,
         dbRecordIdFunction: undefined,
@@ -64,9 +65,6 @@ async function bootstrap() {
 
   // use cookie parser
   app.use(cookieParser());
-
-  // Setup Logger
-  // app.useLogger(app.get(Logger));
 
   // Setup Swagger
 
@@ -122,6 +120,9 @@ async function bootstrap() {
   // Set body parser limit to 10mb
   app.useBodyParser('json', { limit: '10mb' });
 
+  mcpStrategy.setHttpAdapter(app.getHttpAdapter());
+  app.connectMicroservice({ strategy: mcpStrategy });
+  await app.startAllMicroservices();
   await app.listen(port);
 }
 bootstrap();

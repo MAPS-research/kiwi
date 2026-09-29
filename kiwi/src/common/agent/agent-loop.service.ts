@@ -69,11 +69,16 @@ export class AgentLoopService {
     };
 
     return new Observable<AgentStreamEvent>((subscriber) => {
-      this.runLoop(initialMessages, tools, context, fullConfig, subscriber)
-        .catch((error) => {
-          this.logger.error('Agent loop error:', error);
-          subscriber.error(error);
-        });
+      this.runLoop(
+        initialMessages,
+        tools,
+        context,
+        fullConfig,
+        subscriber,
+      ).catch((error) => {
+        this.logger.error('Agent loop error:', error);
+        subscriber.error(error);
+      });
     });
   }
 
@@ -100,7 +105,9 @@ export class AgentLoopService {
       status: 'running',
     };
 
-    this.logger.debug(`Starting agent loop with ${state.messages.length} initial messages`);
+    this.logger.debug(
+      `Starting agent loop with ${state.messages.length} initial messages`,
+    );
 
     /** Overflow recovery fires at most once per turn — see the catch below. */
     let overflowRetried = false;
@@ -171,7 +178,8 @@ export class AgentLoopService {
 
         // Track token usage
         if (response.usage) {
-          const { promptTokens, completionTokens, totalTokens } = response.usage;
+          const { promptTokens, completionTokens, totalTokens } =
+            response.usage;
           const cachedTokens = response.usage.cachedTokens ?? 0;
           const reasoningTokens = response.usage.reasoningTokens ?? 0;
 
@@ -200,7 +208,9 @@ export class AgentLoopService {
               response.toolCalls
                 .map((t) => `${t.name}(${JSON.stringify(t.arguments)})`)
                 .join(', ') +
-              (response.content ? ` | text: "${response.content.slice(0, 120)}"` : ''),
+              (response.content
+                ? ` | text: "${response.content.slice(0, 120)}"`
+                : ''),
           );
 
           // Execute all tool calls
@@ -326,7 +336,9 @@ export class AgentLoopService {
       }
 
       // Max iterations reached
-      this.logger.warn(`Agent loop reached max iterations (${config.maxIterations})`);
+      this.logger.warn(
+        `Agent loop reached max iterations (${config.maxIterations})`,
+      );
       state.status = 'max_iterations';
 
       // Get last content if available
@@ -487,7 +499,10 @@ export class AgentLoopService {
 
           // Accumulate tool calls
           if (delta.tool_calls) {
-            toolCallAcc = this.toolCallAccumulator(toolCallAcc, delta.tool_calls);
+            toolCallAcc = this.toolCallAccumulator(
+              toolCallAcc,
+              delta.tool_calls,
+            );
           }
         },
         error: (error) => {
@@ -688,7 +703,8 @@ export class AgentLoopService {
           ...existingItem.function,
           ...deltaItem.function,
           arguments: existingItem.function?.arguments
-            ? existingItem.function.arguments + (deltaItem.function?.arguments || '')
+            ? existingItem.function.arguments +
+              (deltaItem.function?.arguments || '')
             : deltaItem.function?.arguments,
         };
 
@@ -754,7 +770,11 @@ export class AgentLoopService {
   /**
    * Format tool result for message content
    */
-  private formatToolResult(result: { success: boolean; output: any; error?: string }): string {
+  private formatToolResult(result: {
+    success: boolean;
+    output: any;
+    error?: string;
+  }): string {
     if (result.success) {
       // Cap tool output so a large payload (MCP tools, page snapshots) can't
       // blow the prompt past the model's context window.

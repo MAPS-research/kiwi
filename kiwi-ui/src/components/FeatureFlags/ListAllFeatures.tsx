@@ -116,7 +116,9 @@ const ListAllFeatures: React.FC<ListAllFeaturesProps> = ({ refreshKey = 0 }) => 
       headerName: "Feature",
       flex: 1,
       minWidth: 170,
-      renderCell: ({ row }) => <Typography variant="body2" fontWeight={500}>{row.featureName}</Typography>,
+      renderCell: ({ row }) => <Typography variant="body2" sx={{
+        fontWeight: 500
+      }}>{row.featureName}</Typography>,
     },
     {
       field: "targetType",
@@ -142,7 +144,9 @@ const ListAllFeatures: React.FC<ListAllFeaturesProps> = ({ refreshKey = 0 }) => 
       flex: 1,
       minWidth: 210,
       renderCell: ({ row }) => row.validUntil ? (
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack direction="row" spacing={1} sx={{
+          alignItems: "center"
+        }}>
           <Typography variant="body2">
             {new Date(row.validUntil).toLocaleString()}
           </Typography>
@@ -178,16 +182,20 @@ const ListAllFeatures: React.FC<ListAllFeaturesProps> = ({ refreshKey = 0 }) => 
         <CardContent sx={{ p: 0, "&:last-child": { pb: 0 } }}>
           <Stack
             direction={{ xs: "column", sm: "row" }}
-            justifyContent="space-between"
-            alignItems={{ xs: "flex-start", sm: "center" }}
             spacing={2}
-            sx={{ p: 3, pb: 2 }}
-          >
+            sx={{
+              justifyContent: "space-between",
+              alignItems: { xs: "flex-start", sm: "center" },
+              p: 3,
+              pb: 2
+            }}>
             <Box>
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
                 Active assignments
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Review scopes, targets, and expiration dates for all feature flags.
               </Typography>
             </Box>
@@ -233,10 +241,12 @@ const ListAllFeatures: React.FC<ListAllFeaturesProps> = ({ refreshKey = 0 }) => 
             label="Expiration"
             type="datetime-local"
             fullWidth
-            InputLabelProps={{ shrink: true }}
             value={newValidUntil}
             onChange={(event) => setNewValidUntil(event.target.value)}
             disabled={removeValidUntil}
+            slotProps={{
+              inputLabel: { shrink: true }
+            }}
           />
           <FormControlLabel
             sx={{ mt: 1 }}

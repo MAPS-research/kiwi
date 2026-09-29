@@ -48,7 +48,9 @@ describe('ConversationHistoryService', () => {
   });
 
   it('scopes the query to the requesting user (#117)', async () => {
-    userInteractionService.userInteractionsWithServerActions.mockResolvedValue([]);
+    userInteractionService.userInteractionsWithServerActions.mockResolvedValue(
+      [],
+    );
 
     await service.getWindow({ userId: 'user-1', conversationId: 'thread-1' });
 
@@ -64,7 +66,9 @@ describe('ConversationHistoryService', () => {
   });
 
   it('bounds the read in the database rather than in memory', async () => {
-    userInteractionService.userInteractionsWithServerActions.mockResolvedValue([]);
+    userInteractionService.userInteractionsWithServerActions.mockResolvedValue(
+      [],
+    );
 
     await service.getWindow({
       userId: 'user-1',
@@ -76,7 +80,8 @@ describe('ConversationHistoryService', () => {
     // (the question and the answer) — so fetching `maxTurns` interactions would
     // return roughly twice what we intend to replay.
     expect(
-      userInteractionService.userInteractionsWithServerActions.mock.calls[0][0].take,
+      userInteractionService.userInteractionsWithServerActions.mock.calls[0][0]
+        .take,
     ).toBe(6);
   });
 
@@ -177,9 +182,9 @@ describe('ConversationHistoryService', () => {
     });
 
     it('returns the summary and only replays turns after it', async () => {
-      userInteractionService.userInteractionsWithServerActions.mockResolvedValue([
-        interaction(),
-      ] as any);
+      userInteractionService.userInteractionsWithServerActions.mockResolvedValue(
+        [interaction()] as any,
+      );
 
       const result = await service.getWindow({
         userId: 'user-1',
@@ -188,8 +193,8 @@ describe('ConversationHistoryService', () => {
 
       expect(result.summary).toBe('They asked about loops and lists.');
       const where =
-        userInteractionService.userInteractionsWithServerActions.mock.calls[0][0]
-          .where!;
+        userInteractionService.userInteractionsWithServerActions.mock
+          .calls[0][0].where!;
       // Turns already folded into the summary must not also replay verbatim.
       expect(where.timestamp).toEqual({
         gt: new Date('2024-01-01T12:00:00Z'),
@@ -200,9 +205,9 @@ describe('ConversationHistoryService', () => {
       database.conversationSummary.findUnique.mockRejectedValue(
         new Error('db down'),
       );
-      userInteractionService.userInteractionsWithServerActions.mockResolvedValue([
-        interaction(),
-      ] as any);
+      userInteractionService.userInteractionsWithServerActions.mockResolvedValue(
+        [interaction()] as any,
+      );
 
       const result = await service.getWindow({
         userId: 'user-1',
@@ -233,9 +238,9 @@ describe('ConversationHistoryService', () => {
     it('stays quiet while every turn still fits in the replay window', async () => {
       database.userInteraction.count.mockResolvedValue(WINDOW);
 
-      await expect(
-        service.needsCompaction('user-1', 'thread-1'),
-      ).resolves.toBe(false);
+      await expect(service.needsCompaction('user-1', 'thread-1')).resolves.toBe(
+        false,
+      );
     });
 
     it('fires the moment one turn would fall outside the window', async () => {
@@ -243,9 +248,9 @@ describe('ConversationHistoryService', () => {
       // has not started covering it by now, nothing represents it at all.
       database.userInteraction.count.mockResolvedValue(WINDOW + 1);
 
-      await expect(
-        service.needsCompaction('user-1', 'thread-1'),
-      ).resolves.toBe(true);
+      await expect(service.needsCompaction('user-1', 'thread-1')).resolves.toBe(
+        true,
+      );
     });
 
     it('never lets the trigger drift past what replay can show', async () => {
@@ -253,7 +258,8 @@ describe('ConversationHistoryService', () => {
       // not exceed the window. A future edit that changes one and not the
       // other reopens the gap silently, which is how it happened the first time.
       for (const maxTurns of [1, 2, 7, 40, 200]) {
-        const window = ConversationHistoryService.replayWindowInteractions(maxTurns);
+        const window =
+          ConversationHistoryService.replayWindowInteractions(maxTurns);
         expect(window).toBeLessThanOrEqual(Math.max(maxTurns, 1));
       }
     });
@@ -320,7 +326,14 @@ describe('ConversationHistoryService', () => {
       expect(result).toEqual({ compacted: true, turnsCovered: 4 });
       const transcript = summarize.mock.calls[0][0];
       expect(transcript.map((t: any) => t.content)).toEqual([
-        'q0', 'a0', 'q1', 'a1', 'q2', 'a2', 'q3', 'a3',
+        'q0',
+        'a0',
+        'q1',
+        'a1',
+        'q2',
+        'a2',
+        'q3',
+        'a3',
       ]);
     });
 

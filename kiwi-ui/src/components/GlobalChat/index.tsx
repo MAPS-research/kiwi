@@ -1,3 +1,3 @@
-export { GlobalChatButton } from './GlobalChatButton';
-export { GlobalChatModal } from './GlobalChatModal';
-export { GlobalChatContainer } from './GlobalChatContainer';
+export { GlobalChatButton } from './GlobalChatButton.tsx';
+export { GlobalChatModal } from './GlobalChatModal.tsx';
+export { GlobalChatContainer } from './GlobalChatContainer.tsx';

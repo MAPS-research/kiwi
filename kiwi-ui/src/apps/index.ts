@@ -80,7 +80,7 @@ export type {
   BridgeEventCallback,
   KiwiAppBridge,
   BridgeConfig,
-} from './types';
+} from './types/index.ts';
 
 // ============================================
 // Registry
@@ -95,13 +95,13 @@ export {
   useAppTools,
   useAppWidgets,
   useActiveApps,
-} from './registry';
+} from './registry/index.ts';
 
 export type {
   RegistryListener,
   AppRegistryContextValue,
   AppRegistryProviderProps,
-} from './registry';
+} from './registry/index.ts';
 
 // ============================================
 // Bridge
@@ -132,14 +132,14 @@ export {
   useUpdateWidgetState,
   useWidgetStates,
   useDeleteWidgetState,
-} from './bridge';
+} from './bridge/index.ts';
 
 export type {
   BridgeContextValue,
   BridgeProviderProps,
   PersistedWidgetStateOptions,
   PersistedWidgetStateResult,
-} from './bridge';
+} from './bridge/index.ts';
 
 // ============================================
 // Host / Tool Execution
@@ -151,20 +151,20 @@ export {
   AppHost,
   SingleWidgetHost,
   WidgetContainer,
-} from './host';
+} from './host/index.ts';
 
 export type {
   AppHostProps,
   SingleWidgetHostProps,
   WidgetContainerProps,
-} from './host';
+} from './host/index.ts';
 
 // ============================================
 // Built-in Apps
 // ============================================
 export {
   builtinApps,
-} from './builtins';
+} from './builtins/index.ts';
 
 // ============================================
 // Class Apps Configuration
@@ -176,11 +176,11 @@ export {
   useClassApp,
   useIsAppEnabled,
   useAppToken,
-} from './classApps';
+} from './classApps/index.ts';
 
 export type {
   ClassKiwiAppConfig,
   ClassAppsResponse,
   ClassAppsContextValue,
   ClassAppsProviderProps,
-} from './classApps';
+} from './classApps/index.ts';

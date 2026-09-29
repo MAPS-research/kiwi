@@ -119,10 +119,18 @@ describe('KiwiAppController', () => {
       const dto = { status: 'approved' };
       service.updateWhitelistEntry.mockResolvedValue(mockWhitelistEntry as any);
 
-      const result = await controller.updateWhitelistEntry('codegen', dto, mockRequest);
+      const result = await controller.updateWhitelistEntry(
+        'codegen',
+        dto,
+        mockRequest,
+      );
 
       expect(result).toEqual(mockWhitelistEntry);
-      expect(service.updateWhitelistEntry).toHaveBeenCalledWith('codegen', dto, 'user-1');
+      expect(service.updateWhitelistEntry).toHaveBeenCalledWith(
+        'codegen',
+        dto,
+        'user-1',
+      );
     });
   });
 
@@ -190,7 +198,10 @@ describe('KiwiAppController', () => {
   describe('updateApp', () => {
     it('should update an app', async () => {
       const dto = { name: 'Updated Name' };
-      service.updateApp.mockResolvedValue({ ...mockApp, name: 'Updated Name' } as any);
+      service.updateApp.mockResolvedValue({
+        ...mockApp,
+        name: 'Updated Name',
+      } as any);
 
       const result = await controller.updateApp('codegen', dto);
 
@@ -285,7 +296,11 @@ describe('ClassKiwiAppController', () => {
       const result = await controller.getClassApps('class-1');
 
       expect(result).toEqual([mockClassApp]);
-      expect(service.getClassApps).toHaveBeenCalledWith('class-1');
+      expect(service.getClassApps).toHaveBeenCalledWith(
+        'class-1',
+        undefined,
+        undefined,
+      );
     });
   });
 
@@ -297,28 +312,46 @@ describe('ClassKiwiAppController', () => {
       };
       service.enableClassApp.mockResolvedValue(mockClassApp as any);
 
-      const result = await controller.enableClassApp('class-1', dto, mockRequest);
+      const result = await controller.enableClassApp(
+        'class-1',
+        dto,
+        mockRequest,
+      );
 
       expect(result).toEqual(mockClassApp);
-      expect(service.enableClassApp).toHaveBeenCalledWith('class-1', dto, 'user-1');
+      expect(service.enableClassApp).toHaveBeenCalledWith(
+        'class-1',
+        dto,
+        'user-1',
+      );
     });
   });
 
   describe('updateClassApp', () => {
     it('should update class app configuration', async () => {
       const dto = { tabLabel: 'New Label' };
-      service.updateClassApp.mockResolvedValue({ ...mockClassApp, tabLabel: 'New Label' } as any);
+      service.updateClassApp.mockResolvedValue({
+        ...mockClassApp,
+        tabLabel: 'New Label',
+      } as any);
 
       const result = await controller.updateClassApp('class-1', 'app-1', dto);
 
       expect(result.tabLabel).toBe('New Label');
-      expect(service.updateClassApp).toHaveBeenCalledWith('class-1', 'app-1', dto);
+      expect(service.updateClassApp).toHaveBeenCalledWith(
+        'class-1',
+        'app-1',
+        dto,
+      );
     });
   });
 
   describe('disableClassApp', () => {
     it('should disable an app for a class', async () => {
-      service.disableClassApp.mockResolvedValue({ ...mockClassApp, isEnabled: false } as any);
+      service.disableClassApp.mockResolvedValue({
+        ...mockClassApp,
+        isEnabled: false,
+      } as any);
 
       await controller.disableClassApp('class-1', 'app-1');
 
@@ -381,7 +414,10 @@ describe('PermissionsController', () => {
       const result = await controller.getUserClassRole('user-1', 'class-1');
 
       expect(result).toEqual(roleResponse);
-      expect(service.getUserClassRole).toHaveBeenCalledWith('user-1', 'class-1');
+      expect(service.getUserClassRole).toHaveBeenCalledWith(
+        'user-1',
+        'class-1',
+      );
     });
 
     it('should return null role for non-enrolled user', async () => {

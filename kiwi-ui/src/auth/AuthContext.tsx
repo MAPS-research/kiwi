@@ -99,7 +99,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
             
             // Handle admin status result
             if (adminPromise && results[0].status === 'fulfilled') {
-              updatedUser.isAdmin = results[0].value.isAdmin || false;
+              updatedUser.isAdmin = results[0].value?.isAdmin || false;
             } else if (needsAdminStatus) {
               console.warn('[Suppressed] Failed to fetch admin status');
               updatedUser.isAdmin = false;
@@ -107,7 +107,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
             
             // Handle system role result
             if (rolePromise && results[1].status === 'fulfilled') {
-              updatedUser.systemRole = results[1].value.role || 'user';
+              updatedUser.systemRole = results[1].value?.role || 'user';
               console.log('Fetched system role:', updatedUser.systemRole);
             } else if (needsSystemRole) {
               console.warn('[Suppressed] Failed to fetch system role');

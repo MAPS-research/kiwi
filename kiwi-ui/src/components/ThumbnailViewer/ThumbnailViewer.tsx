@@ -1,62 +1,36 @@
-import React from "react";
-import { Worker } from "@react-pdf-viewer/core";
-import { Viewer } from "@react-pdf-viewer/core";
-// import "@react-pdf-viewer/default-layout/lib/styles/index.css";
-import { thumbnailPlugin } from "@react-pdf-viewer/thumbnail";
+import { useState } from "react";
+import { Document, Page } from "react-pdf";
+import { usePdfSource } from "../PDFViewer/usePdfSource.ts";
+import "../PDFViewer/setupPdfWorker.ts";
 
-// Import styles
-import "@react-pdf-viewer/thumbnail/lib/styles/index.css";
-import type { Plugin, RenderViewer } from "@react-pdf-viewer/core";
-import { transformGetDocumentParams } from "../PDFViewer/pdfLoadOptions.tsx";
-
-interface PageThumbnailPluginProps {
-  PageThumbnail: React.ReactElement;
-}
-
-const pageThumbnailPlugin = (props: PageThumbnailPluginProps): Plugin => {
-  const { PageThumbnail } = props;
-
-  return {
-    renderViewer: (renderProps: RenderViewer) => {
-      let { slot } = renderProps;
-
-      slot.children = PageThumbnail;
-
-      // Reset the sub slot
-      if (slot.subSlot) {
-        slot.subSlot.attrs = {};
-        slot.subSlot.children = <></>;
-      }
-
-      return slot;
-    },
-  };
-};
-
-interface PDFViewerProps {
-  pdfFile: string;
-}
-
-export const ThumbnailViewer: React.FC<PDFViewerProps> = ({ pdfFile }) => {
-  const thumbnailPluginInstance = thumbnailPlugin();
-  const { Cover } = thumbnailPluginInstance;
-  const pageThumbnailPluginInstance = pageThumbnailPlugin({
-    PageThumbnail: <Cover getPageIndex={() => 0} />,
-  });
-
-  return (
-    <div>
-      <Worker workerUrl="/assets/pdf.worker.min.js">
-        {pdfFile ? (
-          <Viewer
-            fileUrl={pdfFile}
-            transformGetDocumentParams={transformGetDocumentParams}
-            plugins={[thumbnailPluginInstance, pageThumbnailPluginInstance]}
-          />
-        ) : (
-          <p>Error displaying thumbnail.</p>
-        )}
-      </Worker>
-    </div>
+export const ThumbnailViewer = ({ pdfFile }: { pdfFile: string }) => {
+  const [retry, setRetry] = useState(0);
+  const source = usePdfSource(pdfFile, retry);
+  const error = (
+    <p>
+      Error displaying thumbnail.{" "}
+      <button onClick={(event) => { event.preventDefault(); event.stopPropagation(); setRetry((value) => value + 1); }}>Retry</button>
+    </p>
+  );
+  if (!pdfFile) return error;
+  return source ? (
+    <Document
+      key={`${pdfFile}:${retry}`}
+      file={pdfFile}
+      options={source.options}
+      suspense={false}
+      error={error}
+      loading={<p>Loading thumbnail…</p>}
+    >
+      <Page
+        pageNumber={1}
+        width={200}
+        renderTextLayer={false}
+        renderAnnotationLayer={false}
+        error={error}
+      />
+    </Document>
+  ) : (
+    <p>Loading thumbnail…</p>
   );
 };

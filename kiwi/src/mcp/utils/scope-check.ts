@@ -133,9 +133,14 @@ export function isAppTokenRequest(request: Request): boolean {
  * @param request - Express request object
  * @returns App context or undefined
  */
-export function getAppContext(
-  request: Request,
-): { appSlug: string; classId: string | null; scopes: string[]; userId: string } | undefined {
+export function getAppContext(request: Request):
+  | {
+      appSlug: string;
+      classId: string | null;
+      scopes: string[];
+      userId: string;
+    }
+  | undefined {
   // classId is null for a classless admin token (see
   // KiwiAppService.generateAppToken). Such a token can never satisfy a
   // class-scoped route — callers must compare against their own :classId and

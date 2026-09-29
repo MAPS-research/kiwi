@@ -91,7 +91,10 @@ describe('KiwiAppChatTool', () => {
         createMockRequest() as any,
       );
 
-      expect(kiwiAppService.getActivePrompt).toHaveBeenCalledWith('codegen', 'hint');
+      expect(kiwiAppService.getActivePrompt).toHaveBeenCalledWith(
+        'codegen',
+        'hint',
+      );
       expect(llmService.createChat).toHaveBeenCalledWith(
         [
           { role: 'system', content: mockPrompt.systemPrompt },
@@ -186,7 +189,9 @@ describe('KiwiAppChatTool', () => {
     });
 
     it('should return error when prompt not found (404)', async () => {
-      const error = new NotFoundException('App "unknown" or prompt "missing" not found');
+      const error = new NotFoundException(
+        'App "unknown" or prompt "missing" not found',
+      );
       (error as any).status = 404;
       kiwiAppService.getActivePrompt.mockRejectedValue(error);
 
@@ -336,7 +341,9 @@ describe('KiwiAppChatTool', () => {
 
     it('should handle LLM service errors', async () => {
       kiwiAppService.getActivePrompt.mockResolvedValue(mockPrompt as any);
-      llmService.createChat.mockRejectedValue(new Error('LLM service unavailable'));
+      llmService.createChat.mockRejectedValue(
+        new Error('LLM service unavailable'),
+      );
 
       const result = await tool.kiwiAppChat(
         {
@@ -426,7 +433,10 @@ describe('KiwiAppChatTool', () => {
         createMockRequest() as any,
       );
 
-      expect(kiwiAppService.getAppPrompts).toHaveBeenCalledWith('codegen', false);
+      expect(kiwiAppService.getAppPrompts).toHaveBeenCalledWith(
+        'codegen',
+        false,
+      );
     });
   });
 });

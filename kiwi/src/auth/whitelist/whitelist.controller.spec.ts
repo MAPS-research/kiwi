@@ -9,7 +9,9 @@ describe('WhitelistController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [WhitelistController],
       providers: [WhitelistService],
-    }).compile();
+    })
+      .useMocker(() => ({ get: jest.fn() }))
+      .compile();
 
     controller = module.get<WhitelistController>(WhitelistController);
   });

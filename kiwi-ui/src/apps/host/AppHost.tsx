@@ -8,13 +8,13 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { Box, Tabs, Tab, Typography, CircularProgress } from '@mui/material';
 
-import { useAppRegistry, useApp } from '../registry';
-import { WidgetContainer } from './WidgetContainer';
+import { useAppRegistry, useApp } from '../registry/index.ts';
+import { WidgetContainer } from './WidgetContainer.tsx';
 import type {
   WidgetState,
   DisplayMode,
   KiwiWidgetDefinition,
-} from '../types';
+} from '../types/index.ts';
 
 /**
  * App Host Props
@@ -163,7 +163,9 @@ export const AppHost: React.FC<AppHostProps> = ({
           ...sx,
         }}
       >
-        <Typography color="text.secondary">
+        <Typography sx={{
+          color: "text.secondary"
+        }}>
           App '{app.manifest.name}' is not active (status: {app.status})
         </Typography>
       </Box>
@@ -182,7 +184,9 @@ export const AppHost: React.FC<AppHostProps> = ({
           ...sx,
         }}
       >
-        <Typography color="text.secondary">
+        <Typography sx={{
+          color: "text.secondary"
+        }}>
           App '{app.manifest.name}' has no widgets
         </Typography>
       </Box>

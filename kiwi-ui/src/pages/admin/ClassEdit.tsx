@@ -205,7 +205,9 @@ export const ClassEdit: React.FC = () => {
           sx={{ display: "flex", alignItems: "center", gap: 1.5, py: 4 }}
         >
           <CircularProgress size={24} />
-          <Typography color="text.secondary">Loading class data...</Typography>
+          <Typography sx={{
+            color: "text.secondary"
+          }}>Loading class data...</Typography>
         </Box>
       </AdminPage>
     );
@@ -253,7 +255,12 @@ export const ClassEdit: React.FC = () => {
                 >
                   Basic information
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "text.secondary",
+                    mt: 0.5
+                  }}>
                   The details shown to students and instructors.
                 </Typography>
               </Box>
@@ -314,7 +321,12 @@ export const ClassEdit: React.FC = () => {
                 >
                   Course image
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "text.secondary",
+                    mt: 0.5
+                  }}>
                   Used as the cover image on the class card.
                 </Typography>
               </Box>
@@ -334,7 +346,12 @@ export const ClassEdit: React.FC = () => {
                     onChange={handleDocumentUpload}
                   />
                 </Button>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "text.secondary",
+                    mt: 1
+                  }}>
                   PNG, JPG, JPEG, or WebP. The preview updates after upload.
                 </Typography>
               </Box>
@@ -361,7 +378,12 @@ export const ClassEdit: React.FC = () => {
                 >
                   Class-specific instructions
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "text.secondary",
+                    mt: 0.5
+                  }}>
                   Added to Kiwi&apos;s built-in instructions in every chat for this class.
                 </Typography>
               </Box>
@@ -397,7 +419,12 @@ export const ClassEdit: React.FC = () => {
                     />
                   </Stack>
                 ) : (
-                  <Typography color="text.secondary" variant="body2" sx={{ mt: 1 }}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: "text.secondary",
+                      mt: 1
+                    }}>
                     Kiwi uses only its built-in instructions for this class.
                   </Typography>
                 )}
@@ -449,7 +476,13 @@ export const ClassEdit: React.FC = () => {
             >
               Class preview
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, mb: 2 }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                mt: 0.5,
+                mb: 2
+              }}>
               This is how the class appears in the class list.
             </Typography>
             <ClassCard

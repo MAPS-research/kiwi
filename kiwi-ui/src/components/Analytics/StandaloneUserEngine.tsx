@@ -139,7 +139,9 @@ export const StandaloneUserEngine: React.FC<StandaloneUserEngineProps> = ({
                     <Typography component="h3" variant="subtitle1" sx={{ fontWeight: 600, mb: 0.25 }}>
                         User Engine Choice
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                    }}>
                         Model usage distribution
                     </Typography>
                 </Box>
@@ -188,7 +190,9 @@ export const StandaloneUserEngine: React.FC<StandaloneUserEngineProps> = ({
                             </ResponsiveContainer>
                         ) : (
                             <Box sx={{ height: '100%', display: 'grid', placeItems: 'center' }}>
-                                <Typography variant="body2" color="text.secondary">
+                                <Typography variant="body2" sx={{
+                                    color: "text.secondary"
+                                }}>
                                     No model usage for this range
                                 </Typography>
                             </Box>
@@ -223,7 +227,9 @@ export const StandaloneUserEngine: React.FC<StandaloneUserEngineProps> = ({
                                     <Typography variant="body2" sx={{ fontWeight: 500 }}>
                                         {item.engine}
                                     </Typography>
-                                    <Typography variant="body2" color="text.secondary">
+                                    <Typography variant="body2" sx={{
+                                        color: "text.secondary"
+                                    }}>
                                         <Box component="span" sx={{ fontWeight: 600, color: 'text.primary' }}>
                                             {item.usage.toLocaleString()} {item.usage === 1 ? 'request' : 'requests'}
                                         </Box>

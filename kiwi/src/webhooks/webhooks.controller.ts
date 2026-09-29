@@ -8,7 +8,6 @@ import {
   Delete,
   UseGuards,
   Request,
-  Headers,
   Query,
 } from '@nestjs/common';
 import {

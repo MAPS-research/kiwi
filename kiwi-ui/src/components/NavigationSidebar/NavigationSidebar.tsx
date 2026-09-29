@@ -162,9 +162,9 @@ const NavigationSidebar = ({
             {section.title && (
               <Typography
                 variant="caption"
-                color="text.secondary"
                 aria-hidden={!open}
                 sx={{
+                  color: "text.secondary",
                   display: 'block',
                   width: titleWidth,
                   px: `${textInsetX}px`,
@@ -174,12 +174,12 @@ const NavigationSidebar = ({
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
                   opacity: open ? 1 : 0,
+
                   transition: (theme) =>
                     theme.transitions.create('opacity', {
                       duration: theme.transitions.duration.shorter,
-                    }),
-                }}
-              >
+                    })
+                }}>
                 {section.title}
               </Typography>
             )}
@@ -252,7 +252,7 @@ const NavigationSidebar = ({
                             slotProps={{
                               primary: {
                                 variant: 'body2',
-                                fontWeight: item.selected || item.active ? 600 : 500,
+                                sx: { fontWeight: item.selected || item.active ? 600 : 500 },
                                 noWrap: true,
                               },
                             }}
@@ -333,8 +333,7 @@ const NavigationSidebar = ({
                                   slotProps={{
                                     primary: {
                                       variant: 'body2',
-                                      fontSize: 13,
-                                      fontWeight: child.selected ? 600 : 500,
+                                      sx: { fontSize: 13, fontWeight: child.selected ? 600 : 500 },
                                       noWrap: true,
                                     },
                                   }}

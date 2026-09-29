@@ -1,4 +1,4 @@
-export { MCPServerDialog } from "./MCPServerDialog";
-export { MCPTestResultDialog } from "./MCPTestResultDialog";
-export { DeleteConfirmDialog } from "./DeleteConfirmDialog";
-export { ToolConfigPanel } from "./ToolConfigPanel";
+export { MCPServerDialog } from "./MCPServerDialog.tsx";
+export { MCPTestResultDialog } from "./MCPTestResultDialog.tsx";
+export { DeleteConfirmDialog } from "./DeleteConfirmDialog.tsx";
+export { ToolConfigPanel } from "./ToolConfigPanel.tsx";

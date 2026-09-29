@@ -30,10 +30,17 @@ describe('computeCost', () => {
   });
 
   it('costs strictly less than pricing every prompt token as fresh', () => {
-    const usage = { promptTokens: 2466, cachedTokens: 2176, completionTokens: 500 };
+    const usage = {
+      promptTokens: 2466,
+      cachedTokens: 2176,
+      completionTokens: 500,
+    };
     const split = computeCost(usage, 'test-model', TABLE).totalUsd!;
-    const flat = computeCost({ ...usage, cachedTokens: 0 }, 'test-model', TABLE)
-      .totalUsd!;
+    const flat = computeCost(
+      { ...usage, cachedTokens: 0 },
+      'test-model',
+      TABLE,
+    ).totalUsd!;
 
     expect(split).toBeLessThan(flat);
   });
@@ -51,7 +58,11 @@ describe('computeCost', () => {
   });
 
   it('treats missing cached/reasoning fields as zero cached tokens', () => {
-    const cost = computeCost({ promptTokens: 1000, completionTokens: 0 }, 'test-model', TABLE);
+    const cost = computeCost(
+      { promptTokens: 1000, completionTokens: 0 },
+      'test-model',
+      TABLE,
+    );
 
     expect(cost.cachedInputTokens).toBe(0);
     expect(cost.totalUsd).toBeCloseTo(0.01, 9);
@@ -144,9 +155,9 @@ describe('loadPricingTable', () => {
   });
 
   it('ignores malformed JSON and incomplete entries', () => {
-    expect(loadPricingTable(get({ [MODEL_PRICING_ENV_KEY]: 'not json' }))).toEqual(
-      DEFAULT_MODEL_PRICING,
-    );
+    expect(
+      loadPricingTable(get({ [MODEL_PRICING_ENV_KEY]: 'not json' })),
+    ).toEqual(DEFAULT_MODEL_PRICING);
 
     const table = loadPricingTable(
       get({

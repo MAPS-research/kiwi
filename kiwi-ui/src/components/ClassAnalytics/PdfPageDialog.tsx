@@ -66,13 +66,15 @@ export const PdfPageDialog: React.FC<PdfPageDialogProps> = ({
       onClose={onClose}
       maxWidth="lg"
       fullWidth
-      PaperProps={{
-        sx: {
-          height: "82vh",
-          borderRadius: 3,
-          border: `1px solid ${tokens.line}`,
-          boxShadow: "0 24px 64px rgba(26, 21, 35, 0.18)",
-        },
+      slotProps={{
+        paper: {
+          sx: {
+            height: "82vh",
+            borderRadius: 3,
+            border: `1px solid ${tokens.line}`,
+            boxShadow: "0 24px 64px rgba(26, 21, 35, 0.18)",
+          },
+        }
       }}
     >
       <Box

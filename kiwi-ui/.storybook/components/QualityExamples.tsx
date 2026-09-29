@@ -100,7 +100,9 @@ const DataRow = ({ label, value }: { label: string; value: string }) => (
       minWidth: 0,
     }}
   >
-    <Typography variant="caption" color="text.secondary" noWrap>
+    <Typography variant="caption" noWrap sx={{
+      color: "text.secondary"
+    }}>
       {label}
     </Typography>
     <Typography variant="caption" sx={{ fontWeight: 700, overflowWrap: 'anywhere' }}>
@@ -128,7 +130,9 @@ export const AccessibilityExample = () => (
     >
       <Typography variant="body2">Kiwi Analytics</Typography>
     </Box>
-    <Typography variant="caption" color="text.secondary">
+    <Typography variant="caption" sx={{
+      color: "text.secondary"
+    }}>
       Visible label and focus indicator; the control keeps a stable accessible name.
     </Typography>
     <Box
@@ -187,7 +191,9 @@ export const AsyncStateExample = () => (
     <Surface label="Offline · Recovery">
       <Stack spacing={1} sx={{ p: 1.5, minHeight: 132, justifyContent: 'center' }}>
         <Typography variant="subtitle2">Couldn’t load usage</Typography>
-        <Typography variant="caption" color="text.secondary">
+        <Typography variant="caption" sx={{
+          color: "text.secondary"
+        }}>
           Check your connection. Your previous filters are preserved.
         </Typography>
         <Box

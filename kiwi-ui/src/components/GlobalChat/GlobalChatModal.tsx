@@ -17,11 +17,11 @@ import {
 } from '@mui/material';
 import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { ChatDisplayMode } from '../../context/GlobalChatContext';
-import { useGlobalChat } from '../../context/GlobalChatContext';
-import type { NavigationAction } from '../../services/models/NavigationAction';
-import ChatCore from '../Chat/ChatCore';
-import { TOP_NAV_HEIGHT } from '../TopNav/TopNav';
+import type { ChatDisplayMode } from '../../context/GlobalChatContext.tsx';
+import { useGlobalChat } from '../../context/GlobalChatContext.tsx';
+import type { NavigationAction } from '../../services/models/NavigationAction.ts';
+import ChatCore from '../Chat/ChatCore.tsx';
+import { TOP_NAV_HEIGHT } from '../TopNav/TopNav.tsx';
 
 // Keep at least this much page content visible when dragging the panel wider
 // in snap mode.

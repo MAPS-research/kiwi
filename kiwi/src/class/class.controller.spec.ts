@@ -7,7 +7,9 @@ describe('ClassController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ClassController],
-    }).compile();
+    })
+      .useMocker(() => ({ get: jest.fn() }))
+      .compile();
 
     controller = module.get<ClassController>(ClassController);
   });

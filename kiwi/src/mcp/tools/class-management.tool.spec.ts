@@ -417,7 +417,9 @@ describe('ClassManagementTool', () => {
     it('should handle service errors', async () => {
       const userId = 'user-123';
 
-      userService.user.mockRejectedValue(new Error('Database connection error'));
+      userService.user.mockRejectedValue(
+        new Error('Database connection error'),
+      );
 
       const result = await tool.getAuthenticatedUser(
         {},

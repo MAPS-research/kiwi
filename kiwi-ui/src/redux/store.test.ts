@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import store, { RootState } from './store';
-import { toggleCodeView } from './codePanelSlice';
+import store, { RootState } from './store.ts';
+import { toggleCodeView } from './codePanelSlice.ts';
 
 describe('Redux Store', () => {
   it('should have the correct initial state structure', () => {

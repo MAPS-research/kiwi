@@ -7,9 +7,9 @@ describe("chart palette", () => {
     const { grey } = materialDesign2014.palettes;
 
     expect(theme.palette.chart).toEqual({
-      series1: "#9C27B0",
-      series2: "#EC0A85",
-      series3: "#FF5A4E",
+      series1: "#6A1B9A",
+      series2: "#CF007E",
+      series3: "#FF4E4C",
       series4: "#FFA600",
       series5: grey["500"],
     });

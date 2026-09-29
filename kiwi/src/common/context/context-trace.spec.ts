@@ -74,7 +74,11 @@ describe('ContextTrace', () => {
   });
 
   describe('prefixHash', () => {
-    const build = (stableText: string, volatileText: string, tools: string[]) => {
+    const build = (
+      stableText: string,
+      volatileText: string,
+      tools: string[],
+    ) => {
       const messages: ChatCompletionMessageParam[] = [];
       const trace = new ContextTrace();
       messages.push(sys(stableText));

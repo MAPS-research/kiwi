@@ -11,7 +11,7 @@ import {
   DialogTitle,
   IconButton,
   List,
-  ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Paper,
@@ -31,24 +31,24 @@ import {
 } from "@mui/material";
 import {
   AddOutlined as AddIcon,
-  DeleteOutline as DeleteIcon,
+  DeleteOutlined as DeleteIcon,
   EditOutlined as EditIcon,
   PlayArrowOutlined as TestIcon,
   RefreshOutlined as RefreshIcon,
   LinkOffOutlined as UnassignIcon,
 } from "@mui/icons-material";
 import { useParams } from "react-router-dom";
-import { mcpAdminApiClient, toolConfigApiClient } from "../../utils/api";
+import { mcpAdminApiClient, toolConfigApiClient } from "../../utils/api.ts";
 import type {
   ClassMcpServerResponseDto,
   McpServerResponseDto,
   McpServerTestResponseDto,
   ToolConfigResponseDto,
-} from "../../services/models";
-import { MCPServerDialog } from "../../components/MCP/MCPServerDialog";
-import { MCPTestResultDialog } from "../../components/MCP/MCPTestResultDialog";
-import { DeleteConfirmDialog } from "../../components/MCP/DeleteConfirmDialog";
-import { ToolConfigPanel } from "../../components/MCP/ToolConfigPanel";
+} from "../../services/models/index.ts";
+import { MCPServerDialog } from "../../components/MCP/MCPServerDialog.tsx";
+import { MCPTestResultDialog } from "../../components/MCP/MCPTestResultDialog.tsx";
+import { DeleteConfirmDialog } from "../../components/MCP/DeleteConfirmDialog.tsx";
+import { ToolConfigPanel } from "../../components/MCP/ToolConfigPanel.tsx";
 import { AdminPage, AdminPageHeader } from "../../components/AdminPage/index.ts";
 
 interface TabPanelProps {
@@ -513,10 +513,17 @@ export const ClassMCPSettings: React.FC = () => {
           </TableContainer>
         ) : assignedServers.length === 0 ? (
           <Paper sx={{ p: 4, textAlign: "center" }}>
-            <Typography variant="h6" color="text.secondary" gutterBottom>
+            <Typography variant="h6" gutterBottom sx={{
+              color: "text.secondary"
+            }}>
               No MCP Servers Assigned
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                mb: 2
+              }}>
               Assign existing servers or create a new one to enable AI tool integrations for this class.
             </Typography>
             <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
@@ -553,11 +560,15 @@ export const ClassMCPSettings: React.FC = () => {
                 {assignedServers.map((assignment) => (
                   <TableRow key={assignment.id}>
                     <TableCell>
-                      <Typography variant="body2" fontWeight={500}>
+                      <Typography variant="body2" sx={{
+                        fontWeight: 500
+                      }}>
                         {assignment.displayName || assignment.mcpServer.name}
                       </Typography>
                       {assignment.mcpServer.description && (
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{
+                          color: "text.secondary"
+                        }}>
                           {assignment.mcpServer.description}
                         </Typography>
                       )}
@@ -681,7 +692,9 @@ export const ClassMCPSettings: React.FC = () => {
             </Box>
           ) : globalServers.length === 0 ? (
             <Box sx={{ textAlign: "center", py: 4 }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 No global servers available. Create a new server first.
               </Typography>
             </Box>
@@ -691,10 +704,9 @@ export const ClassMCPSettings: React.FC = () => {
                 const isAssigned = assignedServers.some((s) => s.mcpServerId === server.id);
                 const isSelected = selectedServers.has(server.id);
                 return (
-                  <ListItem
+                  <ListItemButton
                     key={server.id}
                     dense
-                    button
                     onClick={() => handleToggleServer(server.id)}
                   >
                     <ListItemIcon>
@@ -721,7 +733,7 @@ export const ClassMCPSettings: React.FC = () => {
                       }
                       secondary={server.description}
                     />
-                  </ListItem>
+                  </ListItemButton>
                 );
               })}
             </List>

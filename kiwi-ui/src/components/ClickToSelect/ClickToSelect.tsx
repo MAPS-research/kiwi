@@ -85,6 +85,7 @@ const ClickToSelect: React.FC<ClickToSelectProps> = ({
   };
 
   const onMouseUp = () => {
+    if (!isSelecting) return;
     setIsSelecting(false);
     setSelection(Selection.Selected);
     setShowButton(dx > 2 && dy > 2);
@@ -170,7 +171,7 @@ const ClickToSelect: React.FC<ClickToSelectProps> = ({
   const selectionContainerStyle: CSSProperties = {
     position: "relative",
     width: "100%",
-    height: "100%",
+    height: "auto",
     cursor: isSelecting ? "crosshair" : "auto",
   };
 

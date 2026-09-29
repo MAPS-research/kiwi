@@ -123,8 +123,10 @@ export const CONTEXT_BLOCKS: readonly ContextBlockSpec[] = [
 ];
 
 /** Spec lookup by label. */
-export const CONTEXT_BLOCK_SPECS: ReadonlyMap<ContextBlockLabel, ContextBlockSpec> =
-  new Map(CONTEXT_BLOCKS.map((b) => [b.label, b]));
+export const CONTEXT_BLOCK_SPECS: ReadonlyMap<
+  ContextBlockLabel,
+  ContextBlockSpec
+> = new Map(CONTEXT_BLOCKS.map((b) => [b.label, b]));
 
 /**
  * Check an assembled block sequence against the declaration.
@@ -137,7 +139,9 @@ export const CONTEXT_BLOCK_SPECS: ReadonlyMap<ContextBlockLabel, ContextBlockSpe
  *
  * @returns the violations, empty when the sequence conforms.
  */
-export function checkBlockOrder(labels: readonly ContextBlockLabel[]): string[] {
+export function checkBlockOrder(
+  labels: readonly ContextBlockLabel[],
+): string[] {
   const problems: string[] = [];
   let lastOrder = -Infinity;
   let lastLabel: string | null = null;

@@ -209,9 +209,7 @@ export class ClassAnalyticsService {
         chosenByMaterial.set(key, doc);
       }
     }
-    const chosenIds = new Set(
-      [...chosenByMaterial.values()].map((d) => d.id),
-    );
+    const chosenIds = new Set([...chosenByMaterial.values()].map((d) => d.id));
     const visibleDocuments = documents.filter(
       (doc) =>
         chosenIds.has(doc.id) || (statsByPdf.get(doc.id)?._count._all ?? 0) > 0,
@@ -297,7 +295,9 @@ export class ClassAnalyticsService {
     });
 
     const pdfIds = [
-      ...new Set(grouped.map((g) => g.pdfId).filter((id): id is string => !!id)),
+      ...new Set(
+        grouped.map((g) => g.pdfId).filter((id): id is string => !!id),
+      ),
     ];
     const docs = await this.database.document.findMany({
       where: { id: { in: pdfIds } },
@@ -553,7 +553,7 @@ export class ClassAnalyticsService {
       updatedAt: record?.updatedAt?.toISOString() ?? null,
       questionCount: record?.questionCount ?? 0,
       pendingNewQuestions: staleInfo.newCount,
-      error: record?.status === 'failed' ? record?.error ?? null : null,
+      error: record?.status === 'failed' ? (record?.error ?? null) : null,
       topics,
       intents,
     };
@@ -739,7 +739,11 @@ export class ClassAnalyticsService {
       // Allow re-kick only if a previous run looks crashed
       const stuck =
         Date.now() - record.updatedAt.getTime() > PROCESSING_TIMEOUT_MS;
-      return { shouldRefresh: stuck && newCount > 0, newCount, fullRegen: false };
+      return {
+        shouldRefresh: stuck && newCount > 0,
+        newCount,
+        fullRegen: false,
+      };
     }
 
     if (record.status === 'failed') {
@@ -757,8 +761,7 @@ export class ClassAnalyticsService {
 
     const isStale =
       newCount >= STALE_NEW_QUESTION_THRESHOLD ||
-      (newCount > 0 &&
-        Date.now() - record.updatedAt.getTime() > STALE_AGE_MS);
+      (newCount > 0 && Date.now() - record.updatedAt.getTime() > STALE_AGE_MS);
     return { shouldRefresh: isStale, newCount, fullRegen: false };
   }
 
@@ -779,7 +782,7 @@ export class ClassAnalyticsService {
 
   private async processTopics(classId: string, force = false) {
     try {
-      let record = await this.database.classAnalyticsTopics.findUnique({
+      const record = await this.database.classAnalyticsTopics.findUnique({
         where: { classId },
       });
       if (!record) return;
@@ -843,9 +846,10 @@ export class ClassAnalyticsService {
         idsByText.set(key, ids);
       }
 
-      const uniqueQuestions = [...idsByText.entries()].map(
-        ([key, ids]) => ({ text: key, ids }),
-      );
+      const uniqueQuestions = [...idsByText.entries()].map(([key, ids]) => ({
+        text: key,
+        ids,
+      }));
 
       let totalUsage = 0;
       for (
@@ -972,7 +976,10 @@ Respond with STRICT JSON only, in this exact shape:
     if (!content) throw new Error('Empty LLM response during topic extraction');
 
     const parsed = JSON.parse(
-      content.replace(/```json\s*/g, '').replace(/```\s*$/g, '').trim(),
+      content
+        .replace(/```json\s*/g, '')
+        .replace(/```\s*$/g, '')
+        .trim(),
     );
 
     const newTopics: { id: string; label: string }[] = Array.isArray(
@@ -984,7 +991,11 @@ Respond with STRICT JSON only, in this exact shape:
       if (!t?.id || !t?.label || typeof t.id !== 'string') continue;
       const id = t.id.toLowerCase().trim();
       if (id === '_skip' || topicsById.has(id)) continue;
-      topicsById.set(id, { id, label: String(t.label).trim(), questionIds: [] });
+      topicsById.set(id, {
+        id,
+        label: String(t.label).trim(),
+        questionIds: [],
+      });
     }
 
     const assignments: { q: number; topic: string; intent?: string }[] =
@@ -993,7 +1004,9 @@ Respond with STRICT JSON only, in this exact shape:
       const index = Number(a?.q) - 1;
       if (index < 0 || index >= batch.length) continue;
 
-      const topicId = String(a?.topic ?? '').toLowerCase().trim();
+      const topicId = String(a?.topic ?? '')
+        .toLowerCase()
+        .trim();
       if (topicId !== '_skip') {
         const topic = topicsById.get(topicId);
         if (topic) {
@@ -1003,7 +1016,9 @@ Respond with STRICT JSON only, in this exact shape:
         }
       }
 
-      const intentId = String(a?.intent ?? '').toLowerCase().trim();
+      const intentId = String(a?.intent ?? '')
+        .toLowerCase()
+        .trim();
       if (INTENT_LABEL_BY_ID.has(intentId)) {
         let intent = intentsById.get(intentId);
         if (!intent) {

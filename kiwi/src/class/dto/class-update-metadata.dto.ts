@@ -12,6 +12,7 @@ export class ClassUpdateMetadataRequest {
     description:
       'Updated class details including name, description, and system prompts',
     type: 'object',
+    additionalProperties: true,
     example: {
       name: 'Introduction to Computer Science',
       description: 'An introductory course to computer science concepts',

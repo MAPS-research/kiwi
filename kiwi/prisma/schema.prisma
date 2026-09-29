@@ -6,17 +6,11 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["postgresqlExtensions", "extendedIndexes"]
-}
-
-generator types {
-  provider = "prisma-generator-typescript-interfaces"
-  output   = "../src/common/database/database.types.ts"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
   provider   = "postgresql"
-  url        = env("DATABASE_URL")
   extensions = [vector]
 }
 

@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { createHash } from 'crypto';
 import { Experiment } from '@prisma/client';
 import { ExperimentDatabaseService } from 'src/common/database/experiment.service';
@@ -72,7 +77,7 @@ export class ExperimentService {
       'Rules: variant keys are lowercase_snake. Use only two assignment strategies: "deterministic_hash" (auto split; REQUIRES a non-empty assignment.seed and allocations summing to 1) or "manual" (put student emails in each variant.members; allocations ignored). NEVER use the deprecated "random" strategy.',
       'assignment.unit is ALWAYS "user" — each student is assigned to one group before they chat and stays there. Per-session assignment is not supported; do not ask about it or offer it.',
       'Every variant MUST include config.systemPrompts.defaultSystemMessage — the FULL system prompt for that group (the chat injects only this field). Do NOT emit classMaterialsPrompt or recitationPrompt: they are legacy fields of the retired v1 PDF chat and are ignored.',
-      'IMPORTANT: when the instructor asks to customize a group\'s behavior/prompt, you MUST write the FULL customized prompt text for that group — it has to actually differ from the default and express exactly what they asked for. Do NOT just echo the default. For groups whose prompts were not discussed, copy the class default below as-is.',
+      "IMPORTANT: when the instructor asks to customize a group's behavior/prompt, you MUST write the FULL customized prompt text for that group — it has to actually differ from the default and express exactly what they asked for. Do NOT just echo the default. For groups whose prompts were not discussed, copy the class default below as-is.",
       `Class default system prompt (defaultSystemMessage): ${JSON.stringify(defaults.defaultSystemMessage)}.`,
       emails.length
         ? `Enrolled student emails (only use these for manual member lists): ${emails.join(', ')}.`
@@ -87,7 +92,9 @@ export class ExperimentService {
           { role: 'system', content: system },
           ...messages.map((m) => ({
             role:
-              m.role === 'assistant' ? ('assistant' as const) : ('user' as const),
+              m.role === 'assistant'
+                ? ('assistant' as const)
+                : ('user' as const),
             content: m.content,
           })),
         ],
@@ -418,7 +425,7 @@ export class ExperimentService {
       const chosen =
         cfg.assignment.strategy === 'random'
           ? this.pickRandomVariant(cfg.variants)
-          : this.pickVariant(userId, cfg.assignment.seed ?? "", cfg.variants);
+          : this.pickVariant(userId, cfg.assignment.seed ?? '', cfg.variants);
       await this.db.upsertAssignment({
         experimentId: experiment.id,
         userId,
@@ -456,7 +463,9 @@ export class ExperimentService {
   ): Promise<ResolvedExperimentConfig> {
     const experiment = await this.getById(experimentId);
     if (experiment.classId !== classId) {
-      throw new BadRequestException('Experiment does not belong to this class.');
+      throw new BadRequestException(
+        'Experiment does not belong to this class.',
+      );
     }
 
     const parsed = experimentConfigSchema.safeParse(experiment.config);
@@ -563,13 +572,13 @@ export class ExperimentService {
           enrollment.userId,
         );
         const chosen = existing
-          ? cfg.variants.find((v) => v.key === existing.variantKey) ??
-            cfg.variants[0]
+          ? (cfg.variants.find((v) => v.key === existing.variantKey) ??
+            cfg.variants[0])
           : cfg.assignment.strategy === 'random'
             ? this.pickRandomVariant(cfg.variants)
-            : cfg.variants.find(
+            : (cfg.variants.find(
                 (v) => v.key === quota?.get(enrollment.userId),
-              ) ?? cfg.variants[0];
+              ) ?? cfg.variants[0]);
         if (!existing) {
           await this.db.upsertAssignment({
             experimentId: experiment.id,

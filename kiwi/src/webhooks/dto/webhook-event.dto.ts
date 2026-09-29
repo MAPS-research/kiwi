@@ -14,7 +14,7 @@ export class WebhookEventDto {
       'interaction.created',
       'document.uploaded',
       'test.event',
-      '*'
+      '*',
     ],
   })
   @IsString()

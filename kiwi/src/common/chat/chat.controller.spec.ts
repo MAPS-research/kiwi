@@ -7,7 +7,9 @@ describe('ChatController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ChatController],
-    }).compile();
+    })
+      .useMocker(() => ({ get: jest.fn() }))
+      .compile();
 
     controller = module.get<ChatController>(ChatController);
   });

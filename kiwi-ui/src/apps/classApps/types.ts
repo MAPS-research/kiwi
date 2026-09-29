@@ -12,14 +12,14 @@ export type {
   EnableClassAppDto,
   UpdateClassAppDto,
   ReorderClassAppsDto,
-} from '../../services/models';
+} from '../../services/models/index.ts';
 
 // Re-export the generated API
-export { ClassAppsApi } from '../../services/apis/ClassAppsApi';
-export { KiwiAppsApi } from '../../services/apis/KiwiAppsApi';
+export { ClassAppsApi } from '../../services/apis/ClassAppsApi.ts';
+export { KiwiAppsApi } from '../../services/apis/KiwiAppsApi.ts';
 
 // Import for use in this file
-import type { ClassAppResponseDto } from '../../services/models';
+import type { ClassAppResponseDto } from '../../services/models/index.ts';
 
 /**
  * Alias for the generated DTO - use this for cleaner imports

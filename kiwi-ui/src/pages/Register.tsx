@@ -31,9 +31,9 @@ export const Register: React.FC = () => {
         <Typography
           component="h1"
           variant="h3"
-          fontWeight={700}
-          textAlign="left"
           sx={{
+            fontWeight: 700,
+            textAlign: "left",
             width: "100%",
             fontSize: { xs: "1.75rem", sm: "2.1rem", md: "2.4rem" },
             lineHeight: 1.15,
@@ -44,9 +44,14 @@ export const Register: React.FC = () => {
         </Typography>
         <Typography
           variant="body1"
-          color="text.secondary"
-          textAlign="left"
-          sx={{ width: "100%", mt: 1.5, mb: 4, lineHeight: 1.6 }}
+          sx={{
+            color: "text.secondary",
+            textAlign: "left",
+            width: "100%",
+            mt: 1.5,
+            mb: 4,
+            lineHeight: 1.6,
+          }}
         >
           {googleLoginOn
             ? "Sign up with your Google account."
@@ -68,16 +73,14 @@ export const Register: React.FC = () => {
 
         <Typography
           variant="body2"
-          color="text.secondary"
-          textAlign="center"
-          sx={{ mt: 4 }}
+          sx={{ color: "text.secondary", textAlign: "center", mt: 4 }}
         >
           Already have an account?{" "}
           <Link
             component={RouterLink}
             to="/login"
-            fontWeight={700}
             underline="hover"
+            sx={{ fontWeight: 700 }}
           >
             Log in
           </Link>

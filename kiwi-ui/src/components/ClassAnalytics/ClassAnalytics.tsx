@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import {
-  ChatBubbleOutline as ChatIcon,
+  ChatBubbleOutlined as ChatIcon,
   MenuBookOutlined as MenuBookIcon,
   GroupOutlined as PeopleIcon,
   SellOutlined as TopicIcon,
@@ -47,17 +47,20 @@ const OverviewMetricCard: React.FC<{
   >
     <Stack
       direction="row"
-      justifyContent="space-between"
       spacing={2}
-      sx={{ height: "100%" }}
-    >
+      sx={{
+        justifyContent: "space-between",
+        height: "100%"
+      }}>
       <Box sx={{ minWidth: 0 }}>
         <Typography
           variant="body2"
-          color="text.secondary"
           noWrap
-          sx={{ height: 20, lineHeight: "20px" }}
-        >
+          sx={{
+            color: "text.secondary",
+            height: 20,
+            lineHeight: "20px"
+          }}>
           {label}
         </Typography>
         <Box sx={{ height: 44, display: "flex", alignItems: "center" }}>
@@ -304,22 +307,24 @@ export const ClassAnalytics: React.FC = () => {
                 },
               }}
               MenuProps={{
-                PaperProps: {
-                  sx: {
-                    mt: 0.5,
-                    maxHeight: 380,
-                    borderRadius: 2.5,
-                    border: `1px solid ${tokens.line}`,
-                    boxShadow: "0 12px 32px rgba(26, 21, 35, 0.12)",
-                    "& .MuiMenuItem-root": {
-                      fontSize: 13.5,
-                      borderRadius: 1.5,
-                      mx: 0.75,
-                      my: 0.25,
-                      "&:hover": { backgroundColor: tokens.hover },
-                      "&.Mui-selected": {
-                        backgroundColor: tokens.violetSoft,
-                        "&:hover": { backgroundColor: tokens.violetTrack },
+                slotProps: {
+                  paper: {
+                    sx: {
+                      mt: 0.5,
+                      maxHeight: 380,
+                      borderRadius: 2.5,
+                      border: `1px solid ${tokens.line}`,
+                      boxShadow: "0 12px 32px rgba(26, 21, 35, 0.12)",
+                      "& .MuiMenuItem-root": {
+                        fontSize: 13.5,
+                        borderRadius: 1.5,
+                        mx: 0.75,
+                        my: 0.25,
+                        "&:hover": { backgroundColor: tokens.hover },
+                        "&.Mui-selected": {
+                          backgroundColor: tokens.violetSoft,
+                          "&:hover": { backgroundColor: tokens.violetTrack },
+                        },
                       },
                     },
                   },

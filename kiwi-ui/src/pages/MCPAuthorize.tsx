@@ -209,7 +209,9 @@ export const MCPAuthorize: React.FC = () => {
         <LogoBox />
 
         {passwordLoginOn && (
-          <Box component="form" onSubmit={handlePasswordLogin} width="100%">
+          <Box component="form" onSubmit={handlePasswordLogin} sx={{
+            width: "100%"
+          }}>
             <TextField
               label="Your Email"
               value={email}
@@ -246,7 +248,11 @@ export const MCPAuthorize: React.FC = () => {
         )}
 
         {googleLoginOn && (
-          <Box mt={2} width="100%">
+          <Box
+            sx={{
+              mt: 2,
+              width: "100%"
+            }}>
             <GoogleLoginButton mode="login" />
           </Box>
         )}

@@ -1,4 +1,9 @@
-import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { DatabaseService } from '../common/database/database.service';
 import { McpClientService } from '../common/mcp/mcp-client.service';
 import { McpConnectionManagerService } from '../common/mcp/mcp-connection-manager.service';
@@ -301,7 +306,10 @@ export class McpService {
     }
 
     // Fallback to OIDC with proper URL construction
-    const oidcUrl = this.buildWellKnownUrl(normalizedUrl, 'openid-configuration');
+    const oidcUrl = this.buildWellKnownUrl(
+      normalizedUrl,
+      'openid-configuration',
+    );
     const oidcResult = await this.tryFetchOAuthMetadata(oidcUrl, normalizedUrl);
 
     if (oidcResult.success) {
@@ -358,7 +366,11 @@ export class McpService {
       const metadata = await response.json();
 
       // RFC 8414 Section 3.3: Validate issuer matches expected value
-      if (expectedIssuer && metadata.issuer && metadata.issuer !== expectedIssuer) {
+      if (
+        expectedIssuer &&
+        metadata.issuer &&
+        metadata.issuer !== expectedIssuer
+      ) {
         this.logger.warn(
           `Issuer mismatch: expected ${expectedIssuer}, got ${metadata.issuer}`,
         );
@@ -458,7 +470,10 @@ export class McpService {
       } = registrationResponse;
 
       if (!client_id) {
-        return { success: false, error: 'Registration response missing client_id' };
+        return {
+          success: false,
+          error: 'Registration response missing client_id',
+        };
       }
 
       // For confidential clients, encrypt and store the client_secret
@@ -466,7 +481,8 @@ export class McpService {
         const encryptedSecret = await encrypt(client_secret);
 
         // Update the server's oauthMetadata with the new client credentials
-        const existingMetadata = (server.oauthMetadata as Record<string, any>) || {};
+        const existingMetadata =
+          (server.oauthMetadata as Record<string, any>) || {};
         const updatedMetadata = {
           ...existingMetadata,
           clientId: client_id,
@@ -557,9 +573,7 @@ export class McpService {
       },
     });
 
-    this.logger.log(
-      `Assigned MCP server ${serverId} to class ${dto.classId}`,
-    );
+    this.logger.log(`Assigned MCP server ${serverId} to class ${dto.classId}`);
 
     return this.mapClassMcpServerToResponse(assignment);
   }
@@ -597,9 +611,7 @@ export class McpService {
       where: { id: assignment.id },
     });
 
-    this.logger.log(
-      `Removed MCP server ${mcpServerId} from class ${classId}`,
-    );
+    this.logger.log(`Removed MCP server ${mcpServerId} from class ${classId}`);
   }
 
   /**
@@ -1059,9 +1071,7 @@ export class McpService {
       serverId,
     );
 
-    this.logger.log(
-      `Initiated OAuth for user ${userId}, server ${serverId}`,
-    );
+    this.logger.log(`Initiated OAuth for user ${userId}, server ${serverId}`);
 
     return result;
   }
@@ -1091,16 +1101,12 @@ export class McpService {
     const oauthMetadata = server.oauthMetadata as any;
 
     // Exchange code for tokens (single call with complete metadata)
-    const tokenData = await this.mcpOAuth.exchangeCodeForToken(
-      code,
-      state,
-      {
-        tokenUrl: oauthMetadata.tokenUrl,
-        clientId: oauthMetadata.clientId,
-        clientSecret: oauthMetadata.clientSecret,
-        redirectUri: oauthMetadata.redirectUri || this.mcpOAuth.getRedirectUri(),
-      },
-    );
+    const tokenData = await this.mcpOAuth.exchangeCodeForToken(code, state, {
+      tokenUrl: oauthMetadata.tokenUrl,
+      clientId: oauthMetadata.clientId,
+      clientSecret: oauthMetadata.clientSecret,
+      redirectUri: oauthMetadata.redirectUri || this.mcpOAuth.getRedirectUri(),
+    });
 
     // Create connection
     const connection = await this.mcpConnectionManager.createConnection(
@@ -1156,9 +1162,14 @@ export class McpService {
       throw new BadRequestException('Connection does not belong to user');
     }
 
-    await this.mcpConnectionManager.disconnectUser(userId, connection.mcpServerId);
+    await this.mcpConnectionManager.disconnectUser(
+      userId,
+      connection.mcpServerId,
+    );
 
-    this.logger.log(`User ${userId} disconnected from MCP server ${connection.mcpServerId}`);
+    this.logger.log(
+      `User ${userId} disconnected from MCP server ${connection.mcpServerId}`,
+    );
   }
 
   // ============================================
@@ -1181,10 +1192,13 @@ export class McpService {
     // Sanitize config (remove sensitive environment variables)
     if (sanitized.config?.env) {
       const config = { ...sanitized.config };
-      config.env = Object.keys(config.env).reduce((acc: Record<string, string>, key) => {
-        acc[key] = '***';
-        return acc;
-      }, {});
+      config.env = Object.keys(config.env).reduce(
+        (acc: Record<string, string>, key) => {
+          acc[key] = '***';
+          return acc;
+        },
+        {},
+      );
       sanitized.config = config;
     }
 
@@ -1224,7 +1238,9 @@ export class McpService {
   /**
    * Map ClassMcpServer to response DTO
    */
-  private mapClassMcpServerToResponse(assignment: any): ClassMcpServerResponseDto {
+  private mapClassMcpServerToResponse(
+    assignment: any,
+  ): ClassMcpServerResponseDto {
     return {
       id: assignment.id,
       classId: assignment.classId,

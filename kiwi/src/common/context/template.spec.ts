@@ -15,9 +15,9 @@ describe('renderConditional', () => {
   });
 
   it('renders every occurrence, not just the first', () => {
-    expect(renderConditional('{{#if x}}A{{/if}}-{{#if x}}B{{/if}}', 'x', (i) => i)).toBe(
-      'A-B',
-    );
+    expect(
+      renderConditional('{{#if x}}A{{/if}}-{{#if x}}B{{/if}}', 'x', (i) => i),
+    ).toBe('A-B');
   });
 
   describe('nesting — the bug that put literal {{/if}} into every prompt', () => {

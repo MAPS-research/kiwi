@@ -95,7 +95,9 @@ const Group = ({ title, colors }: { title: string; colors: Colors }) => (
     <Typography variant="subtitle1" sx={{ mb: 1.5, fontWeight: 600 }}>
       {title}
     </Typography>
-    <Stack direction="row" spacing={2} flexWrap="wrap" useFlexGap>
+    <Stack direction="row" spacing={2} useFlexGap sx={{
+      flexWrap: "wrap"
+    }}>
       {Object.entries(colors).map(([name, value]) => (
         <Swatch key={name} name={name} value={value} />
       ))}

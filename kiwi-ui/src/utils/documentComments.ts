@@ -1,8 +1,8 @@
-import { HighlightArea } from "@react-pdf-viewer/highlight";
+import { HighlightArea } from "../components/PDFViewer/pdfTypes.ts";
 import {
   CommentPinPosition,
   DocumentCommentPin,
-} from "../types/documentComments";
+} from "../types/documentComments.ts";
 
 type ServerDocumentComment = Partial<DocumentCommentPin> &
   Record<string, unknown> & {

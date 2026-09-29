@@ -9,8 +9,8 @@ import {
   uninstallBridge,
   isBridgeInstalled,
   getBridge,
-} from '../KiwiAppBridge';
-import type { KiwiAppBridge, BridgeConfig } from '../../types';
+} from '../KiwiAppBridge.ts';
+import type { KiwiAppBridge, BridgeConfig } from '../../types/index.ts';
 
 describe('KiwiAppBridge', () => {
   // Create default config with all required callbacks
@@ -27,6 +27,7 @@ describe('KiwiAppBridge', () => {
     onClose: vi.fn(),
     onOpenExternal: vi.fn(),
     ...overrides,
+    theme: overrides.theme ?? 'light',
   });
 
   beforeEach(() => {
@@ -90,7 +91,7 @@ describe('KiwiAppBridge', () => {
       const config = createDefaultConfig({ initialState: { count: 5 } });
       const bridge = createKiwiAppBridge(config);
 
-      bridge.setWidgetState((prev) => ({ ...prev, count: prev.count + 1 }));
+      bridge.setWidgetState((prev) => ({ ...prev, count: (prev.count as number) + 1 }));
 
       expect(bridge.getWidgetState().count).toBe(6);
     });

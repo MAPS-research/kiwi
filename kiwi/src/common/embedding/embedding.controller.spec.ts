@@ -7,7 +7,9 @@ describe('EmbeddingController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [EmbeddingController],
-    }).compile();
+    })
+      .useMocker(() => ({ get: jest.fn() }))
+      .compile();
 
     controller = module.get<EmbeddingController>(EmbeddingController);
   });

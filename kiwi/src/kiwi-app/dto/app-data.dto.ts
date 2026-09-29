@@ -37,7 +37,9 @@ export class DocumentChunksQueryDto {
   @IsString({ each: true })
   documentIds?: string[];
 
-  @ApiPropertyOptional({ description: 'Opaque cursor from a previous response' })
+  @ApiPropertyOptional({
+    description: 'Opaque cursor from a previous response',
+  })
   @IsOptional()
   @IsString()
   @MaxLength(500)
@@ -120,7 +122,7 @@ export class ContextRequestDto {
 }
 
 export class ContextualChatRequestDto {
-  @ApiProperty({ description: 'ID of the app\'s admin-approved prompt' })
+  @ApiProperty({ description: "ID of the app's admin-approved prompt" })
   @IsString()
   @IsNotEmpty()
   promptId: string;
@@ -146,7 +148,9 @@ export class ContextualChatRequestDto {
 }
 
 export class ContextualChatResponseDto {
-  @ApiProperty({ description: 'The LLM output (a JSON string if outputSchema was given)' })
+  @ApiProperty({
+    description: 'The LLM output (a JSON string if outputSchema was given)',
+  })
   output: string;
   @ApiProperty() promptId: string;
   @ApiProperty() promptName: string;

@@ -1,5 +1,11 @@
-import { Injectable, Logger, Scope } from '@nestjs/common';
-import { Resource, Context, HttpRequest } from '@rekog/mcp-nest';
+import { Payload, Ctx } from '@nestjs/microservices';
+import { Logger, Scope } from '@nestjs/common';
+import {
+  ResourceTemplate,
+  McpContext as Context,
+  McpController,
+  McpRawRequest,
+} from '@rekog/mcp-nest';
 import { Request } from 'express';
 import { UserService } from 'src/common/database/user.service';
 import { EnrollmentService } from 'src/common/database/enrollment.service';
@@ -14,15 +20,15 @@ import { requireScope } from '../utils/scope-check';
  * - kiwi://users/{userId}/role/{classId} - User's role in a specific class
  */
 /**
- * @rekog/mcp-nest hands resource handlers an adapted request; the Express
- * request (where the auth guard put `user` and `appContext`) is `.raw`.
- * Reading the adapter directly silently skips every app-token scope check.
+ * The Express request, where the auth guard put `user` and `appContext`.
+ * @rekog/mcp-nest 2 passes it directly; older adapters wrapped it as `.raw`,
+ * and reading the wrapper silently skips every app-token scope check.
  */
-function expressRequest(httpRequest: HttpRequest): Request {
+function expressRequest(httpRequest: unknown): Request {
   return ((httpRequest as any)?.raw ?? httpRequest) as Request;
 }
 
-@Injectable({ scope: Scope.REQUEST })
+@McpController({ scope: Scope.REQUEST })
 export class UserResource {
   private readonly logger = new Logger(UserResource.name);
 
@@ -51,16 +57,16 @@ export class UserResource {
    * (never for app tokens)
    * Does NOT expose: password hashes, OAuth tokens, etc.
    */
-  @Resource({
+  @ResourceTemplate({
     name: 'user-profile',
     description: 'Get basic user profile information by user ID',
     mimeType: 'application/json',
-    uri: 'kiwi://users/{userId}',
+    uriTemplate: 'kiwi://users/{userId}',
   })
   async getUserProfile(
-    { uri }: { uri: string },
-    context: Context,
-    httpRequest: HttpRequest,
+    @Payload() { uri }: { uri: string },
+    @Ctx() context: Context,
+    @McpRawRequest() httpRequest: Request,
   ) {
     try {
       // Check scope for app tokens
@@ -142,16 +148,16 @@ export class UserResource {
    * Returns: userId, classId, role (student/ta/professor/admin)
    * Returns null role if user is not enrolled in the class
    */
-  @Resource({
+  @ResourceTemplate({
     name: 'user-class-role',
     description: "Get a user's role in a specific class",
     mimeType: 'application/json',
-    uri: 'kiwi://users/{userId}/role/{classId}',
+    uriTemplate: 'kiwi://users/{userId}/role/{classId}',
   })
   async getUserClassRole(
-    { uri }: { uri: string },
-    context: Context,
-    httpRequest: HttpRequest,
+    @Payload() { uri }: { uri: string },
+    @Ctx() context: Context,
+    @McpRawRequest() httpRequest: Request,
   ) {
     try {
       // Check scope for app tokens
@@ -217,16 +223,16 @@ export class UserResource {
    *
    * Returns: list of classes the user is enrolled in with their roles
    */
-  @Resource({
+  @ResourceTemplate({
     name: 'user-enrollments',
     description: 'Get all class enrollments for a user',
     mimeType: 'application/json',
-    uri: 'kiwi://users/{userId}/enrollments',
+    uriTemplate: 'kiwi://users/{userId}/enrollments',
   })
   async getUserEnrollments(
-    { uri }: { uri: string },
-    context: Context,
-    httpRequest: HttpRequest,
+    @Payload() { uri }: { uri: string },
+    @Ctx() context: Context,
+    @McpRawRequest() httpRequest: Request,
   ) {
     try {
       // Check scope for app tokens

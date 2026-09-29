@@ -38,7 +38,9 @@ export const SystemWideFeatureFlags: React.FC = () => {
         <Typography variant="h6" component="h2" sx={{ fontWeight: 600 }}>
           Add an assignment
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" sx={{
+          color: "text.secondary"
+        }}>
           Choose the narrowest scope possible and add an expiration for temporary access.
         </Typography>
       </Stack>

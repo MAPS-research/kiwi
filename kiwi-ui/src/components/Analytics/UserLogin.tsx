@@ -31,7 +31,7 @@ interface DailyPlotProps {
 // Mock data generator for user activities
 const generateMockUserData = (days: number) => {
   const users = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry'];
-  const data = [];
+  const data: { userId: string; displayName: string; sessionCount: number; rank: number }[] = [];
 
   // Generate data for each user
   users.forEach((user, index) => {
@@ -116,7 +116,9 @@ export const UserLoginPlot: React.FC<DailyPlotProps> = ({
           <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#333' }}>
             User Activity
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             Active Users: {chartData.length} | Total Sessions: {chartData.reduce((sum, item) => sum + item.sessionCount, 0)}
           </Typography>
         </Box>
@@ -141,44 +143,46 @@ export const UserLoginPlot: React.FC<DailyPlotProps> = ({
       </Box>
 
       {/* Chart */}
-      <ResponsiveContainer width="100%" height="calc(100% - 80px)">
-        <AreaChart
-          data={chartData}
-          margin={{ top: 10, right: 30, left: 20, bottom: 0 }}
-        >
-          <defs>
-            <linearGradient id="colorUserLogin" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#FF9800" stopOpacity={0.3} />
-              <stop offset="95%" stopColor="#FF9800" stopOpacity={0.05} />
-            </linearGradient>
-          </defs>
-          <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#f0f0f0" />
-          <XAxis
-            dataKey="displayName"
-            axisLine={false}
-            tickLine={false}
-            tick={{ fontSize: 11, fill: '#666' }}
-            angle={-45}
-            textAnchor="end"
-            height={60}
-          />
-          <YAxis
-            axisLine={false}
-            tickLine={false}
-            tick={{ fontSize: 12, fill: '#666' }}
-          />
-          <Tooltip content={<CustomTooltip />} />
-          <Area
-            type="monotone"
-            dataKey="sessionCount"
-            stroke="#FF9800"
-            strokeWidth={3}
-            fill="url(#colorUserLogin)"
-            dot={{ fill: '#FF9800', strokeWidth: 2, r: 4 }}
-            activeDot={{ r: 4, stroke: '#FF9800', strokeWidth: 0, fill: '#FF9800' }}
-          />
-        </AreaChart>
-      </ResponsiveContainer>
+      <Box sx={{ height: "calc(100% - 80px)" }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart
+            data={chartData}
+            margin={{ top: 10, right: 30, left: 20, bottom: 0 }}
+          >
+            <defs>
+              <linearGradient id="colorUserLogin" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#FF9800" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#FF9800" stopOpacity={0.05} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#f0f0f0" />
+            <XAxis
+              dataKey="displayName"
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 11, fill: '#666' }}
+              angle={-45}
+              textAnchor="end"
+              height={60}
+            />
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 12, fill: '#666' }}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Area
+              type="monotone"
+              dataKey="sessionCount"
+              stroke="#FF9800"
+              strokeWidth={3}
+              fill="url(#colorUserLogin)"
+              dot={{ fill: '#FF9800', strokeWidth: 2, r: 4 }}
+              activeDot={{ r: 4, stroke: '#FF9800', strokeWidth: 0, fill: '#FF9800' }}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </Box>
     </Box>
   );
 };

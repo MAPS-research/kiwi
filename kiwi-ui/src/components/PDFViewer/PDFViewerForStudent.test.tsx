@@ -34,10 +34,9 @@ vi.mock("./pdfRangeTransport.ts", () => ({
 // CSS imports
 vi.mock("react-pdf/dist/Page/AnnotationLayer.css", () => ({}));
 vi.mock("react-pdf/dist/Page/TextLayer.css", () => ({}));
-vi.mock("./PDFViewer.css", () => ({}));
 
 import { PDFViewerForStudents } from "./PDFViewerForStudent.tsx";
-import type { DocumentCommentPin } from "../../types/documentComments";
+import type { DocumentCommentPin } from "../../types/documentComments.ts";
 
 // jsdom lacks these — the viewer uses them.
 beforeEach(() => {

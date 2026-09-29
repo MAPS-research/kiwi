@@ -1,4 +1,4 @@
-import { useId, useRef, useState } from "react";
+import { useId, useRef, useState, type KeyboardEvent } from "react";
 import {
   Box,
   ButtonBase,
@@ -220,7 +220,7 @@ const ClassSwitcher = ({
             slotProps={{
               htmlInput: {
                 "aria-label": "Search classes",
-                onKeyDown: (event) => {
+                onKeyDown: (event: KeyboardEvent<HTMLInputElement>) => {
                   if (event.key === "ArrowDown") {
                     event.preventDefault();
                     firstOptionRef.current?.focus();
@@ -343,7 +343,9 @@ const ClassSwitcher = ({
             })
           ) : (
             <Box sx={{ px: 1.5, py: 4, textAlign: "center" }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 {emptyLabel}
               </Typography>
             </Box>

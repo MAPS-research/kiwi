@@ -1,7 +1,10 @@
-import Slider from "react-slick";
+import SliderExport from "react-slick";
 import { Box, Typography, useMediaQuery } from "@mui/material";
 import { useAuth } from "../../auth/AuthContext.tsx";
 import { BRAND_LABEL } from "../../config/branding";
+
+// react-slick's CommonJS entry can expose its component under a nested default.
+const Slider = (SliderExport as unknown as { default?: typeof SliderExport }).default ?? SliderExport;
 
 const images = [
   { src: "/assets/images/bg-hero-1.svg", alt: "Decorative green gradient" },

@@ -39,8 +39,8 @@ import {
     RefreshOutlined as RefreshIcon,
     VisibilityOutlined as VisibilityIcon,
     TrendingUpOutlined as TrendingUpIcon,
-    ErrorOutline as ErrorIcon,
-    CheckCircleOutline as CheckCircleIcon,
+    ErrorOutlined as ErrorIcon,
+    CheckCircleOutlined as CheckCircleIcon,
     ScienceOutlined as TestTubeIcon,
 } from "@mui/icons-material";
 import { emailAuditApiClient } from "../../utils/api.ts";
@@ -243,12 +243,14 @@ export const EmailAudit: React.FC = () => {
                                         label="Search by recipient email"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
-                                        InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <SearchIcon />
-                                                </InputAdornment>
-                                            )
+                                        slotProps={{
+                                            input: {
+                                                startAdornment: (
+                                                    <InputAdornment position="start">
+                                                        <SearchIcon />
+                                                    </InputAdornment>
+                                                )
+                                            }
                                         }}
                                     />
                                 </Grid>
@@ -291,7 +293,9 @@ export const EmailAudit: React.FC = () => {
                                         type="datetime-local"
                                         value={startDate}
                                         onChange={(e) => setStartDate(e.target.value)}
-                                        InputLabelProps={{ shrink: true }}
+                                        slotProps={{
+                                            inputLabel: { shrink: true }
+                                        }}
                                     />
                                 </Grid>
                                 <Grid size={{ xs: 12, md: 2 }}>
@@ -301,7 +305,9 @@ export const EmailAudit: React.FC = () => {
                                         type="datetime-local"
                                         value={endDate}
                                         onChange={(e) => setEndDate(e.target.value)}
-                                        InputLabelProps={{ shrink: true }}
+                                        slotProps={{
+                                            inputLabel: { shrink: true }
+                                        }}
                                     />
                                 </Grid>
                                 <Grid size={{ xs: 12, md: 1 }}>
@@ -329,37 +335,51 @@ export const EmailAudit: React.FC = () => {
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>
-                                            <Typography variant="subtitle2" fontWeight="bold">
+                                            <Typography variant="subtitle2" sx={{
+                                                fontWeight: "bold"
+                                            }}>
                                                 Timestamp
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <Typography variant="subtitle2" fontWeight="bold">
+                                            <Typography variant="subtitle2" sx={{
+                                                fontWeight: "bold"
+                                            }}>
                                                 From
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <Typography variant="subtitle2" fontWeight="bold">
+                                            <Typography variant="subtitle2" sx={{
+                                                fontWeight: "bold"
+                                            }}>
                                                 Recipients
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <Typography variant="subtitle2" fontWeight="bold">
+                                            <Typography variant="subtitle2" sx={{
+                                                fontWeight: "bold"
+                                            }}>
                                                 Subject
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <Typography variant="subtitle2" fontWeight="bold">
+                                            <Typography variant="subtitle2" sx={{
+                                                fontWeight: "bold"
+                                            }}>
                                                 Type
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <Typography variant="subtitle2" fontWeight="bold">
+                                            <Typography variant="subtitle2" sx={{
+                                                fontWeight: "bold"
+                                            }}>
                                                 Status
                                             </Typography>
                                         </TableCell>
                                         <TableCell align="center">
-                                            <Typography variant="subtitle2" fontWeight="bold">
+                                            <Typography variant="subtitle2" sx={{
+                                                fontWeight: "bold"
+                                            }}>
                                                 Actions
                                             </Typography>
                                         </TableCell>
@@ -483,7 +503,9 @@ export const EmailAudit: React.FC = () => {
                                         <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
                                             {stats.totalSent}
                                         </Typography>
-                                        <Typography variant="subtitle1" color="text.secondary">
+                                        <Typography variant="subtitle1" sx={{
+                                            color: "text.secondary"
+                                        }}>
                                             Total Sent
                                         </Typography>
                                     </CardContent>
@@ -496,7 +518,9 @@ export const EmailAudit: React.FC = () => {
                                         <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#f44336' }}>
                                             {stats.totalFailed}
                                         </Typography>
-                                        <Typography variant="subtitle1" color="text.secondary">
+                                        <Typography variant="subtitle1" sx={{
+                                            color: "text.secondary"
+                                        }}>
                                             Total Failed
                                         </Typography>
                                     </CardContent>
@@ -509,7 +533,9 @@ export const EmailAudit: React.FC = () => {
                                         <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#ff9800' }}>
                                             {stats.totalTestMode}
                                         </Typography>
-                                        <Typography variant="subtitle1" color="text.secondary">
+                                        <Typography variant="subtitle1" sx={{
+                                            color: "text.secondary"
+                                        }}>
                                             Test Mode
                                         </Typography>
                                     </CardContent>
@@ -522,7 +548,9 @@ export const EmailAudit: React.FC = () => {
                                         <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#4B2E5D' }}>
                                             {stats.totalSent + stats.totalFailed + stats.totalTestMode}
                                         </Typography>
-                                        <Typography variant="subtitle1" color="text.secondary">
+                                        <Typography variant="subtitle1" sx={{
+                                            color: "text.secondary"
+                                        }}>
                                             Total Emails
                                         </Typography>
                                     </CardContent>
@@ -541,7 +569,9 @@ export const EmailAudit: React.FC = () => {
                                                 <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
                                                     <Card variant="outlined">
                                                         <CardContent>
-                                                            <Typography variant="subtitle1" fontWeight="bold">
+                                                            <Typography variant="subtitle1" sx={{
+                                                                fontWeight: "bold"
+                                                            }}>
                                                                 {typeStats.emailType?.replace('_', ' ') || 'Unknown'}
                                                             </Typography>
                                                             <Typography variant="h6" color="primary">
@@ -553,7 +583,9 @@ export const EmailAudit: React.FC = () => {
                                             ))}
                                         </Grid>
                                     ) : (
-                                        <Typography variant="body2" color="text.secondary">
+                                        <Typography variant="body2" sx={{
+                                            color: "text.secondary"
+                                        }}>
                                             No email type data available
                                         </Typography>
                                     )}

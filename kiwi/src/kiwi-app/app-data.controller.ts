@@ -158,7 +158,8 @@ export class AppDataController {
     timeoutMs: 120_000,
   })
   @ApiOperation({
-    summary: 'Run an approved prompt over the student\'s private learning context',
+    summary:
+      "Run an approved prompt over the student's private learning context",
     description:
       'App-token only — the target student and class come from the token. Requires ' +
       'both the "llm:prompt:<promptId>" and "context:student_learning:read" scopes. ' +
@@ -166,7 +167,10 @@ export class AppDataController {
       'output; personal recent_questions are dropped for non-consented students ' +
       '(reported in contextOmitted).',
   })
-  @ApiParam({ name: 'slug', description: 'App slug (must match the app token)' })
+  @ApiParam({
+    name: 'slug',
+    description: 'App slug (must match the app token)',
+  })
   @ApiResponse({ status: 200, type: ContextualChatResponseDto })
   async contextualChat(
     @Param('slug') slug: string,

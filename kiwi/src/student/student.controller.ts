@@ -62,7 +62,7 @@ export class StudentController {
   constructor(
     private readonly studentService: StudentService,
     private readonly storageService: StorageService,
-  ) { }
+  ) {}
 
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
@@ -210,9 +210,7 @@ export class StudentController {
     status: 200,
     description: 'Successful response',
   })
-  async beacon(
-    @Session() session: { userId: string; userSessionId: string },
-  ) {
+  async beacon(@Session() session: { userId: string; userSessionId: string }) {
     // this.logger.debug('Beacon session', JSON.stringify(session, null, 2));
 
     const { userId, userSessionId } = session;
@@ -235,7 +233,8 @@ export class StudentController {
   @ApiOperation({
     deprecated: true,
     summary: 'Chat with Kiwi (DEPRECATED)',
-    description: 'This endpoint is deprecated. Use /chat/v2 instead for improved tool calling, environment awareness, and navigation support.',
+    description:
+      'This endpoint is deprecated. Use /chat/v2 instead for improved tool calling, environment awareness, and navigation support.',
   })
   @ApiExtraModels(StudentChatResponse)
   @ApiResponse({
@@ -430,9 +429,12 @@ export class StudentController {
   })
   async refreshKeywords(
     @Body() refreshKeywordsRequest: RefreshKeywordsRequest,
-    @Session() session: { userId: string },
+    @Session() _session: { userId: string },
   ) {
-    this.logger.debug('Refreshing keywords for lecture', refreshKeywordsRequest);
+    this.logger.debug(
+      'Refreshing keywords for lecture',
+      refreshKeywordsRequest,
+    );
 
     const { lectureId, classId, force } = refreshKeywordsRequest;
 
@@ -457,7 +459,7 @@ export class StudentController {
   })
   async getKeywords(
     @Body() getKeywordsRequest: GetKeywordsRequest,
-    @Session() session: { userId: string },
+    @Session() _session: { userId: string },
   ) {
     this.logger.debug('Getting keywords for lecture', getKeywordsRequest);
 
@@ -480,7 +482,7 @@ export class StudentController {
   })
   async getKeywordStatus(
     @Body() getKeywordsRequest: GetKeywordsRequest,
-    @Session() session: { userId: string },
+    @Session() _session: { userId: string },
   ) {
     this.logger.debug('Getting keyword status for lecture', getKeywordsRequest);
 

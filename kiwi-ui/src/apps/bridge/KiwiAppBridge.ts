@@ -14,7 +14,7 @@ import type {
   DisplayMode,
   WidgetState,
   ToolResult,
-} from '../types';
+} from '../types/index.ts';
 
 /**
  * Create a KiwiAppBridge instance

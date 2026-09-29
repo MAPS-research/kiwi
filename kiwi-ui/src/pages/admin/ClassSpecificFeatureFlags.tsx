@@ -56,7 +56,9 @@ export const ClassSpecificFeatureFlags: React.FC = () => {
         description={`Control staged feature access for ${className || classID}.`}
       />
 
-      <Grid container spacing={3} alignItems="stretch">
+      <Grid container spacing={3} sx={{
+        alignItems: "stretch"
+      }}>
         <Grid size={{ xs: 12, lg: 4 }}>
           <AddClassFeature
             classes={[classID]}

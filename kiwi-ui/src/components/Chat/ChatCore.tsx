@@ -1145,7 +1145,6 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
               size="small"
               checked={experimentMode}
               onChange={(event) => setExperimentMode(event.target.checked)}
-              inputProps={{ "aria-label": "Experiment mode" }}
               sx={{
                 "& .MuiSwitch-track": {
                   borderRadius: 999,
@@ -1161,6 +1160,9 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
                   bgcolor: "primary.main",
                   opacity: 1,
                 },
+              }}
+              slotProps={{
+                input: { "aria-label": "Experiment mode" }
               }}
             />
           }
@@ -1202,17 +1204,23 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
             </FormControl>
 
             {experimentError && (
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" sx={{
+                color: "text.secondary"
+              }}>
                 {experimentError}
               </Typography>
             )}
             {loadingExperiments && (
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" sx={{
+                color: "text.secondary"
+              }}>
                 Loading experiments...
               </Typography>
             )}
             {!loadingExperiments && !experimentError && experiments.length === 0 && (
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" sx={{
+                color: "text.secondary"
+              }}>
                 No experiments have been created for this class.
               </Typography>
             )}
@@ -1233,7 +1241,9 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
                     size="small"
                     checked={compareMode}
                     onChange={(event) => setCompareMode(event.target.checked)}
-                    inputProps={{ "aria-label": "Compare two variants" }}
+                    slotProps={{
+                      input: { "aria-label": "Compare two variants" }
+                    }}
                   />
                 }
               />
@@ -1272,7 +1282,9 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
             )}
 
             {compareMode && canCompare && compareVariantKeyA === compareVariantKeyB && (
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" sx={{
+                color: "text.secondary"
+              }}>
                 Both columns run the same variant — pick two different ones to
                 see a difference.
               </Typography>
@@ -1307,7 +1319,9 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
                       }}
                     >
                       <Box sx={{ minWidth: 0, textAlign: "left" }}>
-                        <Typography variant="body2" fontWeight={700} noWrap>
+                        <Typography variant="body2" noWrap sx={{
+                          fontWeight: 700
+                        }}>
                           {variant.label}
                         </Typography>
                         <Typography variant="caption" sx={{ opacity: 0.75 }} noWrap>
@@ -1337,8 +1351,17 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
   ) : null;
 
   return (
-    <Box height="100%" display="flex" flexDirection="column">
-      <Stack height="100%" flexGrow={1}>
+    <Box
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column"
+      }}>
+      <Stack
+        sx={{
+          height: "100%",
+          flexGrow: 1
+        }}>
         {/* Session Picker Header — 44px content + 1px border to match the main
             page's tab bar (44px Tabs + 1px border), so the divider below lines
             up with the tab strip's border in side-panel modes. */}
@@ -1402,9 +1425,10 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
                     <ListItemText
                       primary={session.firstMessage + (session.firstMessage.length >= 50 ? '...' : '')}
                       secondary={new Date(session.timestamp).toLocaleDateString()}
-                      primaryTypographyProps={{ variant: 'body2', noWrap: true }}
-                      secondaryTypographyProps={{ variant: 'caption' }}
-                    />
+                      slotProps={{
+                        primary: { variant: 'body2', noWrap: true },
+                        secondary: { variant: 'caption' }
+                      }} />
                     <Chip label={session.messageCount} size="small" sx={{ ml: 1 }} />
                   </ListItemButton>
                 ))}
@@ -1440,11 +1464,19 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
 
         <Divider />
 
-        <Box padding={1}>
+        <Box sx={{
+          padding: 1
+        }}>
           <form ref={formRef} onSubmit={handleSubmit}>
             <Grid container columnSpacing={1} columns={16} direction="row">
               {qwenEnabled && !experimentMode && (
-                <Grid display="flex" justifyContent="center" alignItems="center" size={16}>
+                <Grid
+                  size={16}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}>
                   <FormControl size="small">
                     <InputLabel id="model-select-label">Model</InputLabel>
                     <Select

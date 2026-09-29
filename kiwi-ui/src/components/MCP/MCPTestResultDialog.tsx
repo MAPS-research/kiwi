@@ -19,13 +19,13 @@ import {
   Typography,
 } from "@mui/material";
 import {
-  CheckCircleOutline as SuccessIcon,
-  ErrorOutline as ErrorIcon,
+  CheckCircleOutlined as SuccessIcon,
+  ErrorOutlined as ErrorIcon,
   BuildOutlined as ToolIcon,
   ExpandMoreOutlined as ExpandMoreIcon,
   ExpandLessOutlined as ExpandLessIcon,
 } from "@mui/icons-material";
-import type { McpServerTestResponseDto } from "../../services/models";
+import type { McpServerTestResponseDto } from "../../services/models/index.ts";
 
 interface MCPTestResultDialogProps {
   open: boolean;
@@ -68,7 +68,9 @@ export const MCPTestResultDialog: React.FC<MCPTestResultDialogProps> = ({
             }}
           >
             <CircularProgress size={48} sx={{ mb: 2 }} />
-            <Typography variant="body1" color="text.secondary">
+            <Typography variant="body1" sx={{
+              color: "text.secondary"
+            }}>
               Testing connection to MCP server...
             </Typography>
           </Box>
@@ -97,7 +99,9 @@ export const MCPTestResultDialog: React.FC<MCPTestResultDialogProps> = ({
                 <Typography variant="h6">
                   {testResult.success ? "Connection Successful" : "Connection Failed"}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   {testResult.success
                     ? `Found ${tools.length} available tool${tools.length !== 1 ? "s" : ""}`
                     : testResult.error || "Unknown error occurred"}
@@ -130,7 +134,9 @@ export const MCPTestResultDialog: React.FC<MCPTestResultDialogProps> = ({
                         <ListItemText
                           primary={
                             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                              <Typography variant="body1" fontWeight={500}>
+                              <Typography variant="body1" sx={{
+                                fontWeight: 500
+                              }}>
                                 {tool.name}
                               </Typography>
                             </Box>
@@ -155,10 +161,11 @@ export const MCPTestResultDialog: React.FC<MCPTestResultDialogProps> = ({
                           <Box sx={{ p: 2, bgcolor: "grey.50" }}>
                             <Typography
                               variant="caption"
-                              color="text.secondary"
                               gutterBottom
-                              sx={{ display: "block" }}
-                            >
+                              sx={{
+                                color: "text.secondary",
+                                display: "block"
+                              }}>
                               Input Schema
                             </Typography>
                             <Box
@@ -186,7 +193,9 @@ export const MCPTestResultDialog: React.FC<MCPTestResultDialogProps> = ({
             {/* No tools message */}
             {testResult.success && tools.length === 0 && (
               <Paper sx={{ p: 3, textAlign: "center", bgcolor: "grey.50" }}>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   No tools were returned by the MCP server.
                   <br />
                   The server connection is working, but no tools are available.
@@ -215,7 +224,9 @@ export const MCPTestResultDialog: React.FC<MCPTestResultDialogProps> = ({
           </Box>
         ) : (
           <Box sx={{ textAlign: "center", py: 4 }}>
-            <Typography variant="body1" color="text.secondary">
+            <Typography variant="body1" sx={{
+              color: "text.secondary"
+            }}>
               No test results available
             </Typography>
           </Box>

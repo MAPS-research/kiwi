@@ -6,6 +6,7 @@
  */
 
 import type { ComponentType } from 'react';
+import type { DisplayMode } from './bridge.types.ts';
 
 /**
  * Widget layout position
@@ -73,7 +74,7 @@ export interface WidgetProps {
   onStateChange?: (state: WidgetState) => void;
 
   /** Callback to request display mode change */
-  onDisplayModeRequest?: (mode: WidgetPosition) => void;
+  onDisplayModeRequest?: (mode: DisplayMode) => void;
 
   /** Callback to notify height change for auto-sizing */
   onHeightChange?: (height: number) => void;

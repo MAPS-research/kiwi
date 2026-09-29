@@ -97,7 +97,9 @@ export class ConversationHistoryService {
             conversationId: conversationRowId,
           }),
           type: { in: ConversationHistoryService.CHAT_TYPES },
-          ...(excludeInteractionId ? { id: { not: excludeInteractionId } } : {}),
+          ...(excludeInteractionId
+            ? { id: { not: excludeInteractionId } }
+            : {}),
           // Everything folded into the summary replays as the summary instead.
           ...(summary
             ? { timestamp: { gt: summary.coversUpToTimestamp } }
@@ -270,9 +272,7 @@ export class ConversationHistoryService {
     if (toCompact.length > 0 && toCompact.length < interactions.length) {
       const boundary = toCompact[toCompact.length - 1].timestamp.getTime();
       if (interactions[toCompact.length].timestamp.getTime() === boundary) {
-        toCompact = toCompact.filter(
-          (i) => i.timestamp.getTime() !== boundary,
-        );
+        toCompact = toCompact.filter((i) => i.timestamp.getTime() !== boundary);
       }
     }
 
@@ -342,11 +342,16 @@ export class ConversationHistoryService {
 
     const prompt = context?.content?.prompt;
     if (typeof prompt === 'string' && prompt.trim()) {
-      turns.push({ role: 'user', content: prompt.trim().slice(0, maxTurnChars) });
+      turns.push({
+        role: 'user',
+        content: prompt.trim().slice(0, maxTurnChars),
+      });
     }
 
     const finalAnswer = [...(interaction.serverActions || [])]
-      .filter((action) => action.type !== 'agent-loop-step' && action.botResponse)
+      .filter(
+        (action) => action.type !== 'agent-loop-step' && action.botResponse,
+      )
       .sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime())
       .pop();
 

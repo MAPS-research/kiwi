@@ -15,7 +15,6 @@ import {
   ApiResponse,
   ApiBearerAuth,
   ApiParam,
-  ApiBody,
 } from '@nestjs/swagger';
 import { ApiTokensService } from './api-tokens.service';
 import { CreateApiTokenDto } from './dto/create-api-token.dto';
@@ -37,11 +36,13 @@ export class ApiTokensController {
   @Post()
   @ApiOperation({
     summary: 'Generate a new API token for a webhook',
-    description: 'Creates a new API token for authenticating webhook requests. Only one token can exist per webhook - creating a new token will automatically revoke any existing token for that webhook. The raw token value is only shown once during creation and cannot be retrieved later.'
+    description:
+      'Creates a new API token for authenticating webhook requests. Only one token can exist per webhook - creating a new token will automatically revoke any existing token for that webhook. The raw token value is only shown once during creation and cannot be retrieved later.',
   })
   @ApiResponse({
     status: 201,
-    description: 'API token created successfully. The raw token is only shown once.',
+    description:
+      'API token created successfully. The raw token is only shown once.',
     type: ApiTokenResponseDto,
   })
   @ApiResponse({ status: 400, description: 'Bad request' })
@@ -98,7 +99,8 @@ export class ApiTokensController {
   @Delete(':id')
   @ApiOperation({
     summary: 'Delete an API token',
-    description: 'Permanently deletes an API token. This action cannot be undone.'
+    description:
+      'Permanently deletes an API token. This action cannot be undone.',
   })
   @ApiParam({ name: 'id', description: 'API Token ID' })
   @ApiResponse({

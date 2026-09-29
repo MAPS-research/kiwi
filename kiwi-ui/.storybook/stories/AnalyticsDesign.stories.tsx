@@ -62,7 +62,9 @@ const Principle = ({ title, children }: { title: string; children: ReactNode }) 
     <Typography component="h3" variant="subtitle1" sx={{ mb: 0.75, fontWeight: 650 }}>
       {title}
     </Typography>
-    <Typography component="div" variant="body2" color="text.secondary">
+    <Typography component="div" variant="body2" sx={{
+      color: "text.secondary"
+    }}>
       {children}
     </Typography>
   </Paper>
@@ -70,7 +72,13 @@ const Principle = ({ title, children }: { title: string; children: ReactNode }) 
 
 const MetricExample = ({ loading }: { loading: boolean }) => (
   <Paper variant="outlined" sx={{ p: 2.5, height: 132, boxSizing: 'border-box', borderRadius: 2 }}>
-    <Typography variant="body2" color="text.secondary" sx={{ height: 20, lineHeight: '20px' }}>
+    <Typography
+      variant="body2"
+      sx={{
+        color: "text.secondary",
+        height: 20,
+        lineHeight: '20px'
+      }}>
       Primary metric
     </Typography>
     <Box sx={{ height: 44, display: 'flex', alignItems: 'center' }}>
@@ -82,7 +90,13 @@ const MetricExample = ({ loading }: { loading: boolean }) => (
         </Typography>
       )}
     </Box>
-    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', height: 18 }}>
+    <Typography
+      variant="caption"
+      sx={{
+        color: "text.secondary",
+        display: 'block',
+        height: 18
+      }}>
       Unique entities in scope
     </Typography>
   </Paper>
@@ -94,7 +108,9 @@ const ChartExample = ({ loading }: { loading: boolean }) => (
       <Typography component="h3" variant="subtitle1" sx={{ fontWeight: 600 }}>
         Daily trend
       </Typography>
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" sx={{
+        color: "text.secondary"
+      }}>
         Unique entities recorded each day
       </Typography>
       <Box sx={{ mt: 1.5, height: 222 }}>
@@ -130,10 +146,14 @@ const ContractRow = ({ metric, definition, presentation }: { metric: string; def
     <Typography variant="body2" sx={{ fontWeight: 650 }}>
       {metric}
     </Typography>
-    <Typography variant="body2" color="text.secondary">
+    <Typography variant="body2" sx={{
+      color: "text.secondary"
+    }}>
       {definition}
     </Typography>
-    <Typography variant="body2" color="text.secondary">
+    <Typography variant="body2" sx={{
+      color: "text.secondary"
+    }}>
       {presentation}
     </Typography>
   </Box>
@@ -157,7 +177,13 @@ export const AnalyticsDesignGuide = ({
         <Typography component="h1" variant="h3" sx={{ fontWeight: 750, letterSpacing: '-0.03em' }}>
           Analytics design
         </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mt: 1, maxWidth: 820 }}>
+        <Typography
+          variant="body1"
+          sx={{
+            color: "text.secondary",
+            mt: 1,
+            maxWidth: 820
+          }}>
           A shared contract for information hierarchy, metric semantics, chart density, responsive behavior, refresh
           coordination, and stable loading states across Kiwi analytics pages.
         </Typography>
@@ -203,11 +229,18 @@ export const AnalyticsDesignGuide = ({
     </GuideSection>
 
     <GuideSection title="3. Loading without layout shift">
-      <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 820 }}>
+      <Typography
+        variant="body2"
+        sx={{
+          color: "text.secondary",
+          maxWidth: 820
+        }}>
         Toggle the Storybook <Code>loading</Code> control. Titles, descriptions, card dimensions, and surrounding
         layout remain stable. Only data-bearing regions change to Skeleton.
       </Typography>
-      <Grid container spacing={2} alignItems="stretch">
+      <Grid container spacing={2} sx={{
+        alignItems: "stretch"
+      }}>
         <Grid size={{ xs: 12, md: 4 }}>
           <MetricExample loading={loading} />
         </Grid>
@@ -237,11 +270,18 @@ export const AnalyticsDesignGuide = ({
         <Stack
           direction={{ xs: 'column', sm: 'row' }}
           spacing={1.5}
-          alignItems={{ xs: 'flex-start', sm: 'center' }}
-          justifyContent="flex-end"
-        >
+          sx={{
+            alignItems: { xs: 'flex-start', sm: 'center' },
+            justifyContent: "flex-end"
+          }}>
           <Box sx={{ minWidth: 0, mr: { sm: 0.5 } }}>
-            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', lineHeight: 1.2 }}>
+            <Typography
+              variant="caption"
+              sx={{
+                color: "text.secondary",
+                display: 'block',
+                lineHeight: 1.2
+              }}>
               Last updated
             </Typography>
             <Typography variant="body2" sx={{ mt: 0.25, fontWeight: 550, whiteSpace: 'nowrap' }}>
@@ -342,7 +382,9 @@ export const AnalyticsDesignGuide = ({
       <Grid container spacing={1.5}>
         {analyticsContract.reviewChecklist.map((item, index) => (
           <Grid key={item} size={{ xs: 12, md: 6 }}>
-            <Stack direction="row" spacing={1.25} alignItems="flex-start">
+            <Stack direction="row" spacing={1.25} sx={{
+              alignItems: "flex-start"
+            }}>
               <Typography variant="caption" color="primary" sx={{ pt: 0.25, fontWeight: 700 }}>
                 {String(index + 1).padStart(2, '0')}
               </Typography>

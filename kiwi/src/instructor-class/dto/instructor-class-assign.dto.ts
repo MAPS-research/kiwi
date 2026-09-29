@@ -5,7 +5,7 @@ export class InstructorPermissions {
   @ApiProperty({ default: true })
   canManageMaterials: boolean;
 
-  @ApiProperty({ default: true })  
+  @ApiProperty({ default: true })
   canViewAnalytics: boolean;
 }
 

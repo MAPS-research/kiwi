@@ -1,12 +1,20 @@
-import { Injectable, Logger, Scope } from '@nestjs/common';
-import { Resource, Context, HttpRequest } from '@rekog/mcp-nest';
+import { Request } from 'express';
+import { Payload, Ctx } from '@nestjs/microservices';
+import { Logger, Scope } from '@nestjs/common';
+import {
+  Resource,
+  ResourceTemplate,
+  McpContext as Context,
+  McpController,
+  McpRawRequest,
+} from '@rekog/mcp-nest';
 import { ClassService } from 'src/class/class.service';
 
 /**
  * MCP Resources for Class Data
  * Provides read-only access to class information, materials, and documents
  */
-@Injectable({ scope: Scope.REQUEST })
+@McpController({ scope: Scope.REQUEST })
 export class ClassResource {
   private readonly logger = new Logger(ClassResource.name);
 
@@ -24,27 +32,30 @@ export class ClassResource {
     uri: 'kiwi://classes',
   })
   async getClassesList(
-    { uri }: { uri: string },
-    context: Context,
-    httpRequest: HttpRequest,
+    @Payload() { uri }: { uri: string },
+    @Ctx() context: Context,
+    @McpRawRequest() httpRequest: Request,
   ) {
     try {
-      const userId = (httpRequest.raw as any)?.user?.sub;
+      const userId = (httpRequest as any)?.user?.sub;
       if (!userId) {
         return {
           contents: [
             {
               uri,
               mimeType: 'application/json',
-              text: JSON.stringify({ error: 'User not authenticated' }, null, 2),
+              text: JSON.stringify(
+                { error: 'User not authenticated' },
+                null,
+                2,
+              ),
             },
           ],
         };
       }
 
       // Get user's enrolled classes
-      const enrollments =
-        await this.classService.getEnrollmentsPerUser(userId);
+      const enrollments = await this.classService.getEnrollmentsPerUser(userId);
       const classDetails = [];
 
       for (const enrollment of enrollments) {
@@ -100,26 +111,30 @@ export class ClassResource {
    * Documents for a specific class
    * URI pattern: kiwi://class/{classId}/documents
    */
-  @Resource({
+  @ResourceTemplate({
     name: 'class-documents',
     description: 'Documents and materials for a specific class',
     mimeType: 'application/json',
-    uri: 'kiwi://class/{classId}/documents',
+    uriTemplate: 'kiwi://class/{classId}/documents',
   })
   async getClassDocuments(
-    { uri }: { uri: string },
-    context: Context,
-    httpRequest: HttpRequest,
+    @Payload() { uri }: { uri: string },
+    @Ctx() context: Context,
+    @McpRawRequest() httpRequest: Request,
   ) {
     try {
-      const userId = (httpRequest.raw as any)?.user?.sub;
+      const userId = (httpRequest as any)?.user?.sub;
       if (!userId) {
         return {
           contents: [
             {
               uri,
               mimeType: 'application/json',
-              text: JSON.stringify({ error: 'User not authenticated' }, null, 2),
+              text: JSON.stringify(
+                { error: 'User not authenticated' },
+                null,
+                2,
+              ),
             },
           ],
         };
@@ -142,8 +157,7 @@ export class ClassResource {
       const classId = match[1];
 
       // Verify user has access to this class
-      const enrollments =
-        await this.classService.getEnrollmentsPerUser(userId);
+      const enrollments = await this.classService.getEnrollmentsPerUser(userId);
       const hasAccess = enrollments.some(
         (enrollment) => enrollment.classId === classId,
       );
@@ -209,27 +223,31 @@ export class ClassResource {
    * All materials for a specific class (comprehensive view)
    * URI pattern: kiwi://class/{classId}/materials
    */
-  @Resource({
+  @ResourceTemplate({
     name: 'class-materials',
     description:
       'Comprehensive view of all materials for a class including documents and metadata',
     mimeType: 'application/json',
-    uri: 'kiwi://class/{classId}/materials',
+    uriTemplate: 'kiwi://class/{classId}/materials',
   })
   async getClassMaterials(
-    { uri }: { uri: string },
-    context: Context,
-    httpRequest: HttpRequest,
+    @Payload() { uri }: { uri: string },
+    @Ctx() context: Context,
+    @McpRawRequest() httpRequest: Request,
   ) {
     try {
-      const userId = (httpRequest.raw as any)?.user?.sub;
+      const userId = (httpRequest as any)?.user?.sub;
       if (!userId) {
         return {
           contents: [
             {
               uri,
               mimeType: 'application/json',
-              text: JSON.stringify({ error: 'User not authenticated' }, null, 2),
+              text: JSON.stringify(
+                { error: 'User not authenticated' },
+                null,
+                2,
+              ),
             },
           ],
         };
@@ -252,8 +270,7 @@ export class ClassResource {
       const classId = match[1];
 
       // Verify user has access to this class
-      const enrollments =
-        await this.classService.getEnrollmentsPerUser(userId);
+      const enrollments = await this.classService.getEnrollmentsPerUser(userId);
       const hasAccess = enrollments.some(
         (enrollment) => enrollment.classId === classId,
       );

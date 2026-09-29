@@ -18,10 +18,7 @@ import {
   ApiParam,
 } from '@nestjs/swagger';
 import { Request } from 'express';
-import {
-  InstructorClassGuard,
-  JwtAuthGuard,
-} from 'src/auth/auth.guard';
+import { InstructorClassGuard, JwtAuthGuard } from 'src/auth/auth.guard';
 import { ExperimentService } from './experiment.service';
 import {
   AssistantChatBody,

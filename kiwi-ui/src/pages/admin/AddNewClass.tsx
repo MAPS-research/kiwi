@@ -276,9 +276,10 @@ export const AddNewClassDialog: React.FC<AddNewClassDialogProps> = ({
               </Typography>
               <Typography
                 variant="body2"
-                color="text.secondary"
-                sx={{ mb: 1.5 }}
-              >
+                sx={{
+                  color: "text.secondary",
+                  mb: 1.5
+                }}>
                 PNG, JPG, JPEG, or WebP. Used as the cover image on the class
                 card.
               </Typography>
@@ -332,9 +333,11 @@ export const AddNewClassDialog: React.FC<AddNewClassDialogProps> = ({
             </Typography>
             <Typography
               variant="body2"
-              color="text.secondary"
-              sx={{ mt: 0.5, mb: 2 }}
-            >
+              sx={{
+                color: "text.secondary",
+                mt: 0.5,
+                mb: 2
+              }}>
               This is how the class will appear in the list.
             </Typography>
             <ClassCard

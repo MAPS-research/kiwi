@@ -1,8 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+import 'dotenv/config';
+import { createPrismaClient } from '../src/common/database/prisma-client.factory';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 const OUTPUT_PATH = path.resolve(__dirname, 'seed-data.json');
 

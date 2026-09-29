@@ -28,7 +28,8 @@ export class AssignMcpServerDto {
   isEnabled?: boolean;
 
   @ApiPropertyOptional({
-    description: 'Priority for tool selection in this class (higher = preferred)',
+    description:
+      'Priority for tool selection in this class (higher = preferred)',
     default: 0,
   })
   @IsOptional()

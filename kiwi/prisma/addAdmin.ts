@@ -1,6 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import 'dotenv/config';
+import { createPrismaClient } from '../src/common/database/prisma-client.factory';
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 async function main() {
   const email = process.argv[2]; // Get the email from the command line arguments

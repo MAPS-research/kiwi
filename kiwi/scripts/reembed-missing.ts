@@ -22,14 +22,14 @@
  *            (in this deployment QWEN_EMBEDDING_MODEL is bge-m3, 1024-dim)
  */
 import 'dotenv/config';
-import { PrismaClient } from '@prisma/client';
+import { createPrismaClient } from '../src/common/database/prisma-client.factory';
 import OpenAI from 'openai';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 
 type Provider = 'openai' | 'qwen';
 
 const BATCH_SIZE = 32;
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 function parseArgs(): { provider: Provider; documentId?: string } {
   const args = process.argv.slice(2);
@@ -150,7 +150,7 @@ async function main() {
           const vec = JSON.stringify(res.data[idx].embedding);
           return prisma.$executeRaw`
             INSERT INTO "EmbeddingVector" ("id", "embeddingId", "modelId", "embedding")
-            VALUES (${uuidv4()}, ${chunk.id}, ${model.id}, ${vec}::vector)
+            VALUES (${randomUUID()}, ${chunk.id}, ${model.id}, ${vec}::vector)
             ON CONFLICT ("embeddingId", "modelId") DO NOTHING;
           `;
         }),
@@ -163,7 +163,9 @@ async function main() {
         err instanceof Error ? err.message : err,
       );
     }
-    process.stdout.write(`\r[reembed] ${done}/${missing.length} (failed ${failed})`);
+    process.stdout.write(
+      `\r[reembed] ${done}/${missing.length} (failed ${failed})`,
+    );
   }
   console.log(`\n[reembed] done: ${done} embedded, ${failed} failed.`);
 }

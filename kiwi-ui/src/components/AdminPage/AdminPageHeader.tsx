@@ -36,9 +36,11 @@ const AdminPageHeader = ({
     <Stack
       direction="row"
       spacing={{ xs: 1, sm: 1.5 }}
-      alignItems="flex-start"
-      sx={{ minWidth: 0, width: { xs: "100%", md: "auto" } }}
-    >
+      sx={{
+        alignItems: "flex-start",
+        minWidth: 0,
+        width: { xs: "100%", md: "auto" }
+      }}>
       {back && (
         <IconButton
           size="small"
@@ -54,10 +56,11 @@ const AdminPageHeader = ({
         <Stack
           direction="row"
           spacing={1.5}
-          alignItems="center"
-          flexWrap="wrap"
           useFlexGap
-        >
+          sx={{
+            alignItems: "center",
+            flexWrap: "wrap"
+          }}>
           <Typography
             component="h1"
             variant="h5"
@@ -75,9 +78,12 @@ const AdminPageHeader = ({
         {description && (
           <Typography
             variant="body2"
-            color="text.secondary"
-            sx={{ mt: 0.5, maxWidth: 720, overflowWrap: "anywhere" }}
-          >
+            sx={{
+              color: "text.secondary",
+              mt: 0.5,
+              maxWidth: 720,
+              overflowWrap: "anywhere"
+            }}>
             {description}
           </Typography>
         )}

@@ -25,7 +25,9 @@ import { InstructorClassListResponse } from './dto/instructor-class-list.dto';
 
 @Controller('instructor-class')
 export class InstructorClassController {
-  constructor(private readonly instructorClassService: InstructorClassService) {}
+  constructor(
+    private readonly instructorClassService: InstructorClassService,
+  ) {}
 
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard, AdminGuard)
@@ -38,12 +40,13 @@ export class InstructorClassController {
     type: AssignInstructorToClassResponse,
   })
   async assignInstructorToClass(@Body() dto: AssignInstructorToClassDto) {
-    const instructorClass = await this.instructorClassService.assignInstructorToClass(
-      dto.classId,
-      dto.userEmail,
-      dto.permissions,
-      dto.role || 'instructor',
-    );
+    const instructorClass =
+      await this.instructorClassService.assignInstructorToClass(
+        dto.classId,
+        dto.userEmail,
+        dto.permissions,
+        dto.role || 'instructor',
+      );
 
     return {
       message: 'Instructor assigned to class successfully',

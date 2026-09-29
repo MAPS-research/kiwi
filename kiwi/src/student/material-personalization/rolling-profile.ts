@@ -216,7 +216,10 @@ function recurring(values: string[]): string[] {
 }
 
 function rank(values: string[]): string[] {
-  const seen = new Map<string, { text: string; count: number; index: number }>();
+  const seen = new Map<
+    string,
+    { text: string; count: number; index: number }
+  >();
 
   values.forEach((value, index) => {
     const text = sanitizeProfileText(value);

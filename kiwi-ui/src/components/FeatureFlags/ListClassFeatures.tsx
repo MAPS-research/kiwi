@@ -49,18 +49,24 @@ const ListClassFeatures: React.FC<ListClassFeaturesProps> = ({
       <CardContent sx={{ p: 0, "&:last-child": { pb: 0 } }}>
         <Stack
           direction={{ xs: "column", sm: "row" }}
-          justifyContent="space-between"
-          alignItems={{ xs: "stretch", sm: "center" }}
           spacing={2}
-          sx={{ p: 3, pb: 2 }}
-        >
-          <Stack direction="row" spacing={1.5} alignItems="flex-start">
+          sx={{
+            justifyContent: "space-between",
+            alignItems: { xs: "stretch", sm: "center" },
+            p: 3,
+            pb: 2
+          }}>
+          <Stack direction="row" spacing={1.5} sx={{
+            alignItems: "flex-start"
+          }}>
             <FlagOutlined color="action" />
             <Box>
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
                 Assigned flags
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Features currently available to this class.
               </Typography>
             </Box>
@@ -112,7 +118,9 @@ const ListClassFeatures: React.FC<ListClassFeaturesProps> = ({
                 return (
                   <TableRow key={`${feature.targetId}-${feature.featureName}`} hover>
                     <TableCell>
-                      <Typography variant="body2" fontWeight={500}>
+                      <Typography variant="body2" sx={{
+                        fontWeight: 500
+                      }}>
                         {feature.featureName}
                       </Typography>
                     </TableCell>
@@ -136,7 +144,9 @@ const ListClassFeatures: React.FC<ListClassFeaturesProps> = ({
                 <TableRow>
                   <TableCell colSpan={3}>
                     <Box sx={{ py: 5, textAlign: "center" }}>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                      }}>
                         No feature flags are assigned to this class.
                       </Typography>
                     </Box>

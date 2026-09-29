@@ -34,8 +34,8 @@ import {
   type AdminClassNavigation,
 } from "../../context/AdminNavigationContext.tsx";
 import apiClient, { kiwiAppsApiClient } from "../../utils/api.ts";
-import type { AppResponseDto, AppUIResponseDto } from "../../services/models";
-import { useContentResize } from "../../hooks/useContentResize";
+import type { AppResponseDto, AppUIResponseDto } from "../../services/models/index.ts";
+import { useContentResize } from "../../hooks/useContentResize.ts";
 import {
   ALL_CLASSES_ADMIN_LABEL,
   ALL_CLASSES_SCOPE_ID,

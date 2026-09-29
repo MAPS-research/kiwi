@@ -7,7 +7,9 @@ describe('EmbeddingService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [EmbeddingService],
-    }).compile();
+    })
+      .useMocker(() => ({ get: jest.fn() }))
+      .compile();
 
     service = module.get<EmbeddingService>(EmbeddingService);
   });

@@ -1,6 +1,6 @@
 import ExpandMoreIcon from "@mui/icons-material/ExpandMoreOutlined";
 import AddIcon from "@mui/icons-material/AddOutlined";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import SaveIcon from "@mui/icons-material/SaveOutlined";
 import CloseIcon from "@mui/icons-material/CloseOutlined";
@@ -171,15 +171,19 @@ export const DocumentSummaryDialog: React.FC<DocumentSummaryDialogProps> = ({
       onClose={onClose}
       fullWidth
       maxWidth="md"
-      PaperProps={{
-        sx: { borderRadius: 4, overflow: "hidden" },
+      slotProps={{
+        paper: {
+          sx: { borderRadius: 4, overflow: "hidden" },
+        }
       }}
     >
       <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1 }}>
         <Typography variant="h6" component="span">
           Document Summaries
         </Typography>
-        <Typography variant="body2" color="text.secondary" component="span">
+        <Typography variant="body2" component="span" sx={{
+          color: "text.secondary"
+        }}>
           {documentName}
         </Typography>
       </DialogTitle>
@@ -199,7 +203,9 @@ export const DocumentSummaryDialog: React.FC<DocumentSummaryDialogProps> = ({
                   textAlign: "center",
                 }}
               >
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   No summaries for this document yet. Click the plus icon to create one.
                 </Typography>
               </Box>
@@ -303,7 +309,9 @@ export const DocumentSummaryDialog: React.FC<DocumentSummaryDialogProps> = ({
                             <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
                               {summary.content}
                             </Typography>
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography variant="caption" sx={{
+                              color: "text.secondary"
+                            }}>
                               Created by {summary.author.name || summary.author.email} • {new Date(summary.createdAt).toLocaleString()}
                             </Typography>
                           </Stack>
@@ -319,7 +327,9 @@ export const DocumentSummaryDialog: React.FC<DocumentSummaryDialogProps> = ({
           <Divider flexItem />
 
           <Box>
-            <Stack direction="row" spacing={2} alignItems="center">
+            <Stack direction="row" spacing={2} sx={{
+              alignItems: "center"
+            }}>
               <Typography variant="subtitle2">Add New Summary</Typography>
               {!isAddMode && (
                 <IconButton

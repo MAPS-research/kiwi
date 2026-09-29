@@ -1,5 +1,12 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { Tool, Context } from '@rekog/mcp-nest';
+import { reportMcpProgress } from '../utils/report-progress';
+import { Payload, Ctx } from '@nestjs/microservices';
+import { Logger } from '@nestjs/common';
+import {
+  Tool,
+  McpContext as Context,
+  McpController,
+  McpRawRequest,
+} from '@rekog/mcp-nest';
 import { z } from 'zod';
 import { Request } from 'express';
 import { StorageService } from 'src/common/storage/storage.service';
@@ -9,7 +16,7 @@ import { UserService } from 'src/common/database/user.service';
  * MCP Tools for Storage Operations
  * Allows AI assistants to upload documents and generate signed URLs
  */
-@Injectable()
+@McpController()
 export class StorageTool {
   private readonly logger = new Logger(StorageTool.name);
 
@@ -55,6 +62,7 @@ export class StorageTool {
     },
   })
   async uploadDocument(
+    @Payload()
     {
       fileName,
       fileData,
@@ -66,8 +74,8 @@ export class StorageTool {
       mimeType: string;
       storageKey?: string;
     },
-    context: Context,
-    request: Request,
+    @Ctx() context: Context,
+    @McpRawRequest() request: Request,
   ) {
     try {
       // Get user ID and check permissions
@@ -98,7 +106,7 @@ export class StorageTool {
         };
       }
 
-      await context.reportProgress({ progress: 20, total: 100 });
+      await reportMcpProgress(context, { progress: 20, total: 100 });
 
       // Decode base64 file data
       let buffer: Buffer;
@@ -116,7 +124,7 @@ export class StorageTool {
         };
       }
 
-      await context.reportProgress({ progress: 40, total: 100 });
+      await reportMcpProgress(context, { progress: 40, total: 100 });
 
       // Create a file object that matches Express.Multer.File interface
       const file: Express.Multer.File = {
@@ -135,17 +143,17 @@ export class StorageTool {
       // Use provided key or default to fileName
       const key = storageKey || fileName;
 
-      await context.reportProgress({ progress: 60, total: 100 });
+      await reportMcpProgress(context, { progress: 60, total: 100 });
 
       // Upload file
       const result = await this.storageService.uploadFile(file, key);
 
-      await context.reportProgress({ progress: 80, total: 100 });
+      await reportMcpProgress(context, { progress: 80, total: 100 });
 
       // Generate signed URL for the uploaded file
       const signedUrl = await this.storageService.generateSignedUrl(key);
 
-      await context.reportProgress({ progress: 100, total: 100 });
+      await reportMcpProgress(context, { progress: 100, total: 100 });
 
       return {
         content: [
@@ -202,9 +210,9 @@ export class StorageTool {
     },
   })
   async getDocumentSignedUrl(
-    { key }: { key: string },
-    context: Context,
-    request: Request,
+    @Payload() { key }: { key: string },
+    @Ctx() context: Context,
+    @McpRawRequest() request: Request,
   ) {
     try {
       const userId = (request as any).user?.sub;
@@ -220,11 +228,11 @@ export class StorageTool {
         };
       }
 
-      await context.reportProgress({ progress: 50, total: 100 });
+      await reportMcpProgress(context, { progress: 50, total: 100 });
 
       const signedUrl = await this.storageService.generateSignedUrl(key);
 
-      await context.reportProgress({ progress: 100, total: 100 });
+      await reportMcpProgress(context, { progress: 100, total: 100 });
 
       return {
         content: [

@@ -167,7 +167,7 @@ describe('StorageTool', () => {
       );
     });
 
-    it('should handle invalid base64 data', async () => {
+    it('should decode base64 content before uploading', async () => {
       const adminId = 'admin-123';
 
       userService.user.mockResolvedValue({
@@ -175,8 +175,12 @@ describe('StorageTool', () => {
         systemRole: 'admin',
       } as any);
 
-      // Note: Buffer.from doesn't throw on invalid base64, it just decodes what it can
-      // But we can test the upload flow with valid base64
+      storageService.uploadFile.mockResolvedValue({
+        message: 'File uploaded',
+        key: 'test.pdf',
+      } as any);
+      storageService.generateSignedUrl.mockResolvedValue('url');
+
       const result = await tool.uploadDocument(
         {
           ...validUploadData,
@@ -186,13 +190,11 @@ describe('StorageTool', () => {
         createMockRequest(adminId) as any,
       );
 
-      // The actual function doesn't reject invalid base64 in a catch block
-      // because Buffer.from is lenient. Testing successful path instead.
-      storageService.uploadFile.mockResolvedValue({
-        message: 'File uploaded',
-        key: 'test.pdf',
-      } as any);
-      storageService.generateSignedUrl.mockResolvedValue('url');
+      expect(result.isError).toBeUndefined();
+      expect(storageService.uploadFile).toHaveBeenCalledWith(
+        expect.objectContaining({ buffer: Buffer.from('valid content') }),
+        expect.any(String),
+      );
     });
 
     it('should handle storage service errors', async () => {

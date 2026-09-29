@@ -1,5 +1,5 @@
 import {
-  DeleteOutline as DeleteIcon,
+  DeleteOutlined as DeleteIcon,
   ExpandMoreOutlined as ExpandIcon,
   WarningAmberOutlined as WarningIcon,
 } from "@mui/icons-material";
@@ -43,7 +43,14 @@ const SummaryChips: React.FC<{ material: StaffMaterial }> = ({ material }) => {
   const references = documentsWithRole(material, "REFERENCE").length;
 
   return (
-    <Stack direction="row" spacing={0.75} alignItems="center" flexWrap="wrap" useFlexGap>
+    <Stack
+      direction="row"
+      spacing={0.75}
+      useFlexGap
+      sx={{
+        alignItems: "center",
+        flexWrap: "wrap"
+      }}>
       {issues
         .filter((issue) => issue !== "processing")
         .map((issue) => (
@@ -127,15 +134,14 @@ export const MaterialRow: React.FC<MaterialRowProps> = ({
       <Stack
         direction="row"
         spacing={1.5}
-        alignItems="center"
         onClick={() => onToggle(material.id)}
         sx={{
+          alignItems: "center",
           px: 1.5,
           py: 1.25,
           cursor: "pointer",
-          "&:hover": { bgcolor: "action.hover" },
-        }}
-      >
+          "&:hover": { bgcolor: "action.hover" }
+        }}>
         <ExpandIcon
           fontSize="small"
           sx={{
@@ -162,9 +168,12 @@ export const MaterialRow: React.FC<MaterialRowProps> = ({
 
         <Typography
           variant="caption"
-          color="text.secondary"
-          sx={{ width: 64, textAlign: "right", flexShrink: 0 }}
-        >
+          sx={{
+            color: "text.secondary",
+            width: 64,
+            textAlign: "right",
+            flexShrink: 0
+          }}>
           {dateLabel(material.availableDate)}
         </Typography>
       </Stack>
@@ -174,9 +183,10 @@ export const MaterialRow: React.FC<MaterialRowProps> = ({
           <Stack
             direction={{ xs: "column", sm: "row" }}
             spacing={2}
-            alignItems={{ sm: "center" }}
-            sx={{ mb: 1 }}
-          >
+            sx={{
+              alignItems: { sm: "center" },
+              mb: 1
+            }}>
             <TextField
               size="small"
               label="Title"
@@ -194,12 +204,14 @@ export const MaterialRow: React.FC<MaterialRowProps> = ({
               defaultValue={new Date(material.availableDate)
                 .toISOString()
                 .slice(0, 10)}
-              InputLabelProps={{ shrink: true }}
               onBlur={(event) =>
                 onSaveField(material, {
                   availableDate: new Date(event.target.value),
                 })
               }
+              slotProps={{
+                inputLabel: { shrink: true }
+              }}
             />
             <Tooltip title="Delete material">
               <IconButton onClick={() => onDeleteMaterial(material)}>

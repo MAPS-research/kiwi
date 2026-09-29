@@ -9,7 +9,7 @@ describe('StorageResource', () => {
   const mockContext = {};
 
   const createMockHttpRequest = (userId?: string) => ({
-    raw: userId ? { user: { sub: userId } } : {},
+    user: userId ? { sub: userId } : undefined,
   });
 
   beforeEach(async () => {
@@ -73,7 +73,9 @@ describe('StorageResource', () => {
       expect(content.key).toBe(documentKey);
       expect(content.signedUrl).toBe(signedUrl);
       expect(content.expiresIn).toBe('4 hours');
-      expect(storageService.generateSignedUrl).toHaveBeenCalledWith(documentKey);
+      expect(storageService.generateSignedUrl).toHaveBeenCalledWith(
+        documentKey,
+      );
     });
 
     it('should decode URI-encoded keys', async () => {

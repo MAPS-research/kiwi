@@ -10,12 +10,12 @@ import React, { useEffect, useRef, useState, useContext, useCallback } from 'rea
 import { useParams, useNavigate } from 'react-router-dom';
 import { Box, CircularProgress, Typography, Alert } from '@mui/material';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-import { ChatContext } from './ClassLayout';
-import { useAuth } from '../auth/AuthContext';
-import { useGlobalChat } from '../context/GlobalChatContext';
-import type { ChatDisplayMode } from '../context/GlobalChatContext';
-import apiClient, { permissionsApiClient, kiwiAppsApiClient } from '../utils/api';
-import { basePath } from '../utils/api';
+import { ChatContext } from './ClassLayout.tsx';
+import { useAuth } from '../auth/AuthContext.tsx';
+import { useGlobalChat } from '../context/GlobalChatContext.tsx';
+import type { ChatDisplayMode } from '../context/GlobalChatContext.tsx';
+import apiClient, { permissionsApiClient, kiwiAppsApiClient } from '../utils/api.ts';
+import { basePath } from '../utils/api.ts';
 import { OP_TABLE, requiredScopesFor, scopeMatches } from '../apps/classApps/bridgeOps.generated.ts';
 
 interface ClassAppViewProps {

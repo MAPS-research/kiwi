@@ -23,7 +23,7 @@ export const isSsoDomainEmail = (email: string): boolean => isSsoEmail(email);
 import {
   AlternateEmailOutlined as AccountFieldIcon,
   BadgeOutlined as RoleFieldIcon,
-  CheckCircleOutline as CheckCircle,
+  CheckCircleOutlined as CheckCircle,
   ClearAllOutlined as ClearFiltersIcon,
   DownloadOutlined as DownloadIcon,
   GroupOutlined as GroupIcon,
@@ -969,7 +969,12 @@ const UserManagement: React.FC = () => {
           >
             <DialogTitle component="div" id="add-users-dialog-title" sx={{ pb: 1.5 }}>
               <Typography component="h2" variant="h6">Add users</Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                  mt: 0.5
+                }}>
                 Choose whether to grant access or create password-based accounts.
               </Typography>
             </DialogTitle>
@@ -992,11 +997,19 @@ const UserManagement: React.FC = () => {
             <DialogContent dividers={false} sx={{ px: { xs: 2, sm: 3 }, py: 3, "& .MuiOutlinedInput-root": { minHeight: 44 } }}>
               {addUsersTab === "whitelist" ? (
                 <Box role="tabpanel" aria-label="Whitelist access">
-                  <Stack direction="row" spacing={1.5} alignItems="flex-start" sx={{ mb: 2.5 }}>
+                  <Stack
+                    direction="row"
+                    spacing={1.5}
+                    sx={{
+                      alignItems: "flex-start",
+                      mb: 2.5
+                    }}>
                     <PlaylistAddIcon sx={{ color: "primary.main", mt: 0.25 }} aria-hidden="true" />
                     <Box>
                       <Typography component="h3" variant="subtitle1" sx={{ fontWeight: 600 }}>Grant product access</Typography>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                      }}>
                         Existing accounts are enabled immediately. New email addresses remain pending until first sign-in.
                       </Typography>
                     </Box>
@@ -1020,11 +1033,19 @@ const UserManagement: React.FC = () => {
                 </Box>
               ) : (
                 <Box role="tabpanel" aria-label="Password accounts">
-                  <Stack direction="row" spacing={1.5} alignItems="flex-start" sx={{ mb: 2.5 }}>
+                  <Stack
+                    direction="row"
+                    spacing={1.5}
+                    sx={{
+                      alignItems: "flex-start",
+                      mb: 2.5
+                    }}>
                     <PersonAddIcon sx={{ color: "primary.main", mt: 0.25 }} aria-hidden="true" />
                     <Box>
                       <Typography component="h3" variant="subtitle1" sx={{ fontWeight: 600 }}>Create password accounts</Typography>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                      }}>
                         Use this only for non-SSO users. SSO users should sign in with OAuth.
                       </Typography>
                     </Box>
@@ -1064,7 +1085,13 @@ const UserManagement: React.FC = () => {
 
                     {registrationResults.length > 0 && (
                       <Box>
-                        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1.5 }}>
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          sx={{
+                            alignItems: "center",
+                            mb: 1.5
+                          }}>
                           <CheckCircle color="success" fontSize="small" aria-hidden="true" />
                           <Typography component="h3" variant="subtitle2" sx={{ flex: 1 }}>
                             Registration results ({registrationResults.length})
@@ -1094,7 +1121,13 @@ const UserManagement: React.FC = () => {
                                   <TableCell>
                                     {result.error && (
                                       <Tooltip title={result.error}>
-                                        <Typography variant="body2" color="error.main" noWrap sx={{ maxWidth: 160 }}>{result.error}</Typography>
+                                        <Typography
+                                          variant="body2"
+                                          noWrap
+                                          sx={{
+                                            color: "error.main",
+                                            maxWidth: 160
+                                          }}>{result.error}</Typography>
                                       </Tooltip>
                                     )}
                                   </TableCell>
@@ -1106,14 +1139,28 @@ const UserManagement: React.FC = () => {
                         <Stack spacing={1} sx={{ display: { xs: "flex", md: "none" } }}>
                           {registrationResults.map((result) => (
                             <Box key={`${result.email}-${result.classId}`} sx={{ p: 1.5, border: 1, borderColor: "divider", borderRadius: 2 }}>
-                              <Stack direction="row" justifyContent="space-between" gap={1} alignItems="flex-start">
+                              <Stack
+                                direction="row"
+                                sx={{
+                                  justifyContent: "space-between",
+                                  gap: 1,
+                                  alignItems: "flex-start"
+                                }}>
                                 <Typography variant="body2" sx={{ fontWeight: 600, overflowWrap: "anywhere" }}>{result.email}</Typography>
                                 <Chip size="small" label={result.status} color={result.status === "success" ? "success" : result.status === "error" ? "error" : "default"} />
                               </Stack>
-                              <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 1 }}>
+                              <Typography
+                                variant="caption"
+                                sx={{
+                                  color: "text.secondary",
+                                  display: "block",
+                                  mt: 1
+                                }}>
                                 Class {result.classId} · Password <Box component="span" sx={{ fontFamily: "monospace" }}>{result.password}</Box>
                               </Typography>
-                              {result.error && <Typography variant="caption" color="error.main" role="alert">{result.error}</Typography>}
+                              {result.error && <Typography variant="caption" role="alert" sx={{
+                                color: "error.main"
+                              }}>{result.error}</Typography>}
                             </Box>
                           ))}
                         </Stack>
@@ -1164,14 +1211,21 @@ const UserManagement: React.FC = () => {
           >
             <DialogTitle component="div" id="assignment-dialog-title">
               <Typography component="h2" variant="h6">Instructor assignments</Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                  mt: 0.5
+                }}>
                 Assign an instructor to a class or update an existing assignment.
               </Typography>
             </DialogTitle>
             {isAssigning && <LinearProgress aria-label="Saving instructor assignment" />}
             <DialogContent dividers sx={{ px: { xs: 2, sm: 3 }, py: 3, "& .MuiOutlinedInput-root": { minHeight: 44 } }}>
               <Stack spacing={2.5}>
-                <Stack direction={{ xs: "column", md: "row" }} spacing={2} alignItems="flex-start">
+                <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{
+                  alignItems: "flex-start"
+                }}>
                   <FormControl fullWidth>
                     <InputLabel>Class</InputLabel>
                     <Select
@@ -1229,12 +1283,18 @@ const UserManagement: React.FC = () => {
                   <Box>
                     <Typography component="h3" variant="subtitle2" sx={{ mb: 1 }}>Current assignments</Typography>
                     {isLoadingAssignments ? (
-                      <Stack direction="row" alignItems="center" spacing={1}>
+                      <Stack direction="row" spacing={1} sx={{
+                        alignItems: "center"
+                      }}>
                         <CircularProgress size={16} />
-                        <Typography variant="body2" color="text.secondary">Loading assignments…</Typography>
+                        <Typography variant="body2" sx={{
+                          color: "text.secondary"
+                        }}>Loading assignments…</Typography>
                       </Stack>
                     ) : classAssignments.length === 0 ? (
-                      <Typography variant="body2" color="text.secondary">No instructors assigned to this class yet.</Typography>
+                      <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                      }}>No instructors assigned to this class yet.</Typography>
                     ) : (
                       <Stack spacing={1}>
                         {classAssignments.map((assignment) => (
@@ -1303,18 +1363,17 @@ const UserManagement: React.FC = () => {
               <Stack
                 direction="row"
                 spacing={0.75}
-                alignItems="center"
                 aria-label="Current view: Table"
                 sx={{
+                  alignItems: "center",
                   gridArea: "view",
                   justifySelf: "start",
                   minHeight: 36,
                   px: 1.25,
                   color: "text.primary",
                   bgcolor: "action.selected",
-                  borderRadius: 1,
-                }}
-              >
+                  borderRadius: 1
+                }}>
                 <TableViewIcon aria-hidden="true" fontSize="small" />
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>Table</Typography>
               </Stack>
@@ -1324,7 +1383,6 @@ const UserManagement: React.FC = () => {
                 placeholder="Search"
                 value={searchQuery}
                 onChange={(event) => setSearchQuery(event.target.value)}
-                inputProps={{ "aria-label": "Search accounts" }}
                 slotProps={{
                   input: {
                     startAdornment: (
@@ -1333,13 +1391,14 @@ const UserManagement: React.FC = () => {
                       </InputAdornment>
                     ),
                   },
+
+                  htmlInput: { "aria-label": "Search accounts" }
                 }}
                 sx={{
                   gridArea: "search",
                   width: "100%",
                   "& .MuiOutlinedInput-root": { minHeight: 36, borderRadius: 1 },
-                }}
-              />
+                }} />
               <Button
                 variant="outlined"
                 startIcon={<DownloadIcon />}
@@ -1370,7 +1429,9 @@ const UserManagement: React.FC = () => {
                   onChange={(event) => setAccessFilter(event.target.value)}
                   inputProps={{ "aria-label": "Filter by access" }}
                   renderValue={() => (
-                    <Stack direction="row" spacing={0.75} alignItems="center">
+                    <Stack direction="row" spacing={0.75} sx={{
+                      alignItems: "center"
+                    }}>
                       <AccessFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "text.secondary" }} />
                       <Typography variant="body2" sx={{ fontWeight: 600 }}>{accessFilterLabel}</Typography>
                     </Stack>
@@ -1388,7 +1449,9 @@ const UserManagement: React.FC = () => {
                   onChange={(event) => setRoleFilter(event.target.value)}
                   inputProps={{ "aria-label": "Filter by role" }}
                   renderValue={() => (
-                    <Stack direction="row" spacing={0.75} alignItems="center">
+                    <Stack direction="row" spacing={0.75} sx={{
+                      alignItems: "center"
+                    }}>
                       <RoleFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "text.secondary" }} />
                       <Typography variant="body2" sx={{ fontWeight: 600 }}>{roleFilterLabel}</Typography>
                     </Stack>
@@ -1407,7 +1470,9 @@ const UserManagement: React.FC = () => {
                   onChange={(event) => setAccountStatusFilter(event.target.value)}
                   inputProps={{ "aria-label": "Filter by account status" }}
                   renderValue={() => (
-                    <Stack direction="row" spacing={0.75} alignItems="center">
+                    <Stack direction="row" spacing={0.75} sx={{
+                      alignItems: "center"
+                    }}>
                       <StatusFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "text.secondary" }} />
                       <Typography variant="body2" sx={{ fontWeight: 600 }}>{accountStatusFilterLabel}</Typography>
                     </Stack>
@@ -1438,13 +1503,23 @@ const UserManagement: React.FC = () => {
             {isLoadingUsers ? (
               <Box sx={{ p: 4, textAlign: "center" }} aria-live="polite">
                 <CircularProgress size={28} />
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 1.5 }}>Loading accounts…</Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "text.secondary",
+                    mt: 1.5
+                  }}>Loading accounts…</Typography>
               </Box>
             ) : paginatedUsers.length === 0 ? (
               <Box sx={{ px: 2, py: 6, textAlign: "center" }}>
                 <GroupIcon sx={{ color: "text.disabled", fontSize: 36 }} aria-hidden="true" />
                 <Typography component="p" variant="h6" sx={{ mt: 1 }}>No accounts found</Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "text.secondary",
+                    mt: 0.5
+                  }}>
                   {hasActiveFilters ? "Try clearing or changing the current filters." : "Add an email to the whitelist to get started."}
                 </Typography>
                 {hasActiveFilters && <Button sx={{ mt: 2 }} onClick={() => { setSearchQuery(""); setAccessFilter("all"); setRoleFilter("all"); setAccountStatusFilter("all"); }}>Clear filters</Button>}
@@ -1474,7 +1549,9 @@ const UserManagement: React.FC = () => {
                         onClick={() => handleRequestSort('email')}
                         sx={{ fontWeight: 600, color: "text.secondary", "&.Mui-active": { color: "text.primary" } }}
                       >
-                        <Stack direction="row" spacing={0.75} alignItems="center">
+                        <Stack direction="row" spacing={0.75} sx={{
+                          alignItems: "center"
+                        }}>
                           <AccountFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "text.disabled" }} />
                           <span>Account</span>
                         </Stack>
@@ -1487,26 +1564,47 @@ const UserManagement: React.FC = () => {
                         onClick={() => handleRequestSort('status')}
                         sx={{ fontWeight: 600, color: "text.secondary", "&.Mui-active": { color: "text.primary" } }}
                       >
-                        <Stack direction="row" spacing={0.75} alignItems="center">
+                        <Stack direction="row" spacing={0.75} sx={{
+                          alignItems: "center"
+                        }}>
                           <AccessFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "text.disabled" }} />
                           <span>Access</span>
                         </Stack>
                       </TableSortLabel>
                     </TableCell>
                     <TableCell sx={{ py: 1.25, width: 160, whiteSpace: "nowrap" }}>
-                      <Stack direction="row" spacing={0.75} alignItems="center" sx={{ color: "text.secondary" }}>
+                      <Stack
+                        direction="row"
+                        spacing={0.75}
+                        sx={{
+                          alignItems: "center",
+                          color: "text.secondary"
+                        }}>
                         <RoleFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "text.disabled" }} />
                         <Typography variant="body2" sx={{ fontWeight: 600 }}>Role</Typography>
                       </Stack>
                     </TableCell>
                     <TableCell sx={{ py: 1.25, width: 150, whiteSpace: "nowrap" }}>
-                      <Stack direction="row" spacing={0.75} alignItems="center" sx={{ color: "text.secondary" }}>
+                      <Stack
+                        direction="row"
+                        spacing={0.75}
+                        sx={{
+                          alignItems: "center",
+                          color: "text.secondary"
+                        }}>
                         <StatusFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "text.disabled" }} />
                         <Typography variant="body2" sx={{ fontWeight: 600 }}>Account status</Typography>
                       </Stack>
                     </TableCell>
                     <TableCell align="right" sx={{ py: 1.25, pr: 2, width: 170, whiteSpace: "nowrap" }}>
-                      <Stack direction="row" spacing={0.75} alignItems="center" justifyContent="flex-end" sx={{ color: "text.secondary" }}>
+                      <Stack
+                        direction="row"
+                        spacing={0.75}
+                        sx={{
+                          alignItems: "center",
+                          justifyContent: "flex-end",
+                          color: "text.secondary"
+                        }}>
                         <ActionFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "text.disabled" }} />
                         <Typography variant="body2" sx={{ fontWeight: 600 }}>Account action</Typography>
                       </Stack>
@@ -1524,7 +1622,12 @@ const UserManagement: React.FC = () => {
                           <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary', overflowWrap: "anywhere" }}>
                             {user.email}
                           </Typography>
-                          <Typography variant="caption" color="text.secondary" sx={{ whiteSpace: "nowrap" }}>
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              color: "text.secondary",
+                              whiteSpace: "nowrap"
+                            }}>
                             {user.oauth ? "OAuth" : "Password"}
                           </Typography>
                         </TableCell>
@@ -1540,7 +1643,9 @@ const UserManagement: React.FC = () => {
                               }}
                               disabled={isProcessing}
                               color="success"
-                              inputProps={{ "aria-label": `${isEnabled ? "Disable" : "Enable"} access for ${user.email}` }}
+                              slotProps={{
+                                input: { "aria-label": `${isEnabled ? "Disable" : "Enable"} access for ${user.email}` }
+                              }}
                             />
                             <Typography
                               variant="body2"
@@ -1607,7 +1712,13 @@ const UserManagement: React.FC = () => {
 
                         <TableCell align="right" sx={{ py: 1, pr: 2, whiteSpace: "nowrap" }}>
                           {user.isPending ? (
-                            <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic', whiteSpace: "nowrap" }}>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: "text.secondary",
+                                fontStyle: 'italic',
+                                whiteSpace: "nowrap"
+                              }}>
                               Awaiting Registration
                             </Typography>
                           ) : !user.oauth ? (
@@ -1622,7 +1733,13 @@ const UserManagement: React.FC = () => {
                               Reset password
                             </Button>
                           ) : (
-                            <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic', whiteSpace: "nowrap" }}>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: "text.secondary",
+                                fontStyle: 'italic',
+                                whiteSpace: "nowrap"
+                              }}>
                               Managed by OAuth
                             </Typography>
                           )}
@@ -1640,15 +1757,34 @@ const UserManagement: React.FC = () => {
                 const isEnabled = user.status === "enabled";
                 return (
                   <Box key={user.id} sx={{ p: { xs: 1.5, sm: 2 } }}>
-                    <Stack direction="row" justifyContent="space-between" gap={1.5} alignItems="flex-start">
+                    <Stack
+                      direction="row"
+                      sx={{
+                        justifyContent: "space-between",
+                        gap: 1.5,
+                        alignItems: "flex-start"
+                      }}>
                       <Box sx={{ minWidth: 0 }}>
                         <Typography variant="body2" sx={{ fontWeight: 600, overflowWrap: "anywhere" }}>{user.email}</Typography>
-                        <Stack direction="row" spacing={0.75} sx={{ mt: 0.75 }} flexWrap="wrap" useFlexGap>
+                        <Stack
+                          direction="row"
+                          spacing={0.75}
+                          useFlexGap
+                          sx={{
+                            flexWrap: "wrap",
+                            mt: 0.75
+                          }}>
                           <Chip size="small" variant="outlined" label={user.oauth ? "OAuth" : "Password"} />
                           <Chip size="small" label={user.isPending ? "Pending" : "Registered"} color={user.isPending ? "warning" : "success"} />
                         </Stack>
                       </Box>
-                      <Stack direction="row" alignItems="center" spacing={0.25} sx={{ flexShrink: 0 }}>
+                      <Stack
+                        direction="row"
+                        spacing={0.25}
+                        sx={{
+                          alignItems: "center",
+                          flexShrink: 0
+                        }}>
                         <Box
                           component="label"
                           sx={{
@@ -1666,7 +1802,9 @@ const UserManagement: React.FC = () => {
                             onChange={(event) => handleWhitelistStatusToggle(user.id, event.target.checked ? "enabled" : "disabled")}
                             disabled={isProcessing}
                             color="success"
-                            inputProps={{ "aria-label": `${isEnabled ? "Disable" : "Enable"} access for ${user.email}` }}
+                            slotProps={{
+                              input: { "aria-label": `${isEnabled ? "Disable" : "Enable"} access for ${user.email}` }
+                            }}
                           />
                         </Box>
                         <Typography variant="caption" color={isEnabled ? "success.dark" : "text.secondary"}>{isEnabled ? "Enabled" : "Disabled"}</Typography>
@@ -1690,13 +1828,27 @@ const UserManagement: React.FC = () => {
                         </Select>
                       </FormControl>
                       {user.isPending ? (
-                        <Typography variant="caption" color="text.secondary" sx={{ minHeight: 44, display: "flex", alignItems: "center" }}>Awaiting registration</Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            color: "text.secondary",
+                            minHeight: 44,
+                            display: "flex",
+                            alignItems: "center"
+                          }}>Awaiting registration</Typography>
                       ) : !user.oauth ? (
                         <Button variant="outlined" startIcon={<VpnKeyIcon />} disabled={isResetting} onClick={() => handleResetPasswordForUser(user.email)} sx={{ minHeight: 44 }}>
                           Reset password
                         </Button>
                       ) : (
-                        <Typography variant="caption" color="text.secondary" sx={{ minHeight: 44, display: "flex", alignItems: "center" }}>Password managed by OAuth</Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            color: "text.secondary",
+                            minHeight: 44,
+                            display: "flex",
+                            alignItems: "center"
+                          }}>Password managed by OAuth</Typography>
                       )}
                     </Box>
                   </Box>

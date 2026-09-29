@@ -1,9 +1,20 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsEnum, IsInt, IsNotEmpty, IsObject, IsOptional, IsString, Min } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsObject,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 import { AnnotationAudience } from '@prisma/client';
 
 export class CreateDocumentCommentDto {
-  @ApiProperty({ description: 'Page number (0-indexed) where the annotation should appear.' })
+  @ApiProperty({
+    description: 'Page number (0-indexed) where the annotation should appear.',
+  })
   @IsInt()
   @Min(0)
   pageNumber: number;
@@ -32,7 +43,9 @@ export class CreateDocumentCommentDto {
   @IsEnum(['STUDENT', 'TUTOR', 'STAFF'])
   audience?: AnnotationAudience;
 
-  @ApiPropertyOptional({ description: 'Selection region for the comment highlight.' })
+  @ApiPropertyOptional({
+    description: 'Selection region for the comment highlight.',
+  })
   @IsOptional()
   @IsObject()
   selectionRegion?: any;
@@ -44,7 +57,9 @@ export class CreateDocumentCommentDto {
 }
 
 export class UpdateDocumentCommentVisibilityDto {
-  @ApiPropertyOptional({ description: 'Whether the comment should be visible to students.' })
+  @ApiPropertyOptional({
+    description: 'Whether the comment should be visible to students.',
+  })
   @IsOptional()
   @IsBoolean()
   isVisibleToStudents?: boolean;
@@ -75,7 +90,9 @@ class DocumentCommentAuthorDto {
   @ApiProperty()
   id: string;
 
-  @ApiPropertyOptional({ description: 'Display name derived from instructor profile.' })
+  @ApiPropertyOptional({
+    description: 'Display name derived from instructor profile.',
+  })
   name?: string;
 
   @ApiPropertyOptional()
@@ -104,7 +121,9 @@ export class DocumentCommentDto {
   })
   audience: AnnotationAudience;
 
-  @ApiPropertyOptional({ description: 'Selection region for the comment highlight.' })
+  @ApiPropertyOptional({
+    description: 'Selection region for the comment highlight.',
+  })
   selectionRegion?: any;
 
   @ApiPropertyOptional({ description: 'Pin position for the comment marker.' })

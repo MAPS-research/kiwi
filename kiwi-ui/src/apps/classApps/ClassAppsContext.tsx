@@ -14,14 +14,14 @@ import React, {
   useMemo,
   type ReactNode,
 } from 'react';
-import { Configuration as ApiConfiguration } from '../../services/runtime';
-import { ClassAppsApi } from '../../services/apis/ClassAppsApi';
-import { basePath } from '../../utils/api';
+import { Configuration as ApiConfiguration } from '../../services/runtime.ts';
+import { ClassAppsApi } from '../../services/apis/ClassAppsApi.ts';
+import { basePath } from '../../utils/api.ts';
 import type {
   ClassKiwiAppConfig,
   ClassAppsContextValue,
   ClassAppsProviderProps,
-} from './types';
+} from './types.ts';
 
 /**
  * Default context value

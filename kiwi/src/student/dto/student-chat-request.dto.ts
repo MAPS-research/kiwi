@@ -118,11 +118,20 @@ export class StudentContext {
 export class CodegenContext {
   @ApiProperty()
   problemId: string;
-  @ApiProperty({ required: false, description: 'Full code context as a string (may be truncated server-side)' })
+  @ApiProperty({
+    required: false,
+    description: 'Full code context as a string (may be truncated server-side)',
+  })
   codeContext?: string;
-  @ApiProperty({ required: false, description: 'Selected code snippet as a string' })
+  @ApiProperty({
+    required: false,
+    description: 'Selected code snippet as a string',
+  })
   selectedCode?: string;
-  @ApiProperty({ required: false, description: 'Error or traceback as a string' })
+  @ApiProperty({
+    required: false,
+    description: 'Error or traceback as a string',
+  })
   errorContext?: string;
 }
 
@@ -134,7 +143,9 @@ export class AppContext {
   @IsString()
   appSlug: string;
 
-  @ApiPropertyOptional({ description: 'App-provided context string (e.g., current state, user data)' })
+  @ApiPropertyOptional({
+    description: 'App-provided context string (e.g., current state, user data)',
+  })
   @IsOptional()
   @IsString()
   appContext?: string;
@@ -227,13 +238,15 @@ export class UnifiedChatContext {
  */
 export class ClientToolResult {
   @ApiProperty({
-    description: 'The OpenAI tool call ID that was paused (from the clientAction event)',
+    description:
+      'The OpenAI tool call ID that was paused (from the clientAction event)',
   })
   @IsString()
   toolCallId: string;
 
   @ApiProperty({
-    description: 'The client tool name that was executed (e.g. "navigate", "observe")',
+    description:
+      'The client tool name that was executed (e.g. "navigate", "observe")',
   })
   @IsString()
   tool: string;
@@ -326,7 +339,8 @@ export class UnifiedChatRequest {
 
   @ApiProperty({
     type: UnifiedChatContext,
-    description: 'Unified context containing PDF, codegen, and environment info',
+    description:
+      'Unified context containing PDF, codegen, and environment info',
   })
   @ValidateNested()
   @Type(() => UnifiedChatContext)
@@ -408,10 +422,14 @@ export class OAuthRequiredResponse {
   @ApiProperty({ description: 'The tool that requires OAuth authorization' })
   toolName: string;
 
-  @ApiProperty({ description: 'URL to redirect the user for OAuth authorization' })
+  @ApiProperty({
+    description: 'URL to redirect the user for OAuth authorization',
+  })
   authorizationUrl: string;
 
-  @ApiProperty({ description: 'User-friendly message explaining the OAuth requirement' })
+  @ApiProperty({
+    description: 'User-friendly message explaining the OAuth requirement',
+  })
   message: string;
 }
 

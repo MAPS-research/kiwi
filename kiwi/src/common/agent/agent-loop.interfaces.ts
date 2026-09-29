@@ -39,11 +39,7 @@ export const DEFAULT_AGENT_LOOP_CONFIG: AgentLoopConfig = {
  * Agent loop status
  */
 export type AgentLoopStatus =
-  | 'running'
-  | 'completed'
-  | 'paused_oauth'
-  | 'error'
-  | 'max_iterations';
+  'running' | 'completed' | 'paused_oauth' | 'error' | 'max_iterations';
 
 /**
  * State maintained throughout the agent loop

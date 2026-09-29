@@ -5,7 +5,7 @@ in this repo; see `../docs/` for deeper topics.
 
 ## Environment & running
 
-- Use the Node version in `.nvmrc` (v20.14.0), e.g. `nvm use` or a version
+- Use the Node version in `.nvmrc` (v24.21.0), e.g. `nvm use` or a version
   manager of your choice, before running backend commands.
 - Infra (Postgres/pgvector, Redis, MinIO) runs via Docker: `npm run infra`
   (or `infra:detached`). Do **not** remove containers/volumes — stop, don't
@@ -22,6 +22,9 @@ in this repo; see `../docs/` for deeper topics.
 - Schema: `prisma/schema.prisma`. Apply migrations with
   `npx prisma migrate deploy` (use `deploy`, not `dev`, to avoid touching
   existing drift). Regenerate the client with `npx prisma generate`.
+- Prisma 7 no longer generates the client on install, so `npm install` runs
+  `prisma generate` as a `postinstall` step. Config lives in `prisma.config.ts`;
+  commands that talk to the database need `DATABASE_URL`, `generate` does not.
 - Seed: `npx prisma db seed` replays `prisma/seed-data.json` if present, else a
   minimal baseline. See `../docs/development.md`.
 - pgvector is enabled (the `vector` extension). See `../docs/embeddings.md` for how
@@ -46,7 +49,7 @@ After changing the embedding provider/model (env or a new engine), **re-embed
 existing chunks for the target provider** so RAG works:
 
 ```bash
-npx ts-node scripts/reembed-missing.ts --provider qwen     # 1024-dim
+npx ts-node scripts/reembed-missing.ts --provider qwen     # bge-m3 (1024)
 npx ts-node scripts/reembed-missing.ts --provider openai              # 1536
 npx ts-node scripts/reembed-missing.ts --provider qwen --documentId <uuid>
 ```

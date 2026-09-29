@@ -12,13 +12,13 @@ import {
   AppsOutlined as AppsIcon,
   RefreshOutlined as RefreshIcon,
 } from '@mui/icons-material';
-import { useAuth } from '../../auth/AuthContext';
+import { useAuth } from '../../auth/AuthContext.tsx';
 import apiClient, {
   classAppsApiClient,
   kiwiAppsApiClient,
   permissionsApiClient,
-} from '../../utils/api';
-import type { RequestAppTokenDto } from '../../services/models';
+} from '../../utils/api.ts';
+import type { RequestAppTokenDto } from '../../services/models/index.ts';
 import { useAdminNavigation } from '../../context/AdminNavigationContext.tsx';
 import {
   ADMIN_NAVIGATE_MESSAGE,
@@ -447,16 +447,20 @@ export const AdminAppView: React.FC<AdminAppViewProps> = ({
             id="app-not-enabled-title"
             component="h1"
             variant="h5"
-            color="text.primary"
-            sx={{ fontWeight: 600 }}
-          >
+            sx={{
+              color: "text.primary",
+              fontWeight: 600
+            }}>
             Exercise Manager is not enabled for this class
           </Typography>
           <Typography
             variant="body2"
-            color="text.secondary"
-            sx={{ mt: 1, maxWidth: 480, lineHeight: 1.6 }}
-          >
+            sx={{
+              color: "text.secondary",
+              mt: 1,
+              maxWidth: 480,
+              lineHeight: 1.6
+            }}>
             Enable the Codegen app in this class before opening its exercise
             management tools.
           </Typography>

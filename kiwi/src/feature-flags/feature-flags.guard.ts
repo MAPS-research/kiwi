@@ -9,7 +9,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { FeatureFlagsService } from './feature-flags.service';
 import { FEATURE_FLAG_KEY } from './feature-flags.decorator';
-import { Feature } from 'src/common/database/database.types';
+import type { Feature } from '@prisma/client';
 import { EngineChoice } from 'src/common/llm/interfaces/engine-config';
 
 @Injectable()
@@ -79,7 +79,12 @@ export class FeatureFlagGuardQwenModel implements CanActivate {
       engineChoice: EngineChoice;
     };
 
-    const { type, studentContext, codegenContext, context: unifiedContext, engineChoice } = requestBody;
+    const {
+      type,
+      studentContext,
+      context: unifiedContext,
+      engineChoice,
+    } = requestBody;
 
     // Check for codegen type (v1) or codegen context (v2)
     if (type === 'codegen' || unifiedContext?.codegen) {
@@ -148,7 +153,12 @@ export class FeatureFlagGuardTokenLimit implements CanActivate {
       };
     };
 
-    const { type, studentContext, codegenContext, classId, context: unifiedContext } = requestBody;
+    const {
+      type,
+      studentContext,
+      classId,
+      context: unifiedContext,
+    } = requestBody;
 
     // Check for codegen type (v1) or codegen context (v2)
     if (type === 'codegen' || unifiedContext?.codegen) {

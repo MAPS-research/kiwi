@@ -1,5 +1,11 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { Tool, Context } from '@rekog/mcp-nest';
+import { Payload, Ctx } from '@nestjs/microservices';
+import { Logger } from '@nestjs/common';
+import {
+  Tool,
+  McpContext as Context,
+  McpController,
+  McpRawRequest,
+} from '@rekog/mcp-nest';
 import { z } from 'zod';
 import { Request } from 'express';
 import { AppChunksService } from 'src/kiwi-app/app-chunks.service';
@@ -21,7 +27,7 @@ import {
  * App tokens require the explicit `class:materials:chunks:read` scope and can
  * only read the class their token was minted for.
  */
-@Injectable()
+@McpController()
 export class ClassChunksTool {
   private readonly logger = new Logger(ClassChunksTool.name);
 
@@ -72,6 +78,7 @@ export class ClassChunksTool {
     },
   })
   async getClassDocumentChunks(
+    @Payload()
     {
       classId,
       documentIds,
@@ -83,8 +90,8 @@ export class ClassChunksTool {
       cursor?: string;
       limit?: number;
     },
-    context: Context,
-    request: Request,
+    @Ctx() context: Context,
+    @McpRawRequest() request: Request,
   ) {
     try {
       let userId: string | undefined;

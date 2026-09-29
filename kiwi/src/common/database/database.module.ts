@@ -69,4 +69,4 @@ import { ExperimentDatabaseService } from './experiment.service';
     KeywordService,
   ],
 })
-export class DatabaseModule { }
+export class DatabaseModule {}

@@ -5,7 +5,12 @@
     "test",
     "dist",
     "prisma",
+    "prisma.config.ts",
     "scripts",
     "**/*spec.ts"
-  ]
+  ],
+  "compilerOptions": {
+    "rootDir": "./src",
+    "tsBuildInfoFile": "./dist/tsconfig.build.tsbuildinfo"
+  }
 }

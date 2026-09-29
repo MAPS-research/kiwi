@@ -63,9 +63,21 @@ const MetricCard: React.FC<MetricCardProps> = ({
     variant="outlined"
     sx={{ p: 2.5, height: 132, boxSizing: "border-box", borderRadius: 2 }}
   >
-    <Stack direction="row" justifyContent="space-between" spacing={2} sx={{ height: "100%" }}>
+    <Stack
+      direction="row"
+      spacing={2}
+      sx={{
+        justifyContent: "space-between",
+        height: "100%"
+      }}>
       <Box sx={{ minWidth: 0 }}>
-        <Typography variant="body2" color="text.secondary" sx={{ height: 20, lineHeight: "20px" }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.secondary",
+            height: 20,
+            lineHeight: "20px"
+          }}>
           {label}
         </Typography>
         <Box sx={{ height: 44, display: "flex", alignItems: "center" }}>
@@ -82,9 +94,13 @@ const MetricCard: React.FC<MetricCardProps> = ({
         </Box>
         <Typography
           variant="caption"
-          color="text.secondary"
-          sx={{ display: "block", height: 18, lineHeight: "18px", whiteSpace: "nowrap" }}
-        >
+          sx={{
+            color: "text.secondary",
+            display: "block",
+            height: 18,
+            lineHeight: "18px",
+            whiteSpace: "nowrap"
+          }}>
           {helper}
         </Typography>
       </Box>

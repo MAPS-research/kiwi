@@ -4,7 +4,7 @@
  * Built-in apps that come with the framework.
  */
 
-import type { KiwiAppManifest } from '../types';
+import type { KiwiAppManifest } from '../types/index.ts';
 
 /**
  * All built-in app manifests

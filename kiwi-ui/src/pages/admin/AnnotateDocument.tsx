@@ -1,14 +1,4 @@
-import {
-  PageChangeEvent,
-  RenderPage,
-  RenderPageProps,
-} from "@react-pdf-viewer/core";
-import {
-  HighlightArea,
-  RenderHighlightsProps,
-  Trigger,
-  highlightPlugin,
-} from "@react-pdf-viewer/highlight";
+import type { PageChangeEvent, HighlightArea } from "../../components/PDFViewer/pdfTypes.ts";
 import React, {
   useCallback,
   useEffect,
@@ -22,8 +12,7 @@ import { PDFViewer } from "../../components/PDFViewer/PDFViewer.tsx";
 
 import { Box, Button, MenuItem, Paper, TextField, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Chip } from "@mui/material";
 import EditIcon from '@mui/icons-material/EditOutlined';
-import DeleteIcon from '@mui/icons-material/DeleteOutline';
-import "@react-pdf-viewer/highlight/lib/styles/index.css";
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import type { Chunk } from "../../services/index.ts";
 import ClickToSelect from "../../components/ClickToSelect/ClickToSelect.tsx";
 import {
@@ -620,7 +609,7 @@ export const AnnotateDocument: React.FC = () => {
     }));
   }, [highlights]);
 
-  const renderHighlights = (props: RenderHighlightsProps) => {
+  const renderHighlights = (props: { pageIndex: number }) => {
     const pageCommentPins = commentPins.filter(
       (comment) => comment.selectionRegion.pageIndex === props.pageIndex
     );
@@ -633,6 +622,7 @@ export const AnnotateDocument: React.FC = () => {
 
     return (
       <div
+        style={{ position: "absolute", inset: 0 }}
         ref={(element) => {
           if (element) {
             commentLayerRefs.current.set(props.pageIndex, element);
@@ -894,11 +884,6 @@ export const AnnotateDocument: React.FC = () => {
       </div>
     );
   };
-
-  const highlightPluginInstance = highlightPlugin({
-    renderHighlights,
-    trigger: Trigger.None,
-  });
 
   interface BoxCoordinates {
     left: number;
@@ -1340,15 +1325,13 @@ export const AnnotateDocument: React.FC = () => {
     []
   );
 
-  const customRenderPage: RenderPage = (props: RenderPageProps) => {
+  const customRenderPage = (page: React.ReactNode) => {
     return (
       <ClickToSelect
         onAddChunk={handleAddChunkSelection}
         onAddComment={handleAddCommentSelection}
       >
-        {props.canvasLayer.children}
-        {props.annotationLayer.children}
-        {props.textLayer.children}
+        {page}
       </ClickToSelect>
     );
   };
@@ -1443,7 +1426,14 @@ export const AnnotateDocument: React.FC = () => {
 
       {/* NEW: Three-column workspace: Left rail | PDF | Right page-filtered chunks */}
       {documentData && (
-        <Box display="flex" gap={2} sx={{ px: { xs: 2, md: 3 }, py: 1, overflow: "hidden" }}>
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2,
+            px: { xs: 2, md: 3 },
+            py: 1,
+            overflow: "hidden"
+          }}>
           {/* LEFT RAIL (thin) */}
           <Paper
             elevation={0}
@@ -1473,9 +1463,12 @@ export const AnnotateDocument: React.FC = () => {
               {chunksForCurrentPage.length === 0 ? (
                 <Typography
                   variant="body2"
-                  color="text.secondary"
-                  sx={{ fontSize: "0.75rem", textAlign: "center", mt: 2 }}
-                >
+                  sx={{
+                    color: "text.secondary",
+                    fontSize: "0.75rem",
+                    textAlign: "center",
+                    mt: 2
+                  }}>
                   No chunks
                 </Typography>
               ) : (
@@ -1536,9 +1529,8 @@ export const AnnotateDocument: React.FC = () => {
             <PDFViewer
               pdfFile={documentData.documentContent}
               onPageChangeCallback={onPageChangeCallback}
-              highlightPlugin={highlightPluginInstance}
-              highlights={highlights}
-              customRenderPage={customRenderPage}
+              renderHighlights={renderHighlights}
+              renderPage={customRenderPage}
             />
           </Box>
 
@@ -1578,10 +1570,18 @@ export const AnnotateDocument: React.FC = () => {
                   {chunksForCurrentPage.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={3} align="center" sx={{ py: 6 }}>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{
+                          color: "text.secondary"
+                        }}>
                           No chunks found on this page
                         </Typography>
-                        <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: "block" }}>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            color: "text.secondary",
+                            mt: 1,
+                            display: "block"
+                          }}>
                           Select a region on the PDF to create a new chunk
                         </Typography>
                       </TableCell>

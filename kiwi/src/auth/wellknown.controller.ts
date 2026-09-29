@@ -107,7 +107,7 @@ export class WellKnownController {
    * OAuth Authorization Server Metadata with path support (RFC 8414 Section 3.1)
    * Handles path-based issuer discovery: /.well-known/oauth-authorization-server/:path*
    */
-  @Get('oauth-authorization-server/*')
+  @Get('oauth-authorization-server/*path')
   @Public()
   @ApiOperation({
     summary: 'OAuth Authorization Server Metadata (path-based)',
@@ -118,10 +118,10 @@ export class WellKnownController {
     status: 200,
     description: 'Authorization server metadata for path-based issuer',
   })
-  getAuthorizationServerMetadataWithPath(@Param('0') path: string) {
+  getAuthorizationServerMetadataWithPath(@Param('path') path: string[]) {
     const serverUrl =
       this.configService.get('SERVER_URL') || 'http://localhost:3000';
-    const issuer = `${serverUrl}/${path}`;
+    const issuer = `${serverUrl}/${path.join('/')}`;
     return this.buildAuthorizationServerMetadata(issuer);
   }
 
@@ -150,7 +150,7 @@ export class WellKnownController {
    * OAuth Protected Resource Metadata with path support (RFC 9728)
    * Handles path-based resource discovery: /.well-known/oauth-protected-resource/:path*
    */
-  @Get('oauth-protected-resource/*')
+  @Get('oauth-protected-resource/*path')
   @Public()
   @ApiOperation({
     summary: 'OAuth Protected Resource Metadata (path-based)',
@@ -161,10 +161,10 @@ export class WellKnownController {
     status: 200,
     description: 'Protected resource metadata for path-based resource',
   })
-  getProtectedResourceMetadataWithPath(@Param('0') path: string) {
+  getProtectedResourceMetadataWithPath(@Param('path') path: string[]) {
     const serverUrl =
       this.configService.get('SERVER_URL') || 'http://localhost:3000';
-    const resource = `${serverUrl}/${path}`;
+    const resource = `${serverUrl}/${path.join('/')}`;
     return this.buildProtectedResourceMetadata(resource);
   }
 

@@ -237,9 +237,9 @@ describe('ChatTool', () => {
     });
 
     it('should report progress during streaming', async () => {
-      const mockObservable = of(
-        { data: { choices: [{ delta: { content: 'Hello' } }] } },
-      );
+      const mockObservable = of({
+        data: { choices: [{ delta: { content: 'Hello' } }] },
+      });
 
       chatService.createChatStream.mockResolvedValue(mockObservable as any);
 

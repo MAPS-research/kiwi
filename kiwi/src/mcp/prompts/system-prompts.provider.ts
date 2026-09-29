@@ -1,5 +1,5 @@
-import { Injectable, Scope } from '@nestjs/common';
-import { Prompt } from '@rekog/mcp-nest';
+import { Scope } from '@nestjs/common';
+import { Prompt, McpController } from '@rekog/mcp-nest';
 import { z } from 'zod';
 import { DEFAULT_SYSTEM_PROMPTS } from 'src/student/student.prompts';
 
@@ -7,7 +7,7 @@ import { DEFAULT_SYSTEM_PROMPTS } from 'src/student/student.prompts';
  * MCP System Prompts Provider
  * Exposes system prompts as MCP prompts for use by AI assistants
  */
-@Injectable({ scope: Scope.REQUEST })
+@McpController({ scope: Scope.REQUEST })
 export class SystemPromptsProvider {
   /**
    * Default system prompt for the Kiwi assistant
@@ -23,7 +23,7 @@ export class SystemPromptsProvider {
       description: 'Default Kiwi assistant system instructions',
       messages: [
         {
-          role: 'system',
+          role: 'user',
           content: {
             type: 'text',
             text: DEFAULT_SYSTEM_PROMPTS.defaultSystemMessage,
@@ -56,7 +56,7 @@ export class SystemPromptsProvider {
       description: 'CS class materials assistance prompt',
       messages: [
         {
-          role: 'system',
+          role: 'user',
           content: {
             type: 'text',
             text: promptText,
@@ -92,7 +92,7 @@ export class SystemPromptsProvider {
       description: 'Recitation problem-solving guidance prompt',
       messages: [
         {
-          role: 'system',
+          role: 'user',
           content: {
             type: 'text',
             text: promptText,
@@ -127,7 +127,7 @@ export class SystemPromptsProvider {
   }) {
     const messages = [
       {
-        role: 'system',
+        role: 'user',
         content: {
           type: 'text',
           text: DEFAULT_SYSTEM_PROMPTS.defaultSystemMessage,
@@ -145,7 +145,7 @@ export class SystemPromptsProvider {
         classPrompt += `\n\nClass ID: ${classId}`;
       }
       messages.push({
-        role: 'system',
+        role: 'user',
         content: {
           type: 'text',
           text: classPrompt,
@@ -153,7 +153,7 @@ export class SystemPromptsProvider {
       });
     } else if (selectedMode === 'recitation') {
       messages.push({
-        role: 'system',
+        role: 'user',
         content: {
           type: 'text',
           text: DEFAULT_SYSTEM_PROMPTS.recitationPrompt,

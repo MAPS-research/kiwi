@@ -1,5 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsOptional, IsBoolean, IsInt, IsArray, ValidateNested, Min } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsBoolean,
+  IsInt,
+  IsArray,
+  ValidateNested,
+  Min,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class EnableClassAppDto {
@@ -18,12 +26,17 @@ export class EnableClassAppDto {
   @IsString()
   tabLabel?: string;
 
-  @ApiPropertyOptional({ description: 'Class-specific config (overrides app defaults)', type: 'object' })
+  @ApiPropertyOptional({
+    description: 'Class-specific config (overrides app defaults)',
+    type: 'object',
+    additionalProperties: true,
+  })
   @IsOptional()
   config?: Record<string, any>;
 
   @ApiPropertyOptional({
-    description: 'Scopes to enable for this class (subset of maxScopes). If empty, all maxScopes are allowed.',
+    description:
+      'Scopes to enable for this class (subset of maxScopes). If empty, all maxScopes are allowed.',
     example: ['user:profile:read', 'class:info:read'],
     type: [String],
   })
@@ -50,12 +63,17 @@ export class UpdateClassAppDto {
   @IsBoolean()
   isEnabled?: boolean;
 
-  @ApiPropertyOptional({ description: 'Class-specific config', type: 'object' })
+  @ApiPropertyOptional({
+    description: 'Class-specific config',
+    type: 'object',
+    additionalProperties: true,
+  })
   @IsOptional()
   config?: Record<string, any>;
 
   @ApiPropertyOptional({
-    description: 'Scopes to enable for this class (subset of maxScopes). If empty, all maxScopes are allowed.',
+    description:
+      'Scopes to enable for this class (subset of maxScopes). If empty, all maxScopes are allowed.',
     example: ['user:profile:read', 'class:info:read'],
     type: [String],
   })
@@ -77,7 +95,10 @@ class TabOrderItem {
 }
 
 export class ReorderClassAppsDto {
-  @ApiProperty({ description: 'Array of app IDs with their new order', type: [TabOrderItem] })
+  @ApiProperty({
+    description: 'Array of app IDs with their new order',
+    type: [TabOrderItem],
+  })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => TabOrderItem)
@@ -103,12 +124,13 @@ export class ClassAppResponseDto {
   @ApiProperty()
   isEnabled: boolean;
 
-  @ApiProperty({ type: 'object' })
+  @ApiProperty({ type: 'object', additionalProperties: true })
   config: Record<string, any>;
 
   @ApiProperty({
     type: [String],
-    description: 'Scopes enabled for this class (empty = all maxScopes allowed)',
+    description:
+      'Scopes enabled for this class (empty = all maxScopes allowed)',
     example: ['user:profile:read', 'class:info:read'],
   })
   enabledScopes: string[];
@@ -123,7 +145,9 @@ export class ClassAppResponseDto {
   @ApiProperty({ description: 'App slug' })
   slug: string;
 
-  @ApiProperty({ description: 'App name (use tabLabel if set, otherwise this)' })
+  @ApiProperty({
+    description: 'App name (use tabLabel if set, otherwise this)',
+  })
   name: string;
 
   @ApiProperty({ description: 'App base URL' })
@@ -138,6 +162,10 @@ export class ClassAppResponseDto {
   @ApiProperty({ type: [String], description: 'App capabilities' })
   capabilities: string[];
 
-  @ApiProperty({ type: 'object', description: 'Merged config (app defaults + class overrides)' })
+  @ApiProperty({
+    type: 'object',
+    additionalProperties: true,
+    description: 'Merged config (app defaults + class overrides)',
+  })
   mergedConfig: Record<string, any>;
 }

@@ -1,7 +1,7 @@
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { MCPServerManagement } from "./MCPServerManagement";
+import { MCPServerManagement } from "./MCPServerManagement.tsx";
 
 // Mock MCP components
 vi.mock("../../components/MCP/MCPServerDialog", () => ({
@@ -48,7 +48,7 @@ describe("MCPServerManagement", () => {
   let mockMcpAdminApiClient: any;
 
   beforeEach(async () => {
-    const api = await import("../../utils/api");
+    const api = await import("../../utils/api.ts");
     mockMcpAdminApiClient = vi.mocked(api.mcpAdminApiClient);
 
     vi.clearAllMocks();

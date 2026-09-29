@@ -53,7 +53,9 @@ describe('CONTEXT_BLOCKS', () => {
       ...CONTEXT_BLOCKS.filter((b) => b.tier === 'history').map((b) => b.order),
     );
     const firstVolatile = Math.min(
-      ...CONTEXT_BLOCKS.filter((b) => b.tier === 'volatile').map((b) => b.order),
+      ...CONTEXT_BLOCKS.filter((b) => b.tier === 'volatile').map(
+        (b) => b.order,
+      ),
     );
 
     expect(lastHistory).toBeLessThan(firstVolatile);

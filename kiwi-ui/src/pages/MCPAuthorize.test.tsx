@@ -182,7 +182,7 @@ describe('MCPAuthorize Page', () => {
       });
 
       // Restore window.location
-      window.location = originalLocation;
+      (window as any).location = originalLocation;
     });
 
     it('navigates to home when fetch encounters CORS error (authorization succeeded)', async () => {
@@ -279,7 +279,7 @@ describe('MCPAuthorize Page', () => {
       vi.spyOn(document, 'createElement').mockImplementation((tagName: string) => {
         const element = originalCreateElement(tagName);
         if (tagName === 'form') {
-          element.submit = mockSubmit;
+          (element as HTMLFormElement).submit = mockSubmit;
         }
         return element;
       });

@@ -34,19 +34,19 @@ import {
   Tab,
 } from "@mui/material";
 import {
-  CheckCircleOutline as CheckCircleIcon,
+  CheckCircleOutlined as CheckCircleIcon,
   CancelOutlined as CancelIcon,
   RefreshOutlined as RefreshIcon,
   VisibilityOutlined as VisibilityIcon,
   ExpandMoreOutlined as ExpandMoreIcon,
   PersonAddOutlined as PersonAddIcon,
-  PersonOutline as PersonIcon,
+  PersonOutlined as PersonIcon,
   SchoolOutlined as SchoolIcon,
   DescriptionOutlined as DescriptionIcon,
   AssignmentOutlined as AssignmentIcon,
   ScienceOutlined as ScienceIcon,
-  StarOutline as StarIcon,
-  CheckCircleOutline as ApproveIcon,
+  StarOutlined as StarIcon,
+  CheckCircleOutlined as ApproveIcon,
   HighlightOffOutlined as RejectIcon,
   HistoryOutlined as HistoryIcon,
 } from "@mui/icons-material";
@@ -572,273 +572,177 @@ export const WebhookEventApprovals: React.FC = () => {
         }
       />
 
-        <Box
-          component="section"
-          aria-label="Webhook event approval summary"
-          sx={{
-            display: "grid",
-            gridTemplateColumns: { xs: "1fr", sm: "repeat(3, minmax(0, 1fr))" },
-            gap: 2,
-            mb: 2,
-            maxWidth: 992,
-          }}
-        >
-          {[
-            { label: "Pending approvals", value: pendingEvents.length },
-            { label: "Audit history", value: auditTotal },
-            { label: "Selected", value: tabValue === 0 ? selectedEvents.size : 0 },
-          ].map((item) => (
-            <AdminFormSurface
-              key={item.label}
+      <Box
+        component="section"
+        aria-label="Webhook event approval summary"
+        sx={{
+          display: "grid",
+          gridTemplateColumns: { xs: "1fr", sm: "repeat(3, minmax(0, 1fr))" },
+          gap: 2,
+          mb: 2,
+          maxWidth: 992,
+        }}
+      >
+        {[
+          { label: "Pending approvals", value: pendingEvents.length },
+          { label: "Audit history", value: auditTotal },
+          { label: "Selected", value: tabValue === 0 ? selectedEvents.size : 0 },
+        ].map((item) => (
+          <AdminFormSurface
+            key={item.label}
+            sx={{
+              width: "100%",
+              maxWidth: 320,
+              minHeight: 112,
+              p: { xs: 2, sm: 2.5 },
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
+          >
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
+              {item.label}
+            </Typography>
+            <Typography
+              variant="h4"
               sx={{
-                width: "100%",
-                maxWidth: 320,
-                minHeight: 112,
-                p: { xs: 2, sm: 2.5 },
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <Typography variant="body2" color="text.secondary">
-                {item.label}
-              </Typography>
-              <Typography variant="h4" color="text.primary" sx={{ mt: 0.5, fontWeight: 600 }}>
-                {item.value}
-              </Typography>
-            </AdminFormSurface>
-          ))}
-        </Box>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-          Note: Currently only <Chip label="user.enroll" size="small" variant="outlined" /> events
-          will execute actions. Other events are for testing purposes.
-        </Typography>
-
-        {/* Bulk Actions - only show for pending tab */}
-        {selectedEvents.size > 0 && tabValue === 0 && (
-          <AdminFormSurface sx={{ p: 2, mb: 2, borderColor: "primary.light" }}>
-            <Box sx={{ display: "flex", gap: 1.5, alignItems: "center", flexWrap: "wrap" }}>
-              <Typography variant="subtitle1">
-                {selectedEvents.size} event(s) selected
-              </Typography>
-              <Button
-                variant="contained"
-                color="success"
-                startIcon={<ApproveIcon />}
-                onClick={() => openApproveDialog()}
-                disabled={processing}
-              >
-                Approve Selected
-              </Button>
-              <Button
-                variant="outlined"
-                color="error"
-                startIcon={<RejectIcon />}
-                onClick={() => openRejectDialog()}
-                disabled={processing}
-              >
-                Reject Selected
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={() => setSelectedEvents(new Set())}
-              >
-                Clear Selection
-              </Button>
-            </Box>
+                color: "text.primary",
+                mt: 0.5,
+                fontWeight: 600
+              }}>
+              {item.value}
+            </Typography>
           </AdminFormSurface>
-        )}
+        ))}
+      </Box>
+      <Typography
+        variant="body2"
+        component="div"
+        sx={{
+          color: "text.secondary",
+          mb: 3
+        }}>
+        Note: Currently only <Chip label="user.enroll" size="small" variant="outlined" /> events
+        will execute actions. Other events are for testing purposes.
+      </Typography>
 
-        {/* Main Content with Tabs */}
-        <AdminFormSurface sx={{ overflow: "hidden" }}>
-          <Tabs value={tabValue} onChange={(_e, v) => setTabValue(v)} sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tab label="Pending Approvals" />
-            <Tab label="Audit History" />
-          </Tabs>
+      {/* Bulk Actions - only show for pending tab */}
+      {selectedEvents.size > 0 && tabValue === 0 && (
+        <AdminFormSurface sx={{ p: 2, mb: 2, borderColor: "primary.light" }}>
+          <Box sx={{ display: "flex", gap: 1.5, alignItems: "center", flexWrap: "wrap" }}>
+            <Typography variant="subtitle1">
+              {selectedEvents.size} event(s) selected
+            </Typography>
+            <Button
+              variant="contained"
+              color="success"
+              startIcon={<ApproveIcon />}
+              onClick={() => openApproveDialog()}
+              disabled={processing}
+            >
+              Approve Selected
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<RejectIcon />}
+              onClick={() => openRejectDialog()}
+              disabled={processing}
+            >
+              Reject Selected
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => setSelectedEvents(new Set())}
+            >
+              Clear Selection
+            </Button>
+          </Box>
+        </AdminFormSurface>
+      )}
 
-          <Box sx={{ p: 2 }}>
-            {/* Pending Events Table */}
-            {tabValue === 0 && (
-              loading ? (
-                <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
-                  <CircularProgress />
-                </Box>
-              ) : pendingEvents.length === 0 ? (
-                <Box sx={{ textAlign: "center", py: 8 }}>
-                  <CheckCircleIcon sx={{ fontSize: 64, color: "success.main", mb: 2 }} />
-                  <Typography variant="h6" color="text.secondary">
-                    No pending webhook events
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                    All webhook events have been processed
-                  </Typography>
-                </Box>
-              ) : (
-                <>
-                  <TableContainer>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              indeterminate={
-                                selectedEvents.size > 0 &&
-                                selectedEvents.size < displayedPendingEvents.length
-                              }
-                              checked={
-                                displayedPendingEvents.length > 0 &&
-                                selectedEvents.size === displayedPendingEvents.length
-                              }
-                              onChange={handleSelectAll}
-                            />
-                          </TableCell>
-                          <TableCell>Event Type</TableCell>
-                          <TableCell>Webhook ID</TableCell>
-                          <TableCell>Payload Preview</TableCell>
-                          <TableCell>Created At</TableCell>
-                          <TableCell>Actions</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {displayedPendingEvents.map((event) => {
-                          const eventDetails = getEventTypeDetails(event.eventType);
-                          const isSelected = selectedEvents.has(event.id);
+      {/* Main Content with Tabs */}
+      <AdminFormSurface sx={{ overflow: "hidden" }}>
+        <Tabs value={tabValue} onChange={(_e, v) => setTabValue(v)} sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tab label="Pending Approvals" />
+          <Tab label="Audit History" />
+        </Tabs>
 
-                          return (
-                            <TableRow
-                              key={event.id}
-                              selected={isSelected}
-                              hover
-                            >
-                              <TableCell padding="checkbox">
-                                <Checkbox
-                                  checked={isSelected}
-                                  onChange={() => handleSelectEvent(event.id)}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <Chip
-                                  icon={eventDetails.icon}
-                                  label={event.eventType}
-                                  color={eventDetails.color as any}
-                                  size="small"
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <Typography
-                                  variant="body2"
-                                  sx={{ fontFamily: "monospace", fontSize: "0.875rem" }}
-                                >
-                                  {event.webhookId.substring(0, 8)}...
-                                </Typography>
-                              </TableCell>
-                              <TableCell>
-                                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                                  <Typography
-                                    variant="body2"
-                                    sx={{
-                                      fontFamily: "monospace",
-                                      fontSize: "0.75rem",
-                                      maxWidth: "300px",
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis",
-                                      whiteSpace: "nowrap",
-                                    }}
-                                  >
-                                    {formatPayloadPreview(event.payload)}
-                                  </Typography>
-                                  <IconButton
-                                    size="small"
-                                    onClick={() => openDetailsDialog(event)}
-                                  >
-                                    <VisibilityIcon fontSize="small" />
-                                  </IconButton>
-                                </Box>
-                              </TableCell>
-                              <TableCell>
-                                {new Date(event.createdAt).toLocaleString()}
-                              </TableCell>
-                              <TableCell>
-                                <Box sx={{ display: "flex", gap: 1 }}>
-                                  <Tooltip title="Approve">
-                                    <IconButton
-                                      size="small"
-                                      color="success"
-                                      onClick={() => openApproveDialog(event)}
-                                      disabled={processing}
-                                    >
-                                      <CheckCircleIcon />
-                                    </IconButton>
-                                  </Tooltip>
-                                  <Tooltip title="Reject">
-                                    <IconButton
-                                      size="small"
-                                      color="error"
-                                      onClick={() => openRejectDialog(event)}
-                                      disabled={processing}
-                                    >
-                                      <CancelIcon />
-                                    </IconButton>
-                                  </Tooltip>
-                                </Box>
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                  <TablePagination
-                    component="div"
-                    count={pendingEvents.length}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    rowsPerPage={rowsPerPage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                  />
-                </>
-              )
-            )}
+        <Box sx={{ p: 2 }}>
+          {/* Pending Events Table */}
+          {tabValue === 0 && (
+            loading ? (
+              <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+                <CircularProgress />
+              </Box>
+            ) : pendingEvents.length === 0 ? (
+              <Box sx={{ textAlign: "center", py: 8 }}>
+                <CheckCircleIcon sx={{ fontSize: 64, color: "success.main", mb: 2 }} />
+                <Typography variant="h6" sx={{
+                  color: "text.secondary"
+                }}>
+                  No pending webhook events
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "text.secondary",
+                    mt: 1
+                  }}>
+                  All webhook events have been processed
+                </Typography>
+              </Box>
+            ) : (
+              <>
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            indeterminate={
+                              selectedEvents.size > 0 &&
+                              selectedEvents.size < displayedPendingEvents.length
+                            }
+                            checked={
+                              displayedPendingEvents.length > 0 &&
+                              selectedEvents.size === displayedPendingEvents.length
+                            }
+                            onChange={handleSelectAll}
+                          />
+                        </TableCell>
+                        <TableCell>Event Type</TableCell>
+                        <TableCell>Webhook ID</TableCell>
+                        <TableCell>Payload Preview</TableCell>
+                        <TableCell>Created At</TableCell>
+                        <TableCell>Actions</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {displayedPendingEvents.map((event) => {
+                        const eventDetails = getEventTypeDetails(event.eventType);
+                        const isSelected = selectedEvents.has(event.id);
 
-            {/* Audit History Table */}
-            {tabValue === 1 && (
-              loadingAudit ? (
-                <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
-                  <CircularProgress />
-                </Box>
-              ) : auditHistory.length === 0 ? (
-                <Box sx={{ textAlign: "center", py: 8 }}>
-                  <HistoryIcon sx={{ fontSize: 64, color: "text.secondary", mb: 2 }} />
-                  <Typography variant="h6" color="text.secondary">
-                    No audit history available
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                    Approved and rejected events will appear here
-                  </Typography>
-                </Box>
-              ) : (
-                <>
-                  <TableContainer>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Action</TableCell>
-                          <TableCell>Event ID</TableCell>
-                          <TableCell>Performed By</TableCell>
-                          <TableCell>Timestamp</TableCell>
-                          <TableCell>Reason</TableCell>
-                          <TableCell>Details</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {auditHistory.map((audit) => (
-                          <TableRow key={audit.id} hover>
+                        return (
+                          <TableRow
+                            key={event.id}
+                            selected={isSelected}
+                            hover
+                          >
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                checked={isSelected}
+                                onChange={() => handleSelectEvent(event.id)}
+                              />
+                            </TableCell>
                             <TableCell>
                               <Chip
-                                label={audit.action}
-                                color={audit.action === 'approved' ? 'success' : 'error'}
+                                icon={eventDetails.icon}
+                                label={event.eventType}
+                                color={eventDetails.color as any}
                                 size="small"
-                                icon={audit.action === 'approved' ? <CheckCircleIcon /> : <CancelIcon />}
                               />
                             </TableCell>
                             <TableCell>
@@ -846,50 +750,174 @@ export const WebhookEventApprovals: React.FC = () => {
                                 variant="body2"
                                 sx={{ fontFamily: "monospace", fontSize: "0.875rem" }}
                               >
-                                {audit.webhookEventId.substring(0, 8)}...
+                                {event.webhookId.substring(0, 8)}...
                               </Typography>
                             </TableCell>
                             <TableCell>
-                              <Tooltip title={audit.performedBy}>
-                                <Typography variant="body2">
-                                  {resolvePerformerDisplay(audit)}
+                              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                                <Typography
+                                  variant="body2"
+                                  sx={{
+                                    fontFamily: "monospace",
+                                    fontSize: "0.75rem",
+                                    maxWidth: "300px",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  {formatPayloadPreview(event.payload)}
                                 </Typography>
-                              </Tooltip>
+                                <IconButton
+                                  size="small"
+                                  onClick={() => openDetailsDialog(event)}
+                                >
+                                  <VisibilityIcon fontSize="small" />
+                                </IconButton>
+                              </Box>
                             </TableCell>
                             <TableCell>
-                              {new Date(audit.timestamp).toLocaleString()}
+                              {new Date(event.createdAt).toLocaleString()}
                             </TableCell>
                             <TableCell>
-                              <Typography variant="body2">
-                                {audit.reason || '-'}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <IconButton
-                                size="small"
-                                onClick={() => openDetailsDialog(audit)}
-                              >
-                                <VisibilityIcon fontSize="small" />
-                              </IconButton>
+                              <Box sx={{ display: "flex", gap: 1 }}>
+                                <Tooltip title="Approve">
+                                  <IconButton
+                                    size="small"
+                                    color="success"
+                                    onClick={() => openApproveDialog(event)}
+                                    disabled={processing}
+                                  >
+                                    <CheckCircleIcon />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Reject">
+                                  <IconButton
+                                    size="small"
+                                    color="error"
+                                    onClick={() => openRejectDialog(event)}
+                                    disabled={processing}
+                                  >
+                                    <CancelIcon />
+                                  </IconButton>
+                                </Tooltip>
+                              </Box>
                             </TableCell>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                  <TablePagination
-                    component="div"
-                    count={auditTotal}
-                    page={auditPage}
-                    onPageChange={handleChangePage}
-                    rowsPerPage={auditRowsPerPage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                  />
-                </>
-              )
-            )}
-          </Box>
-        </AdminFormSurface>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <TablePagination
+                  component="div"
+                  count={pendingEvents.length}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  rowsPerPage={rowsPerPage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </>
+            )
+          )}
+
+          {/* Audit History Table */}
+          {tabValue === 1 && (
+            loadingAudit ? (
+              <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+                <CircularProgress />
+              </Box>
+            ) : auditHistory.length === 0 ? (
+              <Box sx={{ textAlign: "center", py: 8 }}>
+                <HistoryIcon sx={{ fontSize: 64, color: "text.secondary", mb: 2 }} />
+                <Typography variant="h6" sx={{
+                  color: "text.secondary"
+                }}>
+                  No audit history available
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "text.secondary",
+                    mt: 1
+                  }}>
+                  Approved and rejected events will appear here
+                </Typography>
+              </Box>
+            ) : (
+              <>
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Action</TableCell>
+                        <TableCell>Event ID</TableCell>
+                        <TableCell>Performed By</TableCell>
+                        <TableCell>Timestamp</TableCell>
+                        <TableCell>Reason</TableCell>
+                        <TableCell>Details</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {auditHistory.map((audit) => (
+                        <TableRow key={audit.id} hover>
+                          <TableCell>
+                            <Chip
+                              label={audit.action}
+                              color={audit.action === 'approved' ? 'success' : 'error'}
+                              size="small"
+                              icon={audit.action === 'approved' ? <CheckCircleIcon /> : <CancelIcon />}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Typography
+                              variant="body2"
+                              sx={{ fontFamily: "monospace", fontSize: "0.875rem" }}
+                            >
+                              {audit.webhookEventId.substring(0, 8)}...
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Tooltip title={audit.performedBy}>
+                              <Typography variant="body2">
+                                {resolvePerformerDisplay(audit)}
+                              </Typography>
+                            </Tooltip>
+                          </TableCell>
+                          <TableCell>
+                            {new Date(audit.timestamp).toLocaleString()}
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2">
+                              {audit.reason || '-'}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <IconButton
+                              size="small"
+                              onClick={() => openDetailsDialog(audit)}
+                            >
+                              <VisibilityIcon fontSize="small" />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <TablePagination
+                  component="div"
+                  count={auditTotal}
+                  page={auditPage}
+                  onPageChange={handleChangePage}
+                  rowsPerPage={auditRowsPerPage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </>
+            )
+          )}
+        </Box>
+      </AdminFormSurface>
       {/* Event Details Dialog */}
       <Dialog
         open={detailsDialogOpen}
@@ -913,7 +941,9 @@ export const WebhookEventApprovals: React.FC = () => {
                 <AccordionDetails>
                   <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                     <Box>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
                         Event ID
                       </Typography>
                       <Typography variant="body2" sx={{ fontFamily: "monospace" }}>
@@ -921,7 +951,9 @@ export const WebhookEventApprovals: React.FC = () => {
                       </Typography>
                     </Box>
                     <Box>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
                         Event Type
                       </Typography>
                       <Box sx={{ mt: 0.5 }}>
@@ -934,7 +966,9 @@ export const WebhookEventApprovals: React.FC = () => {
                       </Box>
                     </Box>
                     <Box>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
                         Webhook ID
                       </Typography>
                       <Typography variant="body2" sx={{ fontFamily: "monospace" }}>
@@ -942,7 +976,9 @@ export const WebhookEventApprovals: React.FC = () => {
                       </Typography>
                     </Box>
                     <Box>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
                         Created At
                       </Typography>
                       <Typography variant="body2">
@@ -950,7 +986,9 @@ export const WebhookEventApprovals: React.FC = () => {
                       </Typography>
                     </Box>
                     <Box>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
                         Status
                       </Typography>
                       <Box sx={{ mt: 0.5 }}>
@@ -998,7 +1036,9 @@ export const WebhookEventApprovals: React.FC = () => {
                 <AccordionDetails>
                   <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                     <Box>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
                         Audit ID
                       </Typography>
                       <Typography variant="body2" sx={{ fontFamily: "monospace" }}>
@@ -1006,7 +1046,9 @@ export const WebhookEventApprovals: React.FC = () => {
                       </Typography>
                     </Box>
                     <Box>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
                         Event ID
                       </Typography>
                       <Typography variant="body2" sx={{ fontFamily: "monospace" }}>
@@ -1014,7 +1056,9 @@ export const WebhookEventApprovals: React.FC = () => {
                       </Typography>
                     </Box>
                     <Box>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
                         Action
                       </Typography>
                       <Box sx={{ mt: 0.5 }}>
@@ -1026,7 +1070,9 @@ export const WebhookEventApprovals: React.FC = () => {
                       </Box>
                     </Box>
                     <Box>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
                         Performed By
                       </Typography>
                       <Typography variant="body2">
@@ -1034,7 +1080,9 @@ export const WebhookEventApprovals: React.FC = () => {
                       </Typography>
                     </Box>
                     <Box>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
                         Timestamp
                       </Typography>
                       <Typography variant="body2">
@@ -1043,7 +1091,9 @@ export const WebhookEventApprovals: React.FC = () => {
                     </Box>
                     {selectedAudit.reason && (
                       <Box>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{
+                          color: "text.secondary"
+                        }}>
                           Reason
                         </Typography>
                         <Typography variant="body2">

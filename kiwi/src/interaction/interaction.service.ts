@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { UserInteractionService as DatabaseInteractionService } from 'src/common/database/user-interaction.service';
 import { UserService as DatabaseUserService } from 'src/common/database/user.service';
 import { UserSessionService as DatabaseSessionService } from 'src/common/database/user-session.service';
-import { UserInteraction, Prisma, User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { Action_client } from './dto/update_interaction.dto';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class InteractionService {
     private databaseInteractionService: DatabaseInteractionService,
     private databaseUserService: DatabaseUserService,
     private databaseSessionService: DatabaseSessionService,
-  ) { }
+  ) {}
 
   async createInteraction(
     sessionId: string,
@@ -46,11 +46,11 @@ export class InteractionService {
 
     this.logger.log(
       'Interaction creating for user: ' +
-      userId +
-      ', class: ' +
-      (hasClass ? classId : '(none/UI)') +
-      ' and session: ' +
-      sessionId,
+        userId +
+        ', class: ' +
+        (hasClass ? classId : '(none/UI)') +
+        ' and session: ' +
+        sessionId,
     );
     // Here I will create the interaction
     const interaction =

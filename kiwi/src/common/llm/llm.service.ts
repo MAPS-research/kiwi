@@ -73,6 +73,12 @@ export class LlmService implements OnModuleInit {
 
   private initializeEngines() {
     for (const [engineName, config] of Object.entries(this.engineConfigs)) {
+      if (!config.apiKey) {
+        this.logger.warn(
+          `Engine ${engineName} is disabled: API key is not configured.`,
+        );
+        continue;
+      }
       const instance = new OpenAI({
         apiKey: config.apiKey,
         baseURL: config.baseURL,
@@ -84,7 +90,9 @@ export class LlmService implements OnModuleInit {
   private getEngine(engineChoice: string) {
     const engineData = this.engines.get(engineChoice);
     if (!engineData) {
-      throw new Error(`Engine ${engineChoice} is not supported.`);
+      throw new Error(
+        `Engine ${engineChoice} is not supported or its API key is not configured.`,
+      );
     }
     return engineData;
   }
@@ -167,7 +175,9 @@ export class LlmService implements OnModuleInit {
    * a single token. Used to auto-detect and cache `EmbeddingModel.dimensions`
    * when it isn't known ahead of time. Returns the vector length.
    */
-  async resolveDimensions(engineChoice: EngineChoice = 'openai'): Promise<number> {
+  async resolveDimensions(
+    engineChoice: EngineChoice = 'openai',
+  ): Promise<number> {
     const probe = await this.createEmbedding('dim probe', engineChoice);
     return probe.data[0].embedding.length;
   }
@@ -344,8 +354,7 @@ export class LlmService implements OnModuleInit {
    */
   private toChatOptions(
     messagesOrOptions:
-      | OpenAI.Chat.Completions.ChatCompletionMessageParam[]
-      | CreateChatOptions,
+      OpenAI.Chat.Completions.ChatCompletionMessageParam[] | CreateChatOptions,
     temperature?: number,
     max_tokens?: number,
     tools?: OpenAI.Chat.Completions.ChatCompletionTool[],
@@ -389,8 +398,7 @@ export class LlmService implements OnModuleInit {
   ): Promise<OpenAI.Chat.Completions.ChatCompletion>;
   async createChat(
     messagesOrOptions:
-      | OpenAI.Chat.Completions.ChatCompletionMessageParam[]
-      | CreateChatOptions,
+      OpenAI.Chat.Completions.ChatCompletionMessageParam[] | CreateChatOptions,
     temperature?: number,
     max_tokens?: number,
     tools?: OpenAI.Chat.Completions.ChatCompletionTool[],
@@ -447,8 +455,7 @@ export class LlmService implements OnModuleInit {
   ): Promise<Stream<OpenAI.Chat.Completions.ChatCompletionChunk>>;
   async createChatStream(
     messagesOrOptions:
-      | OpenAI.Chat.Completions.ChatCompletionMessageParam[]
-      | CreateChatOptions,
+      OpenAI.Chat.Completions.ChatCompletionMessageParam[] | CreateChatOptions,
     temperature?: number,
     max_tokens?: number,
     tools?: OpenAI.Chat.Completions.ChatCompletionTool[],

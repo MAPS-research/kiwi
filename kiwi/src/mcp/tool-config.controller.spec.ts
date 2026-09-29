@@ -8,7 +8,6 @@ import {
   BulkToolConfigDto,
   ToolConfigResponseDto,
   UpdateToolStatusDto,
-  UpsertToolConfigDto,
   ToolTypeDto,
 } from './dto/tool-config.dto';
 
@@ -162,7 +161,11 @@ describe('ToolConfigController - Permission Tests', () => {
           toolType: ToolTypeDto.CODE_INTERPRETER,
           toolIdentifier: 'code-interpreter',
         },
-        { ...mockToolConfig, toolType: ToolTypeDto.MCP, toolIdentifier: 'server-123' },
+        {
+          ...mockToolConfig,
+          toolType: ToolTypeDto.MCP,
+          toolIdentifier: 'server-123',
+        },
       ];
       mcpService.getToolConfigsForClass.mockResolvedValue(mixedTools);
 
@@ -215,7 +218,11 @@ describe('ToolConfigController - Permission Tests', () => {
       const updatedConfig = { ...mockToolConfig, isEnabled: false };
       mcpService.updateToolConfig.mockResolvedValue(updatedConfig);
 
-      const result = await controller.updateToolConfig(toolConfigId, updateDto, session);
+      const result = await controller.updateToolConfig(
+        toolConfigId,
+        updateDto,
+        session,
+      );
 
       expect(mcpService.updateToolConfig).toHaveBeenCalledWith(
         toolConfigId,
@@ -231,7 +238,11 @@ describe('ToolConfigController - Permission Tests', () => {
       const enabledConfig = { ...mockToolConfig, isEnabled: true };
       mcpService.updateToolConfig.mockResolvedValue(enabledConfig);
 
-      const result = await controller.updateToolConfig(toolConfigId, enableDto, session);
+      const result = await controller.updateToolConfig(
+        toolConfigId,
+        enableDto,
+        session,
+      );
 
       expect(mcpService.updateToolConfig).toHaveBeenCalledWith(
         toolConfigId,
@@ -301,7 +312,11 @@ describe('ToolConfigController - Permission Tests', () => {
       ];
       mcpService.bulkUpdateToolConfigs.mockResolvedValue(mockResults);
 
-      const result = await controller.bulkUpdateToolConfigs(classId, bulkDto, session);
+      const result = await controller.bulkUpdateToolConfigs(
+        classId,
+        bulkDto,
+        session,
+      );
 
       expect(mcpService.bulkUpdateToolConfigs).toHaveBeenCalledWith(
         classId,
@@ -316,7 +331,11 @@ describe('ToolConfigController - Permission Tests', () => {
       const emptyDto: BulkToolConfigDto = { tools: [] };
       mcpService.bulkUpdateToolConfigs.mockResolvedValue([]);
 
-      const result = await controller.bulkUpdateToolConfigs(classId, emptyDto, session);
+      const result = await controller.bulkUpdateToolConfigs(
+        classId,
+        emptyDto,
+        session,
+      );
 
       expect(mcpService.bulkUpdateToolConfigs).toHaveBeenCalledWith(
         classId,
@@ -365,7 +384,11 @@ describe('ToolConfigController - Permission Tests', () => {
       ];
       mcpService.bulkUpdateToolConfigs.mockResolvedValue(mockResults);
 
-      const result = await controller.bulkUpdateToolConfigs(classId, mixedDto, session);
+      const result = await controller.bulkUpdateToolConfigs(
+        classId,
+        mixedDto,
+        session,
+      );
 
       expect(result).toHaveLength(2);
       expect(result[0].toolType).toBe(ToolTypeDto.MCP);

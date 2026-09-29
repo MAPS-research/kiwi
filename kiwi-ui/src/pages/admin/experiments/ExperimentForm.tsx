@@ -1,8 +1,8 @@
 import {
   AddOutlined as Plus,
-  ChatBubbleOutline as MessageSquare,
+  ChatBubbleOutlined as MessageSquare,
   DataObjectOutlined as FileJson,
-  DeleteOutline as DeleteIcon,
+  DeleteOutlined as DeleteIcon,
   DownloadOutlined as Download,
   CloudUploadOutlined as Upload,
   GroupOutlined as Users,
@@ -67,7 +67,12 @@ const Section: React.FC<{
   <HoverCard sx={{ p: { xs: 2, sm: 3 } }}>
     <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
       <Box sx={{ color: VIOLET, display: "grid", placeItems: "center" }}>{icon}</Box>
-      <Typography variant="subtitle1" fontWeight={700} sx={{ flexGrow: 1 }}>
+      <Typography
+        variant="subtitle1"
+        sx={{
+          fontWeight: 700,
+          flexGrow: 1
+        }}>
         {title}
       </Typography>
       {action}
@@ -608,591 +613,633 @@ const ExperimentForm: React.FC = () => {
 
   return (
     <ExperimentTheme>
-    <Box sx={{ px: { xs: 2, md: 3 }, pt: { xs: 2, md: 3 }, pb: 4, maxWidth: 900, mx: "auto" }}>
-      <PageHeader
-        icon={<FlaskConical />}
-        title={isEdit ? "Edit Experiment" : "New Experiment"}
-        subtitle={
-          isEdit
-            ? "Update groups, assignment, and prompts. Active experiments use saved changes on future chats."
-            : "Design variant groups, then review and submit. The AI assistant can draft this for you."
-        }
-        onBack={() => navigate(`/admin/class/${classID}/experiments`)}
-      />
+      <Box sx={{ px: { xs: 2, md: 3 }, pt: { xs: 2, md: 3 }, pb: 4, maxWidth: 900, mx: "auto" }}>
+        <PageHeader
+          icon={<FlaskConical />}
+          title={isEdit ? "Edit Experiment" : "New Experiment"}
+          subtitle={
+            isEdit
+              ? "Update groups, assignment, and prompts. Active experiments use saved changes on future chats."
+              : "Design variant groups, then review and submit. The AI assistant can draft this for you."
+          }
+          onBack={() => navigate(`/admin/class/${classID}/experiments`)}
+        />
 
-      {error && (
-        <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }} onClose={() => setError(null)}>
-          {error}
-        </Alert>
-      )}
-      {info && (
-        <Alert severity="info" sx={{ mb: 2, borderRadius: 2 }} onClose={() => setInfo(null)}>
-          {info}
-        </Alert>
-      )}
+        {error && (
+          <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }} onClose={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
+        {info && (
+          <Alert severity="info" sx={{ mb: 2, borderRadius: 2 }} onClose={() => setInfo(null)}>
+            {info}
+          </Alert>
+        )}
 
-      <Stack spacing={2.5}>
-        <Section icon={<Settings2 sx={{ fontSize: 18 }} />} title="Basics">
-          <Stack spacing={2}>
-            <TextField
-              label="Experiment name"
-              value={config.name}
-              onChange={(e) => update({ name: e.target.value })}
-              fullWidth
-              error={!!draftDiff?.name}
-            />
-            <TextField
-              label="Description"
-              value={config.description || ""}
-              onChange={(e) => update({ description: e.target.value })}
-              fullWidth
-              multiline
-              minRows={2}
-              error={!!draftDiff?.description}
-            />
-          </Stack>
-        </Section>
-
-        <Section icon={<Shuffle sx={{ fontSize: 18 }} />} title="Group Assignment">
-          <RadioGroup
-            value={config.assignment.strategy}
-            onChange={(e) => {
-              setPreview(null);
-              update({
-                assignment: {
-                  ...config.assignment,
-                  strategy: e.target.value as any,
-                },
-              });
-            }}
-          >
-            {STRATEGY_OPTIONS.map((o) => (
-              <FormControlLabel
-                key={o.value}
-                value={o.value}
-                sx={{ alignItems: "flex-start", mb: 0.5 }}
-                control={
-                  <Radio
-                    size="small"
-                    sx={{ pt: 0.5, color: alpha(VIOLET, 0.5), "&.Mui-checked": { color: VIOLET } }}
-                  />
-                }
-                label={
-                  <Box sx={{ py: 0.25 }}>
-                    <Typography
-                      variant="body2"
-                      fontWeight={600}
-                      color={
-                        draftDiff?.strategy &&
-                          config.assignment.strategy === o.value
-                          ? "error.main"
-                          : undefined
-                      }
-                    >
-                      {o.label}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {o.caption}
-                    </Typography>
-                  </Box>
-                }
+        <Stack spacing={2.5}>
+          <Section icon={<Settings2 sx={{ fontSize: 18 }} />} title="Basics">
+            <Stack spacing={2}>
+              <TextField
+                label="Experiment name"
+                value={config.name}
+                onChange={(e) => update({ name: e.target.value })}
+                fullWidth
+                error={!!draftDiff?.name}
               />
-            ))}
-          </RadioGroup>
+              <TextField
+                label="Description"
+                value={config.description || ""}
+                onChange={(e) => update({ description: e.target.value })}
+                fullWidth
+                multiline
+                minRows={2}
+                error={!!draftDiff?.description}
+              />
+            </Stack>
+          </Section>
 
-          {config.assignment.strategy === "deterministic_hash" && (
-            <TextField
-              label="Seed"
-              helperText="The random seed. Keep it to reproduce the same split; edit it or click Reshuffle for a new one."
-              error={!!draftDiff?.seed}
-              value={config.assignment.seed}
-              onChange={(e) =>
+          <Section icon={<Shuffle sx={{ fontSize: 18 }} />} title="Group Assignment">
+            <RadioGroup
+              value={config.assignment.strategy}
+              onChange={(e) => {
+                setPreview(null);
                 update({
-                  assignment: { ...config.assignment, seed: e.target.value },
-                })
-              }
-              sx={{ mt: 1, maxWidth: 460 }}
-              fullWidth
-            />
-          )}
-
-          {rosterError && (
-            <Alert severity="warning" sx={{ mt: 2, borderRadius: 2 }}>
-              Couldn't load the class roster: {rosterError}. Group preview is
-              unavailable until it loads.
-            </Alert>
-          )}
-
-          <Box sx={{ mt: 2, display: "flex", alignItems: "center", gap: 1.5, flexWrap: "wrap" }}>
-            <Typography variant="subtitle2" fontWeight={700}>
-              Student groups
-            </Typography>
-            {!isRandom && (
-              <Button
-                size="small"
-                variant="text"
-                startIcon={<RotateCcw sx={{ fontSize: 14 }} />}
-                onClick={() => {
-                  // Seeded split: "Reshuffle" re-rolls the seed → a fresh random
-                  // split that still honours the exact allocation proportions.
-                  // The new seed is saved, so the split stays reproducible.
-                  // Manual: just recompute from the current member lists.
-                  if (config.assignment.strategy === "deterministic_hash") {
-                    update({
-                      assignment: {
-                        ...config.assignment,
-                        seed: `seed-${Date.now().toString(36)}-${Math.random()
-                          .toString(36)
-                          .slice(2, 8)}`,
-                      },
-                    });
-                  } else {
-                    runPreview();
-                  }
-                }}
-                disabled={previewing}
-                sx={{ color: VIOLET, fontWeight: 600 }}
-              >
-                {previewing
-                  ? "Computing…"
-                  : config.assignment.strategy === "deterministic_hash"
-                    ? "Reshuffle"
-                    : "Recompute"}
-              </Button>
-            )}
-            <Box sx={{ flexGrow: 1 }} />
-            <Typography variant="caption" color="text.secondary">
-              {isManual
-                ? "From the email lists below."
-                : isRandom
-                  ? "Assigned server-side at activation."
-                  : "Reproducible — matches what students actually get."}
-            </Typography>
-          </Box>
-
-          {isRandom ? (
-            <Alert
-              severity="info"
-              icon={false}
-              sx={{ mt: 1.5, borderRadius: 2, bgcolor: alpha(VIOLET, 0.05) }}
+                  assignment: {
+                    ...config.assignment,
+                    strategy: e.target.value as any,
+                  },
+                });
+              }}
             >
-              “Random on first chat” is decided on the server when you activate,
-              so it can’t be shown as a stable list here. To fix each student’s
-              group (and which config they get) <b>before</b> they chat, use{" "}
-              <b>Seeded split</b> above.
-            </Alert>
-          ) : rosterLoaded && !isManual && roster.length === 0 && !rosterError ? (
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1.5 }}>
-              No students are enrolled in this class yet, so there is nobody to
-              group.
-            </Typography>
-          ) : preview ? (
-            <Stack spacing={1.5} sx={{ mt: 2 }}>
-              {config.variants.map((v) => {
-                const members = preview[v.key] ?? [];
+              {STRATEGY_OPTIONS.map((o) => (
+                <FormControlLabel
+                  key={o.value}
+                  value={o.value}
+                  sx={{ alignItems: "flex-start", mb: 0.5 }}
+                  control={
+                    <Radio
+                      size="small"
+                      sx={{ pt: 0.5, color: alpha(VIOLET, 0.5), "&.Mui-checked": { color: VIOLET } }}
+                    />
+                  }
+                  label={
+                    <Box sx={{ py: 0.25 }}>
+                      <Typography
+                        variant="body2"
+                        color={
+                          draftDiff?.strategy &&
+                            config.assignment.strategy === o.value
+                            ? "error.main"
+                            : undefined
+                        }
+                        sx={{
+                          fontWeight: 600
+                        }}
+                      >
+                        {o.label}
+                      </Typography>
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
+                        {o.caption}
+                      </Typography>
+                    </Box>
+                  }
+                />
+              ))}
+            </RadioGroup>
+
+            {config.assignment.strategy === "deterministic_hash" && (
+              <TextField
+                label="Seed"
+                helperText="The random seed. Keep it to reproduce the same split; edit it or click Reshuffle for a new one."
+                error={!!draftDiff?.seed}
+                value={config.assignment.seed}
+                onChange={(e) =>
+                  update({
+                    assignment: { ...config.assignment, seed: e.target.value },
+                  })
+                }
+                sx={{ mt: 1, maxWidth: 460 }}
+                fullWidth
+              />
+            )}
+
+            {rosterError && (
+              <Alert severity="warning" sx={{ mt: 2, borderRadius: 2 }}>
+                Couldn't load the class roster: {rosterError}. Group preview is
+                unavailable until it loads.
+              </Alert>
+            )}
+
+            <Box sx={{ mt: 2, display: "flex", alignItems: "center", gap: 1.5, flexWrap: "wrap" }}>
+              <Typography variant="subtitle2" sx={{
+                fontWeight: 700
+              }}>
+                Student groups
+              </Typography>
+              {!isRandom && (
+                <Button
+                  size="small"
+                  variant="text"
+                  startIcon={<RotateCcw sx={{ fontSize: 14 }} />}
+                  onClick={() => {
+                    // Seeded split: "Reshuffle" re-rolls the seed → a fresh random
+                    // split that still honours the exact allocation proportions.
+                    // The new seed is saved, so the split stays reproducible.
+                    // Manual: just recompute from the current member lists.
+                    if (config.assignment.strategy === "deterministic_hash") {
+                      update({
+                        assignment: {
+                          ...config.assignment,
+                          seed: `seed-${Date.now().toString(36)}-${Math.random()
+                            .toString(36)
+                            .slice(2, 8)}`,
+                        },
+                      });
+                    } else {
+                      runPreview();
+                    }
+                  }}
+                  disabled={previewing}
+                  sx={{ color: VIOLET, fontWeight: 600 }}
+                >
+                  {previewing
+                    ? "Computing…"
+                    : config.assignment.strategy === "deterministic_hash"
+                      ? "Reshuffle"
+                      : "Recompute"}
+                </Button>
+              )}
+              <Box sx={{ flexGrow: 1 }} />
+              <Typography variant="caption" sx={{
+                color: "text.secondary"
+              }}>
+                {isManual
+                  ? "From the email lists below."
+                  : isRandom
+                    ? "Assigned server-side at activation."
+                    : "Reproducible — matches what students actually get."}
+              </Typography>
+            </Box>
+
+            {isRandom ? (
+              <Alert
+                severity="info"
+                icon={false}
+                sx={{ mt: 1.5, borderRadius: 2, bgcolor: alpha(VIOLET, 0.05) }}
+              >
+                “Random on first chat” is decided on the server when you activate,
+                so it can’t be shown as a stable list here. To fix each student’s
+                group (and which config they get) <b>before</b> they chat, use{" "}
+                <b>Seeded split</b> above.
+              </Alert>
+            ) : rosterLoaded && !isManual && roster.length === 0 && !rosterError ? (
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                  mt: 1.5
+                }}>
+                No students are enrolled in this class yet, so there is nobody to
+                group.
+              </Typography>
+            ) : preview ? (
+              <Stack spacing={1.5} sx={{ mt: 2 }}>
+                {config.variants.map((v) => {
+                  const members = preview[v.key] ?? [];
+                  return (
+                    <Box
+                      key={v.key}
+                      sx={{
+                        border: `1px solid ${alpha(VIOLET, 0.15)}`,
+                        borderRadius: 3,
+                        p: 1.5,
+                        borderLeft: `4px solid ${v.config.engine === "qwen" ? "#6366f1" : "#10b981"}`,
+                      }}
+                    >
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: members.length ? 1 : 0 }}>
+                        <Typography variant="body2" sx={{
+                          fontWeight: 700
+                        }}>
+                          {v.label}
+                        </Typography>
+                        <Chip
+                          size="small"
+                          label={v.config.engine}
+                          sx={{
+                            height: 20,
+                            fontWeight: 600,
+                            bgcolor: v.config.engine === "qwen" ? "#eef2ff" : "#ecfdf5",
+                            color: v.config.engine === "qwen" ? "#4338ca" : "#047857",
+                          }}
+                        />
+                        <Box sx={{ flexGrow: 1 }} />
+                        <Chip
+                          size="small"
+                          label={
+                            isManual
+                              ? `${members.length} students`
+                              : `${members.length} students · target ${Math.round(
+                                  (Number(v.allocation) || 0) * 100,
+                                )}%`
+                          }
+                          sx={{ height: 20, fontWeight: 600, bgcolor: alpha(VIOLET, 0.08), color: VIOLET }}
+                        />
+                      </Box>
+                      {members.length ? (
+                        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                          {members.map((m) => (
+                            <Chip key={m} size="small" variant="outlined" label={m} sx={{ height: 22 }} />
+                          ))}
+                        </Box>
+                      ) : (
+                        <Typography variant="caption" sx={{
+                          color: "text.secondary"
+                        }}>
+                          No students
+                        </Typography>
+                      )}
+                    </Box>
+                  );
+                })}
+              </Stack>
+            ) : null}
+          </Section>
+
+          <Section
+            icon={<Users sx={{ fontSize: 18 }} />}
+            title="Variants"
+            action={
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                {isManual && (
+                  <Button
+                    size="small"
+                    startIcon={<Shuffle sx={{ fontSize: 14 }} />}
+                    onClick={randomAssign}
+                    sx={{ color: VIOLET, fontWeight: 600 }}
+                  >
+                    Random assign
+                  </Button>
+                )}
+                {isManual ? (
+                  <Chip
+                    size="small"
+                    label={`${config.variants.reduce((s, v) => s + (v.members?.length ?? 0), 0)} / ${roster.length} assigned`}
+                    sx={{ bgcolor: alpha(VIOLET, 0.08), color: VIOLET, fontWeight: 600 }}
+                  />
+                ) : (
+                  <Chip
+                    size="small"
+                    variant="outlined"
+                    color={Math.abs(allocationSum - 1) < 1e-6 ? "success" : "error"}
+                    label={`Σ ${allocationSum.toFixed(2)}`}
+                  />
+                )}
+              </Box>
+            }
+          >
+            <Stack spacing={2}>
+              {config.variants.map((v, i) => {
+                const fb = isManual ? memberFeedback(memberText[v.key] || "") : null;
+                const vd = draftDiff?.variants[i];
                 return (
-                  <Box
-                    key={v.key}
+                  <Paper
+                    key={i}
+                    variant="outlined"
                     sx={{
-                      border: `1px solid ${alpha(VIOLET, 0.15)}`,
-                      borderRadius: 3,
-                      p: 1.5,
+                      p: 2.5,
+                      borderRadius: 4,
+                      borderColor: alpha(VIOLET, 0.15),
                       borderLeft: `4px solid ${v.config.engine === "qwen" ? "#6366f1" : "#10b981"}`,
                     }}
                   >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: members.length ? 1 : 0 }}>
-                      <Typography variant="body2" fontWeight={700}>
-                        {v.label}
-                      </Typography>
-                      <Chip
-                        size="small"
-                        label={v.config.engine}
-                        sx={{
-                          height: 20,
-                          fontWeight: 600,
-                          bgcolor: v.config.engine === "qwen" ? "#eef2ff" : "#ecfdf5",
-                          color: v.config.engine === "qwen" ? "#4338ca" : "#047857",
+                    <Stack direction="row" spacing={2} sx={{ mb: 1 }}>
+                      <TextField
+                        label="Key"
+                        value={v.key}
+                        onChange={(e) => updateVariant(i, { key: e.target.value })}
+                        error={!!vd?.key}
+                      />
+                      <TextField
+                        label="Label"
+                        value={v.label}
+                        onChange={(e) => updateVariant(i, { label: e.target.value })}
+                        error={!!vd?.label}
+                      />
+                      <TextField
+                        label="Allocation"
+                        type="number"
+                        value={v.allocation}
+                        onChange={(e) =>
+                          updateVariant(i, { allocation: Number(e.target.value) })
+                        }
+                        sx={{ width: 130 }}
+                        disabled={isManual}
+                        helperText={isManual ? "set by roster" : undefined}
+                        error={!!vd?.allocation}
+                        slotProps={{
+                          htmlInput: { step: 0.05, min: 0, max: 1 }
                         }}
                       />
-                      <Box sx={{ flexGrow: 1 }} />
-                      <Chip
-                        size="small"
-                        label={
-                          isManual
-                            ? `${members.length} students`
-                            : `${members.length} students · target ${Math.round(
-                                (Number(v.allocation) || 0) * 100,
-                              )}%`
+                      <TextField
+                        select
+                        label="Engine"
+                        value={v.config.engine}
+                        onChange={(e) =>
+                          updateVariantConfig(i, { engine: e.target.value as Engine })
                         }
-                        sx={{ height: 20, fontWeight: 600, bgcolor: alpha(VIOLET, 0.08), color: VIOLET }}
-                      />
-                    </Box>
-                    {members.length ? (
-                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                        {members.map((m) => (
-                          <Chip key={m} size="small" variant="outlined" label={m} sx={{ height: 22 }} />
+                        sx={{ minWidth: 120 }}
+                        error={!!vd?.engine}
+                      >
+                        {ENGINES.map((eng) => (
+                          <MenuItem key={eng} value={eng}>
+                            {eng}
+                          </MenuItem>
                         ))}
-                      </Box>
-                    ) : (
-                      <Typography variant="caption" color="text.secondary">
-                        No students
-                      </Typography>
-                    )}
-                  </Box>
-                );
-              })}
-            </Stack>
-          ) : null}
-        </Section>
+                      </TextField>
+                      <IconButton
+                        onClick={() => removeVariant(i)}
+                        disabled={config.variants.length <= 2}
+                        aria-label="remove variant"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Stack>
 
-        <Section
-          icon={<Users sx={{ fontSize: 18 }} />}
-          title="Variants"
-          action={
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-              {isManual && (
-                <Button
-                  size="small"
-                  startIcon={<Shuffle sx={{ fontSize: 14 }} />}
-                  onClick={randomAssign}
-                  sx={{ color: VIOLET, fontWeight: 600 }}
-                >
-                  Random assign
-                </Button>
-              )}
-              {isManual ? (
-                <Chip
-                  size="small"
-                  label={`${config.variants.reduce((s, v) => s + (v.members?.length ?? 0), 0)} / ${roster.length} assigned`}
-                  sx={{ bgcolor: alpha(VIOLET, 0.08), color: VIOLET, fontWeight: 600 }}
-                />
-              ) : (
-                <Chip
-                  size="small"
-                  variant="outlined"
-                  color={Math.abs(allocationSum - 1) < 1e-6 ? "success" : "error"}
-                  label={`Σ ${allocationSum.toFixed(2)}`}
-                />
-              )}
-            </Box>
-          }
-        >
-          <Stack spacing={2}>
-            {config.variants.map((v, i) => {
-              const fb = isManual ? memberFeedback(memberText[v.key] || "") : null;
-              const vd = draftDiff?.variants[i];
-              return (
-                <Paper
-                  key={i}
-                  variant="outlined"
-                  sx={{
-                    p: 2.5,
-                    borderRadius: 4,
-                    borderColor: alpha(VIOLET, 0.15),
-                    borderLeft: `4px solid ${v.config.engine === "qwen" ? "#6366f1" : "#10b981"}`,
-                  }}
-                >
-                  <Stack direction="row" spacing={2} sx={{ mb: 1 }}>
-                    <TextField
-                      label="Key"
-                      value={v.key}
-                      onChange={(e) => updateVariant(i, { key: e.target.value })}
-                      error={!!vd?.key}
-                    />
-                    <TextField
-                      label="Label"
-                      value={v.label}
-                      onChange={(e) => updateVariant(i, { label: e.target.value })}
-                      error={!!vd?.label}
-                    />
-                    <TextField
-                      label="Allocation"
-                      type="number"
-                      inputProps={{ step: 0.05, min: 0, max: 1 }}
-                      value={v.allocation}
-                      onChange={(e) =>
-                        updateVariant(i, { allocation: Number(e.target.value) })
-                      }
-                      sx={{ width: 130 }}
-                      disabled={isManual}
-                      helperText={isManual ? "set by roster" : undefined}
-                      error={!!vd?.allocation}
-                    />
-                    <TextField
-                      select
-                      label="Engine"
-                      value={v.config.engine}
-                      onChange={(e) =>
-                        updateVariantConfig(i, { engine: e.target.value as Engine })
-                      }
-                      sx={{ minWidth: 120 }}
-                      error={!!vd?.engine}
-                    >
-                      {ENGINES.map((eng) => (
-                        <MenuItem key={eng} value={eng}>
-                          {eng}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                    <IconButton
-                      onClick={() => removeVariant(i)}
-                      disabled={config.variants.length <= 2}
-                      aria-label="remove variant"
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </Stack>
-
-                  {isManual && (
-                    <Accordion disableGutters defaultExpanded>
-                      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography variant="body2">
-                          Members — {v.members?.length ?? 0} student(s)
-                        </Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <TextField
-                          value={memberText[v.key] || ""}
-                          onChange={(e) =>
-                            onMembersChange(i, v.key, e.target.value)
-                          }
-                          placeholder="student emails, comma or newline separated"
-                          multiline
-                          minRows={3}
-                          fullWidth
-                          error={!!vd?.members}
-                        />
-                        {fb && fb.badFormat.length > 0 && (
-                          <Typography variant="caption" color="error" display="block" sx={{ mt: 0.5 }}>
-                            Invalid email format (ignored): {fb.badFormat.join(", ")}
+                    {isManual && (
+                      <Accordion disableGutters defaultExpanded>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                          <Typography variant="body2">
+                            Members — {v.members?.length ?? 0} student(s)
                           </Typography>
-                        )}
-                        {fb && fb.notEnrolled.length > 0 && (
-                          <Typography variant="caption" color="error" display="block" sx={{ mt: 0.5 }}>
-                            Not enrolled in this class (ignored):{" "}
-                            {fb.notEnrolled.join(", ")}
-                          </Typography>
-                        )}
-                        {v.members && v.members.length > 0 && (
-                          <Box sx={{ mt: 1, display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                            {v.members.map((m) => (
-                              <Chip key={m} size="small" label={m} />
-                            ))}
-                          </Box>
-                        )}
-                      </AccordionDetails>
-                    </Accordion>
-                  )}
-
-                  <Accordion
-                    disableGutters
-                    elevation={0}
-                    sx={{
-                      mt: 1.5,
-                      border: `1px solid ${alpha(VIOLET, 0.12)}`,
-                      borderRadius: 3,
-                      bgcolor: alpha(VIOLET, 0.015),
-                      overflow: "hidden",
-                      "&:before": { display: "none" },
-                    }}
-                  >
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 1, width: "100%", pr: 1 }}>
-                        <MessageSquare sx={{ fontSize: 16, color: VIOLET }} />
-                        <Typography variant="body2" fontWeight={600}>
-                          System prompt
-                        </Typography>
-                        <Box sx={{ flexGrow: 1 }} />
-                        {(() => {
-                          const n = customizedCount(v);
-                          return (
-                            <Chip
-                              size="small"
-                              label={n ? "Customized" : "Using default"}
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          <TextField
+                            value={memberText[v.key] || ""}
+                            onChange={(e) =>
+                              onMembersChange(i, v.key, e.target.value)
+                            }
+                            placeholder="student emails, comma or newline separated"
+                            multiline
+                            minRows={3}
+                            fullWidth
+                            error={!!vd?.members}
+                          />
+                          {fb && fb.badFormat.length > 0 && (
+                            <Typography
+                              variant="caption"
+                              color="error"
                               sx={{
-                                height: 22,
-                                fontWeight: 600,
-                                bgcolor: n ? alpha(VIOLET, 0.1) : "action.hover",
-                                color: n ? VIOLET : "text.secondary",
-                              }}
-                            />
-                          );
-                        })()}
-                      </Box>
-                    </AccordionSummary>
-                    <AccordionDetails sx={{ pt: 0 }}>
-                      <Stack spacing={2.5}>
-                        {PROMPT_FIELDS.map((f) => {
-                          const value = v.config.systemPrompts?.[f.key] || "";
-                          const isCustom = defaults
-                            ? value !== (defaults[f.key] || "")
-                            : false;
-                          return (
-                            <Box key={f.key}>
-                              <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, mb: 0.75 }}>
-                                <Typography variant="caption" fontWeight={700}>
-                                  {f.label}
-                                </Typography>
-                                <Typography variant="caption" color="text.secondary">
-                                  · {f.caption}
-                                </Typography>
-                                <Box sx={{ flexGrow: 1 }} />
-                                {isCustom && (
-                                  <Button
+                                display: "block",
+                                mt: 0.5
+                              }}>
+                              Invalid email format (ignored): {fb.badFormat.join(", ")}
+                            </Typography>
+                          )}
+                          {fb && fb.notEnrolled.length > 0 && (
+                            <Typography
+                              variant="caption"
+                              color="error"
+                              sx={{
+                                display: "block",
+                                mt: 0.5
+                              }}>
+                              Not enrolled in this class (ignored):{" "}
+                              {fb.notEnrolled.join(", ")}
+                            </Typography>
+                          )}
+                          {v.members && v.members.length > 0 && (
+                            <Box sx={{ mt: 1, display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                              {v.members.map((m) => (
+                                <Chip key={m} size="small" label={m} />
+                              ))}
+                            </Box>
+                          )}
+                        </AccordionDetails>
+                      </Accordion>
+                    )}
+
+                    <Accordion
+                      disableGutters
+                      elevation={0}
+                      sx={{
+                        mt: 1.5,
+                        border: `1px solid ${alpha(VIOLET, 0.12)}`,
+                        borderRadius: 3,
+                        bgcolor: alpha(VIOLET, 0.015),
+                        overflow: "hidden",
+                        "&:before": { display: "none" },
+                      }}
+                    >
+                      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1, width: "100%", pr: 1 }}>
+                          <MessageSquare sx={{ fontSize: 16, color: VIOLET }} />
+                          <Typography variant="body2" sx={{
+                            fontWeight: 600
+                          }}>
+                            System prompt
+                          </Typography>
+                          <Box sx={{ flexGrow: 1 }} />
+                          {(() => {
+                            const n = customizedCount(v);
+                            return (
+                              <Chip
+                                size="small"
+                                label={n ? "Customized" : "Using default"}
+                                sx={{
+                                  height: 22,
+                                  fontWeight: 600,
+                                  bgcolor: n ? alpha(VIOLET, 0.1) : "action.hover",
+                                  color: n ? VIOLET : "text.secondary",
+                                }}
+                              />
+                            );
+                          })()}
+                        </Box>
+                      </AccordionSummary>
+                      <AccordionDetails sx={{ pt: 0 }}>
+                        <Stack spacing={2.5}>
+                          {PROMPT_FIELDS.map((f) => {
+                            const value = v.config.systemPrompts?.[f.key] || "";
+                            const isCustom = defaults
+                              ? value !== (defaults[f.key] || "")
+                              : false;
+                            return (
+                              <Box key={f.key}>
+                                <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, mb: 0.75 }}>
+                                  <Typography variant="caption" sx={{
+                                    fontWeight: 700
+                                  }}>
+                                    {f.label}
+                                  </Typography>
+                                  <Typography variant="caption" sx={{
+                                    color: "text.secondary"
+                                  }}>
+                                    · {f.caption}
+                                  </Typography>
+                                  <Box sx={{ flexGrow: 1 }} />
+                                  {isCustom && (
+                                    <Button
+                                      size="small"
+                                      startIcon={<RotateCcw sx={{ fontSize: 12 }} />}
+                                      onClick={() =>
+                                        updateSystemPrompt(i, f.key, defaults?.[f.key] || "")
+                                      }
+                                      sx={{ minWidth: 0, px: 1, color: "text.secondary", fontSize: 11 }}
+                                    >
+                                      Reset
+                                    </Button>
+                                  )}
+                                  <Chip
                                     size="small"
-                                    startIcon={<RotateCcw sx={{ fontSize: 12 }} />}
-                                    onClick={() =>
-                                      updateSystemPrompt(i, f.key, defaults?.[f.key] || "")
-                                    }
-                                    sx={{ minWidth: 0, px: 1, color: "text.secondary", fontSize: 11 }}
-                                  >
-                                    Reset
-                                  </Button>
-                                )}
-                                <Chip
-                                  size="small"
-                                  label={isCustom ? "Customized" : "Default"}
+                                    label={isCustom ? "Customized" : "Default"}
+                                    sx={{
+                                      height: 18,
+                                      fontSize: 10,
+                                      fontWeight: 600,
+                                      bgcolor: isCustom ? alpha(VIOLET, 0.1) : "action.hover",
+                                      color: isCustom ? VIOLET : "text.secondary",
+                                    }}
+                                  />
+                                </Box>
+                                <TextField
+                                  value={value}
+                                  onChange={(e) => updateSystemPrompt(i, f.key, e.target.value)}
+                                  multiline
+                                  minRows={2}
+                                  fullWidth
+                                  error={!!vd?.prompts[f.key]}
                                   sx={{
-                                    height: 18,
-                                    fontSize: 10,
-                                    fontWeight: 600,
-                                    bgcolor: isCustom ? alpha(VIOLET, 0.1) : "action.hover",
-                                    color: isCustom ? VIOLET : "text.secondary",
+                                    "& .MuiOutlinedInput-root": {
+                                      bgcolor: "#fff",
+                                      fontSize: 13,
+                                      lineHeight: 1.5,
+                                    },
                                   }}
                                 />
                               </Box>
-                              <TextField
-                                value={value}
-                                onChange={(e) => updateSystemPrompt(i, f.key, e.target.value)}
-                                multiline
-                                minRows={2}
-                                fullWidth
-                                error={!!vd?.prompts[f.key]}
-                                sx={{
-                                  "& .MuiOutlinedInput-root": {
-                                    bgcolor: "#fff",
-                                    fontSize: 13,
-                                    lineHeight: 1.5,
-                                  },
-                                }}
-                              />
-                            </Box>
-                          );
-                        })}
-                      </Stack>
-                    </AccordionDetails>
-                  </Accordion>
-                </Paper>
-              );
-            })}
+                            );
+                          })}
+                        </Stack>
+                      </AccordionDetails>
+                    </Accordion>
+                  </Paper>
+                );
+              })}
 
-            <Button
-              onClick={addVariant}
-              variant="outlined"
-              startIcon={<Plus sx={{ fontSize: 16 }} />}
-              sx={{ alignSelf: "flex-start", borderColor: alpha(VIOLET, 0.4), color: VIOLET }}
-            >
-              Add variant
-            </Button>
-          </Stack>
-        </Section>
+              <Button
+                onClick={addVariant}
+                variant="outlined"
+                startIcon={<Plus sx={{ fontSize: 16 }} />}
+                sx={{ alignSelf: "flex-start", borderColor: alpha(VIOLET, 0.4), color: VIOLET }}
+              >
+                Add variant
+              </Button>
+            </Stack>
+          </Section>
 
-        <Section icon={<FileJson sx={{ fontSize: 18 }} />} title="Import / export config JSON">
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
-            Paste or import a config JSON to fill the form (this is also how the
-            chat assistant fills it). Exported JSON contains no student group
-            detail — member lists are stripped; the seed is kept.
-          </Typography>
-          <TextField
-            value={jsonText}
-            onChange={(e) => setJsonText(e.target.value)}
-            placeholder='{"name": "...", "assignment": {...}, "variants": [...]}'
-            multiline
-            minRows={5}
-            fullWidth
-            sx={{ "& .MuiInputBase-root": { fontFamily: "monospace", fontSize: 12 } }}
-          />
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="application/json,.json"
-            hidden
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) importJsonFile(file);
-              // Allow re-picking the same file.
-              e.target.value = "";
-            }}
-          />
-          <Stack direction="row" spacing={1.5} sx={{ mt: 1.5, flexWrap: "wrap" }}>
-            <Button onClick={applyJson} variant="outlined" sx={{ borderColor: alpha(VIOLET, 0.4), color: VIOLET }}>
-              Apply JSON
-            </Button>
-            <Button
-              onClick={() => fileInputRef.current?.click()}
-              variant="outlined"
-              startIcon={<Upload sx={{ fontSize: 16 }} />}
-              sx={{ borderColor: alpha(VIOLET, 0.4), color: VIOLET }}
-            >
-              Import file
-            </Button>
-            <Button
-              onClick={exportJson}
-              variant="outlined"
-              startIcon={<Download sx={{ fontSize: 16 }} />}
-              sx={{ borderColor: alpha(VIOLET, 0.4), color: VIOLET }}
-            >
-              Export JSON
-            </Button>
-          </Stack>
-        </Section>
-
-        <HoverCard
-          sx={{
-            p: 2,
-            display: "flex",
-            alignItems: "center",
-            gap: 2,
-            flexWrap: "wrap",
-            position: "sticky",
-            bottom: -10,
-            zIndex: 10,
-            boxShadow: `0 6px 20px ${alpha(VIOLET, 0.1)}`,
-          }}
-        >
-          <Button
-            variant="contained"
-            onClick={handleApprove}
-            disabled={submitting}
-            sx={{ background: violetGradient, fontWeight: 700, px: 3, "&.Mui-disabled": { background: alpha(VIOLET, 0.3), color: "#fff" } }}
-          >
-            {submitting
-              ? "Submitting…"
-              : isEdit
-                ? `Save${activateOnSubmit ? " & activate" : ""}`
-                : `Submit${activateOnSubmit ? " & activate" : " (draft)"}`}
-          </Button>
-          {canActivateAfterSubmit && (
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={activateOnSubmit}
-                  onChange={(e) => setActivateOnSubmit(e.target.checked)}
-                  sx={{ color: VIOLET, "&.Mui-checked": { color: VIOLET } }}
-                />
-              }
-              label={isEdit ? "Activate after saving" : "Activate immediately"}
+          <Section icon={<FileJson sx={{ fontSize: 18 }} />} title="Import / export config JSON">
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                mb: 1.5
+              }}>
+              Paste or import a config JSON to fill the form (this is also how the
+              chat assistant fills it). Exported JSON contains no student group
+              detail — member lists are stripped; the seed is kept.
+            </Typography>
+            <TextField
+              value={jsonText}
+              onChange={(e) => setJsonText(e.target.value)}
+              placeholder='{"name": "...", "assignment": {...}, "variants": [...]}'
+              multiline
+              minRows={5}
+              fullWidth
+              sx={{ "& .MuiInputBase-root": { fontFamily: "monospace", fontSize: 12 } }}
             />
-          )}
-          <Box sx={{ flexGrow: 1 }} />
-          <Button color="inherit" onClick={() => navigate(`/admin/class/${classID}/experiments`)}>
-            Cancel
-          </Button>
-        </HoverCard>
-      </Stack>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="application/json,.json"
+              hidden
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) importJsonFile(file);
+                // Allow re-picking the same file.
+                e.target.value = "";
+              }}
+            />
+            <Stack direction="row" spacing={1.5} sx={{ mt: 1.5, flexWrap: "wrap" }}>
+              <Button onClick={applyJson} variant="outlined" sx={{ borderColor: alpha(VIOLET, 0.4), color: VIOLET }}>
+                Apply JSON
+              </Button>
+              <Button
+                onClick={() => fileInputRef.current?.click()}
+                variant="outlined"
+                startIcon={<Upload sx={{ fontSize: 16 }} />}
+                sx={{ borderColor: alpha(VIOLET, 0.4), color: VIOLET }}
+              >
+                Import file
+              </Button>
+              <Button
+                onClick={exportJson}
+                variant="outlined"
+                startIcon={<Download sx={{ fontSize: 16 }} />}
+                sx={{ borderColor: alpha(VIOLET, 0.4), color: VIOLET }}
+              >
+                Export JSON
+              </Button>
+            </Stack>
+          </Section>
 
-      <ExperimentAssistant />
-    </Box>
+          <HoverCard
+            sx={{
+              p: 2,
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+              flexWrap: "wrap",
+              position: "sticky",
+              bottom: -10,
+              zIndex: 10,
+              boxShadow: `0 6px 20px ${alpha(VIOLET, 0.1)}`,
+            }}
+          >
+            <Button
+              variant="contained"
+              onClick={handleApprove}
+              disabled={submitting}
+              sx={{ background: violetGradient, fontWeight: 700, px: 3, "&.Mui-disabled": { background: alpha(VIOLET, 0.3), color: "#fff" } }}
+            >
+              {submitting
+                ? "Submitting…"
+                : isEdit
+                  ? `Save${activateOnSubmit ? " & activate" : ""}`
+                  : `Submit${activateOnSubmit ? " & activate" : " (draft)"}`}
+            </Button>
+            {canActivateAfterSubmit && (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={activateOnSubmit}
+                    onChange={(e) => setActivateOnSubmit(e.target.checked)}
+                    sx={{ color: VIOLET, "&.Mui-checked": { color: VIOLET } }}
+                  />
+                }
+                label={isEdit ? "Activate after saving" : "Activate immediately"}
+              />
+            )}
+            <Box sx={{ flexGrow: 1 }} />
+            <Button color="inherit" onClick={() => navigate(`/admin/class/${classID}/experiments`)}>
+              Cancel
+            </Button>
+          </HoverCard>
+        </Stack>
+
+        <ExperimentAssistant />
+      </Box>
     </ExperimentTheme>
   );
 };

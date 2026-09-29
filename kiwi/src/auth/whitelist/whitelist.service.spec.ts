@@ -7,7 +7,9 @@ describe('WhitelistService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [WhitelistService],
-    }).compile();
+    })
+      .useMocker(() => ({ get: jest.fn() }))
+      .compile();
 
     service = module.get<WhitelistService>(WhitelistService);
   });

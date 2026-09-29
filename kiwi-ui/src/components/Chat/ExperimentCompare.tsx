@@ -72,11 +72,15 @@ const LaneColumn: React.FC<LaneColumnProps> = ({
           }}
         />
         <Box sx={{ minWidth: 0, flexGrow: 1 }}>
-          <Typography variant="body2" fontWeight={700} noWrap>
+          <Typography variant="body2" noWrap sx={{
+            fontWeight: 700
+          }}>
             {variant?.label || "No variant selected"}
           </Typography>
           {variant && (
-            <Typography variant="caption" color="text.secondary" noWrap>
+            <Typography variant="caption" noWrap sx={{
+              color: "text.secondary"
+            }}>
               {variant.key}
             </Typography>
           )}

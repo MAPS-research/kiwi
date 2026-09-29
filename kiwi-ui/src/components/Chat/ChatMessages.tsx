@@ -251,7 +251,12 @@ interface RetryProps {
 
 const Retry: React.FC<RetryProps> = ({ handleSendRetryMessage, message }) => (
   <Box className="retry">
-    <Grid container alignItems="flex-start" margin="1em 0">
+    <Grid
+      container
+      sx={{
+        alignItems: "flex-start",
+        margin: "1em 0"
+      }}>
       <Grid size="grow">
         <Typography>
           {message.content || "Something went wrong. Please try again."}
@@ -301,7 +306,7 @@ const renderChatMessages = (
     index: number,
     leading?: React.ReactNode,
   ) => {
-    const jumpToPage = context.pageNavigationPluginInstance?.jumpToPage;
+    const jumpToPage = (page: number) => context.pdfNavigationRef?.current?.(page);
     const setCurrentPDFID = context.setCurrentPDFID;
     const currentPDFID = context.currentPDFID;
     const setPdfContent = context.setPdfContent;
@@ -310,8 +315,15 @@ const renderChatMessages = (
       return (
         <Box key={index}>
           <Paper elevation={3}>
-            <Grid container alignItems="flex-start">
-              <Grid margin="1em 0" padding={1} size={1}>
+            <Grid container sx={{
+              alignItems: "flex-start"
+            }}>
+              <Grid
+                size={1}
+                sx={{
+                  margin: "1em 0",
+                  padding: 1
+                }}>
                 <Box
                   sx={{
                     width: 32,
@@ -339,8 +351,16 @@ const renderChatMessages = (
     // Bot message: aligned to left, no border, transparent background, bot icon
     if (message.isAi) {
       return (
-        <Box key={index} display="flex" alignItems="flex-start" mb={1}>
-          <Grid container spacing={1} alignItems="flex-start">
+        <Box
+          key={index}
+          sx={{
+            display: "flex",
+            alignItems: "flex-start",
+            mb: 1
+          }}>
+          <Grid container spacing={1} sx={{
+            alignItems: "flex-start"
+          }}>
             <Grid>
               <BotAvatar />
             </Grid>
@@ -403,9 +423,24 @@ const renderChatMessages = (
 
     // User message: aligned to right, with user icon, plain text (no bubble)
     return (
-      <Box key={index} display="flex" justifyContent="flex-end" alignItems="flex-start" mb={1}>
-        <Grid container spacing={1} alignItems="center" justifyContent="flex-end">
-          <Grid size="grow" textAlign="right">
+      <Box
+        key={index}
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "flex-start",
+          mb: 1
+        }}>
+        <Grid
+          container
+          spacing={1}
+          sx={{
+            alignItems: "center",
+            justifyContent: "flex-end"
+          }}>
+          <Grid size="grow" sx={{
+            textAlign: "right"
+          }}>
             <Paper
               elevation={0}
               sx={{
@@ -537,11 +572,14 @@ const renderChatMessages = (
       nodes.push(
         <Box
           key={`agent-chain-row-${startIndex}`}
-          display="flex"
-          alignItems="flex-start"
-          mb={1}
-        >
-          <Grid container spacing={1} alignItems="flex-start">
+          sx={{
+            display: "flex",
+            alignItems: "flex-start",
+            mb: 1
+          }}>
+          <Grid container spacing={1} sx={{
+            alignItems: "flex-start"
+          }}>
             <Grid>
               <BotAvatar />
             </Grid>
@@ -607,7 +645,9 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   const allMessages = initialMessages.concat(chatMessages);
 
   return (
-    <Stack padding={1} spacing={1}>
+    <Stack spacing={1} sx={{
+      padding: 1
+    }}>
       {renderChatMessages(
         allMessages,
         handleSendRetryMessage,

@@ -32,15 +32,15 @@ import {
 } from "@mui/material";
 import {
   AddOutlined as AddIcon,
-  DeleteOutline as DeleteIcon,
+  DeleteOutlined as DeleteIcon,
   EditOutlined as EditIcon,
   VisibilityOutlined as VisibilityIcon,
   VisibilityOffOutlined as VisibilityOffIcon,
   ContentCopyOutlined as ContentCopyIcon,
   SendOutlined as SendIcon,
   RefreshOutlined as RefreshIcon,
-  CheckCircleOutline as CheckCircleIcon,
-  ErrorOutline as ErrorIcon,
+  CheckCircleOutlined as CheckCircleIcon,
+  ErrorOutlined as ErrorIcon,
   HistoryOutlined as HistoryIcon,
   VpnKeyOutlined as VpnKeyIcon,
   InfoOutlined as InfoIcon,
@@ -592,65 +592,73 @@ export const WebhookManagement: React.FC = () => {
         }
       />
 
-        <Box
-          component="section"
-          aria-label="Webhook summary"
-          sx={{
-            display: "grid",
-            gridTemplateColumns: { xs: "1fr", sm: "repeat(3, minmax(0, 1fr))" },
-            gap: 2,
-            mb: 3,
-            maxWidth: 992,
-          }}
-        >
-          {[
-            { label: "Total webhooks", value: webhooks.length },
-            { label: "Active", value: activeWebhooks },
-            { label: "Inactive", value: inactiveWebhooks },
-          ].map((item) => (
-            <AdminFormSurface
-              key={item.label}
-              sx={{
-                width: "100%",
-                maxWidth: 320,
-                minHeight: 112,
-                p: { xs: 2, sm: 2.5 },
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <Typography variant="body2" color="text.secondary">
-                {item.label}
-              </Typography>
-              <Typography variant="h4" color="text.primary" sx={{ mt: 0.5, fontWeight: 600 }}>
-                {item.value}
-              </Typography>
-            </AdminFormSurface>
-          ))}
-        </Box>
-
-        <AdminFormSurface sx={{ overflow: "hidden" }}>
-          <Tabs
-            value={tabValue}
-            onChange={(_e, v) => setTabValue(v)}
-            sx={{ borderBottom: 1, borderColor: "divider" }}
+      <Box
+        component="section"
+        aria-label="Webhook summary"
+        sx={{
+          display: "grid",
+          gridTemplateColumns: { xs: "1fr", sm: "repeat(3, minmax(0, 1fr))" },
+          gap: 2,
+          mb: 3,
+          maxWidth: 992,
+        }}
+      >
+        {[
+          { label: "Total webhooks", value: webhooks.length },
+          { label: "Active", value: activeWebhooks },
+          { label: "Inactive", value: inactiveWebhooks },
+        ].map((item) => (
+          <AdminFormSurface
+            key={item.label}
+            sx={{
+              width: "100%",
+              maxWidth: 320,
+              minHeight: 112,
+              p: { xs: 2, sm: 2.5 },
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
           >
-            <Tab label="All" />
-            <Tab label="Active" />
-            <Tab label="Inactive" />
-          </Tabs>
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
+              {item.label}
+            </Typography>
+            <Typography
+              variant="h4"
+              sx={{
+                color: "text.primary",
+                mt: 0.5,
+                fontWeight: 600
+              }}>
+              {item.value}
+            </Typography>
+          </AdminFormSurface>
+        ))}
+      </Box>
 
-          <TabPanel value={tabValue} index={0}>
-            {renderWebhookTable()}
-          </TabPanel>
-          <TabPanel value={tabValue} index={1}>
-            {renderWebhookTable()}
-          </TabPanel>
-          <TabPanel value={tabValue} index={2}>
-            {renderWebhookTable()}
-          </TabPanel>
-        </AdminFormSurface>
+      <AdminFormSurface sx={{ overflow: "hidden" }}>
+        <Tabs
+          value={tabValue}
+          onChange={(_e, v) => setTabValue(v)}
+          sx={{ borderBottom: 1, borderColor: "divider" }}
+        >
+          <Tab label="All" />
+          <Tab label="Active" />
+          <Tab label="Inactive" />
+        </Tabs>
+
+        <TabPanel value={tabValue} index={0}>
+          {renderWebhookTable()}
+        </TabPanel>
+        <TabPanel value={tabValue} index={1}>
+          {renderWebhookTable()}
+        </TabPanel>
+        <TabPanel value={tabValue} index={2}>
+          {renderWebhookTable()}
+        </TabPanel>
+      </AdminFormSurface>
       {/* Create Webhook Dialog */}
       <Dialog
         open={createDialogOpen}
@@ -849,7 +857,9 @@ export const WebhookManagement: React.FC = () => {
               <Typography variant="subtitle2" gutterBottom>
                 Current Token Information:
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Name: {selectedWebhook.apiToken.name}<br />
                 Created: {new Date(selectedWebhook.createdAt).toLocaleDateString()}<br />
                 {selectedWebhook.apiToken.lastUsedAt && (
@@ -959,10 +969,14 @@ export const WebhookManagement: React.FC = () => {
           </Alert>
           {selectedWebhook && (
             <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle2" color="text.secondary">
+              <Typography variant="subtitle2" sx={{
+                color: "text.secondary"
+              }}>
                 Webhook ID: {selectedWebhook.id}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 URL: {selectedWebhook.url}
               </Typography>
             </Box>
@@ -1065,7 +1079,9 @@ export const WebhookManagement: React.FC = () => {
               <Typography variant="subtitle1">
                 Webhook ID: {selectedWebhook.id}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 URL: {selectedWebhook.url}
               </Typography>
             </Box>
@@ -1075,7 +1091,13 @@ export const WebhookManagement: React.FC = () => {
               <CircularProgress />
             </Box>
           ) : deliveryHistory.length === 0 ? (
-            <Typography variant="body1" color="text.secondary" sx={{ textAlign: 'center', py: 3 }}>
+            <Typography
+              variant="body1"
+              sx={{
+                color: "text.secondary",
+                textAlign: 'center',
+                py: 3
+              }}>
               No delivery history available
             </Typography>
           ) : (
@@ -1152,7 +1174,9 @@ export const WebhookManagement: React.FC = () => {
     if (filteredWebhooks.length === 0) {
       return (
         <Box sx={{ textAlign: "center", py: 4 }}>
-          <Typography variant="h6" color="text.secondary">
+          <Typography variant="h6" sx={{
+            color: "text.secondary"
+          }}>
             No webhooks found
           </Typography>
           <Button
@@ -1280,7 +1304,9 @@ export const WebhookManagement: React.FC = () => {
                           {createdApiTokens[webhook.id] ? (
                             <Alert severity="warning" sx={{ flexGrow: 1, width: '100%' }}>
                               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                                <Typography variant="caption" fontWeight="bold">
+                                <Typography variant="caption" sx={{
+                                  fontWeight: "bold"
+                                }}>
                                   New Token Created - Copy Now!
                                 </Typography>
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -1359,7 +1385,9 @@ export const WebhookManagement: React.FC = () => {
                                 </IconButton>
                               </Tooltip>
                               {webhook.apiToken.lastUsedAt && (
-                                <Typography variant="caption" color="text.secondary">
+                                <Typography variant="caption" sx={{
+                                  color: "text.secondary"
+                                }}>
                                   Last used: {new Date(webhook.apiToken.lastUsedAt).toLocaleDateString()}
                                 </Typography>
                               )}
@@ -1391,7 +1419,9 @@ export const WebhookManagement: React.FC = () => {
                         </Typography>
                       </Box>
                     ) : (
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                      }}>
                         No deliveries yet
                       </Typography>
                     )}

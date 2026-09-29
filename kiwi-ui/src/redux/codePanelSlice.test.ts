@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import codePanelReducer, { toggleCodeView, setCodeViewVisible } from './codePanelSlice';
+import codePanelReducer, { toggleCodeView, setCodeViewVisible } from './codePanelSlice.ts';
 
 describe('codePanelSlice', () => {
   const initialState = {

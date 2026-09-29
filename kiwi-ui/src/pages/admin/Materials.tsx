@@ -1,6 +1,6 @@
 import {
   CloudUploadOutlined as CloudUploadIcon,
-  DeleteOutline as DeleteIcon,
+  DeleteOutlined as DeleteIcon,
   FolderOutlined as FolderIcon,
   PlayArrowOutlined as PlayIcon,
   SearchOutlined as SearchIcon,
@@ -83,10 +83,15 @@ const SectionLabel: React.FC<{ label: string; count: number }> = ({
   <Stack
     direction="row"
     spacing={1}
-    alignItems="center"
-    sx={{ px: 1.5, py: 0.75, bgcolor: "action.hover" }}
-  >
-    <Typography variant="overline" color="text.secondary">
+    sx={{
+      alignItems: "center",
+      px: 1.5,
+      py: 0.75,
+      bgcolor: "action.hover"
+    }}>
+    <Typography variant="overline" sx={{
+      color: "text.secondary"
+    }}>
       {label}
     </Typography>
     <Chip size="small" label={count} />
@@ -450,18 +455,24 @@ export const Materials: React.FC = () => {
         <CardContent sx={{ p: 0, "&:last-child": { pb: 0 } }}>
         <Stack
           direction={{ xs: "column", sm: "row" }}
-          justifyContent="space-between"
-          alignItems={{ xs: "stretch", sm: "center" }}
           spacing={2}
-          sx={{ p: 3, pb: 2 }}
-        >
-          <Stack direction="row" spacing={1.5} alignItems="flex-start">
+          sx={{
+            justifyContent: "space-between",
+            alignItems: { xs: "stretch", sm: "center" },
+            p: 3,
+            pb: 2
+          }}>
+          <Stack direction="row" spacing={1.5} sx={{
+            alignItems: "flex-start"
+          }}>
             <CloudUploadIcon color="action" />
             <Box>
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
                 New materials
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Each file becomes its own material, as the copy students see.
                 Answer keys go on the material below, whenever they are ready.
               </Typography>
@@ -524,9 +535,10 @@ export const Materials: React.FC = () => {
                               key={extra.id}
                               direction="row"
                               spacing={1}
-                              alignItems="center"
-                              sx={{ mt: 0.5 }}
-                            >
+                              sx={{
+                                alignItems: "center",
+                                mt: 0.5
+                              }}>
                               <Chip
                                 size="small"
                                 variant="outlined"
@@ -551,16 +563,20 @@ export const Materials: React.FC = () => {
                           {orphanAnswer && (
                             <Typography
                               variant="caption"
-                              color="warning.main"
-                              sx={{ display: "block", mt: 0.5 }}
-                            >
+                              sx={{
+                                color: "warning.main",
+                                display: "block",
+                                mt: 0.5
+                              }}>
                               Looks like an answer key, but nothing here matches
                               it. On its own, students would see the answers.
                             </Typography>
                           )}
                           {misfiled && (
                             <Box sx={{ mt: 0.5 }}>
-                              <Typography variant="caption" color="warning.main">
+                              <Typography variant="caption" sx={{
+                                color: "warning.main"
+                              }}>
                                 Looks like the answer key for “{misfiled.title}”.
                                 As a new material, students would see the
                                 answers.
@@ -675,13 +691,22 @@ export const Materials: React.FC = () => {
 
       <Card variant="outlined" sx={{ borderRadius: 2, mb: 4 }}>
         <CardContent sx={{ p: 0, "&:last-child": { pb: 0 } }}>
-        <Stack direction="row" spacing={1.5} alignItems="flex-start" sx={{ p: 3, pb: 2 }}>
+        <Stack
+          direction="row"
+          spacing={1.5}
+          sx={{
+            alignItems: "flex-start",
+            p: 3,
+            pb: 2
+          }}>
           <FolderIcon color="action" />
           <Box>
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               Materials
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               {materials.length} material{materials.length === 1 ? "" : "s"}
               {attentionCount > 0 && ` · ${attentionCount} need attention`}
             </Typography>
@@ -691,21 +716,25 @@ export const Materials: React.FC = () => {
         <Stack
           direction={{ xs: "column", md: "row" }}
           spacing={1.5}
-          alignItems={{ md: "center" }}
-          sx={{ px: 3, pb: 2 }}
-        >
+          sx={{
+            alignItems: { md: "center" },
+            px: 3,
+            pb: 2
+          }}>
           <TextField
             size="small"
             placeholder="Search titles and file names"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             sx={{ flex: 1, minWidth: 220 }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon fontSize="small" />
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon fontSize="small" />
+                  </InputAdornment>
+                ),
+              }
             }}
           />
           <Select
@@ -756,9 +785,11 @@ export const Materials: React.FC = () => {
         {visible.length === 0 ? (
           <Typography
             variant="body2"
-            color="text.secondary"
-            sx={{ p: 3, textAlign: "center" }}
-          >
+            sx={{
+              color: "text.secondary",
+              p: 3,
+              textAlign: "center"
+            }}>
             {materials.length === 0
               ? "No materials yet."
               : "Nothing matches these filters."}
@@ -783,9 +814,12 @@ export const Materials: React.FC = () => {
         {hiddenCount > 0 && (
           <Typography
             variant="caption"
-            color="text.secondary"
-            sx={{ display: "block", px: 1.5, py: 1 }}
-          >
+            sx={{
+              color: "text.secondary",
+              display: "block",
+              px: 1.5,
+              py: 1
+            }}>
             {hiddenCount} material{hiddenCount > 1 ? "s" : ""} hidden by the
             current filter.
           </Typography>
@@ -801,7 +835,9 @@ export const Materials: React.FC = () => {
         <DialogTitle>Replace this file?</DialogTitle>
         <DialogContent>
           <DialogContentText component="div">
-            <Typography variant="body2" paragraph>
+            <Typography variant="body2" sx={{
+              marginBottom: "16px"
+            }}>
               “{confirmReplace?.fileName}” is swapped for the file you pick next.
               Comments, summaries and existing citations stay with it — they
               point at the document, not the file.

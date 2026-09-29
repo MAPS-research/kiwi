@@ -1,10 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import {
-  McpModule as ReKogMcpModule,
-  McpTransportType,
-} from '@rekog/mcp-nest';
-import { randomUUID } from 'crypto';
+import { ConfigModule } from '@nestjs/config';
+import { McpHttpController } from './mcp-http.controller';
 
 // Import existing modules
 import { AuthModule } from 'src/auth/auth.module';
@@ -42,8 +38,7 @@ import { SystemPromptsProvider } from './prompts/system-prompts.provider';
  * - Get prompts (system prompts, class prompts)
  *
  * Configured with:
- * - SSE (Server-Sent Events) for streaming
- * - Streamable HTTP for standard requests
+ * - Streamable HTTP with SSE responses
  * - OAuth 2.1 authentication via existing auth system
  */
 @Module({
@@ -59,39 +54,10 @@ import { SystemPromptsProvider } from './prompts/system-prompts.provider';
     KiwiAppModule,
     InstructorClassModule,
     ExperimentModule,
-
-    // MCP Protocol Server
-    ReKogMcpModule.forRoot({
-      name: 'kiwi-mcp-server',
-      version: '1.0.0',
-
-      // Enable both SSE (for streaming) and Streamable HTTP transports
-      transport: [McpTransportType.SSE, McpTransportType.STREAMABLE_HTTP],
-
-      // SSE-specific configuration
-      sse: {
-        pingEnabled: true,
-        pingIntervalMs: 30000, // 30 seconds
-      },
-
-      // Streamable HTTP configuration
-      streamableHttp: {
-        enableJsonResponse: false, // MCP protocol format
-        sessionIdGenerator: () => randomUUID(),
-        statelessMode: false, // Use sessions for better UX
-      },
-
-      // Authentication handled by global SmartJwtAuthGuard
-      // (automatically uses session-optional mode for /mcp paths)
-
-      // Instructions for AI assistants
-      instructions:
-        'MCP server for Kiwi learning platform - provides access to classes, materials, chat, and analytics',
-    }),
   ],
-  providers: [
-    // MCP Server Implementation Service
-    McpService,
+  providers: [McpService],
+  controllers: [
+    McpHttpController,
 
     // Tools
     ClassManagementTool,

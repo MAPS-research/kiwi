@@ -14,7 +14,7 @@ import {
   FormControlLabel,
   IconButton,
   List,
-  ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Paper,
@@ -33,7 +33,7 @@ import {
 } from "@mui/material";
 import {
   AddOutlined as AddIcon,
-  DeleteOutline as DeleteIcon,
+  DeleteOutlined as DeleteIcon,
   EditOutlined as EditIcon,
   RefreshOutlined as RefreshIcon,
   DragIndicatorOutlined as DragIcon,
@@ -42,12 +42,12 @@ import {
   SecurityOutlined as SecurityIcon,
 } from "@mui/icons-material";
 import { useParams } from "react-router-dom";
-import { classAppsApiClient, kiwiAppsApiClient } from "../../utils/api";
+import { classAppsApiClient, kiwiAppsApiClient } from "../../utils/api.ts";
 import type {
   ClassAppResponseDto,
   ClassAppScopesResponseDto,
   AppResponseDto,
-} from "../../services/models";
+} from "../../services/models/index.ts";
 import { AdminPage, AdminPageHeader } from "../../components/AdminPage/index.ts";
 
 export const ClassKiwiAppsSettings: React.FC = () => {
@@ -218,9 +218,9 @@ export const ClassKiwiAppsSettings: React.FC = () => {
     if (!classID) return;
     try {
       setLoadingScopes(true);
-      const scopes = await classAppsApiClient.classKiwiAppControllerGetClassAppScopes({
+      const scopes = await kiwiAppsApiClient.kiwiAppControllerGetClassAppScopes({
         classId: classID,
-        appSlug: app.slug,
+        slug: app.slug,
       });
       setEditScopes(scopes);
       // Initialize enabled scopes from current settings
@@ -317,7 +317,7 @@ export const ClassKiwiAppsSettings: React.FC = () => {
       await classAppsApiClient.classKiwiAppControllerReorderClassApps({
         classId: classID,
         reorderClassAppsDto: {
-          appIds: newOrder.map((a) => a.appId),
+          order: newOrder.map((a, tabOrder) => ({ appId: a.appId, tabOrder })),
         },
       });
 
@@ -339,7 +339,7 @@ export const ClassKiwiAppsSettings: React.FC = () => {
       await classAppsApiClient.classKiwiAppControllerReorderClassApps({
         classId: classID,
         reorderClassAppsDto: {
-          appIds: newOrder.map((a) => a.appId),
+          order: newOrder.map((a, tabOrder) => ({ appId: a.appId, tabOrder })),
         },
       });
 
@@ -417,10 +417,17 @@ export const ClassKiwiAppsSettings: React.FC = () => {
         </TableContainer>
       ) : enabledApps.length === 0 ? (
         <Paper sx={{ p: 4, textAlign: "center" }}>
-          <Typography variant="h6" color="text.secondary" gutterBottom>
+          <Typography variant="h6" gutterBottom sx={{
+            color: "text.secondary"
+          }}>
             No Apps Enabled
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "text.secondary",
+              mb: 2
+            }}>
             Enable apps to give students access to additional tools and features in this class.
           </Typography>
           <Button
@@ -466,10 +473,14 @@ export const ClassKiwiAppsSettings: React.FC = () => {
                     </Box>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2" fontWeight={500}>
+                    <Typography variant="body2" sx={{
+                      fontWeight: 500
+                    }}>
                       {app.name}
                     </Typography>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant="caption" sx={{
+                      color: "text.secondary"
+                    }}>
                       {app.slug}
                     </Typography>
                   </TableCell>
@@ -537,7 +548,9 @@ export const ClassKiwiAppsSettings: React.FC = () => {
             </Box>
           ) : availableApps.length === 0 ? (
             <Box sx={{ textAlign: "center", py: 4 }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 No registered apps available. Apps must be registered in the system first.
               </Typography>
             </Box>
@@ -546,10 +559,9 @@ export const ClassKiwiAppsSettings: React.FC = () => {
               {availableApps.map((app) => {
                 const isSelected = selectedApps.has(app.id);
                 return (
-                  <ListItem
+                  <ListItemButton
                     key={app.id}
                     dense
-                    button
                     onClick={() => handleToggleApp(app.id)}
                   >
                     <ListItemIcon>
@@ -571,9 +583,15 @@ export const ClassKiwiAppsSettings: React.FC = () => {
                           />
                         </Box>
                       }
+                      slotProps={{
+                        primary: { component: "div" },
+                        secondary: { component: "div" },
+                      }}
                       secondary={
                         <Box>
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography variant="caption" sx={{
+                            color: "text.secondary"
+                          }}>
                             {app.slug}
                           </Typography>
                           {app.capabilities.length > 0 && (
@@ -592,7 +610,7 @@ export const ClassKiwiAppsSettings: React.FC = () => {
                         </Box>
                       }
                     />
-                  </ListItem>
+                  </ListItemButton>
                 );
               })}
             </List>
@@ -630,7 +648,9 @@ export const ClassKiwiAppsSettings: React.FC = () => {
             <Divider sx={{ my: 3 }} />
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
               <SecurityIcon fontSize="small" color="action" />
-              <Typography variant="subtitle1" fontWeight={500}>
+              <Typography variant="subtitle1" sx={{
+                fontWeight: 500
+              }}>
                 Enabled Scopes
               </Typography>
             </Box>
@@ -638,17 +658,26 @@ export const ClassKiwiAppsSettings: React.FC = () => {
             {loadingScopes ? (
               <Box sx={{ display: "flex", alignItems: "center", gap: 1, py: 2 }}>
                 <CircularProgress size={20} />
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   Loading scopes...
                 </Typography>
               </Box>
             ) : !editScopes || editScopes.maxScopes.length === 0 ? (
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 No scopes defined for this app. The app's whitelist entry may not have any maxScopes configured.
               </Typography>
             ) : (
               <Box>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "text.secondary",
+                    mb: 1.5
+                  }}>
                   Select which scopes this app can use in this class. If none are selected, all max scopes are allowed.
                 </Typography>
 
@@ -700,7 +729,9 @@ export const ClassKiwiAppsSettings: React.FC = () => {
                 {/* Show effective scopes summary */}
                 {editEnabledScopes.length > 0 && (
                   <Box sx={{ mt: 2 }}>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant="caption" sx={{
+                      color: "text.secondary"
+                    }}>
                       Enabled: {editEnabledScopes.length} of {editScopes.maxScopes.length} scopes
                     </Typography>
                   </Box>

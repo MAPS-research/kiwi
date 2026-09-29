@@ -5,8 +5,8 @@
  * Inspired by OpenAI's Apps SDK patterns.
  */
 
-import type { KiwiToolDefinition } from './tool.types';
-import type { KiwiWidgetDefinition } from './widget.types';
+import type { KiwiToolDefinition } from './tool.types.ts';
+import type { KiwiWidgetDefinition } from './widget.types.ts';
 
 /**
  * Permissions that an app can request.

@@ -1,7 +1,7 @@
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { ClassMCPSettings } from "./ClassMCPSettings";
+import { ClassMCPSettings } from "./ClassMCPSettings.tsx";
 
 // Mock MCP components
 vi.mock("../../components/MCP/MCPServerDialog", () => ({
@@ -106,7 +106,7 @@ describe("ClassMCPSettings", () => {
   let mockToolConfigApiClient: any;
 
   beforeEach(async () => {
-    const api = await import("../../utils/api");
+    const api = await import("../../utils/api.ts");
     mockMcpAdminApiClient = vi.mocked(api.mcpAdminApiClient);
     mockToolConfigApiClient = vi.mocked(api.toolConfigApiClient);
 
@@ -308,7 +308,7 @@ describe("ClassMCPSettings", () => {
     });
 
     // Should have an enabled toggle switch
-    const switchElement = screen.getByRole("checkbox");
+    const switchElement = screen.getByRole("switch");
     expect(switchElement).toBeInTheDocument();
     expect(switchElement).toBeChecked();
   });

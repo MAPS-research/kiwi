@@ -6,15 +6,15 @@
  */
 
 import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
-import { useBridge, type BridgeContextValue } from './BridgeProvider';
-import { getBridge } from './KiwiAppBridge';
+import { useBridge, type BridgeContextValue } from './BridgeProvider.tsx';
+import { getBridge } from './KiwiAppBridge.ts';
 import type {
   KiwiAppBridge,
   WidgetState,
   ToolResult,
   DisplayMode,
   BridgeEventType,
-} from '../types';
+} from '../types/index.ts';
 
 /**
  * Primary hook for widgets to interact with the Kiwi App framework

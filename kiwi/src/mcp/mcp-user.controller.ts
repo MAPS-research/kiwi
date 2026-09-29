@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Controller,
   Delete,
   Get,
@@ -8,7 +7,6 @@ import {
   Logger,
   Param,
   Query,
-  Redirect,
   Res,
   Session,
   UseGuards,
@@ -29,7 +27,6 @@ import {
   McpConnectionResponseDto,
   OAuthInitiateResponseDto,
   OAuthCallbackQueryDto,
-  OAuthCallbackSuccessDto,
 } from './dto/mcp-connection.dto';
 
 /**
@@ -117,7 +114,11 @@ export class McpUserController {
   })
   @ApiQuery({ name: 'code', description: 'Authorization code' })
   @ApiQuery({ name: 'state', description: 'State parameter for verification' })
-  @ApiQuery({ name: 'error', required: false, description: 'Error code if authorization failed' })
+  @ApiQuery({
+    name: 'error',
+    required: false,
+    description: 'Error code if authorization failed',
+  })
   @ApiResponse({
     status: HttpStatus.FOUND,
     description: 'Redirects to frontend after OAuth completion',

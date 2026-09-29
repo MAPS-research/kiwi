@@ -80,13 +80,17 @@ const AddClassFeature: React.FC<AddClassFeatureProps> = ({
       <Card variant="outlined" sx={{ height: "100%", borderRadius: 2 }}>
         <CardContent sx={{ p: 3 }}>
           <Stack spacing={2.5}>
-            <Stack direction="row" spacing={1.5} alignItems="flex-start">
+            <Stack direction="row" spacing={1.5} sx={{
+              alignItems: "flex-start"
+            }}>
               <SchoolOutlined color="action" />
               <div>
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                   Class access
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   Enable a feature for every member of a class.
                 </Typography>
               </div>
@@ -107,8 +111,12 @@ const AddClassFeature: React.FC<AddClassFeatureProps> = ({
                 ))}
               </TextField>
             ) : (
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Typography variant="body2" color="text.secondary">
+              <Stack direction="row" spacing={1} sx={{
+                alignItems: "center"
+              }}>
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   Target
                 </Typography>
                 <Chip label={classes[0]} size="small" variant="outlined" />
@@ -132,7 +140,6 @@ const AddClassFeature: React.FC<AddClassFeatureProps> = ({
             </TextField>
 
             <TextField
-              InputLabelProps={{ shrink: true }}
               label="Expiration (optional)"
               type="datetime-local"
               value={validUntil ? validUntil.toISOString().slice(0, -1) : ""}
@@ -141,6 +148,9 @@ const AddClassFeature: React.FC<AddClassFeatureProps> = ({
               }
               helperText="Leave empty to keep the flag active indefinitely."
               fullWidth
+              slotProps={{
+                inputLabel: { shrink: true }
+              }}
             />
 
             <Button

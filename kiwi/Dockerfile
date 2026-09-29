@@ -1,19 +1,20 @@
-FROM node:20.14.0-alpine3.20 as dependencies
+FROM node:24.21.0-alpine3.24 AS dependencies
 
 WORKDIR /build
 
 COPY package*.json ./
 COPY prisma ./prisma/
+COPY prisma.config.ts ./
 
 RUN npm ci
 
-FROM dependencies as build
+FROM dependencies AS build
 
 COPY . .
 
 RUN npm run build
 
-FROM node:20.14.0-alpine3.20 as production
+FROM node:24.21.0-alpine3.24 AS production
 
 WORKDIR /app
 
@@ -21,6 +22,7 @@ COPY --from=build /build/dist /app/dist
 COPY --from=build /build/package*.json /app
 COPY --from=build /build/node_modules /app/node_modules
 COPY --from=build /build/prisma /app/prisma
+COPY --from=build /build/prisma.config.ts /app/prisma.config.ts
 
 ENV DATABASE_URL=
 ENV PORT=3000

@@ -13,7 +13,7 @@ import type {
   AppStatus,
   KiwiToolDefinition,
   KiwiWidgetDefinition,
-} from '../types';
+} from '../types/index.ts';
 
 /**
  * Listener callback type for registry changes

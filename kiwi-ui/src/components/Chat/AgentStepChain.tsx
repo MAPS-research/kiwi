@@ -9,7 +9,7 @@ import {
 import {
   AutoAwesome as AutoAwesomeIcon,
   CheckCircle as CheckCircleIcon,
-  ErrorOutline as ErrorOutlineIcon,
+  ErrorOutlined as ErrorOutlineIcon,
   ExpandMore as ExpandMoreIcon,
   Search as SearchIcon,
   Code as CodeIcon,

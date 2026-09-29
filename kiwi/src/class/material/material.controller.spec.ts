@@ -7,7 +7,9 @@ describe('MaterialController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [MaterialController],
-    }).compile();
+    })
+      .useMocker(() => ({ get: jest.fn() }))
+      .compile();
 
     controller = module.get<MaterialController>(MaterialController);
   });

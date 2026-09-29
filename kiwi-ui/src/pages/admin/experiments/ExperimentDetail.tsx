@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import {
-  ChatBubbleOutline as MessageSquare,
+  ChatBubbleOutlined as MessageSquare,
   DownloadOutlined as Download,
   EditOutlined as Pencil,
   GroupOutlined as Users,
@@ -58,10 +58,16 @@ const StatPill: React.FC<{ icon: React.ReactNode; label: string; value: number }
   >
     <Box sx={{ color: VIOLET, display: "grid", placeItems: "center" }}>{icon}</Box>
     <Box>
-      <Typography fontWeight={700} lineHeight={1}>
+      <Typography
+        sx={{
+          fontWeight: 700,
+          lineHeight: 1
+        }}>
         {value}
       </Typography>
-      <Typography variant="caption" color="text.secondary">
+      <Typography variant="caption" sx={{
+        color: "text.secondary"
+      }}>
         {label}
       </Typography>
     </Box>
@@ -190,209 +196,235 @@ const ExperimentDetail: React.FC = () => {
 
   return (
     <ExperimentTheme>
-    <Box sx={{ px: { xs: 2, md: 3 }, pt: { xs: 2, md: 3 }, pb: 4, maxWidth: 920, mx: "auto" }}>
-      <PageHeader
-        icon={<FlaskConical />}
-        title={experiment.name}
-        subtitle={assignmentSubtitle}
-        status={<StatusChip status={experiment.status} onLight />}
-        onBack={() => navigate(`/admin/class/${classID}/experiments`)}
-      />
+      <Box sx={{ px: { xs: 2, md: 3 }, pt: { xs: 2, md: 3 }, pb: 4, maxWidth: 920, mx: "auto" }}>
+        <PageHeader
+          icon={<FlaskConical />}
+          title={experiment.name}
+          subtitle={assignmentSubtitle}
+          status={<StatusChip status={experiment.status} onLight />}
+          onBack={() => navigate(`/admin/class/${classID}/experiments`)}
+        />
 
-      {error && (
-        <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }} onClose={() => setError(null)}>
-          {error}
-        </Alert>
-      )}
+        {error && (
+          <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }} onClose={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
 
-      <Stack direction="row" spacing={1.5} sx={{ mb: 3 }}>
-        <Button
-          variant="outlined"
-          startIcon={<Pencil sx={{ fontSize: 16 }} />}
-          onClick={() => navigate(`/admin/class/${classID}/experiments/${experimentId}/edit`)}
-          sx={{ borderColor: alpha(VIOLET, 0.4), color: VIOLET }}
-        >
-          Edit
-        </Button>
-        {experiment.status === "draft" && (
-          <Button variant="contained" onClick={() => act(() => experimentApi.activate(classID!, experimentId!))} sx={{ background: VIOLET, fontWeight: 600 }}>
-            Activate
+        <Stack direction="row" spacing={1.5} sx={{ mb: 3 }}>
+          <Button
+            variant="outlined"
+            startIcon={<Pencil sx={{ fontSize: 16 }} />}
+            onClick={() => navigate(`/admin/class/${classID}/experiments/${experimentId}/edit`)}
+            sx={{ borderColor: alpha(VIOLET, 0.4), color: VIOLET }}
+          >
+            Edit
           </Button>
-        )}
-        {experiment.status === "completed" && (
-          <Button variant="contained" onClick={() => act(() => experimentApi.activate(classID!, experimentId!))} sx={{ background: VIOLET, fontWeight: 600 }}>
-            Re-activate
+          {experiment.status === "draft" && (
+            <Button variant="contained" onClick={() => act(() => experimentApi.activate(classID!, experimentId!))} sx={{ background: VIOLET, fontWeight: 600 }}>
+              Activate
+            </Button>
+          )}
+          {experiment.status === "completed" && (
+            <Button variant="contained" onClick={() => act(() => experimentApi.activate(classID!, experimentId!))} sx={{ background: VIOLET, fontWeight: 600 }}>
+              Re-activate
+            </Button>
+          )}
+          {experiment.status === "active" && (
+            <Button variant="outlined" color="error" onClick={() => act(() => experimentApi.complete(classID!, experimentId!))} sx={{ fontWeight: 600 }}>
+              Turn off
+            </Button>
+          )}
+          <Button variant="outlined" startIcon={<Download sx={{ fontSize: 16 }} />} onClick={handleExport} sx={{ borderColor: alpha(VIOLET, 0.4), color: VIOLET }}>
+            Export JSON
           </Button>
-        )}
-        {experiment.status === "active" && (
-          <Button variant="outlined" color="error" onClick={() => act(() => experimentApi.complete(classID!, experimentId!))} sx={{ fontWeight: 600 }}>
-            Turn off
-          </Button>
-        )}
-        <Button variant="outlined" startIcon={<Download sx={{ fontSize: 16 }} />} onClick={handleExport} sx={{ borderColor: alpha(VIOLET, 0.4), color: VIOLET }}>
-          Export JSON
-        </Button>
-      </Stack>
+        </Stack>
 
-      {experiment.description && (
-        <Typography color="text.secondary" sx={{ mb: 3 }}>
-          {experiment.description}
+        {experiment.description && (
+          <Typography
+            sx={{
+              color: "text.secondary",
+              mb: 3
+            }}>
+            {experiment.description}
+          </Typography>
+        )}
+
+        <Typography
+          variant="overline"
+          sx={{
+            color: "text.secondary",
+            fontWeight: 700
+          }}>
+          Variants · {cfg.variants.length}
         </Typography>
-      )}
+        <Stack spacing={1.5} sx={{ mt: 1 }}>
+          {cfg.variants.map((v, i) => (
+            <MotionStack key={v.key} delay={i * 0.06}>
+              <HoverCard sx={{ p: 2.5 }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, flexWrap: "wrap" }}>
+                  <Typography sx={{
+                    fontWeight: 700
+                  }}>{v.label}</Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: "text.secondary",
+                      fontFamily: "monospace"
+                    }}>
+                    {v.key}
+                  </Typography>
+                  <Chip
+                    size="small"
+                    label={v.config.engine}
+                    sx={{
+                      height: 22,
+                      fontWeight: 600,
+                      bgcolor: v.config.engine === "qwen" ? "#eef2ff" : "#ecfdf5",
+                      color: v.config.engine === "qwen" ? "#4338ca" : "#047857",
+                    }}
+                  />
+                  <Box sx={{ flexGrow: 1 }} />
+                  <Chip
+                    size="small"
+                    label={`${Math.round(v.allocation * 100)}%`}
+                    sx={{ height: 22, fontWeight: 700, bgcolor: alpha(VIOLET, 0.1), color: VIOLET }}
+                  />
+                </Box>
 
-      <Typography variant="overline" color="text.secondary" sx={{ fontWeight: 700 }}>
-        Variants · {cfg.variants.length}
-      </Typography>
-      <Stack spacing={1.5} sx={{ mt: 1 }}>
-        {cfg.variants.map((v, i) => (
-          <MotionStack key={v.key} delay={i * 0.06}>
-            <HoverCard sx={{ p: 2.5 }}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, flexWrap: "wrap" }}>
-                <Typography fontWeight={700}>{v.label}</Typography>
-                <Typography variant="caption" color="text.secondary" sx={{ fontFamily: "monospace" }}>
-                  {v.key}
-                </Typography>
-                <Chip
-                  size="small"
-                  label={v.config.engine}
-                  sx={{
-                    height: 22,
-                    fontWeight: 600,
-                    bgcolor: v.config.engine === "qwen" ? "#eef2ff" : "#ecfdf5",
-                    color: v.config.engine === "qwen" ? "#4338ca" : "#047857",
-                  }}
-                />
-                <Box sx={{ flexGrow: 1 }} />
-                <Chip
-                  size="small"
-                  label={`${Math.round(v.allocation * 100)}%`}
-                  sx={{ height: 22, fontWeight: 700, bgcolor: alpha(VIOLET, 0.1), color: VIOLET }}
-                />
-              </Box>
+                <Stack direction="row" spacing={1.5} sx={{ mt: 2 }}>
+                  <StatPill
+                    icon={<Users sx={{ fontSize: 16 }} />}
+                    label="students"
+                    value={groups ? (groups[v.key]?.length ?? 0) : counts[v.key] ?? 0}
+                  />
+                  <StatPill icon={<MessageSquare sx={{ fontSize: 16 }} />} label="chats" value={interactions[v.key] ?? 0} />
+                </Stack>
 
-              <Stack direction="row" spacing={1.5} sx={{ mt: 2 }}>
-                <StatPill
-                  icon={<Users sx={{ fontSize: 16 }} />}
-                  label="students"
-                  value={groups ? (groups[v.key]?.length ?? 0) : counts[v.key] ?? 0}
-                />
-                <StatPill icon={<MessageSquare sx={{ fontSize: 16 }} />} label="chats" value={interactions[v.key] ?? 0} />
-              </Stack>
+                {groups && (
+                  <Accordion disableGutters elevation={0} sx={accordionSx}>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 1, width: "100%", pr: 1 }}>
+                        <Users sx={{ fontSize: 16, color: VIOLET }} />
+                        <Typography variant="body2" sx={{
+                          fontWeight: 600
+                        }}>
+                          Students in this group
+                        </Typography>
+                        <Box sx={{ flexGrow: 1 }} />
+                        <Chip
+                          size="small"
+                          label={`${groups[v.key]?.length ?? 0} students`}
+                          sx={{ height: 22, fontWeight: 600, bgcolor: alpha(VIOLET, 0.08), color: VIOLET }}
+                        />
+                      </Box>
+                    </AccordionSummary>
+                    <AccordionDetails sx={{ pt: 0 }}>
+                      {(groups[v.key]?.length ?? 0) > 0 ? (
+                        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                          {groups[v.key].map((email) => (
+                            <Chip key={email} size="small" variant="outlined" label={email} sx={{ height: 22 }} />
+                          ))}
+                        </Box>
+                      ) : (
+                        <Typography variant="body2" sx={{
+                          color: "text.secondary"
+                        }}>
+                          No students
+                        </Typography>
+                      )}
+                    </AccordionDetails>
+                  </Accordion>
+                )}
 
-              {groups && (
                 <Accordion disableGutters elevation={0} sx={accordionSx}>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1, width: "100%", pr: 1 }}>
-                      <Users sx={{ fontSize: 16, color: VIOLET }} />
-                      <Typography variant="body2" fontWeight={600}>
-                        Students in this group
+                      <MessageSquare sx={{ fontSize: 16, color: VIOLET }} />
+                      <Typography variant="body2" sx={{
+                        fontWeight: 600
+                      }}>
+                        System prompt
                       </Typography>
                       <Box sx={{ flexGrow: 1 }} />
-                      <Chip
-                        size="small"
-                        label={`${groups[v.key]?.length ?? 0} students`}
-                        sx={{ height: 22, fontWeight: 600, bgcolor: alpha(VIOLET, 0.08), color: VIOLET }}
-                      />
+                      {(() => {
+                        const n = customizedCount(v);
+                        return (
+                          <Chip
+                            size="small"
+                            label={n ? "Customized" : "Using default"}
+                            sx={{
+                              height: 22,
+                              fontWeight: 600,
+                              bgcolor: n ? alpha(VIOLET, 0.1) : "action.hover",
+                              color: n ? VIOLET : "text.secondary",
+                            }}
+                          />
+                        );
+                      })()}
                     </Box>
                   </AccordionSummary>
                   <AccordionDetails sx={{ pt: 0 }}>
-                    {(groups[v.key]?.length ?? 0) > 0 ? (
-                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                        {groups[v.key].map((email) => (
-                          <Chip key={email} size="small" variant="outlined" label={email} sx={{ height: 22 }} />
-                        ))}
-                      </Box>
-                    ) : (
-                      <Typography variant="body2" color="text.secondary">
-                        No students
-                      </Typography>
-                    )}
+                    <Stack spacing={2}>
+                      {PROMPT_FIELDS.map((f) => {
+                        const value = v.config.systemPrompts?.[f.key] || "";
+                        const isCustom = defaults
+                          ? value !== (defaults[f.key] || "")
+                          : false;
+                        return (
+                          <Box key={f.key}>
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, mb: 0.75 }}>
+                              <Typography variant="caption" sx={{
+                                fontWeight: 700
+                              }}>
+                                {f.label}
+                              </Typography>
+                              <Typography variant="caption" sx={{
+                                color: "text.secondary"
+                              }}>
+                                · {f.caption}
+                              </Typography>
+                              <Box sx={{ flexGrow: 1 }} />
+                              <Chip
+                                size="small"
+                                label={isCustom ? "Customized" : "Default"}
+                                sx={{
+                                  height: 18,
+                                  fontSize: 10,
+                                  fontWeight: 600,
+                                  bgcolor: isCustom ? alpha(VIOLET, 0.1) : "action.hover",
+                                  color: isCustom ? VIOLET : "text.secondary",
+                                }}
+                              />
+                            </Box>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                whiteSpace: "pre-wrap",
+                                p: 1.25,
+                                borderRadius: 2,
+                                bgcolor: "#fff",
+                                border: `1px solid ${alpha(VIOLET, isCustom ? 0.25 : 0.08)}`,
+                                fontSize: 13,
+                                lineHeight: 1.5,
+                                color: value ? "text.primary" : "text.disabled",
+                              }}
+                            >
+                              {value || "(empty — class default applies)"}
+                            </Typography>
+                          </Box>
+                        );
+                      })}
+                    </Stack>
                   </AccordionDetails>
                 </Accordion>
-              )}
+              </HoverCard>
+            </MotionStack>
+          ))}
+        </Stack>
 
-              <Accordion disableGutters elevation={0} sx={accordionSx}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1, width: "100%", pr: 1 }}>
-                    <MessageSquare sx={{ fontSize: 16, color: VIOLET }} />
-                    <Typography variant="body2" fontWeight={600}>
-                      System prompt
-                    </Typography>
-                    <Box sx={{ flexGrow: 1 }} />
-                    {(() => {
-                      const n = customizedCount(v);
-                      return (
-                        <Chip
-                          size="small"
-                          label={n ? "Customized" : "Using default"}
-                          sx={{
-                            height: 22,
-                            fontWeight: 600,
-                            bgcolor: n ? alpha(VIOLET, 0.1) : "action.hover",
-                            color: n ? VIOLET : "text.secondary",
-                          }}
-                        />
-                      );
-                    })()}
-                  </Box>
-                </AccordionSummary>
-                <AccordionDetails sx={{ pt: 0 }}>
-                  <Stack spacing={2}>
-                    {PROMPT_FIELDS.map((f) => {
-                      const value = v.config.systemPrompts?.[f.key] || "";
-                      const isCustom = defaults
-                        ? value !== (defaults[f.key] || "")
-                        : false;
-                      return (
-                        <Box key={f.key}>
-                          <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, mb: 0.75 }}>
-                            <Typography variant="caption" fontWeight={700}>
-                              {f.label}
-                            </Typography>
-                            <Typography variant="caption" color="text.secondary">
-                              · {f.caption}
-                            </Typography>
-                            <Box sx={{ flexGrow: 1 }} />
-                            <Chip
-                              size="small"
-                              label={isCustom ? "Customized" : "Default"}
-                              sx={{
-                                height: 18,
-                                fontSize: 10,
-                                fontWeight: 600,
-                                bgcolor: isCustom ? alpha(VIOLET, 0.1) : "action.hover",
-                                color: isCustom ? VIOLET : "text.secondary",
-                              }}
-                            />
-                          </Box>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              whiteSpace: "pre-wrap",
-                              p: 1.25,
-                              borderRadius: 2,
-                              bgcolor: "#fff",
-                              border: `1px solid ${alpha(VIOLET, isCustom ? 0.25 : 0.08)}`,
-                              fontSize: 13,
-                              lineHeight: 1.5,
-                              color: value ? "text.primary" : "text.disabled",
-                            }}
-                          >
-                            {value || "(empty — class default applies)"}
-                          </Typography>
-                        </Box>
-                      );
-                    })}
-                  </Stack>
-                </AccordionDetails>
-              </Accordion>
-            </HoverCard>
-          </MotionStack>
-        ))}
-      </Stack>
-
-      <ExperimentAssistant />
-    </Box>
+        <ExperimentAssistant />
+      </Box>
     </ExperimentTheme>
   );
 };

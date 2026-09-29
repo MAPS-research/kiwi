@@ -1,21 +1,15 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { StudentService } from './student.service';
 import { LlmService } from 'src/common/llm/llm.service';
 import { UserSessionService } from 'src/common/database/user-session.service';
 import { ClassService } from 'src/class/class.service';
-import { ChatService } from 'src/common/chat/chat.service';
 import { UserService } from 'src/common/database/user.service';
-import { InteractionService } from 'src/interaction/interaction.service';
-import { DocumentService } from 'src/document/document.service';
 import { MaterialPersonalizationService } from './material-personalization/material-personalization.service';
-import { KeywordService } from 'src/common/database/keyword.service';
 import { ToolRegistryService } from 'src/common/tools/tool-registry.service';
-import { AgentLoopService } from 'src/common/agent/agent-loop.service';
 import { UserInteractionService } from 'src/common/database/user-interaction.service';
-import { ExperimentService } from 'src/experiment/experiment.service';
+
 import { KiwiAppService } from 'src/kiwi-app/kiwi-app.service';
 import { ConversationHistoryService } from 'src/common/context/conversation-history.service';
-import { ConversationService } from 'src/common/context/conversation.service';
+
 import { createStudentServiceHarness } from './student-service.harness';
 import { CONTEXT_BUDGET } from 'src/common/context/context-budget';
 import { UNIFIED_SYSTEM_PROMPTS } from 'src/student/student.prompts';
@@ -27,14 +21,9 @@ describe('StudentService', () => {
   let userSessionService: jest.Mocked<UserSessionService>;
   let classService: jest.Mocked<ClassService>;
   let kiwiAppService: jest.Mocked<KiwiAppService>;
-  let chatService: jest.Mocked<ChatService>;
   let userService: jest.Mocked<UserService>;
-  let interactionService: jest.Mocked<InteractionService>;
-  let documentService: jest.Mocked<DocumentService>;
   let materialPersonalizationService: jest.Mocked<MaterialPersonalizationService>;
-  let keywordService: jest.Mocked<KeywordService>;
   let toolRegistryService: jest.Mocked<ToolRegistryService>;
-  let agentLoopService: jest.Mocked<AgentLoopService>;
   let userInteractionService: jest.Mocked<UserInteractionService>;
   let conversationHistoryService: jest.Mocked<ConversationHistoryService>;
 
@@ -49,14 +38,9 @@ describe('StudentService', () => {
     classService = h.classService;
     kiwiAppService = h.kiwiAppService;
     conversationHistoryService = h.conversationHistoryService;
-    chatService = h.chatService;
     userService = h.userService;
-    interactionService = h.interactionService;
-    documentService = h.documentService;
     materialPersonalizationService = h.materialPersonalizationService;
-    keywordService = h.keywordService;
     toolRegistryService = h.toolRegistryService;
-    agentLoopService = h.agentLoopService;
     userInteractionService = h.userInteractionService;
   });
 
@@ -138,7 +122,9 @@ describe('StudentService', () => {
 
       expect(result.page).toBe(1);
       expect(result.limit).toBe(20);
-      expect(userInteractionService.userInteractionsWithServerActions).toHaveBeenCalledWith({
+      expect(
+        userInteractionService.userInteractionsWithServerActions,
+      ).toHaveBeenCalledWith({
         where: {
           userId,
           type: {
@@ -159,7 +145,10 @@ describe('StudentService', () => {
         mockInteractions,
       );
 
-      const result = await service.getChatHistory(userId, { page: 2, limit: 10 });
+      const result = await service.getChatHistory(userId, {
+        page: 2,
+        limit: 10,
+      });
 
       expect(result.page).toBe(2);
       expect(result.limit).toBe(10);
@@ -180,9 +169,13 @@ describe('StudentService', () => {
         mockInteractions,
       );
 
-      await service.getChatHistory(userId, { interactionType: 'exercise_chat' });
+      await service.getChatHistory(userId, {
+        interactionType: 'exercise_chat',
+      });
 
-      expect(userInteractionService.userInteractionsWithServerActions).toHaveBeenCalledWith({
+      expect(
+        userInteractionService.userInteractionsWithServerActions,
+      ).toHaveBeenCalledWith({
         where: {
           userId,
           type: { equals: 'exercise_chat' },
@@ -200,7 +193,9 @@ describe('StudentService', () => {
 
       // stringTag is empty on most chat interactions, so a conversationId is
       // usually the interaction id — the query matches either.
-      expect(userInteractionService.userInteractionsWithServerActions).toHaveBeenCalledWith({
+      expect(
+        userInteractionService.userInteractionsWithServerActions,
+      ).toHaveBeenCalledWith({
         where: expect.objectContaining({
           OR: [{ stringTag: 'conv-1' }, { id: 'conv-1' }],
         }),
@@ -218,7 +213,9 @@ describe('StudentService', () => {
 
       await service.getChatHistory(userId, { startDate, endDate });
 
-      expect(userInteractionService.userInteractionsWithServerActions).toHaveBeenCalledWith({
+      expect(
+        userInteractionService.userInteractionsWithServerActions,
+      ).toHaveBeenCalledWith({
         where: expect.objectContaining({
           timestamp: {
             gte: startDate,
@@ -242,7 +239,9 @@ describe('StudentService', () => {
         startDate,
       });
 
-      expect(userInteractionService.userInteractionsWithServerActions).toHaveBeenCalledWith({
+      expect(
+        userInteractionService.userInteractionsWithServerActions,
+      ).toHaveBeenCalledWith({
         where: {
           userId,
           type: { equals: 'exercise_chat' },
@@ -269,7 +268,10 @@ describe('StudentService', () => {
         manyInteractions,
       );
 
-      const result = await service.getChatHistory(userId, { page: 1, limit: 10 });
+      const result = await service.getChatHistory(userId, {
+        page: 1,
+        limit: 10,
+      });
 
       expect(result.total).toBe(25);
       expect(result.totalPages).toBe(3);
@@ -277,18 +279,26 @@ describe('StudentService', () => {
       expect(result.hasPrevious).toBe(false);
 
       // Test page 2
-      const result2 = await service.getChatHistory(userId, { page: 2, limit: 10 });
+      const result2 = await service.getChatHistory(userId, {
+        page: 2,
+        limit: 10,
+      });
       expect(result2.hasNext).toBe(true);
       expect(result2.hasPrevious).toBe(true);
 
       // Test last page
-      const result3 = await service.getChatHistory(userId, { page: 3, limit: 10 });
+      const result3 = await service.getChatHistory(userId, {
+        page: 3,
+        limit: 10,
+      });
       expect(result3.hasNext).toBe(false);
       expect(result3.hasPrevious).toBe(true);
     });
 
     it('should return empty results for user with no history', async () => {
-      userInteractionService.userInteractionsWithServerActions.mockResolvedValue([]);
+      userInteractionService.userInteractionsWithServerActions.mockResolvedValue(
+        [],
+      );
 
       const result = await service.getChatHistory(userId);
 
@@ -308,7 +318,9 @@ describe('StudentService', () => {
 
       // Should have messages from both interaction patterns
       const userMessages = result.messages.filter((m) => m.role === 'user');
-      const assistantMessages = result.messages.filter((m) => m.role === 'assistant');
+      const assistantMessages = result.messages.filter(
+        (m) => m.role === 'assistant',
+      );
 
       expect(userMessages.length).toBeGreaterThan(0);
       expect(assistantMessages.length).toBeGreaterThan(0);
@@ -356,40 +368,42 @@ describe('StudentService', () => {
     });
 
     it('flags agent-loop-step narration as intermediate and keeps the final answer (#139, #108)', async () => {
-      userInteractionService.userInteractionsWithServerActions.mockResolvedValue([
-        {
-          id: 'i1',
-          userId,
-          type: 'frontend-interaction-chat',
-          stringTag: 'conv-1',
-          timestamp: new Date('2024-01-01T00:00:00Z'),
-          context: { content: { prompt: 'take me to admin' } },
-          serverActions: [
-            {
-              id: 'a-final',
-              type: 'agent-loop-complete',
-              botResponse: 'You are on the admin page now.',
-              timestamp: new Date('2024-01-01T00:00:02Z'),
-              engineChoice: 'openai',
-            },
-            {
-              id: 'a-step',
-              type: 'agent-loop-step',
-              botResponse: "I'll navigate there for you.",
-              timestamp: new Date('2024-01-01T00:00:01Z'),
-              engineChoice: 'openai',
-            },
-            // Snapshot rows carry no botResponse and must not surface at all.
-            {
-              id: 'a-snapshot',
-              type: 'chat-context-snapshot',
-              botResponse: '',
-              timestamp: new Date('2024-01-01T00:00:01Z'),
-              engineChoice: 'openai',
-            },
-          ],
-        },
-      ] as any);
+      userInteractionService.userInteractionsWithServerActions.mockResolvedValue(
+        [
+          {
+            id: 'i1',
+            userId,
+            type: 'frontend-interaction-chat',
+            stringTag: 'conv-1',
+            timestamp: new Date('2024-01-01T00:00:00Z'),
+            context: { content: { prompt: 'take me to admin' } },
+            serverActions: [
+              {
+                id: 'a-final',
+                type: 'agent-loop-complete',
+                botResponse: 'You are on the admin page now.',
+                timestamp: new Date('2024-01-01T00:00:02Z'),
+                engineChoice: 'openai',
+              },
+              {
+                id: 'a-step',
+                type: 'agent-loop-step',
+                botResponse: "I'll navigate there for you.",
+                timestamp: new Date('2024-01-01T00:00:01Z'),
+                engineChoice: 'openai',
+              },
+              // Snapshot rows carry no botResponse and must not surface at all.
+              {
+                id: 'a-snapshot',
+                type: 'chat-context-snapshot',
+                botResponse: '',
+                timestamp: new Date('2024-01-01T00:00:01Z'),
+                engineChoice: 'openai',
+              },
+            ],
+          },
+        ] as any,
+      );
 
       const result = await service.getChatHistory(userId, {});
       const assistant = result.messages.filter((m) => m.role === 'assistant');
@@ -398,7 +412,9 @@ describe('StudentService', () => {
         expect.arrayContaining(['a-step', 'a-final']),
       );
       expect(assistant.find((m) => m.id === 'a-snapshot')).toBeUndefined();
-      expect(assistant.find((m) => m.id === 'a-step')!.isIntermediate).toBe(true);
+      expect(assistant.find((m) => m.id === 'a-step')!.isIntermediate).toBe(
+        true,
+      );
       // The real answer must NOT be flagged, or clients would collapse it away.
       expect(
         assistant.find((m) => m.id === 'a-final')!.isIntermediate,
@@ -406,32 +422,34 @@ describe('StudentService', () => {
     });
 
     it('drops a narration step that merely repeats the final answer', async () => {
-      userInteractionService.userInteractionsWithServerActions.mockResolvedValue([
-        {
-          id: 'i1',
-          userId,
-          type: 'frontend-interaction-chat',
-          stringTag: 'conv-1',
-          timestamp: new Date('2024-01-01T00:00:00Z'),
-          context: {},
-          serverActions: [
-            {
-              id: 'a-step',
-              type: 'agent-loop-step',
-              botResponse: 'Same text.',
-              timestamp: new Date('2024-01-01T00:00:01Z'),
-              engineChoice: 'openai',
-            },
-            {
-              id: 'a-final',
-              type: 'agent-loop-complete',
-              botResponse: 'Same text.',
-              timestamp: new Date('2024-01-01T00:00:02Z'),
-              engineChoice: 'openai',
-            },
-          ],
-        },
-      ] as any);
+      userInteractionService.userInteractionsWithServerActions.mockResolvedValue(
+        [
+          {
+            id: 'i1',
+            userId,
+            type: 'frontend-interaction-chat',
+            stringTag: 'conv-1',
+            timestamp: new Date('2024-01-01T00:00:00Z'),
+            context: {},
+            serverActions: [
+              {
+                id: 'a-step',
+                type: 'agent-loop-step',
+                botResponse: 'Same text.',
+                timestamp: new Date('2024-01-01T00:00:01Z'),
+                engineChoice: 'openai',
+              },
+              {
+                id: 'a-final',
+                type: 'agent-loop-complete',
+                botResponse: 'Same text.',
+                timestamp: new Date('2024-01-01T00:00:02Z'),
+                engineChoice: 'openai',
+              },
+            ],
+          },
+        ] as any,
+      );
 
       const result = await service.getChatHistory(userId, {});
       const assistant = result.messages.filter((m) => m.role === 'assistant');
@@ -468,7 +486,9 @@ describe('StudentService', () => {
       );
 
       const result = await service.getChatHistory(userId);
-      const assistantMessage = result.messages.find((m) => m.role === 'assistant');
+      const assistantMessage = result.messages.find(
+        (m) => m.role === 'assistant',
+      );
 
       expect(assistantMessage).toBeDefined();
       expect(assistantMessage?.content).toBe('Hi there! How can I help?');
@@ -556,14 +576,18 @@ describe('StudentService', () => {
       const result = await service.getChatHistory(userId);
 
       // Messages should be sorted by timestamp descending
-      const timestamps = result.messages.map((m) => new Date(m.timestamp).getTime());
+      const timestamps = result.messages.map((m) =>
+        new Date(m.timestamp).getTime(),
+      );
       for (let i = 0; i < timestamps.length - 1; i++) {
         expect(timestamps[i]).toBeGreaterThanOrEqual(timestamps[i + 1]);
       }
     });
 
     it('should handle empty interactions', async () => {
-      userInteractionService.userInteractionsWithServerActions.mockResolvedValue([]);
+      userInteractionService.userInteractionsWithServerActions.mockResolvedValue(
+        [],
+      );
 
       const result = await service.getChatHistory(userId);
 
@@ -602,7 +626,9 @@ describe('StudentService', () => {
 
       const result = await service.getChatHistory(userId);
       const userMessage = result.messages.find((m) => m.role === 'user');
-      const assistantMessage = result.messages.find((m) => m.role === 'assistant');
+      const assistantMessage = result.messages.find(
+        (m) => m.role === 'assistant',
+      );
 
       expect(userMessage?.metadata?.pdfId).toBe('test-pdf');
       expect(userMessage?.metadata?.classId).toBe('test-class');
@@ -615,46 +641,52 @@ describe('StudentService', () => {
   // ==========================================================================
 
   describe('inferChatType (tested via service behavior)', () => {
-    // Since inferChatType is private, we test its effects through public methods
-    // The method is used in unifiedChat and we can verify behavior by checking
-    // what system prompts and tools are selected
-
     it('should handle exercises tab correctly', async () => {
       // The inferChatType method returns 'codegen' when activeTab='exercises'
       // This is verified by the test patterns
-      const environment = { activeTab: 'exercises' };
+      const environment = { activeTab: 'exercises' } as const;
       const hasCodegenContext = false;
 
       // The expected result is 'codegen'
-      // We can verify this by checking that the service exists
-      expect(service).toBeDefined();
+      expect(service['inferChatType'](environment, hasCodegenContext)).toBe(
+        'codegen',
+      );
     });
 
     it('should handle codegen context correctly', async () => {
       // The inferChatType method returns 'codegen' when hasCodegenContext=true
-      const environment = { activeTab: 'materials' };
+      const environment = { activeTab: 'materials' } as const;
       const hasCodegenContext = true;
 
       // Expected result is 'codegen'
-      expect(service).toBeDefined();
+      expect(service['inferChatType'](environment, hasCodegenContext)).toBe(
+        'codegen',
+      );
     });
 
     it('should default to pdf for materials/chat/dashboard tabs', async () => {
       // The inferChatType method returns 'pdf' for other tabs
-      const environment = { activeTab: 'materials' };
+      const environment = { activeTab: 'materials' } as const;
       const hasCodegenContext = false;
 
       // Expected result is 'pdf'
-      expect(service).toBeDefined();
+      expect(service['inferChatType'](environment, hasCodegenContext)).toBe(
+        'pdf',
+      );
     });
 
     it('should handle app tab with codegen app', async () => {
       // The inferChatType method returns 'codegen' when on app tab with codegen app
-      const environment = { activeTab: 'app', activeAppSlug: 'codegen' };
+      const environment = {
+        activeTab: 'app',
+        activeAppSlug: 'codegen',
+      } as const;
       const hasCodegenContext = false;
 
       // Expected result is 'codegen'
-      expect(service).toBeDefined();
+      expect(service['inferChatType'](environment, hasCodegenContext)).toBe(
+        'codegen',
+      );
     });
   });
 
@@ -677,7 +709,9 @@ describe('StudentService', () => {
         },
       } as any);
 
-      materialPersonalizationService.getUserPersonalizations.mockResolvedValue([]);
+      materialPersonalizationService.getUserPersonalizations.mockResolvedValue(
+        [],
+      );
     });
 
     // Helper: build the system prompt and flatten all system messages into one
@@ -818,7 +852,11 @@ describe('StudentService', () => {
     it('applies the guidance guardrail when the app requests tutoringMode=guidance', async () => {
       const text = await buildPromptText(
         { activeTab: 'app', activeAppSlug: 'codegen' },
-        { appSlug: 'codegen', tutoringMode: 'guidance', appContext: 'working on problem 3' },
+        {
+          appSlug: 'codegen',
+          tutoringMode: 'guidance',
+          appContext: 'working on problem 3',
+        },
       );
 
       // App Mode is still applied...
@@ -870,7 +908,9 @@ describe('StudentService', () => {
     });
 
     it('omits the personalization block entirely when there is no profile', async () => {
-      materialPersonalizationService.getRollingProfileBlock.mockResolvedValue(null);
+      materialPersonalizationService.getRollingProfileBlock.mockResolvedValue(
+        null,
+      );
 
       const text = await buildPromptText({ activeTab: 'materials' });
       expect(text).not.toContain('Student personalization information');
@@ -897,7 +937,9 @@ describe('StudentService', () => {
         id: 'class-1',
         classMetadata: { className: 'Test Class' },
       } as any);
-      materialPersonalizationService.getUserPersonalizations.mockResolvedValue([]);
+      materialPersonalizationService.getUserPersonalizations.mockResolvedValue(
+        [],
+      );
       toolRegistryService.getToolsForClass.mockResolvedValue([
         { type: 'function', function: { name: 'rag' } },
       ] as any);
@@ -1005,11 +1047,14 @@ describe('StudentService', () => {
 
       const { messages } = await assemble({ conversation });
       const replayed = messages.filter(
-        (m: any) => typeof m.content === 'string' && /^turn \d+/.test(m.content),
+        (m: any) =>
+          typeof m.content === 'string' && /^turn \d+/.test(m.content),
       );
 
       expect(replayed.length).toBeLessThanOrEqual(200);
-      replayed.forEach((m: any) => expect(m.content.length).toBeLessThanOrEqual(4000));
+      replayed.forEach((m: any) =>
+        expect(m.content.length).toBeLessThanOrEqual(4000),
+      );
       // The NEWEST turns survive — they carry the thread of the conversation.
       expect(replayed[replayed.length - 1].content).toMatch(/^turn 259/);
     });
@@ -1242,7 +1287,9 @@ describe('StudentService', () => {
           ],
         });
 
-        const [earlier, latest] = messages.filter((m: any) => m.role === 'tool');
+        const [earlier, latest] = messages.filter(
+          (m: any) => m.role === 'tool',
+        );
         expect(earlier.content).toHaveLength(
           CONTEXT_BUDGET.maxEarlierToolResultChars,
         );
@@ -1298,9 +1345,9 @@ describe('StudentService', () => {
       it('still reports a genuinely duplicated block', async () => {
         // The repeat-group exemption must stay narrow: it covers history and
         // the trail pair, and nothing else.
-        expect(checkBlockOrder(['stable-head', 'prompt', 'environment'])).toEqual(
-          ['"environment" appears after "prompt"'],
-        );
+        expect(
+          checkBlockOrder(['stable-head', 'prompt', 'environment']),
+        ).toEqual(['"environment" appears after "prompt"']);
       });
 
       it('still resumes an older client that sends only the latest step', async () => {
@@ -1339,7 +1386,9 @@ describe('StudentService', () => {
       const rendered = messages
         .map((m: any) => String(m.content ?? ''))
         .join('\n');
-      expect(rendered).toContain('The student is stuck on recursion base cases.');
+      expect(rendered).toContain(
+        'The student is stuck on recursion base cases.',
+      );
     });
 
     it('drops the client summary once the server actually has history', async () => {
@@ -1361,7 +1410,9 @@ describe('StudentService', () => {
         .map((m: any) => String(m.content ?? ''))
         .join('\n');
       expect(rendered).toContain('Server-owned summary.');
-      expect(rendered).not.toContain('Client-side summary that must not survive.');
+      expect(rendered).not.toContain(
+        'Client-side summary that must not survive.',
+      );
     });
 
     it('still honours guidance from an app the class has not registered', async () => {
@@ -1511,7 +1562,7 @@ describe('StudentService', () => {
       const { messages } = await assemble({ clientToolTrail });
       const liveLabels = messages
         .map(
-          (m: any, i: number) =>
+          (m: any, _i: number) =>
             (m.role === 'tool' && 'resume-tool-result') ||
             (m.role === 'assistant' && m.tool_calls && 'resume-tool-call') ||
             null,
@@ -1592,7 +1643,11 @@ describe('StudentService', () => {
   // ==========================================================================
 
   describe('getModeReminder', () => {
-    const reminderFor = (pdf?: any, codegen?: any, app?: any): string | undefined =>
+    const reminderFor = (
+      pdf?: any,
+      codegen?: any,
+      app?: any,
+    ): string | undefined =>
       (service as any).getModeReminder(pdf, codegen, app);
 
     it('re-states the guidance prohibitions when the app requests tutoringMode=guidance', () => {
@@ -1622,7 +1677,9 @@ describe('StudentService', () => {
     });
 
     it('stays silent for unguarded contexts', () => {
-      expect(reminderFor(undefined, undefined, { appSlug: 'codegen' })).toBeUndefined();
+      expect(
+        reminderFor(undefined, undefined, { appSlug: 'codegen' }),
+      ).toBeUndefined();
       expect(reminderFor(undefined, { problemId: 'p1' })).toBeUndefined();
       expect(reminderFor({ materialType: 'classMaterials' })).toBeUndefined();
       expect(reminderFor()).toBeUndefined();
@@ -1667,7 +1724,9 @@ describe('StudentService', () => {
       // to back it up. The material decides a guarded mode; the request body
       // does not get a vote.
       expect(
-        reminderFor({ materialType: 'recitation' }, undefined, { appSlug: 'flashcards' }),
+        reminderFor({ materialType: 'recitation' }, undefined, {
+          appSlug: 'flashcards',
+        }),
       ).toContain('Recitation Mode is still in force');
     });
   });
@@ -1682,12 +1741,16 @@ describe('StudentService', () => {
         { classId: 'class-1', role: 'student' },
         { classId: 'class-2', role: 'professor' },
       ];
-      classService.getEnrollmentsPerUser.mockResolvedValue(mockEnrollments as any);
+      classService.getEnrollmentsPerUser.mockResolvedValue(
+        mockEnrollments as any,
+      );
 
       const result = await service.getEnrollments('user-123');
 
       expect(result).toEqual(mockEnrollments);
-      expect(classService.getEnrollmentsPerUser).toHaveBeenCalledWith('user-123');
+      expect(classService.getEnrollmentsPerUser).toHaveBeenCalledWith(
+        'user-123',
+      );
     });
   });
 
@@ -1707,10 +1770,9 @@ describe('StudentService', () => {
 
       expect(result.summary).toBe('Summary: A greeting conversation');
       expect(llmService.createChat).toHaveBeenCalled();
-      expect(userSessionService.incrementUserSessionTokensUsed).toHaveBeenCalledWith(
-        'session-123',
-        50,
-      );
+      expect(
+        userSessionService.incrementUserSessionTokensUsed,
+      ).toHaveBeenCalledWith('session-123', 50);
     });
   });
 

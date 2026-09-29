@@ -85,7 +85,9 @@ export function loadContextWindowTable(get: ConfigGetter): ContextWindowTable {
   }
 
   const table: ContextWindowTable = { ...DEFAULT_MODEL_CONTEXT_WINDOWS };
-  for (const [model, value] of Object.entries(parsed as Record<string, unknown>)) {
+  for (const [model, value] of Object.entries(
+    parsed as Record<string, unknown>,
+  )) {
     if (typeof value === 'number' && Number.isFinite(value) && value > 0) {
       table[model] = value;
     }
@@ -110,7 +112,10 @@ export function lookupContextWindow(
 
   let bestKey: string | null = null;
   for (const key of Object.keys(table)) {
-    if (model.startsWith(`${key}-`) && (!bestKey || key.length > bestKey.length)) {
+    if (
+      model.startsWith(`${key}-`) &&
+      (!bestKey || key.length > bestKey.length)
+    ) {
       bestKey = key;
     }
   }
@@ -129,13 +134,21 @@ export function lookupContextWindow(
  */
 export function isContextOverflowError(error: unknown): boolean {
   const err = error as
-    | { code?: unknown; status?: unknown; message?: unknown; error?: { code?: unknown; message?: unknown } }
+    | {
+        code?: unknown;
+        status?: unknown;
+        message?: unknown;
+        error?: { code?: unknown; message?: unknown };
+      }
     | null
     | undefined;
   if (!err) return false;
 
   const code = String(err.code ?? err.error?.code ?? '');
-  if (code === 'context_length_exceeded' || code === 'string_above_max_length') {
+  if (
+    code === 'context_length_exceeded' ||
+    code === 'string_above_max_length'
+  ) {
     return true;
   }
 

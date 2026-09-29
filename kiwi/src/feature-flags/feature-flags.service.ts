@@ -4,7 +4,7 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
-import { Feature } from 'src/common/database/database.types';
+import type { Feature } from '@prisma/client';
 import { FeatureFlagService as FeatureFlagsDatabaseService } from 'src/common/database/feature-flags.service';
 import {
   AddFeatureRequest,

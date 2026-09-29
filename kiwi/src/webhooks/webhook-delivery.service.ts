@@ -23,7 +23,7 @@ export class WebhookDeliveryService extends WorkerHost {
       this.logger.log(`Payload: ${JSON.stringify(payload)}`);
 
       // Simulate processing
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Update delivery status to success
       await this.databaseService.webhookDelivery.update({
@@ -42,7 +42,7 @@ export class WebhookDeliveryService extends WorkerHost {
       return { success: true };
     } catch (error) {
       this.logger.error(`Failed to deliver webhook ${deliveryId}:`, error);
-      
+
       // Update delivery status to failed
       await this.databaseService.webhookDelivery.update({
         where: { id: deliveryId },

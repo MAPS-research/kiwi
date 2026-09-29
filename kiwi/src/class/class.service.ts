@@ -14,7 +14,7 @@ import { EngineChoice } from 'src/common/llm/interfaces/engine-config';
 import { PendingEnrollmentService } from 'src/common/database/pending-enrollment.service';
 import { StorageService } from 'src/common/storage/storage.service';
 import { ClassMetadata } from './interfaces/class-metadata.interface';
-import { v4 as uuid } from 'uuid';
+import { randomUUID } from 'node:crypto';
 
 @Injectable()
 export class ClassService {
@@ -40,7 +40,7 @@ export class ClassService {
    * create or edit a class" instead.
    */
   async uploadClassImage(file: Express.Multer.File) {
-    const { key } = await this.storageService.uploadFile(file, uuid());
+    const { key } = await this.storageService.uploadFile(file, randomUUID());
 
     this.logger.debug(`Stored class image ${file.originalname} as ${key}`);
 
@@ -476,7 +476,9 @@ export class ClassService {
     // 2) One document per material: the student copy, or nothing.
     const res = await Promise.all(
       materials.map(async (m) => {
-        const chosen = await this.materialAccessService.getStudentDocument(m.id);
+        const chosen = await this.materialAccessService.getStudentDocument(
+          m.id,
+        );
         if (!chosen) return null;
 
         return {

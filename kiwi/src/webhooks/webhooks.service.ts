@@ -121,7 +121,7 @@ export class WebhooksService {
     }
 
     // Don't return the secret
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     const { secret, ...webhookData } = webhook;
     return webhookData;
   }

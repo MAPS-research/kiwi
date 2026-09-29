@@ -9,7 +9,6 @@ import {
   Param,
   Patch,
   Post,
-  Query,
   Req,
   Session,
   UploadedFile,
@@ -48,10 +47,7 @@ import {
 } from './dto/chunk-request.dto';
 import { QueryRequest, QueryResponse } from './dto/query-request.dto';
 import { DescribeResponse } from './dto/describe-response.dto';
-import {
-  DocumentListResponse,
-  GetDocumentResponse,
-} from './dto/document-response.dto';
+import { GetDocumentResponse } from './dto/document-response.dto';
 import { MigrateResponse } from './dto/migrate-response.dto';
 import { DocumentDeleteRequestDto } from './dto/document-delete-request.dto';
 import { SetDocumentFlagsDto } from './dto/set-document-flags.dto';
@@ -426,7 +422,10 @@ export class DocumentController {
     @Param('id') documentId: string,
     @Session() session: { userId: string },
   ) {
-    return this.documentService.listDocumentComments(documentId, session.userId);
+    return this.documentService.listDocumentComments(
+      documentId,
+      session.userId,
+    );
   }
 
   @HttpCode(HttpStatus.OK)
@@ -526,7 +525,10 @@ export class DocumentController {
     @Param('id') documentId: string,
     @Session() session: { userId: string },
   ) {
-    return this.documentService.listDocumentSummaries(documentId, session.userId);
+    return this.documentService.listDocumentSummaries(
+      documentId,
+      session.userId,
+    );
   }
 
   @HttpCode(HttpStatus.OK)

@@ -7,6 +7,7 @@ export class ClassAddRequest {
     description:
       'Class details including name, description, and optional system prompts',
     type: 'object',
+    additionalProperties: true,
     example: {
       name: 'Introduction to Computer Science',
       description: 'An introductory course to computer science concepts',

@@ -30,13 +30,13 @@ import {
   SendOutlined as SendIcon,
   GroupOutlined as GroupIcon,
   SchoolOutlined as SchoolIcon,
-  PersonOutline as PersonIcon,
+  PersonOutlined as PersonIcon,
 } from '@mui/icons-material';
 import EmailComposer, { EmailData } from '../../components/Email/EmailComposer.tsx';
 import TemplatedEmailForm from '../../components/Email/TemplatedEmailForm.tsx';
 import RecipientSelector from '../../components/Email/RecipientSelector.tsx';
 import apiClient, { emailApiClient } from '../../utils/api.ts';
-import { SendEmailDto, SendTemplatedEmailDto, ClassEmailRecipients, SendEmailToClassDto, SendTemplatedEmailDtoTemplateEnum, EmailRecipient } from '../../services/index.ts';
+import { SendEmailDto, SendTemplatedEmailDto, ClassEmailRecipients, SendEmailToClassDto, SendTemplatedEmailDtoTemplateEnum, EmailRecipient, PendingUser } from '../../services/index.ts';
 import { AdminPage, AdminPageHeader } from '../../components/AdminPage/index.ts';
 
 interface TabPanelProps {
@@ -149,7 +149,7 @@ const AdminEmail: React.FC = () => {
 
           return {
             classId: classId,
-            className: classInfo.className || classInfo.name || classId, // Try multiple fields and fallback to classId
+            className: classInfo.className || classId,
             classRoster: classRoster.users,
           };
         } catch (error) {
@@ -370,11 +370,14 @@ const AdminEmail: React.FC = () => {
                           />
                         </Box>
                       }
+                      slotProps={{ secondary: { component: "div" } }}
                       secondary={
                         <Box>
                           <Typography variant="body2">{user.role}</Typography>
                           {user.status === 'pending' && user.classIds && user.classIds.length > 0 && (
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography variant="caption" sx={{
+                              color: "text.secondary"
+                            }}>
                               Pending in {user.classIds.length} class{user.classIds.length > 1 ? 'es' : ''}
                             </Typography>
                           )}
@@ -421,11 +424,14 @@ const AdminEmail: React.FC = () => {
                             />
                           </Box>
                         }
+                        slotProps={{ secondary: { component: "div" } }}
                         secondary={
                           <Box>
                             <Typography variant="body2">{user.role}</Typography>
                             {user.classIds && user.classIds.length > 0 && (
-                              <Typography variant="caption" color="text.secondary">
+                              <Typography variant="caption" sx={{
+                                color: "text.secondary"
+                              }}>
                                 Classes: {user.classIds.join(', ')}
                               </Typography>
                             )}

@@ -10,7 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import { Readable } from 'stream';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import axios from 'axios';
-import * as FormData from 'form-data';
+import FormData from 'form-data';
 import { RedisService } from 'src/common/redis/redis.service';
 
 @Injectable()
@@ -51,7 +51,7 @@ export class StorageService {
     fileStream: Readable,
     targetUrl: string,
     userId: string,
-    headers: Record<string, string> = {},
+    _headers: Record<string, string> = {},
     estimated_content_length: string,
     key: string,
   ): Promise<{ message: string; status: number }> {
@@ -90,7 +90,7 @@ export class StorageService {
   async queryStreamUploadStatus(
     userId: string,
     targetUrl: string,
-    headers: Record<string, string> = {},
+    _headers: Record<string, string> = {},
   ): Promise<{ progress: string; message: string }> {
     try {
       console.log('Querying upload status...', targetUrl, userId);

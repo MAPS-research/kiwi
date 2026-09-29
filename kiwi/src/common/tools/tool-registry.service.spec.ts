@@ -13,13 +13,10 @@ describe('ToolRegistryService tool ordering determinism', () => {
     requiresOAuth: false,
   };
 
-  const buildService = (options: {
-    mcpTools?: any[];
-    systemRole?: string;
-  }) => {
-    const classMcpServerFindMany = jest.fn().mockResolvedValue([
-      { id: 'assignment-1', priority: 0, mcpServer },
-    ]);
+  const buildService = (options: { mcpTools?: any[]; systemRole?: string }) => {
+    const classMcpServerFindMany = jest
+      .fn()
+      .mockResolvedValue([{ id: 'assignment-1', priority: 0, mcpServer }]);
 
     const prisma = {
       classToolConfig: { findMany: jest.fn().mockResolvedValue([]) },
@@ -60,7 +57,7 @@ describe('ToolRegistryService tool ordering determinism', () => {
     );
   });
 
-  it('sorts each MCP server\'s tools by name', async () => {
+  it("sorts each MCP server's tools by name", async () => {
     const { service } = buildService({
       mcpTools: [
         { name: 'zeta', description: 'z', inputSchema: {} },
@@ -118,7 +115,7 @@ describe('ToolRegistryService tool ordering determinism', () => {
     ]);
   });
 
-  it('drops a failing server\'s tools but keeps the rest of the list intact', async () => {
+  it("drops a failing server's tools but keeps the rest of the list intact", async () => {
     const { service, mcpClient } = buildService({});
     mcpClient.listTools.mockRejectedValue(new Error('server down'));
 

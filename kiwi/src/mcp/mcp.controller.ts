@@ -20,11 +20,11 @@ import {
 import {
   JSONRPCRequest,
   JSONRPCResponse,
-  JSONRPCError,
+  JSONRPCErrorResponse as JSONRPCError,
   InitializeRequest,
   ReadResourceRequest,
   CallToolRequest,
-} from '@modelcontextprotocol/sdk/types.js';
+} from '@modelcontextprotocol/server';
 
 @ApiTags('MCP')
 @Controller('mcp')

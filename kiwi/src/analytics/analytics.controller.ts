@@ -164,7 +164,9 @@ export class AnalyticsController {
   async getUserTokenUsage(
     @Body() body: UserTokenUsageRequest,
   ): Promise<UserTokenUsageResponse> {
-    const sessions = await this.analyticsService.userTokenUsageDetails(body.userId);
+    const sessions = await this.analyticsService.userTokenUsageDetails(
+      body.userId,
+    );
 
     // Get user info
     const user = await this.database.user.findUnique({

@@ -17,14 +17,21 @@ import { UnstructuredService } from 'src/common/unstructured/unstructured.servic
 import { Chunk } from './dto/chunk-request.dto';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import { v4 as uuid, validate as validateUuid } from 'uuid';
+import { isUUID } from 'class-validator';
+import { randomUUID } from 'node:crypto';
 import { StorageService } from 'src/common/storage/storage.service';
 import { DatabaseService } from 'src/common/database/database.service';
 import { SetDocumentFlagsDto } from './dto/set-document-flags.dto';
 import { DocumentCommentService } from 'src/common/database/document-comment.service';
 import { DocumentSummaryService } from 'src/common/database/document-summary.service';
-import { CreateDocumentCommentDto, UpdateDocumentCommentVisibilityDto } from './dto/document-comment.dto';
-import { CreateDocumentSummaryDto, UpdateDocumentSummaryDto } from './dto/document-summary.dto';
+import {
+  CreateDocumentCommentDto,
+  UpdateDocumentCommentVisibilityDto,
+} from './dto/document-comment.dto';
+import {
+  CreateDocumentSummaryDto,
+  UpdateDocumentSummaryDto,
+} from './dto/document-summary.dto';
 import {
   AnnotationAudience,
   DocumentComment,
@@ -186,7 +193,7 @@ export class DocumentService {
     );
 
     // Create a uuid for the document
-    const documentId = uuid();
+    const documentId = randomUUID();
 
     const { key: documentKey } = await this.storageService.uploadFile(
       file,
@@ -227,7 +234,7 @@ export class DocumentService {
     classMaterialId: string,
     role?: DocumentRole,
   ) {
-    const documentId = uuid();
+    const documentId = randomUUID();
     const { key: documentKey } = await this.storageService.uploadFile(
       file,
       documentId,
@@ -275,7 +282,10 @@ export class DocumentService {
     });
     if (!existing) throw new NotFoundException('Document not found');
 
-    const { key: newKey } = await this.storageService.uploadFile(file, uuid());
+    const { key: newKey } = await this.storageService.uploadFile(
+      file,
+      randomUUID(),
+    );
 
     await this.db.document.update({
       where: { id: documentId },
@@ -335,7 +345,10 @@ export class DocumentService {
         select: { materialType: true },
       });
 
-      if (role === 'ANSWER' && material?.materialType !== MaterialType.ASSIGNMENT) {
+      if (
+        role === 'ANSWER' &&
+        material?.materialType !== MaterialType.ASSIGNMENT
+      ) {
         throw new BadRequestException(
           'Only a recitation can have an answer key. Use REFERENCE for ' +
             'supplementary lecture material.',
@@ -386,7 +399,9 @@ export class DocumentService {
     });
   }
 
-  private async markProcessingFailed(documentId: string, error: unknown) {
+  /** Public so the queue consumer can record a failure in the one stage that
+   * runs there rather than in this service (chunking). */
+  async markProcessingFailed(documentId: string, error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     // Truncated: some upstream errors carry a whole response body, and this
     // column is read straight into the instructor's UI.
@@ -723,8 +738,7 @@ export class DocumentService {
       (model) => (writtenPerModel.get(model.id) ?? 0) < total,
     );
 
-    const message =
-      `Embedded document ${fileId} — chunks written per model: ${summary}`;
+    const message = `Embedded document ${fileId} — chunks written per model: ${summary}`;
     if (incomplete.length > 0) {
       this.logger.error(
         `${message}. Incomplete for ${incomplete
@@ -856,9 +870,7 @@ export class DocumentService {
         fileId,
       );
       if (!allowed) {
-        throw new ForbiddenException(
-          'You do not have access to this document',
-        );
+        throw new ForbiddenException('You do not have access to this document');
       }
     }
 
@@ -1041,7 +1053,7 @@ export class DocumentService {
         const { id, fileUrl, fileName } = document;
 
         // Check if is a valid uuid
-        if (validateUuid(fileUrl)) {
+        if (isUUID(fileUrl)) {
           report.push({
             id,
             message: 'Document already migrated',
@@ -1049,7 +1061,7 @@ export class DocumentService {
           return;
         }
 
-        const fileId = uuid();
+        const fileId = randomUUID();
 
         const multerFile = this.convertBase64UrlToDocument(fileUrl, fileName);
 
@@ -1561,9 +1573,10 @@ export class DocumentService {
   private async loadDocumentWithClass(
     documentId: string,
   ): Promise<DocumentWithClassMaterial> {
-    const document = await this.databaseDocumentService.documentWithClassMaterial({
-      where: { id: documentId },
-    });
+    const document =
+      await this.databaseDocumentService.documentWithClassMaterial({
+        where: { id: documentId },
+      });
 
     if (!document) {
       throw new NotFoundException('Document not found');

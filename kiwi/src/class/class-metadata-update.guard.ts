@@ -56,15 +56,14 @@ export class ClassMetadataUpdateGuard implements CanActivate {
     if (isProf && enrollments.length > 0) {
       // Extract classId from request body
       const classId = request.body?.classId;
-      
+
       if (classId) {
         // Check if professor is enrolled in this specific class
         const isProfForThisClass = enrollments.some(
-          (enrollment) => 
-            enrollment.role === 'professor' && 
-            enrollment.classId === classId
+          (enrollment) =>
+            enrollment.role === 'professor' && enrollment.classId === classId,
         );
-        
+
         if (isProfForThisClass) {
           return true;
         }
@@ -73,31 +72,35 @@ export class ClassMetadataUpdateGuard implements CanActivate {
 
     // Check if user is an instructor with canUpdateMetadata or canManageMaterials permission
     const classId = request.body?.classId;
-    
+
     if (classId) {
       // Check for canUpdateMetadata permission first, fallback to canManageMaterials
-      const hasUpdatePermission = await this.instructorClassService.checkInstructorPermission(
-        userId,
-        classId,
-        'canUpdateMetadata' as any,
-      );
-      
+      const hasUpdatePermission =
+        await this.instructorClassService.checkInstructorPermission(
+          userId,
+          classId,
+          'canUpdateMetadata' as any,
+        );
+
       if (hasUpdatePermission) {
         return true;
       }
-      
+
       // Fallback to canManageMaterials permission for backward compatibility
-      const hasManagePermission = await this.instructorClassService.checkInstructorPermission(
-        userId,
-        classId,
-        'canManageMaterials',
-      );
-      
+      const hasManagePermission =
+        await this.instructorClassService.checkInstructorPermission(
+          userId,
+          classId,
+          'canManageMaterials',
+        );
+
       if (hasManagePermission) {
         return true;
       }
     }
 
-    throw new UnauthorizedException('User does not have permission to update class metadata');
+    throw new UnauthorizedException(
+      'User does not have permission to update class metadata',
+    );
   }
 }

@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import {
   PersonAddOutlined as PersonAddIcon,
-  DeleteOutline as DeleteIcon,
+  DeleteOutlined as DeleteIcon,
   SearchOutlined as SearchIcon,
   EmailOutlined as EmailIcon
 } from "@mui/icons-material";
@@ -258,180 +258,192 @@ export const ClassEnroll: React.FC = () => {
         description="Add students, review pending enrollments, and manage the class roster."
       />
 
-        {classID && (
-          <Alert severity="info" sx={{ mt: 2, mb: 2, width: '100%' }}>
-            Managing enrollment for class: <strong>{className || classID}</strong>
-          </Alert>
-        )}
+      {classID && (
+        <Alert severity="info" sx={{ mt: 2, mb: 2, width: '100%' }}>
+          Managing enrollment for class: <strong>{className || classID}</strong>
+        </Alert>
+      )}
 
-        <Box sx={{ mt: 3 }}>
-          {/* Enrollment Section */}
-          <Paper elevation={0} sx={{ p: 3, mb: 4, backgroundColor: '#f5f5f5' }}>
-            <TextField
-              label="Email Addresses (one per line) *"
-              variant="outlined"
-              fullWidth
-              value={enrollEmails}
-              onChange={(e) => setEnrollEmails(e.target.value)}
-              multiline
-              rows={6}
-              helperText="Enter email addresses, one per line"
-              sx={{ mb: 3, backgroundColor: 'white' }}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              fullWidth
-              onClick={handleEnroll}
-              startIcon={<PersonAddIcon />}
-              sx={{ py: 1.5 }}
-            >
-              ENROLL USERS
-            </Button>
-          </Paper>
-          {/* Enrolled Users Section */}
-          <Box sx={{ mb: 4 }}>
-            <Typography variant="h5" fontWeight={600} gutterBottom sx={{ mb: 3 }}>
-              Enrolled Users
-            </Typography>
+      <Box sx={{ mt: 3 }}>
+        {/* Enrollment Section */}
+        <Paper elevation={0} sx={{ p: 3, mb: 4, backgroundColor: '#f5f5f5' }}>
+          <TextField
+            label="Email Addresses (one per line) *"
+            variant="outlined"
+            fullWidth
+            value={enrollEmails}
+            onChange={(e) => setEnrollEmails(e.target.value)}
+            multiline
+            rows={6}
+            helperText="Enter email addresses, one per line"
+            sx={{ mb: 3, backgroundColor: 'white' }}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            fullWidth
+            onClick={handleEnroll}
+            startIcon={<PersonAddIcon />}
+            sx={{ py: 1.5 }}
+          >
+            ENROLL USERS
+          </Button>
+        </Paper>
+        {/* Enrolled Users Section */}
+        <Box sx={{ mb: 4 }}>
+          <Typography
+            variant="h5"
+            gutterBottom
+            sx={{
+              fontWeight: 600,
+              mb: 3
+            }}>
+            Enrolled Users
+          </Typography>
 
-            <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Stack direction="row" spacing={2} alignItems="center">
-                <Typography variant="body1" color="text.secondary">
-                  Total: {allUsers.length} users ({allUsers.filter(u => u.status === 'active').length} active, {allUsers.filter(u => u.status === 'pending').length} pending)
-                </Typography>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => setEmailDialogOpen(true)}
-                  disabled={selectedUsers.length === 0}
-                  startIcon={<EmailIcon />}
-                >
-                  Email Selected ({selectedUsers.length})
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  onClick={handleDeleteSelected}
-                  disabled={selectedUsers.length === 0}
-                  startIcon={<DeleteIcon />}
-                >
-                  Remove Selected ({selectedUsers.length})
-                </Button>
-              </Stack>
-
-              <TextField
-                placeholder="Search users..."
+          <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Stack direction="row" spacing={2} sx={{
+              alignItems: "center"
+            }}>
+              <Typography variant="body1" sx={{
+                color: "text.secondary"
+              }}>
+                Total: {allUsers.length} users ({allUsers.filter(u => u.status === 'active').length} active, {allUsers.filter(u => u.status === 'pending').length} pending)
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setEmailDialogOpen(true)}
+                disabled={selectedUsers.length === 0}
+                startIcon={<EmailIcon />}
+              >
+                Email Selected ({selectedUsers.length})
+              </Button>
+              <Button
                 variant="outlined"
-                size="small"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                slotProps={{
-                  input: {
-                    startAdornment: <SearchIcon sx={{ mr: 1, color: 'text.secondary' }} />
-                  }
-                }}
-                sx={{ width: 300 }}
-              />
-            </Box>
+                color="error"
+                onClick={handleDeleteSelected}
+                disabled={selectedUsers.length === 0}
+                startIcon={<DeleteIcon />}
+              >
+                Remove Selected ({selectedUsers.length})
+              </Button>
+            </Stack>
 
-            <TableContainer component={Paper} elevation={1}>
-              <Table>
-                <TableHead>
-                  <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        checked={selectAll}
-                        onChange={handleSelectAll}
-                        indeterminate={selectedUsers.length > 0 && selectedUsers.length < filteredUsers.length}
-                      />
+            <TextField
+              placeholder="Search users..."
+              variant="outlined"
+              size="small"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              slotProps={{
+                input: {
+                  startAdornment: <SearchIcon sx={{ mr: 1, color: 'text.secondary' }} />
+                }
+              }}
+              sx={{ width: 300 }}
+            />
+          </Box>
+
+          <TableContainer component={Paper} elevation={1}>
+            <Table>
+              <TableHead>
+                <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      checked={selectAll}
+                      onChange={handleSelectAll}
+                      indeterminate={selectedUsers.length > 0 && selectedUsers.length < filteredUsers.length}
+                    />
+                  </TableCell>
+                  <TableCell>Email</TableCell>
+                  <TableCell>Role</TableCell>
+                  <TableCell align="center">Status</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredUsers.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={4} align="center" sx={{ py: 3 }}>
+                      <Typography sx={{
+                        color: "text.secondary"
+                      }}>
+                        {searchQuery ? 'No users found matching your search' : 'No users enrolled yet'}
+                      </Typography>
                     </TableCell>
-                    <TableCell>Email</TableCell>
-                    <TableCell>Role</TableCell>
-                    <TableCell align="center">Status</TableCell>
                   </TableRow>
-                </TableHead>
-                <TableBody>
-                  {filteredUsers.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={4} align="center" sx={{ py: 3 }}>
-                        <Typography color="text.secondary">
-                          {searchQuery ? 'No users found matching your search' : 'No users enrolled yet'}
-                        </Typography>
+                ) : (
+                  filteredUsers.map((user) => (
+                    <TableRow key={user.id} hover>
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          checked={selectedUsers.includes(user.id)}
+                          onChange={() => handleSelectUser(user.id)}
+                        />
+                      </TableCell>
+                      <TableCell>{user.email}</TableCell>
+                      <TableCell>
+                        {user.role === "admin" ? (
+                          <Chip label="Admin" color="warning" size="small" />
+                        ) : user.role === "professor" ? (
+                          <Chip label="Professor" color="secondary" size="small" />
+                        ) : (
+                          <Chip label="Student" color="primary" size="small" />
+                        )}
+                      </TableCell>
+                      <TableCell align="center">
+                        {user.status === 'active' ? (
+                          <Chip label="Active" color="success" size="small" />
+                        ) : (
+                          <Chip label="Pending" color="info" size="small" />
+                        )}
                       </TableCell>
                     </TableRow>
-                  ) : (
-                    filteredUsers.map((user) => (
-                      <TableRow key={user.id} hover>
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            checked={selectedUsers.includes(user.id)}
-                            onChange={() => handleSelectUser(user.id)}
-                          />
-                        </TableCell>
-                        <TableCell>{user.email}</TableCell>
-                        <TableCell>
-                          {user.role === "admin" ? (
-                            <Chip label="Admin" color="warning" size="small" />
-                          ) : user.role === "professor" ? (
-                            <Chip label="Professor" color="secondary" size="small" />
-                          ) : (
-                            <Chip label="Student" color="primary" size="small" />
-                          )}
-                        </TableCell>
-                        <TableCell align="center">
-                          {user.status === 'active' ? (
-                            <Chip label="Active" color="success" size="small" />
-                          ) : (
-                            <Chip label="Pending" color="info" size="small" />
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
 
-            {Math.ceil(totalFilteredUsers / pageSize) > 1 && (
-              <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
-                <Pagination
-                  count={Math.ceil(totalFilteredUsers / pageSize)}
-                  page={currentPage}
-                  onChange={(_, value) => setCurrentPage(value)}
-                />
-              </Box>
-            )}
-          </Box>
-          {/* Snackbar for success notifications */}
-          <Snackbar
-            open={openSnackbar}
-            autoHideDuration={3000}
-            onClose={() => setOpenSnackbar(false)}
-          >
-            <Alert onClose={() => setOpenSnackbar(false)} severity={snackbarSeverity} sx={{ width: '100%' }}>
-              {snackbarMessage}
-            </Alert>
-          </Snackbar>
-
-          {/* Email Dialog */}
-          <EmailSelectedUsersDialog
-            open={emailDialogOpen}
-            onClose={() => setEmailDialogOpen(false)}
-            selectedUsers={allUsers.filter(user => selectedUsers.includes(user.id))}
-            classId={classID}
-            className={className}
-            onSuccess={() => {
-              setSnackbarSeverity("success");
-              setSnackbarMessage("Emails sent successfully!");
-              setOpenSnackbar(true);
-              setSelectedUsers([]);
-              setSelectAll(false);
-              setEmailDialogOpen(false);
-            }}
-          />
+          {Math.ceil(totalFilteredUsers / pageSize) > 1 && (
+            <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
+              <Pagination
+                count={Math.ceil(totalFilteredUsers / pageSize)}
+                page={currentPage}
+                onChange={(_, value) => setCurrentPage(value)}
+              />
+            </Box>
+          )}
         </Box>
+        {/* Snackbar for success notifications */}
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={3000}
+          onClose={() => setOpenSnackbar(false)}
+        >
+          <Alert onClose={() => setOpenSnackbar(false)} severity={snackbarSeverity} sx={{ width: '100%' }}>
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
+
+        {/* Email Dialog */}
+        <EmailSelectedUsersDialog
+          open={emailDialogOpen}
+          onClose={() => setEmailDialogOpen(false)}
+          selectedUsers={allUsers.filter(user => selectedUsers.includes(user.id))}
+          classId={classID}
+          className={className}
+          onSuccess={() => {
+            setSnackbarSeverity("success");
+            setSnackbarMessage("Emails sent successfully!");
+            setOpenSnackbar(true);
+            setSelectedUsers([]);
+            setSelectAll(false);
+            setEmailDialogOpen(false);
+          }}
+        />
+      </Box>
     </AdminPage>
   );
 };

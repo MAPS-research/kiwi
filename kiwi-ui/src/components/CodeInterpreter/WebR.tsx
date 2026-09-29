@@ -1,7 +1,7 @@
 import { WebR } from 'webr';
 
 // Pin WebR version to match package.json dependency for deterministic builds
-const WEBR_VERSION = '0.5.8'; // Keep this in sync with package.json webr version
+const WEBR_VERSION = '0.6.0'; // Keep this in sync with package.json webr version
 
 let webrInstance: WebR | null = null;
 let webrReady = false;

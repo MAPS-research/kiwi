@@ -7,7 +7,9 @@ describe('UnstructuredService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [UnstructuredService],
-    }).compile();
+    })
+      .useMocker(() => ({ get: jest.fn() }))
+      .compile();
 
     service = module.get<UnstructuredService>(UnstructuredService);
   });

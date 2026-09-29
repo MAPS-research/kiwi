@@ -9,7 +9,7 @@ describe('ClassResource', () => {
   const mockContext = {};
 
   const createMockHttpRequest = (userId?: string) => ({
-    raw: userId ? { user: { sub: userId } } : {},
+    user: userId ? { sub: userId } : undefined,
   });
 
   beforeEach(async () => {
@@ -329,9 +329,7 @@ describe('ClassResource', () => {
         { classId, role: 'student' },
       ] as any);
 
-      classService.getClassById.mockRejectedValue(
-        new Error('Class not found'),
-      );
+      classService.getClassById.mockRejectedValue(new Error('Class not found'));
 
       const result = await resource.getClassMaterials(
         { uri },

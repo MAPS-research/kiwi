@@ -7,7 +7,9 @@ describe('FeatureFlagsService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [FeatureFlagsService],
-    }).compile();
+    })
+      .useMocker(() => ({ get: jest.fn() }))
+      .compile();
 
     service = module.get<FeatureFlagsService>(FeatureFlagsService);
   });

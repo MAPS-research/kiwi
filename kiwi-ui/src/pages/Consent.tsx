@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
+import { PDFViewer } from "../components/PDFViewer/PDFViewer.tsx";
 import { Container } from "@mui/material";
 import { Navigate, useNavigate } from "react-router-dom";
 import apiClient from "../utils/api.ts";
@@ -53,9 +53,7 @@ export const Consent: React.FC = () => {
         <p>Please read the document below and accept to continue.</p>
       </Container>
       <Container>
-        <Worker workerUrl="/assets/pdf.worker.min.js">
-          <Viewer theme="dark" fileUrl={formUrl} />
-        </Worker>
+        <PDFViewer pdfFile={formUrl} continuous />
       </Container>
       {user!.consent === false && (
         <Container>
@@ -67,12 +65,14 @@ export const Consent: React.FC = () => {
                 type="date"
                 defaultValue={todayDate}
                 onChange={(e) => setText(e.target.value)}
-                InputLabelProps={{
-                  shrink: true,
-                }}
                 variant="outlined"
                 fullWidth
                 margin="normal"
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  }
+                }}
               />
               <FormControlLabel
                 control={

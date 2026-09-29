@@ -134,7 +134,10 @@ export class KiwiAppController {
   @Public()
   @ApiOperation({ summary: 'Self-register an app (must be whitelisted)' })
   @ApiResponse({ status: 201, type: AppResponseDto })
-  @ApiResponse({ status: 403, description: 'App not whitelisted or not approved' })
+  @ApiResponse({
+    status: 403,
+    description: 'App not whitelisted or not approved',
+  })
   async registerApp(@Body() dto: RegisterAppDto) {
     return this.kiwiAppService.registerApp(dto);
   }
@@ -247,7 +250,10 @@ export class KiwiAppController {
   })
   @ApiParam({ name: 'slug', description: 'App slug' })
   @ApiResponse({ status: 200, type: AppTokenResponseDto })
-  @ApiResponse({ status: 403, description: 'User not enrolled or app not enabled for class' })
+  @ApiResponse({
+    status: 403,
+    description: 'User not enrolled or app not enabled for class',
+  })
   async getAppToken(
     @Param('slug') slug: string,
     @Body() dto: RequestAppTokenDto,
@@ -265,11 +271,8 @@ export class KiwiAppController {
       );
     }
     const user = (req as any).user;
-    const { accessToken, expiresIn, scopes } = await this.kiwiAppService.generateAppToken(
-      slug,
-      dto.classId,
-      user.sub,
-    );
+    const { accessToken, expiresIn, scopes } =
+      await this.kiwiAppService.generateAppToken(slug, dto.classId, user.sub);
     return { accessToken, expiresIn, scopes, appSlug: slug };
   }
 
@@ -277,12 +280,16 @@ export class KiwiAppController {
   @ApiBearerAuth()
   @ApiOperation({
     summary: 'Get app scope information',
-    description: 'Returns the maximum scopes this app can request (from whitelist) and its active prompt scopes.',
+    description:
+      'Returns the maximum scopes this app can request (from whitelist) and its active prompt scopes.',
   })
   @ApiParam({ name: 'slug', description: 'App slug' })
   @ApiResponse({ status: 200, type: AppScopesResponseDto })
-  async getAppScopes(@Param('slug') slug: string): Promise<AppScopesResponseDto> {
-    const { maxScopes, promptScopes } = await this.kiwiAppService.getAppScopes(slug);
+  async getAppScopes(
+    @Param('slug') slug: string,
+  ): Promise<AppScopesResponseDto> {
+    const { maxScopes, promptScopes } =
+      await this.kiwiAppService.getAppScopes(slug);
     return { appSlug: slug, maxScopes, promptScopes };
   }
 
@@ -356,7 +363,8 @@ export class ClassKiwiAppController {
   @ApiQuery({
     name: 'placement',
     required: false,
-    description: 'Filter by UI placement (class-tab, admin-panel, modal, dashboard-widget)',
+    description:
+      'Filter by UI placement (class-tab, admin-panel, modal, dashboard-widget)',
   })
   @ApiQuery({
     name: 'userRole',
@@ -449,7 +457,11 @@ export class PermissionsController {
       properties: {
         userId: { type: 'string' },
         classId: { type: 'string' },
-        role: { type: 'string', nullable: true, enum: ['student', 'ta', 'professor', 'admin'] },
+        role: {
+          type: 'string',
+          nullable: true,
+          enum: ['student', 'ta', 'professor', 'admin'],
+        },
       },
     },
   })

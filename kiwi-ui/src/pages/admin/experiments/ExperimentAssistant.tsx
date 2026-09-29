@@ -453,220 +453,226 @@ const ExperimentAssistant: React.FC = () => {
         )}
       </AnimatePresence>
 
-        {/* Panel */}
-        <AnimatePresence>
-          {open && (
-            <Paper
-              component={motion.div}
-              initial={{ opacity: 0, y: 24, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 24, scale: 0.96 }}
-              transition={{ type: "spring", stiffness: 320, damping: 30 }}
-              elevation={12}
+      {/* Panel */}
+      <AnimatePresence>
+        {open && (
+          <Paper
+            component={motion.div}
+            initial={{ opacity: 0, y: 24, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 24, scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 320, damping: 30 }}
+            elevation={12}
+            sx={{
+              position: "fixed",
+              left: panelRect.x,
+              top: panelRect.y,
+              pointerEvents: "auto",
+              width: panelRect.width,
+              height: panelRect.height,
+              minWidth: Math.min(MIN_PANEL_WIDTH, getViewport().width - EDGE_GAP * 2),
+              minHeight: Math.min(MIN_PANEL_HEIGHT, getViewport().height - EDGE_GAP * 2),
+              display: "flex",
+              flexDirection: "column",
+              zIndex: 1250,
+              borderRadius: 5,
+              overflow: "hidden",
+              border: `1px solid ${alpha(VIOLET, 0.12)}`,
+            }}
+          >
+            {/* Header */}
+            <Box
               sx={{
-                position: "fixed",
-                left: panelRect.x,
-                top: panelRect.y,
-                pointerEvents: "auto",
-                width: panelRect.width,
-                height: panelRect.height,
-                minWidth: Math.min(MIN_PANEL_WIDTH, getViewport().width - EDGE_GAP * 2),
-                minHeight: Math.min(MIN_PANEL_HEIGHT, getViewport().height - EDGE_GAP * 2),
+                px: 2,
+                py: 1.75,
                 display: "flex",
-                flexDirection: "column",
-                zIndex: 1250,
-                borderRadius: 5,
-                overflow: "hidden",
-                border: `1px solid ${alpha(VIOLET, 0.12)}`,
+                alignItems: "center",
+                gap: 1.5,
+                color: "#fff",
+                background: violetGradient,
+                cursor: "move",
+                userSelect: "none",
+                touchAction: "none",
               }}
+              onPointerDown={startDrag}
             >
-              {/* Header */}
-              <Box
-                sx={{
-                  px: 2,
-                  py: 1.75,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1.5,
-                  color: "#fff",
-                  background: violetGradient,
-                  cursor: "move",
-                  userSelect: "none",
-                  touchAction: "none",
-                }}
-                onPointerDown={startDrag}
-              >
-                <Avatar sx={{ bgcolor: alpha("#fff", 0.2), width: 38, height: 38 }}>
-                  <Sparkles sx={{ fontSize: 20 }} />
-                </Avatar>
-                <Box sx={{ flexGrow: 1, minWidth: 0 }}>
-                  <Typography fontWeight={700} lineHeight={1.2}>
-                    Experiment Assistant
-                  </Typography>
-                  <Typography variant="caption" sx={{ opacity: 0.85 }}>
-                    Describe it · I'll draft the config
-                  </Typography>
-                </Box>
-                <IconButton size="small" onClick={() => setOpen(false)} sx={{ color: "#fff" }}>
-                  <CloseIcon fontSize="small" />
-                </IconButton>
+              <Avatar sx={{ bgcolor: alpha("#fff", 0.2), width: 38, height: 38 }}>
+                <Sparkles sx={{ fontSize: 20 }} />
+              </Avatar>
+              <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+                <Typography
+                  sx={{
+                    fontWeight: 700,
+                    lineHeight: 1.2
+                  }}>
+                  Experiment Assistant
+                </Typography>
+                <Typography variant="caption" sx={{ opacity: 0.85 }}>
+                  Describe it · I'll draft the config
+                </Typography>
               </Box>
+              <IconButton size="small" onClick={() => setOpen(false)} sx={{ color: "#fff" }}>
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </Box>
 
-              {/* Messages */}
-              <Box ref={scrollRef} sx={{ flexGrow: 1, overflowY: "auto", p: 2, bgcolor: alpha(VIOLET, 0.02) }}>
-                {messages.length === 0 && (
-                  <Box sx={{ textAlign: "center", mt: 3, px: 1 }}>
-                    <Box
-                      sx={{
-                        width: 56,
-                        height: 56,
-                        borderRadius: "50%",
-                        display: "grid",
-                        placeItems: "center",
-                        mx: "auto",
-                        mb: 1.5,
-                        background: alpha(VIOLET, 0.08),
-                      }}
-                    >
-                      <Sparkles sx={{ fontSize: 26, color: VIOLET }} />
-                    </Box>
-                    <Typography variant="body2" color="text.secondary">
-                      Describe the experiment you want — e.g.{" "}
-                      <Box component="span" sx={{ color: "text.primary", fontStyle: "italic" }}>
-                        "Two groups 50/50: control on openai with default prompts,
-                        treatment on qwen that never gives direct answers."
-                      </Box>{" "}
-                      I'll draft the config and open it for review.
-                    </Typography>
-                  </Box>
-                )}
-                <Stack spacing={1.25}>
-                  {messages.map((m, i) => (
-                    <Box
-                      key={i}
-                      component={motion.div}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.25 }}
-                      sx={{
-                        alignSelf: m.role === "user" ? "flex-end" : "flex-start",
-                        background: m.role === "user" ? violetGradient : "#fff",
-                        color: m.role === "user" ? "#fff" : "text.primary",
-                        px: 1.75,
-                        py: 1.25,
-                        borderRadius: 2.5,
-                        borderTopRightRadius: m.role === "user" ? 4 : 20,
-                        borderTopLeftRadius: m.role === "user" ? 20 : 4,
-                        maxWidth: "88%",
-                        whiteSpace: "pre-wrap",
-                        fontSize: 14,
-                        lineHeight: 1.5,
-                        boxShadow: m.role === "user" ? "none" : `0 2px 8px ${alpha("#000", 0.06)}`,
-                        border: m.role === "user" ? "none" : `1px solid ${alpha(VIOLET, 0.08)}`,
-                      }}
-                    >
-                      {m.content}
-                    </Box>
-                  ))}
-                  {loading && (
-                    <Box sx={{ alignSelf: "flex-start", bgcolor: "#fff", borderRadius: 2.5, border: `1px solid ${alpha(VIOLET, 0.08)}` }}>
-                      <TypingDots />
-                    </Box>
-                  )}
-                </Stack>
-              </Box>
-
-              {/* Last draft JSON */}
-              {lastConfig && (
-                <Box sx={{ borderTop: `1px solid ${alpha(VIOLET, 0.1)}` }}>
-                  <Button
-                    size="small"
-                    fullWidth
-                    onClick={() => setShowJson((s) => !s)}
-                    sx={{ justifyContent: "space-between", textTransform: "none", px: 2, color: VIOLET, fontWeight: 600 }}
+            {/* Messages */}
+            <Box ref={scrollRef} sx={{ flexGrow: 1, overflowY: "auto", p: 2, bgcolor: alpha(VIOLET, 0.02) }}>
+              {messages.length === 0 && (
+                <Box sx={{ textAlign: "center", mt: 3, px: 1 }}>
+                  <Box
+                    sx={{
+                      width: 56,
+                      height: 56,
+                      borderRadius: "50%",
+                      display: "grid",
+                      placeItems: "center",
+                      mx: "auto",
+                      mb: 1.5,
+                      background: alpha(VIOLET, 0.08),
+                    }}
                   >
-                    {showJson ? "Hide" : "View"} last draft JSON
-                  </Button>
-                  <Collapse in={showJson}>
-                    <Box
-                      component="pre"
-                      sx={{
-                        m: 0,
-                        p: 1.5,
-                        maxHeight: 200,
-                        overflow: "auto",
-                        bgcolor: alpha(VIOLET, 0.03),
-                        fontSize: 11,
-                        whiteSpace: "pre-wrap",
-                        wordBreak: "break-word",
-                      }}
-                    >
-                      {JSON.stringify(lastConfig, null, 2)}
-                    </Box>
-                  </Collapse>
+                    <Sparkles sx={{ fontSize: 26, color: VIOLET }} />
+                  </Box>
+                  <Typography variant="body2" sx={{
+                    color: "text.secondary"
+                  }}>
+                    Describe the experiment you want — e.g.{" "}
+                    <Box component="span" sx={{ color: "text.primary", fontStyle: "italic" }}>
+                      "Two groups 50/50: control on openai with default prompts,
+                      treatment on qwen that never gives direct answers."
+                    </Box>{" "}
+                    I'll draft the config and open it for review.
+                  </Typography>
                 </Box>
               )}
+              <Stack spacing={1.25}>
+                {messages.map((m, i) => (
+                  <Box
+                    key={i}
+                    component={motion.div}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25 }}
+                    sx={{
+                      alignSelf: m.role === "user" ? "flex-end" : "flex-start",
+                      background: m.role === "user" ? violetGradient : "#fff",
+                      color: m.role === "user" ? "#fff" : "text.primary",
+                      px: 1.75,
+                      py: 1.25,
+                      borderRadius: 2.5,
+                      borderTopRightRadius: m.role === "user" ? 4 : 20,
+                      borderTopLeftRadius: m.role === "user" ? 20 : 4,
+                      maxWidth: "88%",
+                      whiteSpace: "pre-wrap",
+                      fontSize: 14,
+                      lineHeight: 1.5,
+                      boxShadow: m.role === "user" ? "none" : `0 2px 8px ${alpha("#000", 0.06)}`,
+                      border: m.role === "user" ? "none" : `1px solid ${alpha(VIOLET, 0.08)}`,
+                    }}
+                  >
+                    {m.content}
+                  </Box>
+                ))}
+                {loading && (
+                  <Box sx={{ alignSelf: "flex-start", bgcolor: "#fff", borderRadius: 2.5, border: `1px solid ${alpha(VIOLET, 0.08)}` }}>
+                    <TypingDots />
+                  </Box>
+                )}
+              </Stack>
+            </Box>
 
-              {/* Composer */}
-              <Box sx={{ p: 1.25, display: "flex", gap: 1, alignItems: "flex-end", borderTop: `1px solid ${alpha(VIOLET, 0.1)}` }}>
-                <TextField
+            {/* Last draft JSON */}
+            {lastConfig && (
+              <Box sx={{ borderTop: `1px solid ${alpha(VIOLET, 0.1)}` }}>
+                <Button
                   size="small"
                   fullWidth
-                  placeholder="Describe your experiment…"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      send();
-                    }
-                  }}
-                  multiline
-                  maxRows={4}
-                  sx={{ "& .MuiOutlinedInput-root": { borderRadius: 3.5 } }}
-                />
-                <IconButton
-                  onClick={send}
-                  disabled={loading || !input.trim()}
-                  sx={{
-                    color: "#fff",
-                    background: violetGradient,
-                    width: 40,
-                    height: 40,
-                    "&:hover": { opacity: 0.9 },
-                    "&.Mui-disabled": { background: alpha(VIOLET, 0.25), color: "#fff" },
-                  }}
+                  onClick={() => setShowJson((s) => !s)}
+                  sx={{ justifyContent: "space-between", textTransform: "none", px: 2, color: VIOLET, fontWeight: 600 }}
                 >
-                  <Send sx={{ fontSize: 18 }} />
-                </IconButton>
+                  {showJson ? "Hide" : "View"} last draft JSON
+                </Button>
+                <Collapse in={showJson}>
+                  <Box
+                    component="pre"
+                    sx={{
+                      m: 0,
+                      p: 1.5,
+                      maxHeight: 200,
+                      overflow: "auto",
+                      bgcolor: alpha(VIOLET, 0.03),
+                      fontSize: 11,
+                      whiteSpace: "pre-wrap",
+                      wordBreak: "break-word",
+                    }}
+                  >
+                    {JSON.stringify(lastConfig, null, 2)}
+                  </Box>
+                </Collapse>
               </Box>
-              <Box
-                onPointerDown={startResize}
-                aria-label="resize experiment assistant"
-                sx={{
-                  position: "absolute",
-                  right: 0,
-                  bottom: 0,
-                  width: 24,
-                  height: 24,
-                  cursor: "nwse-resize",
-                  touchAction: "none",
-                  pointerEvents: "auto",
-                  "&:before": {
-                    content: '""',
-                    position: "absolute",
-                    right: 6,
-                    bottom: 6,
-                    width: 10,
-                    height: 10,
-                    borderRight: `2px solid ${alpha(VIOLET, 0.45)}`,
-                    borderBottom: `2px solid ${alpha(VIOLET, 0.45)}`,
-                  },
+            )}
+
+            {/* Composer */}
+            <Box sx={{ p: 1.25, display: "flex", gap: 1, alignItems: "flex-end", borderTop: `1px solid ${alpha(VIOLET, 0.1)}` }}>
+              <TextField
+                size="small"
+                fullWidth
+                placeholder="Describe your experiment…"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    send();
+                  }
                 }}
+                multiline
+                maxRows={4}
+                sx={{ "& .MuiOutlinedInput-root": { borderRadius: 3.5 } }}
               />
-            </Paper>
-          )}
-        </AnimatePresence>
+              <IconButton
+                onClick={send}
+                disabled={loading || !input.trim()}
+                sx={{
+                  color: "#fff",
+                  background: violetGradient,
+                  width: 40,
+                  height: 40,
+                  "&:hover": { opacity: 0.9 },
+                  "&.Mui-disabled": { background: alpha(VIOLET, 0.25), color: "#fff" },
+                }}
+              >
+                <Send sx={{ fontSize: 18 }} />
+              </IconButton>
+            </Box>
+            <Box
+              onPointerDown={startResize}
+              aria-label="resize experiment assistant"
+              sx={{
+                position: "absolute",
+                right: 0,
+                bottom: 0,
+                width: 24,
+                height: 24,
+                cursor: "nwse-resize",
+                touchAction: "none",
+                pointerEvents: "auto",
+                "&:before": {
+                  content: '""',
+                  position: "absolute",
+                  right: 6,
+                  bottom: 6,
+                  width: 10,
+                  height: 10,
+                  borderRight: `2px solid ${alpha(VIOLET, 0.45)}`,
+                  borderBottom: `2px solid ${alpha(VIOLET, 0.45)}`,
+                },
+              }}
+            />
+          </Paper>
+        )}
+      </AnimatePresence>
     </>
   );
 };

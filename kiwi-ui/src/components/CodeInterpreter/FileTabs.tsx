@@ -153,8 +153,15 @@ export const BasicTabs: React.FC<BasicTabsProps> = ({
   // };
 
   return (
-    <Box width="100%">
-      <Box width="100%" minHeight="50px" overflow="auto">
+    <Box sx={{
+      width: "100%"
+    }}>
+      <Box
+        sx={{
+          width: "100%",
+          minHeight: "50px",
+          overflow: "auto"
+        }}>
         <Box>
           <Tabs
             value={value}
@@ -186,8 +193,18 @@ export const BasicTabs: React.FC<BasicTabsProps> = ({
         </Box>
       </Box>
 
-      <Box height="45px" width="100%">
-        <Stack direction="row" sx={{ minWidth: 0 }} overflow="auto" spacing={1}>
+      <Box
+        sx={{
+          height: "45px",
+          width: "100%"
+        }}>
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{
+            overflow: "auto",
+            minWidth: 0
+          }}>
           <Button
             size="small"
             component="label"

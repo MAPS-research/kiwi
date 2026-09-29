@@ -149,7 +149,9 @@ export const ActionHierarchy: Story = {
             <Typography component="h4" variant="subtitle2">
               {label}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               {guidance}
             </Typography>
           </Box>
@@ -169,7 +171,9 @@ export const DestructiveActions: Story = {
     },
   },
   render: () => (
-    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems={{ xs: 'stretch', sm: 'center' }}>
+    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{
+      alignItems: { xs: 'stretch', sm: 'center' }
+    }}>
       <Button variant="outlined" color="error" startIcon={<DeleteOutlinedIcon />}>
         Delete class
       </Button>
@@ -190,7 +194,9 @@ export const StatusActions: Story = {
     },
   },
   render: () => (
-    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems={{ xs: 'stretch', sm: 'center' }}>
+    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{
+      alignItems: { xs: 'stretch', sm: 'center' }
+    }}>
       <Button variant="contained" color="success" startIcon={<SaveOutlinedIcon />}>
         Approve submission
       </Button>

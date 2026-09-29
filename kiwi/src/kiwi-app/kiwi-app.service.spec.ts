@@ -20,7 +20,6 @@ jest.mock('bcryptjs', () => ({
 describe('KiwiAppService', () => {
   let service: KiwiAppService;
   let db: any;
-  let jwtService: jest.Mocked<JwtService>;
 
   const mockWhitelistEntry = {
     id: 'whitelist-1',
@@ -138,7 +137,6 @@ describe('KiwiAppService', () => {
     }).compile();
 
     service = module.get<KiwiAppService>(KiwiAppService);
-    jwtService = module.get(JwtService);
   });
 
   it('should be defined', () => {
@@ -209,7 +207,10 @@ describe('KiwiAppService', () => {
 
       const result = await service.createWhitelistEntry(createDto, 'admin-1');
 
-      expect(bcrypt.hash).toHaveBeenCalledWith(createDto.registrationSecret, 10);
+      expect(bcrypt.hash).toHaveBeenCalledWith(
+        createDto.registrationSecret,
+        10,
+      );
       expect(db.kiwiAppWhitelist.create).toHaveBeenCalledWith({
         data: {
           slug: 'new-app',
@@ -228,9 +229,9 @@ describe('KiwiAppService', () => {
     it('should throw ConflictException if slug already exists', async () => {
       db.kiwiAppWhitelist.findUnique.mockResolvedValue(mockWhitelistEntry);
 
-      await expect(service.createWhitelistEntry(createDto, 'admin-1')).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(
+        service.createWhitelistEntry(createDto, 'admin-1'),
+      ).rejects.toThrow(ConflictException);
     });
 
     it('should not set approvedBy if status is not approved', async () => {
@@ -263,7 +264,11 @@ describe('KiwiAppService', () => {
         ...updateDto,
       });
 
-      const result = await service.updateWhitelistEntry('codegen', updateDto, 'admin-1');
+      const result = await service.updateWhitelistEntry(
+        'codegen',
+        updateDto,
+        'admin-1',
+      );
 
       expect(result.description).toBe('Updated description');
     });
@@ -283,9 +288,16 @@ describe('KiwiAppService', () => {
       db.kiwiAppWhitelist.findUnique.mockResolvedValue(mockWhitelistEntry);
       db.kiwiAppWhitelist.update.mockResolvedValue(mockWhitelistEntry);
 
-      await service.updateWhitelistEntry('codegen', updateWithSecret, 'admin-1');
+      await service.updateWhitelistEntry(
+        'codegen',
+        updateWithSecret,
+        'admin-1',
+      );
 
-      expect(bcrypt.hash).toHaveBeenCalledWith(updateWithSecret.registrationSecret, 10);
+      expect(bcrypt.hash).toHaveBeenCalledWith(
+        updateWithSecret.registrationSecret,
+        10,
+      );
     });
   });
 
@@ -354,7 +366,9 @@ describe('KiwiAppService', () => {
     it('should throw NotFoundException if app not found', async () => {
       db.kiwiApp.findUnique.mockResolvedValue(null);
 
-      await expect(service.getApp('nonexistent')).rejects.toThrow(NotFoundException);
+      await expect(service.getApp('nonexistent')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -386,7 +400,9 @@ describe('KiwiAppService', () => {
     it('should throw ForbiddenException if not in whitelist', async () => {
       db.kiwiAppWhitelist.findUnique.mockResolvedValue(null);
 
-      await expect(service.registerApp(registerDto)).rejects.toThrow(ForbiddenException);
+      await expect(service.registerApp(registerDto)).rejects.toThrow(
+        ForbiddenException,
+      );
     });
 
     it('should throw ForbiddenException if whitelist status is not approved', async () => {
@@ -395,7 +411,9 @@ describe('KiwiAppService', () => {
         status: 'pending',
       });
 
-      await expect(service.registerApp(registerDto)).rejects.toThrow(ForbiddenException);
+      await expect(service.registerApp(registerDto)).rejects.toThrow(
+        ForbiddenException,
+      );
     });
 
     it('should throw UnauthorizedException if secret is invalid', async () => {
@@ -462,7 +480,9 @@ describe('KiwiAppService', () => {
     it('should throw NotFoundException if app not found', async () => {
       db.kiwiApp.findUnique.mockResolvedValue(null);
 
-      await expect(service.deleteApp('nonexistent')).rejects.toThrow(NotFoundException);
+      await expect(service.deleteApp('nonexistent')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -486,7 +506,9 @@ describe('KiwiAppService', () => {
     it('should throw NotFoundException if app not found', async () => {
       db.kiwiApp.findUnique.mockResolvedValue(null);
 
-      await expect(service.heartbeat('nonexistent')).rejects.toThrow(NotFoundException);
+      await expect(service.heartbeat('nonexistent')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -526,13 +548,17 @@ describe('KiwiAppService', () => {
     it('returns null for a slug the class has not installed', async () => {
       db.classKiwiApp.findFirst.mockResolvedValue(null);
 
-      await expect(service.resolveChatApp('class-1', 'ghost')).resolves.toBeNull();
+      await expect(
+        service.resolveChatApp('class-1', 'ghost'),
+      ).resolves.toBeNull();
     });
 
     it('returns null without a class, rather than trusting a bare slug', async () => {
       // A classless turn has no installation to check against, so there is
       // nothing that could authorise a mode.
-      await expect(service.resolveChatApp(undefined, 'codegen')).resolves.toBeNull();
+      await expect(
+        service.resolveChatApp(undefined, 'codegen'),
+      ).resolves.toBeNull();
       expect(db.classKiwiApp.findFirst).not.toHaveBeenCalled();
     });
 
@@ -542,7 +568,9 @@ describe('KiwiAppService', () => {
         app: { ...mockApp, config: { tutoringMode: 'guidance' } },
       });
 
-      await expect(service.resolveChatApp('class-1', 'codegen')).resolves.toEqual({
+      await expect(
+        service.resolveChatApp('class-1', 'codegen'),
+      ).resolves.toEqual({
         appSlug: 'codegen',
         tutoringMode: 'guidance',
       });
@@ -578,7 +606,9 @@ describe('KiwiAppService', () => {
 
       expect(db.classKiwiApp.findMany).toHaveBeenCalledWith({
         where: { classId: 'class-1', isEnabled: true },
-        include: { app: { include: { uis: { orderBy: { tabOrder: 'asc' } } } } },
+        include: {
+          app: { include: { uis: { orderBy: { tabOrder: 'asc' } } } },
+        },
         orderBy: { tabOrder: 'asc' },
       });
       expect(result).toHaveLength(1);
@@ -601,7 +631,11 @@ describe('KiwiAppService', () => {
       db.classKiwiApp.aggregate.mockResolvedValue({ _max: { tabOrder: 0 } });
       db.classKiwiApp.create.mockResolvedValue(mockClassApp);
 
-      const result = await service.enableClassApp('class-1', enableDto, 'user-1');
+      const result = await service.enableClassApp(
+        'class-1',
+        enableDto,
+        'user-1',
+      );
 
       expect(db.classKiwiApp.create).toHaveBeenCalled();
       expect(result).toBeDefined();
@@ -610,17 +644,17 @@ describe('KiwiAppService', () => {
     it('should throw NotFoundException if app does not exist', async () => {
       db.kiwiApp.findUnique.mockResolvedValue(null);
 
-      await expect(service.enableClassApp('class-1', enableDto, 'user-1')).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.enableClassApp('class-1', enableDto, 'user-1'),
+      ).rejects.toThrow(NotFoundException);
     });
 
     it('should throw BadRequestException if app is not active', async () => {
       db.kiwiApp.findUnique.mockResolvedValue({ ...mockApp, isActive: false });
 
-      await expect(service.enableClassApp('class-1', enableDto, 'user-1')).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        service.enableClassApp('class-1', enableDto, 'user-1'),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should re-enable a disabled app', async () => {
@@ -651,7 +685,11 @@ describe('KiwiAppService', () => {
         tabLabel: 'New Label',
       });
 
-      const result = await service.updateClassApp('class-1', 'app-1', updateDto);
+      const result = await service.updateClassApp(
+        'class-1',
+        'app-1',
+        updateDto,
+      );
 
       expect(result.tabLabel).toBe('New Label');
     });
@@ -977,9 +1015,9 @@ describe('KiwiAppService', () => {
       db.kiwiApp.findUnique.mockResolvedValue(mockApp);
       db.kiwiAppPrompt.findUnique.mockResolvedValue(null);
 
-      await expect(service.revokePrompt('codegen', 'nonexistent')).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.revokePrompt('codegen', 'nonexistent'),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -1028,9 +1066,9 @@ describe('KiwiAppService', () => {
         isActive: false,
       });
 
-      await expect(
-        service.getActivePrompt('codegen', 'hint'),
-      ).rejects.toThrow(ForbiddenException);
+      await expect(service.getActivePrompt('codegen', 'hint')).rejects.toThrow(
+        ForbiddenException,
+      );
     });
   });
 });

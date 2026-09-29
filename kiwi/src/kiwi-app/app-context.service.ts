@@ -5,9 +5,7 @@ import { UserService } from 'src/common/database/user.service';
 import { ClassService } from 'src/class/class.service';
 
 export type ContextInclude =
-  | 'recent_questions'
-  | 'weak_concepts'
-  | 'relevant_materials';
+  'recent_questions' | 'weak_concepts' | 'relevant_materials';
 
 export interface AssembledContext {
   contextText: string;
@@ -176,7 +174,8 @@ export class AppContextService {
       const keywords = lecture.keywords;
       if (!Array.isArray(keywords)) continue;
       for (const keyword of keywords as any[]) {
-        const text = typeof keyword?.text === 'string' ? keyword.text.trim() : '';
+        const text =
+          typeof keyword?.text === 'string' ? keyword.text.trim() : '';
         if (!text) continue;
         const count = typeof keyword.count === 'number' ? keyword.count : 1;
         counts.set(text, (counts.get(text) ?? 0) + count);

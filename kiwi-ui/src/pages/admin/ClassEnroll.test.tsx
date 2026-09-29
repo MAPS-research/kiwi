@@ -17,6 +17,9 @@ vi.mock("../../utils/api.ts", () => ({
   },
 }));
 
+// Fixtures are partial API responses, so the mocked client is loosely typed.
+const mockApiClient = apiClient as any;
+
 describe("ClassEnroll", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -61,9 +64,9 @@ describe("ClassEnroll", () => {
   });
 
   it("renders with classID from params", async () => {
-    apiClient.classControllerRoster.mockResolvedValue(mockRosterResponse);
-    apiClient.classControllerGetPendingEnrollment.mockResolvedValue(mockPendingUsersResponse);
-    apiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
+    mockApiClient.classControllerRoster.mockResolvedValue(mockRosterResponse);
+    mockApiClient.classControllerGetPendingEnrollment.mockResolvedValue(mockPendingUsersResponse);
+    mockApiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
 
     renderWithRouter();
 
@@ -74,9 +77,9 @@ describe("ClassEnroll", () => {
   });
 
   it("renders with className from navigation state", async () => {
-    apiClient.classControllerRoster.mockResolvedValue(mockRosterResponse);
-    apiClient.classControllerGetPendingEnrollment.mockResolvedValue(mockPendingUsersResponse);
-    apiClient.classControllerGetById.mockResolvedValue({ className: "Test Class Name" });
+    mockApiClient.classControllerRoster.mockResolvedValue(mockRosterResponse);
+    mockApiClient.classControllerGetPendingEnrollment.mockResolvedValue(mockPendingUsersResponse);
+    mockApiClient.classControllerGetById.mockResolvedValue({ className: "Test Class Name" });
 
     renderWithRouter("/admin/test-class-id/enroll", { className: "Test Class Name" });
 
@@ -86,17 +89,17 @@ describe("ClassEnroll", () => {
   });
 
   it("fetches and displays all users on mount", async () => {
-    apiClient.classControllerRoster.mockResolvedValue(mockRosterResponse);
-    apiClient.classControllerGetPendingEnrollment.mockResolvedValue(mockPendingUsersResponse);
-    apiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
+    mockApiClient.classControllerRoster.mockResolvedValue(mockRosterResponse);
+    mockApiClient.classControllerGetPendingEnrollment.mockResolvedValue(mockPendingUsersResponse);
+    mockApiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
 
     renderWithRouter();
 
     await waitFor(() => {
-      expect(apiClient.classControllerRoster).toHaveBeenCalledWith({
+      expect(mockApiClient.classControllerRoster).toHaveBeenCalledWith({
         classRosterRequest: { classId: "test-class-id" },
       });
-      expect(apiClient.classControllerGetPendingEnrollment).toHaveBeenCalledWith({
+      expect(mockApiClient.classControllerGetPendingEnrollment).toHaveBeenCalledWith({
         classPendingEnrollmentRequest: { classId: "test-class-id" },
       });
     });
@@ -110,9 +113,9 @@ describe("ClassEnroll", () => {
   });
 
   it("displays role chips correctly", async () => {
-    apiClient.classControllerRoster.mockResolvedValue(mockRosterResponse);
-    apiClient.classControllerGetPendingEnrollment.mockResolvedValue(mockPendingUsersResponse);
-    apiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
+    mockApiClient.classControllerRoster.mockResolvedValue(mockRosterResponse);
+    mockApiClient.classControllerGetPendingEnrollment.mockResolvedValue(mockPendingUsersResponse);
+    mockApiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
 
     renderWithRouter();
 
@@ -128,10 +131,10 @@ describe("ClassEnroll", () => {
   });
 
   it("enrolls users when enroll button is clicked", async () => {
-    apiClient.classControllerRoster.mockResolvedValue(mockRosterResponse);
-    apiClient.classControllerGetPendingEnrollment.mockResolvedValue(mockPendingUsersResponse);
-    apiClient.classControllerEnroll.mockResolvedValue({ success: true });
-    apiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
+    mockApiClient.classControllerRoster.mockResolvedValue(mockRosterResponse);
+    mockApiClient.classControllerGetPendingEnrollment.mockResolvedValue(mockPendingUsersResponse);
+    mockApiClient.classControllerEnroll.mockResolvedValue({ success: true });
+    mockApiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
 
     renderWithRouter();
 
@@ -146,7 +149,7 @@ describe("ClassEnroll", () => {
     fireEvent.click(enrollButton);
 
     await waitFor(() => {
-      expect(apiClient.classControllerEnroll).toHaveBeenCalledWith({
+      expect(mockApiClient.classControllerEnroll).toHaveBeenCalledWith({
         classEnrollRequest: {
           classId: "test-class-id",
           studentEmails: ["newuser1@example.com", "newuser2@example.com"],
@@ -156,12 +159,12 @@ describe("ClassEnroll", () => {
   });
 
   it("shows error message on enrollment failure", async () => {
-    apiClient.classControllerRoster.mockResolvedValue(mockRosterResponse);
-    apiClient.classControllerGetPendingEnrollment.mockResolvedValue(mockPendingUsersResponse);
-    apiClient.classControllerEnroll.mockRejectedValue({
+    mockApiClient.classControllerRoster.mockResolvedValue(mockRosterResponse);
+    mockApiClient.classControllerGetPendingEnrollment.mockResolvedValue(mockPendingUsersResponse);
+    mockApiClient.classControllerEnroll.mockRejectedValue({
       message: "ConflictException: User already enrolled",
     });
-    apiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
+    mockApiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
 
     renderWithRouter();
 
@@ -181,11 +184,11 @@ describe("ClassEnroll", () => {
   });
 
   it("removes selected users", async () => {
-    apiClient.classControllerRoster.mockResolvedValue(mockRosterResponse);
-    apiClient.classControllerGetPendingEnrollment.mockResolvedValue(mockPendingUsersResponse);
-    apiClient.classControllerDelete.mockResolvedValue({ success: true });
-    apiClient.classControllerDeletePendingUsers.mockResolvedValue({ success: true });
-    apiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
+    mockApiClient.classControllerRoster.mockResolvedValue(mockRosterResponse);
+    mockApiClient.classControllerGetPendingEnrollment.mockResolvedValue(mockPendingUsersResponse);
+    mockApiClient.classControllerDelete.mockResolvedValue({ success: true });
+    mockApiClient.classControllerDeletePendingUsers.mockResolvedValue({ success: true });
+    mockApiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
 
     renderWithRouter();
 
@@ -208,7 +211,7 @@ describe("ClassEnroll", () => {
     fireEvent.click(removeButton);
 
     await waitFor(() => {
-      expect(apiClient.classControllerDelete).toHaveBeenCalledWith({
+      expect(mockApiClient.classControllerDelete).toHaveBeenCalledWith({
         classEnrollDeleteRequest: {
           classId: "test-class-id",
           studentIds: ["student1"],
@@ -218,10 +221,10 @@ describe("ClassEnroll", () => {
   });
 
   it("removes pending users through unified interface", async () => {
-    apiClient.classControllerRoster.mockResolvedValue(mockRosterResponse);
-    apiClient.classControllerGetPendingEnrollment.mockResolvedValue(mockPendingUsersResponse);
-    apiClient.classControllerDeletePendingUsers.mockResolvedValue({ success: true });
-    apiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
+    mockApiClient.classControllerRoster.mockResolvedValue(mockRosterResponse);
+    mockApiClient.classControllerGetPendingEnrollment.mockResolvedValue(mockPendingUsersResponse);
+    mockApiClient.classControllerDeletePendingUsers.mockResolvedValue({ success: true });
+    mockApiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
 
     renderWithRouter();
 
@@ -244,7 +247,7 @@ describe("ClassEnroll", () => {
     fireEvent.click(removeButton);
 
     await waitFor(() => {
-      expect(apiClient.classControllerDeletePendingUsers).toHaveBeenCalledWith({
+      expect(mockApiClient.classControllerDeletePendingUsers).toHaveBeenCalledWith({
         classDeletePendingEnrollmentRequest: {
           classId: "test-class-id",
           pendingUserIds: ["pending1"],
@@ -254,9 +257,9 @@ describe("ClassEnroll", () => {
   });
 
   it("handles select all functionality", async () => {
-    apiClient.classControllerRoster.mockResolvedValue(mockRosterResponse);
-    apiClient.classControllerGetPendingEnrollment.mockResolvedValue(mockPendingUsersResponse);
-    apiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
+    mockApiClient.classControllerRoster.mockResolvedValue(mockRosterResponse);
+    mockApiClient.classControllerGetPendingEnrollment.mockResolvedValue(mockPendingUsersResponse);
+    mockApiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
 
     renderWithRouter();
 
@@ -278,9 +281,9 @@ describe("ClassEnroll", () => {
   });
 
   it("filters users based on search input", async () => {
-    apiClient.classControllerRoster.mockResolvedValue(mockRosterResponse);
-    apiClient.classControllerGetPendingEnrollment.mockResolvedValue(mockPendingUsersResponse);
-    apiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
+    mockApiClient.classControllerRoster.mockResolvedValue(mockRosterResponse);
+    mockApiClient.classControllerGetPendingEnrollment.mockResolvedValue(mockPendingUsersResponse);
+    mockApiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
 
     renderWithRouter();
 
@@ -312,9 +315,9 @@ describe("ClassEnroll", () => {
       })),
     };
 
-    apiClient.classControllerRoster.mockResolvedValue(largeRoster);
-    apiClient.classControllerGetPendingEnrollment.mockResolvedValue({ pendingUsers: [] });
-    apiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
+    mockApiClient.classControllerRoster.mockResolvedValue(largeRoster);
+    mockApiClient.classControllerGetPendingEnrollment.mockResolvedValue({ pendingUsers: [] });
+    mockApiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
 
     renderWithRouter();
 

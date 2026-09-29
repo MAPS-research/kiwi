@@ -188,7 +188,12 @@ If you have any questions, please contact your instructor.`);
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>
-        <Box display="flex" alignItems="center" gap={1}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1
+          }}>
           <EmailIcon color="primary" />
           <Typography variant="h6">Send Email to Selected Users</Typography>
         </Box>
@@ -197,7 +202,7 @@ If you have any questions, please contact your instructor.`);
         <Box sx={{ mt: 2 }}>
           {/* User Summary */}
           <Alert severity="info" sx={{ mb: 3 }}>
-            <Typography variant="body2">
+            <Typography variant="body2" component="div">
               Sending to <strong>{selectedUsers.length}</strong> selected user(s):
               {pendingUsers.length > 0 && (
                 <Box component="span" sx={{ ml: 1 }}>
@@ -235,8 +240,14 @@ If you have any questions, please contact your instructor.`);
                   <ListItem>
                     <ListItemText
                       primary={user.email}
+                      slotProps={{ secondary: { component: "div" } }}
                       secondary={
-                        <Box display="flex" gap={1} alignItems="center">
+                        <Box
+                          sx={{
+                            display: "flex",
+                            gap: 1,
+                            alignItems: "center"
+                          }}>
                           <Chip
                             label={user.status}
                             size="small"
@@ -314,7 +325,12 @@ If you have any questions, please contact your instructor.`);
                     Welcome Email (for {pendingUsers.length} pending users):
                   </Typography>
                   <Box sx={{ mb: 3 }}>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "text.secondary",
+                        mb: 1
+                      }}>
                       Subject: {generateWelcomePreview().subject}
                     </Typography>
                     <Box
@@ -343,7 +359,12 @@ If you have any questions, please contact your instructor.`);
                   <Typography variant="subtitle2" sx={{ mb: 1 }}>
                     Class Announcement (for {activeUsers.length} active users):
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: "text.secondary",
+                      mb: 1
+                    }}>
                     Subject: {generateAnnouncementPreview().subject}
                   </Typography>
                   <Box
@@ -371,7 +392,12 @@ If you have any questions, please contact your instructor.`);
               ) : pendingUsers.length > 0 ? (
                 // Only pending users - show welcome preview
                 <>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: "text.secondary",
+                      mb: 1
+                    }}>
                     Subject: {generateWelcomePreview().subject}
                   </Typography>
                   <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
@@ -424,7 +450,12 @@ If you have any questions, please contact your instructor.`);
               ) : (
                 // Only active users - show announcement preview
                 <>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: "text.secondary",
+                      mb: 1
+                    }}>
                     Subject: {generateAnnouncementPreview().subject}
                   </Typography>
                   <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>

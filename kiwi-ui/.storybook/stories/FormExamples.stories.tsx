@@ -31,7 +31,12 @@ const BasicFormPreview = () => (
         <Typography component="h2" variant="h6">
           Create profile
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.secondary",
+            mt: 0.5
+          }}>
           Add the information people will use to identify you.
         </Typography>
       </Box>
@@ -46,7 +51,9 @@ const BasicFormPreview = () => (
           helperText="Used for account notifications."
         />
       </Stack>
-      <Stack direction={{ xs: "column-reverse", sm: "row" }} spacing={1} justifyContent="flex-end">
+      <Stack direction={{ xs: "column-reverse", sm: "row" }} spacing={1} sx={{
+        justifyContent: "flex-end"
+      }}>
         <Button variant="text">Cancel</Button>
         <Button variant="contained" type="submit">Create profile</Button>
       </Stack>

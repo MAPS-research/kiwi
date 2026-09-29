@@ -67,7 +67,9 @@ const SidebarItem = ({
         {icon}
       </ListItemIcon>
       <ListItemText
-        primary={<Typography fontWeight={active ? 600 : 400}>{label}</Typography>}
+        primary={<Typography sx={{
+          fontWeight: active ? 600 : 400
+        }}>{label}</Typography>}
       />
       {active && (
         <ChevronRightIcon sx={{ color: activeColor }} />

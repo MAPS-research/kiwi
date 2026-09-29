@@ -25,11 +25,12 @@ const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) =
   if (user.isAdmin === undefined) {
     return (
       <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-      >
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh"
+        }}>
         <CircularProgress />
       </Box>
     );

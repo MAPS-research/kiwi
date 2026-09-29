@@ -115,7 +115,9 @@ export const StandaloneDailySessions: React.FC<StandaloneDailySessionsProps> = (
                         <Typography component="h3" variant="subtitle1" sx={{ fontWeight: 600, mb: 0.25 }}>
                             {series.granularity === "hour" ? "Hourly Sessions" : "Daily Sessions"}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{
+                            color: "text.secondary"
+                        }}>
                             Sessions started each {series.granularity === "hour" ? "hour" : "day"}
                         </Typography>
                     </Box>

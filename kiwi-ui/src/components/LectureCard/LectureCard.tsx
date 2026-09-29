@@ -49,11 +49,18 @@ const LectureCard = ({
           }}
         >
           {/* Top area */}
-          <Typography variant="subtitle1" fontWeight={600}>
+          <Typography variant="subtitle1" sx={{
+            fontWeight: 600
+          }}>
             {lectureNumber}
           </Typography>
 
-          <Typography variant="h6" fontWeight={700} sx={{ mt: 1 }}>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 700,
+              mt: 1
+            }}>
             {lectureTitle}
           </Typography>
 
@@ -65,7 +72,9 @@ const LectureCard = ({
           <Box sx={{ flexGrow: 1 }} />
 
           {/* Bottom area (pinned to bottom of the Card via flexGrow above) */}
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             {description}
           </Typography>
         </CardContent>

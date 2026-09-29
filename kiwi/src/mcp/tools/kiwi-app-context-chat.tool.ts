@@ -1,5 +1,12 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { Tool, Context } from '@rekog/mcp-nest';
+import { reportMcpProgress } from '../utils/report-progress';
+import { Payload, Ctx } from '@nestjs/microservices';
+import { Logger } from '@nestjs/common';
+import {
+  Tool,
+  McpContext as Context,
+  McpController,
+  McpRawRequest,
+} from '@rekog/mcp-nest';
 import { z } from 'zod';
 import { Request } from 'express';
 import { ContextInclude } from 'src/kiwi-app/app-context.service';
@@ -23,7 +30,7 @@ import {
  *   (context:student_learning:read)
  * - the assembled context is injected as a system message and never echoed
  */
-@Injectable()
+@McpController()
 export class KiwiAppContextChatTool {
   private readonly logger = new Logger(KiwiAppContextChatTool.name);
 
@@ -34,7 +41,7 @@ export class KiwiAppContextChatTool {
   @Tool({
     name: 'kiwi_app_contextual_chat',
     description:
-      "Run an approved Kiwi App prompt with platform-held student learning context. " +
+      'Run an approved Kiwi App prompt with platform-held student learning context. ' +
       'Kiwi assembles the context (recent questions, weak concepts, relevant materials) ' +
       'server-side and returns only the LLM output — raw student data is never exposed. ' +
       'Requires an app token with both the "llm:prompt:<promptId>" and ' +
@@ -75,11 +82,7 @@ export class KiwiAppContextChatTool {
           .describe('How far back to look for interaction data (default 14)'),
         include: z
           .array(
-            z.enum([
-              'recent_questions',
-              'weak_concepts',
-              'relevant_materials',
-            ]),
+            z.enum(['recent_questions', 'weak_concepts', 'relevant_materials']),
           )
           .nonempty()
           .describe('Which context sections to assemble'),
@@ -92,7 +95,7 @@ export class KiwiAppContextChatTool {
           ),
       }),
       outputSchema: z
-        .record(z.any())
+        .record(z.string(), z.any())
         .optional()
         .describe(
           'Optional JSON Schema (root type "object") the LLM output must conform to',
@@ -106,6 +109,7 @@ export class KiwiAppContextChatTool {
     },
   })
   async kiwiAppContextualChat(
+    @Payload()
     {
       appSlug,
       promptId,
@@ -125,8 +129,8 @@ export class KiwiAppContextChatTool {
       };
       outputSchema?: Record<string, any>;
     },
-    context: Context,
-    request: Request,
+    @Ctx() context: Context,
+    @McpRawRequest() request: Request,
   ) {
     try {
       // Host-mediated by design: only app tokens are accepted, and the target
@@ -153,7 +157,7 @@ export class KiwiAppContextChatTool {
         );
       }
 
-      await context.reportProgress({ progress: 20, total: 100 });
+      await reportMcpProgress(context, { progress: 20, total: 100 });
 
       // Shared with the App API REST endpoint. The target userId/classId come
       // from the token; the orchestration + privacy contract live in the service.
@@ -168,7 +172,7 @@ export class KiwiAppContextChatTool {
         request,
       });
 
-      await context.reportProgress({ progress: 100, total: 100 });
+      await reportMcpProgress(context, { progress: 100, total: 100 });
 
       // Only the LLM output leaves the platform — never the assembled context.
       return {

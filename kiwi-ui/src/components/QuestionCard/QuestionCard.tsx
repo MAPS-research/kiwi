@@ -162,12 +162,15 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   
           {/* Row for Viewed/Comments text */}
           <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between" // Push IconButton to the right
-            sx={{ mt: 0 }}
-            >
-            <Typography variant="body2" color="text.secondary">
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              mt: 0
+            }}>
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               {currentNumUpvotes} Upvoted, Asked {formatTimeAgo(time)}{" "}
               {instructorApproved ? "Instructor Approved" : null}
             </Typography>

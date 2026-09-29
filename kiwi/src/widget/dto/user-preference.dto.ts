@@ -42,6 +42,7 @@ export class UpdateUserPreferenceDto {
   @ApiPropertyOptional({
     description: 'Per-app preferences',
     type: 'object',
+    additionalProperties: true,
     example: {
       codegen: { autoSave: true, showLineNumbers: true },
     },
@@ -67,7 +68,7 @@ export class UserPreferenceResponseDto {
   @ApiProperty()
   codeEditorFontSize: number;
 
-  @ApiProperty({ type: 'object' })
+  @ApiProperty({ type: 'object', additionalProperties: true })
   appPreferences: Record<string, any>;
 
   @ApiProperty()

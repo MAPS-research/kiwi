@@ -19,7 +19,7 @@ import { ChatContext } from "../../pages/ClassLayout.tsx";
 import { DocumentIdsForChat } from "../../services/index.ts";
 import { PDFViewerForStudents } from "../PDFViewer/PDFViewerForStudent.tsx";
 import { useSaveInteraction } from "../../utils/useSaveInteraction.ts";
-import type { DocumentCommentPin } from "../../types/documentComments";
+import type { DocumentCommentPin } from "../../types/documentComments.ts";
 import { mapServerCommentToPin } from "../../utils/documentComments.ts";
 
 /**

@@ -6,9 +6,9 @@ describe('threadScope', () => {
   it('scopes by user, always', () => {
     // userId is part of the scope rather than a filter applied afterwards, so a
     // thread key can never reach another user's turns (#117).
-    expect(
-      threadScope({ userId: 'u1', threadKey: 't1' }),
-    ).toMatchObject({ userId: 'u1' });
+    expect(threadScope({ userId: 'u1', threadKey: 't1' })).toMatchObject({
+      userId: 'u1',
+    });
   });
 
   it('matches historical turns through the legacy key', () => {

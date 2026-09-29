@@ -47,6 +47,7 @@ export class WebhookEventAuditDto {
   @ApiPropertyOptional({
     description: 'User details who performed the action',
     type: 'object',
+    additionalProperties: true,
     example: { id: 'user-123', email: 'admin@example.com' },
   })
   performer?: any;

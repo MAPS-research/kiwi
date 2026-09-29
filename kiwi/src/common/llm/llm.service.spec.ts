@@ -7,12 +7,18 @@ describe('LlmService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [LlmService],
-    }).compile();
+    })
+      .useMocker(() => ({ get: jest.fn() }))
+      .compile();
 
     service = module.get<LlmService>(LlmService);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  it('starts without credentials for unused engines', () => {
+    expect(() => service.onModuleInit()).not.toThrow();
   });
 });

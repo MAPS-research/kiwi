@@ -158,7 +158,6 @@ export class MaterialController {
     return await this.materialService.list(classId);
   }
 
-
   /**
    * Upload a file into a material and start processing it.
    *

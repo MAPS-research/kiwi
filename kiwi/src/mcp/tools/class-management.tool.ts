@@ -1,5 +1,12 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { Tool, Context } from '@rekog/mcp-nest';
+import { reportMcpProgress } from '../utils/report-progress';
+import { Payload, Ctx } from '@nestjs/microservices';
+import { Logger } from '@nestjs/common';
+import {
+  Tool,
+  McpContext as Context,
+  McpController,
+  McpRawRequest,
+} from '@rekog/mcp-nest';
 import { z } from 'zod';
 import { Request } from 'express';
 import { ClassService } from 'src/class/class.service';
@@ -9,7 +16,7 @@ import { UserService } from 'src/common/database/user.service';
  * MCP Tools for Class Management
  * Allows AI assistants to manage class enrollments and information
  */
-@Injectable()
+@McpController()
 export class ClassManagementTool {
   private readonly logger = new Logger(ClassManagementTool.name);
 
@@ -44,9 +51,10 @@ export class ClassManagementTool {
     },
   })
   async addUsersToClass(
+    @Payload()
     { classId, userEmails }: { classId: string; userEmails: string[] },
-    context: Context,
-    request: Request,
+    @Ctx() context: Context,
+    @McpRawRequest() request: Request,
   ) {
     try {
       // Get user ID from request
@@ -87,12 +95,12 @@ export class ClassManagementTool {
       }
 
       // Report progress
-      await context.reportProgress({ progress: 30, total: 100 });
+      await reportMcpProgress(context, { progress: 30, total: 100 });
 
       // Enroll users
       const result = await this.classService.enroll(classId, userEmails);
 
-      await context.reportProgress({ progress: 100, total: 100 });
+      await reportMcpProgress(context, { progress: 100, total: 100 });
 
       return {
         content: [
@@ -147,9 +155,9 @@ export class ClassManagementTool {
     },
   })
   async getClassRoster(
-    { classId }: { classId: string },
-    context: Context,
-    request: Request,
+    @Payload() { classId }: { classId: string },
+    @Ctx() context: Context,
+    @McpRawRequest() request: Request,
   ) {
     try {
       const userId = (request as any).user?.sub;
@@ -186,11 +194,11 @@ export class ClassManagementTool {
         };
       }
 
-      await context.reportProgress({ progress: 50, total: 100 });
+      await reportMcpProgress(context, { progress: 50, total: 100 });
 
       const roster = await this.classService.roster(classId);
 
-      await context.reportProgress({ progress: 100, total: 100 });
+      await reportMcpProgress(context, { progress: 100, total: 100 });
 
       const users = roster.users || [];
 
@@ -201,9 +209,8 @@ export class ClassManagementTool {
             text: JSON.stringify(
               {
                 classId,
-                totalStudents: users.filter(
-                  (u: any) => u.role === 'student',
-                ).length,
+                totalStudents: users.filter((u: any) => u.role === 'student')
+                  .length,
                 totalProfessors: users.filter(
                   (u: any) => u.role === 'professor',
                 ).length,
@@ -243,7 +250,11 @@ export class ClassManagementTool {
       idempotentHint: true,
     },
   })
-  async getAuthenticatedUser({}, context: Context, request: Request) {
+  async getAuthenticatedUser(
+    @Payload() {},
+    @Ctx() context: Context,
+    @McpRawRequest() request: Request,
+  ) {
     try {
       const userId = (request as any).user?.sub;
       if (!userId) {

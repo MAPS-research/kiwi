@@ -157,7 +157,12 @@ export class WebhookEventService {
     return { message: 'Event approved and executed successfully' };
   }
 
-  async rejectEvent(eventId: string, adminUserId: string, reason?: string, metadata?: any) {
+  async rejectEvent(
+    eventId: string,
+    adminUserId: string,
+    reason?: string,
+    metadata?: any,
+  ) {
     const event = await this.getWebhookEvent(eventId);
 
     if (event.status !== 'pending') {
@@ -196,7 +201,9 @@ export class WebhookEventService {
     const { email, classId } = payload;
 
     if (!email || !classId) {
-      throw new BadRequestException('Email and classId are required in payload');
+      throw new BadRequestException(
+        'Email and classId are required in payload',
+      );
     }
 
     try {
@@ -248,7 +255,9 @@ export class WebhookEventService {
       });
 
       if (existingEnrollment) {
-        this.logger.log(`User ${email} is already enrolled in class ${classId}`);
+        this.logger.log(
+          `User ${email} is already enrolled in class ${classId}`,
+        );
         // Still mark as executed since the end goal is achieved
         await this.webhookEventService.update({
           where: { id: eventId },
@@ -320,7 +329,8 @@ export class WebhookEventService {
 
   // Audit history methods
   async getEventAuditHistory(eventId: string) {
-    const audits = await this.webhookEventAuditService.findByWebhookEvent(eventId);
+    const audits =
+      await this.webhookEventAuditService.findByWebhookEvent(eventId);
     return {
       audits,
       total: audits.length,
@@ -360,12 +370,15 @@ export class WebhookEventService {
     };
   }
 
-  async getUserAuditHistory(userId: string, params?: {
-    page?: number;
-    limit?: number;
-    skip?: number;
-    action?: string;
-  }) {
+  async getUserAuditHistory(
+    userId: string,
+    params?: {
+      page?: number;
+      limit?: number;
+      skip?: number;
+      action?: string;
+    },
+  ) {
     const page = params?.page || 1;
     const limit = params?.limit || 20;
     const skip = params?.skip ?? (page - 1) * limit;

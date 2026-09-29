@@ -7,7 +7,9 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
  * it — the blocks contain course material and student conversation text.
  */
 export class ContextBlockDto {
-  @ApiProperty({ description: 'Position in the messages array sent to the model' })
+  @ApiProperty({
+    description: 'Position in the messages array sent to the model',
+  })
   index: number;
 
   @ApiProperty({ enum: ['system', 'user', 'assistant', 'tool'] })
@@ -36,12 +38,14 @@ export class ContextBlockDto {
   estTokens: number;
 
   @ApiPropertyOptional({
-    description: 'Short fingerprint, for spotting which block changed between turns',
+    description:
+      'Short fingerprint, for spotting which block changed between turns',
   })
   hash?: string;
 
   @ApiPropertyOptional({
-    description: 'Raw block text. Admin-only, and only when includeContent=true.',
+    description:
+      'Raw block text. Admin-only, and only when includeContent=true.',
   })
   content?: string;
 }

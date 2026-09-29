@@ -7,7 +7,9 @@ describe('ConsentController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ConsentController],
-    }).compile();
+    })
+      .useMocker(() => ({ get: jest.fn() }))
+      .compile();
 
     controller = module.get<ConsentController>(ConsentController);
   });

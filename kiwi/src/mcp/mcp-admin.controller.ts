@@ -9,7 +9,6 @@ import {
   Param,
   Post,
   Put,
-  Query,
   Session,
   UseGuards,
 } from '@nestjs/common';
@@ -18,7 +17,6 @@ import {
   ApiBody,
   ApiOperation,
   ApiParam,
-  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -237,7 +235,9 @@ export class McpAdminController {
     @Param('id') id: string,
     @Session() session: { userId: string },
   ): Promise<any[]> {
-    this.logger.log(`User ${session.userId} listing tools from MCP server ${id}`);
+    this.logger.log(
+      `User ${session.userId} listing tools from MCP server ${id}`,
+    );
 
     return await this.mcpService.listMcpServerTools(id);
   }

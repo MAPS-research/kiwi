@@ -1,4 +1,4 @@
-import { ApiProperty, getSchemaPath } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { DocumentResponse } from './file-upload.dto';
 
 export class ChunkRequest {
@@ -52,13 +52,16 @@ export class Chunk {
   @ApiProperty({ description: 'Text content of the chunk', required: false })
   text?: string;
 
-  @ApiProperty({ description: 'Chunk type (e.g., "text", "image", "table")', required: false })
+  @ApiProperty({
+    description: 'Chunk type (e.g., "text", "image", "table")',
+    required: false,
+  })
   type?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Additional metadata for the chunk',
     type: 'object',
-    required: false,
+    additionalProperties: true,
   })
   metadata?: Record<string, any>;
 }

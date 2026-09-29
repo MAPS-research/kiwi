@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from './database.service';
 import { Embedding, Prisma } from '@prisma/client';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 
 interface EmbeddingCreateInput {
   embedding: number[];
@@ -60,7 +60,7 @@ export class EmbeddingService {
   }
 
   async createEmbedding(data: EmbeddingCreateInput): Promise<number> {
-    const id = uuidv4();
+    const id = randomUUID();
     const chunkData = JSON.stringify(data.chunk);
     try {
       // Every vector for this chunk, primary first.
@@ -95,7 +95,7 @@ export class EmbeddingService {
       for (const vector of vectors) {
         await this.database.$executeRaw`
           INSERT INTO "EmbeddingVector" ("id", "embeddingId", "modelId", "embedding")
-          VALUES (${uuidv4()}, ${id}, ${vector.modelId}, ${JSON.stringify(vector.embedding)}::vector)
+          VALUES (${randomUUID()}, ${id}, ${vector.modelId}, ${JSON.stringify(vector.embedding)}::vector)
           ON CONFLICT ("embeddingId", "modelId") DO NOTHING;
         `;
       }
@@ -186,8 +186,15 @@ export class EmbeddingService {
     modelId: string;
     dimensions: number;
   }): Promise<Embedding[]> {
-    const { embeddingVector, n, fileIds, pageNumber, oMode, modelId, dimensions } =
-      params;
+    const {
+      embeddingVector,
+      n,
+      fileIds,
+      pageNumber,
+      oMode,
+      modelId,
+      dimensions,
+    } = params;
 
     // dimensions comes from our own EmbeddingModel registry, not user input.
     // Validate it's a positive integer before interpolating into the cast type

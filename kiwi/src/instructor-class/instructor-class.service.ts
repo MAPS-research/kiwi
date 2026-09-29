@@ -41,7 +41,9 @@ export class InstructorClassService {
       where: { userId_classId: { userId: user.id, classId } },
     });
     if (existingAssignment) {
-      throw new BadRequestException('Instructor already assigned to this class');
+      throw new BadRequestException(
+        'Instructor already assigned to this class',
+      );
     }
 
     // Create the instructor-class relationship
@@ -73,9 +75,7 @@ export class InstructorClassService {
       where: { userId_classId: { userId: user.id, classId } },
     });
     if (!existing) {
-      throw new BadRequestException(
-        'Instructor is not assigned to this class',
-      );
+      throw new BadRequestException('Instructor is not assigned to this class');
     }
 
     const updated = await this.database.instructorClass.update({
@@ -143,7 +143,10 @@ export class InstructorClassService {
   async getInstructorPermissionsForClass(
     userId: string,
     classId: string,
-  ): Promise<{ canManageMaterials: boolean; canViewAnalytics: boolean } | null> {
+  ): Promise<{
+    canManageMaterials: boolean;
+    canViewAnalytics: boolean;
+  } | null> {
     const instructorClass = await this.database.instructorClass.findUnique({
       where: {
         userId_classId: { userId, classId },

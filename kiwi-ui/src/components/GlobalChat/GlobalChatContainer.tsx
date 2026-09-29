@@ -1,7 +1,7 @@
 import React from 'react';
-import { useAuth } from '../../auth/AuthContext';
-import { GlobalChatButton } from './GlobalChatButton';
-import { GlobalChatModal } from './GlobalChatModal';
+import { useAuth } from '../../auth/AuthContext.tsx';
+import { GlobalChatButton } from './GlobalChatButton.tsx';
+import { GlobalChatModal } from './GlobalChatModal.tsx';
 
 /**
  * Container component that renders both the floating chat button

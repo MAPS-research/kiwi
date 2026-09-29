@@ -117,7 +117,9 @@ const EmailComposer: React.FC<EmailComposerProps> = ({
 
       {!allowRecipientSelection && recipients.length > 0 && (
         <Box>
-          <Typography variant="body2" color="text.secondary" gutterBottom>
+          <Typography variant="body2" gutterBottom sx={{
+            color: "text.secondary"
+          }}>
             Recipients: {recipients.length} selected
           </Typography>
         </Box>
@@ -129,12 +131,19 @@ const EmailComposer: React.FC<EmailComposerProps> = ({
         value={subject}
         onChange={(e) => setSubject(e.target.value)}
         disabled={sending}
-        InputProps={{
-          startAdornment: subjectPrefix ? (
-            <Typography variant="body2" color="text.secondary" sx={{ mr: 1 }}>
-              {subjectPrefix}
-            </Typography>
-          ) : undefined,
+        slotProps={{
+          input: {
+            startAdornment: subjectPrefix ? (
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                  mr: 1
+                }}>
+                {subjectPrefix}
+              </Typography>
+            ) : undefined,
+          }
         }}
       />
 

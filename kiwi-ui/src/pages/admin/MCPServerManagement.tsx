@@ -25,17 +25,17 @@ import {
 } from "@mui/material";
 import {
   AddOutlined as AddIcon,
-  DeleteOutline as DeleteIcon,
+  DeleteOutlined as DeleteIcon,
   EditOutlined as EditIcon,
   LinkOutlined as LinkIcon,
   PlayArrowOutlined as TestIcon,
   RefreshOutlined as RefreshIcon,
 } from "@mui/icons-material";
-import { mcpAdminApiClient, mcpUserApiClient } from "../../utils/api";
-import type { McpServerResponseDto, McpServerTestResponseDto } from "../../services/models";
-import { MCPServerDialog } from "../../components/MCP/MCPServerDialog";
-import { MCPTestResultDialog } from "../../components/MCP/MCPTestResultDialog";
-import { DeleteConfirmDialog } from "../../components/MCP/DeleteConfirmDialog";
+import { mcpAdminApiClient, mcpUserApiClient } from "../../utils/api.ts";
+import type { McpServerResponseDto, McpServerTestResponseDto } from "../../services/models/index.ts";
+import { MCPServerDialog } from "../../components/MCP/MCPServerDialog.tsx";
+import { MCPTestResultDialog } from "../../components/MCP/MCPTestResultDialog.tsx";
+import { DeleteConfirmDialog } from "../../components/MCP/DeleteConfirmDialog.tsx";
 import { AdminPage, AdminPageHeader } from "../../components/AdminPage/index.ts";
 
 export const MCPServerManagement: React.FC = () => {
@@ -331,10 +331,17 @@ export const MCPServerManagement: React.FC = () => {
         </TableContainer>
       ) : servers.length === 0 ? (
         <Paper sx={{ p: 4, textAlign: "center" }}>
-          <Typography variant="h6" color="text.secondary" gutterBottom>
+          <Typography variant="h6" gutterBottom sx={{
+            color: "text.secondary"
+          }}>
             No MCP Servers Configured
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "text.secondary",
+              mb: 2
+            }}>
             Create a global MCP server, then assign it to classes from the class MCP settings page.
           </Typography>
           <Button
@@ -362,11 +369,15 @@ export const MCPServerManagement: React.FC = () => {
               {servers.map((server) => (
                 <TableRow key={server.id}>
                   <TableCell>
-                    <Typography variant="body2" fontWeight={500}>
+                    <Typography variant="body2" sx={{
+                      fontWeight: 500
+                    }}>
                       {server.name}
                     </Typography>
                     {server.description && (
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
                         {server.description}
                       </Typography>
                     )}

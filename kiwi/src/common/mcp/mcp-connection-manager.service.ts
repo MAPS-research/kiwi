@@ -217,10 +217,7 @@ export class McpConnectionManagerService {
    * Disconnect a user from an MCP server
    * Revokes tokens and deletes connection
    */
-  async disconnectUser(
-    userId: string,
-    mcpServerId: string,
-  ): Promise<void> {
+  async disconnectUser(userId: string, mcpServerId: string): Promise<void> {
     const connection = await this.prisma.mcpUserConnection.findUnique({
       where: {
         userId_mcpServerId: {

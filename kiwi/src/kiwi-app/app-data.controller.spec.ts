@@ -20,7 +20,10 @@ describe('AppDataController', () => {
       appContext: {
         appSlug: 'flashcards',
         classId: 'class-1',
-        scopes: ['class:materials:chunks:read', 'context:student_learning:read'],
+        scopes: [
+          'class:materials:chunks:read',
+          'context:student_learning:read',
+        ],
         userId: 'user-1',
         ...overrides,
       },
@@ -40,7 +43,10 @@ describe('AppDataController', () => {
       providers: [
         { provide: KiwiAppService, useValue: kiwiAppService },
         { provide: AppChunksService, useValue: appChunksService },
-        { provide: AppContextualChatService, useValue: appContextualChatService },
+        {
+          provide: AppContextualChatService,
+          useValue: appContextualChatService,
+        },
       ],
     }).compile();
     controller = moduleRef.get(AppDataController);
@@ -126,9 +132,13 @@ describe('AppDataController', () => {
 
   it('rejects contextual-chat without an app token', async () => {
     await expect(
-      controller.contextualChat('flashcards', chatDto as any, {
-        user: { sub: 'user-1' },
-      } as any),
+      controller.contextualChat(
+        'flashcards',
+        chatDto as any,
+        {
+          user: { sub: 'user-1' },
+        } as any,
+      ),
     ).rejects.toBeInstanceOf(ForbiddenException);
     expect(appContextualChatService.run).not.toHaveBeenCalled();
   });
@@ -138,7 +148,12 @@ describe('AppDataController', () => {
       controller.contextualChat(
         'other-app',
         chatDto as any,
-        appTokenReq({ scopes: ['llm:prompt:weekly-summary', 'context:student_learning:read'] }),
+        appTokenReq({
+          scopes: [
+            'llm:prompt:weekly-summary',
+            'context:student_learning:read',
+          ],
+        }),
       ),
     ).rejects.toBeInstanceOf(ForbiddenException);
   });

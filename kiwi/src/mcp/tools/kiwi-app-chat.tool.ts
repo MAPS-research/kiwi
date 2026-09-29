@@ -1,10 +1,21 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { Tool, Context } from '@rekog/mcp-nest';
+import { reportMcpProgress } from '../utils/report-progress';
+import { Payload, Ctx } from '@nestjs/microservices';
+import { Logger } from '@nestjs/common';
+import {
+  Tool,
+  McpContext as Context,
+  McpController,
+  McpRawRequest,
+} from '@rekog/mcp-nest';
 import { z } from 'zod';
 import { Request } from 'express';
 import { LlmService } from 'src/common/llm/llm.service';
 import { KiwiAppService } from 'src/kiwi-app/kiwi-app.service';
-import { requireScope, isAppTokenRequest, getAppContext } from '../utils/scope-check';
+import {
+  requireScope,
+  isAppTokenRequest,
+  getAppContext,
+} from '../utils/scope-check';
 import OpenAI from 'openai';
 
 /**
@@ -18,7 +29,7 @@ import OpenAI from 'openai';
  *
  * This ensures that apps cannot run arbitrary LLM requests with any system prompt.
  */
-@Injectable()
+@McpController()
 export class KiwiAppChatTool {
   private readonly logger = new Logger(KiwiAppChatTool.name);
 
@@ -34,7 +45,7 @@ export class KiwiAppChatTool {
   @Tool({
     name: 'kiwi_app_chat',
     description:
-      'Send a message to the AI using a Kiwi App\'s pre-approved prompt. ' +
+      "Send a message to the AI using a Kiwi App's pre-approved prompt. " +
       'Apps must register prompts during registration and have them approved by an admin. ' +
       'This tool enforces that only approved system prompts can be used.',
     parameters: z.object({
@@ -44,7 +55,9 @@ export class KiwiAppChatTool {
         .nonempty('App slug is required'),
       promptId: z
         .string()
-        .describe('The ID of the pre-approved prompt to use (e.g., "hint", "explain-error")')
+        .describe(
+          'The ID of the pre-approved prompt to use (e.g., "hint", "explain-error")',
+        )
         .nonempty('Prompt ID is required'),
       userMessage: z
         .string()
@@ -63,6 +76,7 @@ export class KiwiAppChatTool {
     },
   })
   async kiwiAppChat(
+    @Payload()
     {
       appSlug,
       promptId,
@@ -74,8 +88,8 @@ export class KiwiAppChatTool {
       userMessage: string;
       image?: string;
     },
-    context: Context,
-    request: Request,
+    @Ctx() context: Context,
+    @McpRawRequest() request: Request,
   ) {
     try {
       this.logger.debug(
@@ -95,14 +109,17 @@ export class KiwiAppChatTool {
         }
       }
 
-      await context.reportProgress({ progress: 10, total: 100 });
+      await reportMcpProgress(context, { progress: 10, total: 100 });
 
       // Get the approved prompt - this throws if not found or not approved
-      const prompt = await this.kiwiAppService.getActivePrompt(appSlug, promptId);
+      const prompt = await this.kiwiAppService.getActivePrompt(
+        appSlug,
+        promptId,
+      );
 
       this.logger.debug(`Using prompt: ${prompt.name} (${prompt.id})`);
 
-      await context.reportProgress({ progress: 30, total: 100 });
+      await reportMcpProgress(context, { progress: 30, total: 100 });
 
       // Build messages array with system prompt and user message
       const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
@@ -138,7 +155,7 @@ export class KiwiAppChatTool {
         prompt.maxTokens ?? undefined,
       );
 
-      await context.reportProgress({ progress: 100, total: 100 });
+      await reportMcpProgress(context, { progress: 100, total: 100 });
 
       const content =
         response.choices[0]?.message?.content || 'No response generated';
@@ -203,9 +220,9 @@ export class KiwiAppChatTool {
     },
   })
   async listAppPrompts(
-    { appSlug }: { appSlug: string },
-    context: Context,
-    request: Request,
+    @Payload() { appSlug }: { appSlug: string },
+    @Ctx() _context: Context,
+    @McpRawRequest() _request: Request,
   ) {
     try {
       this.logger.debug(`Listing prompts for app: ${appSlug}`);

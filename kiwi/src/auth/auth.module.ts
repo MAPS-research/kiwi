@@ -4,6 +4,7 @@ import { WellKnownController } from './wellknown.controller';
 import { AuthService } from './auth.service';
 import { DatabaseModule } from 'src/common/database/database.module';
 import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 import { jwtExpiration } from './auth.constants';
 import { APP_GUARD } from '@nestjs/core';
 import {
@@ -26,6 +27,7 @@ import { isDevAuthEnabled } from './dev-auth';
 
 @Module({
   imports: [
+    PassportModule.register({}),
     ConfigModule.forRoot(),
     DatabaseModule,
     ClassModule,
@@ -90,6 +92,12 @@ import { isDevAuthEnabled } from './dev-auth';
     JwtAuthOptionalSessionGuard,
     SmartJwtAuthGuard,
   ],
-  exports: [AdminGuard, ProfGuard, JwtAuthOptionalSessionGuard, SmartJwtAuthGuard, JwtKeysService],
+  exports: [
+    AdminGuard,
+    ProfGuard,
+    JwtAuthOptionalSessionGuard,
+    SmartJwtAuthGuard,
+    JwtKeysService,
+  ],
 })
 export class AuthModule {}

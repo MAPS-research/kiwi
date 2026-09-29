@@ -9,11 +9,11 @@ export {
   useClassApp,
   useIsAppEnabled,
   useAppToken,
-} from './ClassAppsContext';
+} from './ClassAppsContext.tsx';
 
 export type {
   ClassKiwiAppConfig,
   ClassAppsResponse,
   ClassAppsContextValue,
   ClassAppsProviderProps,
-} from './types';
+} from './types.ts';

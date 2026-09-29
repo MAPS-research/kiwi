@@ -7,7 +7,9 @@ describe('FeatureFlagsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [FeatureFlagsController],
-    }).compile();
+    })
+      .useMocker(() => ({ get: jest.fn() }))
+      .compile();
 
     controller = module.get<FeatureFlagsController>(FeatureFlagsController);
   });

@@ -1,9 +1,4 @@
-import {
-  IsString,
-  IsOptional,
-  IsObject,
-  IsUUID,
-} from 'class-validator';
+import { IsString, IsOptional, IsObject, IsUUID } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class SaveWidgetStateDto {
@@ -24,6 +19,7 @@ export class SaveWidgetStateDto {
   @ApiProperty({
     description: 'Widget state object to persist',
     type: 'object',
+    additionalProperties: true,
     example: { code: 'print("hello")', currentTab: 'editor' },
   })
   @IsObject()
@@ -78,6 +74,7 @@ export class UpdateWidgetStateDto {
   @ApiProperty({
     description: 'Widget state to merge with existing state',
     type: 'object',
+    additionalProperties: true,
   })
   @IsObject()
   widgetState: Record<string, any>;
@@ -111,7 +108,7 @@ export class WidgetStateResponseDto {
   @ApiPropertyOptional()
   exerciseSetId?: string;
 
-  @ApiProperty({ type: 'object' })
+  @ApiProperty({ type: 'object', additionalProperties: true })
   widgetState: Record<string, any>;
 
   @ApiProperty({ enum: ['compact', 'expanded', 'fullscreen'] })

@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ExecutionContext, BadRequestException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { McpUserController } from './mcp-user.controller';
 import { McpService } from './mcp.service';
 import { JwtAuthGuard } from '../auth/auth.guard';
@@ -18,11 +19,6 @@ describe('McpUserController - Permission Tests', () => {
   // Mock user data
   const user1 = {
     sub: 'user-123',
-    systemRole: 'student',
-  };
-
-  const user2 = {
-    sub: 'user-456',
     systemRole: 'student',
   };
 
@@ -77,6 +73,12 @@ describe('McpUserController - Permission Tests', () => {
         {
           provide: McpService,
           useValue: mockMcpServiceValue,
+        },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn().mockReturnValue('http://localhost:3001'),
+          },
         },
       ],
     })
@@ -206,9 +208,9 @@ describe('McpUserController - Permission Tests', () => {
         new BadRequestException('Server does not require OAuth'),
       );
 
-      await expect(
-        controller.initiateOAuth(serverId, session),
-      ).rejects.toThrow('Server does not require OAuth');
+      await expect(controller.initiateOAuth(serverId, session)).rejects.toThrow(
+        'Server does not require OAuth',
+      );
     });
   });
 
@@ -221,24 +223,28 @@ describe('McpUserController - Permission Tests', () => {
     it('should allow public access (no authentication required)', async () => {
       // OAuth callback should work without authentication
       mcpService.handleOAuthCallback.mockResolvedValue(mockOAuthCallback);
+      const response = { redirect: jest.fn() };
 
-      const result = await controller.handleOAuthCallback(validQuery);
+      await controller.handleOAuthCallback(validQuery, response as any);
 
       expect(mcpService.handleOAuthCallback).toHaveBeenCalledWith(
         'auth-code-123',
         'state-xyz',
       );
-      expect(result).toEqual(mockOAuthCallback);
+      expect(response.redirect).toHaveBeenCalledWith(
+        'http://localhost:3001/?mcp_oauth_success=true',
+      );
     });
 
     it('should successfully complete OAuth flow with valid code and state', async () => {
       mcpService.handleOAuthCallback.mockResolvedValue(mockOAuthCallback);
+      const response = { redirect: jest.fn() };
 
-      const result = await controller.handleOAuthCallback(validQuery);
+      await controller.handleOAuthCallback(validQuery, response as any);
 
-      expect(result.message).toBe('Successfully connected to MCP server');
-      expect(result.connection).toBeDefined();
-      expect(result.connection.userId).toBe('user-123');
+      expect(response.redirect).toHaveBeenCalledWith(
+        'http://localhost:3001/?mcp_oauth_success=true',
+      );
     });
 
     it('should throw error when OAuth provider returns error', async () => {
@@ -249,9 +255,14 @@ describe('McpUserController - Permission Tests', () => {
         error_description: 'User denied access',
       };
 
-      await expect(
-        controller.handleOAuthCallback(errorQuery),
-      ).rejects.toThrow('OAuth authorization failed: access_denied');
+      const response = { redirect: jest.fn() };
+
+      await controller.handleOAuthCallback(errorQuery, response as any);
+
+      expect(mcpService.handleOAuthCallback).not.toHaveBeenCalled();
+      expect(response.redirect).toHaveBeenCalledWith(
+        'http://localhost:3001/?mcp_oauth_error=access_denied',
+      );
     });
 
     it('should handle invalid state parameter', async () => {
@@ -263,20 +274,26 @@ describe('McpUserController - Permission Tests', () => {
       mcpService.handleOAuthCallback.mockRejectedValue(
         new Error('Invalid state parameter'),
       );
+      const response = { redirect: jest.fn() };
 
-      await expect(
-        controller.handleOAuthCallback(invalidStateQuery),
-      ).rejects.toThrow('Invalid state parameter');
+      await controller.handleOAuthCallback(invalidStateQuery, response as any);
+
+      expect(response.redirect).toHaveBeenCalledWith(
+        'http://localhost:3001/?mcp_oauth_error=Invalid%20state%20parameter',
+      );
     });
 
     it('should handle expired authorization code', async () => {
       mcpService.handleOAuthCallback.mockRejectedValue(
         new Error('Authorization code expired'),
       );
+      const response = { redirect: jest.fn() };
 
-      await expect(
-        controller.handleOAuthCallback(validQuery),
-      ).rejects.toThrow('Authorization code expired');
+      await controller.handleOAuthCallback(validQuery, response as any);
+
+      expect(response.redirect).toHaveBeenCalledWith(
+        'http://localhost:3001/?mcp_oauth_error=Authorization%20code%20expired',
+      );
     });
   });
 
@@ -404,10 +421,13 @@ describe('McpUserController - Permission Tests', () => {
       };
 
       mcpService.handleOAuthCallback.mockResolvedValue(mockOAuthCallback);
+      const response = { redirect: jest.fn() };
 
       // This should not throw even without authentication
-      const result = await controller.handleOAuthCallback(query);
-      expect(result).toBeDefined();
+      await controller.handleOAuthCallback(query, response as any);
+      expect(response.redirect).toHaveBeenCalledWith(
+        'http://localhost:3001/?mcp_oauth_success=true',
+      );
     });
   });
 });

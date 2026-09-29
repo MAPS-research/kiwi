@@ -1,30 +1,51 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsOptional, IsIn, IsUrl, MinLength, IsArray } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsIn,
+  IsUrl,
+  MinLength,
+  IsArray,
+} from 'class-validator';
 
 export class CreateWhitelistEntryDto {
-  @ApiProperty({ description: 'Unique slug identifier for the app', example: 'codegen' })
+  @ApiProperty({
+    description: 'Unique slug identifier for the app',
+    example: 'codegen',
+  })
   @IsString()
   slug: string;
 
   @ApiProperty({
-    description: 'Secret that the app must provide to register (min 32 chars). Will be hashed before storage.',
+    description:
+      'Secret that the app must provide to register (min 32 chars). Will be hashed before storage.',
     example: 'super-secret-registration-key-for-codegen-app',
   })
   @IsString()
-  @MinLength(32, { message: 'Registration secret must be at least 32 characters' })
+  @MinLength(32, {
+    message: 'Registration secret must be at least 32 characters',
+  })
   registrationSecret: string;
 
-  @ApiPropertyOptional({ description: 'Expected base URL of the app', example: 'http://localhost:8000' })
+  @ApiPropertyOptional({
+    description: 'Expected base URL of the app',
+    example: 'http://localhost:8000',
+  })
   @IsOptional()
   @IsUrl({ require_tld: false })
   baseUrl?: string;
 
-  @ApiPropertyOptional({ description: 'Status of the whitelist entry', enum: ['pending', 'approved', 'rejected'] })
+  @ApiPropertyOptional({
+    description: 'Status of the whitelist entry',
+    enum: ['pending', 'approved', 'rejected'],
+  })
   @IsOptional()
   @IsIn(['pending', 'approved', 'rejected'])
   status?: string;
 
-  @ApiPropertyOptional({ description: 'Description of why this app is whitelisted' })
+  @ApiPropertyOptional({
+    description: 'Description of why this app is whitelisted',
+  })
   @IsOptional()
   @IsString()
   description?: string;
@@ -42,24 +63,35 @@ export class CreateWhitelistEntryDto {
 
 export class UpdateWhitelistEntryDto {
   @ApiPropertyOptional({
-    description: 'New registration secret (min 32 chars). Will be hashed before storage.',
+    description:
+      'New registration secret (min 32 chars). Will be hashed before storage.',
   })
   @IsOptional()
   @IsString()
-  @MinLength(32, { message: 'Registration secret must be at least 32 characters' })
+  @MinLength(32, {
+    message: 'Registration secret must be at least 32 characters',
+  })
   registrationSecret?: string;
 
-  @ApiPropertyOptional({ description: 'Expected base URL of the app', example: 'http://localhost:8000' })
+  @ApiPropertyOptional({
+    description: 'Expected base URL of the app',
+    example: 'http://localhost:8000',
+  })
   @IsOptional()
   @IsUrl({ require_tld: false })
   baseUrl?: string;
 
-  @ApiPropertyOptional({ description: 'Status of the whitelist entry', enum: ['pending', 'approved', 'rejected'] })
+  @ApiPropertyOptional({
+    description: 'Status of the whitelist entry',
+    enum: ['pending', 'approved', 'rejected'],
+  })
   @IsOptional()
   @IsIn(['pending', 'approved', 'rejected'])
   status?: string;
 
-  @ApiPropertyOptional({ description: 'Description of why this app is whitelisted' })
+  @ApiPropertyOptional({
+    description: 'Description of why this app is whitelisted',
+  })
   @IsOptional()
   @IsString()
   description?: string;

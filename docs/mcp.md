@@ -81,18 +81,20 @@ server, use a host that supports MCP OAuth (see
 
 ## Endpoints and transports
 
-| Transport | Endpoints | Use from an external client |
-|---|---|---|
-| Streamable HTTP | `POST /mcp`, `GET /mcp`, `DELETE /mcp` | Yes (recommended) |
-| SSE (legacy) | `GET /sse`, `POST /messages?sessionId=...` | No |
+| Transport | Endpoints |
+|---|---|
+| Streamable HTTP | `POST /mcp`, `GET /mcp`, `DELETE /mcp` |
 
-The global auth guard (`SmartJwtAuthGuard` in `kiwi/src/auth/auth.guard.ts`)
-requires a Kiwi browser session cookie on every route except those whose path
-starts with `/mcp`. Streamable HTTP lives at `/mcp`, so a bearer token alone is
-enough there. The SSE endpoints are at `/sse` and `/messages`, so a user token
-without a browser session gets `401 User's session is not initialized`. SSE is
-therefore not usable from external clients. App tokens are the exception: they
-skip the session check on every path.
+The server runs on MCP-Nest v2 and the MCP TypeScript SDK v2. It accepts
+initialized 2025 protocol sessions (described below) and the sessionless
+2026-07-28 protocol. The old HTTP+SSE transport (`GET /sse`,
+`POST /messages`) is no longer served; clients that used it must switch to
+Streamable HTTP at `/mcp`.
+
+`/mcp` is claimed by a controller guarded by `SmartJwtAuthGuard`
+(`kiwi/src/mcp/mcp-http.controller.ts`), so authentication runs on every
+request, and a bearer token alone is enough there — no browser session is
+needed.
 
 There are no `/mcp/sse`, `/mcp/streamable-http`, `/mcp/rpc`, or
 `/mcp/capabilities` endpoints. (`kiwi/src/mcp/mcp.controller.ts` declares some
@@ -111,10 +113,8 @@ The Streamable HTTP server is stateful:
   does this.
 - `GET /mcp` opens the server-to-client notification stream. `DELETE /mcp` ends
   the session (`transport.terminateSession()` in the SDK).
-- The session keeps the identity (and app context) of the token used for
-  `initialize`. Later requests still need a valid bearer token, but tools and
-  resources act as the user who initialized the session. To act as a different
-  user, open a new session.
+- Every request needs a valid bearer token, and tools and resources run as
+  the user (and app context) of the token sent with that request.
 - Sessions live in the memory of one server process. After a restart, or if a
   load balancer routes the request to another instance, the server replies
   `404` with JSON-RPC error `-32001 Session not found`; the client must
@@ -884,8 +884,9 @@ curl http://localhost:3000/.well-known/oauth-protected-resource
 
 **`401 User's session is not initialized`**
 
-You are using the SSE endpoints (`/sse`, `/messages`). Switch to Streamable
-HTTP at `/mcp`.
+You are calling a path other than `/mcp` (for example the removed `/sse` or
+`/messages` endpoints) with a bearer token and no browser session. Use
+Streamable HTTP at `/mcp`.
 
 **`404` / `Session not found`**
 

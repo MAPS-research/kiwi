@@ -11,6 +11,7 @@ import {
   Container,
   Grid,
   Paper,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -49,23 +50,34 @@ const Register: React.FC = () => {
   };
 
   return (
-    <Grid container justifyContent="center" alignItems="center" height="100vh">
+    <Grid
+      container
+      sx={{
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh"
+      }}>
       <Grid size="grow">
         <Container maxWidth="xs" fixed>
           <Paper elevation={24}>
-            <Grid
-              container
-              justifyContent="center"
-              alignItems="center"
-              direction="column"
-              rowSpacing={2}
-              padding={2}
-            >
+            <Stack
+              spacing={2}
+              sx={{
+                justifyContent: "center",
+                alignItems: "center",
+                padding: 2
+              }}>
               <Grid>
                 <Typography variant="h4">Create an Account.</Typography>
               </Grid>
               {import.meta.env.VITE_DISABLE_PASSWORD_LOGIN !== "true" && (
-                <Grid container justifyContent="center" alignItems="center" columnSpacing={1}>
+                <Grid
+                  container
+                  columnSpacing={1}
+                  sx={{
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}>
                   <Box component="form" onSubmit={handleSubmit}>
                     <TextField
                       id="email"
@@ -101,7 +113,7 @@ const Register: React.FC = () => {
               <Grid>
                 <GoogleLoginButton mode="register" />
               </Grid>
-            </Grid>
+            </Stack>
           </Paper>
         </Container>
       </Grid>

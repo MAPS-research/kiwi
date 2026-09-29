@@ -152,7 +152,9 @@ const ClassEmail: React.FC = () => {
         </Alert>
       ) : (
         <Paper sx={{ p: 3 }}>
-          <Typography variant="body1" color="text.secondary" gutterBottom>
+          <Typography variant="body1" gutterBottom sx={{
+            color: "text.secondary"
+          }}>
             Send an email to {recipients.length} students in this class
           </Typography>
 

@@ -144,17 +144,19 @@ const ChatField: React.FC<ChatFieldProps> = ({
               }
             }}
             variant="standard"
-            InputProps={{
-              disableUnderline: true,
-              sx: {
-                backgroundColor: "transparent",
-                borderRadius: "8px",
-                fontSize: "0.875rem",
-                padding: 1,
-              },
-            }}
             sx={{
               flexGrow: 1,
+            }}
+            slotProps={{
+              input: {
+                disableUnderline: true,
+                sx: {
+                  backgroundColor: "transparent",
+                  borderRadius: "8px",
+                  fontSize: "0.875rem",
+                  padding: 1,
+                },
+              }
             }}
           />
         </Box>

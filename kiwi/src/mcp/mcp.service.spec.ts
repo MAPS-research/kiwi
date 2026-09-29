@@ -4,6 +4,16 @@ import { ClassService } from 'src/class/class.service';
 import { ChatService } from 'src/common/chat/chat.service';
 import { UserService } from 'src/common/database/user.service';
 
+function getTextContent(
+  result: Awaited<ReturnType<McpService['callTool']>>,
+): string {
+  const content = result.content[0];
+  if (content.type !== 'text') {
+    throw new Error(`Expected text content, received ${content.type}`);
+  }
+  return content.text;
+}
+
 describe('McpService', () => {
   let service: McpService;
   let classService: jest.Mocked<ClassService>;
@@ -275,7 +285,7 @@ describe('McpService', () => {
         );
 
         expect(result.isError).toBeUndefined();
-        const content = JSON.parse(result.content[0].text as string);
+        const content = JSON.parse(getTextContent(result));
         expect(content.id).toBe(userId);
         expect(content.email).toBe('user@test.com');
         expect(content.systemRole).toBe('student');
@@ -291,7 +301,7 @@ describe('McpService', () => {
         );
 
         expect(result.isError).toBe(true);
-        expect(result.content[0].text).toContain('User not found');
+        expect(getTextContent(result)).toContain('User not found');
       });
 
       it('should handle service errors', async () => {
@@ -304,7 +314,7 @@ describe('McpService', () => {
         );
 
         expect(result.isError).toBe(true);
-        expect(result.content[0].text).toContain('Database error');
+        expect(getTextContent(result)).toContain('Database error');
       });
     });
 
@@ -325,7 +335,7 @@ describe('McpService', () => {
         const result = await service.callTool('chat', { input }, userId);
 
         expect(result.isError).toBeUndefined();
-        expect(result.content[0].text).toBe('Hello! How can I help you?');
+        expect(getTextContent(result)).toBe('Hello! How can I help you?');
         expect(chatService.createChat).toHaveBeenCalledWith(input, undefined);
       });
 
@@ -359,7 +369,7 @@ describe('McpService', () => {
           userId,
         );
 
-        expect(result.content[0].text).toBe('No response generated');
+        expect(getTextContent(result)).toBe('No response generated');
       });
 
       it('should handle chat service errors', async () => {
@@ -374,7 +384,7 @@ describe('McpService', () => {
         );
 
         expect(result.isError).toBe(true);
-        expect(result.content[0].text).toContain('Chat service unavailable');
+        expect(getTextContent(result)).toContain('Chat service unavailable');
       });
     });
 

@@ -28,18 +28,21 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
     >
       <Stack
         direction="row"
-        alignItems="center"
-        justifyContent="space-between"
         sx={{
+          alignItems: "center",
+          justifyContent: "space-between",
           py: 1,
           px: 2,
           maxWidth: '100%',
-          margin: '0 auto',
-        }}
-      >
+          margin: '0 auto'
+        }}>
         {/* Left: Label */}
-        <Stack direction="row" alignItems="center" spacing={1}>
-          <Typography variant="subtitle1" fontWeight="bold">
+        <Stack direction="row" spacing={1} sx={{
+          alignItems: "center"
+        }}>
+          <Typography variant="subtitle1" sx={{
+            fontWeight: "bold"
+          }}>
             {label}
           </Typography>
         </Stack>

@@ -7,10 +7,10 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { InteractionService } from 'src/interaction/interaction.service';
 import { UserInteractionService as DatabaseInteractionService } from 'src/common/database/user-interaction.service';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 import { Prisma, UserInteraction } from '@prisma/client';
 import { unlink, writeFileSync } from 'fs';
-import { group } from 'console';
+
 import { DatabaseService } from 'src/common/database/database.service';
 import {
   PricingTable,
@@ -89,10 +89,10 @@ export class AnalyticsService {
     private databaseInteractionService: DatabaseInteractionService,
     private database: DatabaseService,
     private configService: ConfigService,
-  ) { }
+  ) {}
 
   writeInteractionsToFile(interactions: UserInteraction[]) {
-    const fileId = uuidv4();
+    const fileId = randomUUID();
     const responseFilePath = `/tmp/interactions-${fileId}.json`;
     const responseFileContent = JSON.stringify(interactions, null, 2);
 
@@ -190,8 +190,12 @@ export class AnalyticsService {
       orderBy: { timestamp: 'asc' },
     });
 
-    this.logger.log(`Found ${interactions.length} interactions${classId ? ' for classId: ' + classId : ''}`);
-    const responseFileName = this.writeInteractionsToFile(interactions as unknown as UserInteraction[]);
+    this.logger.log(
+      `Found ${interactions.length} interactions${classId ? ' for classId: ' + classId : ''}`,
+    );
+    const responseFileName = this.writeInteractionsToFile(
+      interactions as unknown as UserInteraction[],
+    );
 
     return { interactionsFileName: responseFileName };
   }
@@ -234,13 +238,15 @@ export class AnalyticsService {
       select: { id: true, email: true },
     });
     const idToEmail: Record<string, string> = {};
-    users.forEach((u: any) => { idToEmail[u.id] = u.email; });
+    users.forEach((u: any) => {
+      idToEmail[u.id] = u.email;
+    });
 
     return grouped.map((g: any) => ({
       userId: g.userId,
       email: idToEmail[g.userId] || '',
       tokensUsed: g._sum.tokensUsed || 0,
-      sessionCount: g._count.id // 添加session数量信息
+      sessionCount: g._count.id, // 添加session数量信息
     }));
   }
 
@@ -470,7 +476,10 @@ export class AnalyticsService {
       }
     }
 
-    totals.cacheHitRate = this.hitRate(totals.cachedTokens, totals.promptTokens);
+    totals.cacheHitRate = this.hitRate(
+      totals.cachedTokens,
+      totals.promptTokens,
+    );
     totals.models = [...models].sort();
     totals.cost.unpricedModels = [...unpriced].sort();
     if (priced) {
@@ -589,7 +598,8 @@ export class AnalyticsService {
   }
 
   private resolveUsageLimit(limit?: number): number {
-    if (!limit || !Number.isFinite(limit) || limit < 1) return DEFAULT_USAGE_LIMIT;
+    if (!limit || !Number.isFinite(limit) || limit < 1)
+      return DEFAULT_USAGE_LIMIT;
     return Math.min(Math.floor(limit), MAX_USAGE_LIMIT);
   }
 
@@ -614,7 +624,10 @@ export class AnalyticsService {
     return Prisma.join(conditions, ' AND ');
   }
 
-  private parseUsageDate(value: string | undefined, field: string): Date | null {
+  private parseUsageDate(
+    value: string | undefined,
+    field: string,
+  ): Date | null {
     if (!value) return null;
     const parsed = new Date(value);
     if (parsed.toString() === 'Invalid Date') {

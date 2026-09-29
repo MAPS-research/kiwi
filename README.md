@@ -21,8 +21,8 @@ CC BY 4.0 (see [docs/LICENSE](docs/LICENSE)).
 
 ## Quick start
 
-Requires Docker and Node.js 20 or later (`kiwi/.nvmrc` pins 20.14; `kiwi-ui/.nvmrc`
-pins 22.16, and the UI also builds on 20).
+Requires Docker and Node.js 24 (`kiwi/.nvmrc` and `kiwi-ui/.nvmrc` both pin
+24.21.0).
 
 ```bash
 # 1. Infrastructure: PostgreSQL/pgvector, Redis, MinIO, Adminer

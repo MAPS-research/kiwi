@@ -18,7 +18,9 @@ describe('SystemPromptsProvider', () => {
       providers: [SystemPromptsProvider],
     }).compile();
 
-    provider = await module.resolve<SystemPromptsProvider>(SystemPromptsProvider);
+    provider = await module.resolve<SystemPromptsProvider>(
+      SystemPromptsProvider,
+    );
   });
 
   describe('getDefaultSystemPrompt', () => {
@@ -29,7 +31,7 @@ describe('SystemPromptsProvider', () => {
         'Default Kiwi assistant system instructions',
       );
       expect(result.messages).toHaveLength(1);
-      expect(result.messages[0].role).toBe('system');
+      expect(result.messages[0].role).toBe('user');
       expect(result.messages[0].content.type).toBe('text');
     });
 
@@ -68,7 +70,7 @@ describe('SystemPromptsProvider', () => {
     it('should return correct structure', () => {
       const result = provider.getClassMaterialsPrompt({ classId: 'test' });
 
-      expect(result.messages[0].role).toBe('system');
+      expect(result.messages[0].role).toBe('user');
       expect(result.messages[0].content.type).toBe('text');
     });
   });
@@ -101,7 +103,7 @@ describe('SystemPromptsProvider', () => {
     it('should return correct structure', () => {
       const result = provider.getRecitationPrompt({ topic: 'functions' });
 
-      expect(result.messages[0].role).toBe('system');
+      expect(result.messages[0].role).toBe('user');
       expect(result.messages[0].content.type).toBe('text');
     });
   });
@@ -195,7 +197,7 @@ describe('SystemPromptsProvider', () => {
       for (const mode of modes) {
         const result = provider.getCompletePrompt({ mode });
 
-        expect(result.messages[0].role).toBe('system');
+        expect(result.messages[0].role).toBe('user');
         expect(result.messages[0].content.type).toBe('text');
       }
     });

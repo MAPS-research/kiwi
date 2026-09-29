@@ -92,10 +92,10 @@ describe('GoogleRedirectHandler', () => {
     });
 
     await waitFor(() => {
-      expect(mockLogin).toHaveBeenCalledWith({
+      expect(mockLogin).toHaveBeenCalledWith(expect.objectContaining({
         username: 'test@example.com',
         consent: true
-      });
+      }));
     }, { timeout: 2000 });
   });
 
@@ -105,10 +105,10 @@ describe('GoogleRedirectHandler', () => {
     renderWithProviders(<GoogleRedirectHandler />);
 
     await waitFor(() => {
-      expect(mockLogin).toHaveBeenCalledWith({
+      expect(mockLogin).toHaveBeenCalledWith(expect.objectContaining({
         username: 'test@example.com',
         consent: true
-      });
+      }));
     }, { timeout: 2000 });
   });
 
@@ -118,10 +118,10 @@ describe('GoogleRedirectHandler', () => {
     renderWithProviders(<GoogleRedirectHandler />);
 
     await waitFor(() => {
-      expect(mockLogin).toHaveBeenCalledWith({
+      expect(mockLogin).toHaveBeenCalledWith(expect.objectContaining({
         username: 'test@example.com',
         consent: false
-      });
+      }));
     }, { timeout: 2000 });
   });
 
@@ -131,10 +131,10 @@ describe('GoogleRedirectHandler', () => {
     renderWithProviders(<GoogleRedirectHandler />);
 
     await waitFor(() => {
-      expect(mockLogin).toHaveBeenCalledWith({
+      expect(mockLogin).toHaveBeenCalledWith(expect.objectContaining({
         username: 'test@example.com',
         consent: false
-      });
+      }));
     }, { timeout: 2000 });
   });
 

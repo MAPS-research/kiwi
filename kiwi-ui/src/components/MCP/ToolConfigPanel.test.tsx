@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { ToolConfigPanel } from "./ToolConfigPanel";
+import { ToolConfigPanel } from "./ToolConfigPanel.tsx";
 
 const theme = createTheme();
 
@@ -124,7 +124,7 @@ describe("ToolConfigPanel", () => {
     renderWithProviders({ tools: mockTools, onToolToggle });
 
     // Find all toggle switches
-    const switches = screen.getAllByRole("checkbox");
+    const switches = screen.getAllByRole("switch");
 
     // Click the first one
     fireEvent.click(switches[0]);

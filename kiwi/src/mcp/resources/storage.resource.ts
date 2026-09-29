@@ -1,12 +1,19 @@
-import { Injectable, Logger, Scope } from '@nestjs/common';
-import { Resource, Context, HttpRequest } from '@rekog/mcp-nest';
+import { Request } from 'express';
+import { Payload, Ctx } from '@nestjs/microservices';
+import { Logger, Scope } from '@nestjs/common';
+import {
+  ResourceTemplate,
+  McpContext as Context,
+  McpController,
+  McpRawRequest,
+} from '@rekog/mcp-nest';
 import { StorageService } from 'src/common/storage/storage.service';
 
 /**
  * MCP Resources for Storage Operations
  * Provides access to documents with signed URLs
  */
-@Injectable({ scope: Scope.REQUEST })
+@McpController({ scope: Scope.REQUEST })
 export class StorageResource {
   private readonly logger = new Logger(StorageResource.name);
 
@@ -16,27 +23,31 @@ export class StorageResource {
    * Get a document from storage with a signed URL
    * URI pattern: kiwi://storage/document/{key}
    */
-  @Resource({
+  @ResourceTemplate({
     name: 'storage-document',
     description:
       'Access a document from storage using its key. Returns a signed URL.',
     mimeType: 'application/json',
-    uri: 'kiwi://storage/document/{key}',
+    uriTemplate: 'kiwi://storage/document/{key*}',
   })
   async getStorageDocument(
-    { uri }: { uri: string },
-    context: Context,
-    httpRequest: HttpRequest,
+    @Payload() { uri }: { uri: string },
+    @Ctx() context: Context,
+    @McpRawRequest() httpRequest: Request,
   ) {
     try {
-      const userId = (httpRequest.raw as any)?.user?.sub;
+      const userId = (httpRequest as any)?.user?.sub;
       if (!userId) {
         return {
           contents: [
             {
               uri,
               mimeType: 'application/json',
-              text: JSON.stringify({ error: 'User not authenticated' }, null, 2),
+              text: JSON.stringify(
+                { error: 'User not authenticated' },
+                null,
+                2,
+              ),
             },
           ],
         };

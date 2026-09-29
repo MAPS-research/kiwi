@@ -2,6 +2,6 @@ import { InteractionInterceptor } from './interaction.interceptor';
 
 describe('InteractionInterceptor', () => {
   it('should be defined', () => {
-    expect(new InteractionInterceptor()).toBeDefined();
+    expect(new InteractionInterceptor({} as any)).toBeDefined();
   });
 });

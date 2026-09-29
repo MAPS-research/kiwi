@@ -143,7 +143,9 @@ describe('scope-check utilities', () => {
       ).toThrow(ForbiddenException);
       expect(() =>
         requireAnyScope(request, ['user:profile:read', 'class:info:read']),
-      ).toThrow('Missing one of required scopes: user:profile:read, class:info:read');
+      ).toThrow(
+        'Missing one of required scopes: user:profile:read, class:info:read',
+      );
     });
   });
 
@@ -253,7 +255,12 @@ describe('scope-check utilities', () => {
     it('should return empty array when scopes not defined', () => {
       const request = {} as Request;
       // Simulate an incomplete appContext without scopes
-      request['appContext'] = { appSlug: 'test', classId: 'class-1', userId: 'user-1', scopes: undefined } as any;
+      request['appContext'] = {
+        appSlug: 'test',
+        classId: 'class-1',
+        userId: 'user-1',
+        scopes: undefined,
+      } as any;
 
       const scopes = getAppScopes(request);
 

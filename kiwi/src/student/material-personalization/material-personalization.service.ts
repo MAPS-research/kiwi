@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 import { MaterialPersonalizationService as DatabaseMaterialPersonalizationService } from 'src/common/database/material-personalization.service';
 import { RedisService } from 'src/common/redis/redis.service';
 import { InteractionService } from 'src/interaction/interaction.service';
@@ -311,7 +311,7 @@ export class MaterialPersonalizationService {
     }
     await this.databaseMaterialPersonalizationService.createMaterialPersonalization(
       {
-        personalizationId: uuidv4(), // Generate a unique ID
+        personalizationId: randomUUID(), // Generate a unique ID
         timeSpent: personalizationData.timeSpent.toString(),
         learningStyle: personalizationData.learningStyle || '',
         questionStyle: personalizationData.preferredQuestionLevel || '',

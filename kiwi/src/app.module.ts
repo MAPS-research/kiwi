@@ -4,8 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import configuration from './config/configuration';
-// import { LoggerModule } from 'nestjs-pino';
-import * as cors from 'cors';
+import cors from 'cors';
 import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './common/chat/chat.module';
 import { EmbeddingModule } from './common/embedding/embedding.module';
@@ -47,7 +46,6 @@ import { ContextJobsModule } from './context-jobs/context-jobs.module';
         password: process.env.REDIS_PASSWORD,
       },
     }),
-    // LoggerModule.forRoot(),
     HealthModule,
     EventsModule,
     AuthModule,
@@ -89,6 +87,6 @@ export class AppModule implements NestModule {
           credentials: true,
         }),
       )
-      .forRoutes('*');
+      .forRoutes('{*splat}');
   }
 }

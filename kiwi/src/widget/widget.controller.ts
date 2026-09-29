@@ -57,11 +57,12 @@ export class WidgetController {
   @Post('state')
   @ApiOperation({ summary: 'Save widget state (create or update)' })
   @ApiBody({ type: SaveWidgetStateDto })
-  @ApiResponse({ status: 201, description: 'Widget state saved', type: WidgetStateResponseDto })
-  async saveWidgetState(
-    @Body() body: SaveWidgetStateDto,
-    @Req() req: Request,
-  ) {
+  @ApiResponse({
+    status: 201,
+    description: 'Widget state saved',
+    type: WidgetStateResponseDto,
+  })
+  async saveWidgetState(@Body() body: SaveWidgetStateDto, @Req() req: Request) {
     const user = (req as any).user;
     return this.widgetService.saveWidgetState(user.sub, body);
   }
@@ -69,7 +70,11 @@ export class WidgetController {
   @Get('state/:widgetId')
   @ApiOperation({ summary: 'Get widget state by widget ID' })
   @ApiParam({ name: 'widgetId', description: 'Widget instance ID' })
-  @ApiResponse({ status: 200, description: 'Widget state', type: WidgetStateResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Widget state',
+    type: WidgetStateResponseDto,
+  })
   async getWidgetState(
     @Param('widgetId') widgetId: string,
     @Req() req: Request,
@@ -79,13 +84,19 @@ export class WidgetController {
   }
 
   @Get('states')
-  @ApiOperation({ summary: 'Get all widget states for user with optional filters' })
+  @ApiOperation({
+    summary: 'Get all widget states for user with optional filters',
+  })
   @ApiQuery({ name: 'appId', required: false })
   @ApiQuery({ name: 'conversationId', required: false })
   @ApiQuery({ name: 'classId', required: false })
   @ApiQuery({ name: 'exerciseId', required: false })
   @ApiQuery({ name: 'exerciseSetId', required: false })
-  @ApiResponse({ status: 200, description: 'List of widget states', type: [WidgetStateResponseDto] })
+  @ApiResponse({
+    status: 200,
+    description: 'List of widget states',
+    type: [WidgetStateResponseDto],
+  })
   async getWidgetStates(
     @Query('appId') appId?: string,
     @Query('conversationId') conversationId?: string,
@@ -107,9 +118,18 @@ export class WidgetController {
   @Patch('state/:widgetId')
   @ApiOperation({ summary: 'Update widget state (partial merge)' })
   @ApiParam({ name: 'widgetId', description: 'Widget instance ID' })
-  @ApiQuery({ name: 'merge', required: false, type: Boolean, description: 'Merge with existing state (default: true)' })
+  @ApiQuery({
+    name: 'merge',
+    required: false,
+    type: Boolean,
+    description: 'Merge with existing state (default: true)',
+  })
   @ApiBody({ type: UpdateWidgetStateDto })
-  @ApiResponse({ status: 200, description: 'Widget state updated', type: WidgetStateResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Widget state updated',
+    type: WidgetStateResponseDto,
+  })
   async updateWidgetState(
     @Param('widgetId') widgetId: string,
     @Body() body: UpdateWidgetStateDto,
@@ -148,7 +168,10 @@ export class WidgetController {
     @Req() req: Request,
   ) {
     const user = (req as any).user;
-    await this.widgetService.deleteWidgetStatesForExercise(exerciseId, user.sub);
+    await this.widgetService.deleteWidgetStatesForExercise(
+      exerciseId,
+      user.sub,
+    );
   }
 
   // ============================================================================
@@ -157,7 +180,11 @@ export class WidgetController {
 
   @Get('preferences')
   @ApiOperation({ summary: 'Get user preferences' })
-  @ApiResponse({ status: 200, description: 'User preferences', type: UserPreferenceResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'User preferences',
+    type: UserPreferenceResponseDto,
+  })
   async getUserPreferences(@Req() req: Request) {
     const user = (req as any).user;
     return this.widgetService.getUserPreferences(user.sub);
@@ -166,7 +193,11 @@ export class WidgetController {
   @Patch('preferences')
   @ApiOperation({ summary: 'Update user preferences' })
   @ApiBody({ type: UpdateUserPreferenceDto })
-  @ApiResponse({ status: 200, description: 'Preferences updated', type: UserPreferenceResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Preferences updated',
+    type: UserPreferenceResponseDto,
+  })
   async updateUserPreferences(
     @Body() body: UpdateUserPreferenceDto,
     @Req() req: Request,
@@ -179,10 +210,7 @@ export class WidgetController {
   @ApiOperation({ summary: 'Get preferences for a specific app' })
   @ApiParam({ name: 'appId', description: 'App ID (e.g., "codegen")' })
   @ApiResponse({ status: 200, description: 'App preferences' })
-  async getAppPreferences(
-    @Param('appId') appId: string,
-    @Req() req: Request,
-  ) {
+  async getAppPreferences(@Param('appId') appId: string, @Req() req: Request) {
     const user = (req as any).user;
     return this.widgetService.getAppPreferences(user.sub, appId);
   }
@@ -197,6 +225,10 @@ export class WidgetController {
     @Req() req: Request,
   ) {
     const user = (req as any).user;
-    return this.widgetService.updateAppPreferences(user.sub, appId, preferences);
+    return this.widgetService.updateAppPreferences(
+      user.sub,
+      appId,
+      preferences,
+    );
   }
 }

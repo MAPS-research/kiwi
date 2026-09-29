@@ -2,8 +2,8 @@
  * Kiwi Apps Framework - Registry Exports
  */
 
-export { default as AppRegistry, getAppRegistry } from './AppRegistry';
-export type { RegistryListener } from './AppRegistry';
+export { default as AppRegistry, getAppRegistry } from './AppRegistry.ts';
+export type { RegistryListener } from './AppRegistry.ts';
 
 export {
   AppRegistryProvider,
@@ -13,8 +13,8 @@ export {
   useAppTools,
   useAppWidgets,
   useActiveApps,
-} from './AppRegistryContext';
+} from './AppRegistryContext.tsx';
 export type {
   AppRegistryContextValue,
   AppRegistryProviderProps,
-} from './AppRegistryContext';
+} from './AppRegistryContext.tsx';

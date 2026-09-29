@@ -115,10 +115,19 @@ const ExperimentList: React.FC = () => {
               >
                 <FlaskConical sx={{ fontSize: 34, color: VIOLET }} />
               </Box>
-              <Typography variant="h6" fontWeight={700}>
+              <Typography variant="h6" sx={{
+                fontWeight: 700
+              }}>
                 No experiments yet
               </Typography>
-              <Typography color="text.secondary" sx={{ mt: 0.5, mb: 3, maxWidth: 420, mx: "auto" }}>
+              <Typography
+                sx={{
+                  color: "text.secondary",
+                  mt: 0.5,
+                  mb: 3,
+                  maxWidth: 420,
+                  mx: "auto"
+                }}>
                 Create one to assign students to variant groups with different chat
                 configs — or ask the AI assistant to draft it for you.
               </Typography>
@@ -156,7 +165,9 @@ const ExperimentList: React.FC = () => {
                     </Box>
                     <Box sx={{ flexGrow: 1, minWidth: 0 }}>
                       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                        <Typography fontWeight={700} noWrap>
+                        <Typography noWrap sx={{
+                          fontWeight: 700
+                        }}>
                           {exp.name || "Untitled experiment"}
                         </Typography>
                         <StatusChip status={exp.status} onLight />
@@ -184,7 +195,12 @@ const ExperimentList: React.FC = () => {
                             }}
                           />
                         ))}
-                        <Typography variant="caption" color="text.secondary" sx={{ ml: "auto" }}>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            color: "text.secondary",
+                            ml: "auto"
+                          }}>
                           {new Date(exp.createdAt).toLocaleDateString()}
                         </Typography>
                       </Box>

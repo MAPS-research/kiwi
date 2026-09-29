@@ -14,12 +14,9 @@ import TopNav, {
   type ClassSwitcherOption,
 } from "../components/TopNav/TopNav.tsx";
 import apiClient, { classAppsApiClient } from "../utils/api.ts";
-import {
-  PageNavigationPlugin,
-  pageNavigationPlugin,
-} from "@react-pdf-viewer/page-navigation";
-import type { ClassAppResponseDto } from "../services/models";
-import { useContentResize } from "../hooks/useContentResize";
+
+import type { ClassAppResponseDto } from "../services/models/index.ts";
+import { useContentResize } from "../hooks/useContentResize.ts";
 
 // Feature checker import
 import { useAuth } from "../auth/AuthContext.tsx";
@@ -41,7 +38,7 @@ export const ChatContext = React.createContext<{
   currentPDFMaterialType?: string;
   setCurrentPDFMaterialType?: (materialType: string) => void;
   setCurrentPDFPage?: (pageNumber: number) => void;
-  pageNavigationPluginInstance?: PageNavigationPlugin;
+  pdfNavigationRef?: React.MutableRefObject<((page: number) => void) | undefined>;
   pdfContent?: string;
   setPdfContent?: (content: string) => void;
   multipleCourses?: boolean;
@@ -100,7 +97,7 @@ export const StudentClassLayout: React.FC = () => {
   const [currentPDFPage, setCurrentPDFPage] = useState<number>(0);
   const [currentPDFMaterialType, setCurrentPDFMaterialType] =
     useState<string>("");
-  const pageNavigationPluginInstance = pageNavigationPlugin();
+  const pdfNavigationRef = useRef<((page: number) => void) | undefined>(undefined);
   const contentResizeStyles = useContentResize();
 
   const activePath = location.pathname.split("/").pop();
@@ -291,7 +288,7 @@ export const StudentClassLayout: React.FC = () => {
     setCurrentPDFPage,
     currentPDFMaterialType,
     setCurrentPDFMaterialType,
-    pageNavigationPluginInstance,
+    pdfNavigationRef,
     pdfContent,
     setPdfContent,
     multipleCourses,
@@ -310,7 +307,6 @@ export const StudentClassLayout: React.FC = () => {
           display: "flex",
           flexDirection: "column",
           height: "100vh",
-          width: "100%",
           ...contentResizeStyles,
         }}
       >

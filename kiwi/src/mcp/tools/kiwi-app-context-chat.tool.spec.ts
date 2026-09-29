@@ -43,18 +43,19 @@ describe('KiwiAppContextChatTool', () => {
     const moduleRef = await Test.createTestingModule({
       providers: [
         KiwiAppContextChatTool,
-        { provide: AppContextualChatService, useValue: appContextualChatService },
+        {
+          provide: AppContextualChatService,
+          useValue: appContextualChatService,
+        },
       ],
     }).compile();
     tool = moduleRef.get(KiwiAppContextChatTool);
   });
 
   it('rejects requests without an app token', async () => {
-    const result = await tool.kiwiAppContextualChat(
-      baseArgs,
-      mcpContext,
-      { user: { sub: 'user-1' } } as any,
-    );
+    const result = await tool.kiwiAppContextualChat(baseArgs, mcpContext, {
+      user: { sub: 'user-1' },
+    } as any);
     expect(result.isError).toBe(true);
     expect(result.content[0].text).toContain('app-scoped token');
     expect(appContextualChatService.run).not.toHaveBeenCalled();

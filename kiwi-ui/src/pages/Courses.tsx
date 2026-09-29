@@ -30,7 +30,12 @@ const Courses = () => {
   }, []);
 
   return (
-    <Box display="flex" flexDirection="column" height="100vh">
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100vh"
+      }}>
       <TopNav />
       <Paper
         data-testid="courses-surface"

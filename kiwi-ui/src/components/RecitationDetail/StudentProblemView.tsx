@@ -98,7 +98,9 @@ const StudentProblemView: React.FC<StudentProblemViewProps> = ({
             }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>
                     <Box sx={{ overflow: 'hidden' }}>
-                        <Typography fontWeight="bold" noWrap>{classData.className}</Typography>
+                        <Typography noWrap sx={{
+                            fontWeight: "bold"
+                        }}>{classData.className}</Typography>
                         <Typography variant="body2" sx={{ opacity: 0.9 }} noWrap>
                             {classData.recitationTitle} - {formatLocalTime(classData.recitationDate)}
                         </Typography>
@@ -158,14 +160,20 @@ const StudentProblemView: React.FC<StudentProblemViewProps> = ({
                                 <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
                                     <Typography
                                         variant="body1"
-                                        fontWeight={openStudent === student.id ? "bold" : "medium"}
                                         color={openStudent === student.id ? theme.palette.primary.main : "textPrimary"}
-                                        sx={{ fontSize: '0.95rem' }}
-                                    >
+                                        sx={{
+                                            fontWeight: openStudent === student.id ? "bold" : "medium",
+                                            fontSize: '0.95rem'
+                                        }}>
                                         {student.email}
                                     </Typography>
                                     <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                                        <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                color: "text.secondary",
+                                                fontSize: '0.75rem'
+                                            }}>
                                             Overall: {student.overallPerformance.overallScore}/5
                                         </Typography>
                                         {typeof (student as any).overallPerformance?.teacherOverall === 'number' && (
@@ -233,20 +241,19 @@ const StudentProblemView: React.FC<StudentProblemViewProps> = ({
                                             <ListItemText
                                                 primary={
                                                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                        <Typography 
-                                                            variant="body2" 
-                                                            fontWeight="medium" 
-                                                            sx={{ 
-                                                                mr: 1, 
+                                                        <Typography
+                                                            variant="body2"
+                                                            title={performance.problemTitle}
+                                                            sx={{
+                                                                fontWeight: "medium",
+                                                                mr: 1,
                                                                 fontSize: '0.875rem',
                                                                 overflow: 'hidden',
                                                                 textOverflow: 'ellipsis',
                                                                 whiteSpace: 'nowrap',
                                                                 flex: 1,
                                                                 minWidth: 0
-                                                            }}
-                                                            title={performance.problemTitle}
-                                                        >
+                                                            }}>
                                                             {performance.problemTitle}
                                                         </Typography>
                                                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
@@ -255,13 +262,13 @@ const StudentProblemView: React.FC<StudentProblemViewProps> = ({
                                                             )}
                                                             <Typography
                                                                 variant="body2"
-                                                                fontWeight="bold"
-                                                                sx={{ 
+                                                                sx={{
+                                                                    fontWeight: "bold",
                                                                     fontSize: '0.875rem',
+
                                                                     color: performance.aiScore.overall >= 2.4 ? theme.palette.success.main :
                                                                            performance.aiScore.overall >= 1.8 ? theme.palette.warning.main : theme.palette.error.main
-                                                                }}
-                                                            >
+                                                                }}>
                                                                 {performance.aiScore.overall}
                                                             </Typography>
                                                             {/* Confidence percent */}
@@ -305,22 +312,26 @@ const StudentProblemView: React.FC<StudentProblemViewProps> = ({
                                         primary={
                                             <Typography
                                                 variant="body1"
-                                                fontWeight={openProblem === problem.id ? 'bold' : 'medium'}
                                                 color={openProblem === problem.id ? theme.palette.primary.main : 'textPrimary'}
-                                                sx={{ 
+                                                title={problem.title}
+                                                sx={{
+                                                    fontWeight: openProblem === problem.id ? 'bold' : 'medium',
                                                     fontSize: '0.95rem',
                                                     overflow: 'hidden',
                                                     textOverflow: 'ellipsis',
                                                     whiteSpace: 'nowrap',
                                                     maxWidth: '100%'
-                                                }}
-                                                title={problem.title}
-                                            >
+                                                }}>
                                                 {problem.title}
                                             </Typography>
                                         }
                                         secondary={
-                                            <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
+                                            <Typography
+                                                variant="caption"
+                                                sx={{
+                                                    color: "text.secondary",
+                                                    fontSize: '0.75rem'
+                                                }}>
                                                 {problem.students.length} submissions
                                             </Typography>
                                         }
@@ -353,7 +364,13 @@ const StudentProblemView: React.FC<StudentProblemViewProps> = ({
                                                 <ListItemText
                                                     primary={
                                                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                            <Typography variant="body2" fontWeight="medium" sx={{ mr: 1, fontSize: '0.875rem' }}>
+                                                            <Typography
+                                                                variant="body2"
+                                                                sx={{
+                                                                    fontWeight: "medium",
+                                                                    mr: 1,
+                                                                    fontSize: '0.875rem'
+                                                                }}>
                                                                 {s.email}
                                                             </Typography>
                                                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
@@ -362,13 +379,13 @@ const StudentProblemView: React.FC<StudentProblemViewProps> = ({
                                                                 )}
                                                                 <Typography
                                                                     variant="body2"
-                                                                    fontWeight="bold"
-                                                                    sx={{ 
+                                                                    sx={{
+                                                                        fontWeight: "bold",
                                                                         fontSize: '0.875rem',
+
                                                                         color: (s.aiScore?.overall ?? 0) >= 2.4 ? theme.palette.success.main :
                                                                                (s.aiScore?.overall ?? 0) >= 1.8 ? theme.palette.warning.main : theme.palette.error.main
-                                                                    }}
-                                                                >
+                                                                    }}>
                                                                     {s.aiScore?.overall}
                                                                 </Typography>
                                                                 {/* Confidence percent */}

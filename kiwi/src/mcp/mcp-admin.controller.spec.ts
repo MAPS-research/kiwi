@@ -282,7 +282,11 @@ describe('McpAdminController - Permission Tests', () => {
       const updatedServer = { ...mockMcpServer, ...updateDto };
       mcpService.updateMcpServer.mockResolvedValue(updatedServer);
 
-      const result = await controller.updateMcpServer(serverId, updateDto, session);
+      const result = await controller.updateMcpServer(
+        serverId,
+        updateDto,
+        session,
+      );
 
       expect(mcpService.updateMcpServer).toHaveBeenCalledWith(
         serverId,
@@ -376,7 +380,10 @@ describe('McpAdminController - Permission Tests', () => {
 
       const result = await controller.testMcpServer(serverId, session);
 
-      expect(mcpService.testMcpServer).toHaveBeenCalledWith(serverId);
+      expect(mcpService.testMcpServer).toHaveBeenCalledWith(
+        serverId,
+        adminUser.sub,
+      );
       expect(result).toEqual(testResponse);
     });
   });
@@ -477,7 +484,10 @@ describe('McpAdminController - Permission Tests', () => {
       const session = { userId: adminUser.sub };
       mcpService.discoverOAuthMetadata.mockResolvedValue(successResponse);
 
-      const result = await controller.discoverOAuthMetadata(discoverDto, session);
+      const result = await controller.discoverOAuthMetadata(
+        discoverDto,
+        session,
+      );
 
       expect(mcpService.discoverOAuthMetadata).toHaveBeenCalledWith(
         discoverDto.url,
@@ -489,7 +499,10 @@ describe('McpAdminController - Permission Tests', () => {
       const session = { userId: adminUser.sub };
       mcpService.discoverOAuthMetadata.mockResolvedValue(failureResponse);
 
-      const result = await controller.discoverOAuthMetadata(discoverDto, session);
+      const result = await controller.discoverOAuthMetadata(
+        discoverDto,
+        session,
+      );
 
       expect(result.success).toBe(false);
       expect(result.error).toBeDefined();

@@ -59,9 +59,17 @@ export const DEFAULT_MODEL_PRICING: PricingTable = {
   'gpt-5-nano': { inputPer1M: 0.05, cachedInputPer1M: 0.005, outputPer1M: 0.4 },
   'gpt-4.1': { inputPer1M: 2, cachedInputPer1M: 0.5, outputPer1M: 8 },
   'gpt-4.1-mini': { inputPer1M: 0.4, cachedInputPer1M: 0.1, outputPer1M: 1.6 },
-  'gpt-4.1-nano': { inputPer1M: 0.1, cachedInputPer1M: 0.025, outputPer1M: 0.4 },
+  'gpt-4.1-nano': {
+    inputPer1M: 0.1,
+    cachedInputPer1M: 0.025,
+    outputPer1M: 0.4,
+  },
   'gpt-4o': { inputPer1M: 2.5, cachedInputPer1M: 1.25, outputPer1M: 10 },
-  'gpt-4o-mini': { inputPer1M: 0.15, cachedInputPer1M: 0.075, outputPer1M: 0.6 },
+  'gpt-4o-mini': {
+    inputPer1M: 0.15,
+    cachedInputPer1M: 0.075,
+    outputPer1M: 0.6,
+  },
   // gpt-3.5-turbo predates prompt caching, so a "cached" token bills as fresh.
   'gpt-3.5-turbo': { inputPer1M: 0.5, cachedInputPer1M: 0.5, outputPer1M: 1.5 },
 
@@ -121,7 +129,9 @@ export function loadPricingTable(get: ConfigGetter): PricingTable {
   }
 
   const table: PricingTable = { ...DEFAULT_MODEL_PRICING };
-  for (const [model, entry] of Object.entries(parsed as Record<string, unknown>)) {
+  for (const [model, entry] of Object.entries(
+    parsed as Record<string, unknown>,
+  )) {
     const candidate = entry as Partial<ModelPricing> | null;
     if (
       candidate &&
@@ -153,7 +163,10 @@ export function lookupModelPricing(
 
   let bestKey: string | null = null;
   for (const key of Object.keys(table)) {
-    if (model.startsWith(`${key}-`) && (!bestKey || key.length > bestKey.length)) {
+    if (
+      model.startsWith(`${key}-`) &&
+      (!bestKey || key.length > bestKey.length)
+    ) {
       bestKey = key;
     }
   }
@@ -176,7 +189,10 @@ export function computeCost(
   const promptTokens = nonNegative(usage.promptTokens);
   // Providers never report more cached than prompt tokens, but an aggregate
   // stitched from several rows could; clamping keeps fresh input off negatives.
-  const cachedInputTokens = Math.min(nonNegative(usage.cachedTokens), promptTokens);
+  const cachedInputTokens = Math.min(
+    nonNegative(usage.cachedTokens),
+    promptTokens,
+  );
   const freshInputTokens = promptTokens - cachedInputTokens;
   const completionTokens = nonNegative(usage.completionTokens);
 
@@ -196,7 +212,10 @@ export function computeCost(
   }
 
   const inputUsd = perMillion(freshInputTokens, pricing.inputPer1M);
-  const cachedInputUsd = perMillion(cachedInputTokens, pricing.cachedInputPer1M);
+  const cachedInputUsd = perMillion(
+    cachedInputTokens,
+    pricing.cachedInputPer1M,
+  );
   const outputUsd = perMillion(completionTokens, pricing.outputPer1M);
 
   return {

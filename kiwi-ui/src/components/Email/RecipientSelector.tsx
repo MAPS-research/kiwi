@@ -26,7 +26,7 @@ import {
   ClearOutlined as ClearIcon,
   GroupOutlined as GroupIcon,
   SchoolOutlined as SchoolIcon,
-  PersonOutline as PersonIcon,
+  PersonOutlined as PersonIcon,
   HourglassEmptyOutlined as PendingIcon,
   ScheduleOutlined as ScheduleIcon,
 } from '@mui/icons-material';
@@ -214,30 +214,39 @@ const RecipientSelector: React.FC<RecipientSelectorProps> = ({
         placeholder="Search by email..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
-          endAdornment: searchQuery && (
-            <InputAdornment position="end">
-              <IconButton size="small" onClick={() => setSearchQuery('')}>
-                <ClearIcon />
-              </IconButton>
-            </InputAdornment>
-          ),
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+            endAdornment: searchQuery && (
+              <InputAdornment position="end">
+                <IconButton size="small" onClick={() => setSearchQuery('')}>
+                  <ClearIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }
         }}
       />
 
       {/* Selection Info and Actions */}
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
+      <Stack
+        direction="row"
+        sx={{
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}>
         <Alert severity="info" sx={{ flex: 1, mr: 2 }}>
           {getFilteredSelectionCount()} of {filteredUsers.length} recipients selected
           {selectedRecipients.length > getFilteredSelectionCount() && 
             ` (${selectedRecipients.length} total selected)`}
         </Alert>
-        <Stack direction="row" gap={1}>
+        <Stack direction="row" sx={{
+          gap: 1
+        }}>
           <Button 
             size="small" 
             onClick={handleSelectAll}
@@ -266,7 +275,9 @@ const RecipientSelector: React.FC<RecipientSelectorProps> = ({
       >
         {filteredUsers.length === 0 ? (
           <Box sx={{ p: 3, textAlign: 'center' }}>
-            <Typography color="text.secondary">
+            <Typography sx={{
+              color: "text.secondary"
+            }}>
               {searchQuery ? 'No users found matching your search' : 'No users in this filter'}
             </Typography>
           </Box>

@@ -24,7 +24,17 @@ export class DocumentConsumer extends WorkerHost {
   async process(job: Job<any, any, string>): Promise<any> {
     switch (job.name) {
       case 'chunkDocument':
-        return await this.chunkDocument(job.data.fileId);
+        // Same reason as in processDocument: the legacy chunk-only job has to
+        // record its own failure or the document stays stuck in PROCESSING.
+        try {
+          return await this.chunkDocument(job.data.fileId);
+        } catch (error) {
+          await this.documentService.markProcessingFailed(
+            job.data.fileId,
+            error,
+          );
+          throw error;
+        }
       case 'processDocument':
         return await this.processDocument(job.data.documentId);
       default:
@@ -62,7 +72,18 @@ export class DocumentConsumer extends WorkerHost {
       return { message: 'Already processing', document: { id: documentId } };
     }
 
-    await this.chunkDocument(documentId);
+    // Chunking runs here rather than in DocumentService, so its failures are
+    // ours to record. Without this the document keeps the PROCESSING it was
+    // claimed with: the instructor sees a permanent "processing" badge with no
+    // error, and the next job steps aside at the claim above, so re-running the
+    // pipeline cannot rescue it either. Describe and embed mark themselves.
+    try {
+      await this.chunkDocument(documentId);
+    } catch (error) {
+      await this.documentService.markProcessingFailed(documentId, error);
+      throw error;
+    }
+
     await this.documentService.describeImageChunks(documentId);
     await this.documentService.embedDocument(documentId);
 

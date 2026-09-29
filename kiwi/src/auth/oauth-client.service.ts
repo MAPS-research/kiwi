@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { DatabaseService } from 'src/common/database/database.service';
 import { Prisma, OAuthClient } from '@prisma/client';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 import * as bcrypt from 'bcryptjs';
 
 export interface ClientRegistrationRequest {
@@ -72,14 +72,14 @@ export class OAuthClientService {
     const scope = request.scope || 'openid profile email';
 
     // Generate client_id
-    const clientId = uuidv4();
+    const clientId = randomUUID();
 
     // Generate client_secret for confidential clients
     let clientSecret: string | undefined;
     let hashedClientSecret: string | undefined;
 
     if (tokenEndpointAuthMethod !== 'none') {
-      clientSecret = uuidv4();
+      clientSecret = randomUUID();
       const saltRounds = 10;
       hashedClientSecret = await bcrypt.hash(clientSecret, saltRounds);
     }

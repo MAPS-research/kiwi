@@ -129,7 +129,10 @@ describe('DocumentService (unit)', () => {
           provide: DocumentCommentService,
           useValue: documentCommentServiceMock,
         },
-        { provide: DocumentSummaryService, useValue: documentSummaryServiceMock },
+        {
+          provide: DocumentSummaryService,
+          useValue: documentSummaryServiceMock,
+        },
         {
           provide: MaterialPermissionService,
           useValue: materialPermissionServiceMock,
@@ -222,9 +225,7 @@ describe('DocumentService (unit)', () => {
       isLlm: false,
       role: 'REFERENCE',
     });
-    db.document.count
-      .mockResolvedValueOnce(2)
-      .mockResolvedValueOnce(1); // an answer key already exists
+    db.document.count.mockResolvedValueOnce(2).mockResolvedValueOnce(1); // an answer key already exists
     db.classMaterial.findUnique.mockResolvedValueOnce({
       materialType: 'recitation',
     });
@@ -586,7 +587,9 @@ describe('DocumentService (unit)', () => {
     };
 
     beforeEach(() => {
-      documentDbMock.documentWithClassMaterial.mockResolvedValue(documentRecord);
+      documentDbMock.documentWithClassMaterial.mockResolvedValue(
+        documentRecord,
+      );
     });
 
     it('listVisibleDocumentCommentsForStudent returns only visible comments', async () => {

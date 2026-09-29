@@ -36,8 +36,7 @@ export class WebhookEventService {
 
   async createWebhookEvent(
     data:
-      | Prisma.WebhookEventCreateInput
-      | Prisma.WebhookEventUncheckedCreateInput,
+      Prisma.WebhookEventCreateInput | Prisma.WebhookEventUncheckedCreateInput,
   ): Promise<WebhookEvent> {
     return this.database.webhookEvent.create({
       data,
@@ -109,8 +108,7 @@ export class WebhookEventService {
 
   async create(params: {
     data:
-      | Prisma.WebhookEventCreateInput
-      | Prisma.WebhookEventUncheckedCreateInput;
+      Prisma.WebhookEventCreateInput | Prisma.WebhookEventUncheckedCreateInput;
     include?: Prisma.WebhookEventInclude;
     select?: Prisma.WebhookEventSelect;
   }) {

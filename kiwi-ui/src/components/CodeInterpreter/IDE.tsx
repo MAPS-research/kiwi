@@ -385,12 +385,11 @@ export const IDE: React.FC<IDEProps> = ({
 
   return (
     <Stack
-      height="100%"
       sx={{
+        height: "100%",
         bgcolor: theme.palette.background.default,
-        color: theme.palette.text.primary,
-      }}
-    >
+        color: theme.palette.text.primary
+      }}>
       {/* -------------------- TABS (TOP) -------------------- */}
       <Box
         id="tab"
@@ -628,10 +627,12 @@ export const IDE: React.FC<IDEProps> = ({
             <Typography
               component="pre"
               id="code-output"
-              fontFamily="monospace"
-              width="100%"
-              sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
-            >
+              sx={{
+                fontFamily: "monospace",
+                width: "100%",
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-word"
+              }}>
               {IDEOutputCode || "Output will appear here."}
             </Typography>
           ) : outputTabValue === 1 && selectedLanguage === "r" ? (
@@ -740,13 +741,12 @@ export const IDE: React.FC<IDEProps> = ({
         {/* Overlayed buttons at the bottom center of the output area */}
         <Stack
           direction="row"
-          justifyContent="center"
           spacing={2}
           sx={{
+            justifyContent: "center",
             mt: 0.5,
-            p: 0.5,
-          }}
-        >
+            p: 0.5
+          }}>
           <Button
             variant="contained"
             // color="secondary"

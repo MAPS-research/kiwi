@@ -177,7 +177,9 @@ export const StandaloneTopActions: React.FC<StandaloneTopActionsProps> = ({
                         <Typography component="h3" variant="subtitle1" sx={{ fontWeight: 600, mb: 0.25 }}>
                             Top Actions
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{
+                            color: "text.secondary"
+                        }}>
                             Interactions grouped by action type
                         </Typography>
                     </Box>
@@ -213,14 +215,14 @@ export const StandaloneTopActions: React.FC<StandaloneTopActionsProps> = ({
                                 tick={{ fontSize: 11, fill: theme.palette.text.secondary }}
                                 width={72}
                                 tickMargin={4}
-                                tickFormatter={(value) => ({
+                                tickFormatter={(value: string) => ({
                                     'Chat Action': 'Chat',
                                     'PDF Action': 'PDF',
                                     'Run Code': 'Run code',
                                     'Export Code and Output': 'Export',
                                     'Other Code Actions': 'Other code',
                                     'Other Actions': 'Other',
-                                }[value] || value)}
+                                } as Record<string, string>)[value] || value}
                             />
                             <Tooltip content={<CustomTooltip />} offset={12} />
                             <Bar

@@ -408,7 +408,9 @@ const TemplatedEmailForm: React.FC<TemplatedEmailFormProps> = ({ template, onCha
           </Typography>
           <Divider sx={{ mb: 2 }} />
 
-          <Typography variant="subtitle2" color="text.secondary">
+          <Typography variant="subtitle2" sx={{
+            color: "text.secondary"
+          }}>
             Subject:
           </Typography>
           <Typography variant="body1" sx={{ mb: 2 }}>

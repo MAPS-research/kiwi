@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { EnvironmentContextActiveTabEnum } from '../services/models/EnvironmentContext';
+import type { EnvironmentContextActiveTabEnum } from '../services/models/EnvironmentContext.ts';
 
 /**
  * Chat message structure

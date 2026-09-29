@@ -1,4 +1,8 @@
-import { Injectable, ConflictException, NotFoundException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { ApiTokenService as DatabaseApiTokenService } from '../common/database/api-token.service';
 import { WebhookEndpointService } from '../common/database/webhook-endpoint.service';
 import { CreateApiTokenDto } from './dto/create-api-token.dto';
@@ -24,7 +28,9 @@ export class ApiTokensService {
     }
 
     if (webhook.userId !== userId) {
-      throw new ForbiddenException('You do not have permission to create a token for this webhook');
+      throw new ForbiddenException(
+        'You do not have permission to create a token for this webhook',
+      );
     }
 
     // Check if a token already exists for this webhook
@@ -103,7 +109,9 @@ export class ApiTokensService {
     }
 
     if (apiToken.userId !== userId) {
-      throw new ForbiddenException('You do not have permission to view this token');
+      throw new ForbiddenException(
+        'You do not have permission to view this token',
+      );
     }
 
     // Don't return the actual token
@@ -111,7 +119,11 @@ export class ApiTokensService {
     return tokenData;
   }
 
-  async update(userId: string, id: string, updateApiTokenDto: UpdateApiTokenDto) {
+  async update(
+    userId: string,
+    id: string,
+    updateApiTokenDto: UpdateApiTokenDto,
+  ) {
     const apiToken = await this.apiTokenService.apiToken({ id });
 
     if (!apiToken) {
@@ -119,7 +131,9 @@ export class ApiTokensService {
     }
 
     if (apiToken.userId !== userId) {
-      throw new ForbiddenException('You do not have permission to update this token');
+      throw new ForbiddenException(
+        'You do not have permission to update this token',
+      );
     }
 
     return this.apiTokenService.update({
@@ -144,7 +158,9 @@ export class ApiTokensService {
     }
 
     if (apiToken.userId !== userId) {
-      throw new ForbiddenException('You do not have permission to delete this token');
+      throw new ForbiddenException(
+        'You do not have permission to delete this token',
+      );
     }
 
     await this.apiTokenService.deleteApiToken({ id });

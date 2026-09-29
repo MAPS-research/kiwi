@@ -14,9 +14,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, CircularProgress, Typography, Alert } from '@mui/material';
-import { kiwiAppsApiClient } from '../../utils/api';
-import type { AppUIResponseDto } from '../../services/models';
-import AdminAppView from './AdminAppView';
+import { kiwiAppsApiClient } from '../../utils/api.ts';
+import type { AppUIResponseDto } from '../../services/models/index.ts';
+import AdminAppView from './AdminAppView.tsx';
 
 interface AdminAppPageProps {
   /** Overrides the :appSlug route param. */

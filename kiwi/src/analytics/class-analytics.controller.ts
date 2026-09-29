@@ -93,7 +93,8 @@ export class ClassAnalyticsController {
     return this.classAnalyticsService.getChats(classId, {
       lectureId: lectureId || undefined,
       studentKey: studentKey || undefined,
-      pdfPage: pdfPage !== undefined && pdfPage !== '' ? Number(pdfPage) : undefined,
+      pdfPage:
+        pdfPage !== undefined && pdfPage !== '' ? Number(pdfPage) : undefined,
       offset: offset ? Number(offset) : undefined,
       limit: limit ? Number(limit) : undefined,
       order: order === 'asc' ? 'asc' : 'desc',
@@ -121,7 +122,10 @@ export class ClassAnalyticsController {
     @Query('lectureId') lectureId?: string,
   ) {
     this.assertClassAccess(req, classId);
-    return this.classAnalyticsService.getTopics(classId, lectureId || undefined);
+    return this.classAnalyticsService.getTopics(
+      classId,
+      lectureId || undefined,
+    );
   }
 
   @HttpCode(HttpStatus.OK)

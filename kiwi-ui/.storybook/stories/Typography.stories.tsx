@@ -127,11 +127,21 @@ const TypographyOverview = () => {
           Semantic text colors
         </Typography>
         <Stack spacing={1.5}>
-          <Typography color="text.primary">text.primary — primary content</Typography>
-          <Typography color="text.secondary">text.secondary — supporting content</Typography>
-          <Typography color="text.disabled">text.disabled — unavailable content</Typography>
-          <Typography color="primary.main">primary.main — interactive or brand emphasis</Typography>
-          <Typography color="error.main">error.main — error feedback</Typography>
+          <Typography sx={{
+            color: "text.primary"
+          }}>text.primary — primary content</Typography>
+          <Typography sx={{
+            color: "text.secondary"
+          }}>text.secondary — supporting content</Typography>
+          <Typography sx={{
+            color: "text.disabled"
+          }}>text.disabled — unavailable content</Typography>
+          <Typography sx={{
+            color: "primary.main"
+          }}>primary.main — interactive or brand emphasis</Typography>
+          <Typography sx={{
+            color: "error.main"
+          }}>error.main — error feedback</Typography>
         </Stack>
       </Box>
     </Stack>

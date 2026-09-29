@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 /**
  * Request/response DTOs exist so @nestjs/swagger documents the request bodies
@@ -11,7 +11,8 @@ export class ExperimentConfigBody {
   @ApiProperty({
     type: 'object',
     additionalProperties: true,
-    description: 'The experiment Config JSON (validated server-side against the zod contract)',
+    description:
+      'The experiment Config JSON (validated server-side against the zod contract)',
   })
   config: Record<string, any>;
 }
@@ -64,8 +65,7 @@ export class AssistantChatBody {
 export class AssistantChatResponse {
   @ApiProperty({ description: "The assistant's natural-language reply" })
   reply: string;
-  @ApiProperty({
-    required: false,
+  @ApiPropertyOptional({
     nullable: true,
     type: 'object',
     additionalProperties: true,

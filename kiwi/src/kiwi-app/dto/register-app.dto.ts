@@ -47,7 +47,10 @@ export class RegisterAppUIDto {
   @IsString()
   uiSlug: string;
 
-  @ApiProperty({ description: 'Display name for this UI', example: 'Exercise Runner' })
+  @ApiProperty({
+    description: 'Display name for this UI',
+    example: 'Exercise Runner',
+  })
   @IsString()
   uiName: string;
 
@@ -68,20 +71,32 @@ export class RegisterAppUIDto {
     description: 'Roles that can access this UI',
     enum: UserRole,
     isArray: true,
-    default: [UserRole.STUDENT, UserRole.TA, UserRole.INSTRUCTOR, UserRole.ADMIN],
+    default: [
+      UserRole.STUDENT,
+      UserRole.TA,
+      UserRole.INSTRUCTOR,
+      UserRole.ADMIN,
+    ],
   })
   @IsOptional()
   @IsArray()
   @IsEnum(UserRole, { each: true })
   allowedRoles?: UserRole[];
 
-  @ApiPropertyOptional({ description: 'Tab order within placement', default: 0 })
+  @ApiPropertyOptional({
+    description: 'Tab order within placement',
+    default: 0,
+  })
   @IsOptional()
   @IsInt()
   @Min(0)
   tabOrder?: number;
 
-  @ApiPropertyOptional({ description: 'UI-specific configuration', type: 'object' })
+  @ApiPropertyOptional({
+    description: 'UI-specific configuration',
+    type: 'object',
+    additionalProperties: true,
+  })
   @IsOptional()
   config?: Record<string, any>;
 }
@@ -103,12 +118,16 @@ export class RegisterAppPromptDto {
 
   @ApiProperty({
     description: 'The system prompt (will be reviewed by admin)',
-    example: 'You are a coding tutor. Give hints without revealing the answer...',
+    example:
+      'You are a coding tutor. Give hints without revealing the answer...',
   })
   @IsString()
   systemPrompt: string;
 
-  @ApiPropertyOptional({ description: 'Max tokens for response', example: 1000 })
+  @ApiPropertyOptional({
+    description: 'Max tokens for response',
+    example: 1000,
+  })
   @IsOptional()
   @IsInt()
   @Min(1)
@@ -124,7 +143,10 @@ export class RegisterAppPromptDto {
 }
 
 export class RegisterAppDto {
-  @ApiProperty({ description: 'Unique slug identifier (must be in whitelist)', example: 'codegen' })
+  @ApiProperty({
+    description: 'Unique slug identifier (must be in whitelist)',
+    example: 'codegen',
+  })
   @IsString()
   slug: string;
 
@@ -135,7 +157,10 @@ export class RegisterAppDto {
   @IsString()
   registrationSecret: string;
 
-  @ApiProperty({ description: 'Display name of the app', example: 'Code Exercises' })
+  @ApiProperty({
+    description: 'Display name of the app',
+    example: 'Code Exercises',
+  })
   @IsString()
   name: string;
 
@@ -144,7 +169,10 @@ export class RegisterAppDto {
   @IsString()
   description?: string;
 
-  @ApiProperty({ description: 'Base URL of the app', example: 'http://localhost:8000' })
+  @ApiProperty({
+    description: 'Base URL of the app',
+    example: 'http://localhost:8000',
+  })
   @IsUrl({ require_tld: false })
   baseUrl: string;
 
@@ -153,7 +181,11 @@ export class RegisterAppDto {
   @IsUrl({ require_tld: false })
   iconUrl?: string;
 
-  @ApiPropertyOptional({ description: 'Category', enum: ['plugin', 'analytics', 'tool'], default: 'plugin' })
+  @ApiPropertyOptional({
+    description: 'Category',
+    enum: ['plugin', 'analytics', 'tool'],
+    default: 'plugin',
+  })
   @IsOptional()
   @IsString()
   category?: string;
@@ -172,7 +204,11 @@ export class RegisterAppDto {
   @IsString({ each: true })
   capabilities?: string[];
 
-  @ApiPropertyOptional({ description: 'Default configuration', type: 'object' })
+  @ApiPropertyOptional({
+    description: 'Default configuration',
+    type: 'object',
+    additionalProperties: true,
+  })
   @IsOptional()
   config?: Record<string, any>;
 
@@ -287,7 +323,7 @@ export class AppUIResponseDto {
   @ApiProperty()
   isEnabled: boolean;
 
-  @ApiProperty({ type: 'object' })
+  @ApiProperty({ type: 'object', additionalProperties: true })
   config: Record<string, any>;
 
   @ApiProperty()
@@ -364,7 +400,7 @@ export class AppResponseDto {
   @ApiProperty()
   isActive: boolean;
 
-  @ApiProperty({ type: 'object' })
+  @ApiProperty({ type: 'object', additionalProperties: true })
   config: Record<string, any>;
 
   @ApiProperty({ type: [String] })

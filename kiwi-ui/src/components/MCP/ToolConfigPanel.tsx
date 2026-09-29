@@ -16,7 +16,7 @@ import {
   Typography,
 } from "@mui/material";
 import { RefreshOutlined as RefreshIcon } from "@mui/icons-material";
-import type { ToolConfigResponseDto } from "../../services/models";
+import type { ToolConfigResponseDto } from "../../services/models/index.ts";
 
 interface ToolConfigPanelProps {
   tools: ToolConfigResponseDto[];
@@ -110,10 +110,14 @@ export const ToolConfigPanel: React.FC<ToolConfigPanelProps> = ({
           </Button>
         </Box>
         <Paper sx={{ p: 4, textAlign: "center" }}>
-          <Typography variant="h6" color="text.secondary" gutterBottom>
+          <Typography variant="h6" gutterBottom sx={{
+            color: "text.secondary"
+          }}>
             No Tools Available
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             Add MCP servers to enable additional tools for this class.
             Built-in tools (RAG and Code Interpreter) should appear automatically.
           </Typography>
@@ -147,11 +151,15 @@ export const ToolConfigPanel: React.FC<ToolConfigPanelProps> = ({
                 return (
                   <TableRow key={tool.id}>
                     <TableCell>
-                      <Typography variant="body2" fontWeight={500}>
+                      <Typography variant="body2" sx={{
+                        fontWeight: 500
+                      }}>
                         {tool.toolName}
                       </Typography>
                       {tool.toolType === "MCP" && mcpServer?.name && (
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{
+                          color: "text.secondary"
+                        }}>
                           from {mcpServer.name}
                         </Typography>
                       )}
@@ -175,7 +183,9 @@ export const ToolConfigPanel: React.FC<ToolConfigPanelProps> = ({
                             />
                           ))
                         ) : (
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography variant="caption" sx={{
+                            color: "text.secondary"
+                          }}>
                             All
                           </Typography>
                         )}
@@ -226,7 +236,9 @@ export const ToolConfigPanel: React.FC<ToolConfigPanelProps> = ({
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" sx={{
+          color: "text.secondary"
+        }}>
           Enable or disable tools available to students in the chat. Higher priority tools are preferred
           when multiple tools can handle the same request.
         </Typography>

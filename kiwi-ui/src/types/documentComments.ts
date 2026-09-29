@@ -1,4 +1,4 @@
-import { HighlightArea } from "@react-pdf-viewer/highlight";
+import { HighlightArea } from "../components/PDFViewer/pdfTypes.ts";
 
 export interface CommentPinPosition {
   left: number;

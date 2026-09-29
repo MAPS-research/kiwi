@@ -8,7 +8,7 @@ import {
   Resource,
   Tool,
   CallToolResult,
-} from '@modelcontextprotocol/sdk/types.js';
+} from '@modelcontextprotocol/server';
 
 @Injectable()
 export class McpService {

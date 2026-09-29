@@ -3,9 +3,9 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { executeTool, validateToolParams, createToolExecutor } from '../ToolExecutor';
-import type { KiwiToolDefinition, ToolExecutionContext, ToolInvocation } from '../../types';
-import { AppRegistry } from '../../registry/AppRegistry';
+import { executeTool, validateToolParams, createToolExecutor } from '../ToolExecutor.ts';
+import type { KiwiToolDefinition, ToolExecutionContext, ToolInvocation } from '../../types/index.ts';
+import { AppRegistry } from '../../registry/AppRegistry.ts';
 
 // Mock fetch
 const mockFetch = vi.fn();
@@ -100,6 +100,7 @@ describe('ToolExecutor', () => {
         registry.register({
           id: 'test-app',
           name: 'Test App',
+          description: 'Test app',
           version: '1.0.0',
           tools: [],
           widgets: [],
@@ -135,6 +136,7 @@ describe('ToolExecutor', () => {
         registry.register({
           id: 'test-app',
           name: 'Test App',
+          description: 'Test app',
           version: '1.0.0',
           tools: [tool],
           widgets: [],
@@ -167,6 +169,7 @@ describe('ToolExecutor', () => {
         registry.register({
           id: 'test-app',
           name: 'Test App',
+          description: 'Test app',
           version: '1.0.0',
           tools: [tool],
           widgets: [],
@@ -199,6 +202,7 @@ describe('ToolExecutor', () => {
         registry.register({
           id: 'test-app',
           name: 'Test App',
+          description: 'Test app',
           version: '1.0.0',
           tools: [tool],
           widgets: [],
@@ -237,6 +241,7 @@ describe('ToolExecutor', () => {
         registry.register({
           id: 'test-app',
           name: 'Test App',
+          description: 'Test app',
           version: '1.0.0',
           tools: [tool],
           widgets: [],
@@ -276,6 +281,7 @@ describe('ToolExecutor', () => {
         registry.register({
           id: 'test-app',
           name: 'Test App',
+          description: 'Test app',
           version: '1.0.0',
           tools: [tool],
           widgets: [],
@@ -309,6 +315,7 @@ describe('ToolExecutor', () => {
         registry.register({
           id: 'test-app',
           name: 'Test App',
+          description: 'Test app',
           version: '1.0.0',
           tools: [tool],
           widgets: [],
@@ -347,6 +354,7 @@ describe('ToolExecutor', () => {
         registry.register({
           id: 'test-app',
           name: 'Test App',
+          description: 'Test app',
           version: '1.0.0',
           tools: [tool],
           widgets: [],
@@ -379,6 +387,7 @@ describe('ToolExecutor', () => {
         registry.register({
           id: 'test-app',
           name: 'Test App',
+          description: 'Test app',
           version: '1.0.0',
           tools: [tool],
           widgets: [],
@@ -411,6 +420,7 @@ describe('ToolExecutor', () => {
         registry.register({
           id: 'test-app',
           name: 'Test App',
+          description: 'Test app',
           version: '1.0.0',
           tools: [tool],
           widgets: [],
@@ -455,6 +465,7 @@ describe('ToolExecutor', () => {
       registry.register({
         id: 'test-app',
         name: 'Test App',
+        description: 'Test app',
         version: '1.0.0',
         tools: [tool],
         widgets: [],

@@ -1,5 +1,9 @@
-import { BadRequestException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
-import { JsonObject } from '@prisma/client/runtime/library';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import {
   ChatCompletionChunk,
   ChatCompletionContentPart,
@@ -20,9 +24,8 @@ import {
 import { LlmService } from 'src/common/llm/llm.service';
 import { DocumentService } from 'src/document/document.service';
 import { InteractionService } from 'src/interaction/interaction.service';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 import {
-  BotResponse,
   StudentContext,
   CodegenContext,
   AppContext,
@@ -41,9 +44,14 @@ import {
   ChatHistoryResponseDto,
 } from './dto/chat-history.dto';
 import { studentConfig } from './student.constants';
-import { DEFAULT_SYSTEM_PROMPTS, UNIFIED_SYSTEM_PROMPTS } from './student.prompts';
+import {
+  DEFAULT_SYSTEM_PROMPTS,
+  UNIFIED_SYSTEM_PROMPTS,
+} from './student.prompts';
 import { ClassMetadata } from 'src/class/interfaces/class-metadata.interface';
-import { Enrollment, Class } from '@prisma/client';
+import { Enrollment, Class, Prisma } from '@prisma/client';
+
+type JsonObject = Prisma.JsonObject;
 import { MaterialPersonalizationService } from './material-personalization/material-personalization.service';
 import { EngineChoice } from 'src/common/llm/interfaces/engine-config';
 import { KeywordService } from 'src/common/database/keyword.service';
@@ -147,7 +155,10 @@ type DocumentType = {
 export class StudentService {
   private readonly logger = new Logger(StudentService.name);
   // Store last keyword generation token usage per keywordId (ephemeral)
-  private keywordUsage: Map<string, { promptTokens: number; completionTokens: number; totalTokens: number }> = new Map();
+  private keywordUsage: Map<
+    string,
+    { promptTokens: number; completionTokens: number; totalTokens: number }
+  > = new Map();
   constructor(
     private llmService: LlmService,
     private userSessionService: UserSessionService,
@@ -167,7 +178,7 @@ export class StudentService {
     private contextJobsService: ContextJobsService,
     private kiwiAppService: KiwiAppService,
     private materialAccessService: MaterialAccessService,
-  ) { }
+  ) {}
 
   async getEnrollments(userId: string): Promise<Enrollment[]> {
     this.logger.debug('Fetching enrolled classes for user', userId);
@@ -763,7 +774,7 @@ Your response: In Python, the print() function is used to display output on the 
           ...deltaItem.function,
           arguments: existingItem.function?.arguments
             ? existingItem.function.arguments +
-            (deltaItem.function?.arguments || '')
+              (deltaItem.function?.arguments || '')
             : deltaItem.function?.arguments,
         };
 
@@ -846,7 +857,8 @@ Your response: In Python, the print() function is used to display output on the 
           id: conversationID,
           data: {
             bot: {
-              botResponse: contentAccumulator.value + `\n\nUsing ${toolName}...`,
+              botResponse:
+                contentAccumulator.value + `\n\nUsing ${toolName}...`,
               id: conversationID,
               citations: citations,
               streaming: null,
@@ -938,9 +950,6 @@ Your response: In Python, the print() function is used to display output on the 
     },
     engineChoice?: EngineChoice,
   ) {
-    const conversationID = uuidv4();
-    const { userId, userSessionId } = session;
-
     if (type === 'pdf') {
       return this.chatPdf(
         prompt,
@@ -973,7 +982,7 @@ Your response: In Python, the print() function is used to display output on the 
     },
     engineChoice?: EngineChoice,
   ) {
-    const conversationID = uuidv4();
+    const conversationID = randomUUID();
     const RAGQuery = prompt;
     const classId = studentContext.classId;
     const previewedPdfId = studentContext.pdfId;
@@ -1350,7 +1359,7 @@ Your response: In Python, the print() function is used to display output on the 
     // this.logger.debug('Using the messages', JSON.stringify(messages, null, 2));
 
     // Store the query so far
-    const serverAction = await this.interactionService.createServerAction(
+    await this.interactionService.createServerAction(
       {
         interactionId: userChatInteraction.id,
         type: 'chat-query',
@@ -1454,7 +1463,7 @@ Your response: In Python, the print() function is used to display output on the 
     },
     engineChoice?: EngineChoice,
   ) {
-    const conversationID = uuidv4();
+    const conversationID = randomUUID();
     const { userId, userSessionId } = session;
     const { problemId } = codegenContext;
     const classId = session.classId;
@@ -1529,14 +1538,6 @@ Your response: In Python, the print() function is used to display output on the 
       user?.researchNotes ?? ({ CONTEXT_STUDY: 'control' } as JsonObject);
     const userGroup =
       ((researchNotes as JsonObject).CONTEXT_STUDY as string) ?? 'control';
-
-    const userSession = await this.userSessionService.userSession({
-      id: userSessionId,
-    });
-    const researchNotesForSession =
-      userSession?.researchNotesForSession ?? ({ PN_STUDY: 1 } as JsonObject);
-    const PN_STUDY_RATIO =
-      ((researchNotesForSession as JsonObject).PN_STUDY as number) ?? 1;
 
     const enhancedPrompt = this.buildCodegenPrompt(
       prompt,
@@ -1654,7 +1655,7 @@ Your response: In Python, the print() function is used to display output on the 
           };
         } catch {}
       };
-      
+
       chatObservable.subscribe({
         next: async (chunk) => {
           const response = chunk.data;
@@ -1751,12 +1752,12 @@ Your response: In Python, the print() function is used to display output on the 
     errorContext?: string,
   ): string {
     const testCasesInfo = problemInfo?.testCases
-      ? `- Test Cases: Available (${Array.isArray(problemInfo.testCases) ? problemInfo.testCases.length : "Multiple"})`
-      : "- Test Cases: Not provided";
+      ? `- Test Cases: Available (${Array.isArray(problemInfo.testCases) ? problemInfo.testCases.length : 'Multiple'})`
+      : '- Test Cases: Not provided';
 
     const solutionInfo = problemInfo?.solution
-      ? "- Solution: Available internally (do not reveal it verbatim)"
-      : "- Solution: Not provided";
+      ? '- Solution: Available internally (do not reveal it verbatim)'
+      : '- Solution: Not provided';
 
     const trim = (text: string | undefined, max: number) => {
       if (!text) return '';
@@ -1773,18 +1774,19 @@ Your response: In Python, the print() function is used to display output on the 
     const selectedCodeBlock = selectedCode
       ? codeBlock('Selected Code', trim(selectedCode, 4000))
       : '';
-    const fullCodeBlock = !selectedCode && codeContext
-      ? codeBlock('Code Context', trim(codeContext, 6000))
-      : '';
+    const fullCodeBlock =
+      !selectedCode && codeContext
+        ? codeBlock('Code Context', trim(codeContext, 6000))
+        : '';
     const errorBlock = errorContext
       ? codeBlock('Error Context', trim(errorContext, 2000))
       : '';
     return `Context:
 
 Problem Information:
-- Title: ${problemInfo?.title || "Unknown"}
-- Description: ${problemInfo?.description || "No description available"}
-- Constraints: ${problemInfo?.constraints || "No constraints specified"}
+- Title: ${problemInfo?.title || 'Unknown'}
+- Description: ${problemInfo?.description || 'No description available'}
+- Constraints: ${problemInfo?.constraints || 'No constraints specified'}
 ${testCasesInfo}
 ${solutionInfo}
 
@@ -1853,7 +1855,7 @@ Safety:
       classId?: string;
     },
   ): Promise<Observable<UnifiedChatEvent>> {
-    const conversationID = uuidv4();
+    const conversationID = randomUUID();
     const {
       prompt,
       chatSummary,
@@ -1869,8 +1871,14 @@ Safety:
     // is its own island: `stringTag` stays empty, so nothing groups the turns and
     // server-owned replay has no key to look them up by. The id is echoed back on
     // the stream so the client can adopt it for the rest of the conversation.
-    const threadId = requestedThreadId || uuidv4();
-    const { environment, pdf, codegen, app, experiment: experimentOverride } = context;
+    const threadId = requestedThreadId || randomUUID();
+    const {
+      environment,
+      pdf,
+      codegen,
+      app,
+      experiment: experimentOverride,
+    } = context;
     const { userId, userSessionId } = session;
     let effectiveEngineChoice = engineChoice;
 
@@ -1882,7 +1890,9 @@ Safety:
     // class-scoped features (RAG, class prompts) are skipped when it's missing.
     const classId = pdf?.classId || app?.classId || session.classId;
 
-    this.logger.debug(`Unified chat request - type: ${chatType}, classId: ${classId ?? '(none)'}, activeTab: ${environment.activeTab}`);
+    this.logger.debug(
+      `Unified chat request - type: ${chatType}, classId: ${classId ?? '(none)'}, activeTab: ${environment.activeTab}`,
+    );
 
     // Check user session tokens
     const userSession = await this.userSessionService.userSession({
@@ -2031,28 +2041,28 @@ Safety:
 
     const { messages, tools, trace, usedServerHistory } =
       await this.assembleUnifiedContext({
-      classId,
-      userId,
-      environment,
-      pdf,
-      codegen,
-      app,
-      chatSummary,
-      experimentConfig,
-      prompt,
-      conversation,
-      conversationId: threadId,
-      currentInteractionId: userChatInteraction.id,
-      conversationRowId: conversationRow?.id,
-      clientToolResult,
-      clientToolTrail,
-      pnStudyRatio: PN_STUDY_RATIO,
-      n: N,
-      userGroup,
-      engineChoice: effectiveEngineChoice,
-      chatType,
-      systemRole: user?.systemRole ?? 'user',
-    });
+        classId,
+        userId,
+        environment,
+        pdf,
+        codegen,
+        app,
+        chatSummary,
+        experimentConfig,
+        prompt,
+        conversation,
+        conversationId: threadId,
+        currentInteractionId: userChatInteraction.id,
+        conversationRowId: conversationRow?.id,
+        clientToolResult,
+        clientToolTrail,
+        pnStudyRatio: PN_STUDY_RATIO,
+        n: N,
+        userGroup,
+        engineChoice: effectiveEngineChoice,
+        chatType,
+        systemRole: user?.systemRole ?? 'user',
+      });
 
     // Build agent execution context
     const agentContext: AgentExecutionContext = {
@@ -2061,18 +2071,22 @@ Safety:
       classId: classId,
       chatType: chatType,
       engineChoice: effectiveEngineChoice,
-      studentContext: pdf ? {
-        pdfId: pdf.pdfId,
-        pageNumber: pdf.pageNumber,
-        materialType: pdf.materialType,
-        chatSummary: chatSummary,
-      } : undefined,
-      codegenContext: codegen ? {
-        problemId: codegen.problemId,
-        codeContext: codegen.codeContext,
-        selectedCode: codegen.selectedCode,
-        errorContext: codegen.errorContext,
-      } : undefined,
+      studentContext: pdf
+        ? {
+            pdfId: pdf.pdfId,
+            pageNumber: pdf.pageNumber,
+            materialType: pdf.materialType,
+            chatSummary: chatSummary,
+          }
+        : undefined,
+      codegenContext: codegen
+        ? {
+            problemId: codegen.problemId,
+            codeContext: codegen.codeContext,
+            selectedCode: codegen.selectedCode,
+            errorContext: codegen.errorContext,
+          }
+        : undefined,
       environmentContext: {
         activeTab: environment.activeTab,
         activeView: environment.activeView,
@@ -2107,8 +2121,7 @@ Safety:
     // DEBUG: log the exact context the agent is seeded with this turn, so we can
     // see whether conversation history / tool results are preserved or dropped.
     // The trail itself is seeded inside the assembler; this only counts it.
-    const resumeSteps =
-      clientToolTrail?.length ?? (clientToolResult ? 1 : 0);
+    const resumeSteps = clientToolTrail?.length ?? (clientToolResult ? 1 : 0);
     this.logger.debug(
       `[AGENT-CTX] resume=${resumeSteps > 0} steps=${resumeSteps} prompt="${prompt}" ` +
         `conversationTurns=${conversation?.length ?? 0} tools=${tools.length} ` +
@@ -2207,16 +2220,20 @@ Safety:
         },
       )
       .pipe(
-        map((event) => this.transformUnifiedAgentEvent(
-          event,
-          conversationID,
-          citations,
-          contentAccumulator,
-          pendingNavigation,
-          (nav) => { pendingNavigation = nav; },
-          userChatInteraction.id,
-          threadId,
-        )),
+        map((event) =>
+          this.transformUnifiedAgentEvent(
+            event,
+            conversationID,
+            citations,
+            contentAccumulator,
+            pendingNavigation,
+            (nav) => {
+              pendingNavigation = nav;
+            },
+            userChatInteraction.id,
+            threadId,
+          ),
+        ),
         filter((event): event is UnifiedChatEvent => event !== null),
       );
   }
@@ -2233,7 +2250,10 @@ Safety:
       return 'codegen';
     }
     // If on an app tab with codegen app, use codegen type
-    if (environment.activeTab === 'app' && environment.activeAppSlug === 'codegen') {
+    if (
+      environment.activeTab === 'app' &&
+      environment.activeAppSlug === 'codegen'
+    ) {
       return 'codegen';
     }
     // Default to pdf for materials, chat, or other tabs
@@ -2325,11 +2345,13 @@ Safety:
     );
 
     if (promptMode === 'recitation') {
-      systemPrompt += '\n' + UNIFIED_SYSTEM_PROMPTS.materialTypePrompts.recitation;
+      systemPrompt +=
+        '\n' + UNIFIED_SYSTEM_PROMPTS.materialTypePrompts.recitation;
     } else if (promptMode === 'codegen') {
       systemPrompt += '\n' + UNIFIED_SYSTEM_PROMPTS.materialTypePrompts.codegen;
     } else if (promptMode === 'classMaterials') {
-      systemPrompt += '\n' + UNIFIED_SYSTEM_PROMPTS.materialTypePrompts.classMaterials;
+      systemPrompt +=
+        '\n' + UNIFIED_SYSTEM_PROMPTS.materialTypePrompts.classMaterials;
     } else {
       // App-scoped: App Mode, then the style the app's registration asks for.
       systemPrompt += '\n' + UNIFIED_SYSTEM_PROMPTS.materialTypePrompts.app;
@@ -2684,7 +2706,9 @@ Safety:
         // into the prompt, so unrecognised roles are treated as the student
         // speaking rather than trusted.
         const role = turn.role === 'assistant' ? 'assistant' : 'user';
-        const content = (turn.content || '').trim().slice(0, MAX_TURN_CONTENT_CHARS);
+        const content = (turn.content || '')
+          .trim()
+          .slice(0, MAX_TURN_CONTENT_CHARS);
         if (!content) continue;
         if (/^using\s+\w+\.\.\.$/i.test(content)) continue; // skip tool narration
         messages.push({ role, content });
@@ -3022,7 +3046,8 @@ Safety:
     const mode = this.resolvePromptMode(pdfContext, codegenContext, appContext);
 
     let reminder: string | undefined;
-    if (mode === 'guidance') reminder = UNIFIED_SYSTEM_PROMPTS.modeReminders.guidance;
+    if (mode === 'guidance')
+      reminder = UNIFIED_SYSTEM_PROMPTS.modeReminders.guidance;
     if (mode === 'recitation')
       reminder = UNIFIED_SYSTEM_PROMPTS.modeReminders.recitation;
     if (!reminder) return undefined;
@@ -3033,7 +3058,8 @@ Safety:
     // quietly beat the variant it was told to defer to. Say the precedence out
     // loud rather than letting position decide it.
     if (experimentConfig?.systemPrompts?.defaultSystemMessage) {
-      reminder += '\n' + UNIFIED_SYSTEM_PROMPTS.modeReminders.experimentOverride;
+      reminder +=
+        '\n' + UNIFIED_SYSTEM_PROMPTS.modeReminders.experimentOverride;
     }
 
     return reminder;
@@ -3191,10 +3217,22 @@ Safety:
     let result = template;
 
     // Replace simple placeholders
-    result = result.replace(/\{\{activeTab\}\}/g, environment.activeTab || 'unknown');
-    result = result.replace(/\{\{activeView\}\}/g, environment.activeView || '');
-    result = result.replace(/\{\{activeAppName\}\}/g, environment.activeAppName || '');
-    result = result.replace(/\{\{currentPath\}\}/g, environment.currentPath || '');
+    result = result.replace(
+      /\{\{activeTab\}\}/g,
+      environment.activeTab || 'unknown',
+    );
+    result = result.replace(
+      /\{\{activeView\}\}/g,
+      environment.activeView || '',
+    );
+    result = result.replace(
+      /\{\{activeAppName\}\}/g,
+      environment.activeAppName || '',
+    );
+    result = result.replace(
+      /\{\{currentPath\}\}/g,
+      environment.currentPath || '',
+    );
     result = result.replace(/\{\{classID\}\}/g, currentClass?.classID || '');
     result = result.replace(
       /\{\{className\}\}/g,
@@ -3204,9 +3242,15 @@ Safety:
     // Handle conditional blocks for currentPath. Without this the agent has no idea
     // where it already is: it navigates, then re-reads the sitemap to check, and loops.
     if (environment.currentPath) {
-      result = result.replace(/\{\{#if currentPath\}\}([\s\S]*?)\{\{\/if\}\}/g, '$1');
+      result = result.replace(
+        /\{\{#if currentPath\}\}([\s\S]*?)\{\{\/if\}\}/g,
+        '$1',
+      );
     } else {
-      result = result.replace(/\{\{#if currentPath\}\}[\s\S]*?\{\{\/if\}\}/g, '');
+      result = result.replace(
+        /\{\{#if currentPath\}\}[\s\S]*?\{\{\/if\}\}/g,
+        '',
+      );
     }
 
     // Handle conditional blocks for the current class. The request has carried a
@@ -3214,9 +3258,15 @@ Safety:
     // the model — so "this class" was unresolvable and the agent had to spend a
     // round-trip on list_classes, whose result the next round-trip then dropped.
     if (currentClass?.classID) {
-      result = result.replace(/\{\{#if currentClass\}\}([\s\S]*?)\{\{\/if\}\}/g, '$1');
+      result = result.replace(
+        /\{\{#if currentClass\}\}([\s\S]*?)\{\{\/if\}\}/g,
+        '$1',
+      );
     } else {
-      result = result.replace(/\{\{#if currentClass\}\}[\s\S]*?\{\{\/if\}\}/g, '');
+      result = result.replace(
+        /\{\{#if currentClass\}\}[\s\S]*?\{\{\/if\}\}/g,
+        '',
+      );
     }
 
     // Conditional sections. These MUST be rendered with depth-matched close
@@ -3335,29 +3385,30 @@ Safety:
 
     // The answer key when this material has one — the agent path never did
     // this swap, so it saw only what the student saw.
-    const llmDocumentId = await this.materialAccessService.resolveLlmCounterpart(
-      pdfContext.pdfId,
-    );
+    const llmDocumentId =
+      await this.materialAccessService.resolveLlmCounterpart(pdfContext.pdfId);
 
-    const studentContextResultsForP = await this.classService.queryClassDocuments(
-      query,
-      classId,
-      P,
-      llmDocumentId,
-      pdfContext.pageNumber,
-      false,
-      engineChoice,
-    );
+    const studentContextResultsForP =
+      await this.classService.queryClassDocuments(
+        query,
+        classId,
+        P,
+        llmDocumentId,
+        pdfContext.pageNumber,
+        false,
+        engineChoice,
+      );
 
-    const studentContextResultsForO = await this.classService.queryClassDocuments(
-      query,
-      classId,
-      O,
-      llmDocumentId,
-      pdfContext.pageNumber,
-      true,
-      engineChoice,
-    );
+    const studentContextResultsForO =
+      await this.classService.queryClassDocuments(
+        query,
+        classId,
+        O,
+        llmDocumentId,
+        pdfContext.pageNumber,
+        true,
+        engineChoice,
+      );
 
     // Build context content.
     //
@@ -3389,7 +3440,9 @@ Safety:
     droppedChunks += other.dropped;
 
     if (other.kept.length > 0) {
-      contextParts.push(`[Additional Course Context]\n${other.kept.join('\n')}`);
+      contextParts.push(
+        `[Additional Course Context]\n${other.kept.join('\n')}`,
+      );
     }
 
     if (droppedChunks > 0) {
@@ -3447,7 +3500,7 @@ Safety:
   private async addCodegenContextToMessages(
     messages: ChatCompletionMessageParam[],
     codegenContext: CodegenContext,
-    prompt: string,
+    _prompt: string,
   ): Promise<void> {
     // Problem info is no longer fetched from the codegen service.
     const problemInfo: any = null;
@@ -3455,7 +3508,9 @@ Safety:
     const contextParts: string[] = [];
 
     if (problemInfo) {
-      contextParts.push(`## Problem: ${problemInfo.title || codegenContext.problemId}`);
+      contextParts.push(
+        `## Problem: ${problemInfo.title || codegenContext.problemId}`,
+      );
       if (problemInfo.description) {
         contextParts.push(`Description: ${problemInfo.description}`);
       }
@@ -3506,7 +3561,7 @@ Safety:
     setNavigation: (nav: NavigationAction | undefined) => void,
     interactionId?: string,
     threadId?: string,
-  ): (UnifiedChatEvent) | null {
+  ): UnifiedChatEvent | null {
     switch (event.type) {
       case 'content_delta':
         contentAccumulator.value += event.data.content || '';
@@ -3538,7 +3593,9 @@ Safety:
           event.data.toolCall?.name === 'open_material' &&
           event.data.toolCall?.metadata
         ) {
-          const metadata = event.data.toolCall.metadata as { navigation?: NavigationAction };
+          const metadata = event.data.toolCall.metadata as {
+            navigation?: NavigationAction;
+          };
           if (metadata.navigation) {
             const navAction = metadata.navigation;
             setNavigation(navAction);
@@ -3569,7 +3626,9 @@ Safety:
       case 'max_iterations':
         return this.createUnifiedMessageEvent(
           conversationID,
-          event.data.content || contentAccumulator.value || 'I reached the maximum number of steps.',
+          event.data.content ||
+            contentAccumulator.value ||
+            'I reached the maximum number of steps.',
           citations,
           'stop',
           currentNavigation,
@@ -3631,12 +3690,25 @@ Safety:
 
   // === Keyword Management Methods ===
 
-  async refreshKeywords(lectureId: string, classId: string, force: boolean = false) {
-    this.logger.debug('Refreshing keywords for lecture:', lectureId, 'class:', classId);
+  async refreshKeywords(
+    lectureId: string,
+    classId: string,
+    force: boolean = false,
+  ) {
+    this.logger.debug(
+      'Refreshing keywords for lecture:',
+      lectureId,
+      'class:',
+      classId,
+    );
 
     try {
       // Check if keywords already exist
-      const existingKeywords = await this.keywordService.getLectureKeywordsByLectureId(lectureId, classId);
+      const existingKeywords =
+        await this.keywordService.getLectureKeywordsByLectureId(
+          lectureId,
+          classId,
+        );
 
       if (existingKeywords && !force) {
         this.logger.debug('Keywords already exist, returning existing record');
@@ -3691,10 +3763,19 @@ Safety:
   }
 
   async getKeywords(lectureId: string, classId: string) {
-    this.logger.debug('Getting keywords for lecture:', lectureId, 'class:', classId);
+    this.logger.debug(
+      'Getting keywords for lecture:',
+      lectureId,
+      'class:',
+      classId,
+    );
 
     try {
-      const keywordRecord = await this.keywordService.getLectureKeywordsByLectureId(lectureId, classId);
+      const keywordRecord =
+        await this.keywordService.getLectureKeywordsByLectureId(
+          lectureId,
+          classId,
+        );
 
       if (!keywordRecord) {
         return {
@@ -3708,7 +3789,9 @@ Safety:
 
       // Ensure keywords returned to clients are validated with the latest rules
       const rawKeywords = (keywordRecord.keywords as any[]) || [];
-      const filteredKeywords = this.validateAndFilterKeywords(Array.isArray(rawKeywords) ? rawKeywords : []);
+      const filteredKeywords = this.validateAndFilterKeywords(
+        Array.isArray(rawKeywords) ? rawKeywords : [],
+      );
 
       const usage = this.keywordUsage.get(keywordRecord.id) || undefined;
       return {
@@ -3733,10 +3816,19 @@ Safety:
   }
 
   async getKeywordStatus(lectureId: string, classId: string) {
-    this.logger.debug('Getting keyword status for lecture:', lectureId, 'class:', classId);
+    this.logger.debug(
+      'Getting keyword status for lecture:',
+      lectureId,
+      'class:',
+      classId,
+    );
 
     try {
-      const keywordRecord = await this.keywordService.getLectureKeywordsByLectureId(lectureId, classId);
+      const keywordRecord =
+        await this.keywordService.getLectureKeywordsByLectureId(
+          lectureId,
+          classId,
+        );
 
       if (!keywordRecord) {
         return {
@@ -3748,11 +3840,18 @@ Safety:
         };
       }
 
-      const progress = keywordRecord.status === 'completed' ? 100 :
-        keywordRecord.status === 'processing' ? 50 :
-          keywordRecord.status === 'failed' ? 0 : 0;
+      const progress =
+        keywordRecord.status === 'completed'
+          ? 100
+          : keywordRecord.status === 'processing'
+            ? 50
+            : keywordRecord.status === 'failed'
+              ? 0
+              : 0;
 
-      const usage = keywordRecord?.id ? this.keywordUsage.get(keywordRecord.id) : undefined;
+      const usage = keywordRecord?.id
+        ? this.keywordUsage.get(keywordRecord.id)
+        : undefined;
       return {
         success: true,
         message: this.getStatusMessage(keywordRecord.status),
@@ -3789,20 +3888,30 @@ Safety:
     }
   }
 
-  private async processKeywordsAsync(keywordId: string, lectureId: string, classId: string) {
+  private async processKeywordsAsync(
+    keywordId: string,
+    lectureId: string,
+    classId: string,
+  ) {
     try {
-      this.logger.debug('Processing keywords asynchronously for:', keywordId, 'classId:', classId, 'lectureId:', lectureId);
+      this.logger.debug(
+        'Processing keywords asynchronously for:',
+        keywordId,
+        'classId:',
+        classId,
+        'lectureId:',
+        lectureId,
+      );
 
       // Fetch interactions for this lecture and class efficiently (avoid loading all records)
       const interactions = await this.interactionService.getLectureInteractions(
         lectureId,
         classId,
-        [
-          'frontend-interaction-chat',
-          'frontend-interaction-chat-exercise',
-        ],
+        ['frontend-interaction-chat', 'frontend-interaction-chat-exercise'],
       );
-      this.logger.debug(`Filtered lecture interactions: ${interactions.length} for lectureId: ${lectureId}, classId: ${classId}`);
+      this.logger.debug(
+        `Filtered lecture interactions: ${interactions.length} for lectureId: ${lectureId}, classId: ${classId}`,
+      );
 
       if (!interactions || interactions.length === 0) {
         this.logger.debug('No interactions found for lecture:', lectureId);
@@ -3811,9 +3920,13 @@ Safety:
       }
 
       // Extract questions from interactions
-      const questionObjects = this.extractQuestionsFromInteractions(interactions);
+      const questionObjects =
+        this.extractQuestionsFromInteractions(interactions);
       this.logger.debug(`Extracted questions: ${questionObjects.length}`);
-      this.logger.debug('Sample questions:', questionObjects.slice(0, 3).map(q => q.text));
+      this.logger.debug(
+        'Sample questions:',
+        questionObjects.slice(0, 3).map((q) => q.text),
+      );
 
       if (questionObjects.length === 0) {
         this.logger.debug('No questions found in interactions');
@@ -3822,7 +3935,8 @@ Safety:
       }
 
       // Use LLM to generate keywords
-      const { keywords, usage } = await this.generateKeywordsFromQuestions(questionObjects);
+      const { keywords, usage } =
+        await this.generateKeywordsFromQuestions(questionObjects);
 
       // Update keyword record with generated keywords
       await this.keywordService.updateLectureKeywords({
@@ -3860,7 +3974,7 @@ Safety:
             slide: interaction.pdfPage, // use pdfPage as slide index
             slideTitle: `Page ${interaction.pdfPage}`, // simple title
             studentId: interaction.userId,
-            timestamp: interaction.timestamp
+            timestamp: interaction.timestamp,
           });
         }
       }
@@ -3869,7 +3983,14 @@ Safety:
     return questions;
   }
 
-  private async generateKeywordsFromQuestions(questionObjects: any[]): Promise<{ keywords: any[]; usage?: { promptTokens: number; completionTokens: number; totalTokens: number } }> {
+  private async generateKeywordsFromQuestions(questionObjects: any[]): Promise<{
+    keywords: any[];
+    usage?: {
+      promptTokens: number;
+      completionTokens: number;
+      totalTokens: number;
+    };
+  }> {
     const KEYWORD_GENERATION_PROMPT = `
 You are an educational content analyzer. Given a list of student questions about a lecture, extract and return the key academic topics/keywords that students are asking about.
 
@@ -3892,7 +4013,7 @@ Return the result as a JSON array of objects with this structure:
 ]
 
 Student questions (total: ${questionObjects.length}):
-${questionObjects.map(q => q.text).join('\n')}
+${questionObjects.map((q) => q.text).join('\n')}
 `;
 
     try {
@@ -3923,23 +4044,33 @@ ${questionObjects.map(q => q.text).join('\n')}
 
       // Clean up markdown code blocks and parse JSON
       const cleanedContent = content
-        .replace(/```json\s*/g, '')  // Remove ```json
-        .replace(/```\s*$/g, '')     // Remove closing ```
+        .replace(/```json\s*/g, '') // Remove ```json
+        .replace(/```\s*$/g, '') // Remove closing ```
         .trim();
 
       this.logger.debug('Cleaned LLM content:', cleanedContent);
 
       // Parse JSON response
       const keywordsFromLLM = JSON.parse(cleanedContent);
-      this.logger.debug(`LLM generated ${keywordsFromLLM.length} keywords:`, keywordsFromLLM.map((k: any) => k.text));
+      this.logger.debug(
+        `LLM generated ${keywordsFromLLM.length} keywords:`,
+        keywordsFromLLM.map((k: any) => k.text),
+      );
 
       // Map keywords back to question objects with metadata
-      const enhancedKeywords = this.mapKeywordsToQuestionObjects(keywordsFromLLM, questionObjects);
+      const enhancedKeywords = this.mapKeywordsToQuestionObjects(
+        keywordsFromLLM,
+        questionObjects,
+      );
       this.logger.debug(`Enhanced keywords count: ${enhancedKeywords.length}`);
 
       // Validate and filter keywords
-      const validatedKeywords = this.validateAndFilterKeywords(enhancedKeywords);
-      this.logger.debug(`Final validated keywords: ${validatedKeywords.length}`, validatedKeywords.map((k: any) => k.text));
+      const validatedKeywords =
+        this.validateAndFilterKeywords(enhancedKeywords);
+      this.logger.debug(
+        `Final validated keywords: ${validatedKeywords.length}`,
+        validatedKeywords.map((k: any) => k.text),
+      );
 
       const usage = {
         promptTokens: response.usage?.prompt_tokens ?? 0,
@@ -3955,7 +4086,10 @@ ${questionObjects.map(q => q.text).join('\n')}
     }
   }
 
-  private mapKeywordsToQuestionObjects(keywordsFromLLM: any[], questionObjects: any[]): any[] {
+  private mapKeywordsToQuestionObjects(
+    keywordsFromLLM: any[],
+    questionObjects: any[],
+  ): any[] {
     const enhancedKeywords: any[] = [];
 
     const dedupeQuestionObjects = (arr: any[]): any[] => {
@@ -3979,9 +4113,10 @@ ${questionObjects.map(q => q.text).join('\n')}
       // Map questions to question objects
       if (keyword.questions && Array.isArray(keyword.questions)) {
         for (const questionText of keyword.questions) {
-          const matchingObj = questionObjects.find(obj =>
-            obj.text.toLowerCase().includes(questionText.toLowerCase()) ||
-            questionText.toLowerCase().includes(obj.text.toLowerCase())
+          const matchingObj = questionObjects.find(
+            (obj) =>
+              obj.text.toLowerCase().includes(questionText.toLowerCase()) ||
+              questionText.toLowerCase().includes(obj.text.toLowerCase()),
           );
           if (matchingObj) {
             matchingQuestionObjects.push(matchingObj);
@@ -3992,9 +4127,10 @@ ${questionObjects.map(q => q.text).join('\n')}
       // Map related questions to question objects
       if (keyword.relatedQuestions && Array.isArray(keyword.relatedQuestions)) {
         for (const questionText of keyword.relatedQuestions) {
-          const matchingObj = questionObjects.find(obj =>
-            obj.text.toLowerCase().includes(questionText.toLowerCase()) ||
-            questionText.toLowerCase().includes(obj.text.toLowerCase())
+          const matchingObj = questionObjects.find(
+            (obj) =>
+              obj.text.toLowerCase().includes(questionText.toLowerCase()) ||
+              questionText.toLowerCase().includes(obj.text.toLowerCase()),
           );
           if (matchingObj) {
             matchingRelatedObjects.push(matchingObj);
@@ -4035,12 +4171,14 @@ ${questionObjects.map(q => q.text).join('\n')}
           return true;
         });
         const seenR = new Set<string>();
-        const relatedQuestions = (keyword.relatedQuestions || []).filter((q: any) => {
-          const key = (q.text || '').toLowerCase().trim();
-          if (seenR.has(key) || seenQ.has(key)) return false;
-          seenR.add(key);
-          return true;
-        });
+        const relatedQuestions = (keyword.relatedQuestions || []).filter(
+          (q: any) => {
+            const key = (q.text || '').toLowerCase().trim();
+            if (seenR.has(key) || seenQ.has(key)) return false;
+            seenR.add(key);
+            return true;
+          },
+        );
         const actualTotalQuestions = questions.length + relatedQuestions.length;
 
         validKeywords.push({
@@ -4075,20 +4213,136 @@ ${questionObjects.map(q => q.text).join('\n')}
 
     // Exclude common non-academic terms
     const nonAcademicTerms = [
-      'ppt', 'pdf', 'slide', 'page', 'document', 'file', 'presentation',
+      'ppt',
+      'pdf',
+      'slide',
+      'page',
+      'document',
+      'file',
+      'presentation',
       // Articles / conjunctions / prepositions
-      'a', 'an', 'the', 'and', 'or', 'but', 'if', 'then', 'else', 'than', 'because',
-      'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'as', 'about', 'into', 'through', 'over', 'after', 'before', 'between', 'without', 'within', 'across', 'against', 'among', 'around', 'during', 'until', 'upon', 'via',
+      'a',
+      'an',
+      'the',
+      'and',
+      'or',
+      'but',
+      'if',
+      'then',
+      'else',
+      'than',
+      'because',
+      'in',
+      'on',
+      'at',
+      'to',
+      'for',
+      'of',
+      'with',
+      'by',
+      'from',
+      'as',
+      'about',
+      'into',
+      'through',
+      'over',
+      'after',
+      'before',
+      'between',
+      'without',
+      'within',
+      'across',
+      'against',
+      'among',
+      'around',
+      'during',
+      'until',
+      'upon',
+      'via',
       // Auxiliaries / be-forms
-      'is', 'are', 'am', 'was', 'were', 'be', 'been', 'being', 'do', 'does', 'did', 'done', 'doing', 'have', 'has', 'had',
+      'is',
+      'are',
+      'am',
+      'was',
+      'were',
+      'be',
+      'been',
+      'being',
+      'do',
+      'does',
+      'did',
+      'done',
+      'doing',
+      'have',
+      'has',
+      'had',
       // Pronouns / determiners
-      'i', 'you', 'he', 'she', 'it', 'we', 'they', 'me', 'him', 'her', 'us', 'them', 'my', 'your', 'his', 'her', 'its', 'our', 'their', 'mine', 'yours', 'ours', 'theirs', 'this', 'that', 'these', 'those', 'there', 'here',
+      'i',
+      'you',
+      'he',
+      'she',
+      'it',
+      'we',
+      'they',
+      'me',
+      'him',
+      'her',
+      'us',
+      'them',
+      'my',
+      'your',
+      'his',
+      'her',
+      'its',
+      'our',
+      'their',
+      'mine',
+      'yours',
+      'ours',
+      'theirs',
+      'this',
+      'that',
+      'these',
+      'those',
+      'there',
+      'here',
       // Question/Modal words and fillers
-      'question', 'answer', 'ask', 'please', 'thank', 'thanks', 'hi', 'hello', 'ok', 'okay',
-      'what', 'how', 'when', 'where', 'why', 'who', 'which', 'whom',
-      'will', 'would', 'should', 'could', 'can', 'may', 'might', 'shall', 'must',
+      'question',
+      'answer',
+      'ask',
+      'please',
+      'thank',
+      'thanks',
+      'hi',
+      'hello',
+      'ok',
+      'okay',
+      'what',
+      'how',
+      'when',
+      'where',
+      'why',
+      'who',
+      'which',
+      'whom',
+      'will',
+      'would',
+      'should',
+      'could',
+      'can',
+      'may',
+      'might',
+      'shall',
+      'must',
       // Additional fillers/connectives not desired in academic keywords
-      'like', 'etc', 'etc.', 'such', 'such as', 'including', 'include', 'includes'
+      'like',
+      'etc',
+      'etc.',
+      'such',
+      'such as',
+      'including',
+      'include',
+      'includes',
     ];
 
     if (nonAcademicTerms.includes(text)) {
@@ -4119,7 +4373,10 @@ ${questionObjects.map(q => q.text).join('\n')}
   }
 
   private generateFallbackKeywords(questionObjects: any[]): any[] {
-    this.logger.debug('Generating fallback keywords from questions:', questionObjects.map((q: any) => q.text));
+    this.logger.debug(
+      'Generating fallback keywords from questions:',
+      questionObjects.map((q: any) => q.text),
+    );
 
     // Extract keywords from actual question text using simple word extraction
     const keywords: any[] = [];
@@ -4127,16 +4384,56 @@ ${questionObjects.map(q => q.text).join('\n')}
 
     // Extended academic terms
     const academicTerms = [
-      'probability', 'statistics', 'algorithm', 'function', 'variable',
-      'equation', 'matrix', 'vector', 'regression', 'classification',
-      'neural network', 'machine learning', 'deep learning', 'data',
-      'model', 'training', 'testing', 'validation', 'optimization',
-      'conditional', 'gaussian', 'distribution', 'variance', 'mean',
-      'calculate', 'compute', 'formula', 'theorem', 'proof', 'derivative',
-      'integral', 'linear', 'exponential', 'logarithm', 'random',
-      'sample', 'population', 'hypothesis', 'significance', 'correlation',
-      'bayes', 'frequentist', 'likelihood', 'estimation', 'confidence',
-      'interval', 'regression', 'clustering', 'supervised', 'unsupervised'
+      'probability',
+      'statistics',
+      'algorithm',
+      'function',
+      'variable',
+      'equation',
+      'matrix',
+      'vector',
+      'regression',
+      'classification',
+      'neural network',
+      'machine learning',
+      'deep learning',
+      'data',
+      'model',
+      'training',
+      'testing',
+      'validation',
+      'optimization',
+      'conditional',
+      'gaussian',
+      'distribution',
+      'variance',
+      'mean',
+      'calculate',
+      'compute',
+      'formula',
+      'theorem',
+      'proof',
+      'derivative',
+      'integral',
+      'linear',
+      'exponential',
+      'logarithm',
+      'random',
+      'sample',
+      'population',
+      'hypothesis',
+      'significance',
+      'correlation',
+      'bayes',
+      'frequentist',
+      'likelihood',
+      'estimation',
+      'confidence',
+      'interval',
+      'regression',
+      'clustering',
+      'supervised',
+      'unsupervised',
     ];
 
     // Check each question for academic terms
@@ -4148,10 +4445,16 @@ ${questionObjects.map(q => q.text).join('\n')}
 
       for (const word of words) {
         // Check if word is an academic term or similar
-        if (word.length >= 3 && academicTerms.some(term =>
-          term.includes(word) || word.includes(term) ||
-          term.toLowerCase().includes(word) || word.includes(term.toLowerCase())
-        )) {
+        if (
+          word.length >= 3 &&
+          academicTerms.some(
+            (term) =>
+              term.includes(word) ||
+              word.includes(term) ||
+              term.toLowerCase().includes(word) ||
+              word.includes(term.toLowerCase()),
+          )
+        ) {
           if (!keywordCounts.has(word)) {
             keywordCounts.set(word, []);
           }
@@ -4190,7 +4493,10 @@ ${questionObjects.map(q => q.text).join('\n')}
       .sort((a, b) => b.count - a.count)
       .slice(0, 10);
 
-    this.logger.debug(`Generated ${sortedKeywords.length} fallback keywords:`, sortedKeywords.map((k: any) => k.text));
+    this.logger.debug(
+      `Generated ${sortedKeywords.length} fallback keywords:`,
+      sortedKeywords.map((k: any) => k.text),
+    );
 
     return sortedKeywords;
   }

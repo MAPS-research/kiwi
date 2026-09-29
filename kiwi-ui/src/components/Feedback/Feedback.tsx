@@ -44,7 +44,9 @@ export const Feedback: React.FC<{ index: string; videoID?: string }> = ({
   };
 
   return (
-    <Stack direction="row" spacing={1} mt={1}>
+    <Stack direction="row" spacing={1} sx={{
+      mt: 1
+    }}>
       <Tooltip title="Regenerate response">
         <IconButton size="small" disabled>
           <CachedIcon fontSize="small" />

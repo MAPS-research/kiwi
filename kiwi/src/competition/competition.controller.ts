@@ -5,28 +5,24 @@ import {
   Body,
   Param,
   Query,
-  Headers,
   HttpException,
   HttpStatus,
   Session,
   UseGuards,
   HttpCode,
-  UseInterceptors,
-  UploadedFile,
 } from '@nestjs/common';
 import { CompetitionService } from './competition.service';
 import { CompetitionService as DatabaseCompetitionService } from '../common/database/competition.service';
 import { UserService } from '../common/database/user.service';
-import { DocumentService } from '../document/document.service';
+
 import { StorageService } from 'src/common/storage/storage.service';
 import {
   ApiBearerAuth,
   ApiBody,
-  ApiConsumes,
   ApiExtraModels,
   ApiResponse,
 } from '@nestjs/swagger';
-import { FileInterceptor } from '@nestjs/platform-express';
+
 import {
   CompetitionInfoDto,
   CompetitionGetEntriesDto,
@@ -36,7 +32,6 @@ import {
   GetAllCompetitionsDto,
   CompetitionEntryDto,
   CompetitorInfoDto,
-  CompetitorInfoWithImageFileDto,
   NumEntriesLeftDto,
 } from './dto/competition.dto';
 import { AdminGuard } from 'src/auth/auth.guard';
@@ -263,7 +258,7 @@ export class CompetitionController {
   @Post('competition/create')
   async createCompetition(
     @Body() competitionInfoDto: CompetitionInfoDto,
-    @Session() session: Record<string, any>,
+    @Session() _session: Record<string, any>,
   ): Promise<string> {
     try {
       const competitionId =
@@ -302,7 +297,7 @@ export class CompetitionController {
   @Post('competition/enroll')
   async enrollCompetitor(
     @Body() competitorEnrollDto: CompetitorEnrollDto,
-    @Session() session: Record<string, any>,
+    @Session() _session: Record<string, any>,
   ): Promise<string> {
     try {
       // get userId for competitorEnrollDto.userEmail

@@ -15,14 +15,14 @@ import React, {
   type ReactNode,
 } from 'react';
 
-import AppRegistry, { getAppRegistry } from './AppRegistry';
+import AppRegistry, { getAppRegistry } from './AppRegistry.ts';
 import type {
   RegisteredApp,
   KiwiAppManifest,
   AppRegistrationOptions,
   KiwiToolDefinition,
   KiwiWidgetDefinition,
-} from '../types';
+} from '../types/index.ts';
 
 /**
  * Context value interface

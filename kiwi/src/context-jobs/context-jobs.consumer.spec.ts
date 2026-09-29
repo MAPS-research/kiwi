@@ -5,7 +5,8 @@ import { ConversationHistoryService } from 'src/common/context/conversation-hist
 import { LlmService } from 'src/common/llm/llm.service';
 import { ContextJobsConsumer } from './context-jobs.consumer';
 
-const job = (name: string, data: any) => ({ name, data }) as Job<any, any, string>;
+const job = (name: string, data: any) =>
+  ({ name, data }) as Job<any, any, string>;
 
 describe('ContextJobsConsumer', () => {
   let consumer: ContextJobsConsumer;
@@ -57,7 +58,9 @@ describe('ContextJobsConsumer', () => {
   });
 
   it('ignores an unknown job name instead of failing it', async () => {
-    const result = await consumer.process(job('somethingFromANewerRelease', {}));
+    const result = await consumer.process(
+      job('somethingFromANewerRelease', {}),
+    );
 
     expect(result).toBeUndefined();
     expect(
@@ -96,7 +99,7 @@ describe('ContextJobsConsumer', () => {
       );
     };
 
-    it('writes the summary with the conversation\'s own engine', async () => {
+    it("writes the summary with the conversation's own engine", async () => {
       // `engineChoice` is the SIXTH positional parameter of createChat, so it
       // was never passed and every summary fell through to the default engine.
       // A Qwen class had its long-term memory written by an OpenAI model.

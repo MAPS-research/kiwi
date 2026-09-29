@@ -293,7 +293,13 @@ export const DateTimeRangePicker = ({
         }}
       >
         <Box sx={{ p: 2 }}>
-          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1 }}>
+          <Stack
+            direction="row"
+            sx={{
+              alignItems: "center",
+              justifyContent: "space-between",
+              mb: 1
+            }}>
             <Typography sx={{ fontWeight: 600, ...COMPACT_POPUP_TYPOGRAPHY.title }}>
               {format(visibleMonth, "MMMM yyyy", { locale })}
             </Typography>
@@ -432,10 +438,12 @@ export const DateTimeRangePicker = ({
               size="small"
               value={draft.startDate}
               onChange={(event) => setDraft((current) => ({ ...current, startDate: event.target.value }))}
-              inputProps={{ min: minDate, max: earlierDate(draft.endDate, maxDate) }}
               sx={{
                 "& .MuiInputBase-input": COMPACT_POPUP_TYPOGRAPHY.primary,
                 "& .MuiInputLabel-root": COMPACT_POPUP_TYPOGRAPHY.supporting,
+              }}
+              slotProps={{
+                htmlInput: { min: minDate, max: earlierDate(draft.endDate, maxDate) }
               }}
             />
             <TextField
@@ -443,10 +451,12 @@ export const DateTimeRangePicker = ({
               size="small"
               value={draft.startTime}
               onChange={(event) => setDraft((current) => ({ ...current, startTime: event.target.value }))}
-              inputProps={{ "aria-label": labels.startTime }}
               sx={{
                 "& .MuiInputBase-input": COMPACT_POPUP_TYPOGRAPHY.primary,
                 "& .MuiInputLabel-root": COMPACT_POPUP_TYPOGRAPHY.supporting,
+              }}
+              slotProps={{
+                htmlInput: { "aria-label": labels.startTime }
               }}
             />
           </Box>
@@ -464,10 +474,12 @@ export const DateTimeRangePicker = ({
               size="small"
               value={draft.endDate}
               onChange={(event) => setDraft((current) => ({ ...current, endDate: event.target.value }))}
-              inputProps={{ min: laterDate(draft.startDate, minDate), max: maxDate }}
               sx={{
                 "& .MuiInputBase-input": COMPACT_POPUP_TYPOGRAPHY.primary,
                 "& .MuiInputLabel-root": COMPACT_POPUP_TYPOGRAPHY.supporting,
+              }}
+              slotProps={{
+                htmlInput: { min: laterDate(draft.startDate, minDate), max: maxDate }
               }}
             />
             <TextField
@@ -475,10 +487,12 @@ export const DateTimeRangePicker = ({
               size="small"
               value={draft.endTime}
               onChange={(event) => setDraft((current) => ({ ...current, endTime: event.target.value }))}
-              inputProps={{ "aria-label": labels.endTime }}
               sx={{
                 "& .MuiInputBase-input": COMPACT_POPUP_TYPOGRAPHY.primary,
                 "& .MuiInputLabel-root": COMPACT_POPUP_TYPOGRAPHY.supporting,
+              }}
+              slotProps={{
+                htmlInput: { "aria-label": labels.endTime }
               }}
             />
           </Box>
@@ -505,11 +519,11 @@ export const DateTimeRangePicker = ({
           </Box>
           <Typography
             variant="caption"
-            color="text.secondary"
             align="center"
             noWrap
-            sx={COMPACT_POPUP_TYPOGRAPHY.supporting}
-          >
+            sx={[{
+              color: "text.secondary"
+            }, COMPACT_POPUP_TYPOGRAPHY.supporting]}>
             {labels.localTimeZone(timeZone)}
           </Typography>
         </Stack>

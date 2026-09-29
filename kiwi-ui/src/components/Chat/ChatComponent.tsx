@@ -582,8 +582,12 @@ export const ChatComponent: React.FC = () => {
   };
 
   return (
-    <Box height="100%">
-      <Stack height="100%">
+    <Box sx={{
+      height: "100%"
+    }}>
+      <Stack sx={{
+        height: "100%"
+      }}>
         
         <PanelHeader label={tabIndex === 0 ? "Chat" : "Code"} 
           onCodeToggle={toggleCode}
@@ -597,16 +601,18 @@ export const ChatComponent: React.FC = () => {
           hidden={tabIndex !== 0}
           id="vertical-tabpanel-0"
           aria-labelledby="vertical-tab-0"
-          height="100%"
-          width="100%"
-          overflow="auto"
-        >
+          sx={{
+            height: "100%",
+            width: "100%",
+            overflow: "auto"
+          }}>
           <Stack
             useFlexGap
             direction="column"
-            justifyContent="space-between"
-            height="100%"
-          >
+            sx={{
+              justifyContent: "space-between",
+              height: "100%"
+            }}>
             
           
             <Box sx={{ position: "relative", height: "100%", width: "100%" }}>
@@ -623,11 +629,19 @@ export const ChatComponent: React.FC = () => {
 
             <Divider />
 
-            <Box padding={1}>
+            <Box sx={{
+              padding: 1
+            }}>
               <form ref={formRef} onSubmit={handleSubmit}>
                 <Grid container columnSpacing={1} columns={16} direction="row">
                   {qwenEnabled && (
-                    <Grid display="flex" justifyContent="center" alignItems="center" size={16}>
+                    <Grid
+                      size={16}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center"
+                      }}>
                       <FormControl size="small">
                         <InputLabel id="model-select-label">Model</InputLabel>
                         <Select
@@ -678,10 +692,11 @@ export const ChatComponent: React.FC = () => {
           hidden={tabIndex !== 1}
           id="vertical-tabpanel-1"
           aria-labelledby="vertical-tab-1"
-          height="100%"
-          width="100%"
-          overflow="auto"
-        >
+          sx={{
+            height: "100%",
+            width: "100%",
+            overflow: "auto"
+          }}>
           <Box sx={{ px: 2, maxWidth: '100%', mx: 'auto', height: '100%' }}>
             <IDEContext.Provider
               value={{

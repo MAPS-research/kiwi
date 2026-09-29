@@ -28,10 +28,6 @@ import {
   ToggleUpvoteRequest,
   AddDiscussionResponse,
   AddDiscussionRequest,
-  GetDiscussionByClassIdRequest,
-  GetDiscussionByClassIdResponse,
-  GetDiscussionByPdfRequest,
-  GetDiscussionByPdfResponse,
 } from './dto/update_interaction.dto';
 
 @Controller('interaction')
@@ -43,7 +39,7 @@ export class InteractionController {
     private readonly userSessoinService: UserSessionService,
     private readonly documentService: DocumentService,
     private readonly userService: UserService,
-  ) { }
+  ) {}
 
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
@@ -246,7 +242,7 @@ export class InteractionController {
         // Handle cases where context is invalid
         return null; // Return null for invalid contexts
       })
-      .filter(interaction => interaction !== null); // Filter out null values
+      .filter((interaction) => interaction !== null); // Filter out null values
 
     return responseInteractions;
   }

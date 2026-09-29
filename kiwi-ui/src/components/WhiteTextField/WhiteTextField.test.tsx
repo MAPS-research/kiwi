@@ -79,16 +79,30 @@ describe('WhiteTextField', () => {
     expect(input).toBeDisabled();
   });
 
-  it('passes through custom InputProps', () => {
+  it('passes through custom input slot props', () => {
     renderWithTheme(
       <WhiteTextField
         label="Custom Field"
-        InputProps={{ placeholder: 'Custom placeholder' }}
+        slotProps={{ input: { placeholder: 'Custom placeholder' } }}
         data-testid="custom-input"
       />
     );
 
     const input = screen.getByTestId('custom-input').querySelector('input');
     expect(input).toHaveAttribute('placeholder', 'Custom placeholder');
+  });
+
+  it('passes through HTML input slot callbacks while retaining default padding', () => {
+    renderWithTheme(
+      <WhiteTextField
+        label="Verification code"
+        slotProps={{ htmlInput: () => ({ inputMode: 'numeric', maxLength: 6 }) }}
+      />
+    );
+
+    const input = screen.getByLabelText('Verification code');
+    expect(input).toHaveAttribute('inputmode', 'numeric');
+    expect(input).toHaveAttribute('maxlength', '6');
+    expect(input).toHaveStyle({ paddingTop: '10px', paddingBottom: '10px' });
   });
 });

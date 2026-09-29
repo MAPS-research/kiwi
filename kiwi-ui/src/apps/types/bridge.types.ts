@@ -5,8 +5,8 @@
  * Follows OpenAI's window.openai pattern for familiarity.
  */
 
-import type { WidgetState } from './widget.types';
-import type { ToolResult } from './tool.types';
+import type { WidgetState } from './widget.types.ts';
+import type { ToolResult } from './tool.types.ts';
 
 /**
  * User information available to widgets

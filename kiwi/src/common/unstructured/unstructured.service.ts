@@ -22,7 +22,9 @@ export class UnstructuredService {
     // blocks survive as their own elements.
     chunk: boolean = strategy === 'ocr_only',
   ): Promise<Array<{ [k: string]: any }>> {
-    const documentFile = new Blob([documentContent], { type: documentType });
+    const documentFile = new Blob([new Uint8Array(documentContent)], {
+      type: documentType,
+    });
 
     const formData = new FormData();
     formData.append('files', documentFile, documentName);

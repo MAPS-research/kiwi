@@ -22,7 +22,12 @@ export const AnalyticsChartTooltip: React.FC<AnalyticsChartTooltipProps> = ({
     }}
   >
     <Stack spacing={0.25}>
-      <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+      <Typography
+        variant="body2"
+        sx={{
+          color: "text.secondary",
+          fontWeight: 600
+        }}>
         {title}
       </Typography>
       <Typography variant="body2" sx={{ color: valueColor, fontWeight: 500 }}>

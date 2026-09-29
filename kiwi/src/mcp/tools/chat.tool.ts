@@ -1,5 +1,12 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { Tool, Context } from '@rekog/mcp-nest';
+import { reportMcpProgress } from '../utils/report-progress';
+import { Payload, Ctx } from '@nestjs/microservices';
+import { Logger } from '@nestjs/common';
+import {
+  Tool,
+  McpContext as Context,
+  McpController,
+  McpRawRequest,
+} from '@rekog/mcp-nest';
 import { z } from 'zod';
 import { Request } from 'express';
 import { ChatService } from 'src/common/chat/chat.service';
@@ -8,7 +15,7 @@ import { ChatService } from 'src/common/chat/chat.service';
  * MCP Tools for Chat Operations
  * Allows AI assistants to interact with the chat system
  */
-@Injectable()
+@McpController()
 export class ChatTool {
   private readonly logger = new Logger(ChatTool.name);
 
@@ -20,7 +27,8 @@ export class ChatTool {
    */
   @Tool({
     name: 'chat',
-    description: 'Send a message to the AI chat system and get a complete response',
+    description:
+      'Send a message to the AI chat system and get a complete response',
     parameters: z.object({
       input: z
         .string()
@@ -39,18 +47,18 @@ export class ChatTool {
     },
   })
   async chat(
-    { input, image }: { input: string; image?: string },
-    context: Context,
-    request: Request,
+    @Payload() { input, image }: { input: string; image?: string },
+    @Ctx() context: Context,
+    @McpRawRequest() _request: Request,
   ) {
     try {
       this.logger.debug('Chat tool called with input:', input);
 
-      await context.reportProgress({ progress: 30, total: 100 });
+      await reportMcpProgress(context, { progress: 30, total: 100 });
 
       const response = await this.chatService.createChat(input, image);
 
-      await context.reportProgress({ progress: 100, total: 100 });
+      await reportMcpProgress(context, { progress: 100, total: 100 });
 
       const content =
         response.choices[0]?.message?.content || 'No response generated';
@@ -87,7 +95,8 @@ export class ChatTool {
    */
   @Tool({
     name: 'chat_stream',
-    description: 'Send a message to the AI chat system and receive streaming responses',
+    description:
+      'Send a message to the AI chat system and receive streaming responses',
     parameters: z.object({
       input: z
         .string()
@@ -106,22 +115,25 @@ export class ChatTool {
     },
   })
   async chatStream(
-    { input, image }: { input: string; image?: string },
-    context: Context,
-    request: Request,
+    @Payload() { input, image }: { input: string; image?: string },
+    @Ctx() context: Context,
+    @McpRawRequest() _request: Request,
   ) {
     try {
       this.logger.debug('Chat stream tool called with input:', input);
 
-      await context.reportProgress({ progress: 10, total: 100 });
+      await reportMcpProgress(context, { progress: 10, total: 100 });
 
       // Get the streaming observable
-      const chatObservable = await this.chatService.createChatStream(input, image);
+      const chatObservable = await this.chatService.createChatStream(
+        input,
+        image,
+      );
 
       let fullContent = '';
       let chunkCount = 0;
 
-      await context.reportProgress({ progress: 30, total: 100 });
+      await reportMcpProgress(context, { progress: 30, total: 100 });
 
       // Subscribe to the observable and collect chunks
       await new Promise<void>((resolve, reject) => {
@@ -135,9 +147,9 @@ export class ChatTool {
 
             // Report progress periodically
             if (chunkCount % 10 === 0) {
-              context.reportProgress({
-                progress: Math.min(30 + (chunkCount / 2), 90),
-                total: 100
+              void reportMcpProgress(context, {
+                progress: Math.min(30 + chunkCount / 2, 90),
+                total: 100,
               });
             }
           },
@@ -152,7 +164,7 @@ export class ChatTool {
         });
       });
 
-      await context.reportProgress({ progress: 100, total: 100 });
+      await reportMcpProgress(context, { progress: 100, total: 100 });
 
       return {
         content: [

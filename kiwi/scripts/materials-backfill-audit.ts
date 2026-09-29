@@ -17,9 +17,9 @@
  *   npx ts-node scripts/materials-backfill-audit.ts --json > review.json
  */
 import 'dotenv/config';
-import { PrismaClient } from '@prisma/client';
+import { createPrismaClient } from '../src/common/database/prisma-client.factory';
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 const RECITATION = 'recitation';
 

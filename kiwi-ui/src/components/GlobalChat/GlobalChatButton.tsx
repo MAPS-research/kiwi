@@ -3,7 +3,7 @@ import { Fab, Badge, Tooltip, Zoom } from '@mui/material';
 import ChatIcon from '@mui/icons-material/Chat';
 import DraggableExport from 'react-draggable';
 import type { DraggableData, DraggableEvent, DraggableProps } from 'react-draggable';
-import { useGlobalChat } from '../../context/GlobalChatContext';
+import { useGlobalChat } from '../../context/GlobalChatContext.tsx';
 
 // react-draggable ships CJS typings, so under `moduleResolution: nodenext` its
 // default export types as the module namespace rather than the class (the same

@@ -11,7 +11,7 @@ import { UserSessionService } from 'src/common/database/user-session.service';
 import { UserService } from 'src/common/database/user.service';
 import { RedisService } from 'src/common/redis/redis.service';
 import { jwtExpiration } from './auth.constants';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 import { PendingEnrollmentService } from 'src/common/database/pending-enrollment.service';
 import * as bcrypt from 'bcryptjs';
 import { WhitelistService } from './whitelist/whitelist.service';
@@ -46,7 +46,7 @@ export class AuthService {
     email: string;
   }): Promise<string> {
     const payload = { sub: user.id, email: user.email };
-    const refresh_token_jwtid = uuidv4();
+    const refresh_token_jwtid = randomUUID();
 
     const refresh_token = await this.jwtService.signAsync(payload, {
       expiresIn: jwtExpiration.refreshToken,
@@ -122,7 +122,7 @@ export class AuthService {
   }
 
   async createDevUser(): Promise<any> {
-    const userId = `dev-${uuidv4()}`;
+    const userId = `dev-${randomUUID()}`;
     const emailDomain =
       this.configService.get('SYNTHETIC_EMAIL_DOMAIN') || 'kiwi.local';
     const email = `${userId}@${emailDomain}`;
@@ -158,7 +158,7 @@ export class AuthService {
 
     const user = await this.userService.createUser({
       email,
-      oauthId: uuidv4(),
+      oauthId: randomUUID(),
       oauth: false,
       passwordHash,
       passwordSalt: salt,
@@ -349,7 +349,10 @@ export class AuthService {
     }));
   }
 
-  async changeUserRole(email: string, role: 'user' | 'admin' | 'instructor'): Promise<void> {
+  async changeUserRole(
+    email: string,
+    role: 'user' | 'admin' | 'instructor',
+  ): Promise<void> {
     const user = await this.userService.user({ email });
 
     if (!user) {
@@ -382,7 +385,15 @@ export class AuthService {
     return user.systemRole;
   }
 
-  async getAllUsers(): Promise<{ id: string; email: string; systemRole: string; oauth: boolean; consent: boolean | null }[]> {
+  async getAllUsers(): Promise<
+    {
+      id: string;
+      email: string;
+      systemRole: string;
+      oauth: boolean;
+      consent: boolean | null;
+    }[]
+  > {
     const users = await this.userService.users({});
 
     return users.map((user) => ({
@@ -423,9 +434,7 @@ export class AuthService {
   /**
    * Retrieve pending OAuth authorization request from Redis
    */
-  async getPendingOAuthRequest(
-    sessionId: string,
-  ): Promise<{
+  async getPendingOAuthRequest(sessionId: string): Promise<{
     clientId: string;
     redirectUri: string;
     state: string;
@@ -457,7 +466,7 @@ export class AuthService {
     codeChallengeMethod: string;
     scope?: string;
   }): Promise<string> {
-    const authCode = uuidv4();
+    const authCode = randomUUID();
 
     await this.redisService.set(
       `oauth:code:${authCode}`,
@@ -500,7 +509,9 @@ export class AuthService {
     codeChallengeMethod: string,
   ): Promise<boolean> {
     if (codeChallengeMethod !== 'S256') {
-      this.logger.warn(`Unsupported code challenge method: ${codeChallengeMethod}`);
+      this.logger.warn(
+        `Unsupported code challenge method: ${codeChallengeMethod}`,
+      );
       return false;
     }
 
@@ -564,7 +575,7 @@ export class AuthService {
       mcp_server_id: mcpServerId,
       token_type: 'mcp',
     };
-    const refresh_token_jwtid = uuidv4();
+    const refresh_token_jwtid = randomUUID();
 
     const refresh_token = await this.jwtService.signAsync(payload, {
       expiresIn: jwtExpiration.refreshToken,

@@ -143,176 +143,184 @@ export const Classes: React.FC = () => {
             </Button>
         ) : undefined}
       />
-        {/* Class list toolbar - Search is disabled when there's an error */}
-        <Box
+      {/* Class list toolbar - Search is disabled when there's an error */}
+      <Box
+        sx={{
+          mb: 3,
+          width: '100%',
+          display: 'flex',
+          flexDirection: { xs: 'column', sm: 'row' },
+          alignItems: { xs: 'stretch', sm: 'center' },
+          justifyContent: 'space-between',
+          gap: 2
+        }}
+      >
+        <TextField
+          variant="outlined"
+          placeholder={userRole === 'instructor' ? "Search your classes..." : "Search classes or professors..."}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          disabled={!!error}
           sx={{
-            mb: 3,
-            width: '100%',
-            display: 'flex',
-            flexDirection: { xs: 'column', sm: 'row' },
-            alignItems: { xs: 'stretch', sm: 'center' },
-            justifyContent: 'space-between',
-            gap: 2
+            width: { xs: '100%', sm: 420 },
           }}
-        >
-          <TextField
-            variant="outlined"
-            placeholder={userRole === 'instructor' ? "Search your classes..." : "Search classes or professors..."}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            disabled={!!error}
-            sx={{
-              width: { xs: '100%', sm: 420 },
-            }}
-            slotProps={{
-              input: {
-                sx: {
-                  height: 44,
-                  borderRadius: 3,
-                  '& .MuiOutlinedInput-input': {
-                    typography: 'body2',
-                  },
+          slotProps={{
+            input: {
+              sx: {
+                height: 44,
+                borderRadius: 3,
+                '& .MuiOutlinedInput-input': {
+                  typography: 'body2',
                 },
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon fontSize="small" sx={{ color: 'text.secondary' }} />
-                  </InputAdornment>
-                )
-              }
-            }}
-          />
-
-          {!error && !loading && !roleLoading && (
-            <Typography
-              variant="subtitle1"
-              color="text.secondary"
-              sx={{ whiteSpace: 'nowrap' }}
-            >
-              Showing {filteredClasses.length} of {classes.length} classes
-            </Typography>
-          )}
-        </Box>
-
-        {/* Error Bar */}
-        <Collapse in={!!error} sx={{ width: '100%', mb: error ? 2 : 0 }}>
-          <Alert 
-            severity="error"
-            sx={{ mb: 2 }}
-            action={
-              <Button 
-                color="inherit" 
-                size="small"
-                onClick={() => window.location.reload()}
-                sx={{ textTransform: 'none' }}
-              >
-                Retry
-              </Button>
+              },
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon fontSize="small" sx={{ color: 'text.secondary' }} />
+                </InputAdornment>
+              )
             }
-          >
-            <Typography variant="body2" component="span">
-              <strong>Error Loading Classes:</strong> {error}
-            </Typography>
-          </Alert>
-        </Collapse>
-
-        {/* Class Cards or Empty/Skeleton - Only show when no error */}
-        {!error && (
-          <Box sx={{ width: '100%' }}>
-          {(loading || roleLoading) ? (
-            <Grid container spacing={3}>
-              {[...Array(6)].map((_, index) => (
-                <Grid
-                  key={index}
-                  size={{
-                    xs: 12,
-                    md: 4
-                  }}>
-                  <Skeleton
-                    variant="rectangular"
-                    animation="wave"
-                    height={CLASS_CARD_HEIGHT}
-                    sx={{ borderRadius: "12px" }}
-                  />
-                </Grid>
-              ))}
-            </Grid>
-          ) : (
-            <>
-              {filteredClasses.length > 0 ? (
-                <Grid container spacing={3}>
-                  {filteredClasses.map((classInfo) => (
-                    <Grid
-                      key={classInfo.classID}
-                      size={{
-                        xs: 12,
-                        md: 4
-                      }}>
-                      <ClassCard
-                        title={classInfo.className}
-                        instructor={classInfo.professorName}
-                        imageUrl={classInfo.imageSnippetUrl}
-                        to={`/admin/class/${classInfo.classID}`}
-                        routeState={{ className: classInfo.className }}
-                      />
-                    </Grid>
-                  ))}
-                </Grid>
-              ) : (
-                <Box 
-                  className="admin-empty-state"
-                  sx={{ 
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    py: 8,
-                    textAlign: 'center'
-                  }}
-                >
-                  <EmptySchoolIcon 
-                    sx={{ 
-                      fontSize: 120, 
-                      color: 'text.disabled',
-                      mb: 3 
-                    }} 
-                  />
-                  <Typography variant="h6" color="text.secondary" gutterBottom>
-                    {userRole === 'instructor' ? 'No classes assigned' : 'No classes found'}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                    {userRole === 'instructor' 
-                      ? (search ? 'Try adjusting your search terms' : 'You have not been assigned to any classes yet')
-                      : (search ? 'Try adjusting your search or creating a new class' : 'Get started by creating your first class')
-                    }
-                  </Typography>
-                  {!search && canCreateClass && (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      startIcon={<AddIcon />}
-                      onClick={() => setAddClassDialogOpen(true)}
-                      sx={{
-                        borderRadius: 2,
-                        textTransform: 'none',
-                        fontWeight: 600,
-                        px: 3,
-                        py: 1
-                      }}
-                    >
-                      Create First Class
-                    </Button>
-                  )}
-                </Box>
-              )}
-            </>
-          )}
-          </Box>
-        )}
-        <AddNewClassDialog
-          open={addClassDialogOpen}
-          onClose={() => setAddClassDialogOpen(false)}
-          onCreated={fetchClassList}
+          }}
         />
+
+        {!error && !loading && !roleLoading && (
+          <Typography
+            variant="subtitle1"
+            sx={{
+              color: "text.secondary",
+              whiteSpace: 'nowrap'
+            }}>
+            Showing {filteredClasses.length} of {classes.length} classes
+          </Typography>
+        )}
+      </Box>
+
+      {/* Error Bar */}
+      <Collapse in={!!error} sx={{ width: '100%', mb: error ? 2 : 0 }}>
+        <Alert 
+          severity="error"
+          sx={{ mb: 2 }}
+          action={
+            <Button 
+              color="inherit" 
+              size="small"
+              onClick={() => window.location.reload()}
+              sx={{ textTransform: 'none' }}
+            >
+              Retry
+            </Button>
+          }
+        >
+          <Typography variant="body2" component="span">
+            <strong>Error Loading Classes:</strong> {error}
+          </Typography>
+        </Alert>
+      </Collapse>
+
+      {/* Class Cards or Empty/Skeleton - Only show when no error */}
+      {!error && (
+        <Box sx={{ width: '100%' }}>
+        {(loading || roleLoading) ? (
+          <Grid container spacing={3}>
+            {[...Array(6)].map((_, index) => (
+              <Grid
+                key={index}
+                size={{
+                  xs: 12,
+                  md: 4
+                }}>
+                <Skeleton
+                  variant="rectangular"
+                  animation="wave"
+                  height={CLASS_CARD_HEIGHT}
+                  sx={{ borderRadius: "12px" }}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        ) : (
+          <>
+            {filteredClasses.length > 0 ? (
+              <Grid container spacing={3}>
+                {filteredClasses.map((classInfo) => (
+                  <Grid
+                    key={classInfo.classID}
+                    size={{
+                      xs: 12,
+                      md: 4
+                    }}>
+                    <ClassCard
+                      title={classInfo.className}
+                      instructor={classInfo.professorName}
+                      imageUrl={classInfo.imageSnippetUrl}
+                      to={`/admin/class/${classInfo.classID}`}
+                      routeState={{ className: classInfo.className }}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            ) : (
+              <Box 
+                className="admin-empty-state"
+                sx={{ 
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  py: 8,
+                  textAlign: 'center'
+                }}
+              >
+                <EmptySchoolIcon 
+                  sx={{ 
+                    fontSize: 120, 
+                    color: 'text.disabled',
+                    mb: 3 
+                  }} 
+                />
+                <Typography variant="h6" gutterBottom sx={{
+                  color: "text.secondary"
+                }}>
+                  {userRole === 'instructor' ? 'No classes assigned' : 'No classes found'}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "text.secondary",
+                    mb: 3
+                  }}>
+                  {userRole === 'instructor' 
+                    ? (search ? 'Try adjusting your search terms' : 'You have not been assigned to any classes yet')
+                    : (search ? 'Try adjusting your search or creating a new class' : 'Get started by creating your first class')
+                  }
+                </Typography>
+                {!search && canCreateClass && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<AddIcon />}
+                    onClick={() => setAddClassDialogOpen(true)}
+                    sx={{
+                      borderRadius: 2,
+                      textTransform: 'none',
+                      fontWeight: 600,
+                      px: 3,
+                      py: 1
+                    }}
+                  >
+                    Create First Class
+                  </Button>
+                )}
+              </Box>
+            )}
+          </>
+        )}
+        </Box>
+      )}
+      <AddNewClassDialog
+        open={addClassDialogOpen}
+        onClose={() => setAddClassDialogOpen(false)}
+        onCreated={fetchClassList}
+      />
     </AdminPage>
   );
 };

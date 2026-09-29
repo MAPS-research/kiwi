@@ -1,5 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { AnnotationAudience } from '@prisma/client';
 
 export class CreateDocumentSummaryDto {
@@ -34,7 +40,9 @@ export class UpdateDocumentSummaryDto {
   @IsString()
   content?: string;
 
-  @ApiPropertyOptional({ description: 'Whether the summary should be visible to students.' })
+  @ApiPropertyOptional({
+    description: 'Whether the summary should be visible to students.',
+  })
   @IsOptional()
   @IsBoolean()
   isVisibleToStudents?: boolean;
@@ -55,7 +63,9 @@ class DocumentSummaryAuthorDto {
   @ApiProperty()
   id: string;
 
-  @ApiPropertyOptional({ description: 'Display name derived from instructor profile.' })
+  @ApiPropertyOptional({
+    description: 'Display name derived from instructor profile.',
+  })
   name?: string;
 
   @ApiPropertyOptional()

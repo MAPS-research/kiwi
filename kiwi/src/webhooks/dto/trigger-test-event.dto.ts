@@ -13,6 +13,7 @@ export class TriggerTestEventDto {
   @ApiProperty({
     description: 'Event data payload',
     type: 'object',
+    additionalProperties: true,
     example: { message: 'Test event data' },
   })
   data: any;

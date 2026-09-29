@@ -66,13 +66,15 @@ export const QuestionListDialog: React.FC<QuestionListDialogProps> = ({
       onClose={onClose}
       maxWidth="md"
       fullWidth
-      PaperProps={{
-        sx: {
-          borderRadius: 3,
-          border: `1px solid ${tokens.line}`,
-          maxHeight: "80vh",
-          boxShadow: "0 24px 64px rgba(26, 21, 35, 0.18)",
-        },
+      slotProps={{
+        paper: {
+          sx: {
+            borderRadius: 3,
+            border: `1px solid ${tokens.line}`,
+            maxHeight: "80vh",
+            boxShadow: "0 24px 64px rgba(26, 21, 35, 0.18)",
+          },
+        }
       }}
     >
       <Box

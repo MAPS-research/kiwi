@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useAuth } from "../auth/AuthContext.tsx";
-import apiClient from "../utils/api.ts";
+import apiClient, { apiClientWithoutMiddleWare } from "../utils/api.ts";
 
 export const Login: React.FC = () => {
   const googleLoginOn = googleLoginEnabled();
@@ -41,10 +41,9 @@ export const Login: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      const tokenResponse = await apiClient.authControllerLogin({
+      const tokenResponse = await apiClientWithoutMiddleWare.authControllerLogin({
         loginDto: { email, password },
       });
-      console.log("Token response:", tokenResponse);
       if (tokenResponse.accessToken) {
         localStorage.setItem("authToken", tokenResponse.accessToken);
       }
@@ -130,17 +129,16 @@ export const Login: React.FC = () => {
         <Typography
           component="h1"
           variant="h3"
-          fontWeight={700}
-          textAlign="left"
           sx={{
+            fontWeight: 700,
+            textAlign: "left",
             width: "100%",
             mt: 0,
             fontSize: { xs: "1.75rem", sm: "2.1rem", md: "2.4rem" },
             lineHeight: 1.15,
             letterSpacing: "-0.035em",
-            whiteSpace: { xs: "normal", md: "nowrap" },
-          }}
-        >
+            whiteSpace: { xs: "normal", md: "nowrap" }
+          }}>
           Welcome back to{" "}
           <KiwiWordmark
             component="span"
@@ -149,15 +147,14 @@ export const Login: React.FC = () => {
         </Typography>
         <Typography
           variant="body1"
-          color="text.secondary"
-          textAlign="left"
           sx={{
+            color: "text.secondary",
+            textAlign: "left",
             width: "100%",
             mt: 1.5,
             mb: 6,
-            lineHeight: 1.6,
-          }}
-        >
+            lineHeight: 1.6
+          }}>
           Continue learning with AI-powered support.
         </Typography>
 
@@ -174,13 +171,12 @@ export const Login: React.FC = () => {
           <Box
             component="form"
             onSubmit={handleSubmit}
-            width="100%"
             sx={{
+              width: "100%",
               display: "flex",
               flexDirection: "column",
-              gap: 2,
-            }}
-          >
+              gap: 2
+            }}>
             <TextField
               id="login-email"
               label="Email"
@@ -276,7 +272,9 @@ export const Login: React.FC = () => {
         )}
 
         {googleLoginOn && (
-          <Box width="100%">
+          <Box sx={{
+            width: "100%"
+          }}>
             <GoogleLoginButton mode="login" appearance="neutral" />
           </Box>
         )}
@@ -290,18 +288,21 @@ export const Login: React.FC = () => {
 
         <Typography
           variant="body2"
-          color="text.secondary"
-          textAlign="center"
-          sx={{ mt: 4 }}
-        >
+          sx={{
+            color: "text.secondary",
+            textAlign: "center",
+            mt: 4
+          }}>
           {googleLoginOn ? (
             <>
               Don&apos;t have an account?{" "}
               <Link
                 component={RouterLink}
                 to="/register"
-                fontWeight={700}
                 underline="hover"
+                sx={{
+                  fontWeight: 700
+                }}
               >
                 Create one
               </Link>

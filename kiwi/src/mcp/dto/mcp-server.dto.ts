@@ -1,5 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsBoolean, IsObject, IsOptional, IsEnum, IsUUID, IsUrl } from 'class-validator';
+import {
+  IsString,
+  IsBoolean,
+  IsObject,
+  IsOptional,
+  IsEnum,
+  IsUrl,
+} from 'class-validator';
 
 /**
  * MCP Server Transport Types

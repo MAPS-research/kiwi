@@ -7,7 +7,11 @@ describe('StorageController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [StorageController],
-    }).compile();
+    })
+      .useMocker(() => ({
+        get: jest.fn().mockReturnValue('http://localhost'),
+      }))
+      .compile();
 
     controller = module.get<StorageController>(StorageController);
   });

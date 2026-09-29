@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { GlobalChatContainer } from './GlobalChat';
+import { GlobalChatContainer } from './GlobalChat/index.tsx';
 import { AgentBridge } from '../agent/AgentBridge.tsx';
 
 /**

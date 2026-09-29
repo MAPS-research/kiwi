@@ -57,7 +57,9 @@ export class KiwiAppService {
     });
 
     if (existing) {
-      throw new ConflictException(`Whitelist entry for "${dto.slug}" already exists`);
+      throw new ConflictException(
+        `Whitelist entry for "${dto.slug}" already exists`,
+      );
     }
 
     // Hash the registration secret before storing
@@ -87,7 +89,11 @@ export class KiwiAppService {
     });
   }
 
-  async updateWhitelistEntry(slug: string, dto: UpdateWhitelistEntryDto, adminId: string) {
+  async updateWhitelistEntry(
+    slug: string,
+    dto: UpdateWhitelistEntryDto,
+    adminId: string,
+  ) {
     const existing = await this.db.kiwiAppWhitelist.findUnique({
       where: { slug },
     });
@@ -99,7 +105,10 @@ export class KiwiAppService {
     // If a new secret is provided, hash it
     const updateData: any = { ...dto };
     if (dto.registrationSecret) {
-      updateData.registrationSecret = await bcrypt.hash(dto.registrationSecret, 10);
+      updateData.registrationSecret = await bcrypt.hash(
+        dto.registrationSecret,
+        10,
+      );
     }
 
     return this.db.kiwiAppWhitelist.update({
@@ -185,11 +194,16 @@ export class KiwiAppService {
     }
 
     if (whitelist.status !== 'approved') {
-      throw new ForbiddenException(`App "${dto.slug}" whitelist entry is not approved (status: ${whitelist.status})`);
+      throw new ForbiddenException(
+        `App "${dto.slug}" whitelist entry is not approved (status: ${whitelist.status})`,
+      );
     }
 
     // Validate registration secret
-    const isValidSecret = await bcrypt.compare(dto.registrationSecret, whitelist.registrationSecret);
+    const isValidSecret = await bcrypt.compare(
+      dto.registrationSecret,
+      whitelist.registrationSecret,
+    );
     if (!isValidSecret) {
       throw new UnauthorizedException('Invalid registration secret');
     }
@@ -232,7 +246,10 @@ export class KiwiAppService {
       }
 
       // Re-fetch with updated UIs and prompts
-      if ((dto.uis && dto.uis.length > 0) || (dto.prompts && dto.prompts.length > 0)) {
+      if (
+        (dto.uis && dto.uis.length > 0) ||
+        (dto.prompts && dto.prompts.length > 0)
+      ) {
         return this.db.kiwiApp.findUnique({
           where: { slug: dto.slug },
           include: {
@@ -274,7 +291,10 @@ export class KiwiAppService {
     }
 
     // Re-fetch with UIs and prompts
-    if ((dto.uis && dto.uis.length > 0) || (dto.prompts && dto.prompts.length > 0)) {
+    if (
+      (dto.uis && dto.uis.length > 0) ||
+      (dto.prompts && dto.prompts.length > 0)
+    ) {
       return this.db.kiwiApp.findUnique({
         where: { id: newApp.id },
         include: {
@@ -302,7 +322,12 @@ export class KiwiAppService {
           uiName: ui.uiName,
           uiUrl: ui.uiUrl,
           placement: ui.placement || 'class-tab',
-          allowedRoles: ui.allowedRoles || ['student', 'ta', 'instructor', 'admin'],
+          allowedRoles: ui.allowedRoles || [
+            'student',
+            'ta',
+            'instructor',
+            'admin',
+          ],
           tabOrder: ui.tabOrder || 0,
           config: ui.config || {},
         },
@@ -310,7 +335,12 @@ export class KiwiAppService {
           uiName: ui.uiName,
           uiUrl: ui.uiUrl,
           placement: ui.placement || 'class-tab',
-          allowedRoles: ui.allowedRoles || ['student', 'ta', 'instructor', 'admin'],
+          allowedRoles: ui.allowedRoles || [
+            'student',
+            'ta',
+            'instructor',
+            'admin',
+          ],
           tabOrder: ui.tabOrder || 0,
           config: ui.config || {},
         },
@@ -322,7 +352,10 @@ export class KiwiAppService {
    * Sync app prompts - creates/updates prompts based on the provided list
    * Note: Prompts are created as inactive and require admin approval
    */
-  private async syncAppPrompts(appId: string, prompts: RegisterAppDto['prompts']) {
+  private async syncAppPrompts(
+    appId: string,
+    prompts: RegisterAppDto['prompts'],
+  ) {
     if (!prompts) return;
 
     for (const prompt of prompts) {
@@ -332,7 +365,8 @@ export class KiwiAppService {
 
       if (existing) {
         // Update existing prompt - if system prompt changed, reset approval
-        const systemPromptChanged = existing.systemPrompt !== prompt.systemPrompt;
+        const systemPromptChanged =
+          existing.systemPrompt !== prompt.systemPrompt;
         await this.db.kiwiAppPrompt.update({
           where: { appId_promptId: { appId, promptId: prompt.promptId } },
           data: {
@@ -484,7 +518,9 @@ export class KiwiAppService {
       }
 
       if (userRole) {
-        filteredUIs = filteredUIs.filter((ui) => ui.allowedRoles.includes(userRole));
+        filteredUIs = filteredUIs.filter((ui) =>
+          ui.allowedRoles.includes(userRole),
+        );
       }
 
       // Skip apps with no matching UIs
@@ -533,7 +569,11 @@ export class KiwiAppService {
     return results;
   }
 
-  async enableClassApp(classId: string, dto: EnableClassAppDto, userId: string) {
+  async enableClassApp(
+    classId: string,
+    dto: EnableClassAppDto,
+    userId: string,
+  ) {
     // Verify app exists and is active
     const app = await this.db.kiwiApp.findUnique({
       where: { id: dto.appId },
@@ -673,7 +713,9 @@ export class KiwiAppService {
     });
 
     if (!prompt) {
-      throw new NotFoundException(`Prompt "${promptId}" not found for app "${slug}"`);
+      throw new NotFoundException(
+        `Prompt "${promptId}" not found for app "${slug}"`,
+      );
     }
 
     return this.db.kiwiAppPrompt.update({
@@ -700,7 +742,9 @@ export class KiwiAppService {
     });
 
     if (!prompt) {
-      throw new NotFoundException(`Prompt "${promptId}" not found for app "${slug}"`);
+      throw new NotFoundException(
+        `Prompt "${promptId}" not found for app "${slug}"`,
+      );
     }
 
     return this.db.kiwiAppPrompt.update({
@@ -728,11 +772,15 @@ export class KiwiAppService {
     });
 
     if (!prompt) {
-      throw new NotFoundException(`Prompt "${promptId}" not found for app "${slug}"`);
+      throw new NotFoundException(
+        `Prompt "${promptId}" not found for app "${slug}"`,
+      );
     }
 
     if (!prompt.isActive) {
-      throw new ForbiddenException(`Prompt "${promptId}" is not active (requires admin approval)`);
+      throw new ForbiddenException(
+        `Prompt "${promptId}" is not active (requires admin approval)`,
+      );
     }
 
     return prompt;
@@ -791,7 +839,10 @@ export class KiwiAppService {
    * Calculate effective scopes for an app in a class
    * Effective = intersection(maxScopes, enabledScopes) + active prompt scopes
    */
-  async calculateEffectiveScopes(appSlug: string, classId: string): Promise<string[]> {
+  async calculateEffectiveScopes(
+    appSlug: string,
+    classId: string,
+  ): Promise<string[]> {
     // Get whitelist for max scopes
     const whitelist = await this.db.kiwiAppWhitelist.findUnique({
       where: { slug: appSlug },
@@ -827,7 +878,9 @@ export class KiwiAppService {
 
     // If enabledScopes is empty, use all maxScopes (default = all allowed)
     const baseScopes =
-      enabledScopes.length > 0 ? maxScopes.filter((s) => enabledScopes.includes(s)) : maxScopes;
+      enabledScopes.length > 0
+        ? maxScopes.filter((s) => enabledScopes.includes(s))
+        : maxScopes;
 
     // Add prompt scopes for active prompts
     const promptScopes = prompts.map((p) => `llm:prompt:${p.promptId}`);

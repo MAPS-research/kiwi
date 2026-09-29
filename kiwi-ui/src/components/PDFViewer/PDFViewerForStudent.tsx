@@ -32,9 +32,8 @@ import {
   NavigateNext as NavigateNextIcon,
 } from "@mui/icons-material";
 
-import "./PDFViewer.css";
 import { buildResilientDocumentOptions } from "./pdfRangeTransport.ts";
-import type { DocumentCommentPin } from "../../types/documentComments";
+import type { DocumentCommentPin } from "../../types/documentComments.ts";
 import { getDefaultPinPosition } from "../../utils/documentComments.ts";
 import { basePath } from "../../utils/api.ts";
 
@@ -72,12 +71,6 @@ interface PDFViewerProps {
   // 0-based page to scroll to once the document renders (e.g. a restored
   // last-viewed page). Explicit channel so it isn't clobbered by scroll tracking.
   initialPage?: number;
-  // Accepted for backwards compatibility with the old viewer's prop surface.
-  highlightSelectionPlugin?: unknown;
-  highlightPlugin?: unknown;
-  previousHighlights?: Array<unknown>;
-  highlights?: Array<unknown>;
-  customRenderPage?: unknown;
   isExpanded?: boolean;
 }
 
@@ -126,6 +119,7 @@ export const PDFViewerForStudents: React.FC<PDFViewerProps> = ({
 
   const {
     currentPDFPage,
+    pdfNavigationRef,
     setCurrentPDFPage,
   } = useContext(ChatContext);
 
@@ -263,6 +257,12 @@ export const PDFViewerForStudents: React.FC<PDFViewerProps> = ({
     },
     [numPages]
   );
+
+  useEffect(() => {
+    if (!pdfNavigationRef) return;
+    pdfNavigationRef.current = goToPage;
+    return () => { pdfNavigationRef.current = undefined; };
+  }, [pdfNavigationRef, goToPage]);
 
   // Restore the scroll position to `initialPage` once the document has rendered.
   // react-pdf renders pages lazily and progressively, so pages ABOVE the target
@@ -556,7 +556,14 @@ export const PDFViewerForStudents: React.FC<PDFViewerProps> = ({
         >
           {fileName || ""}
         </Typography>
-        <Stack direction="row" alignItems="center" spacing={0} sx={{ flex: "none", color: "#55555E" }}>
+        <Stack
+          direction="row"
+          spacing={0}
+          sx={{
+            alignItems: "center",
+            flex: "none",
+            color: "#55555E"
+          }}>
           <IconButton
             size="small"
             sx={toolbarButtonSx}
@@ -627,6 +634,7 @@ export const PDFViewerForStudents: React.FC<PDFViewerProps> = ({
             loader
           ) : (
             <Document
+              suspense={false}
               key={reloadKey}
               file={pdfFile}
               options={docOptions}
@@ -699,18 +707,31 @@ export const PDFViewerForStudents: React.FC<PDFViewerProps> = ({
         onClose={() => setIsSummaryDialogOpen(false)}
         maxWidth="md"
         fullWidth
-        PaperProps={{ sx: { borderRadius: 2 } }}
+        slotProps={{
+          paper: { sx: { borderRadius: 2 } }
+        }}
       >
         <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1, backgroundColor: "#f5f5f5" }}>
           <MenuBookIcon color="primary" />
           <Typography variant="h6">Document Summaries</Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ ml: "auto" }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "text.secondary",
+              ml: "auto"
+            }}>
             {documentSummaries.length} {documentSummaries.length === 1 ? "summary" : "summaries"}
           </Typography>
         </DialogTitle>
         <DialogContent dividers>
           {documentSummaries.length === 0 ? (
-            <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center", py: 3 }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                textAlign: "center",
+                py: 3
+              }}>
               No summaries available for this document.
             </Typography>
           ) : (
@@ -733,7 +754,14 @@ export const PDFViewerForStudents: React.FC<PDFViewerProps> = ({
                       {summary.content}
                     </Typography>
                     {summary.author && (
-                      <Typography variant="caption" color="text.secondary" sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          color: "text.secondary",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 0.5
+                        }}>
                         <strong>Added by:</strong> {summary.author.name || summary.author.email}
                       </Typography>
                     )}

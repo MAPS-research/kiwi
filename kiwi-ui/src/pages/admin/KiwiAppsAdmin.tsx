@@ -37,14 +37,14 @@ import {
 } from "@mui/material";
 import {
   AddOutlined as AddIcon,
-  DeleteOutline as DeleteIcon,
+  DeleteOutlined as DeleteIcon,
   EditOutlined as EditIcon,
   RefreshOutlined as RefreshIcon,
   ContentCopyOutlined as CopyIcon,
   AutorenewOutlined as GenerateIcon,
   VisibilityOutlined as VisibilityIcon,
   VisibilityOffOutlined as VisibilityOffIcon,
-  CheckCircleOutline as ApprovedIcon,
+  CheckCircleOutlined as ApprovedIcon,
   HourglassEmptyOutlined as PendingIcon,
   CancelOutlined as RejectedIcon,
   KeyboardArrowDownOutlined as ExpandMoreIcon,
@@ -52,14 +52,14 @@ import {
   SecurityOutlined as SecurityIcon,
   PsychologyOutlined as PromptIcon,
 } from "@mui/icons-material";
-import { kiwiAppsApiClient } from "../../utils/api";
+import { kiwiAppsApiClient } from "../../utils/api.ts";
 import type {
   AppResponseDto,
   AppUIResponseDto,
   AppScopesResponseDto,
   AppPromptResponseDto,
   WhitelistEntryResponseDto,
-} from "../../services/models";
+} from "../../services/models/index.ts";
 import { AdminPage, AdminPageHeader } from "../../components/AdminPage/index.ts";
 
 interface TabPanelProps {
@@ -629,10 +629,17 @@ export const KiwiAppsAdmin: React.FC = () => {
           </TableContainer>
         ) : whitelist.length === 0 ? (
           <Paper sx={{ p: 4, textAlign: "center" }}>
-            <Typography variant="h6" color="text.secondary" gutterBottom>
+            <Typography variant="h6" gutterBottom sx={{
+              color: "text.secondary"
+            }}>
               No Apps Whitelisted
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                mb: 2
+              }}>
               Add an app slug to the whitelist to allow it to self-register.
             </Typography>
             <Button
@@ -660,17 +667,29 @@ export const KiwiAppsAdmin: React.FC = () => {
                 {whitelist.map((entry) => (
                   <TableRow key={entry.slug}>
                     <TableCell>
-                      <Typography variant="body2" fontWeight={500} fontFamily="monospace">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontWeight: 500,
+                          fontFamily: "monospace"
+                        }}>
                         {entry.slug}
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2" color="text.secondary" fontFamily="monospace">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: "text.secondary",
+                          fontFamily: "monospace"
+                        }}>
                         {entry.baseUrl || "-"}
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                      }}>
                         {entry.description || "-"}
                       </Typography>
                     </TableCell>
@@ -678,7 +697,9 @@ export const KiwiAppsAdmin: React.FC = () => {
                       {getStatusChip(entry.status)}
                     </TableCell>
                     <TableCell>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
                         {formatDate(entry.createdAt)}
                       </Typography>
                     </TableCell>
@@ -755,10 +776,14 @@ export const KiwiAppsAdmin: React.FC = () => {
           </TableContainer>
         ) : apps.length === 0 ? (
           <Paper sx={{ p: 4, textAlign: "center" }}>
-            <Typography variant="h6" color="text.secondary" gutterBottom>
+            <Typography variant="h6" gutterBottom sx={{
+              color: "text.secondary"
+            }}>
               No Apps Registered
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               Apps will appear here once they self-register. Make sure the app is whitelisted first.
             </Typography>
           </Paper>
@@ -796,17 +821,23 @@ export const KiwiAppsAdmin: React.FC = () => {
                           </IconButton>
                         </TableCell>
                         <TableCell>
-                          <Typography variant="body2" fontWeight={500}>
+                          <Typography variant="body2" sx={{
+                            fontWeight: 500
+                          }}>
                             {app.name}
                           </Typography>
                           {app.description && (
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography variant="caption" sx={{
+                              color: "text.secondary"
+                            }}>
                               {app.description}
                             </Typography>
                           )}
                         </TableCell>
                         <TableCell>
-                          <Typography variant="body2" fontFamily="monospace">
+                          <Typography variant="body2" sx={{
+                            fontFamily: "monospace"
+                          }}>
                             {app.slug}
                           </Typography>
                         </TableCell>
@@ -828,7 +859,9 @@ export const KiwiAppsAdmin: React.FC = () => {
                           />
                         </TableCell>
                         <TableCell>
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography variant="caption" sx={{
+                            color: "text.secondary"
+                          }}>
                             {formatDate(app.lastSeenAt)}
                           </Typography>
                         </TableCell>
@@ -856,12 +889,19 @@ export const KiwiAppsAdmin: React.FC = () => {
                               {isLoadingUI ? (
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 2 }}>
                                   <CircularProgress size={20} />
-                                  <Typography variant="body2" color="text.secondary">
+                                  <Typography variant="body2" sx={{
+                                    color: "text.secondary"
+                                  }}>
                                     Loading UIs...
                                   </Typography>
                                 </Box>
                               ) : uis.length === 0 ? (
-                                <Typography variant="body2" color="text.secondary" sx={{ py: 2 }}>
+                                <Typography
+                                  variant="body2"
+                                  sx={{
+                                    color: "text.secondary",
+                                    py: 2
+                                  }}>
                                   No UIs registered for this app.
                                 </Typography>
                               ) : (
@@ -881,7 +921,12 @@ export const KiwiAppsAdmin: React.FC = () => {
                                     {uis.map((ui) => (
                                       <TableRow key={ui.id}>
                                         <TableCell>
-                                          <Typography variant="body2" fontFamily="monospace" fontSize={12}>
+                                          <Typography
+                                            variant="body2"
+                                            sx={{
+                                              fontFamily: "monospace",
+                                              fontSize: 12
+                                            }}>
                                             {ui.uiSlug}
                                           </Typography>
                                         </TableCell>
@@ -894,15 +939,14 @@ export const KiwiAppsAdmin: React.FC = () => {
                                           <Tooltip title={ui.uiUrl}>
                                             <Typography
                                               variant="body2"
-                                              fontFamily="monospace"
-                                              fontSize={12}
                                               sx={{
+                                                fontFamily: "monospace",
+                                                fontSize: 12,
                                                 maxWidth: 200,
                                                 overflow: 'hidden',
                                                 textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                              }}
-                                            >
+                                                whiteSpace: 'nowrap'
+                                              }}>
                                               {ui.uiUrl}
                                             </Typography>
                                           </Tooltip>
@@ -958,12 +1002,19 @@ export const KiwiAppsAdmin: React.FC = () => {
                               {loadingScopes.has(app.slug) ? (
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 2 }}>
                                   <CircularProgress size={20} />
-                                  <Typography variant="body2" color="text.secondary">
+                                  <Typography variant="body2" sx={{
+                                    color: "text.secondary"
+                                  }}>
                                     Loading scopes...
                                   </Typography>
                                 </Box>
                               ) : !appScopes[app.slug] || (appScopes[app.slug].maxScopes.length === 0 && appScopes[app.slug].promptScopes.length === 0) ? (
-                                <Typography variant="body2" color="text.secondary" sx={{ py: 1 }}>
+                                <Typography
+                                  variant="body2"
+                                  sx={{
+                                    color: "text.secondary",
+                                    py: 1
+                                  }}>
                                   No scopes defined for this app.
                                 </Typography>
                               ) : (
@@ -971,7 +1022,13 @@ export const KiwiAppsAdmin: React.FC = () => {
                                   {/* Max Scopes (from whitelist) */}
                                   {appScopes[app.slug].maxScopes.length > 0 && (
                                     <Box sx={{ mb: 2 }}>
-                                      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                                      <Typography
+                                        variant="caption"
+                                        sx={{
+                                          color: "text.secondary",
+                                          display: 'block',
+                                          mb: 0.5
+                                        }}>
                                         Maximum Allowed Scopes (from whitelist)
                                       </Typography>
                                       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -990,7 +1047,13 @@ export const KiwiAppsAdmin: React.FC = () => {
                                   {/* Prompt Scopes */}
                                   {appScopes[app.slug].promptScopes.length > 0 && (
                                     <Box>
-                                      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                                      <Typography
+                                        variant="caption"
+                                        sx={{
+                                          color: "text.secondary",
+                                          display: 'block',
+                                          mb: 0.5
+                                        }}>
                                         Prompt Scopes (from registered prompts)
                                       </Typography>
                                       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -1008,7 +1071,13 @@ export const KiwiAppsAdmin: React.FC = () => {
                                   )}
                                 </Box>
                               )}
-                              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
+                              <Typography
+                                variant="caption"
+                                sx={{
+                                  color: "text.secondary",
+                                  display: 'block',
+                                  mt: 1
+                                }}>
                                 Max scopes define what this app can request. Enable/disable specific scopes per class in class settings.
                               </Typography>
 
@@ -1023,12 +1092,19 @@ export const KiwiAppsAdmin: React.FC = () => {
                               {loadingPrompts.has(app.slug) ? (
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 2 }}>
                                   <CircularProgress size={20} />
-                                  <Typography variant="body2" color="text.secondary">
+                                  <Typography variant="body2" sx={{
+                                    color: "text.secondary"
+                                  }}>
                                     Loading prompts...
                                   </Typography>
                                 </Box>
                               ) : !appPrompts[app.slug] || appPrompts[app.slug].length === 0 ? (
-                                <Typography variant="body2" color="text.secondary" sx={{ py: 1 }}>
+                                <Typography
+                                  variant="body2"
+                                  sx={{
+                                    color: "text.secondary",
+                                    py: 1
+                                  }}>
                                   No prompts registered for this app.
                                 </Typography>
                               ) : (
@@ -1054,17 +1130,29 @@ export const KiwiAppsAdmin: React.FC = () => {
                                       return (
                                         <TableRow key={prompt.id}>
                                           <TableCell>
-                                            <Typography variant="body2" fontWeight={500}>
+                                            <Typography variant="body2" sx={{
+                                              fontWeight: 500
+                                            }}>
                                               {prompt.name}
                                             </Typography>
                                             {prompt.description && (
-                                              <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                                              <Typography
+                                                variant="caption"
+                                                sx={{
+                                                  color: "text.secondary",
+                                                  display: 'block'
+                                                }}>
                                                 {prompt.description}
                                               </Typography>
                                             )}
                                           </TableCell>
                                           <TableCell>
-                                            <Typography variant="body2" fontFamily="monospace" fontSize={12}>
+                                            <Typography
+                                              variant="body2"
+                                              sx={{
+                                                fontFamily: "monospace",
+                                                fontSize: 12
+                                              }}>
                                               {prompt.promptId}
                                             </Typography>
                                           </TableCell>
@@ -1072,20 +1160,21 @@ export const KiwiAppsAdmin: React.FC = () => {
                                             <Tooltip title={prompt.systemPrompt}>
                                               <Typography
                                                 variant="body2"
-                                                fontSize={12}
                                                 sx={{
+                                                  fontSize: 12,
                                                   overflow: 'hidden',
                                                   textOverflow: 'ellipsis',
                                                   whiteSpace: 'nowrap',
-                                                  maxWidth: 280,
-                                                }}
-                                              >
+                                                  maxWidth: 280
+                                                }}>
                                                 {prompt.systemPrompt}
                                               </Typography>
                                             </Tooltip>
                                           </TableCell>
                                           <TableCell>
-                                            <Typography variant="caption" color="text.secondary">
+                                            <Typography variant="caption" sx={{
+                                              color: "text.secondary"
+                                            }}>
                                               {prompt.maxTokens && `${prompt.maxTokens} tokens`}
                                               {prompt.maxTokens && prompt.temperature !== undefined && ', '}
                                               {prompt.temperature !== undefined && `temp: ${prompt.temperature}`}
@@ -1148,7 +1237,13 @@ export const KiwiAppsAdmin: React.FC = () => {
                                   </TableBody>
                                 </Table>
                               )}
-                              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
+                              <Typography
+                                variant="caption"
+                                sx={{
+                                  color: "text.secondary",
+                                  display: 'block',
+                                  mt: 1
+                                }}>
                                 Approve prompts to allow the app to use them for LLM requests. Review the system prompt before approving.
                               </Typography>
                             </Box>
@@ -1194,29 +1289,31 @@ export const KiwiAppsAdmin: React.FC = () => {
             onChange={(e) => setFormSecret(e.target.value)}
             helperText="Minimum 32 characters. Share this with the app developer."
             sx={{ mb: 2 }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Tooltip title={showSecret ? "Hide secret" : "Show secret"}>
-                    <IconButton
-                      onClick={() => setShowSecret(!showSecret)}
-                      edge="end"
-                      size="small"
-                    >
-                      {showSecret ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Generate new secret">
-                    <IconButton
-                      onClick={handleGenerateSecret}
-                      edge="end"
-                      size="small"
-                    >
-                      <GenerateIcon />
-                    </IconButton>
-                  </Tooltip>
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Tooltip title={showSecret ? "Hide secret" : "Show secret"}>
+                      <IconButton
+                        onClick={() => setShowSecret(!showSecret)}
+                        edge="end"
+                        size="small"
+                      >
+                        {showSecret ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Generate new secret">
+                      <IconButton
+                        onClick={handleGenerateSecret}
+                        edge="end"
+                        size="small"
+                      >
+                        <GenerateIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </InputAdornment>
+                ),
+              }
             }}
           />
           <TextField
@@ -1255,7 +1352,13 @@ export const KiwiAppsAdmin: React.FC = () => {
             <SecurityIcon fontSize="small" color="action" />
             <Typography variant="subtitle2">Maximum Allowed Scopes</Typography>
           </Box>
-          <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1.5 }}>
+          <Typography
+            variant="caption"
+            sx={{
+              color: "text.secondary",
+              display: "block",
+              mb: 1.5
+            }}>
             Define which scopes this app can request. Examples: read:students, write:grades, mcp:tools
           </Typography>
           <Box sx={{ display: "flex", gap: 1, mb: 1 }}>
@@ -1323,9 +1426,13 @@ export const KiwiAppsAdmin: React.FC = () => {
           </Typography>
           <Typography
             variant="body1"
-            fontFamily="monospace"
-            sx={{ mb: 2, p: 1, bgcolor: "grey.100", borderRadius: 1 }}
-          >
+            sx={{
+              fontFamily: "monospace",
+              mb: 2,
+              p: 1,
+              bgcolor: "grey.100",
+              borderRadius: 1
+            }}>
             {createdSlug}
           </Typography>
           <Typography variant="subtitle2" gutterBottom>
@@ -1343,9 +1450,11 @@ export const KiwiAppsAdmin: React.FC = () => {
           >
             <Typography
               variant="body2"
-              fontFamily="monospace"
-              sx={{ flex: 1, wordBreak: "break-all" }}
-            >
+              sx={{
+                fontFamily: "monospace",
+                flex: 1,
+                wordBreak: "break-all"
+              }}>
               {createdSecret}
             </Typography>
             <Tooltip title="Copy to clipboard">
@@ -1429,7 +1538,13 @@ export const KiwiAppsAdmin: React.FC = () => {
             <SecurityIcon fontSize="small" color="action" />
             <Typography variant="subtitle2">Maximum Allowed Scopes</Typography>
           </Box>
-          <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1.5 }}>
+          <Typography
+            variant="caption"
+            sx={{
+              color: "text.secondary",
+              display: "block",
+              mb: 1.5
+            }}>
             Define which scopes this app can request. Examples: read:students, write:grades, mcp:tools
           </Typography>
           <Box sx={{ display: "flex", gap: 1, mb: 1 }}>

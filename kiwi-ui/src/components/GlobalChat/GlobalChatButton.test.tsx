@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import { GlobalChatButton } from './GlobalChatButton';
+import { GlobalChatButton } from './GlobalChatButton.tsx';
 
 const hoisted = vi.hoisted(() => ({
   chatState: {

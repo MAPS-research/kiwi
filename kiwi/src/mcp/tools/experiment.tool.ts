@@ -1,5 +1,11 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { Tool, Context } from '@rekog/mcp-nest';
+import { Payload, Ctx } from '@nestjs/microservices';
+import { Logger } from '@nestjs/common';
+import {
+  Tool,
+  McpContext as Context,
+  McpController,
+  McpRawRequest,
+} from '@rekog/mcp-nest';
 import { z } from 'zod';
 import { Request } from 'express';
 import { ExperimentService } from 'src/experiment/experiment.service';
@@ -11,7 +17,7 @@ import { experimentConfigJsonSchema } from 'src/experiment/interfaces/experiment
  * validates it, and (on instructor approval) creates a draft experiment.
  * Activation remains a separate, manual instructor action.
  */
-@Injectable()
+@McpController()
 export class ExperimentTool {
   private readonly logger = new Logger(ExperimentTool.name);
 
@@ -49,9 +55,7 @@ export class ExperimentTool {
       'unique, allocations sum to 1, engine in {openai, qwen}). Returns ok=true ' +
       'with the parsed config, or ok=false with the list of issues.',
     parameters: z.object({
-      config: z
-        .any()
-        .describe('The experiment Config JSON object to validate'),
+      config: z.any().describe('The experiment Config JSON object to validate'),
     }),
     annotations: {
       title: 'Validate Experiment Config',
@@ -101,9 +105,9 @@ export class ExperimentTool {
     },
   })
   async createExperiment(
-    { classId, config }: { classId: string; config: unknown },
-    context: Context,
-    request: Request,
+    @Payload() { classId, config }: { classId: string; config: unknown },
+    @Ctx() context: Context,
+    @McpRawRequest() request: Request,
   ) {
     const userId = (request as any).user?.sub;
     if (!userId) {

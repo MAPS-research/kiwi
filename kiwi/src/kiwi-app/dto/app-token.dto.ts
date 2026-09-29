@@ -72,7 +72,8 @@ export class ClassAppScopesResponseDto extends AppScopesResponseDto {
 
   @ApiProperty({
     type: [String],
-    description: 'Effective scopes (intersection of maxScopes and enabledScopes)',
+    description:
+      'Effective scopes (intersection of maxScopes and enabledScopes)',
   })
   effectiveScopes: string[];
 }
@@ -81,7 +82,10 @@ export class ClassAppScopesResponseDto extends AppScopesResponseDto {
  * DTO for reporting context updates from apps (audit logging)
  */
 export class ReportContextUpdateDto {
-  @ApiProperty({ description: 'Type of action performed', example: 'code_submission' })
+  @ApiProperty({
+    description: 'Type of action performed',
+    example: 'code_submission',
+  })
   @IsString()
   @IsNotEmpty()
   actionType: string;

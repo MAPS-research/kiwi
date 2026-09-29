@@ -8,17 +8,17 @@ export {
   uninstallBridge,
   isBridgeInstalled,
   getBridge,
-} from './KiwiAppBridge';
+} from './KiwiAppBridge.ts';
 
 export {
   BridgeProvider,
   BridgeContext,
   useBridge,
-} from './BridgeProvider';
+} from './BridgeProvider.tsx';
 export type {
   BridgeContextValue,
   BridgeProviderProps,
-} from './BridgeProvider';
+} from './BridgeProvider.tsx';
 
 export {
   useKiwiApp,
@@ -33,7 +33,7 @@ export {
   useToolInput,
   useToolOutput,
   useKiwiAppGlobal,
-} from './useKiwiApp';
+} from './useKiwiApp.ts';
 
 // Persistence hooks
 export {
@@ -41,8 +41,8 @@ export {
   useUpdateWidgetState,
   useWidgetStates,
   useDeleteWidgetState,
-} from './usePersistedWidgetState';
+} from './usePersistedWidgetState.ts';
 export type {
   PersistedWidgetStateOptions,
   PersistedWidgetStateResult,
-} from './usePersistedWidgetState';
+} from './usePersistedWidgetState.ts';

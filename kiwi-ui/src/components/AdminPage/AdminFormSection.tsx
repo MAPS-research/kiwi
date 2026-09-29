@@ -41,14 +41,25 @@ const AdminFormSection = ({
     ]}
   >
     <Box sx={{ minWidth: 0 }}>
-      <Stack direction="row" spacing={1} alignItems="flex-start" justifyContent="space-between">
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{
+          alignItems: "flex-start",
+          justifyContent: "space-between"
+        }}>
         <Typography component="h2" variant="subtitle1" sx={{ fontWeight: 600 }}>
           {title}
         </Typography>
         {actions}
       </Stack>
       {description && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.secondary",
+            mt: 0.5
+          }}>
           {description}
         </Typography>
       )}

@@ -29,7 +29,10 @@ describe('worstCasePromptChars', () => {
 describe('fitChunksToBudget', () => {
   it('keeps everything when it fits', () => {
     const chunks = ['aaa', 'bbb'];
-    expect(fitChunksToBudget(chunks, 100)).toEqual({ kept: chunks, dropped: 0 });
+    expect(fitChunksToBudget(chunks, 100)).toEqual({
+      kept: chunks,
+      dropped: 0,
+    });
   });
 
   it('drops whole chunks from the end rather than cutting mid-chunk', () => {
