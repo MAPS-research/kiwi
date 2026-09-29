@@ -13,6 +13,7 @@ import { UserWhitelistService } from '../common/database/user-whistelist.service
 import { EnrollmentService } from '../common/database/enrollment.service';
 import { ClassService } from '../common/database/class.service';
 import { PendingEnrollmentService } from '../common/database/pending-enrollment.service';
+import { EmailService } from '../email/email.service';
 import { Prisma } from '@prisma/client';
 import { InstructorClassService } from '../instructor-class/instructor-class.service';
 
@@ -47,6 +48,7 @@ export class WebhookEventService {
     private readonly classService: ClassService,
     private readonly instructorClassService: InstructorClassService,
     private readonly pendingEnrollmentService: PendingEnrollmentService,
+    private readonly emailService: EmailService,
   ) {}
 
   async createWebhookEvent(data: {
@@ -197,14 +199,35 @@ export class WebhookEventService {
 
     // Execute the event based on type
     if (event.eventType === 'user.enroll') {
-      const { outcome } = await this.executeUserEnrollment(eventId);
-      const { classId } = event.payload as any;
+      const result = await this.executeUserEnrollment(eventId);
+      const { outcome } = result;
+      const { email, classId } = event.payload as any;
+
+      // Nobody else tells them — least of all a student who has never signed
+      // in, who would otherwise never learn the class is waiting.
+      let notified = false;
+      if (outcome !== 'already_enrolled') {
+        try {
+          await this.emailService.sendClassEnrollmentEmail(
+            email,
+            classId,
+            outcome === 'pending_first_login',
+            'enrollment' in result ? result.enrollment?.userId : undefined,
+          );
+          notified = true;
+        } catch (error) {
+          // The enrollment stands; a failed notification must not undo it.
+          this.logger.warn(
+            `Enrollment email to ${email} failed: ${error.message}`,
+          );
+        }
+      }
 
       await this.webhookEventAuditService.create({
         webhookEvent: { connect: { id: eventId } },
         action: 'executed',
         performer: { connect: { id: adminUserId } },
-        metadata: { outcome, classId },
+        metadata: { outcome, classId, notified },
       });
 
       return { message: OUTCOME_MESSAGES[outcome], outcome };

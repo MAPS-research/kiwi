@@ -176,6 +176,11 @@ On approval Kiwi:
    account first appears: at their first Google sign-in, or when an admin
    creates a password account for that email (Admin → User Management).
 5. Marks the event `executed`.
+6. Unless the person was already enrolled, emails them the `classEnrollment`
+   template: where to sign in and, for someone without an account yet, that
+   the class appears once they have one. Whether it was sent is recorded in the
+   audit entry as `notified`; a failed email does not fail the approval. See
+   [email.md](email.md).
 
 The pending list (`GET /webhooks/events/pending`) marks each `user.enroll`
 event with `userExists`, so an approver can tell an existing account from a

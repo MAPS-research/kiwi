@@ -7,6 +7,7 @@ import { DatabaseModule } from '../common/database/database.module';
 import { ApiTokensModule } from '../api-tokens/api-tokens.module';
 import { BullModule } from '@nestjs/bullmq';
 import { InstructorClassModule } from '../instructor-class/instructor-class.module';
+import { EmailModule } from '../email/email.module';
 import { WebhookEndpointService } from '../common/database/webhook-endpoint.service';
 import { WebhookDeliveryService as DatabaseWebhookDeliveryService } from '../common/database/webhook-delivery.service';
 import { UserService } from '../common/database/user.service';
@@ -22,6 +23,7 @@ import { PendingEnrollmentService } from '../common/database/pending-enrollment.
     DatabaseModule,
     ApiTokensModule,
     InstructorClassModule,
+    EmailModule,
     BullModule.registerQueue({
       name: 'webhook-delivery',
     }),

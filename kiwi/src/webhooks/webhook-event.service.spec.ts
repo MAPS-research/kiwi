@@ -9,6 +9,7 @@ import { EnrollmentService } from '../common/database/enrollment.service';
 import { ClassService } from '../common/database/class.service';
 import { PendingEnrollmentService } from '../common/database/pending-enrollment.service';
 import { InstructorClassService } from '../instructor-class/instructor-class.service';
+import { EmailService } from '../email/email.service';
 
 describe('WebhookEventService', () => {
   let service: WebhookEventService;
@@ -20,6 +21,7 @@ describe('WebhookEventService', () => {
   let enrollmentService: any;
   let classService: any;
   let pendingEnrollmentService: any;
+  let emailService: any;
 
   const email = 'new@example.com';
   const classId = 'class-1';
@@ -56,6 +58,8 @@ describe('WebhookEventService', () => {
         .mockImplementation(async (data) => ({ id: 'pending-1', ...data })),
     };
 
+    emailService = { sendClassEnrollmentEmail: jest.fn() };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         WebhookEventService,
@@ -73,6 +77,7 @@ describe('WebhookEventService', () => {
           provide: PendingEnrollmentService,
           useValue: pendingEnrollmentService,
         },
+        { provide: EmailService, useValue: emailService },
       ],
     }).compile();
 
@@ -188,8 +193,81 @@ describe('WebhookEventService', () => {
         webhookEvent: { connect: { id: 'event-1' } },
         action: 'executed',
         performer: { connect: { id: 'admin-1' } },
-        metadata: { outcome: 'pending_first_login', classId },
+        metadata: { outcome: 'pending_first_login', classId, notified: true },
       });
+    });
+
+    it('emails a new student that the class waits for their first sign-in', async () => {
+      userService.user.mockResolvedValue(null);
+
+      await service.approveEvent('event-1', 'admin-1');
+
+      expect(emailService.sendClassEnrollmentEmail).toHaveBeenCalledWith(
+        email,
+        classId,
+        true,
+        undefined,
+      );
+    });
+
+    it('emails an existing user who was just enrolled', async () => {
+      userService.user.mockResolvedValue({ id: 'user-1', email });
+      enrollmentService.enrollment.mockResolvedValue(null);
+      enrollmentService.createEnrollment.mockResolvedValue({
+        classId,
+        userId: 'user-1',
+      });
+
+      await service.approveEvent('event-1', 'admin-1');
+
+      expect(emailService.sendClassEnrollmentEmail).toHaveBeenCalledWith(
+        email,
+        classId,
+        false,
+        'user-1',
+      );
+    });
+
+    it('does not email someone who was already enrolled', async () => {
+      userService.user.mockResolvedValue({ id: 'user-1', email });
+      enrollmentService.enrollment.mockResolvedValue({
+        classId,
+        userId: 'user-1',
+      });
+
+      await service.approveEvent('event-1', 'admin-1');
+
+      expect(emailService.sendClassEnrollmentEmail).not.toHaveBeenCalled();
+      expect(audits.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action: 'executed',
+          metadata: { outcome: 'already_enrolled', classId, notified: false },
+        }),
+      );
+    });
+
+    it('keeps the enrollment when the email fails', async () => {
+      userService.user.mockResolvedValue(null);
+      emailService.sendClassEnrollmentEmail.mockRejectedValue(
+        new Error('SMTP down'),
+      );
+
+      const result = await service.approveEvent('event-1', 'admin-1');
+
+      expect(result.outcome).toBe('pending_first_login');
+      expect(
+        pendingEnrollmentService.createPendingEnrollment,
+      ).toHaveBeenCalled();
+      expect(audits.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action: 'executed',
+          metadata: {
+            outcome: 'pending_first_login',
+            classId,
+            notified: false,
+          },
+        }),
+      );
     });
   });
 

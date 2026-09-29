@@ -7,6 +7,7 @@ import { ClassService as DatabaseClassService } from 'src/common/database/class.
 import { EnrollmentService } from 'src/common/database/enrollment.service';
 import { EmailAuditLogService } from 'src/common/database/email-audit-log.service';
 import { renderTemplate } from './email.templates';
+import { isGoogleOAuthConfigured } from 'src/auth/google.strategy';
 
 export interface EmailOptions {
   to: string | string[];
@@ -244,15 +245,19 @@ export class EmailService {
     );
   }
 
+  private primaryFrontendUrl(): string {
+    const frontendUrls =
+      this.configService.get('FRONTEND_URL')?.split(',') || [];
+    return frontendUrls[0] || 'http://localhost:3001/';
+  }
+
   async sendWelcomeEmail(
     userEmail: string,
     userName: string,
     className?: string,
     userId?: string,
   ): Promise<void> {
-    const frontendUrls =
-      this.configService.get('FRONTEND_URL')?.split(',') || [];
-    const frontendUrl = frontendUrls[0] || 'http://localhost:3001/';
+    const frontendUrl = this.primaryFrontendUrl();
 
     await this.sendTemplatedEmail(
       userEmail,
@@ -267,6 +272,40 @@ export class EmailService {
       },
       undefined,
       { userId },
+    );
+  }
+
+  /**
+   * Tell someone they were added to a class. `firstSignIn` is for people who
+   * have never signed in: they hold a pending enrollment that completes when
+   * their account first appears (Google sign-in or an admin-created password
+   * account).
+   */
+  async sendClassEnrollmentEmail(
+    email: string,
+    classId: string,
+    firstSignIn: boolean,
+    userId?: string,
+  ): Promise<void> {
+    const classData = await this.databaseClassService.class({ id: classId });
+    const metadata = (classData?.classMetadata ?? {}) as {
+      className?: string;
+      professorName?: string;
+    };
+
+    await this.sendTemplatedEmail(
+      email,
+      'classEnrollment',
+      {
+        className: metadata.className || 'a class',
+        professorName: metadata.professorName,
+        frontendUrl: this.primaryFrontendUrl(),
+        firstSignIn,
+        googleSignIn: isGoogleOAuthConfigured(this.configService),
+        supportEmail: this.configService.get('SUPPORT_EMAIL'),
+      },
+      undefined,
+      { userId, classId },
     );
   }
 

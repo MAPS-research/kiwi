@@ -69,6 +69,74 @@ const sharedStyles = `
 `;
 
 export const emailTemplates = {
+  classEnrollment: {
+    subject: "You've been added to {{className}} on Kiwi",
+    generateHtml: (data: {
+      className: string;
+      professorName?: string;
+      frontendUrl: string;
+      firstSignIn: boolean;
+      googleSignIn?: boolean;
+      supportEmail?: string;
+    }) => `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>${sharedStyles}</style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            Welcome to Kiwi
+            <div class="sub-header">${escapeHtml(data.className)}</div>
+          </div>
+          <div class="content">
+            <p>You have been added to <strong>${escapeHtml(data.className)}</strong>${data.professorName ? ` (${escapeHtml(data.professorName)})` : ''} on Kiwi.</p>
+            ${
+              data.firstSignIn
+                ? data.googleSignIn
+                  ? `<p>Sign in at <a href="${escapeHtml(data.frontendUrl)}" target="_blank" rel="noopener">${escapeHtml(data.frontendUrl)}</a> with your Google account for <strong>this email address</strong>. The class will be in your course list as soon as you sign in.</p>`
+                  : `<p>Once your account for <strong>this email address</strong> is set up, sign in at <a href="${escapeHtml(data.frontendUrl)}" target="_blank" rel="noopener">${escapeHtml(data.frontendUrl)}</a>. The class will be in your course list.</p>`
+                : `<p>It is already in your course list at <a href="${escapeHtml(data.frontendUrl)}" target="_blank" rel="noopener">${escapeHtml(data.frontendUrl)}</a>.</p>`
+            }
+            ${data.supportEmail ? `<p>If you have any issues, contact us at <a href="mailto:${escapeHtml(data.supportEmail)}">${escapeHtml(data.supportEmail)}</a>.</p>` : ''}
+            <p><strong>Kiwi Support Team</strong></p>
+          </div>
+          <div class="footer">This email was sent from Kiwi Platform. Please do not reply to this email.</div>
+        </div>
+      </body>
+      </html>
+    `,
+    generateText: (data: {
+      className: string;
+      professorName?: string;
+      frontendUrl: string;
+      firstSignIn: boolean;
+      googleSignIn?: boolean;
+      supportEmail?: string;
+    }) => `
+You have been added to ${data.className}${data.professorName ? ` (${data.professorName})` : ''} on Kiwi.
+
+${
+  data.firstSignIn
+    ? data.googleSignIn
+      ? `Sign in at ${data.frontendUrl} with your Google account for this email address. The class will be in your course list as soon as you sign in.`
+      : `Once your account for this email address is set up, sign in at ${data.frontendUrl}. The class will be in your course list.`
+    : `It is already in your course list at ${data.frontendUrl}.`
+}
+${
+  data.supportEmail
+    ? `
+If you have any issues, contact us at ${data.supportEmail}.
+`
+    : ''
+}
+Kiwi Support Team
+    `,
+  },
+
   classAnnouncement: {
     subject: 'Class Announcement: {{className}}',
     generateHtml: (data: {
@@ -210,12 +278,20 @@ Dear Students,
 Welcome to ${data.institutionName || 'Kiwi'}!
 
 You have been granted access to Kiwi as per your request. You can now log in from the website: ${data.frontendUrl || 'http://localhost:3001/'}
-${data.guideUrl ? `
+${
+  data.guideUrl
+    ? `
 Please follow this guide to learn about how to best use Kiwi to support your self‑learning experience with AI:
 ${data.guideUrl}
-` : ''}${data.supportEmail ? `
+`
+    : ''
+}${
+      data.supportEmail
+        ? `
 If you have any issues while exploring Kiwi, please contact us at: ${data.supportEmail}
-` : ''}
+`
+        : ''
+    }
 Happy Kiwi-ing!
 Kiwi Support Team
     `,

@@ -6,11 +6,14 @@ the audit log. For operators and backend developers. The code is in
 
 ## What sends email today
 
-Email goes out only when someone calls one of the endpoints below. Nothing in
-the app sends mail on its own: no service outside `kiwi/src/email/` calls
-`EmailService`, so registration, enrollment and webhook approval send no
-welcome email. `sendWelcomeEmail` and `sendAdminNotificationEmail` exist but
-have no callers.
+Email goes out when someone calls one of the endpoints below, and in one case
+on its own: approving a `user.enroll` webhook event that enrolls someone, or
+records a pending enrollment for them, sends them the `classEnrollment` email
+(see [webhooks.md](webhooks.md#enrollment-approval)). A failed send is logged
+and recorded in the event's audit entry as `notified: false`; it does not undo
+the enrollment. Registration and roster enrollment send nothing.
+`sendWelcomeEmail` and `sendAdminNotificationEmail` exist but have no
+callers.
 
 ## Configuration
 
@@ -25,14 +28,15 @@ Set these in `kiwi/.env`. Defaults come from `kiwi/src/config/configuration.ts`.
 | `AWS_SES_FROM_EMAIL`, `AWS_SES_FROM_NAME` | `noreply@example.com`, `Kiwi Platform` | Sender |
 | `AWS_SES_REPLY_TO_EMAIL`, `AWS_SES_REPLY_TO_NAME` | `support@example.com`, `Kiwi Platform Support` | Reply-to |
 
-Only the welcome template reads these:
+The welcome and class enrollment templates read these:
 
 | Variable | Used as |
 |---|---|
 | `FRONTEND_URL` | Login link; the first entry of the comma-separated list, else `http://localhost:3001/` |
-| `INSTITUTION_NAME` | Name in the heading; defaults to "Kiwi" |
+| `INSTITUTION_NAME` | Name in the welcome heading; defaults to "Kiwi" |
 | `SUPPORT_EMAIL` | Support paragraph, omitted if unset |
-| `ONBOARDING_GUIDE_URL` | Guide paragraph, omitted if unset |
+| `ONBOARDING_GUIDE_URL` | Guide paragraph in the welcome email, omitted if unset |
+| `GOOGLE_CLIENT_ID` | Whether the enrollment email tells a new person to sign in with Google |
 
 The backend checks the SMTP connection at startup and logs
 `Email transporter verification failed` if it cannot connect. It logs this in
@@ -86,6 +90,7 @@ subject, an HTML body and a plain-text body.
 | `classAnnouncement` | `className`, `message`, `professorName?` | `Class Announcement: <className>` |
 | `adminNotification` | `title`, `message` | `Important Notification from Kiwi Platform` |
 | `welcome` | `frontendUrl?`, `institutionName?`, `supportEmail?`, `guideUrl?` | `Access granted for Kiwi` |
+| `classEnrollment` | `className`, `professorName?`, `frontendUrl`, `firstSignIn`, `googleSignIn?`, `supportEmail?` | `You've been added to <className> on Kiwi` |
 
 Notes:
 
