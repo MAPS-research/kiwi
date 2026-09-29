@@ -12,8 +12,26 @@ import { UserService } from '../common/database/user.service';
 import { UserWhitelistService } from '../common/database/user-whistelist.service';
 import { EnrollmentService } from '../common/database/enrollment.service';
 import { ClassService } from '../common/database/class.service';
+import { PendingEnrollmentService } from '../common/database/pending-enrollment.service';
 import { Prisma } from '@prisma/client';
 import { InstructorClassService } from '../instructor-class/instructor-class.service';
+
+/**
+ * What approving a `user.enroll` event actually did. A person who has never
+ * signed in has no `User` row, and must not get one here: Google sign-in finds
+ * users by their Google subject, so a pre-created row would collide on email
+ * and lock them out. They get a PendingEnrollment instead, which the login
+ * hook in AuthService turns into an enrollment on first sign-in.
+ */
+export type UserEnrollmentOutcome =
+  'enrolled' | 'already_enrolled' | 'pending_first_login';
+
+const OUTCOME_MESSAGES: Record<UserEnrollmentOutcome, string> = {
+  enrolled: 'Event approved; user enrolled in class',
+  already_enrolled: 'Event approved; user was already enrolled in class',
+  pending_first_login:
+    'Event approved; user has not signed in yet and will be enrolled on first sign-in',
+};
 
 @Injectable()
 export class WebhookEventService {
@@ -28,6 +46,7 @@ export class WebhookEventService {
     private readonly enrollmentService: EnrollmentService,
     private readonly classService: ClassService,
     private readonly instructorClassService: InstructorClassService,
+    private readonly pendingEnrollmentService: PendingEnrollmentService,
   ) {}
 
   async createWebhookEvent(data: {
@@ -46,7 +65,7 @@ export class WebhookEventService {
   }
 
   async getPendingEvents() {
-    return this.webhookEventService.findMany({
+    const events = await this.webhookEventService.findMany({
       where: { status: 'pending' },
       include: {
         webhook: {
@@ -59,6 +78,33 @@ export class WebhookEventService {
       },
       orderBy: { createdAt: 'desc' },
     });
+
+    // Approving means "enrol now" for an existing user and "enrol on first
+    // sign-in" for a new one, so tell the approver which it is. Only a boolean:
+    // this list is for admins/professors, but it still needs no user details.
+    const emails = events
+      .filter((e) => e.eventType === 'user.enroll')
+      .map((e) => (e.payload as any)?.email)
+      .filter((email): email is string => typeof email === 'string');
+    const existing = new Set(
+      emails.length > 0
+        ? (
+            await this.databaseService.user.findMany({
+              where: { email: { in: emails } },
+              select: { email: true },
+            })
+          ).map((u) => u.email)
+        : [],
+    );
+
+    return events.map((event) =>
+      event.eventType === 'user.enroll'
+        ? {
+            ...event,
+            userExists: existing.has((event.payload as any)?.email),
+          }
+        : event,
+    );
   }
 
   /**
@@ -151,7 +197,17 @@ export class WebhookEventService {
 
     // Execute the event based on type
     if (event.eventType === 'user.enroll') {
-      await this.executeUserEnrollment(eventId);
+      const { outcome } = await this.executeUserEnrollment(eventId);
+      const { classId } = event.payload as any;
+
+      await this.webhookEventAuditService.create({
+        webhookEvent: { connect: { id: eventId } },
+        action: 'executed',
+        performer: { connect: { id: adminUserId } },
+        metadata: { outcome, classId },
+      });
+
+      return { message: OUTCOME_MESSAGES[outcome], outcome };
     }
 
     return { message: 'Event approved and executed successfully' };
@@ -231,19 +287,36 @@ export class WebhookEventService {
         });
       }
 
-      // 3. Check if user exists
-      let user = await this.userService.user({ email });
+      // 3. Resolve the user by email. Never create one here — see
+      // UserEnrollmentOutcome.
+      const user = await this.userService.user({ email });
 
       if (!user) {
-        // Create user with minimal information
-        // In a real system, you might want to send an invitation email
-        this.logger.log(`Creating user account for ${email}`);
-        user = await this.userService.createUser({
-          email,
-          oauthId: `webhook_${email}_${Date.now()}`, // Generate unique ID
-          oauth: false,
-          systemRole: 'user',
-        });
+        const existingPending =
+          await this.pendingEnrollmentService.pendingEnrollments({
+            where: { classId, userEmail: email, status: 'not enrolled' },
+          });
+
+        // The login hook only drains 'not enrolled' rows.
+        const pendingEnrollment =
+          existingPending[0] ??
+          (await this.pendingEnrollmentService.createPendingEnrollment({
+            classId,
+            userEmail: email,
+            role: 'student',
+            status: 'not enrolled',
+          }));
+
+        await this.markExecuted(eventId, null);
+
+        this.logger.log(
+          `${email} has not signed in yet; will enroll in class ${classId} on first sign-in`,
+        );
+
+        return {
+          outcome: 'pending_first_login' as const,
+          pendingEnrollment,
+        };
       }
 
       // 4. Check if already enrolled
@@ -259,15 +332,11 @@ export class WebhookEventService {
           `User ${email} is already enrolled in class ${classId}`,
         );
         // Still mark as executed since the end goal is achieved
-        await this.webhookEventService.update({
-          where: { id: eventId },
-          data: {
-            status: 'executed',
-            executedAt: new Date(),
-            enrollmentId: `${classId}_${user.id}`,
-          },
-        });
-        return existingEnrollment;
+        await this.markExecuted(eventId, `${classId}_${user.id}`);
+        return {
+          outcome: 'already_enrolled' as const,
+          enrollment: existingEnrollment,
+        };
       }
 
       // 5. Enroll user in class
@@ -279,20 +348,13 @@ export class WebhookEventService {
       });
 
       // 6. Update webhook event status
-      await this.webhookEventService.update({
-        where: { id: eventId },
-        data: {
-          status: 'executed',
-          executedAt: new Date(),
-          enrollmentId: `${classId}_${user.id}`,
-        },
-      });
+      await this.markExecuted(eventId, `${classId}_${user.id}`);
 
       this.logger.log(
         `Successfully enrolled ${email} in class ${classId} via webhook`,
       );
 
-      return enrollment;
+      return { outcome: 'enrolled' as const, enrollment };
     } catch (error) {
       this.logger.error(`Failed to execute enrollment: ${error.message}`);
 
@@ -308,6 +370,17 @@ export class WebhookEventService {
 
       throw error;
     }
+  }
+
+  private async markExecuted(eventId: string, enrollmentId: string | null) {
+    await this.webhookEventService.update({
+      where: { id: eventId },
+      data: {
+        status: 'executed',
+        executedAt: new Date(),
+        enrollmentId,
+      },
+    });
   }
 
   async getEventsByWebhook(webhookId: string, userId: string) {

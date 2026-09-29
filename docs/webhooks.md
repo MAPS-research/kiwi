@@ -129,13 +129,17 @@ Successful responses are `201`:
 | Case | Body |
 |---|---|
 | `user.enroll` | `{"message": "User enrollment event received and pending admin approval", "eventId": "<id>", "status": "pending_approval"}` |
+
+A `user.enroll` whose `data` lacks a string `email` and `classId` is refused
+with `400`, and one naming a class that doesn't exist with `404`, so the sender
+sees the mistake instead of the approver.
 | Any other subscribed event | `{"message": "Webhook event received and queued for processing", "deliveryId": "<id>"}` |
 | Event not in the webhook's `events` | `{"message": "Event ignored - not subscribed"}` |
 
 Swagger lists further event names (`user.created`, `user.updated`,
 `class.created`, `class.enrollment`, `interaction.created`, `document.uploaded`,
 `test.event`). They are accepted but only produce the logged delivery. The
-receiver does not validate `data`.
+receiver does not validate their `data`.
 
 ## Enrollment approval
 
@@ -156,7 +160,7 @@ Events you may not act on return `404`.
 |---|---|
 | `GET /webhooks/events/pending` | Pending events you may act on, as `{"events": [...], "total": n}` |
 | `GET /webhooks/events/:id` | One event, with its webhook and the approver's id and email |
-| `POST /webhooks/events/:id/approve` | Approve and execute; returns `{"message": "Event approved and executed successfully"}` |
+| `POST /webhooks/events/:id/approve` | Approve and execute; returns `{"message": "...", "outcome": "..."}` for `user.enroll` (see below) |
 | `POST /webhooks/events/:id/reject` | Reject, with optional body `{"reason": "..."}`; returns the updated event |
 
 Approving or rejecting an event that is not `pending` returns `400`.
@@ -165,11 +169,17 @@ On approval Kiwi:
 
 1. Checks that the class exists.
 2. Adds the email to the whitelist, or re-enables a disabled entry.
-3. Creates the user if no account has that email. The new account has system
-   role `user` and no password. An admin must set a password
-   (`POST /auth/resetpassword`) before the user can log in.
-4. Enrolls the user as `student`, unless already enrolled.
+3. If an account has that email, enrolls it as `student` (outcome
+   `enrolled`, or `already_enrolled`).
+4. Otherwise records a pending enrollment for the email and creates no
+   account (outcome `pending_first_login`). The person is enrolled when their
+   account first appears: at their first Google sign-in, or when an admin
+   creates a password account for that email (Admin → User Management).
 5. Marks the event `executed`.
+
+The pending list (`GET /webhooks/events/pending`) marks each `user.enroll`
+event with `userExists`, so an approver can tell an existing account from a
+new person.
 
 If a step fails, the event becomes `failed` with an `errorMessage`, and the
 approve call returns the error.

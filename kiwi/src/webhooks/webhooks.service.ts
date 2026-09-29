@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   NotFoundException,
   ForbiddenException,
@@ -209,6 +210,23 @@ export class WebhooksService {
 
     // Check if this is a user.enroll event that needs approval
     if (event.event === 'user.enroll') {
+      // Reject a bad payload now, so the caller (e.g. n8n) sees the error
+      // instead of the approver. Execution re-checks the class, since it can
+      // be deleted before approval.
+      const { email, classId } = event.data ?? {};
+      if (typeof email !== 'string' || !email || typeof classId !== 'string') {
+        throw new BadRequestException(
+          'user.enroll requires string email and classId in data',
+        );
+      }
+      const targetClass = await this.databaseService.class.findUnique({
+        where: { id: classId },
+        select: { id: true },
+      });
+      if (!targetClass) {
+        throw new NotFoundException(`Class ${classId} not found`);
+      }
+
       // Store the event for approval instead of processing immediately
       const webhookEvent = await this.webhookEventService.createWebhookEvent({
         webhookId,

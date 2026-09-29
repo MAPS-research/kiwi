@@ -15,6 +15,7 @@ import { EnrollmentService } from '../common/database/enrollment.service';
 import { ClassService } from '../common/database/class.service';
 import { WebhookEventService as DatabaseWebhookEventService } from '../common/database/webhook-event.service';
 import { WebhookEventAuditService } from '../common/database/webhook-event-audit.service';
+import { PendingEnrollmentService } from '../common/database/pending-enrollment.service';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { WebhookEventAuditService } from '../common/database/webhook-event-audit
     ClassService,
     DatabaseWebhookEventService,
     WebhookEventAuditService,
+    PendingEnrollmentService,
   ],
   exports: [WebhooksService],
 })

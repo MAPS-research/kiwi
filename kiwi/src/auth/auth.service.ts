@@ -176,7 +176,40 @@ export class AuthService {
       this.logger.debug('class enrollment failed', e);
     }
 
+    try {
+      await this.enrollPendingClasses(email);
+    } catch (e) {
+      this.logger.warn(`pending enrollments for ${email} failed`, e);
+    }
+
     return { id: user.id, email: user.email };
+  }
+
+  /**
+   * Enroll a user in the classes they were added to before they had an
+   * account (class rosters, approved `user.enroll` webhook events). Runs when
+   * an account first appears: Google sign-in and admin-created password
+   * accounts.
+   */
+  private async enrollPendingClasses(email: string): Promise<void> {
+    const pendingEnrollments =
+      await this.pendingEnrollmentService.pendingEnrollments({
+        where: {
+          userEmail: email,
+          status: 'not enrolled',
+        },
+      });
+    await Promise.all(
+      pendingEnrollments.map(async (pendingEnrollment) => {
+        await this.classService.enroll(pendingEnrollment.classId, [email]);
+        await this.pendingEnrollmentService.updatePendingEnrollment({
+          where: { id: pendingEnrollment.id },
+          data: {
+            status: 'enrolled',
+          },
+        });
+      }),
+    );
   }
 
   async resetPassword(email: string, password: string): Promise<void> {
@@ -242,29 +275,7 @@ export class AuthService {
         await Promise.all(promises);
       }
 
-      // Check pending enrollments
-      const pendingEnrollments =
-        await this.pendingEnrollmentService.pendingEnrollments({
-          where: {
-            userEmail: user.email,
-            status: 'not enrolled',
-          },
-        });
-      if (pendingEnrollments.length > 0) {
-        await Promise.all(
-          pendingEnrollments.map(async (pendingEnrollment) => {
-            await this.classService.enroll(pendingEnrollment.classId, [
-              user.email,
-            ]);
-            await this.pendingEnrollmentService.updatePendingEnrollment({
-              where: { id: pendingEnrollment.id },
-              data: {
-                status: 'enrolled',
-              },
-            });
-          }),
-        );
-      }
+      await this.enrollPendingClasses(user.email);
 
       // Check pending admin
       const pendingAdmin = await this.pendingAdminService.pendingAdmin({

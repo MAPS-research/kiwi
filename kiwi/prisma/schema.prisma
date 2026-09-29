@@ -777,7 +777,7 @@ model WebhookEvent {
 model WebhookEventAudit {
   id             String   @id @default(uuid())
   webhookEventId String
-  action         String // "approved", "rejected"
+  action         String // "approved", "rejected", "executed"
   performedBy    String // User ID who performed the action
   reason         String? // Optional reason for rejection
   metadata       Json? // Additional context (IP, user agent, etc.)

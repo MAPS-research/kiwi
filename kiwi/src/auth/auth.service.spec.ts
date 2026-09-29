@@ -42,7 +42,7 @@ describe('AuthService', () => {
       createUserSession: jest.fn(),
     };
     pendingEnrollmentService = {
-      pendingEnrollments: jest.fn(),
+      pendingEnrollments: jest.fn().mockResolvedValue([]),
       updatePendingEnrollment: jest.fn(),
     };
     const module: TestingModule = await Test.createTestingModule({
@@ -81,6 +81,27 @@ describe('AuthService', () => {
     expect(hash).toBe(args.passwordHash);
     expect(classService.enroll).toHaveBeenCalledWith('class1', ['a@b.c']);
     expect(whitelistService.create).toHaveBeenCalledWith({ email: 'a@b.c' });
+  });
+
+  it('enrolls a new password account in classes it was added to beforehand', async () => {
+    userService.user.mockResolvedValue(null);
+    userService.createUser.mockResolvedValue({ id: '1', email: 'a@b.c' });
+    pendingEnrollmentService.pendingEnrollments.mockResolvedValue([
+      { id: 'pe-1', classId: 'class2' },
+    ]);
+
+    await service.registerUser('a@b.c', 'secret', 'class1');
+
+    expect(pendingEnrollmentService.pendingEnrollments).toHaveBeenCalledWith({
+      where: { userEmail: 'a@b.c', status: 'not enrolled' },
+    });
+    expect(classService.enroll).toHaveBeenCalledWith('class2', ['a@b.c']);
+    expect(
+      pendingEnrollmentService.updatePendingEnrollment,
+    ).toHaveBeenCalledWith({
+      where: { id: 'pe-1' },
+      data: { status: 'enrolled' },
+    });
   });
 
   it('stores salt and hashed password', async () => {

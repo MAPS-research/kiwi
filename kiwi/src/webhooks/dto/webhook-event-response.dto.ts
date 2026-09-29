@@ -56,6 +56,15 @@ export class WebhookEventResponseDto {
   })
   errorMessage?: string;
 
+  @ApiPropertyOptional({
+    description:
+      'user.enroll only: whether the email already belongs to a Kiwi user. ' +
+      'If false, approving records a pending enrollment that completes on ' +
+      "the person's first sign-in.",
+    example: false,
+  })
+  userExists?: boolean;
+
   @ApiProperty({
     description: 'Timestamp when the event was created',
     example: '2024-01-01T00:00:00Z',
@@ -72,9 +81,18 @@ export class WebhookEventResponseDto {
 export class ApproveWebhookEventResponseDto {
   @ApiProperty({
     description: 'Success message',
-    example: 'Event approved and executed successfully',
+    example: 'Event approved; user enrolled in class',
   })
   message: string;
+
+  @ApiPropertyOptional({
+    description:
+      'user.enroll only: what approval did. pending_first_login means the ' +
+      'person has never signed in and will be enrolled when they do.',
+    enum: ['enrolled', 'already_enrolled', 'pending_first_login'],
+    example: 'enrolled',
+  })
+  outcome?: 'enrolled' | 'already_enrolled' | 'pending_first_login';
 }
 
 export class PendingWebhookEventsResponseDto {
