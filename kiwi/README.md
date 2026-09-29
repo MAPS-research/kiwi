@@ -18,7 +18,7 @@ Run everything from this directory.
 
 ```bash
 # Local services: PostgreSQL/pgvector (5432), Redis (6379),
-# Adminer (8081), MinIO (9000, console 9001), and the Xberg document
+# Adminer (8081), RustFS (9000, console 9001), and the Xberg document
 # parser (8002; see docs/parsers.md for Unstructured instead)
 docker compose up -d
 
@@ -35,6 +35,21 @@ provide is an LLM API key. Its comments explain the rest.
 
 To stop the services without losing data, use `docker compose stop` (not
 `down -v`, which deletes the volumes).
+
+### Local object storage
+
+`docker compose up -d` starts RustFS, and the one-shot `oss-init` service
+creates the `kiwi` bucket and gives it a CORS policy: the UI loads PDFs straight
+from signed URLs on another origin, and RustFS, unlike MinIO, sends no CORS
+headers without one. The console is at http://localhost:9001 (`kiwi` /
+`kiwikiwi`), and objects live in the `rustfs-data` volume. The `OSS_*` values
+in `.env.example` match this setup; for AWS S3, set `OSS_VENDOR="s3"` and your
+bucket, region and credentials.
+
+Coming from MinIO: the old `oss-data` volume is left untouched, and
+`OSS_VENDOR="minio"` keeps working. See
+[docs/object-storage.md](../docs/object-storage.md) for copying your files over
+and for moving a deployment.
 
 ## Signing in
 

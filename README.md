@@ -25,7 +25,7 @@ Requires Docker and Node.js 24 (`kiwi/.nvmrc` and `kiwi-ui/.nvmrc` both pin
 24.21.0).
 
 ```bash
-# 1. Infrastructure: PostgreSQL/pgvector, Redis, MinIO, Adminer, and the
+# 1. Infrastructure: PostgreSQL/pgvector, Redis, RustFS, Adminer, and the
 #    Xberg document parser (see docs/parsers.md for Unstructured instead)
 cd kiwi
 cp .env.example .env          # then set LLM_API_KEY (Google sign-in is optional)

@@ -132,9 +132,12 @@ Leave it empty to turn the consent step off.
       session cookies are marked secure and the reverse proxy is trusted.
 - [ ] Set `FRONTEND_URL` to the exact UI origin(s), and `SERVER_URL` to the
       backend's public URL.
-- [ ] Replace the local database, Redis and MinIO credentials from
+- [ ] Replace the local database, Redis and RustFS credentials from
       `.env.example`; set `ENCRYPTION_KEY`.
 - [ ] Serve both the UI and the backend over HTTPS.
+- [ ] Use S3 or a self-hosted store whose `OSS_ENDPOINT` users' browsers can
+      reach, with the bucket's CORS policy set
+      ([object-storage.md](object-storage.md)).
 - [ ] Configure SMTP and set `EMAIL_TEST_MODE=false` if you want email.
 - [ ] Run a document parser and point Kiwi at it: Xberg (`PARSER=xberg`,
       `XBERG_API_URL`) or Unstructured (`PARSER=unstructured`,

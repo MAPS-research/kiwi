@@ -7,9 +7,12 @@ in this repo; see `../docs/` for deeper topics.
 
 - Use the Node version in `.nvmrc` (v24.21.0), e.g. `nvm use` or a version
   manager of your choice, before running backend commands.
-- Infra (Postgres/pgvector, Redis, MinIO) runs via Docker: `npm run infra`
-  (or `infra:detached`). Do **not** remove containers/volumes — stop, don't
-  delete; local development data lives there.
+- Infra (Postgres/pgvector, Redis, RustFS, Xberg) runs via Docker:
+  `npm run infra` (or `infra:detached`). Do **not** remove containers/volumes —
+  stop, don't delete; local development data lives there.
+- Object storage (RustFS/MinIO/S3, CORS, migrating a deployment): see
+  `../docs/object-storage.md`. Test storage changes with a browser-style request
+  (`Origin` header, `Range`) — curl and Node ignore CORS.
 - Dev server: `npm run start:dev` (watch) on :3000. If you start one for
   verification, shut it down afterwards so the port is free.
 - Typecheck: `npx tsc --noEmit`. Build gate is `nest build`, not bare

@@ -22,20 +22,24 @@ export class StorageService {
     private configService: ConfigService,
     private redisService: RedisService,
   ) {
+    // Self-hosted S3-compatible stores need the explicit endpoint and
+    // path-style URLs. RustFS is the local default; `minio` stays accepted
+    // because existing deployments' .env files still say so.
+    const useLocalStorage = ['rustfs', 'minio'].includes(
+      this.configService.get<string>('OSS_VENDOR') ?? '',
+    );
     this.s3Client = new S3Client({
       region: this.configService.get<string>('OSS_REGION')!,
-      endpoint:
-        this.configService.get<string>('OSS_VENDOR') === 'minio'
-          ? this.configService.get<string>('OSS_ENDPOINT')!
-          : undefined,
+      endpoint: useLocalStorage
+        ? this.configService.get<string>('OSS_ENDPOINT')!
+        : undefined,
       credentials: {
         accessKeyId: this.configService.get<string>('OSS_ACCESS_KEY_ID')!,
         secretAccessKey: this.configService.get<string>(
           'OSS_ACCESS_KEY_SECRET',
         )!,
       },
-      forcePathStyle:
-        this.configService.get<string>('OSS_VENDOR') === 'minio' ? true : false,
+      forcePathStyle: useLocalStorage,
     });
 
     this.BUCKET_NAME = this.configService.get<string>('OSS_BUCKET')!;

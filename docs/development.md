@@ -36,7 +36,8 @@ on environment variables are in [`kiwi/README.md`](../kiwi/README.md) and
 `kiwi/.env.example`.
 
 `kiwi/compose.yml` starts PostgreSQL, Redis, Adminer (http://localhost:8081),
-MinIO (API on 9000, console on 9001) and the Xberg document parser (8002). To
+RustFS object storage (API on 9000, console on 9001; see
+[object-storage.md](object-storage.md)) and the Xberg document parser (8002). To
 parse with Unstructured instead, see [parsers.md](parsers.md).
 
 ## Generating a module
@@ -109,7 +110,7 @@ Nothing else is captured. That includes sessions, OAuth clients, interactions,
 conversations, discussions and upvotes, server actions, competitions,
 experiments, material personalization, email audit logs, API tokens and
 webhooks, MCP servers and class tool settings, Kiwi Apps and widgets, analytics
-topics, `EmbeddingModel` and `EmbeddingVector`. Files stored in MinIO are not
+topics, `EmbeddingModel` and `EmbeddingVector`. Files in object storage are not
 captured either.
 
 After restoring a snapshot, rebuild the vectors retrieval uses:

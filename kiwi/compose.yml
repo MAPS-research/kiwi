@@ -80,18 +80,46 @@ services:
 
 
   oss: # Dev only, use S3 in production
-    image: minio/minio:RELEASE.2024-12-18T13-15-44Z
+    image: rustfs/rustfs:1.0.0
     restart: always
     environment:
-      MINIO_ACCESS_KEY: kiwi
-      MINIO_SECRET_KEY: kiwikiwi
-    entrypoint: sh
-    command: -c 'mkdir -p /data/kiwi && /usr/bin/minio server /data --console-address ":9001"'
+      RUSTFS_ACCESS_KEY: kiwi
+      RUSTFS_SECRET_KEY: kiwikiwi
+      RUSTFS_VOLUMES: /data
+      RUSTFS_CONSOLE_ENABLE: 'true'
     volumes:
-      - oss-data:/data
+      - rustfs-data:/data
     ports:
       - 127.0.0.1:9000:9000 # Endpoint
       - 127.0.0.1:9001:9001 # Console
+    healthcheck:
+      test: ['CMD', 'curl', '-fsS', 'http://localhost:9000/health/ready']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  oss-init:
+    image: amazon/aws-cli:2.34.0
+    restart: 'no'
+    depends_on:
+      oss:
+        condition: service_healthy
+    environment:
+      AWS_ACCESS_KEY_ID: kiwi
+      AWS_SECRET_ACCESS_KEY: kiwikiwi
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_EC2_METADATA_DISABLED: 'true'
+    entrypoint: /bin/sh
+    command:
+      - -ec
+      - |
+        aws --endpoint-url http://oss:9000 s3api head-bucket --bucket kiwi 2>/dev/null ||
+          aws --endpoint-url http://oss:9000 s3api create-bucket --bucket kiwi
+        # The frontend loads files from signed URLs on another origin; RustFS
+        # (unlike MinIO) sends no CORS headers without a bucket policy.
+        aws --endpoint-url http://oss:9000 s3api put-bucket-cors --bucket kiwi \
+          --cors-configuration '{"CORSRules":[{"AllowedOrigins":["*"],"AllowedMethods":["GET","HEAD"],"AllowedHeaders":["*"],"ExposeHeaders":["Content-Range","Accept-Ranges","Content-Length","Content-Type","Content-Disposition","ETag","Last-Modified"],"MaxAgeSeconds":3600}]}'
 
   # Unstructured, the alternative document parser (a large image).
   # unstructured:
@@ -107,7 +135,7 @@ volumes:
     driver: local
   redis-data:
     driver: local
-  oss-data:
+  rustfs-data:
     driver: local
   xberg-cache:
     driver: local
