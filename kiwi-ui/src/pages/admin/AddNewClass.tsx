@@ -104,12 +104,9 @@ export const AddNewClassDialog: React.FC<AddNewClassDialogProps> = ({
     setError(null);
 
     try {
-      const response = await apiClient.documentControllerUploadNoMaterialId({
-        file,
-        classMaterialId: "",
-      });
+      const response = await apiClient.classControllerUploadImage({ file });
       setSnippetImageUrl(URL.createObjectURL(file));
-      setSnippetImageServerKey(response.document.id);
+      setSnippetImageServerKey(response.key);
     } catch (uploadError) {
       console.error("Error uploading class image", uploadError);
       setError(

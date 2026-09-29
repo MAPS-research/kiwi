@@ -8,16 +8,26 @@ import {
   Logger,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
   BadRequestException,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
   ApiBody,
   ApiConflictResponse,
+  ApiConsumes,
   ApiResponse,
 } from '@nestjs/swagger';
-import { AdminGuard, InstructorClassGuard, JwtAuthGuard, ProfGuard } from 'src/auth/auth.guard';
+import {
+  AdminGuard,
+  InstructorClassGuard,
+  InstructorRoleGuard,
+  JwtAuthGuard,
+  ProfGuard,
+} from 'src/auth/auth.guard';
 import {
   DocumentChatResponse,
   DocumentIdsChatResponse,
@@ -50,6 +60,21 @@ import {
 import { UserService } from '../common/database/user.service';
 import { StorageService } from '../common/storage/storage.service';
 import { ClassMetadata } from './interfaces/class-metadata.interface';
+import {
+  ClassImageUploadDto,
+  ClassImageUploadResponse,
+} from './dto/class-image-upload.dto';
+
+/** What a course card can be. SVG stays out: it is a script container. */
+const CLASS_IMAGE_MIME_TYPES = [
+  'image/png',
+  'image/jpeg',
+  'image/webp',
+  'image/gif',
+  'image/avif',
+];
+
+const CLASS_IMAGE_MAX_BYTES = 5 * 1024 * 1024;
 
 @Controller('class')
 export class ClassController {
@@ -102,6 +127,57 @@ export class ClassController {
     );
 
     return await this.classService.add(classDetails, session.userId);
+  }
+
+  /**
+   * Upload the course card image and get back the key to store on the class.
+   *
+   * This used to be `POST /document/uploadNoMaterialId`, which lived on the
+   * document routes, wrote an object no Document row ever referenced, and was
+   * behind JwtAuthGuard alone — any student could push arbitrary files of
+   * arbitrary size into the bucket. It is a class concern, so it lives here,
+   * takes images only, and is gated on being able to create or edit a class.
+   *
+   * The image is picked before the class exists, so there is no classId to
+   * scope this to; InstructorRoleGuard (admin, professor, or instructor) is
+   * the union of what `add` and `update-metadata` require.
+   */
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard, InstructorRoleGuard)
+  @ApiBearerAuth('bearerAuth')
+  @Post('image')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: { fileSize: CLASS_IMAGE_MAX_BYTES },
+      fileFilter: (_request, file, callback) => {
+        if (!CLASS_IMAGE_MIME_TYPES.includes(file.mimetype)) {
+          return callback(
+            new BadRequestException(
+              `${file.mimetype} is not an image this accepts. Use one of: ` +
+                CLASS_IMAGE_MIME_TYPES.join(', '),
+            ),
+            false,
+          );
+        }
+        callback(null, true);
+      },
+    }),
+  )
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    type: ClassImageUploadDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful response',
+    type: ClassImageUploadResponse,
+  })
+  async uploadImage(@UploadedFile() file: Express.Multer.File) {
+    if (!file) {
+      throw new BadRequestException('No file was uploaded');
+    }
+
+    return await this.classService.uploadClassImage(file);
   }
 
   @HttpCode(HttpStatus.OK)

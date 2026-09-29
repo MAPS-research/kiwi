@@ -215,30 +215,6 @@ export class DocumentService {
     };
   }
 
-  async uploadDocumentNoMaterialId(file: Express.Multer.File) {
-    // this.logger.debug(file);
-    this.logger.debug(
-      'Uploaded document with name (no material id)',
-      file.originalname,
-    );
-
-    // Create a uuid for the document
-    const documentId = uuid();
-
-    const { key: documentKey } = await this.storageService.uploadFile(
-      file,
-      documentId,
-    );
-
-    return {
-      message: 'Document uploaded successfully',
-      document: {
-        id: documentKey,
-        fileName: file.originalname,
-      },
-    };
-  }
-
   /**
    * Upload into a material and start processing: one request instead of the
    * six round trips the browser used to make.

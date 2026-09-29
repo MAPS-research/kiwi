@@ -112,41 +112,6 @@ export class DocumentController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard, InstructorRoleGuard)
-  @ApiBearerAuth('bearerAuth')
-  @Post('uploadNoMaterialId')
-  @UseInterceptors(FileInterceptor('file'))
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    type: DocumentUploadDto,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Successful response',
-    type: DocumentUploadResponse,
-  })
-  async uploadNoMaterialId(
-    @UploadedFile() file: Express.Multer.File,
-    // @Body() documentUploadDto: DocumentUploadDto,
-  ) {
-    return await this.documentService.uploadDocumentNoMaterialId(file);
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('bearerAuth')
-  @Get('/material/id')
-  @ApiResponse({
-    status: 200,
-    description: 'Successful response',
-    type: DocumentListResponse,
-  })
-  async getListByMaterialId(@Query('materialID') materialID: string) {
-    throw new Error('Do not use this.');
-    // return await this.documentService.getDocumentsByMaterialId(materialID);
-  }
-
-  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard, MaterialManageGuard)
   @ApiBearerAuth('bearerAuth')
   @Post('chunk')

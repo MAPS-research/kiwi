@@ -84,6 +84,7 @@ models/ClassEmailRecipients.ts
 models/ClassEnrollDeleteRequest.ts
 models/ClassEnrollRequest.ts
 models/ClassEnrollResponse.ts
+models/ClassImageUploadResponse.ts
 models/ClassInfoListResponse.ts
 models/ClassInfoResponse.ts
 models/ClassListResponse.ts

@@ -10,7 +10,7 @@ vi.mock("../../utils/api.ts", () => ({
   default: {
     classControllerGetByIdComplete: vi.fn(),
     classControllerUpdateMetadata: vi.fn(),
-    documentControllerUploadNoMaterialId: vi.fn(),
+    classControllerUploadImage: vi.fn(),
   },
 }));
 

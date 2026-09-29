@@ -12,7 +12,9 @@ import { MaterialAccessService } from './material/material-access.service';
 import { DocumentService } from 'src/document/document.service';
 import { EngineChoice } from 'src/common/llm/interfaces/engine-config';
 import { PendingEnrollmentService } from 'src/common/database/pending-enrollment.service';
+import { StorageService } from 'src/common/storage/storage.service';
 import { ClassMetadata } from './interfaces/class-metadata.interface';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class ClassService {
@@ -25,7 +27,25 @@ export class ClassService {
     private materialService: MaterialService,
     private documentService: DocumentService,
     private materialAccessService: MaterialAccessService,
+    private storageService: StorageService,
   ) {}
+
+  /**
+   * Store a course card image and hand back its storage key.
+   *
+   * The key is what `imageSnippetUrl` holds on the class metadata; every read
+   * path swaps it for a signed URL. The image is chosen before the class
+   * exists — it is a field on the create form — so this cannot be scoped to a
+   * classId the way the material routes are, and the route is gated on "may
+   * create or edit a class" instead.
+   */
+  async uploadClassImage(file: Express.Multer.File) {
+    const { key } = await this.storageService.uploadFile(file, uuid());
+
+    this.logger.debug(`Stored class image ${file.originalname} as ${key}`);
+
+    return { key, fileName: file.originalname };
+  }
 
   async add(classDetails: ClassMetadata, professorId: string) {
     const newClass = await this.databaseClassService.createClass({

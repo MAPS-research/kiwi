@@ -111,6 +111,67 @@ describe("AddNewClassDialog", () => {
     });
   });
 
+  it("uploads the course image and submits the key it gets back", async () => {
+    // The image upload used to live on a document route that was deleted as
+    // unused, which left no way to set a course image at all. Nothing covered
+    // it, so nothing caught that.
+    const createObjectURL = vi.fn().mockReturnValue("blob:preview");
+    Object.defineProperty(URL, "createObjectURL", {
+      value: createObjectURL,
+      writable: true,
+      configurable: true,
+    });
+    Object.defineProperty(URL, "revokeObjectURL", {
+      value: vi.fn(),
+      writable: true,
+      configurable: true,
+    });
+    mockApiClient.classControllerUploadImage.mockResolvedValue({
+      key: "stored-image-key",
+      fileName: "cover.png",
+    });
+
+    renderDialog();
+
+    const file = new File(["image bytes"], "cover.png", { type: "image/png" });
+    const input = screen
+      .getByRole("dialog", { name: "Create New Class" })
+      .querySelector('input[type="file"]') as HTMLInputElement;
+    fireEvent.change(input, { target: { files: [file] } });
+
+    await waitFor(() => {
+      expect(mockApiClient.classControllerUploadImage).toHaveBeenCalledWith({
+        file,
+      });
+    });
+
+    fireEvent.change(screen.getByLabelText(/class name/i), {
+      target: { value: "Biology 101" },
+    });
+    fireEvent.change(screen.getByLabelText(/professor name/i), {
+      target: { value: "Dr. Green" },
+    });
+    fireEvent.change(screen.getByLabelText(/professor email/i), {
+      target: { value: "green@example.edu" },
+    });
+    fireEvent.change(screen.getByLabelText(/description/i), {
+      target: { value: "Introductory biology." },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Create New Class" }));
+
+    await waitFor(() => {
+      expect(mockApiClient.classControllerAdd).toHaveBeenCalledWith(
+        expect.objectContaining({
+          classAddRequest: {
+            classDetails: expect.objectContaining({
+              imageSnippetUrl: "stored-image-key",
+            }),
+          },
+        }),
+      );
+    });
+  });
+
   it("keeps the dialog open and shows an inline error when creation fails", async () => {
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     mockApiClient.classControllerAdd.mockRejectedValueOnce(new Error("Request failed"));

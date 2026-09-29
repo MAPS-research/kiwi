@@ -53,6 +53,7 @@ import type {
   ClassEnrollDeleteRequest,
   ClassEnrollRequest,
   ClassEnrollResponse,
+  ClassImageUploadResponse,
   ClassInfoListResponse,
   ClassInfoResponse,
   ClassListResponse,
@@ -243,6 +244,8 @@ import {
     ClassEnrollRequestToJSON,
     ClassEnrollResponseFromJSON,
     ClassEnrollResponseToJSON,
+    ClassImageUploadResponseFromJSON,
+    ClassImageUploadResponseToJSON,
     ClassInfoListResponseFromJSON,
     ClassInfoListResponseToJSON,
     ClassInfoResponseFromJSON,
@@ -632,6 +635,10 @@ export interface ClassControllerSetSelectedClassRequest {
 
 export interface ClassControllerUpdateMetadataRequest {
     classUpdateMetadataRequest: ClassUpdateMetadataRequest;
+}
+
+export interface ClassControllerUploadImageRequest {
+    file: Blob;
 }
 
 export interface CompetitionControllerCreateCompetitionRequest {
@@ -2812,6 +2819,60 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async classControllerUpdateMetadata(requestParameters: ClassControllerUpdateMetadataRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ClassUpdateMetadataResponse> {
         const response = await this.classControllerUpdateMetadataRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async classControllerUploadImageRaw(requestParameters: ClassControllerUploadImageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ClassImageUploadResponse>> {
+        if (requestParameters.file === null || requestParameters.file === undefined) {
+            throw new runtime.RequiredError('file','Required parameter requestParameters.file was null or undefined when calling classControllerUploadImage.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("bearerAuth", []);
+        }
+
+        const consumes: runtime.Consume[] = [
+            { contentType: 'multipart/form-data' },
+        ];
+        // @ts-ignore: canConsumeForm may be unused
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        // use FormData to transmit files using content-type "multipart/form-data"
+        useForm = canConsumeForm;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
+        }
+
+        if (requestParameters.file !== undefined) {
+            formParams.append('file', requestParameters.file as any);
+        }
+
+        const response = await this.request({
+            path: `/class/image`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: formParams,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ClassImageUploadResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async classControllerUploadImage(requestParameters: ClassControllerUploadImageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ClassImageUploadResponse> {
+        const response = await this.classControllerUploadImageRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

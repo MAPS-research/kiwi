@@ -112,14 +112,11 @@ export const ClassEdit: React.FC = () => {
     const file = event.target.files?.[0];
     if (file) {
       try {
-        const res = await apiClient.documentControllerUploadNoMaterialId({
-          file: file,
-          classMaterialId: "",
-        });
+        const res = await apiClient.classControllerUploadImage({ file });
         if (res) {
           const imageUrl = URL.createObjectURL(file);
           setSnippetImageUrl(imageUrl);
-          setSnippetImageServerKey(res.document.id);
+          setSnippetImageServerKey(res.key);
         }
       } catch (error) {
         console.error("Error uploading document", error);

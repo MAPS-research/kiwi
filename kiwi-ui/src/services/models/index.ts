@@ -71,6 +71,7 @@ export * from './ClassEmailRecipients.ts';
 export * from './ClassEnrollDeleteRequest.ts';
 export * from './ClassEnrollRequest.ts';
 export * from './ClassEnrollResponse.ts';
+export * from './ClassImageUploadResponse.ts';
 export * from './ClassInfoListResponse.ts';
 export * from './ClassInfoResponse.ts';
 export * from './ClassListResponse.ts';

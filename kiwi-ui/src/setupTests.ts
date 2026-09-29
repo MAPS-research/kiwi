@@ -207,9 +207,9 @@ vi.mock("./utils/api.ts", () => {
       .mockResolvedValue({ message: "completed successfully" }),
     documentControllerDescribe: vi.fn().mockResolvedValue({}),
     documentControllerEmbed: vi.fn().mockResolvedValue({}),
-    documentControllerUploadNoMaterialId: vi.fn().mockResolvedValue({
-      message: "Upload successful",
-      document: { id: "test-doc-123", fileName: "test.pdf" },
+    classControllerUploadImage: vi.fn().mockResolvedValue({
+      key: "test-image-key",
+      fileName: "test.png",
     }),
 
     // Class endpoints with complete data
