@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { MaterialType } from './material-enum';
 
 export class MaterialEditRequest {
@@ -6,8 +6,10 @@ export class MaterialEditRequest {
   materialId: string;
   @ApiProperty({ enum: MaterialType, name: 'materialType' })
   materialType: MaterialType;
-  @ApiProperty()
+  @ApiPropertyOptional({ type: Date })
   availableDate?: Date;
+  @ApiPropertyOptional()
+  title?: string;
 }
 
 export class MaterialEditResponse {

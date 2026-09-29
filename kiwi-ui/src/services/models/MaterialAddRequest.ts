@@ -37,6 +37,12 @@ export interface MaterialAddRequest {
      * @memberof MaterialAddRequest
      */
     availableDate: Date;
+    /**
+     * What to call this material. Empty falls back to the student copy's file name, which is what the UI used to show for every material.
+     * @type {string}
+     * @memberof MaterialAddRequest
+     */
+    title?: string;
 }
 
 
@@ -75,6 +81,7 @@ export function MaterialAddRequestFromJSONTyped(json: any, ignoreDiscriminator: 
         'classId': json['classId'],
         'materialType': json['materialType'],
         'availableDate': (new Date(json['availableDate'])),
+        'title': !exists(json, 'title') ? undefined : json['title'],
     };
 }
 
@@ -90,6 +97,7 @@ export function MaterialAddRequestToJSON(value?: MaterialAddRequest | null): any
         'classId': value.classId,
         'materialType': value.materialType,
         'availableDate': (value.availableDate.toISOString()),
+        'title': value.title,
     };
 }
 

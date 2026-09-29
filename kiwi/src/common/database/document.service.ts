@@ -59,16 +59,24 @@ export class DocumentService {
     });
   }
 
+  /**
+   * Remove a document and everything that hangs off it.
+   *
+   * Comments and summaries have no cascade, so deleting a document that had
+   * either used to fail on a foreign key — the delete simply did not work for
+   * annotated documents. Embeddings cascade to EmbeddingVector on their own.
+   *
+   * The stored file is not this method's business; DocumentService removes it
+   * after the row is gone, so a storage failure cannot leave a row pointing at
+   * a deleted object.
+   */
   async deleteDocument(documentId: string) {
-    // First delete all embeddings linked to the document
-    await this.database.embedding.deleteMany({
-      where: { documentId },
-    });
-
-    // Then delete the document itself
-    await this.database.document.delete({
-      where: { id: documentId },
-    });
+    await this.database.$transaction([
+      this.database.documentComment.deleteMany({ where: { documentId } }),
+      this.database.documentSummary.deleteMany({ where: { documentId } }),
+      this.database.embedding.deleteMany({ where: { documentId } }),
+      this.database.document.delete({ where: { id: documentId } }),
+    ]);
   }
 
   async updateDocument(params: {

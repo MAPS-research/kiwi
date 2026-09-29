@@ -57,6 +57,12 @@ export interface DocumentCommentDto {
      */
     isVisibleToStudents: boolean;
     /**
+     * Who the note is for.
+     * @type {string}
+     * @memberof DocumentCommentDto
+     */
+    audience: DocumentCommentDtoAudienceEnum;
+    /**
      * Selection region for the comment highlight.
      * @type {object}
      * @memberof DocumentCommentDto
@@ -94,6 +100,18 @@ export interface DocumentCommentDto {
     updatedAt: Date;
 }
 
+
+/**
+ * @export
+ */
+export const DocumentCommentDtoAudienceEnum = {
+    Student: 'STUDENT',
+    Tutor: 'TUTOR',
+    Staff: 'STAFF'
+} as const;
+export type DocumentCommentDtoAudienceEnum = typeof DocumentCommentDtoAudienceEnum[keyof typeof DocumentCommentDtoAudienceEnum];
+
+
 /**
  * Check if a given object implements the DocumentCommentDto interface.
  */
@@ -104,6 +122,7 @@ export function instanceOfDocumentCommentDto(value: object): boolean {
     isInstance = isInstance && "pageNumber" in value;
     isInstance = isInstance && "text" in value;
     isInstance = isInstance && "isVisibleToStudents" in value;
+    isInstance = isInstance && "audience" in value;
     isInstance = isInstance && "authorId" in value;
     isInstance = isInstance && "author" in value;
     isInstance = isInstance && "createdAt" in value;
@@ -127,6 +146,7 @@ export function DocumentCommentDtoFromJSONTyped(json: any, ignoreDiscriminator: 
         'pageNumber': json['pageNumber'],
         'text': json['text'],
         'isVisibleToStudents': json['isVisibleToStudents'],
+        'audience': json['audience'],
         'selectionRegion': !exists(json, 'selectionRegion') ? undefined : json['selectionRegion'],
         'pinPosition': !exists(json, 'pinPosition') ? undefined : json['pinPosition'],
         'authorId': json['authorId'],
@@ -150,6 +170,7 @@ export function DocumentCommentDtoToJSON(value?: DocumentCommentDto | null): any
         'pageNumber': value.pageNumber,
         'text': value.text,
         'isVisibleToStudents': value.isVisibleToStudents,
+        'audience': value.audience,
         'selectionRegion': value.selectionRegion,
         'pinPosition': value.pinPosition,
         'authorId': value.authorId,

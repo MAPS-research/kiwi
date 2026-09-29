@@ -5,6 +5,7 @@ import { ClassMaterialService } from 'src/common/database/class-material.service
 import { DocumentService as DatabaseDocumentService } from 'src/common/database/document.service';
 import { DatabaseService } from 'src/common/database/database.service';
 import { StorageService } from 'src/common/storage/storage.service';
+import { MaterialAccessService } from './material-access.service';
 
 // Other ctor deps required by MaterialService (but not used in these tests)
 import { ClassService as DatabaseClassService } from 'src/common/database/class.service';
@@ -28,6 +29,10 @@ describe('MaterialService.listDocumentsByMaterialId', () => {
     generateSignedUrl: jest.fn(),
   };
 
+  const materialAccessService = {
+    getStudentDocument: jest.fn(),
+  };
+
   // Unused by this method, but required by constructor:
   const databaseClassService = {};
   const userService = {};
@@ -49,6 +54,7 @@ describe('MaterialService.listDocumentsByMaterialId', () => {
         { provide: EnrollmentService, useValue: enrollmentService },
         { provide: DocumentService, useValue: documentService },
         { provide: DatabaseService, useValue: db },
+        { provide: MaterialAccessService, useValue: materialAccessService },
       ],
     }).compile();
 

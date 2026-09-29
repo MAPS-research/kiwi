@@ -57,6 +57,12 @@ export interface DocumentSummaryDto {
      */
     isVisibleToStudents: boolean;
     /**
+     * Who the note is for.
+     * @type {string}
+     * @memberof DocumentSummaryDto
+     */
+    audience: DocumentSummaryDtoAudienceEnum;
+    /**
      * 
      * @type {string}
      * @memberof DocumentSummaryDto
@@ -82,6 +88,18 @@ export interface DocumentSummaryDto {
     updatedAt: Date;
 }
 
+
+/**
+ * @export
+ */
+export const DocumentSummaryDtoAudienceEnum = {
+    Student: 'STUDENT',
+    Tutor: 'TUTOR',
+    Staff: 'STAFF'
+} as const;
+export type DocumentSummaryDtoAudienceEnum = typeof DocumentSummaryDtoAudienceEnum[keyof typeof DocumentSummaryDtoAudienceEnum];
+
+
 /**
  * Check if a given object implements the DocumentSummaryDto interface.
  */
@@ -92,6 +110,7 @@ export function instanceOfDocumentSummaryDto(value: object): boolean {
     isInstance = isInstance && "summaryNumber" in value;
     isInstance = isInstance && "content" in value;
     isInstance = isInstance && "isVisibleToStudents" in value;
+    isInstance = isInstance && "audience" in value;
     isInstance = isInstance && "authorId" in value;
     isInstance = isInstance && "author" in value;
     isInstance = isInstance && "createdAt" in value;
@@ -115,6 +134,7 @@ export function DocumentSummaryDtoFromJSONTyped(json: any, ignoreDiscriminator: 
         'summaryNumber': json['summaryNumber'],
         'content': json['content'],
         'isVisibleToStudents': json['isVisibleToStudents'],
+        'audience': json['audience'],
         'authorId': json['authorId'],
         'author': DocumentSummaryAuthorDtoFromJSON(json['author']),
         'createdAt': (new Date(json['createdAt'])),
@@ -136,6 +156,7 @@ export function DocumentSummaryDtoToJSON(value?: DocumentSummaryDto | null): any
         'summaryNumber': value.summaryNumber,
         'content': value.content,
         'isVisibleToStudents': value.isVisibleToStudents,
+        'audience': value.audience,
         'authorId': value.authorId,
         'author': DocumentSummaryAuthorDtoToJSON(value.author),
         'createdAt': (value.createdAt.toISOString()),

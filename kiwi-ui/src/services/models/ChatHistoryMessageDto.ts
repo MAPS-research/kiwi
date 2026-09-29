@@ -56,6 +56,12 @@ export interface ChatHistoryMessageDto {
      */
     interactionType: string;
     /**
+     * True for an intermediate step of a multi-step agent turn (narration emitted before a tool ran), as opposed to the final answer. Clients should collapse these rather than rendering them as separate replies.
+     * @type {boolean}
+     * @memberof ChatHistoryMessageDto
+     */
+    isIntermediate?: boolean;
+    /**
      * Additional metadata
      * @type {object}
      * @memberof ChatHistoryMessageDto
@@ -105,6 +111,7 @@ export function ChatHistoryMessageDtoFromJSONTyped(json: any, ignoreDiscriminato
         'timestamp': json['timestamp'],
         'conversationId': json['conversationId'],
         'interactionType': json['interactionType'],
+        'isIntermediate': !exists(json, 'isIntermediate') ? undefined : json['isIntermediate'],
         'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
     };
 }
@@ -124,6 +131,7 @@ export function ChatHistoryMessageDtoToJSON(value?: ChatHistoryMessageDto | null
         'timestamp': value.timestamp,
         'conversationId': value.conversationId,
         'interactionType': value.interactionType,
+        'isIntermediate': value.isIntermediate,
         'metadata': value.metadata,
     };
 }

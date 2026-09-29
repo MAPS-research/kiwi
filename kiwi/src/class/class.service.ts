@@ -8,6 +8,7 @@ import { ClassService as DatabaseClassService } from 'src/common/database/class.
 import { EnrollmentService } from 'src/common/database/enrollment.service';
 import { UserService } from 'src/common/database/user.service';
 import { MaterialService } from './material/material.service';
+import { MaterialAccessService } from './material/material-access.service';
 import { DocumentService } from 'src/document/document.service';
 import { EngineChoice } from 'src/common/llm/interfaces/engine-config';
 import { PendingEnrollmentService } from 'src/common/database/pending-enrollment.service';
@@ -23,6 +24,7 @@ export class ClassService {
     private pendingEnrollmentService: PendingEnrollmentService,
     private materialService: MaterialService,
     private documentService: DocumentService,
+    private materialAccessService: MaterialAccessService,
   ) {}
 
   async add(classDetails: ClassMetadata, professorId: string) {
@@ -393,10 +395,12 @@ export class ClassService {
     if (documentId) {
       queryIds = [documentId];
     } else {
-      const classDocuments = await this.materialService.listDocuments(classId);
-
-      const classDocumentIds = classDocuments.map((doc) => doc.id);
-      queryIds = classDocumentIds;
+      // Published, released, retrieval-enabled and actually embedded. The old
+      // call pulled every document of every material, including ones whose
+      // pipeline never finished (nothing to match) and ones an instructor had
+      // deliberately excluded.
+      queryIds =
+        await this.materialAccessService.listRetrievableDocumentIds(classId);
     }
 
     const { results: queryResults } = await this.documentService.queryDocument(
@@ -416,25 +420,19 @@ export class ClassService {
     // 1) Get materials for this class (your existing method already time-gates/unavailable)
     const { materials } = await this.materialService.list(classId);
 
-    // 2) For each material, get its documents (these already include signed `file` + flags)
+    // 2) One document per material: the student copy, or nothing.
     const res = await Promise.all(
       materials.map(async (m) => {
-        const { documents } =
-          await this.materialService.listDocumentsByMaterialId(m.id);
-        if (!documents || documents.length === 0) return null;
-
-        // Prefer the professor-chosen student doc; fallback to the latest (index 0)
-        const chosen =
-          documents.find((d) => d.isStudent === true) ?? documents[0];
+        const chosen = await this.materialService.getStudentDocumentView(m.id);
+        if (!chosen) return null;
 
         return {
           id: chosen.id,
           fileName: chosen.fileName,
           materialType: m.materialType,
           file: chosen.file,
-          // NEW flags
-          isStudent: !!chosen.isStudent,
-          isLlm: !!chosen.isLlm,
+          isStudent: true,
+          isLlm: chosen.isLlm,
         };
       }),
     );
@@ -455,24 +453,18 @@ export class ClassService {
     // 1) Get materials for this class
     const { materials } = await this.materialService.list(classId);
 
-    // 2) For each material, get its documents (no need to generate signed url for ids endpoint)
+    // 2) One document per material: the student copy, or nothing.
     const res = await Promise.all(
       materials.map(async (m) => {
-        const { documents } =
-          await this.materialService.listDocumentsByMaterialId(m.id);
-        if (!documents || documents.length === 0) return null;
-
-        // Prefer the professor-chosen student doc; fallback to the latest
-        const chosen =
-          documents.find((d) => d.isStudent === true) ?? documents[0];
+        const chosen = await this.materialAccessService.getStudentDocument(m.id);
+        if (!chosen) return null;
 
         return {
           id: chosen.id,
           fileName: chosen.fileName,
           materialType: m.materialType,
-          // NEW flags
-          isStudent: !!chosen.isStudent,
-          isLlm: !!chosen.isLlm,
+          isStudent: true,
+          isLlm: chosen.isLlm,
         };
       }),
     );

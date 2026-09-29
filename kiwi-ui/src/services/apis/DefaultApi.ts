@@ -69,6 +69,8 @@ import type {
   CompetitionReplyDto,
   CompetitorEnrollDto,
   CompetitorInfoDto,
+  ContextPreviewResponse,
+  ConversationLlmUsageResponse,
   CreateDocumentCommentDto,
   CreateDocumentSummaryDto,
   CreateEmbeddingDto,
@@ -82,6 +84,7 @@ import type {
   DocumentDeleteRequestDto,
   DocumentIdsChatResponse,
   DocumentListResponse,
+  DocumentProcessingStatusResponse,
   DocumentSummaryListResponse,
   DocumentSummaryResponse,
   DocumentUploadResponse,
@@ -105,6 +108,7 @@ import type {
   KeywordStatusResponse,
   ListInstructorsForClassResponse,
   ListWhitelistResponse,
+  LlmUsageRequest,
   LoginDto,
   LoginResponseDto,
   MaterialAddRequest,
@@ -114,6 +118,8 @@ import type {
   MaterialEditResponse,
   MaterialListRequest,
   MaterialListResponse,
+  MaterialStaffListResponse,
+  MaterialSummaryResponse,
   MigrateResponse,
   MyInstructorPermissionsResponse,
   NumEntriesLeftDto,
@@ -123,11 +129,13 @@ import type {
   PresentUserRequest,
   QueryRequest,
   QueryResponse,
+  QueuedDocumentResponse,
   RefreshKeywordsRequest,
   RefreshKeywordsResponse,
   RegisterDto,
   ResetPasswordDto,
   SetDocumentFlagsDto,
+  SetDocumentRoleDto,
   SetSelectedClassRequest,
   SetSelectedClassResponse,
   StreamStatusResponse,
@@ -152,6 +160,7 @@ import type {
   UpdateInstructorPermissionsDto,
   UpdateInstructorPermissionsResponse,
   UpdateWhitelistRequest,
+  UserLlmUsageResponse,
   UserTokenUsageRequest,
   UserTokenUsageResponse,
   VariantAnalyticsResponse,
@@ -266,6 +275,10 @@ import {
     CompetitorEnrollDtoToJSON,
     CompetitorInfoDtoFromJSON,
     CompetitorInfoDtoToJSON,
+    ContextPreviewResponseFromJSON,
+    ContextPreviewResponseToJSON,
+    ConversationLlmUsageResponseFromJSON,
+    ConversationLlmUsageResponseToJSON,
     CreateDocumentCommentDtoFromJSON,
     CreateDocumentCommentDtoToJSON,
     CreateDocumentSummaryDtoFromJSON,
@@ -292,6 +305,8 @@ import {
     DocumentIdsChatResponseToJSON,
     DocumentListResponseFromJSON,
     DocumentListResponseToJSON,
+    DocumentProcessingStatusResponseFromJSON,
+    DocumentProcessingStatusResponseToJSON,
     DocumentSummaryListResponseFromJSON,
     DocumentSummaryListResponseToJSON,
     DocumentSummaryResponseFromJSON,
@@ -338,6 +353,8 @@ import {
     ListInstructorsForClassResponseToJSON,
     ListWhitelistResponseFromJSON,
     ListWhitelistResponseToJSON,
+    LlmUsageRequestFromJSON,
+    LlmUsageRequestToJSON,
     LoginDtoFromJSON,
     LoginDtoToJSON,
     LoginResponseDtoFromJSON,
@@ -356,6 +373,10 @@ import {
     MaterialListRequestToJSON,
     MaterialListResponseFromJSON,
     MaterialListResponseToJSON,
+    MaterialStaffListResponseFromJSON,
+    MaterialStaffListResponseToJSON,
+    MaterialSummaryResponseFromJSON,
+    MaterialSummaryResponseToJSON,
     MigrateResponseFromJSON,
     MigrateResponseToJSON,
     MyInstructorPermissionsResponseFromJSON,
@@ -374,6 +395,8 @@ import {
     QueryRequestToJSON,
     QueryResponseFromJSON,
     QueryResponseToJSON,
+    QueuedDocumentResponseFromJSON,
+    QueuedDocumentResponseToJSON,
     RefreshKeywordsRequestFromJSON,
     RefreshKeywordsRequestToJSON,
     RefreshKeywordsResponseFromJSON,
@@ -384,6 +407,8 @@ import {
     ResetPasswordDtoToJSON,
     SetDocumentFlagsDtoFromJSON,
     SetDocumentFlagsDtoToJSON,
+    SetDocumentRoleDtoFromJSON,
+    SetDocumentRoleDtoToJSON,
     SetSelectedClassRequestFromJSON,
     SetSelectedClassRequestToJSON,
     SetSelectedClassResponseFromJSON,
@@ -432,6 +457,8 @@ import {
     UpdateInstructorPermissionsResponseToJSON,
     UpdateWhitelistRequestFromJSON,
     UpdateWhitelistRequestToJSON,
+    UserLlmUsageResponseFromJSON,
+    UserLlmUsageResponseToJSON,
     UserTokenUsageRequestFromJSON,
     UserTokenUsageRequestToJSON,
     UserTokenUsageResponseFromJSON,
@@ -441,6 +468,14 @@ import {
     VariantCountResponseFromJSON,
     VariantCountResponseToJSON,
 } from '../models/index.ts';
+
+export interface AnalyticsControllerGetLlmUsageByConversationRequest {
+    llmUsageRequest: LlmUsageRequest;
+}
+
+export interface AnalyticsControllerGetLlmUsageByUserRequest {
+    llmUsageRequest: LlmUsageRequest;
+}
 
 export interface AnalyticsControllerGetUserTokenUsageRequest {
     userTokenUsageRequest: UserTokenUsageRequest;
@@ -696,10 +731,6 @@ export interface DocumentControllerEmbedRequest {
     chunkRequest: ChunkRequest;
 }
 
-export interface DocumentControllerGetListByMaterialIdRequest {
-    materialID: string;
-}
-
 export interface DocumentControllerListCommentsRequest {
     id: string;
 }
@@ -716,12 +747,25 @@ export interface DocumentControllerListSummariesForStudentRequest {
     id: string;
 }
 
+export interface DocumentControllerProcessingStatusRequest {
+    id: string;
+}
+
 export interface DocumentControllerQueryRequest {
     queryRequest: QueryRequest;
 }
 
 export interface DocumentControllerRemoveEmbedRequest {
     chunkRequest: ChunkRequest;
+}
+
+export interface DocumentControllerReplaceFileRequest {
+    id: string;
+    file: Blob;
+}
+
+export interface DocumentControllerReprocessRequest {
+    id: string;
 }
 
 export interface DocumentControllerRetrieveDocumentRequest {
@@ -731,6 +775,11 @@ export interface DocumentControllerRetrieveDocumentRequest {
 export interface DocumentControllerSetFlagsRequest {
     id: string;
     setDocumentFlagsDto: SetDocumentFlagsDto;
+}
+
+export interface DocumentControllerSetRoleRequest {
+    id: string;
+    setDocumentRoleDto: SetDocumentRoleDto;
 }
 
 export interface DocumentControllerUpdateCommentVisibilityRequest {
@@ -746,11 +795,6 @@ export interface DocumentControllerUpdateSummaryRequest {
 }
 
 export interface DocumentControllerUploadRequest {
-    file: Blob;
-    classMaterialId: string;
-}
-
-export interface DocumentControllerUploadNoMaterialIdRequest {
     file: Blob;
     classMaterialId: string;
 }
@@ -902,6 +946,20 @@ export interface MaterialControllerListRequest {
     materialListRequest: MaterialListRequest;
 }
 
+export interface MaterialControllerListForStaffRequest {
+    materialListRequest: MaterialListRequest;
+}
+
+export interface MaterialControllerSummaryRequest {
+    materialID: string;
+}
+
+export interface MaterialControllerUploadDocumentRequest {
+    materialId: string;
+    file: Blob;
+    role?: MaterialControllerUploadDocumentRoleEnum;
+}
+
 export interface StorageControllerGetSignedUrlRequest {
     key: string;
 }
@@ -941,6 +999,17 @@ export interface StudentControllerGetKeywordsRequest {
     getKeywordsRequest: GetKeywordsRequest;
 }
 
+export interface StudentControllerListConversationsRequest {
+    classId?: string;
+    limit?: string;
+    offset?: string;
+}
+
+export interface StudentControllerPreviewChatContextRequest {
+    includeContent: string;
+    unifiedChatRequest: UnifiedChatRequest;
+}
+
 export interface StudentControllerRefreshKeywordsRequest {
     refreshKeywordsRequest: RefreshKeywordsRequest;
 }
@@ -965,6 +1034,78 @@ export interface WhitelistControllerUpdateUserWhitelistRequest {
  * 
  */
 export class DefaultApi extends runtime.BaseAPI {
+
+    /**
+     */
+    async analyticsControllerGetLlmUsageByConversationRaw(requestParameters: AnalyticsControllerGetLlmUsageByConversationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConversationLlmUsageResponse>> {
+        if (requestParameters.llmUsageRequest === null || requestParameters.llmUsageRequest === undefined) {
+            throw new runtime.RequiredError('llmUsageRequest','Required parameter requestParameters.llmUsageRequest was null or undefined when calling analyticsControllerGetLlmUsageByConversation.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("bearerAuth", []);
+        }
+
+        const response = await this.request({
+            path: `/analytics/llm-usage/by-conversation`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: LlmUsageRequestToJSON(requestParameters.llmUsageRequest),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ConversationLlmUsageResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async analyticsControllerGetLlmUsageByConversation(requestParameters: AnalyticsControllerGetLlmUsageByConversationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConversationLlmUsageResponse> {
+        const response = await this.analyticsControllerGetLlmUsageByConversationRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async analyticsControllerGetLlmUsageByUserRaw(requestParameters: AnalyticsControllerGetLlmUsageByUserRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserLlmUsageResponse>> {
+        if (requestParameters.llmUsageRequest === null || requestParameters.llmUsageRequest === undefined) {
+            throw new runtime.RequiredError('llmUsageRequest','Required parameter requestParameters.llmUsageRequest was null or undefined when calling analyticsControllerGetLlmUsageByUser.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("bearerAuth", []);
+        }
+
+        const response = await this.request({
+            path: `/analytics/llm-usage/by-user`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: LlmUsageRequestToJSON(requestParameters.llmUsageRequest),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UserLlmUsageResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async analyticsControllerGetLlmUsageByUser(requestParameters: AnalyticsControllerGetLlmUsageByUserRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserLlmUsageResponse> {
+        const response = await this.analyticsControllerGetLlmUsageByUserRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      */
@@ -3686,43 +3827,6 @@ export class DefaultApi extends runtime.BaseAPI {
 
     /**
      */
-    async documentControllerGetListByMaterialIdRaw(requestParameters: DocumentControllerGetListByMaterialIdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DocumentListResponse>> {
-        if (requestParameters.materialID === null || requestParameters.materialID === undefined) {
-            throw new runtime.RequiredError('materialID','Required parameter requestParameters.materialID was null or undefined when calling documentControllerGetListByMaterialId.');
-        }
-
-        const queryParameters: any = {};
-
-        if (requestParameters.materialID !== undefined) {
-            queryParameters['materialID'] = requestParameters.materialID;
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            // oauth required
-            headerParameters["Authorization"] = await this.configuration.accessToken("bearerAuth", []);
-        }
-
-        const response = await this.request({
-            path: `/document/material/id`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => DocumentListResponseFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async documentControllerGetListByMaterialId(requestParameters: DocumentControllerGetListByMaterialIdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DocumentListResponse> {
-        const response = await this.documentControllerGetListByMaterialIdRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
     async documentControllerListCommentsRaw(requestParameters: DocumentControllerListCommentsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DocumentCommentListResponse>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling documentControllerListComments.');
@@ -3884,6 +3988,39 @@ export class DefaultApi extends runtime.BaseAPI {
 
     /**
      */
+    async documentControllerProcessingStatusRaw(requestParameters: DocumentControllerProcessingStatusRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DocumentProcessingStatusResponse>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling documentControllerProcessingStatus.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("bearerAuth", []);
+        }
+
+        const response = await this.request({
+            path: `/document/{id}/status`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => DocumentProcessingStatusResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async documentControllerProcessingStatus(requestParameters: DocumentControllerProcessingStatusRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DocumentProcessingStatusResponse> {
+        const response = await this.documentControllerProcessingStatusRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
     async documentControllerQueryRaw(requestParameters: DocumentControllerQueryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<QueryResponse>> {
         if (requestParameters.queryRequest === null || requestParameters.queryRequest === undefined) {
             throw new runtime.RequiredError('queryRequest','Required parameter requestParameters.queryRequest was null or undefined when calling documentControllerQuery.');
@@ -3951,6 +4088,97 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async documentControllerRemoveEmbed(requestParameters: DocumentControllerRemoveEmbedRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DescribeResponse> {
         const response = await this.documentControllerRemoveEmbedRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async documentControllerReplaceFileRaw(requestParameters: DocumentControllerReplaceFileRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<QueuedDocumentResponse>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling documentControllerReplaceFile.');
+        }
+
+        if (requestParameters.file === null || requestParameters.file === undefined) {
+            throw new runtime.RequiredError('file','Required parameter requestParameters.file was null or undefined when calling documentControllerReplaceFile.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("bearerAuth", []);
+        }
+
+        const consumes: runtime.Consume[] = [
+            { contentType: 'multipart/form-data' },
+        ];
+        // @ts-ignore: canConsumeForm may be unused
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        // use FormData to transmit files using content-type "multipart/form-data"
+        useForm = canConsumeForm;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
+        }
+
+        if (requestParameters.file !== undefined) {
+            formParams.append('file', requestParameters.file as any);
+        }
+
+        const response = await this.request({
+            path: `/document/{id}/replace`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: formParams,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => QueuedDocumentResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async documentControllerReplaceFile(requestParameters: DocumentControllerReplaceFileRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<QueuedDocumentResponse> {
+        const response = await this.documentControllerReplaceFileRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async documentControllerReprocessRaw(requestParameters: DocumentControllerReprocessRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<QueuedDocumentResponse>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling documentControllerReprocess.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("bearerAuth", []);
+        }
+
+        const response = await this.request({
+            path: `/document/{id}/reprocess`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => QueuedDocumentResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async documentControllerReprocess(requestParameters: DocumentControllerReprocessRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<QueuedDocumentResponse> {
+        const response = await this.documentControllerReprocessRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -4027,6 +4255,45 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async documentControllerSetFlags(requestParameters: DocumentControllerSetFlagsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.documentControllerSetFlagsRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async documentControllerSetRoleRaw(requestParameters: DocumentControllerSetRoleRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling documentControllerSetRole.');
+        }
+
+        if (requestParameters.setDocumentRoleDto === null || requestParameters.setDocumentRoleDto === undefined) {
+            throw new runtime.RequiredError('setDocumentRoleDto','Required parameter requestParameters.setDocumentRoleDto was null or undefined when calling documentControllerSetRole.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("bearerAuth", []);
+        }
+
+        const response = await this.request({
+            path: `/document/{id}/role`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: SetDocumentRoleDtoToJSON(requestParameters.setDocumentRoleDto),
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async documentControllerSetRole(requestParameters: DocumentControllerSetRoleRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.documentControllerSetRoleRaw(requestParameters, initOverrides);
     }
 
     /**
@@ -4176,68 +4443,6 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async documentControllerUpload(requestParameters: DocumentControllerUploadRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DocumentUploadResponse> {
         const response = await this.documentControllerUploadRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async documentControllerUploadNoMaterialIdRaw(requestParameters: DocumentControllerUploadNoMaterialIdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DocumentUploadResponse>> {
-        if (requestParameters.file === null || requestParameters.file === undefined) {
-            throw new runtime.RequiredError('file','Required parameter requestParameters.file was null or undefined when calling documentControllerUploadNoMaterialId.');
-        }
-
-        if (requestParameters.classMaterialId === null || requestParameters.classMaterialId === undefined) {
-            throw new runtime.RequiredError('classMaterialId','Required parameter requestParameters.classMaterialId was null or undefined when calling documentControllerUploadNoMaterialId.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            // oauth required
-            headerParameters["Authorization"] = await this.configuration.accessToken("bearerAuth", []);
-        }
-
-        const consumes: runtime.Consume[] = [
-            { contentType: 'multipart/form-data' },
-        ];
-        // @ts-ignore: canConsumeForm may be unused
-        const canConsumeForm = runtime.canConsumeForm(consumes);
-
-        let formParams: { append(param: string, value: any): any };
-        let useForm = false;
-        // use FormData to transmit files using content-type "multipart/form-data"
-        useForm = canConsumeForm;
-        if (useForm) {
-            formParams = new FormData();
-        } else {
-            formParams = new URLSearchParams();
-        }
-
-        if (requestParameters.file !== undefined) {
-            formParams.append('file', requestParameters.file as any);
-        }
-
-        if (requestParameters.classMaterialId !== undefined) {
-            formParams.append('classMaterialId', requestParameters.classMaterialId as any);
-        }
-
-        const response = await this.request({
-            path: `/document/uploadNoMaterialId`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: formParams,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => DocumentUploadResponseFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async documentControllerUploadNoMaterialId(requestParameters: DocumentControllerUploadNoMaterialIdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DocumentUploadResponse> {
-        const response = await this.documentControllerUploadNoMaterialIdRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -5616,6 +5821,141 @@ export class DefaultApi extends runtime.BaseAPI {
 
     /**
      */
+    async materialControllerListForStaffRaw(requestParameters: MaterialControllerListForStaffRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MaterialStaffListResponse>> {
+        if (requestParameters.materialListRequest === null || requestParameters.materialListRequest === undefined) {
+            throw new runtime.RequiredError('materialListRequest','Required parameter requestParameters.materialListRequest was null or undefined when calling materialControllerListForStaff.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("bearerAuth", []);
+        }
+
+        const response = await this.request({
+            path: `/class/material/list/staff`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: MaterialListRequestToJSON(requestParameters.materialListRequest),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MaterialStaffListResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async materialControllerListForStaff(requestParameters: MaterialControllerListForStaffRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MaterialStaffListResponse> {
+        const response = await this.materialControllerListForStaffRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async materialControllerSummaryRaw(requestParameters: MaterialControllerSummaryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MaterialSummaryResponse>> {
+        if (requestParameters.materialID === null || requestParameters.materialID === undefined) {
+            throw new runtime.RequiredError('materialID','Required parameter requestParameters.materialID was null or undefined when calling materialControllerSummary.');
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters.materialID !== undefined) {
+            queryParameters['materialID'] = requestParameters.materialID;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("bearerAuth", []);
+        }
+
+        const response = await this.request({
+            path: `/class/material/summary`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MaterialSummaryResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async materialControllerSummary(requestParameters: MaterialControllerSummaryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MaterialSummaryResponse> {
+        const response = await this.materialControllerSummaryRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async materialControllerUploadDocumentRaw(requestParameters: MaterialControllerUploadDocumentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<QueuedDocumentResponse>> {
+        if (requestParameters.materialId === null || requestParameters.materialId === undefined) {
+            throw new runtime.RequiredError('materialId','Required parameter requestParameters.materialId was null or undefined when calling materialControllerUploadDocument.');
+        }
+
+        if (requestParameters.file === null || requestParameters.file === undefined) {
+            throw new runtime.RequiredError('file','Required parameter requestParameters.file was null or undefined when calling materialControllerUploadDocument.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("bearerAuth", []);
+        }
+
+        const consumes: runtime.Consume[] = [
+            { contentType: 'multipart/form-data' },
+        ];
+        // @ts-ignore: canConsumeForm may be unused
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        // use FormData to transmit files using content-type "multipart/form-data"
+        useForm = canConsumeForm;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
+        }
+
+        if (requestParameters.file !== undefined) {
+            formParams.append('file', requestParameters.file as any);
+        }
+
+        if (requestParameters.role !== undefined) {
+            formParams.append('role', requestParameters.role as any);
+        }
+
+        const response = await this.request({
+            path: `/class/material/{materialId}/documents`.replace(`{${"materialId"}}`, encodeURIComponent(String(requestParameters.materialId))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: formParams,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => QueuedDocumentResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async materialControllerUploadDocument(requestParameters: MaterialControllerUploadDocumentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<QueuedDocumentResponse> {
+        const response = await this.materialControllerUploadDocumentRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
     async sseControllerMessagesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
@@ -6198,6 +6538,94 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * List the student\'s chat threads
+     */
+    async studentControllerListConversationsRaw(requestParameters: StudentControllerListConversationsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        if (requestParameters.classId !== undefined) {
+            queryParameters['classId'] = requestParameters.classId;
+        }
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.offset !== undefined) {
+            queryParameters['offset'] = requestParameters.offset;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("bearerAuth", []);
+        }
+
+        const response = await this.request({
+            path: `/student/conversations`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * List the student\'s chat threads
+     */
+    async studentControllerListConversations(requestParameters: StudentControllerListConversationsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.studentControllerListConversationsRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Preview the assembled chat context without calling the model
+     */
+    async studentControllerPreviewChatContextRaw(requestParameters: StudentControllerPreviewChatContextRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ContextPreviewResponse>> {
+        if (requestParameters.includeContent === null || requestParameters.includeContent === undefined) {
+            throw new runtime.RequiredError('includeContent','Required parameter requestParameters.includeContent was null or undefined when calling studentControllerPreviewChatContext.');
+        }
+
+        if (requestParameters.unifiedChatRequest === null || requestParameters.unifiedChatRequest === undefined) {
+            throw new runtime.RequiredError('unifiedChatRequest','Required parameter requestParameters.unifiedChatRequest was null or undefined when calling studentControllerPreviewChatContext.');
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters.includeContent !== undefined) {
+            queryParameters['includeContent'] = requestParameters.includeContent;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("bearerAuth", []);
+        }
+
+        const response = await this.request({
+            path: `/student/chat/context-preview`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: UnifiedChatRequestToJSON(requestParameters.unifiedChatRequest),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ContextPreviewResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Preview the assembled chat context without calling the model
+     */
+    async studentControllerPreviewChatContext(requestParameters: StudentControllerPreviewChatContextRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ContextPreviewResponse> {
+        const response = await this.studentControllerPreviewChatContextRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      */
     async studentControllerRefreshKeywordsRaw(requestParameters: StudentControllerRefreshKeywordsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RefreshKeywordsResponse>> {
         if (requestParameters.refreshKeywordsRequest === null || requestParameters.refreshKeywordsRequest === undefined) {
@@ -6405,3 +6833,13 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
 }
+
+/**
+ * @export
+ */
+export const MaterialControllerUploadDocumentRoleEnum = {
+    Student: 'STUDENT',
+    Answer: 'ANSWER',
+    Reference: 'REFERENCE'
+} as const;
+export type MaterialControllerUploadDocumentRoleEnum = typeof MaterialControllerUploadDocumentRoleEnum[keyof typeof MaterialControllerUploadDocumentRoleEnum];

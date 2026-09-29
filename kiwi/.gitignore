@@ -60,3 +60,6 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 # Prisma local dev seed snapshot (per-developer, not shared)
 prisma/seed-data.json
 prisma/seed-data.backup.dump
+
+# Local infra overrides (host port remaps, etc.)
+compose.override.yml

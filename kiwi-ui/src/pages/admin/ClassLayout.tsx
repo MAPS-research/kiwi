@@ -1,6 +1,5 @@
 import {
   AppsOutlined as Blocks,
-  CloudUploadOutlined as Upload,
   DescriptionOutlined as FileText,
   EditOutlined as PenSquare,
   EmailOutlined as Mail,
@@ -35,8 +34,7 @@ const allMenuItems: Array<{
   requiresInstructorPermission?: 'canManageMaterials' | 'canViewAnalytics';
 }> = [
   { label: "Edit Class", path: "edit-metadata", icon: PenSquare },
-  { label: "Batch Upload", path: "batch-upload", icon: Upload },
-  { label: "Manage Materials", path: "manage-materials", icon: FileText, requiresInstructorPermission: 'canManageMaterials' },
+  { label: "Materials", path: "manage-materials", icon: FileText, requiresInstructorPermission: 'canManageMaterials' },
   { label: "Class Flags", path: "feature-flags", hideForInstructor: true, icon: Flag },
   { label: "Class MCP & Tools", path: "mcp-settings", hideForInstructor: true, icon: Puzzle },
   { label: "Class Apps", path: "kiwi-apps", hideForInstructor: true, icon: Blocks },

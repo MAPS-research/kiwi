@@ -4,6 +4,7 @@ import {
   PutObjectCommand,
   GetObjectCommand,
   GetObjectCommandOutput,
+  DeleteObjectCommand,
 } from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { Readable } from 'stream';
@@ -127,6 +128,20 @@ export class StorageService {
     } catch (error) {
       throw new Error(`Failed to upload file: ${error.message}`);
     }
+  }
+
+  /**
+   * Remove an object. Deleting a Document row used to leave its file behind
+   * forever — there was no delete path here at all — so every removed upload
+   * stayed in the bucket.
+   *
+   * S3 delete is idempotent: removing a key that is already gone succeeds, so
+   * a half-finished delete can simply be retried.
+   */
+  async deleteFile(key: string): Promise<void> {
+    await this.s3Client.send(
+      new DeleteObjectCommand({ Bucket: this.BUCKET_NAME, Key: key }),
+    );
   }
 
   async readFile(

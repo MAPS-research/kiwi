@@ -63,6 +63,12 @@ import {
   UpdateDocumentCommentVisibilityDto,
 } from './dto/document-comment.dto';
 import {
+  DocumentProcessingStatusResponse,
+  DocumentReplaceDto,
+  QueuedDocumentResponse,
+} from './dto/document-processing.dto';
+import { SetDocumentRoleDto } from './dto/set-document-role.dto';
+import {
   CreateDocumentSummaryDto,
   DeleteDocumentSummaryResponse,
   DocumentSummaryListResponse,
@@ -356,6 +362,69 @@ export class DocumentController {
   @Patch(':id/flags')
   async setFlags(@Param('id') id: string, @Body() dto: SetDocumentFlagsDto) {
     return this.documentService.setFlags(id, dto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard, MaterialManageGuard)
+  @ApiBearerAuth('bearerAuth')
+  @Get(':id/status')
+  @ApiResponse({
+    status: 200,
+    description: 'Processing state of a document',
+    type: DocumentProcessingStatusResponse,
+  })
+  async processingStatus(@Param('id') id: string) {
+    return this.documentService.getProcessingStatus(id);
+  }
+
+  @HttpCode(HttpStatus.ACCEPTED)
+  @UseGuards(JwtAuthGuard, MaterialManageGuard)
+  @ApiBearerAuth('bearerAuth')
+  @Post(':id/reprocess')
+  @ApiResponse({
+    status: 202,
+    description: 'Pipeline re-queued for this document',
+    type: QueuedDocumentResponse,
+  })
+  async reprocess(@Param('id') id: string) {
+    const { jobId, documentId } =
+      await this.documentService.reprocessDocument(id);
+    return { documentId, jobId: jobId ?? null, processingStatus: 'PENDING' };
+  }
+
+  /**
+   * Replace the file behind a document, keeping the document itself. Comments,
+   * summaries and existing citations keep pointing at the same id.
+   */
+  @HttpCode(HttpStatus.ACCEPTED)
+  @UseGuards(JwtAuthGuard, MaterialManageGuard)
+  @ApiBearerAuth('bearerAuth')
+  @Post(':id/replace')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: DocumentReplaceDto })
+  @ApiResponse({
+    status: 202,
+    description: 'File replaced and queued for processing',
+    type: QueuedDocumentResponse,
+  })
+  async replaceFile(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.documentService.replaceDocumentFile(id, file);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard, MaterialManageGuard)
+  @ApiBearerAuth('bearerAuth')
+  @Patch(':id/role')
+  @ApiResponse({
+    status: 200,
+    description: 'Role updated',
+  })
+  async setRole(@Param('id') id: string, @Body() dto: SetDocumentRoleDto) {
+    return this.documentService.setDocumentRole(id, dto.role);
   }
 
   @HttpCode(HttpStatus.CREATED)

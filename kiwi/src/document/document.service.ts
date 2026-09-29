@@ -2,9 +2,9 @@ import {
   Injectable,
   Logger,
   BadRequestException,
+  ForbiddenException,
   NotFoundException,
   UnauthorizedException,
-  ForbiddenException,
 } from '@nestjs/common';
 import { ClassMaterialService } from 'src/common/database/class-material.service';
 import { DocumentService as DatabaseDocumentService } from 'src/common/database/document.service';
@@ -12,7 +12,7 @@ import { EmbeddingService } from 'src/common/database/embedding.service';
 import { LlmService } from 'src/common/llm/llm.service';
 import { EngineChoice } from 'src/common/llm/interfaces/engine-config';
 import { ConfigService } from '@nestjs/config';
-import { EmbeddingModel } from '@prisma/client';
+import { EmbeddingModel, Prisma } from '@prisma/client';
 import { UnstructuredService } from 'src/common/unstructured/unstructured.service';
 import { Chunk } from './dto/chunk-request.dto';
 import { InjectQueue } from '@nestjs/bullmq';
@@ -23,10 +23,18 @@ import { DatabaseService } from 'src/common/database/database.service';
 import { SetDocumentFlagsDto } from './dto/set-document-flags.dto';
 import { DocumentCommentService } from 'src/common/database/document-comment.service';
 import { DocumentSummaryService } from 'src/common/database/document-summary.service';
-import { InstructorClassService } from 'src/instructor-class/instructor-class.service';
 import { CreateDocumentCommentDto, UpdateDocumentCommentVisibilityDto } from './dto/document-comment.dto';
 import { CreateDocumentSummaryDto, UpdateDocumentSummaryDto } from './dto/document-summary.dto';
-import { DocumentComment, DocumentSummary, User } from '@prisma/client';
+import {
+  AnnotationAudience,
+  DocumentComment,
+  DocumentRole,
+  DocumentSummary,
+  User,
+} from '@prisma/client';
+import { MaterialType } from 'src/class/material/dto/material-enum';
+import { MaterialAccessService } from 'src/class/material/material-access.service';
+import { MaterialPermissionService } from 'src/class/material/material-permission.service';
 import { DocumentWithClassMaterial } from 'src/common/database/document.service';
 
 @Injectable()
@@ -40,10 +48,11 @@ export class DocumentService {
     private classMaterialService: ClassMaterialService,
     private documentCommentService: DocumentCommentService,
     private documentSummaryService: DocumentSummaryService,
-    private instructorClassService: InstructorClassService,
     private storageService: StorageService,
     private readonly db: DatabaseService,
     private readonly configService: ConfigService,
+    private readonly materialAccessService: MaterialAccessService,
+    private readonly materialPermissionService: MaterialPermissionService,
     @InjectQueue('document') private documentQueue: Queue,
   ) {}
 
@@ -230,6 +239,262 @@ export class DocumentService {
     };
   }
 
+  /**
+   * Upload into a material and start processing: one request instead of the
+   * six round trips the browser used to make.
+   *
+   * Returns as soon as the file is stored and the job is queued. Progress lives
+   * on the document row from here on, so closing the tab is no longer an event.
+   */
+  async uploadDocumentToMaterial(
+    file: Express.Multer.File,
+    classMaterialId: string,
+    role?: DocumentRole,
+  ) {
+    const documentId = uuid();
+    const { key: documentKey } = await this.storageService.uploadFile(
+      file,
+      documentId,
+    );
+
+    const document = await this.databaseDocumentService.createDocument({
+      fileName: file.originalname,
+      fileUrl: documentKey,
+      classMaterialId,
+    });
+
+    if (role) {
+      await this.setDocumentRole(document.id, role);
+    } else {
+      await this.applyUploadRoleDefaults(classMaterialId, document.id);
+    }
+
+    const { jobId } = await this.queueDocumentPipeline(document.id);
+
+    return {
+      documentId: document.id,
+      jobId: jobId ?? null,
+      processingStatus: 'PENDING',
+    };
+  }
+
+  /**
+   * Swap the file behind an existing document and re-run the pipeline.
+   *
+   * The row is kept deliberately. Everything that points at a document points
+   * at its id — instructor comments and summaries, citations already sitting in
+   * chat transcripts, the pdfId on every recorded interaction, analytics — so
+   * replacing by creating a new row and deleting the old one would strand all
+   * of it. Keeping the row means there is nothing to migrate.
+   *
+   * The pipeline overwrites chunks and replaces embeddings, so the old file's
+   * traces are gone once processing finishes. Page-anchored comments stay
+   * correct; a comment's pin coordinates can drift if the new file paginates
+   * differently, which is why the UI warns before doing this.
+   */
+  async replaceDocumentFile(documentId: string, file: Express.Multer.File) {
+    const existing = await this.db.document.findUnique({
+      where: { id: documentId },
+      select: { id: true, fileUrl: true, classMaterialId: true },
+    });
+    if (!existing) throw new NotFoundException('Document not found');
+
+    const { key: newKey } = await this.storageService.uploadFile(file, uuid());
+
+    await this.db.document.update({
+      where: { id: documentId },
+      data: {
+        fileName: file.originalname,
+        fileUrl: newKey,
+        chunks: Prisma.DbNull,
+        processingStatus: 'PENDING',
+        processingStage: null,
+        processingError: null,
+        processedAt: null,
+      },
+    });
+
+    // Only after the row points at the new object, and never fatally: an
+    // orphaned file costs storage, a missing one costs the document.
+    if (existing.fileUrl && existing.fileUrl !== newKey) {
+      try {
+        await this.storageService.deleteFile(existing.fileUrl);
+      } catch (error) {
+        this.logger.error(
+          `Replaced the file for document ${documentId} but could not remove ` +
+            `the previous object (${existing.fileUrl}):`,
+          error,
+        );
+      }
+    }
+
+    const { jobId } = await this.queueDocumentPipeline(documentId);
+
+    return { documentId, jobId: jobId ?? null, processingStatus: 'PENDING' };
+  }
+
+  /**
+   * Say what a document is for its material.
+   *
+   * Both single-copy roles free the slot before claiming it, because the
+   * partial unique indexes reject a second student copy or answer key outright.
+   * The deprecated flags are written as a projection so the old endpoints keep
+   * agreeing with this one until they are removed.
+   */
+  async setDocumentRole(documentId: string, role: DocumentRole) {
+    const document = await this.db.document.findUnique({
+      where: { id: documentId },
+      select: { id: true, classMaterialId: true },
+    });
+    if (!document) throw new NotFoundException('Document not found');
+    if (!document.classMaterialId) {
+      throw new BadRequestException('Document is not attached to a material');
+    }
+
+    const materialId = document.classMaterialId;
+
+    return this.db.$transaction(async (tx) => {
+      const material = await tx.classMaterial.findUnique({
+        where: { id: materialId },
+        select: { materialType: true },
+      });
+
+      if (role === 'ANSWER' && material?.materialType !== MaterialType.ASSIGNMENT) {
+        throw new BadRequestException(
+          'Only a recitation can have an answer key. Use REFERENCE for ' +
+            'supplementary lecture material.',
+        );
+      }
+
+      if (role === 'STUDENT' || role === 'ANSWER') {
+        await tx.document.updateMany({
+          where: { classMaterialId: materialId, role, id: { not: documentId } },
+          data:
+            role === 'STUDENT'
+              ? { role: 'REFERENCE', isStudent: false }
+              : { role: 'REFERENCE' },
+        });
+      }
+
+      return tx.document.update({
+        where: { id: documentId },
+        data: {
+          role,
+          isStudent: role === 'STUDENT',
+          isLlm: role !== 'REFERENCE',
+        },
+        select: { id: true, classMaterialId: true, role: true },
+      });
+    });
+  }
+
+  /**
+   * Processing state lives on the document row, not in a browser tab.
+   *
+   * The three stage methods record their own transitions rather than leaving it
+   * to whoever calls them, so the queued pipeline and the legacy
+   * chunk/describe/embed sequence walk the same state machine and a document
+   * ends up READY either way.
+   */
+  async markProcessingStage(
+    documentId: string,
+    stage: 'chunking' | 'describing' | 'embedding',
+  ) {
+    await this.db.document.update({
+      where: { id: documentId },
+      data: {
+        processingStatus: 'PROCESSING',
+        processingStage: stage,
+        processingError: null,
+      },
+    });
+  }
+
+  private async markProcessingFailed(documentId: string, error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    // Truncated: some upstream errors carry a whole response body, and this
+    // column is read straight into the instructor's UI.
+    await this.db.document.update({
+      where: { id: documentId },
+      data: {
+        processingStatus: 'FAILED',
+        processingError: message.slice(0, 1000),
+      },
+    });
+  }
+
+  private async markProcessingReady(documentId: string) {
+    await this.db.document.update({
+      where: { id: documentId },
+      data: {
+        processingStatus: 'READY',
+        processingStage: null,
+        processingError: null,
+        processedAt: new Date(),
+      },
+    });
+  }
+
+  /**
+   * Queue the whole pipeline for a document. Retries are BullMQ's, so a
+   * provider blip does not need an instructor to notice and click anything.
+   */
+  async queueDocumentPipeline(documentId: string) {
+    const job = await this.documentQueue.add(
+      'processDocument',
+      { documentId },
+      {
+        attempts: 3,
+        backoff: { type: 'exponential', delay: 30_000 },
+      },
+    );
+
+    return { jobId: job.id, documentId };
+  }
+
+  /**
+   * Re-run the pipeline for an existing document. Every stage is a replace, so
+   * this needs no cleanup — the reset exists to release a document stuck in
+   * PROCESSING by a worker that died mid-run, which the queue itself cannot
+   * distinguish from one still working.
+   */
+  async reprocessDocument(documentId: string) {
+    const document = await this.db.document.findUnique({
+      where: { id: documentId },
+      select: { id: true },
+    });
+    if (!document) throw new NotFoundException('Document not found');
+
+    await this.db.document.update({
+      where: { id: documentId },
+      data: {
+        processingStatus: 'PENDING',
+        processingStage: null,
+        processingError: null,
+      },
+    });
+
+    return this.queueDocumentPipeline(documentId);
+  }
+
+  /** What the instructor's UI polls: the row, not the job. */
+  async getProcessingStatus(documentId: string) {
+    const document = await this.db.document.findUnique({
+      where: { id: documentId },
+      select: {
+        id: true,
+        fileName: true,
+        role: true,
+        processingStatus: true,
+        processingStage: true,
+        processingError: true,
+        processedAt: true,
+      },
+    });
+    if (!document) throw new NotFoundException('Document not found');
+    return document;
+  }
+
   async chunkDocumentQueue(fileId: string) {
     const job = await this.documentQueue.add('chunkDocument', { fileId });
     return {
@@ -275,6 +540,20 @@ export class DocumentService {
       throw new Error('Document not chunked yet');
     }
 
+    await this.markProcessingStage(fileId, 'describing');
+
+    try {
+      return await this.describeImageChunksInner(fileId, documentChunks);
+    } catch (error) {
+      await this.markProcessingFailed(fileId, error);
+      throw error;
+    }
+  }
+
+  private async describeImageChunksInner(
+    fileId: string,
+    documentChunks: unknown,
+  ) {
     const chunks = await Promise.all(
       (documentChunks as any[]).map(async (chunk) => {
         if (
@@ -323,6 +602,19 @@ export class DocumentService {
       throw new Error('Document not chunked yet');
     }
 
+    await this.markProcessingStage(fileId, 'embedding');
+
+    try {
+      return await this.embedDocumentInner(fileId, chunks);
+    } catch (error) {
+      // Includes the deliberate "no embeddable chunks" throw below, which is
+      // exactly the half-processed state this column exists to surface.
+      await this.markProcessingFailed(fileId, error);
+      throw error;
+    }
+  }
+
+  private async embedDocumentInner(fileId: string, chunks: unknown) {
     // this.logger.debug(chunks);
 
     // Run embedding only on types CompositeElement, Image and Table
@@ -469,6 +761,8 @@ export class DocumentService {
       this.logger.log(message);
     }
 
+    await this.markProcessingReady(fileId);
+
     return {
       message: 'Document chunks embedded successfully',
     };
@@ -569,13 +863,27 @@ export class DocumentService {
     };
   }
 
-  async retrieveDocument(fileId: string) {
+  async retrieveDocument(fileId: string, userId?: string) {
     const document = await this.databaseDocumentService.document({
       id: fileId,
     });
 
     if (!document) {
       throw new Error('Document not found');
+    }
+
+    // Staff read anything in their class; everyone else gets the student copy
+    // of a released material and nothing else.
+    if (userId) {
+      const allowed = await this.materialPermissionService.canReadDocument(
+        userId,
+        fileId,
+      );
+      if (!allowed) {
+        throw new ForbiddenException(
+          'You do not have access to this document',
+        );
+      }
     }
 
     // Retrieve document from storage
@@ -647,22 +955,6 @@ export class DocumentService {
         file: d.fileUrl,
       })),
     };
-  }
-
-  async getAnsweredRecitationForRecitationById(
-    reciationPDFId: string,
-  ): Promise<string> {
-    const recitationDoc = await this.getDocumentInfoById(reciationPDFId);
-    const materialId = recitationDoc.materialId;
-    if (!materialId) {
-      return reciationPDFId;
-    }
-    const { documents } = await this.getDocumentsByMaterialId(materialId);
-    if (documents.length < 2) {
-      return reciationPDFId;
-    }
-    // get the earlist pdfId in material, which is the answered reciation file
-    return documents[documents.length - 1].id;
   }
 
   async retrieveAllDocuments() {
@@ -807,12 +1099,38 @@ export class DocumentService {
   async deleteDocument(documentId: string): Promise<void> {
     this.logger.debug('Deleting document with ID:', documentId);
 
+    const document = await this.db.document.findUnique({
+      where: { id: documentId },
+      select: { fileUrl: true },
+    });
+
     await this.databaseDocumentService.deleteDocument(documentId);
+
+    // After the row, never before: a storage failure that ran first would
+    // leave a row pointing at an object that no longer exists. This way the
+    // worst case is an orphaned file, which costs space and nothing else.
+    if (document?.fileUrl) {
+      try {
+        await this.storageService.deleteFile(document.fileUrl);
+      } catch (error) {
+        this.logger.error(
+          `Deleted document ${documentId} but could not remove its file ` +
+            `(${document.fileUrl}); it is now orphaned in the bucket:`,
+          error,
+        );
+      }
+    }
 
     this.logger.debug('Document deleted successfully');
   }
-  // Apply default role after a new document is created in a material.
-  // Rule: first doc => STUDENT, second doc => LLM, others => NONE
+  // Default role for a document uploaded through the legacy endpoint, which
+  // carries no role of its own: the first upload is the student copy, a second
+  // one is the answer key when the material is a recitation (a lecture never
+  // gets one), and anything after that is reference material.
+  //
+  // The positional convention survives only until the upload API takes an
+  // explicit role. What changed is that it now writes `role` alongside the
+  // deprecated flags, so the two representations cannot drift while both exist.
   private async applyUploadRoleDefaults(
     materialId: string | null | undefined,
     newDocId: string,
@@ -822,12 +1140,12 @@ export class DocumentService {
     await this.db.$transaction(async (tx) => {
       const fresh = await tx.document.findUnique({
         where: { id: newDocId },
-        select: { isStudent: true, isLlm: true },
+        select: { isStudent: true, isLlm: true, role: true },
       });
       if (!fresh) return;
 
-      // Skip if caller already set flags explicitly
-      if (fresh.isStudent || fresh.isLlm) return;
+      // Skip if the caller already said what this document is.
+      if (fresh.isStudent || fresh.isLlm || fresh.role !== 'REFERENCE') return;
 
       // Count how many docs now exist in this material (includes the new doc)
       const count = await tx.document.count({
@@ -835,27 +1153,54 @@ export class DocumentService {
       });
 
       if (count === 1) {
-        // First doc → both flags true
+        // First upload: what students see, and what the model reads until an
+        // answer key shows up.
         await tx.document.update({
           where: { id: newDocId },
-          data: { isStudent: true, isLlm: true },
+          data: { role: 'STUDENT', isStudent: true, isLlm: true },
         });
-      } else if (count === 2) {
-        // Second doc → set only isLlm
+        return;
+      }
+
+      if (count === 2) {
+        const material = await tx.classMaterial.findUnique({
+          where: { id: materialId },
+          select: { materialType: true },
+        });
+        const takesAnswer =
+          material?.materialType === MaterialType.ASSIGNMENT &&
+          (await tx.document.count({
+            where: { classMaterialId: materialId, role: 'ANSWER' },
+          })) === 0;
+
         await tx.document.update({
           where: { id: newDocId },
-          data: { isLlm: true },
+          data: { role: takesAnswer ? 'ANSWER' : 'REFERENCE', isLlm: true },
         });
       }
-      // Else: leave both flags false
+      // Else: reference material, the column default.
     });
   }
 
+  /**
+   * Legacy flag endpoint, kept working while the frontend still calls it.
+   *
+   * The flags are now a projection of `role`, so this translates rather than
+   * stores: student copy wins over answer key, and only a recitation can have
+   * an answer key at all. The read-then-updateMany dance that used to enforce
+   * "one student copy per material" is gone — a partial unique index does it,
+   * which also makes it safe under concurrent edits.
+   */
   public async setFlags(documentId: string, dto: SetDocumentFlagsDto) {
-    // Load target doc
     const doc = await this.db.document.findUnique({
       where: { id: documentId },
-      select: { id: true, classMaterialId: true, isStudent: true, isLlm: true },
+      select: {
+        id: true,
+        classMaterialId: true,
+        isStudent: true,
+        isLlm: true,
+        role: true,
+      },
     });
     if (!doc) throw new NotFoundException('Document not found');
 
@@ -873,42 +1218,45 @@ export class DocumentService {
         classMaterialId: doc.classMaterialId,
         isStudent: doc.isStudent,
         isLlm: doc.isLlm,
+        role: doc.role,
       };
     }
 
-    // Apply updates atomically
+    const materialId = doc.classMaterialId;
+    const isStudent = dto.isStudent ?? doc.isStudent;
+    const isLlm = dto.isLlm ?? doc.isLlm;
+
     return this.db.$transaction(async (tx) => {
-      // (1) Handle isStudent if provided
-      if (dto.isStudent !== undefined) {
-        if (dto.isStudent === true) {
-          // Clear any existing student selection in this material
-          await tx.document.updateMany({
-            where: { classMaterialId: doc.classMaterialId, isStudent: true },
-            data: { isStudent: false },
-          });
-          // Set this doc as student
-          await tx.document.update({
-            where: { id: doc.id },
-            data: { isStudent: true },
-          });
-        } else {
-          // Explicitly clear student flag on this doc
-          await tx.document.update({
-            where: { id: doc.id },
-            data: { isStudent: false },
-          });
-        }
+      const material = await tx.classMaterial.findUnique({
+        where: { id: materialId },
+        select: { materialType: true },
+      });
+
+      let role: DocumentRole;
+      if (isStudent) {
+        role = 'STUDENT';
+      } else if (isLlm && material?.materialType === MaterialType.ASSIGNMENT) {
+        role = 'ANSWER';
+      } else {
+        role = 'REFERENCE';
       }
 
-      // (2) Handle isLlm if provided
-      if (dto.isLlm !== undefined) {
-        await tx.document.update({
-          where: { id: doc.id },
-          data: { isLlm: dto.isLlm },
+      // Free the slot before claiming it, or the unique index rejects the write.
+      if (role === 'STUDENT' || role === 'ANSWER') {
+        await tx.document.updateMany({
+          where: { classMaterialId: materialId, role, id: { not: doc.id } },
+          data:
+            role === 'STUDENT'
+              ? { role: 'REFERENCE', isStudent: false }
+              : { role: 'REFERENCE' },
         });
       }
 
-      // (3) Return updated state
+      await tx.document.update({
+        where: { id: doc.id },
+        data: { role, isStudent, isLlm },
+      });
+
       return tx.document.findUnique({
         where: { id: doc.id },
         select: {
@@ -916,35 +1264,35 @@ export class DocumentService {
           classMaterialId: true,
           isStudent: true,
           isLlm: true,
+          role: true,
         },
       });
     });
   }
+
   private async resolveLlmDocIdsForMaterial(
     materialId: string,
   ): Promise<string[]> {
-    // 1) All isLlm docs
-    const llmDocs = await this.db.document.findMany({
-      where: { classMaterialId: materialId, isLlm: true },
-      select: { id: true },
-      orderBy: { uploadedDate: 'asc' }, // order doesn't matter much; deterministic
-    });
-    if (llmDocs.length > 0) return llmDocs.map((d) => d.id);
+    // Was a three-step flag fallback ending in "the latest upload" — which on a
+    // material with no flags set is the answer key. One rule, one place now.
+    return this.materialAccessService.getLlmDocumentIds(materialId);
+  }
 
-    // 2) Fallback: the student-visible doc (unique by your service logic)
-    const studentDoc = await this.db.document.findFirst({
-      where: { classMaterialId: materialId, isStudent: true },
-      select: { id: true },
-    });
-    if (studentDoc) return [studentDoc.id];
-
-    // 3) Fallback: the latest uploaded document
-    const latest = await this.db.document.findFirst({
-      where: { classMaterialId: materialId },
-      select: { id: true },
-      orderBy: { uploadedDate: 'desc' },
-    });
-    return latest ? [latest.id] : [];
+  /**
+   * The audience a write should land on. An explicit `audience` wins; the old
+   * boolean maps to the two tiers it could express, and TUTOR is reachable only
+   * by asking for it — a note hidden from students is not silently promoted
+   * into the tutor's prompt.
+   */
+  private resolveAudience(
+    dto: { audience?: AnnotationAudience; isVisibleToStudents?: boolean },
+    current?: AnnotationAudience,
+  ): AnnotationAudience | undefined {
+    if (dto.audience) return dto.audience;
+    if (dto.isVisibleToStudents === undefined) return undefined;
+    if (dto.isVisibleToStudents) return 'STUDENT';
+    // Keep STAFF as STAFF; only demote a student-visible note.
+    return current === 'TUTOR' ? 'TUTOR' : 'STAFF';
   }
 
   async createDocumentComment(
@@ -972,6 +1320,7 @@ export class DocumentService {
       pageNumber: dto.pageNumber,
       text: trimmedText,
       isVisible: dto.isVisibleToStudents ?? true,
+      audience: this.resolveAudience(dto) ?? 'STUDENT',
       selectionRegion: dto.selectionRegion ?? null,
       pinPosition: dto.pinPosition ?? null,
     });
@@ -1027,6 +1376,12 @@ export class DocumentService {
     const updateData: any = {};
     if (dto.isVisibleToStudents !== undefined) {
       updateData.isVisible = dto.isVisibleToStudents;
+    }
+    const audience = this.resolveAudience(dto, existing.audience);
+    if (audience) {
+      updateData.audience = audience;
+      // Keep the deprecated flag a faithful projection of the new column.
+      updateData.isVisible = audience === 'STUDENT';
     }
     if (dto.text !== undefined) {
       const trimmedText = dto.text.trim();
@@ -1089,7 +1444,9 @@ export class DocumentService {
     await this.ensureStudentDocumentAccess(documentId, userId);
 
     const comments = await this.documentCommentService.documentComments({
-      where: { documentId, isVisible: true },
+      // `audience`, not `isVisible`: a note hidden from students may still be
+      // written for the tutor, and that tier did not exist before.
+      where: { documentId, audience: 'STUDENT' },
       orderBy: { createdAt: 'asc' },
       include: { author: true },
     });
@@ -1112,6 +1469,7 @@ export class DocumentService {
       pageNumber: comment.pageNumber,
       text: comment.text,
       isVisibleToStudents: comment.isVisible,
+      audience: comment.audience,
       selectionRegion: comment.selectionRegion || undefined,
       pinPosition: comment.pinPosition || undefined,
       authorId: comment.authorId,
@@ -1130,13 +1488,19 @@ export class DocumentService {
     userId: string,
   ): Promise<DocumentWithClassMaterial> {
     const document = await this.loadDocumentWithClass(documentId);
-    const classId = document.classMaterial!.classId;
-    if (await this.instructorClassService.canManageMaterials(userId, classId)) {
-      return document;
-    }
-    throw new UnauthorizedException(
-      'User does not have permission to manage this document',
+
+    const allowed = await this.materialPermissionService.canManageClass(
+      userId,
+      document.classMaterial!.classId,
     );
+
+    if (!allowed) {
+      throw new UnauthorizedException(
+        'User does not have permission to manage this document',
+      );
+    }
+
+    return document;
   }
 
   private async ensureStudentDocumentAccess(
@@ -1170,7 +1534,7 @@ export class DocumentService {
       throw new NotFoundException('Material not found');
     }
     if (
-      !(await this.instructorClassService.canManageMaterials(
+      !(await this.materialPermissionService.canManageClass(
         userId,
         material.classId,
       ))
@@ -1182,49 +1546,16 @@ export class DocumentService {
   }
 
   /**
-   * Whether a user may read a document. Class managers can read every document
-   * in their class. Other members of the class can read only what the student
-   * material list shows them: for an available material, its document flagged
-   * for students, or its newest document if none is flagged. Answer keys and
-   * other staff-only documents are therefore not readable by students.
-   * Anything else is reported as not found.
+   * Whether a user may read a document: the rule lives in
+   * MaterialPermissionService.canReadDocument (staff read anything in their
+   * class; students get only the student copy of a released material). A
+   * refusal is reported as not found so document ids can't be probed.
    */
   async assertCanReadDocument(documentId: string, userId: string) {
-    const document = await this.db.document.findUnique({
-      where: { id: documentId },
-      include: { classMaterial: true },
-    });
-    const material = document?.classMaterial;
-    if (!document || !material) {
-      throw new NotFoundException('Document not found');
-    }
-
     if (
-      await this.instructorClassService.canManageMaterials(
-        userId,
-        material.classId,
-      )
+      !userId ||
+      !(await this.materialPermissionService.canReadDocument(userId, documentId))
     ) {
-      return;
-    }
-
-    const enrollment = await this.db.enrollment.findUnique({
-      where: { classId_userId: { classId: material.classId, userId } },
-    });
-    const released =
-      material.status !== 'unavailable' &&
-      new Date() >= new Date(material.availableDate);
-    if (!enrollment || !released) {
-      throw new NotFoundException('Document not found');
-    }
-
-    const siblings = await this.db.document.findMany({
-      where: { classMaterialId: material.id },
-      orderBy: { uploadedDate: 'desc' },
-      select: { id: true, isStudent: true },
-    });
-    const visible = siblings.find((d) => d.isStudent) ?? siblings[0];
-    if (visible?.id !== document.id) {
       throw new NotFoundException('Document not found');
     }
   }
@@ -1244,7 +1575,7 @@ export class DocumentService {
     if (
       !job ||
       !classId ||
-      !(await this.instructorClassService.canManageMaterials(userId, classId))
+      !(await this.materialPermissionService.canManageClass(userId, classId))
     ) {
       return { message: 'Job not found' };
     }
@@ -1293,6 +1624,7 @@ export class DocumentService {
       authorId,
       content: trimmedContent,
       isVisibleToStudents: dto.isVisibleToStudents ?? true,
+      audience: this.resolveAudience(dto) ?? 'STUDENT',
     });
 
     const withAuthor = await this.documentSummaryService.findUnique({
@@ -1346,6 +1678,11 @@ export class DocumentService {
     const updateData: any = {};
     if (dto.isVisibleToStudents !== undefined) {
       updateData.isVisibleToStudents = dto.isVisibleToStudents;
+    }
+    const audience = this.resolveAudience(dto, existing.audience);
+    if (audience) {
+      updateData.audience = audience;
+      updateData.isVisibleToStudents = audience === 'STUDENT';
     }
     if (dto.content !== undefined) {
       const trimmedContent = dto.content.trim();
@@ -1405,7 +1742,7 @@ export class DocumentService {
     await this.ensureStudentDocumentAccess(documentId, userId);
 
     const summaries = await this.documentSummaryService.documentSummaries({
-      where: { documentId, isVisibleToStudents: true },
+      where: { documentId, audience: 'STUDENT' },
       orderBy: { summaryNumber: 'asc' },
       include: { author: true },
     });
@@ -1428,6 +1765,7 @@ export class DocumentService {
       summaryNumber: summary.summaryNumber,
       content: summary.content,
       isVisibleToStudents: summary.isVisibleToStudents,
+      audience: summary.audience,
       authorId: summary.authorId,
       author: {
         id: summary.authorId,

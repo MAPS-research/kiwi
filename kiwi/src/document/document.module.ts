@@ -8,6 +8,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { DocumentConsumer } from './document.consumer';
 import { StorageModule } from 'src/common/storage/storage.module';
 import { InstructorClassModule } from 'src/instructor-class/instructor-class.module';
+import { MaterialAccessModule } from 'src/class/material/material-access.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
@@ -19,6 +20,7 @@ import { ConfigModule } from '@nestjs/config';
     BullModule.registerQueue({ name: 'document' }),
     StorageModule,
     InstructorClassModule,
+    MaterialAccessModule,
   ],
   controllers: [DocumentController],
   providers: [DocumentService, DocumentConsumer],

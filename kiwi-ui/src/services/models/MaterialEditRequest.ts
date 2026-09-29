@@ -36,7 +36,13 @@ export interface MaterialEditRequest {
      * @type {Date}
      * @memberof MaterialEditRequest
      */
-    availableDate: Date;
+    availableDate?: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof MaterialEditRequest
+     */
+    title?: string;
 }
 
 
@@ -57,7 +63,6 @@ export function instanceOfMaterialEditRequest(value: object): boolean {
     let isInstance = true;
     isInstance = isInstance && "materialId" in value;
     isInstance = isInstance && "materialType" in value;
-    isInstance = isInstance && "availableDate" in value;
 
     return isInstance;
 }
@@ -74,7 +79,8 @@ export function MaterialEditRequestFromJSONTyped(json: any, ignoreDiscriminator:
         
         'materialId': json['materialId'],
         'materialType': json['materialType'],
-        'availableDate': (new Date(json['availableDate'])),
+        'availableDate': !exists(json, 'availableDate') ? undefined : (new Date(json['availableDate'])),
+        'title': !exists(json, 'title') ? undefined : json['title'],
     };
 }
 
@@ -89,7 +95,8 @@ export function MaterialEditRequestToJSON(value?: MaterialEditRequest | null): a
         
         'materialId': value.materialId,
         'materialType': value.materialType,
-        'availableDate': (value.availableDate.toISOString()),
+        'availableDate': value.availableDate === undefined ? undefined : (value.availableDate.toISOString()),
+        'title': value.title,
     };
 }
 

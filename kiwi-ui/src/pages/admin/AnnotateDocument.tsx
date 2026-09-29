@@ -31,6 +31,8 @@ import {
   DocumentSummaryItem,
 } from "../../components/DocumentSummaryDialog/DocumentSummaryDialog.tsx";
 import { AdminPageHeader } from "../../components/AdminPage/index.ts";
+import { useAdminNavigation } from "../../context/AdminNavigationContext.tsx";
+import { FolderOutlined as MaterialsIcon } from "@mui/icons-material";
 
 interface ChunkData {
   text: string;
@@ -208,7 +210,12 @@ export const AnnotateDocument: React.FC = () => {
 
   const { documentID = "", classID = "", materialID = "" } = useParams();
   const navigate = useNavigate();
+  const { setClassNavigation } = useAdminNavigation();
   const [documentData, setDocumentData] = useState<Document | null>(null);
+  const [materialSummary, setMaterialSummary] = useState<{
+    title: string;
+    className: string;
+  } | null>(null);
   const [pdfCurrentPage, setPdfCurrentPage] = React.useState<number>(0);
   const [highlights, setHighlights] = React.useState<HighlightItem[]>([]);
   const [selectedChunk, setSelectedChunk] = React.useState<string>("");
@@ -223,6 +230,26 @@ export const AnnotateDocument: React.FC = () => {
     useState<CommentVisibility>("students"); // Default to visible for students
 
   // Helper functions for localStorage persistence of pinPositions
+  // This page hangs off /admin/class/... but is not a ClassLayout child, so
+  // nothing else tells the shell which class it is looking at. Without this the
+  // top bar shows a loading placeholder that never resolves.
+  useEffect(() => {
+    if (!classID) return;
+    setClassNavigation({
+      className: materialSummary?.className,
+      classNameLoading: !materialSummary,
+      items: [
+        {
+          key: "materials",
+          label: "Materials",
+          icon: <MaterialsIcon />,
+          selected: true,
+          onClick: () => navigate(`/admin/class/${classID}/manage-materials`),
+        },
+      ],
+    });
+  }, [classID, materialSummary, navigate, setClassNavigation]);
+
   const getStoredPinPositions = useCallback((documentId: string): Map<string, CommentPinPosition> => {
     try {
       const key = `commentPinPositions_${documentId}`;
@@ -559,6 +586,25 @@ export const AnnotateDocument: React.FC = () => {
     };
 
     fetchDocument();
+
+    // Names for the header. The page used to say only "Document Annotation",
+    // which tells an instructor with several classes open nothing at all.
+    const fetchMaterialSummary = async () => {
+      if (!materialID) return;
+      try {
+        const summary = await apiClient.materialControllerSummary({
+          materialID,
+        });
+        setMaterialSummary({
+          title: summary.title,
+          className: summary.className,
+        });
+      } catch (error) {
+        // A missing breadcrumb must not take the annotation tool down with it.
+        console.error("Failed to load material summary", error);
+      }
+    };
+    fetchMaterialSummary();
   }, [documentID]);
 
   const onPageChangeCallback = (e: PageChangeEvent) => {
@@ -1371,11 +1417,20 @@ export const AnnotateDocument: React.FC = () => {
       {documentData && (
         <Box sx={{ mx: { xs: 2, md: 3 }, mt: { xs: 2, md: 3 } }}>
           <AdminPageHeader
-            title="Document Annotation"
+            title={
+              !materialSummary
+                ? "Document Annotation"
+                : materialSummary.className
+                  ? `${materialSummary.className} / ${materialSummary.title}`
+                  : // An unnamed class contributes nothing to a breadcrumb.
+                    materialSummary.title
+            }
             description={`Viewing page ${currentPageNumber} of ${documentData.fileName}.`}
             back={{
-              label: "Material management",
-              onClick: () => navigate(`/admin/class/${classID}/${materialID}`),
+              label: "Materials",
+              // Was `/admin/class/:classID/:materialID`, a page reachable from
+              // nowhere else and now deleted.
+              onClick: () => navigate(`/admin/class/${classID}/manage-materials`),
             }}
             actions={
               <Button variant="contained" onClick={handleOpenSummaryDialog} sx={{ whiteSpace: "nowrap" }}>

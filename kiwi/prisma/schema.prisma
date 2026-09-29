@@ -468,64 +468,117 @@ model PendingEnrollment {
 }
 
 // Status is the status of the material, ie. "waiting", "processing", "processed"
+// Which variant of a material a document is. Roles are *versions*, not
+// audiences: STUDENT is what students see AND the model's default source when
+// there is no answer version, so the 2025-08 NONE/STUDENT/LLM enum's failure
+// (it could not express "both") does not recur. Who may read a document is
+// derived from the role, never stored twice.
+enum DocumentRole {
+  STUDENT // student-facing copy. At most one per material (partial unique index)
+  ANSWER // same pages plus answers. Recitation only, at most one per material
+  REFERENCE // extra corpus (textbook chapter, lecture notes). Many allowed
+}
+
+enum DocumentProcessingStatus {
+  PENDING
+  PROCESSING
+  READY
+  FAILED
+}
+
+enum MaterialLifecycle {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+// Who a comment/summary is written for. Same axis as DocumentRole, one level
+// finer: TUTOR is the LLM-only tier instructors could not express before —
+// "Hidden from students" used to hide the note from the model too.
+enum AnnotationAudience {
+  STUDENT // shown to students, and read by the model
+  TUTOR // read by the model only; students never see it
+  STAFF // instructors only; never enters a prompt
+}
+
 model ClassMaterial {
-  id               String     @id @default(uuid())
+  id               String            @id @default(uuid())
   classId          String
   materialType     String
   materialMetadata Json
   materialContent  String
   status           String
-  uploadedDate     DateTime   @default(now())
-  availableDate    DateTime   @default("1970-01-01T00:00:00.000Z") // default to Unix epoch (0)
-  class            Class      @relation(fields: [classId], references: [id])
+  // Empty falls back to the STUDENT document's file name.
+  title            String?
+  lifecycle        MaterialLifecycle @default(PUBLISHED)
+  uploadedDate     DateTime          @default(now())
+  availableDate    DateTime          @default("1970-01-01T00:00:00.000Z") // default to Unix epoch (0)
+  class            Class             @relation(fields: [classId], references: [id])
   documents        Document[]
 }
 
 model Document {
-  id              String            @id @default(uuid())
-  fileName        String
-  fileUrl         String
-  chunks          Json?
-  embeddings      Embedding[]
-  uploadedDate    DateTime          @default(now())
-  classMaterialId String?
-  classMaterial   ClassMaterial?    @relation(fields: [classMaterialId], references: [id])
-  isStudent       Boolean           @default(false)
-  isLlm           Boolean           @default(false)
-  sortIndex       Int               @default(0)
-  comments        DocumentComment[]
-  summaries       DocumentSummary[]
+  id               String                   @id @default(uuid())
+  fileName         String
+  fileUrl          String
+  chunks           Json?
+  embeddings       Embedding[]
+  uploadedDate     DateTime                 @default(now())
+  classMaterialId  String?
+  classMaterial    ClassMaterial?           @relation(fields: [classMaterialId], references: [id])
+  role             DocumentRole             @default(REFERENCE)
+  // Orthogonal to role: lets staff keep a document (a bad scan, a duplicate)
+  // out of retrieval without changing what it is.
+  retrievalEnabled Boolean                  @default(true)
+  processingStatus DocumentProcessingStatus @default(PENDING)
+  processingStage  String? // chunking | describing | embedding
+  processingError  String?
+  processedAt      DateTime?
+  /// @deprecated superseded by `role`; dual-written for one release
+  isStudent        Boolean                  @default(false)
+  /// @deprecated superseded by `role`
+  isLlm            Boolean                  @default(false)
+  /// @deprecated never written by any code path; dropped in the cleanup phase
+  sortIndex        Int                      @default(0)
+  comments         DocumentComment[]
+  summaries        DocumentSummary[]
+
+  @@index([classMaterialId, role])
 }
 
 model DocumentComment {
-  id              String   @id @default(uuid())
+  id              String             @id @default(uuid())
   documentId      String
   authorId        String
   pageNumber      Int
   text            String
-  isVisible       Boolean  @default(true)
+  audience        AnnotationAudience @default(STUDENT)
+  /// @deprecated superseded by `audience`; dual-written for one release
+  isVisible       Boolean            @default(true)
   selectionRegion Json?
   pinPosition     Json?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  document        Document @relation(fields: [documentId], references: [id])
-  author          User     @relation(fields: [authorId], references: [id])
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  document        Document           @relation(fields: [documentId], references: [id])
+  author          User               @relation(fields: [authorId], references: [id])
 
   @@index([documentId])
   @@index([authorId])
 }
 
 model DocumentSummary {
-  id                  String   @id @default(uuid())
+  id                  String             @id @default(uuid())
   documentId          String
   authorId            String
-  summaryNumber       Int      @default(autoincrement())
-  content             String   @db.Text
-  isVisibleToStudents Boolean  @default(true)
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
-  document            Document @relation(fields: [documentId], references: [id])
-  author              User     @relation(fields: [authorId], references: [id])
+  summaryNumber       Int                @default(autoincrement())
+  content             String             @db.Text
+  audience            AnnotationAudience @default(STUDENT)
+  /// @deprecated superseded by `audience`; dual-written for one release
+  isVisibleToStudents Boolean            @default(true)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  document            Document           @relation(fields: [documentId], references: [id])
+  author              User               @relation(fields: [authorId], references: [id])
 
   @@index([documentId])
   @@index([authorId])

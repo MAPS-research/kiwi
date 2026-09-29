@@ -20,13 +20,13 @@ import { exists, mapValues } from '../runtime.ts';
  */
 export interface ConversationTurn {
     /**
-     * 
+     * Who spoke. Only these two roles are accepted — any other value would inject an arbitrary role into the messages array.
      * @type {string}
      * @memberof ConversationTurn
      */
     role: ConversationTurnRoleEnum;
     /**
-     * 
+     * Turn text. Truncated turns are the client's responsibility; longer than 4000 characters is rejected.
      * @type {string}
      * @memberof ConversationTurn
      */

@@ -2,6 +2,14 @@
 
 export type Feature = "QwenModel" | "TokenLimit" | "RLanguageClass";
 
+export type DocumentRole = "STUDENT" | "ANSWER" | "REFERENCE";
+
+export type DocumentProcessingStatus = "PENDING" | "PROCESSING" | "READY" | "FAILED";
+
+export type MaterialLifecycle = "DRAFT" | "PUBLISHED" | "ARCHIVED";
+
+export type AnnotationAudience = "STUDENT" | "TUTOR" | "STAFF";
+
 export type ToolType = "RAG" | "CodeInterpreter" | "MCP";
 
 export interface Session {
@@ -328,6 +336,8 @@ export interface ClassMaterial {
   materialMetadata: JsonValue;
   materialContent: string;
   status: string;
+  title: string | null;
+  lifecycle: MaterialLifecycle;
   uploadedDate: Date;
   availableDate: Date;
   class?: Class;
@@ -343,6 +353,12 @@ export interface Document {
   uploadedDate: Date;
   classMaterialId: string | null;
   classMaterial?: ClassMaterial | null;
+  role: DocumentRole;
+  retrievalEnabled: boolean;
+  processingStatus: DocumentProcessingStatus;
+  processingStage: string | null;
+  processingError: string | null;
+  processedAt: Date | null;
   isStudent: boolean;
   isLlm: boolean;
   sortIndex: number;
@@ -356,6 +372,7 @@ export interface DocumentComment {
   authorId: string;
   pageNumber: number;
   text: string;
+  audience: AnnotationAudience;
   isVisible: boolean;
   selectionRegion: JsonValue | null;
   pinPosition: JsonValue | null;
@@ -371,6 +388,7 @@ export interface DocumentSummary {
   authorId: string;
   summaryNumber: number;
   content: string;
+  audience: AnnotationAudience;
   isVisibleToStudents: boolean;
   createdAt: Date;
   updatedAt: Date;

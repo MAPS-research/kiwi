@@ -21,14 +21,12 @@ import MCPAuthorize from "./pages/MCPAuthorize.tsx";
 import { Classes } from "./pages/admin/Classes.tsx";
 import AdminLayout from "./pages/admin/AdminLayout.tsx";
 import { AddNewClass } from "./pages/admin/AddNewClass.tsx";
-import { NewMaterial } from "./pages/admin/NewMaterial.tsx";
+import { Materials } from "./pages/admin/Materials.tsx";
 import { Analytics } from "./pages/admin/Analytics.tsx";
 import { ClassEnroll } from "./pages/admin/ClassEnroll.tsx";
 import { SystemWideFeatureFlags } from "./pages/admin/SystemWideFeatureFlags.tsx";
 import { ClassSpecificFeatureFlags } from "./pages/admin/ClassSpecificFeatureFlags.tsx";
 import { AnnotateDocument } from "./pages/admin/AnnotateDocument.tsx";
-import { BatchMaterialsUpload } from "./pages/admin/BatchMaterialsUpload.tsx";
-import { ProfessorInterface } from "./pages/admin/ProfessorInterface.tsx";
 import { ClassLayout } from "./pages/admin/ClassLayout.tsx";
 import { ClassEdit } from "./pages/admin/ClassEdit.tsx";
 import { ClassEmail } from "./pages/admin/ClassEmail.tsx";
@@ -168,8 +166,10 @@ const router = createBrowserRouter([
             children: [
               { index: true, element: <ClassEdit /> },
               { path: "edit-metadata", element: <ClassEdit /> },
-              { path: "batch-upload", element: <BatchMaterialsUpload /> },
-              { path: "manage-materials", element: <NewMaterial /> },
+              { path: "manage-materials", element: <Materials /> },
+              // The batch page merged into the one above; keep the path
+              // working for bookmarks and the old sidebar link.
+              { path: "batch-upload", element: <Navigate to="../manage-materials" replace /> },
               { path: "feature-flags", element: <ClassSpecificFeatureFlags /> },
               { path: "enroll-students", element: <ClassEnroll /> },
               { path: "send-emails", element: <ClassEmail /> },
@@ -183,7 +183,6 @@ const router = createBrowserRouter([
               { path: "app/:appSlug", element: <AdminAppPage /> },
             ],
           },
-          { path: "class/:classID/:materialID", element: <ProfessorInterface /> },
           { path: "class/:classID/:materialID/:documentID", element: <AnnotateDocument /> },
           {
             path: "class/:classID/:materialID/:documentID/annotation",

@@ -26,6 +26,12 @@ export interface UpdateDocumentCommentVisibilityDto {
      */
     isVisibleToStudents?: boolean;
     /**
+     * Who the note is for. STUDENT is shown to students and read by the tutor, TUTOR is read by the tutor only, STAFF never enters a prompt. Wins over isVisibleToStudents when both are sent.
+     * @type {string}
+     * @memberof UpdateDocumentCommentVisibilityDto
+     */
+    audience?: UpdateDocumentCommentVisibilityDtoAudienceEnum;
+    /**
      * Comment text.
      * @type {string}
      * @memberof UpdateDocumentCommentVisibilityDto
@@ -38,6 +44,18 @@ export interface UpdateDocumentCommentVisibilityDto {
      */
     pinPosition?: object;
 }
+
+
+/**
+ * @export
+ */
+export const UpdateDocumentCommentVisibilityDtoAudienceEnum = {
+    Student: 'STUDENT',
+    Tutor: 'TUTOR',
+    Staff: 'STAFF'
+} as const;
+export type UpdateDocumentCommentVisibilityDtoAudienceEnum = typeof UpdateDocumentCommentVisibilityDtoAudienceEnum[keyof typeof UpdateDocumentCommentVisibilityDtoAudienceEnum];
+
 
 /**
  * Check if a given object implements the UpdateDocumentCommentVisibilityDto interface.
@@ -59,6 +77,7 @@ export function UpdateDocumentCommentVisibilityDtoFromJSONTyped(json: any, ignor
     return {
         
         'isVisibleToStudents': !exists(json, 'isVisibleToStudents') ? undefined : json['isVisibleToStudents'],
+        'audience': !exists(json, 'audience') ? undefined : json['audience'],
         'text': !exists(json, 'text') ? undefined : json['text'],
         'pinPosition': !exists(json, 'pinPosition') ? undefined : json['pinPosition'],
     };
@@ -74,6 +93,7 @@ export function UpdateDocumentCommentVisibilityDtoToJSON(value?: UpdateDocumentC
     return {
         
         'isVisibleToStudents': value.isVisibleToStudents,
+        'audience': value.audience,
         'text': value.text,
         'pinPosition': value.pinPosition,
     };

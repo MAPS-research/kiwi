@@ -1,9 +1,11 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
-import { Logger } from '@nestjs/common';
+import { forwardRef, Inject, Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
+import { DatabaseService } from 'src/common/database/database.service';
 import { DocumentService as DatabaseDocumentService } from 'src/common/database/document.service';
 import { StorageService } from 'src/common/storage/storage.service';
 import { UnstructuredService } from 'src/common/unstructured/unstructured.service';
+import { DocumentService } from './document.service';
 
 @Processor('document')
 export class DocumentConsumer extends WorkerHost {
@@ -12,6 +14,9 @@ export class DocumentConsumer extends WorkerHost {
     private databaseDocumentService: DatabaseDocumentService,
     private unstructuredService: UnstructuredService,
     private storageService: StorageService,
+    private readonly db: DatabaseService,
+    @Inject(forwardRef(() => DocumentService))
+    private readonly documentService: DocumentService,
   ) {
     super();
   }
@@ -20,9 +25,51 @@ export class DocumentConsumer extends WorkerHost {
     switch (job.name) {
       case 'chunkDocument':
         return await this.chunkDocument(job.data.fileId);
+      case 'processDocument':
+        return await this.processDocument(job.data.documentId);
       default:
         break;
     }
+  }
+
+  /**
+   * Chunk, describe and embed in one job.
+   *
+   * The browser used to drive these three as separate calls, two of them
+   * synchronous requests lasting minutes, so closing the tab left a document
+   * that looked identical to a finished one. Each stage still records its own
+   * status (see DocumentService), which keeps the legacy three-call sequence
+   * walking the same state machine as this job.
+   */
+  private async processDocument(documentId: string) {
+    // Claim the document. Two jobs for the same document would otherwise
+    // interleave — embedding is a replace, so one run can wipe rows the other
+    // just wrote. `updateMany` with the status in the predicate makes the
+    // claim atomic; a second worker finds nothing to update and steps aside.
+    const claim = await this.db.document.updateMany({
+      where: { id: documentId, processingStatus: { not: 'PROCESSING' } },
+      data: {
+        processingStatus: 'PROCESSING',
+        processingStage: 'chunking',
+        processingError: null,
+      },
+    });
+
+    if (claim.count === 0) {
+      this.logger.warn(
+        `Document ${documentId} is already being processed; skipping this job`,
+      );
+      return { message: 'Already processing', document: { id: documentId } };
+    }
+
+    await this.chunkDocument(documentId);
+    await this.documentService.describeImageChunks(documentId);
+    await this.documentService.embedDocument(documentId);
+
+    return {
+      message: 'Document processed successfully',
+      document: { id: documentId },
+    };
   }
 
   base64ToUint8Array(base64: string): Uint8Array {
@@ -43,6 +90,10 @@ export class DocumentConsumer extends WorkerHost {
     if (!document) {
       throw new Error('Document not found');
     }
+
+    // Recorded here rather than in the caller so the legacy chunk-only job
+    // leaves the same trail as the full pipeline.
+    await this.documentService.markProcessingStage(fileId, 'chunking');
 
     const { fileUrl } = document;
 

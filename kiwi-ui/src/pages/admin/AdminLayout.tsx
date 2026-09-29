@@ -546,9 +546,16 @@ const AdminLayout: React.FC = () => {
           }
           contextLoading={
             canSelectClassScope &&
-            (!classOptionsLoaded || classOptionsLoading ||
+            (!classOptionsLoaded ||
+              classOptionsLoading ||
+              // Only wait on a class navigation that exists and says it is
+              // loading. `?? true` treated "no navigation at all" as "still
+              // loading", which never resolves on a /admin/class/ route that
+              // ClassLayout does not own — the document annotation page —
+              // leaving a skeleton pill in the top bar forever.
               (classNavigationExpanded &&
-                (classNavigation?.classNameLoading ?? true)))
+                classNavigation !== null &&
+                Boolean(classNavigation.classNameLoading)))
           }
           classOptions={classOptions}
           classOptionsLoading={classOptionsLoading}

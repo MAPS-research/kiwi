@@ -4,13 +4,14 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InstructorClassService } from 'src/instructor-class/instructor-class.service';
+import { MaterialPermissionService } from 'src/class/material/material-permission.service';
 import { MaterialManageGuard } from 'src/instructor-class/material-manage.guard';
 import { DocumentService } from './document.service';
 
 /**
  * Regression tests for document and material access: management is scoped to
- * one class, and students can read only the document their material list
- * shows them (never answer keys).
+ * one class, and students can read only the student copy of a released
+ * material (never answer keys or reference documents).
  */
 
 const past = new Date('2020-01-01');
@@ -19,8 +20,7 @@ const future = new Date('2999-01-01');
 type Doc = {
   id: string;
   classMaterialId: string;
-  isStudent: boolean;
-  uploadedDate: Date;
+  role: 'STUDENT' | 'ANSWER' | 'REFERENCE';
 };
 
 function fixture() {
@@ -42,18 +42,22 @@ function fixture() {
     { userId: 'instNoPerm', classId: 'A', permissions: {} },
   ];
   const materials: Record<string, any> = {
-    recA: { id: 'recA', classId: 'A', status: 'processed', availableDate: past },
-    lateA: { id: 'lateA', classId: 'A', status: 'processed', availableDate: future },
-    plainA: { id: 'plainA', classId: 'A', status: 'processed', availableDate: past },
+    recA: { id: 'recA', classId: 'A', status: 'processed', lifecycle: 'PUBLISHED', availableDate: past },
+    lateA: { id: 'lateA', classId: 'A', status: 'processed', lifecycle: 'PUBLISHED', availableDate: future },
+    plainA: { id: 'plainA', classId: 'A', status: 'processed', lifecycle: 'PUBLISHED', availableDate: past },
+    oldA: { id: 'oldA', classId: 'A', status: 'processed', lifecycle: 'ARCHIVED', availableDate: past },
+    offA: { id: 'offA', classId: 'A', status: 'unavailable', lifecycle: 'PUBLISHED', availableDate: past },
   };
   const documents: Doc[] = [
-    // recitation: worksheet flagged for students, answer key newer and unflagged
-    { id: 'worksheet', classMaterialId: 'recA', isStudent: true, uploadedDate: new Date('2024-01-01') },
-    { id: 'answers', classMaterialId: 'recA', isStudent: false, uploadedDate: new Date('2024-02-01') },
-    // no flag: the newest document is the visible one
-    { id: 'old', classMaterialId: 'plainA', isStudent: false, uploadedDate: new Date('2024-01-01') },
-    { id: 'new', classMaterialId: 'plainA', isStudent: false, uploadedDate: new Date('2024-03-01') },
-    { id: 'notYet', classMaterialId: 'lateA', isStudent: true, uploadedDate: new Date('2024-01-01') },
+    // recitation: the student worksheet and its answer key
+    { id: 'worksheet', classMaterialId: 'recA', role: 'STUDENT' },
+    { id: 'answers', classMaterialId: 'recA', role: 'ANSWER' },
+    // a student copy plus a staff-only reference document
+    { id: 'handout', classMaterialId: 'plainA', role: 'STUDENT' },
+    { id: 'notes', classMaterialId: 'plainA', role: 'REFERENCE' },
+    { id: 'notYet', classMaterialId: 'lateA', role: 'STUDENT' },
+    { id: 'archived', classMaterialId: 'oldA', role: 'STUDENT' },
+    { id: 'hidden', classMaterialId: 'offA', role: 'STUDENT' },
   ];
 
   const database: any = {
@@ -66,12 +70,21 @@ function fixture() {
         const { classId, userId } = where.classId_userId;
         return enrollments.find((e) => e.classId === classId && e.userId === userId) ?? null;
       },
+      findFirst: async ({ where }: any) =>
+        enrollments.find(
+          (e) =>
+            e.classId === where.classId &&
+            e.userId === where.userId &&
+            (!where.role || e.role === where.role),
+        ) ?? null,
     },
     instructorClass: {
       findUnique: async ({ where }: any) => {
         const { userId, classId } = where.userId_classId;
         return assignments.find((a) => a.userId === userId && a.classId === classId) ?? null;
       },
+      findFirst: async ({ where }: any) =>
+        assignments.find((a) => a.userId === where.userId && a.classId === where.classId) ?? null,
     },
     classMaterial: {
       findUnique: async ({ where }: any) => materials[where.id] ?? null,
@@ -81,20 +94,16 @@ function fixture() {
         const doc = documents.find((d) => d.id === where.id);
         if (!doc) return null;
         const material = materials[doc.classMaterialId];
-        if (select?.classMaterial) return { classMaterial: { classId: material.classId } };
+        if (select?.classMaterial) return { ...doc, classMaterial: material };
         return include?.classMaterial ? { ...doc, classMaterial: material } : doc;
       },
-      findMany: async ({ where }: any) =>
-        documents
-          .filter((d) => d.classMaterialId === where.classMaterialId)
-          .sort((a, b) => b.uploadedDate.getTime() - a.uploadedDate.getTime()),
     },
   };
 
   const access = new InstructorClassService(database, {} as any);
   const documentService = Object.create(DocumentService.prototype);
   documentService.db = database;
-  documentService.instructorClassService = access;
+  documentService.materialPermissionService = new MaterialPermissionService(database);
   return { access, documentService, database };
 }
 
@@ -167,18 +176,23 @@ describe('DocumentService.assertCanReadDocument', () => {
     await expect(read('notYet', 'instA')).resolves.toBeUndefined();
   });
 
-  it('lets a student read the document shown for a material', async () => {
+  it('lets a student read the student copy of a material', async () => {
     await expect(read('worksheet', 'studentA')).resolves.toBeUndefined();
-    await expect(read('new', 'studentA')).resolves.toBeUndefined();
+    await expect(read('handout', 'studentA')).resolves.toBeUndefined();
   });
 
-  it('hides answer keys and other documents students are not shown', async () => {
+  it('hides answer keys and reference documents from students', async () => {
     await expect(read('answers', 'studentA')).rejects.toBeInstanceOf(NotFoundException);
-    await expect(read('old', 'studentA')).rejects.toBeInstanceOf(NotFoundException);
+    await expect(read('notes', 'studentA')).rejects.toBeInstanceOf(NotFoundException);
   });
 
   it('hides materials that are not released yet', async () => {
     await expect(read('notYet', 'studentA')).rejects.toBeInstanceOf(NotFoundException);
+  });
+
+  it('hides archived and unavailable materials', async () => {
+    await expect(read('archived', 'studentA')).rejects.toBeInstanceOf(NotFoundException);
+    await expect(read('hidden', 'studentA')).rejects.toBeInstanceOf(NotFoundException);
   });
 
   it('hides documents of classes the user is not in', async () => {

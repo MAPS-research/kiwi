@@ -31,7 +31,25 @@ export interface UpdateDocumentSummaryDto {
      * @memberof UpdateDocumentSummaryDto
      */
     isVisibleToStudents?: boolean;
+    /**
+     * Who the note is for. STUDENT is shown to students and read by the tutor, TUTOR is read by the tutor only, STAFF never enters a prompt. Wins over isVisibleToStudents when both are sent.
+     * @type {string}
+     * @memberof UpdateDocumentSummaryDto
+     */
+    audience?: UpdateDocumentSummaryDtoAudienceEnum;
 }
+
+
+/**
+ * @export
+ */
+export const UpdateDocumentSummaryDtoAudienceEnum = {
+    Student: 'STUDENT',
+    Tutor: 'TUTOR',
+    Staff: 'STAFF'
+} as const;
+export type UpdateDocumentSummaryDtoAudienceEnum = typeof UpdateDocumentSummaryDtoAudienceEnum[keyof typeof UpdateDocumentSummaryDtoAudienceEnum];
+
 
 /**
  * Check if a given object implements the UpdateDocumentSummaryDto interface.
@@ -54,6 +72,7 @@ export function UpdateDocumentSummaryDtoFromJSONTyped(json: any, ignoreDiscrimin
         
         'content': !exists(json, 'content') ? undefined : json['content'],
         'isVisibleToStudents': !exists(json, 'isVisibleToStudents') ? undefined : json['isVisibleToStudents'],
+        'audience': !exists(json, 'audience') ? undefined : json['audience'],
     };
 }
 
@@ -68,6 +87,7 @@ export function UpdateDocumentSummaryDtoToJSON(value?: UpdateDocumentSummaryDto 
         
         'content': value.content,
         'isVisibleToStudents': value.isVisibleToStudents,
+        'audience': value.audience,
     };
 }
 

@@ -31,7 +31,25 @@ export interface CreateDocumentSummaryDto {
      * @memberof CreateDocumentSummaryDto
      */
     isVisibleToStudents?: boolean;
+    /**
+     * Who the note is for. STUDENT is shown to students and read by the tutor, TUTOR is read by the tutor only, STAFF never enters a prompt. Wins over isVisibleToStudents when both are sent.
+     * @type {string}
+     * @memberof CreateDocumentSummaryDto
+     */
+    audience?: CreateDocumentSummaryDtoAudienceEnum;
 }
+
+
+/**
+ * @export
+ */
+export const CreateDocumentSummaryDtoAudienceEnum = {
+    Student: 'STUDENT',
+    Tutor: 'TUTOR',
+    Staff: 'STAFF'
+} as const;
+export type CreateDocumentSummaryDtoAudienceEnum = typeof CreateDocumentSummaryDtoAudienceEnum[keyof typeof CreateDocumentSummaryDtoAudienceEnum];
+
 
 /**
  * Check if a given object implements the CreateDocumentSummaryDto interface.
@@ -55,6 +73,7 @@ export function CreateDocumentSummaryDtoFromJSONTyped(json: any, ignoreDiscrimin
         
         'content': json['content'],
         'isVisibleToStudents': !exists(json, 'isVisibleToStudents') ? undefined : json['isVisibleToStudents'],
+        'audience': !exists(json, 'audience') ? undefined : json['audience'],
     };
 }
 
@@ -69,6 +88,7 @@ export function CreateDocumentSummaryDtoToJSON(value?: CreateDocumentSummaryDto 
         
         'content': value.content,
         'isVisibleToStudents': value.isVisibleToStudents,
+        'audience': value.audience,
     };
 }
 

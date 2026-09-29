@@ -106,10 +106,15 @@ models/CompetitionLeaderboardDto.ts
 models/CompetitionReplyDto.ts
 models/CompetitorEnrollDto.ts
 models/CompetitorInfoDto.ts
+models/ContextBlockDto.ts
+models/ContextPreviewResponse.ts
 models/ContextRequestDto.ts
+models/ContextTotalsDto.ts
 models/ContextUpdateResponseDto.ts
 models/ContextualChatRequestDto.ts
 models/ContextualChatResponseDto.ts
+models/ConversationLlmUsage.ts
+models/ConversationLlmUsageResponse.ts
 models/ConversationTurn.ts
 models/CreateApiTokenDto.ts
 models/CreateAuditLogDto.ts
@@ -137,6 +142,7 @@ models/DocumentForListing.ts
 models/DocumentIdsChatResponse.ts
 models/DocumentIdsForChat.ts
 models/DocumentListResponse.ts
+models/DocumentProcessingStatusResponse.ts
 models/DocumentResponse.ts
 models/DocumentSummaryAuthorDto.ts
 models/DocumentSummaryDto.ts
@@ -181,6 +187,9 @@ models/KeywordStatusResponse.ts
 models/LectureStatsDto.ts
 models/ListInstructorsForClassResponse.ts
 models/ListWhitelistResponse.ts
+models/LlmCost.ts
+models/LlmUsageAggregate.ts
+models/LlmUsageRequest.ts
 models/LoginDto.ts
 models/LoginResponseDto.ts
 models/Material.ts
@@ -191,6 +200,8 @@ models/MaterialEditRequest.ts
 models/MaterialEditResponse.ts
 models/MaterialListRequest.ts
 models/MaterialListResponse.ts
+models/MaterialStaffListResponse.ts
+models/MaterialSummaryResponse.ts
 models/McpAdminControllerListMcpServerTools200ResponseInner.ts
 models/McpConnectionResponseDto.ts
 models/McpServerInfoDto.ts
@@ -218,6 +229,7 @@ models/PromptAnswerClient.ts
 models/QueryRequest.ts
 models/QueryResponse.ts
 models/QueryResult.ts
+models/QueuedDocumentResponse.ts
 models/RefreshKeywordsRequest.ts
 models/RefreshKeywordsResponse.ts
 models/RegisterAppDto.ts
@@ -236,8 +248,11 @@ models/SendEmailToClassDto.ts
 models/SendTemplatedEmailDto.ts
 models/SessionTokenUsage.ts
 models/SetDocumentFlagsDto.ts
+models/SetDocumentRoleDto.ts
 models/SetSelectedClassRequest.ts
 models/SetSelectedClassResponse.ts
+models/StaffDocument.ts
+models/StaffMaterial.ts
 models/StreamStatusResponse.ts
 models/Student.ts
 models/StudentChatRequest.ts
@@ -284,6 +299,8 @@ models/UpdateWhitelistEntryDto.ts
 models/UpdateWhitelistRequest.ts
 models/UpdateWidgetStateDto.ts
 models/UpsertToolConfigDto.ts
+models/UserLlmUsage.ts
+models/UserLlmUsageResponse.ts
 models/UserPreferenceResponseDto.ts
 models/UserTokenUsageRequest.ts
 models/UserTokenUsageResponse.ts

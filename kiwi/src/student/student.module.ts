@@ -4,6 +4,7 @@ import { StudentService } from './student.service';
 import { DatabaseModule } from 'src/common/database/database.module';
 import { LlmModule } from 'src/common/llm/llm.module';
 import { ClassModule } from 'src/class/class.module';
+import { MaterialAccessModule } from 'src/class/material/material-access.module';
 import { ChatModule } from 'src/common/chat/chat.module';
 import { InteractionModule } from 'src/interaction/interaction.module';
 import { DocumentModule } from 'src/document/document.module';
@@ -24,6 +25,7 @@ import { KiwiAppModule } from 'src/kiwi-app/kiwi-app.module';
     DatabaseModule,
     LlmModule,
     ClassModule,
+    MaterialAccessModule,
     ChatModule,
     InteractionModule,
     DocumentModule,

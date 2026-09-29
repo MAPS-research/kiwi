@@ -45,7 +45,7 @@ export interface UnifiedChatRequest {
      */
     prompt: string;
     /**
-     * Chat history summary for context
+     * Chat history summary for context, at most 4000 characters.
      * @type {string}
      * @memberof UnifiedChatRequest
      */
@@ -57,7 +57,7 @@ export interface UnifiedChatRequest {
      */
     conversationId?: string;
     /**
-     * Prior conversation turns (oldest first), replayed into the agent so it remembers the back-and-forth across turns.
+     * Prior conversation turns (oldest first), replayed into the agent so it remembers the back-and-forth across turns. At most 200 turns, each at most 4000 characters.
      * @type {Array<ConversationTurn>}
      * @memberof UnifiedChatRequest
      */
@@ -80,6 +80,12 @@ export interface UnifiedChatRequest {
      * @memberof UnifiedChatRequest
      */
     clientToolResult?: ClientToolResult;
+    /**
+     * EVERY client tool executed so far in this agent turn, oldest first (the last entry is the step that just finished). Seeding the whole trail is what lets the agent remember earlier results: each browser round-trip rebuilds the message list from scratch, so sending only the latest step gave the agent amnesia about the sitemap/class list it had already fetched, and it looped re-fetching them.
+     * @type {Array<ClientToolResult>}
+     * @memberof UnifiedChatRequest
+     */
+    clientToolTrail?: Array<ClientToolResult>;
 }
 
 /**
@@ -110,6 +116,7 @@ export function UnifiedChatRequestFromJSONTyped(json: any, ignoreDiscriminator: 
         'context': UnifiedChatContextFromJSON(json['context']),
         'engineChoice': !exists(json, 'engineChoice') ? undefined : json['engineChoice'],
         'clientToolResult': !exists(json, 'clientToolResult') ? undefined : ClientToolResultFromJSON(json['clientToolResult']),
+        'clientToolTrail': !exists(json, 'clientToolTrail') ? undefined : ((json['clientToolTrail'] as Array<any>).map(ClientToolResultFromJSON)),
     };
 }
 
@@ -129,6 +136,7 @@ export function UnifiedChatRequestToJSON(value?: UnifiedChatRequest | null): any
         'context': UnifiedChatContextToJSON(value.context),
         'engineChoice': value.engineChoice,
         'clientToolResult': ClientToolResultToJSON(value.clientToolResult),
+        'clientToolTrail': value.clientToolTrail === undefined ? undefined : ((value.clientToolTrail as Array<any>).map(ClientToolResultToJSON)),
     };
 }
 

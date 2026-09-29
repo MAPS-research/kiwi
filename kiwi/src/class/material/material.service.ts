@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ClassMaterialService } from 'src/common/database/class-material.service';
 import { ClassService as DatabaseClassService } from 'src/common/database/class.service';
 import { DocumentService as DatabaseDocumentService } from 'src/common/database/document.service';
@@ -9,6 +9,7 @@ import { ClassService } from '../class.service';
 import { MaterialStatus, MaterialType } from './dto/material-enum';
 import { ClassMaterial } from '@prisma/client';
 import { StorageService } from 'src/common/storage/storage.service';
+import { MaterialAccessService } from './material-access.service';
 
 @Injectable()
 export class MaterialService {
@@ -21,9 +22,15 @@ export class MaterialService {
     private classMaterialService: ClassMaterialService,
     private documentService: DocumentService,
     private storageService: StorageService,
+    private materialAccessService: MaterialAccessService,
   ) {}
 
-  async add(classId: string, materialType: MaterialType, availableDate: Date) {
+  async add(
+    classId: string,
+    materialType: MaterialType,
+    availableDate: Date,
+    title?: string,
+  ) {
     const newMaterial = await this.classMaterialService.createClassMaterial({
       classId,
       materialType,
@@ -31,6 +38,7 @@ export class MaterialService {
       materialContent: '',
       materialMetadata: '',
       availableDate,
+      title: title?.trim() || null,
     });
 
     return {
@@ -42,6 +50,7 @@ export class MaterialService {
     materialId: string,
     materialType?: MaterialType,
     availableDate?: Date,
+    title?: string,
   ) {
     const updatedMaterial = await this.classMaterialService.updateClassMaterial(
       {
@@ -51,6 +60,7 @@ export class MaterialService {
         data: {
           materialType,
           availableDate,
+          ...(title === undefined ? {} : { title: title.trim() || null }),
         },
       },
     );
@@ -66,9 +76,105 @@ export class MaterialService {
         id: materialId,
       },
       data: {
+        // `status` stays written until the legacy column goes; `lifecycle` is
+        // what reads look at.
         status: MaterialStatus.UNAVAILABLE,
+        lifecycle: 'ARCHIVED',
       },
     });
+  }
+
+  /**
+   * Everything staff need to manage a class's materials, including ones dated
+   * in the future.
+   *
+   * `list()` time-gates on availableDate for everyone, so scheduling a material
+   * ahead made it vanish from the instructor's own management page — they could
+   * not add the answer key afterwards without moving the date back. Staff reads
+   * are a different question from student reads, and this is the staff one.
+   */
+  async listForStaff(classId: string) {
+    const materials = await this.classMaterialService.classMaterials({
+      where: { classId, lifecycle: { not: 'ARCHIVED' } },
+      orderBy: { availableDate: 'asc' },
+    });
+
+    const withDocuments = await Promise.all(
+      materials.map(async (material) => {
+        const documents = await this.databaseDocumentService.documents({
+          where: { classMaterialId: material.id },
+          orderBy: { uploadedDate: 'asc' },
+        });
+
+        const signed = await Promise.all(
+          documents.map(async (document) => ({
+            id: document.id,
+            fileName: document.fileName,
+            role: document.role,
+            processingStatus: document.processingStatus,
+            processingStage: document.processingStage,
+            processingError: document.processingError,
+            uploadedDate: document.uploadedDate,
+            file: await this.storageService.generateSignedUrl(document.fileUrl),
+          })),
+        );
+
+        return {
+          id: material.id,
+          materialType: material.materialType,
+          title:
+            material.title?.trim() ||
+            signed.find((d) => d.role === 'STUDENT')?.fileName ||
+            signed[0]?.fileName ||
+            'Untitled material',
+          availableDate: material.availableDate,
+          lifecycle: material.lifecycle,
+          documents: signed,
+        };
+      }),
+    );
+
+    return { materials: withDocuments };
+  }
+
+  /**
+   * Enough to name a material and its class. Exists so a page that only needs a
+   * breadcrumb does not have to pull the whole staff listing, which signs a URL
+   * for every document in the class.
+   */
+  async summary(materialId: string) {
+    const material = await this.classMaterialService.classMaterial({
+      id: materialId,
+    });
+    if (!material) {
+      throw new NotFoundException('Material not found');
+    }
+
+    const classRecord = await this.databaseClassService.class({
+      id: material.classId,
+    });
+    const metadata = (classRecord?.classMetadata ?? {}) as {
+      className?: string;
+    };
+
+    const documents = await this.databaseDocumentService.documents({
+      where: { classMaterialId: material.id },
+      orderBy: { uploadedDate: 'asc' },
+    });
+
+    return {
+      id: material.id,
+      title:
+        material.title?.trim() ||
+        documents.find((d) => d.role === 'STUDENT')?.fileName ||
+        documents[0]?.fileName ||
+        'Untitled material',
+      materialType: material.materialType,
+      classId: material.classId,
+      // Empty rather than a placeholder: the caller decides whether an
+      // unnamed class is worth a line in a breadcrumb.
+      className: metadata.className?.trim() ?? '',
+    };
   }
 
   async isMaterialAvailable(material: ClassMaterial): Promise<boolean> {
@@ -83,9 +189,7 @@ export class MaterialService {
         ? {
             where: {
               classId,
-              status: {
-                not: MaterialStatus.UNAVAILABLE,
-              },
+              lifecycle: { not: 'ARCHIVED' },
             },
             orderBy: {
               uploadedDate: 'asc',
@@ -112,6 +216,30 @@ export class MaterialService {
         materialType: m.materialType,
         availableDate: m.availableDate,
       })),
+    };
+  }
+
+  /**
+   * The single document a student may open for this material, signed, or null.
+   *
+   * Replaces `documents.find(isStudent) ?? documents[0]` at the call sites. The
+   * fallback in that expression resolved to the newest upload — which for a
+   * recitation is the answer key — so any material whose flags were never set
+   * handed students the answers. There is no fallback now: a material with no
+   * student copy is simply not shown.
+   */
+  async getStudentDocumentView(materialId: string) {
+    const document =
+      await this.materialAccessService.getStudentDocument(materialId);
+    if (!document) return null;
+
+    return {
+      id: document.id,
+      fileName: document.fileName,
+      file: await this.storageService.generateSignedUrl(document.fileUrl),
+      updatedDate: document.uploadedDate,
+      isStudent: true,
+      isLlm: document.isLlm,
     };
   }
 

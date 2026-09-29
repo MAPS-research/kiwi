@@ -5,7 +5,6 @@ import {
 import Grid from "@mui/material/Grid";
 import {
   AppsOutlined as Blocks,
-  CloudUploadOutlined as Upload,
   DescriptionOutlined as FileText,
   EditOutlined as PenSquare,
   EmailOutlined as Mail,
@@ -134,13 +133,7 @@ const ClassManagement: React.FC = () => {
       roles: ['admin', 'instructor']
     },
     {
-      label: "Batch Upload",
-      icon: <Upload sx={{ fontSize: 50, color: "text.primary" }} />,
-      path: `/admin/class/${classID}/batch-upload`,
-      roles: ['admin', 'instructor']
-    },
-    {
-      label: "Manage Materials",
+      label: "Materials",
       icon: <FileText sx={{ fontSize: 50, color: "text.primary" }} />,
       path: `/admin/class/${classID}/manage-materials`,
       roles: ['admin', 'instructor']

@@ -38,6 +38,12 @@ export interface CreateDocumentCommentDto {
      */
     isVisibleToStudents?: boolean;
     /**
+     * Who the note is for. STUDENT is shown to students and read by the tutor, TUTOR is read by the tutor only, STAFF never enters a prompt. Wins over isVisibleToStudents when both are sent.
+     * @type {string}
+     * @memberof CreateDocumentCommentDto
+     */
+    audience?: CreateDocumentCommentDtoAudienceEnum;
+    /**
      * Selection region for the comment highlight.
      * @type {object}
      * @memberof CreateDocumentCommentDto
@@ -50,6 +56,18 @@ export interface CreateDocumentCommentDto {
      */
     pinPosition?: object;
 }
+
+
+/**
+ * @export
+ */
+export const CreateDocumentCommentDtoAudienceEnum = {
+    Student: 'STUDENT',
+    Tutor: 'TUTOR',
+    Staff: 'STAFF'
+} as const;
+export type CreateDocumentCommentDtoAudienceEnum = typeof CreateDocumentCommentDtoAudienceEnum[keyof typeof CreateDocumentCommentDtoAudienceEnum];
+
 
 /**
  * Check if a given object implements the CreateDocumentCommentDto interface.
@@ -75,6 +93,7 @@ export function CreateDocumentCommentDtoFromJSONTyped(json: any, ignoreDiscrimin
         'pageNumber': json['pageNumber'],
         'text': json['text'],
         'isVisibleToStudents': !exists(json, 'isVisibleToStudents') ? undefined : json['isVisibleToStudents'],
+        'audience': !exists(json, 'audience') ? undefined : json['audience'],
         'selectionRegion': !exists(json, 'selectionRegion') ? undefined : json['selectionRegion'],
         'pinPosition': !exists(json, 'pinPosition') ? undefined : json['pinPosition'],
     };
@@ -92,6 +111,7 @@ export function CreateDocumentCommentDtoToJSON(value?: CreateDocumentCommentDto 
         'pageNumber': value.pageNumber,
         'text': value.text,
         'isVisibleToStudents': value.isVisibleToStudents,
+        'audience': value.audience,
         'selectionRegion': value.selectionRegion,
         'pinPosition': value.pinPosition,
     };

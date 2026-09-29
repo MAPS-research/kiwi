@@ -9,6 +9,7 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ClassService } from 'src/class/class.service';
+import { MaterialAccessService } from 'src/class/material/material-access.service';
 import { ChatService } from 'src/common/chat/chat.service';
 import { UserSessionService } from 'src/common/database/user-session.service';
 import { UserService } from 'src/common/database/user.service';
@@ -165,6 +166,7 @@ export class StudentService {
     private conversationService: ConversationService,
     private contextJobsService: ContextJobsService,
     private kiwiAppService: KiwiAppService,
+    private materialAccessService: MaterialAccessService,
   ) { }
 
   async getEnrollments(userId: string): Promise<Enrollment[]> {
@@ -319,26 +321,9 @@ export class StudentService {
       engineChoice,
     );
 
-    // collect them into citations
-    const citations = [] as { pdfID: string; pageNumber: string }[];
-
-    // unique page number and pdfID from results.metadatas
-    const uniquePageNumberPdfID = new Set();
-    results.forEach((ragResult) => {
-      const pageNumberPdfID =
-        ragResult.documentPageNumber + ragResult.documentId;
-      if (!uniquePageNumberPdfID.has(pageNumberPdfID)) {
-        uniquePageNumberPdfID.add(pageNumberPdfID);
-        const citationPdfId = this.pdfIdCorrector(
-          ragResult.documentId,
-          recitationPdfPair,
-        );
-        citations.push({
-          pdfID: citationPdfId,
-          pageNumber: ragResult.documentPageNumber,
-        });
-      }
-    });
+    // collect them into citations, deduped across both retrieval batches below
+    const citationKeys = new Set<string>();
+    const citations = await this.toStudentCitations(results, citationKeys);
 
     // send the retrieved texts and images to the frontend
     const retrievedTexts = results.map((result) => result.text);
@@ -398,17 +383,11 @@ export class StudentService {
       engineChoice,
     );
 
-    studentContextResults.forEach((contextResult) => {
-      const pageNumberPdfID =
-        contextResult.documentPageNumber + contextResult.documentId;
-      if (!uniquePageNumberPdfID.has(pageNumberPdfID)) {
-        uniquePageNumberPdfID.add(pageNumberPdfID);
-        citations.push({
-          pdfID: contextResult.documentId,
-          pageNumber: contextResult.documentPageNumber,
-        });
-      }
-    });
+    // This batch used to be cited by raw document id — no correction at all,
+    // not even the old recitation swap the batch above got.
+    citations.push(
+      ...(await this.toStudentCitations(studentContextResults, citationKeys)),
+    );
 
     const studentContextTexts = studentContextResults.map(
       (result) => result.text,
@@ -526,11 +505,21 @@ export class StudentService {
     engineChoice?: EngineChoice,
     pageScope?: { documentId?: string; pageNumber?: number },
   ): Promise<string> {
+    // Same answer-key swap the legacy chat does. The agent used the student's
+    // own document id verbatim, so scoping to "the current page" retrieved the
+    // questions and never the answers — the two chat paths disagreed on what
+    // the model was allowed to know.
+    const scopedDocumentId = pageScope?.documentId
+      ? await this.materialAccessService.resolveLlmCounterpart(
+          pageScope.documentId,
+        )
+      : undefined;
+
     const results = await this.classService.queryClassDocuments(
       query,
       classId,
       3,
-      pageScope?.documentId,
+      scopedDocumentId,
       pageScope?.pageNumber,
       undefined,
       engineChoice,
@@ -540,9 +529,17 @@ export class StudentService {
       return 'No matching content found in the class materials for this query.';
     }
 
+    // Cite the copy the student can open. Handing the model an answer-key id
+    // puts it in the transcript, and from there into an answer the student can
+    // paste straight into the viewer.
+    const visibleIds = await this.materialAccessService.mapToStudentVisibleIds(
+      results.map((result) => result.documentId),
+    );
+
     const parts = results.map((result, i) => {
       const chunk = result.chunk as ChunkType;
-      const source = `document ${result.documentId}, page ${result.documentPageNumber}`;
+      const citedId = visibleIds.get(result.documentId) ?? result.documentId;
+      const source = `document ${citedId}, page ${result.documentPageNumber}`;
       const body = chunk.described
         ? `[image content, described]: ${result.text}`
         : result.text;
@@ -784,17 +781,37 @@ Your response: In Python, the print() function is used to display output on the 
     return updatedAccumulator;
   }
 
-  pdfIdCorrector(
-    pdfID: string,
-    recitationPdfPair: {
-      previewedPdfId: string;
-      recitationPdfId: string;
-    },
-  ) {
-    if (pdfID === recitationPdfPair.recitationPdfId) {
-      return recitationPdfPair.previewedPdfId;
+  /**
+   * Turn retrieval hits into citations students can actually open.
+   *
+   * Every source id is mapped to its material's student copy. The previous
+   * version only rewrote the one document it had swapped in for the current
+   * material, so a course-wide hit on some *other* material's answer key was
+   * cited by its real id — and the viewer opens any id it is handed. A hit with
+   * no student-visible counterpart is dropped rather than exposed.
+   */
+  private async toStudentCitations(
+    results: { documentId: string; documentPageNumber: string }[],
+    seen: Set<string> = new Set<string>(),
+  ): Promise<{ pdfID: string; pageNumber: string }[]> {
+    const visibleIds = await this.materialAccessService.mapToStudentVisibleIds(
+      results.map((result) => result.documentId),
+    );
+
+    const citations: { pdfID: string; pageNumber: string }[] = [];
+
+    for (const result of results) {
+      const key = result.documentPageNumber + result.documentId;
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      const pdfID = visibleIds.get(result.documentId);
+      if (!pdfID) continue;
+
+      citations.push({ pdfID, pageNumber: result.documentPageNumber });
     }
-    return pdfID;
+
+    return citations;
   }
 
   /**
@@ -965,10 +982,6 @@ Your response: In Python, the print() function is used to display output on the 
     const citations = [] as { pdfID: string; pageNumber: string }[];
 
     let pdfId = '';
-    const recitationPdfPair = {
-      previewedPdfId: previewedPdfId,
-      recitationPdfId: '',
-    };
 
     // Get class metadata to check for custom prompts
     const classInfo = await this.classService.getClassById(
@@ -1012,16 +1025,16 @@ Your response: In Python, the print() function is used to display output on the 
       );
     }
 
-    // set pdfId
-    if (materialType == 'recitation') {
-      pdfId =
-        await this.documentService.getAnsweredRecitationForRecitationById(
-          previewedPdfId,
-        );
-    } else {
-      pdfId = previewedPdfId;
-    }
-    recitationPdfPair.recitationPdfId = pdfId;
+    // The document the model reads for these pages: the answer key when the
+    // material has a usable one, otherwise exactly what the student sees.
+    //
+    // No materialType branch any more. Whether a counterpart exists is a
+    // property of the material, and the old branch resolved it by upload order
+    // — picking the *earliest* upload, which with the batch page's
+    // questions-then-answers flow is the copy without answers. The model has
+    // never actually been given the answer key.
+    pdfId =
+      await this.materialAccessService.resolveLlmCounterpart(previewedPdfId);
 
     this.logger.debug('pdfId', pdfId);
 
@@ -1128,22 +1141,7 @@ Your response: In Python, the print() function is used to display output on the 
       JSON.stringify(studentContextResultsForO, null, 2),
     );
 
-    const uniquePageNumberPdfID = new Set();
-    studentContextResults.forEach((contextResult) => {
-      const pageNumberPdfID =
-        contextResult.documentPageNumber + contextResult.documentId;
-      if (!uniquePageNumberPdfID.has(pageNumberPdfID)) {
-        uniquePageNumberPdfID.add(pageNumberPdfID);
-        const citationPdfId = this.pdfIdCorrector(
-          contextResult.documentId,
-          recitationPdfPair,
-        );
-        citations.push({
-          pdfID: citationPdfId,
-          pageNumber: contextResult.documentPageNumber,
-        });
-      }
-    });
+    citations.push(...(await this.toStudentCitations(studentContextResults)));
 
     // // text content for P and O
     const studentContextTextsForP = studentContextResultsForP.map(
@@ -1179,55 +1177,35 @@ Your response: In Python, the print() function is used to display output on the 
       }).length > 0
         ? 'Below are the related images. '
         : '';
-    // Fetch document summaries for this document
-    let documentSummariesContext = '';
+    // Instructor notes the tutor may use, gathered across the whole material.
+    //
+    // Not for `pdfId` alone: instructors annotate the copy they are looking at
+    // — the student one — while `pdfId` is now the answer key whenever the
+    // material has one, so a per-document lookup would come back empty for
+    // exactly the materials carrying the most teaching notes. Until the answer
+    // swap above was fixed the two ids happened to be the same document, which
+    // is the only reason this ever worked.
+    //
+    // Audience decides what is included: STUDENT and TUTOR reach the model,
+    // STAFF never does.
+    let annotationContext = '';
     try {
-      const summariesResponse = await this.documentService.listVisibleDocumentSummariesForStudent(
-        pdfId,
-        userId,
-      );
-      if (summariesResponse.summaries && summariesResponse.summaries.length > 0) {
-        const summaryTexts = summariesResponse.summaries
-          .map((s, idx) => `Summary ${idx + 1}: ${s.content}`)
-          .join('\n\n');
-        documentSummariesContext = `\n\nDocument Summaries:\n${summaryTexts}`;
-        this.logger.debug(`Loaded ${summariesResponse.summaries.length} document summaries for pdfId ${pdfId}`);
-      }
+      const annotations =
+        await this.materialAccessService.getAnnotationsForTutor(pdfId);
+      annotationContext =
+        this.materialAccessService.renderAnnotationBlock(annotations);
     } catch (error) {
-      this.logger.warn(`Failed to load document summaries for pdfId ${pdfId}:`, error);
-    }
-
-    // Fetch document comments for this document (visible to students)
-    let documentCommentsContext = '';
-    try {
-      const commentsResponse = await this.documentService.listVisibleDocumentCommentsForStudent(
-        pdfId,
-        userId,
+      this.logger.warn(
+        `Failed to load instructor annotations for pdfId ${pdfId}:`,
+        error,
       );
-      if (commentsResponse.comments && commentsResponse.comments.length > 0) {
-        const commentsByPage: Record<number, string[]> = {};
-        commentsResponse.comments.forEach((comment) => {
-          if (!commentsByPage[comment.pageNumber]) {
-            commentsByPage[comment.pageNumber] = [];
-          }
-          commentsByPage[comment.pageNumber].push(comment.text);
-        });
-
-        const commentTexts = Object.entries(commentsByPage)
-          .map(([page, texts]) => `Page ${page}: ${texts.join('; ')}`)
-          .join('\n');
-        documentCommentsContext = `\n\nInstructor Comments:\n${commentTexts}`;
-        this.logger.debug(`Loaded ${commentsResponse.comments.length} document comments for pdfId ${pdfId}`);
-      }
-    } catch (error) {
-      this.logger.warn(`Failed to load document comments for pdfId ${pdfId}:`, error);
     }
 
     if (studentContext.materialType === 'class materials') {
-      studentContextMessageForP = `The student is currently looking at page ${studentContext.pageNumber} of class material with content: ${studentContextContentForP}.${imageTextForP}${documentSummariesContext}${documentCommentsContext}`;
+      studentContextMessageForP = `The student is currently looking at page ${studentContext.pageNumber} of class material with content: ${studentContextContentForP}.${imageTextForP}${annotationContext}`;
       studentContextMessageForO = `The other content about this lecture is ${studentContextContentForO}.${imageTextForO} Do not include this information if the student only asks the content on the current page`;
     } else {
-      studentContextMessageForP = `The student is currently looking at page ${studentContext.pageNumber} of recitation materials without the answers. Below is recitation materials with the questions and the answers: ${studentContextContentForP}.${imageTextForP}${documentSummariesContext}${documentCommentsContext}`;
+      studentContextMessageForP = `The student is currently looking at page ${studentContext.pageNumber} of recitation materials without the answers. Below is recitation materials with the questions and the answers: ${studentContextContentForP}.${imageTextForP}${annotationContext}`;
       studentContextMessageForO = `The other content about this recitation is ${studentContextContentForO}.${imageTextForO} Do not include this information if the student only asks the content on the current page`;
     }
 
@@ -3355,11 +3333,17 @@ Safety:
     const P = Math.round(n * pnStudyRatio);
     const O = n - P;
 
+    // The answer key when this material has one — the agent path never did
+    // this swap, so it saw only what the student saw.
+    const llmDocumentId = await this.materialAccessService.resolveLlmCounterpart(
+      pdfContext.pdfId,
+    );
+
     const studentContextResultsForP = await this.classService.queryClassDocuments(
       query,
       classId,
       P,
-      pdfContext.pdfId,
+      llmDocumentId,
       pdfContext.pageNumber,
       false,
       engineChoice,
@@ -3369,7 +3353,7 @@ Safety:
       query,
       classId,
       O,
-      pdfContext.pdfId,
+      llmDocumentId,
       pdfContext.pageNumber,
       true,
       engineChoice,
@@ -3428,6 +3412,24 @@ Safety:
         `[CTX-RAG] no course context for class ${pdfContext.classId} ` +
           `(doc ${pdfContext.pdfId}, page ${pdfContext.pageNumber}) — ` +
           'answering without grounding; check the class has embeddings for the active engine',
+      );
+    }
+
+    // Instructor notes, which this path never carried at all — only the legacy
+    // chat injected them, so the same class behaved differently depending on
+    // which chat the student happened to be in.
+    try {
+      const annotations =
+        await this.materialAccessService.getAnnotationsForTutor(llmDocumentId);
+      const block =
+        this.materialAccessService.renderAnnotationBlock(annotations);
+      if (block) {
+        contextParts.push(`[Instructor Notes]${block}`);
+      }
+    } catch (error) {
+      this.logger.warn(
+        `Failed to load instructor annotations for pdfId ${llmDocumentId}:`,
+        error,
       );
     }
 

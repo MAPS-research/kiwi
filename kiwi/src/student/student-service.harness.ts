@@ -28,6 +28,7 @@ import { KiwiAppService } from 'src/kiwi-app/kiwi-app.service';
 import { ConversationHistoryService } from 'src/common/context/conversation-history.service';
 import { ConversationService } from 'src/common/context/conversation.service';
 import { ContextJobsService } from 'src/context-jobs/context-jobs.service';
+import { MaterialAccessService } from 'src/class/material/material-access.service';
 
 export interface StudentServiceHarness {
   module: TestingModule;
@@ -49,12 +50,32 @@ export interface StudentServiceHarness {
   conversationHistoryService: jest.Mocked<ConversationHistoryService>;
   conversationService: jest.Mocked<ConversationService>;
   contextJobsService: jest.Mocked<ContextJobsService>;
+  materialAccessService: jest.Mocked<MaterialAccessService>;
 }
 
 export async function createStudentServiceHarness(): Promise<StudentServiceHarness> {
   const module: TestingModule = await Test.createTestingModule({
     providers: [
       StudentService,
+      {
+        provide: MaterialAccessService,
+        useValue: {
+          // Identity by default: no answer key, nothing to remap. A spec that
+          // exercises the answer-key swap overrides these.
+          resolveLlmCounterpart: jest.fn(async (id: string) => id),
+          mapToStudentVisibleIds: jest.fn(
+            async (ids: string[]) => new Map(ids.map((id) => [id, id])),
+          ),
+          getAnnotationsForTutor: jest.fn(async () => ({
+            comments: [],
+            summaries: [],
+          })),
+          renderAnnotationBlock: jest.fn(() => ''),
+          getStudentDocument: jest.fn(async () => null),
+          getLlmDocumentIds: jest.fn(async () => []),
+          listRetrievableDocumentIds: jest.fn(async () => []),
+        },
+      },
       {
         provide: LlmService,
         useValue: { createChat: jest.fn(), createChatStream: jest.fn() },
@@ -166,5 +187,6 @@ export async function createStudentServiceHarness(): Promise<StudentServiceHarne
     conversationHistoryService: module.get(ConversationHistoryService),
     conversationService: module.get(ConversationService),
     contextJobsService: module.get(ContextJobsService),
+    materialAccessService: module.get(MaterialAccessService),
   };
 }
