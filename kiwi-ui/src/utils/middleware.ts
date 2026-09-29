@@ -50,7 +50,13 @@ const handleUnauthorized: Middleware = {
       }
       return;
     }
-    return { url, init };
+    // Some generated clients omit auth metadata, so attach the user token
+    // here as well. Preserve explicit credentials (such as an app token).
+    const headers = new Headers(init.headers);
+    if (!headers.has("Authorization")) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+    return { url, init: { ...init, headers } };
   },
   post: async ({ fetch, url, init, response }) => {
     if (response.status === 401) {
@@ -84,10 +90,9 @@ const handleUnauthorized: Middleware = {
       // If refreshed, retry the original request with new token
       const newToken = localStorage.getItem("authToken");
       if (newToken) {
-        init.headers = {
-          ...init.headers,
-          Authorization: `Bearer ${newToken}`,
-        };
+        const headers = new Headers(init.headers);
+        headers.set("Authorization", `Bearer ${newToken}`);
+        init.headers = headers;
       }
 
       // Retry the original request
