@@ -1,28 +1,6 @@
 /* Self-hosted Montserrat. Imported here (not in main.tsx) so every entry that
    pulls in index.css — the app and the Storybook preview — gets the font once. */
-
-/* Standard shadcn/Tailwind v4 setup, INCLUDING the global preflight reset.
-   Preflight strips user-agent styling from raw HTML elements (heading sizes,
-   list bullets, link colors, form-control chrome). MUI components are immune
-   (emotion styles are unlayered and beat Tailwind's layered rules), but raw
-   HTML is not — so:
-   - markdown output (chat, question cards) sits inside a `.markdown-body`
-     wrapper (defined below) that restores user-agent defaults;
-   - the few raw <h*>/<p>/<button> spots in product code carry explicit
-     styles or MUI components instead of relying on browser defaults.
-   When adding new UI, style elements explicitly (Tailwind classes, shadcn
-   components, or MUI) — never rely on user-agent defaults. */
-@import "tailwindcss";
 @import './fonts/montserrat.css';
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
-
-/* Pin the `dark:` variant to a `.dark` ancestor class. Tailwind v4's default
-   is the `prefers-color-scheme` media query, which would flip shadcn `dark:*`
-   styles on for OS-dark-mode users while the rest of the app stays light.
-   The app never adds `.dark`, so `dark:` utilities are inert until a real
-   dark theme (mapped to Kiwi colors) is introduced. */
-@custom-variant dark (&:is(.dark *));
 
 /* Montserrat is the only typeface for ordinary product UI; `sans-serif` is the
    generic fallback for glyphs Montserrat does not cover (e.g. CJK). Math
@@ -32,17 +10,6 @@ body {
   font-family: 'Montserrat', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Base UI: dialog/popover backdrops use position:absolute and need a
-     positioned body to cover the visual viewport on iOS 26+ Safari. */
-  position: relative;
-}
-
-/* Base UI renders popups in portals appended to <body>. Isolating the app
-   root's stacking context guarantees they paint above page content no matter
-   what z-index values are used inside the app. (MUI portals also live at
-   body level, so they are unaffected.) */
-#root {
-  isolation: isolate;
 }
 
 code {
@@ -59,6 +26,7 @@ code {
 html.global-chat-dragging iframe {
   pointer-events: none !important;
 }
+
 
 /* ============================================================================
    Custom Design Overrides (design branch only)
@@ -88,104 +56,3 @@ html.global-chat-dragging iframe {
    Please refer to this section when integrating or porting styles in the future.
 ---------------------------------------------------------------------------- */
 
-@theme inline {
-  --font-heading: var(--font-sans);
-  --font-sans: 'Montserrat', sans-serif;
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-success: var(--success);
-  --color-warning: var(--warning);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --color-foreground: var(--foreground);
-  --color-background: var(--background);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
-}
-
-:root {
-  /* Mirrors the internal semantic roles in src/Theme.ts. */
-  --background: #fafafa;
-  --foreground: #212121;
-  --card: #ffffff;
-  --card-foreground: #212121;
-  --popover: #ffffff;
-  --popover-foreground: #212121;
-  --primary: #6a1b9a;
-  --primary-foreground: #ffffff;
-  --secondary: #616161;
-  --secondary-foreground: #ffffff;
-  --muted: #f5f5f5;
-  --muted-foreground: #616161;
-  --accent: #f5f5f5;
-  --accent-foreground: #212121;
-  --destructive: #d32f2f;
-  --success: #2e7d32;
-  --warning: #ef6c00;
-  --border: #e0e0e0;
-  --input: #e0e0e0;
-  --ring: #9c27b0;
-  --chart-1: #6a1b9a;
-  --chart-2: #cf007e;
-  --chart-3: #ff4e4c;
-  --chart-4: #ffa600;
-  --chart-5: #9e9e9e;
-  --radius: 0.5rem;
-}
-
-/* No `.dark` palette yet: the app has no dark mode, and shadcn's stock dark
-   values are unmapped neutral grays. When dark mode lands, define a `.dark`
-   block here with values mirrored from a dark variant of src/Theme.ts. */
-
-
-/* ============================================================================
-   Shared shadcn base defaults (standard shadcn v4 setup).
-   ============================================================================ */
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
-/* ============================================================================
-   Markdown typography restore.
-
-   Chat responses and question cards render markdown (react-markdown) as raw
-   HTML that historically relied on user-agent default styling. Preflight
-   strips those defaults, so every markdown container carries this class and
-   `revert` rolls the affected elements back to user-agent styling exactly.
-   Inherited properties (font-family, color, chat font-size) still cascade in
-   from the surrounding MUI wrappers. Lives in @layer components so it beats
-   preflight (base) but stays below utilities.
-   ============================================================================ */
-@layer components {
-  .markdown-body :where(h1, h2, h3, h4, h5, h6, ul, ol, li, a, blockquote,
-      hr, pre, table, thead, tbody, tr, th, td, dl, dt, dd, figure) {
-    all: revert;
-  }
-}

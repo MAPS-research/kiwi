@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { Home as HomeIcon } from 'lucide-react';
+import { HomeOutlined as HomeIcon } from '@mui/icons-material';
 import NavigationSidebar from './NavigationSidebar.tsx';
 
 const createSections = (onClick = () => undefined) => [
@@ -29,10 +29,7 @@ describe('NavigationSidebar', () => {
     expect(sidebar).toBeInTheDocument();
     expect(sidebar).toHaveStyle({ height: '100%', minHeight: 0 });
     expect(sidebar.firstElementChild).toHaveStyle({ overflowY: 'auto' });
-    expect(screen.getByRole('button', { name: 'Home' })).toHaveAttribute(
-      'aria-current',
-      'page',
-    );
+    expect(screen.getByRole('button', { name: 'Home' })).toHaveClass('Mui-selected');
     expect(screen.getByText('Home')).toBeInTheDocument();
   });
 
@@ -60,7 +57,10 @@ describe('NavigationSidebar', () => {
 
     // The label stays mounted so collapsing only animates opacity — a
     // conditional unmount would change layout mid-transition.
-    expect(screen.getByText('Home')).toHaveAttribute('aria-hidden', 'true');
+    expect(screen.getByText('Home').closest('.MuiListItemText-root')).toHaveAttribute(
+      'aria-hidden',
+      'true',
+    );
     expect(screen.getByRole('button', { name: 'Home' })).toBeInTheDocument();
   });
 
@@ -142,14 +142,12 @@ describe('NavigationSidebar', () => {
     const nestedListStyle = window.getComputedStyle(childButton.closest('ul')!);
     expect(nestedListStyle.marginLeft).toBe('0px');
     expect(nestedListStyle.borderLeftStyle).not.toBe('solid');
-    expect(childButton.querySelector('svg')).not.toBeInTheDocument();
+    expect(childButton.querySelector('.MuiSvgIcon-root')).not.toBeInTheDocument();
     expect(childStyle.paddingLeft).toBe(parentStyle.paddingLeft);
     expect(childStyle.gap).toBe(parentStyle.gap);
     expect(childStyle.minHeight).toBe('40px');
     expect(window.getComputedStyle(childIndicator.parentElement!).width).toBe('24px');
-    // The active parent carries the sidebar accent fill; child rows stay flat.
-    expect(parentButton.classList.contains('bg-accent')).toBe(true);
-    expect(childButton.classList.contains('bg-accent')).toBe(false);
+    expect(parentStyle.backgroundColor).not.toBe(childStyle.backgroundColor);
     fireEvent.click(childButton);
     expect(onChildClick).toHaveBeenCalledOnce();
 

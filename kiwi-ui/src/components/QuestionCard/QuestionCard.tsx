@@ -145,7 +145,6 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
             <Typography
               variant="body1"
               component="div"
-              className="markdown-body"
               sx={{
                 mt: 0,
                 color: "text.primary",

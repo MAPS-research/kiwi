@@ -425,7 +425,7 @@ export const PDFViewerForStudents: React.FC<PDFViewerProps> = ({
   if (!studentMode) return null;
 
   if (!pdfFile) {
-    return <Typography sx={{ my: 2 }}>Loading your class lectures...</Typography>;
+    return <p>Loading your class lectures...</p>;
   }
 
   const renderError = (

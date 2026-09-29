@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Box } from '@mui/material';
 import { expect, within } from 'storybook/test';
 import { DoAvoid } from '../components/DoAvoid.tsx';
 
 const meta = {
-  title: 'Contributing/Components/Do Avoid',
+  title: 'Storybook Guide/Components/Do Avoid',
   component: DoAvoid,
   tags: ['autodocs'],
   parameters: {
@@ -60,9 +61,9 @@ export const NarrowSurface: Story = {
   name: 'Narrow surface',
   decorators: [
     (Story) => (
-      <div className="w-full max-w-90">
+      <Box sx={{ width: 'min(100%, 360px)' }}>
         <Story />
-      </div>
+      </Box>
     ),
   ],
   parameters: {

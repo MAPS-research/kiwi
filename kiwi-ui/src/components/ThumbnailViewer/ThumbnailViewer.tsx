@@ -54,7 +54,7 @@ export const ThumbnailViewer: React.FC<PDFViewerProps> = ({ pdfFile }) => {
             plugins={[thumbnailPluginInstance, pageThumbnailPluginInstance]}
           />
         ) : (
-          <p style={{ margin: "1em 0" }}>Error displaying thumbnail.</p>
+          <p>Error displaying thumbnail.</p>
         )}
       </Worker>
     </div>

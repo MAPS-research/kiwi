@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react';
+import { alpha } from '@mui/material/styles';
+import { Box, Paper, Stack, Typography } from '@mui/material';
 
 export interface QualityRuleBlockProps {
   contract: readonly ReactNode[];
@@ -6,184 +8,254 @@ export interface QualityRuleBlockProps {
   children: ReactNode;
 }
 
-export const QualityRuleBlock = ({ contract, visualLabel, children }: QualityRuleBlockProps) => {
-  const contractId = `${visualLabel.replace(/\s+/g, '-').toLowerCase()}-contract`;
-
-  return (
-    <section className="sb-unstyled my-5 grid max-w-full items-stretch gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))]">
-      <section
-        data-ai-contract="true"
-        aria-labelledby={contractId}
-        className="min-w-0 rounded-xl border bg-card p-4 sm:p-5"
+export const QualityRuleBlock = ({ contract, visualLabel, children }: QualityRuleBlockProps) => (
+  <Box
+    component="section"
+    sx={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
+      gap: 2,
+      alignItems: 'stretch',
+      my: 2.5,
+      maxWidth: '100%',
+    }}
+  >
+    <Paper
+      component="section"
+      data-ai-contract="true"
+      aria-labelledby={`${visualLabel.replace(/\s+/g, '-').toLowerCase()}-contract`}
+      variant="outlined"
+      sx={{ minWidth: 0, p: { xs: 2, sm: 2.5 }, borderRadius: 2 }}
+    >
+      <Typography
+        id={`${visualLabel.replace(/\s+/g, '-').toLowerCase()}-contract`}
+        component="h3"
+        variant="overline"
+        sx={{ color: 'primary.main', fontWeight: 800, letterSpacing: '0.08em' }}
       >
-        <h3 id={contractId} className="text-xs font-bold tracking-[0.08em] text-primary uppercase">
-          AI contract
-        </h3>
-        <ul className="mt-3 mb-0 flex list-disc flex-col gap-2 pl-5">
-          {contract.map((item, index) => (
-            <li key={index} className="text-sm leading-relaxed">
-              {item}
-            </li>
-          ))}
-        </ul>
-      </section>
+        AI contract
+      </Typography>
+      <Stack component="ul" spacing={1} sx={{ pl: 2.5, mb: 0, mt: 1.25 }}>
+        {contract.map((item, index) => (
+          <Typography component="li" variant="body2" key={index} sx={{ lineHeight: 1.6 }}>
+            {item}
+          </Typography>
+        ))}
+      </Stack>
+    </Paper>
 
-      <figure aria-label={visualLabel} className="m-0 min-w-0 rounded-xl border bg-background p-4 sm:p-5">
-        <figcaption className="text-xs font-bold tracking-[0.08em] text-muted-foreground uppercase">
-          Human visual example
-        </figcaption>
-        <div className="mt-3">{children}</div>
-      </figure>
-    </section>
-  );
-};
+    <Paper
+      component="figure"
+      aria-label={visualLabel}
+      variant="outlined"
+      sx={{ minWidth: 0, m: 0, p: { xs: 2, sm: 2.5 }, borderRadius: 2, bgcolor: 'background.default' }}
+    >
+      <Typography
+        component="figcaption"
+        variant="overline"
+        sx={{ color: 'text.secondary', fontWeight: 800, letterSpacing: '0.08em' }}
+      >
+        Human visual example
+      </Typography>
+      <Box sx={{ mt: 1.5 }}>{children}</Box>
+    </Paper>
+  </Box>
+);
 
 const Surface = ({ children, label }: { children: ReactNode; label: string }) => (
-  <div aria-label={label} className="min-w-0 overflow-hidden rounded-lg border bg-card">
-    <div className="border-b bg-muted/60 px-3 py-1.5">
-      <span className="text-xs font-bold">{label}</span>
-    </div>
+  <Paper
+    variant="outlined"
+    aria-label={label}
+    sx={{ minWidth: 0, overflow: 'hidden', borderRadius: 1.5, bgcolor: 'background.paper' }}
+  >
+    <Box sx={{ px: 1.25, py: 0.75, borderBottom: 1, borderColor: 'divider', bgcolor: 'action.hover' }}>
+      <Typography variant="caption" sx={{ fontWeight: 700 }}>
+        {label}
+      </Typography>
+    </Box>
     {children}
-  </div>
+  </Paper>
 );
 
 const SkeletonLine = ({ width = '100%', height = 10 }: { width?: string; height?: number }) => (
-  <div
+  <Box
     aria-hidden="true"
-    className="shrink-0 rounded-full bg-muted-foreground/20"
-    style={{ width, height }}
+    sx={{
+      width,
+      height,
+      borderRadius: 99,
+      bgcolor: 'action.disabledBackground',
+      flex: '0 0 auto',
+    }}
   />
 );
 
 const DataRow = ({ label, value }: { label: string; value: string }) => (
-  <div className="grid min-w-0 items-center gap-2 [grid-template-columns:minmax(58px,0.8fr)_minmax(64px,1fr)]">
-    <span className="truncate text-xs text-muted-foreground">{label}</span>
-    <span className="text-xs font-bold [overflow-wrap:anywhere]">{value}</span>
-  </div>
+  <Box
+    sx={{
+      display: 'grid',
+      gridTemplateColumns: 'minmax(58px, 0.8fr) minmax(64px, 1fr)',
+      gap: 1,
+      alignItems: 'center',
+      minWidth: 0,
+    }}
+  >
+    <Typography variant="caption" color="text.secondary" noWrap>
+      {label}
+    </Typography>
+    <Typography variant="caption" sx={{ fontWeight: 700, overflowWrap: 'anywhere' }}>
+      {value}
+    </Typography>
+  </Box>
 );
 
 export const AccessibilityExample = () => (
-  <div aria-label="Accessible field states" className="flex flex-col gap-3">
-    <label className="text-xs font-bold">Workspace name</label>
-    <div className="rounded-md border-2 border-primary px-3 py-2 outline-solid outline-2 outline-offset-2 outline-primary/25">
-      <span className="text-sm">Kiwi Analytics</span>
-    </div>
-    <p className="text-xs text-muted-foreground">
-      Visible label and focus indicator; the control keeps a stable accessible name.
-    </p>
-    <div
-      role="alert"
-      className="grid items-start gap-2 rounded-md bg-destructive/10 p-2 text-destructive [grid-template-columns:20px_1fr]"
+  <Stack spacing={1.25} aria-label="Accessible field states">
+    <Typography component="label" variant="caption" sx={{ fontWeight: 800 }}>
+      Workspace name
+    </Typography>
+    <Box
+      sx={{
+        px: 1.25,
+        py: 1,
+        borderRadius: 1,
+        border: 2,
+        borderColor: 'primary.main',
+        outline: '2px solid',
+        outlineColor: (theme) => alpha(theme.palette.primary.main, 0.22),
+        outlineOffset: 2,
+      }}
     >
-      <span aria-hidden="true" className="text-xs font-black">
+      <Typography variant="body2">Kiwi Analytics</Typography>
+    </Box>
+    <Typography variant="caption" color="text.secondary">
+      Visible label and focus indicator; the control keeps a stable accessible name.
+    </Typography>
+    <Box
+      role="alert"
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: '20px 1fr',
+        gap: 0.75,
+        alignItems: 'start',
+        p: 1,
+        borderRadius: 1,
+        bgcolor: (theme) => alpha(theme.palette.error.main, 0.08),
+        color: 'error.dark',
+      }}
+    >
+      <Typography aria-hidden="true" variant="caption" sx={{ fontWeight: 900 }}>
         !
-      </span>
-      <span className="text-xs">Name is required. Error is conveyed with text, not color alone.</span>
-    </div>
-  </div>
+      </Typography>
+      <Typography variant="caption">Name is required. Error is conveyed with text, not color alone.</Typography>
+    </Box>
+  </Stack>
 );
 
 export const AsyncStateExample = () => (
-  <div className="grid gap-3 sm:grid-cols-3">
+  <Box
+    sx={{
+      display: 'grid',
+      gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, minmax(0, 1fr))' },
+      gap: 1.25,
+    }}
+  >
     <Surface label="Weak network · Loading">
-      <div className="flex min-h-33 flex-col gap-3 p-3">
+      <Stack spacing={1.2} sx={{ p: 1.5, minHeight: 132 }}>
         <SkeletonLine width="58%" height={14} />
         <SkeletonLine />
         <SkeletonLine width="86%" />
-        <div className="grid grid-cols-2 gap-2 pt-1">
+        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, pt: 0.5 }}>
           <SkeletonLine height={36} />
           <SkeletonLine height={36} />
-        </div>
-      </div>
+        </Box>
+      </Stack>
     </Surface>
     <Surface label="Settled · Same geometry">
-      <div className="flex min-h-33 flex-col gap-3 p-3">
-        <span className="text-sm leading-3.5 font-semibold">Usage summary</span>
+      <Stack spacing={1.2} sx={{ p: 1.5, minHeight: 132 }}>
+        <Typography variant="subtitle2" sx={{ lineHeight: '14px' }}>
+          Usage summary
+        </Typography>
         <DataRow label="Requests" value="12,480" />
         <DataRow label="Success" value="99.4%" />
-        <div className="grid grid-cols-2 gap-2 pt-1">
-          <div className="h-9 rounded-md bg-muted" />
-          <div className="h-9 rounded-md bg-muted" />
-        </div>
-      </div>
+        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, pt: 0.5 }}>
+          <Box sx={{ height: 36, borderRadius: 1, bgcolor: 'action.hover' }} />
+          <Box sx={{ height: 36, borderRadius: 1, bgcolor: 'action.hover' }} />
+        </Box>
+      </Stack>
     </Surface>
     <Surface label="Offline · Recovery">
-      <div className="flex min-h-33 flex-col justify-center gap-2 p-3">
-        <span className="text-sm font-semibold">Couldn’t load usage</span>
-        <span className="text-xs text-muted-foreground">
+      <Stack spacing={1} sx={{ p: 1.5, minHeight: 132, justifyContent: 'center' }}>
+        <Typography variant="subtitle2">Couldn’t load usage</Typography>
+        <Typography variant="caption" color="text.secondary">
           Check your connection. Your previous filters are preserved.
-        </span>
-        <span className="self-start rounded-md bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground">
+        </Typography>
+        <Box
+          component="span"
+          sx={{ alignSelf: 'flex-start', px: 1.25, py: 0.6, borderRadius: 1, bgcolor: 'primary.main', color: 'primary.contrastText', fontSize: 12, fontWeight: 700 }}
+        >
           Retry
-        </span>
-      </div>
+        </Box>
+      </Stack>
     </Surface>
-  </div>
+  </Box>
 );
 
 const ViewportFrame = ({ label, columns }: { label: string; columns: string }) => (
   <Surface label={label}>
-    <div className="grid min-h-28 gap-2 p-2" style={{ gridTemplateColumns: columns }}>
-      <div className="min-h-7 rounded-md bg-primary/10" />
-      <div className="flex min-w-0 flex-col gap-2">
+    <Box sx={{ p: 1, display: 'grid', gridTemplateColumns: columns, gap: 0.75, minHeight: 112 }}>
+      <Box sx={{ borderRadius: 1, bgcolor: 'action.selected', minHeight: 28 }} />
+      <Stack spacing={0.75} sx={{ minWidth: 0 }}>
         <SkeletonLine width="65%" height={11} />
         <SkeletonLine />
         <SkeletonLine width="82%" />
-        <div
-          className="grid gap-2"
-          style={{ gridTemplateColumns: columns === '1fr' ? '1fr' : '1fr 1fr' }}
-        >
-          <div className="h-8.5 rounded-md bg-muted" />
-          <div className="h-8.5 rounded-md bg-muted" />
-        </div>
-      </div>
-    </div>
+        <Box sx={{ display: 'grid', gridTemplateColumns: columns === '1fr' ? '1fr' : '1fr 1fr', gap: 0.75 }}>
+          <Box sx={{ height: 34, borderRadius: 1, bgcolor: 'action.hover' }} />
+          <Box sx={{ height: 34, borderRadius: 1, bgcolor: 'action.hover' }} />
+        </Box>
+      </Stack>
+    </Box>
   </Surface>
 );
 
 export const ViewportExample = () => (
-  <div className="grid gap-3 sm:grid-cols-3">
+  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, minmax(0, 1fr))' }, gap: 1.25 }}>
     <ViewportFrame label="390 px · stacked" columns="1fr" />
     <ViewportFrame label="768 px · adaptive" columns="0.7fr 1.3fr" />
     <ViewportFrame label="1440 px · bounded" columns="0.55fr 1.45fr" />
-  </div>
+  </Box>
 );
 
-const densityTones = {
-  warning: 'border-amber-600/50 bg-amber-600/5',
-  success: 'border-green-700/50 bg-green-700/5',
-};
-
-const DensityCard = ({
-  label,
-  rows,
-  gap,
-  tone,
-}: {
-  label: string;
-  rows: number;
-  gap: number;
-  tone: 'warning' | 'success';
-}) => (
-  <div className={`min-w-0 rounded-lg border p-3 ${densityTones[tone]}`}>
-    <span className="mb-2 block text-xs font-bold">{label}</span>
-    <div className="flex flex-col" style={{ gap }}>
+const DensityCard = ({ label, rows, gap, tone }: { label: string; rows: number; gap: number; tone: 'warning' | 'success' }) => (
+  <Paper
+    variant="outlined"
+    sx={{
+      p: 1.25,
+      minWidth: 0,
+      borderColor: `${tone}.main`,
+      bgcolor: (theme) => alpha(theme.palette[tone].main, 0.045),
+    }}
+  >
+    <Typography variant="caption" sx={{ display: 'block', mb: 1, fontWeight: 800 }}>
+      {label}
+    </Typography>
+    <Stack spacing={`${gap}px`}>
       {Array.from({ length: rows }, (_, index) => (
-        <div key={index} className="grid gap-2 [grid-template-columns:34%_1fr]">
+        <Box key={index} sx={{ display: 'grid', gridTemplateColumns: '34% 1fr', gap: 0.75 }}>
           <SkeletonLine height={7} />
           <SkeletonLine width={index % 2 ? '72%' : '100%'} height={7} />
-        </div>
+        </Box>
       ))}
-    </div>
-  </div>
+    </Stack>
+  </Paper>
 );
 
 export const DensityExample = () => (
-  <div className="grid gap-3 sm:grid-cols-3">
+  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, minmax(0, 1fr))' }, gap: 1.25 }}>
     <DensityCard label="Too sparse" rows={3} gap={22} tone="warning" />
     <DensityCard label="Balanced" rows={6} gap={9} tone="success" />
     <DensityCard label="Too dense" rows={10} gap={2} tone="warning" />
-  </div>
+  </Box>
 );
 
 const FieldList = ({ expanded }: { expanded: boolean }) => {
@@ -205,27 +277,38 @@ const FieldList = ({ expanded }: { expanded: boolean }) => {
 
   return (
     <Surface label={expanded ? 'Future · 7 fields · scroll' : 'Today · 3 fields'}>
-      <div
+      <Stack
+        spacing={0.8}
         tabIndex={expanded ? 0 : undefined}
         aria-label={expanded ? 'Scrollable details region' : 'Details region'}
-        className={`flex h-29.5 flex-col gap-2 p-3 [scrollbar-gutter:stable] [scrollbar-width:thin] -outline-offset-2 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-primary ${
-          expanded ? 'overflow-y-auto' : 'overflow-y-hidden'
-        }`}
+        sx={{
+          p: 1.25,
+          height: 118,
+          overflowY: expanded ? 'auto' : 'hidden',
+          scrollbarGutter: 'stable',
+          scrollbarWidth: 'thin',
+          '&::-webkit-scrollbar': { width: 6 },
+          '&::-webkit-scrollbar-thumb': { borderRadius: 99, bgcolor: 'action.disabled' },
+          outlineOffset: -2,
+          '&:focus-visible': { outline: '2px solid', outlineColor: 'primary.main' },
+        }}
       >
         {rows.map(([label, value]) => (
           <DataRow key={label} label={label} value={value} />
         ))}
-      </div>
-      <div className="border-t px-3 py-2">
-        <span className="text-xs font-bold">Stable action area</span>
-      </div>
+      </Stack>
+      <Box sx={{ px: 1.25, py: 0.8, borderTop: 1, borderColor: 'divider' }}>
+        <Typography variant="caption" sx={{ fontWeight: 700 }}>
+          Stable action area
+        </Typography>
+      </Box>
     </Surface>
   );
 };
 
 export const FieldGrowthExample = () => (
-  <div className="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr))]">
+  <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: 1.25 }}>
     <FieldList expanded={false} />
     <FieldList expanded />
-  </div>
+  </Box>
 );

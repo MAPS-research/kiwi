@@ -35,7 +35,7 @@ const AnalyticsHeaderPreview = () => {
 };
 
 const meta = {
-  title: "Deprecated/Analytics Date Range",
+  title: "Kiwi Design System/Patterns/Analytics Date Range",
   component: AnalyticsDateRangeControl,
   tags: ["autodocs"],
   decorators: [
@@ -49,7 +49,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "> **Deprecated section.** This is the MUI-era implementation of the compact date-range picker, kept as executable reference until it migrates to shadcn. New surfaces must not copy its styling.\n\nCompact System Analytics header control for preset and custom local-time date ranges. Date edits remain drafts until Apply is pressed.",
+          "Compact System Analytics header control for preset and custom local-time date ranges. Date edits remain drafts until Apply is pressed.",
       },
     },
   },

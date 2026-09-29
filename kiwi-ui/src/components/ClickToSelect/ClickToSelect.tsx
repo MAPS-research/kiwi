@@ -1,16 +1,6 @@
 import html2canvas from "html2canvas";
 import React, { CSSProperties, useRef, useState } from "react";
 
-// Explicit styles: Tailwind preflight strips user-agent button chrome.
-const toolbarButtonStyle: CSSProperties = {
-  font: "inherit",
-  padding: "4px 10px",
-  border: "1px solid #cbd5e1",
-  borderRadius: 4,
-  backgroundColor: "#ffffff",
-  cursor: "pointer",
-};
-
 interface BoxCoordinates {
   left: number;
   top: number;
@@ -213,8 +203,8 @@ const ClickToSelect: React.FC<ClickToSelectProps> = ({
             boxShadow: "0 4px 12px rgba(15,23,42,0.18)",
           }}
         >
-          <button style={toolbarButtonStyle} onClick={handleAddChunk}>Add Chunk</button>
-          <button style={toolbarButtonStyle} onClick={handleAddComment}>Add Comments</button>
+          <button onClick={handleAddChunk}>Add Chunk</button>
+          <button onClick={handleAddComment}>Add Comments</button>
         </div>
       )}
     </div>

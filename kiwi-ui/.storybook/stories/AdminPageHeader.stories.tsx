@@ -1,18 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Plus, RefreshCw } from 'lucide-react';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
+import { Box, Button, Chip } from '@mui/material';
 import { AdminPageHeader } from '../../src/components/AdminPage/index.ts';
-import { Badge } from '../../src/components/ui/badge.tsx';
-import { Button } from '../../src/components/ui/button.tsx';
 
 const meta = {
-  title: 'Components/Layout/Admin Page Header',
+  title: 'Kiwi Design System/Patterns/Admin Page Header',
   component: AdminPageHeader,
   tags: ['autodocs'],
   decorators: [
     (Story) => (
-      <div className="mx-8 mt-8">
+      <Box sx={{ ml: 4, mt: 4, mr: 4 }}>
         <Story />
-      </div>
+      </Box>
     ),
   ],
   args: {
@@ -26,7 +26,7 @@ const meta = {
 
 The standard page-level header for Kiwi Admin pages.
 
-- Uses a semantic \`h1\` with the shared shadcn typography tokens.
+- Uses a semantic \`h1\` with the compact MUI \`h5\` visual style.
 - Supports an optional description, back action, status, and action area.
 - Actions wrap below the title on narrow screens.
 - Decorative page icons are intentionally excluded from the default pattern.
@@ -45,12 +45,10 @@ export const Standard: Story = {
     description: 'Manage global MCP servers and assign them to classes.',
     actions: (
       <>
-        <Button variant="outline">
-          <RefreshCw data-icon="inline-start" />
+        <Button variant="outlined" startIcon={<RefreshOutlinedIcon />}>
           Refresh
         </Button>
-        <Button>
-          <Plus data-icon="inline-start" />
+        <Button variant="contained" startIcon={<AddOutlinedIcon />}>
           Create Server
         </Button>
       </>
@@ -66,7 +64,7 @@ export const Detail: Story = {
       label: 'Experiments',
       onClick: () => undefined,
     },
-    status: <Badge variant="outline">Active</Badge>,
-    actions: <Button variant="outline">Edit</Button>,
+    status: <Chip size="small" color="success" label="Active" />,
+    actions: <Button variant="outlined">Edit</Button>,
   },
 };

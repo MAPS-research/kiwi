@@ -1,22 +1,25 @@
 import {
-  BarChart3,
-  ClipboardCheck,
-  Flag,
-  GraduationCap,
-  LayoutGrid,
-  Mail,
-  MailCheck,
-  PanelLeftClose,
-  PanelLeftOpen,
-  Server,
-  Users,
-  Webhook,
-} from "lucide-react";
-import { Box, useMediaQuery } from "@mui/material";
+  AppsOutlined as AppsIcon,
+  ApprovalOutlined as ApprovalIcon,
+  DnsOutlined as McpServersIcon,
+  EmailOutlined as EmailIcon,
+  FlagOutlined as FlagIcon,
+  MarkEmailReadOutlined as EmailAuditIcon,
+  MenuOpenOutlined as CollapseSidebarIcon,
+  MenuOutlined as ExpandSidebarIcon,
+  SchoolOutlined as SchoolIcon,
+  SupervisorAccountOutlined as UserManagementIcon,
+  WebhookOutlined as WebhookIcon,
+} from "@mui/icons-material";
+import StackedBarChartOutlinedIcon from "@mui/icons-material/StackedBarChartOutlined";
+import {
+  Box,
+  Drawer,
+  IconButton,
+  Skeleton,
+  useMediaQuery,
+} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Skeleton } from "@/components/ui/skeleton";
 import React, { useEffect, useMemo, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import NavigationSidebar from "../../components/NavigationSidebar/NavigationSidebar.tsx";
@@ -47,61 +50,61 @@ const allSidebarItems = [
   {
     label: "Classes",
     path: "/admin/classes",
-    icon: <GraduationCap />,
+    icon: <SchoolIcon />,
     roles: ["admin", "instructor"],
   },
   {
     label: "User Management",
     path: "/admin/user-management",
-    icon: <Users />,
+    icon: <UserManagementIcon />,
     roles: ["admin"],
   },
   {
     label: "System Analytics",
     path: "/admin/analytics",
-    icon: <BarChart3 />,
+    icon: <StackedBarChartOutlinedIcon />,
     roles: ["admin"],
   },
   {
     label: "System Email",
     path: "/admin/email",
-    icon: <Mail />,
+    icon: <EmailIcon />,
     roles: ["admin"],
   },
   {
     label: "Email Audit",
     path: "/admin/email-audit",
-    icon: <MailCheck />,
+    icon: <EmailAuditIcon />,
     roles: ["admin"],
   },
   {
     label: "System Flags",
     path: "/admin/feature-flags",
-    icon: <Flag />,
+    icon: <FlagIcon />,
     roles: ["admin"],
   },
   {
     label: "MCP Server Registry",
     path: "/admin/mcp-servers",
-    icon: <Server />,
+    icon: <McpServersIcon />,
     roles: ["admin"],
   },
   {
     label: "App Registry",
     path: "/admin/kiwi-apps",
-    icon: <LayoutGrid />,
+    icon: <AppsIcon />,
     roles: ["admin"],
   },
   {
     label: "Webhooks",
     path: "/admin/webhooks",
-    icon: <Webhook />,
+    icon: <WebhookIcon />,
     roles: ["admin"],
   },
   {
     label: "Webhook Approvals",
     path: "/admin/webhooks/approvals",
-    icon: <ClipboardCheck />,
+    icon: <ApprovalIcon />,
     roles: ["admin"],
   },
 ];
@@ -116,30 +119,64 @@ interface AdminAppItem {
 const ADMIN_SIDEBAR_WIDTH = TOP_NAV_BRAND_AREA_WIDTH;
 
 const AdminSidebarSkeleton = () => (
-  <aside
+  <Box
+    component="aside"
     aria-label="Loading admin navigation"
     aria-busy="true"
-    className="flex shrink-0 flex-col overflow-hidden border-r border-border bg-card"
-    style={{ width: ADMIN_SIDEBAR_WIDTH }}
+    sx={{
+      width: ADMIN_SIDEBAR_WIDTH,
+      flexShrink: 0,
+      bgcolor: "background.paper",
+      borderRight: "1px solid",
+      borderColor: "divider",
+      display: "flex",
+      flexDirection: "column",
+      overflow: "hidden",
+    }}
   >
-    <div className="grow py-2">
+    <Box sx={{ flexGrow: 1, py: 1 }}>
       {Array.from({ length: allSidebarItems.length }).map((_, index) => (
-        <div key={index} className="mx-2 flex min-h-11 items-center gap-3 px-2">
-          <div className="flex w-6 shrink-0 justify-center">
-            <Skeleton className="size-5 rounded-full" />
-          </div>
+        <Box
+          key={index}
+          sx={{
+            minHeight: 44,
+            mx: 1,
+            px: 1,
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+          }}
+        >
+          <Box
+            sx={{
+              width: 24,
+              flexShrink: 0,
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Skeleton variant="circular" width={20} height={20} />
+          </Box>
           <Skeleton
-            className="h-4 rounded-md"
-            style={{ width: index % 3 === 0 ? 112 : index % 3 === 1 ? 136 : 96 }}
+            variant="rounded"
+            width={index % 3 === 0 ? 112 : index % 3 === 1 ? 136 : 96}
+            height={16}
           />
-        </div>
+        </Box>
       ))}
-    </div>
+    </Box>
 
-    <div className="shrink-0 border-t border-border p-2">
-      <Skeleton className="size-10 rounded-lg" />
-    </div>
-  </aside>
+    <Box
+      sx={{
+        flexShrink: 0,
+        borderTop: "1px solid",
+        borderColor: "divider",
+        p: 1,
+      }}
+    >
+      <Skeleton variant="circular" width={40} height={40} />
+    </Box>
+  </Box>
 );
 
 const AdminLayout: React.FC = () => {
@@ -443,7 +480,7 @@ const AdminLayout: React.FC = () => {
           return {
             key: appPath,
             label: app.name,
-            icon: <LayoutGrid />,
+            icon: <AppsIcon />,
             selected: activeAdminAppSlug === app.slug,
             active: appNavigationExpanded,
             expanded: appNavigationExpanded ? true : undefined,
@@ -548,42 +585,54 @@ const AdminLayout: React.FC = () => {
               open={drawerOpen}
               width={ADMIN_SIDEBAR_WIDTH}
               footer={
-                <div className="flex justify-start p-2">
-                  <Button
-                    variant="ghost"
-                    size="icon"
+                <Box
+                  sx={{ display: "flex", justifyContent: "flex-start", p: 1 }}
+                >
+                  <IconButton
                     onClick={toggleDrawer}
-                    className="size-10 rounded-full text-muted-foreground"
                     aria-label={
                       drawerOpen
                         ? "Collapse admin navigation"
                         : "Expand admin navigation"
                     }
                   >
-                    {drawerOpen ? <PanelLeftClose /> : <PanelLeftOpen />}
-                  </Button>
-                </div>
+                    {drawerOpen ? (
+                      <CollapseSidebarIcon />
+                    ) : (
+                      <ExpandSidebarIcon />
+                    )}
+                  </IconButton>
+                </Box>
               }
               sections={sidebarSections}
             />
           )}
 
           {shouldShowSidebar && isMobile && (
-            <Dialog open={mobileDrawerOpen} onOpenChange={setMobileDrawerOpen}>
-              <DialogContent
-                showCloseButton={false}
-                aria-label="Admin navigation"
-                className="right-auto bottom-0 left-0 flex h-auto w-auto max-w-none translate-x-0 translate-y-0 gap-0 rounded-none p-0 ring-0 data-open:zoom-in-100 data-open:slide-in-from-left-4 data-closed:zoom-out-100 data-closed:slide-out-to-left-4"
-                style={{ top: TOP_NAV_HEIGHT }}
-              >
+            <Drawer
+              variant="temporary"
+              open={mobileDrawerOpen}
+              onClose={() => setMobileDrawerOpen(false)}
+              ModalProps={{ keepMounted: true }}
+              slotProps={{
+                paper: {
+                  sx: {
+                    top: TOP_NAV_HEIGHT,
+                    width: 260,
+                    height: `calc(100% - ${TOP_NAV_HEIGHT}px)`,
+                  },
+                },
+              }}
+            >
+              <Box sx={{ display: "flex", height: "100%", minHeight: 0 }}>
                 <NavigationSidebar
                   ariaLabel="Admin navigation"
                   open
                   width={260}
                   sections={sidebarSections}
                 />
-              </DialogContent>
-            </Dialog>
+              </Box>
+            </Drawer>
           )}
 
           {/* Main content */}

@@ -4,7 +4,7 @@ import * as Examples from './SmallPopupExamples.stories.tsx';
 
 export const popup = designSystem.patterns['small-popup'];
 
-<Meta title="Patterns/Small Popups/Overview" />
+<Meta title="Kiwi Design System/Popups/Overview" />
 
 # Small popups
 
@@ -107,18 +107,18 @@ Widths are content-driven, not component defaults. For example, a short action o
 
 ### Action menu
 
-The simplest baseline: an immediate choice in a short list, built on the shadcn `DropdownMenu`.
+The simplest baseline: an immediate choice in a short list.
 
 <Canvas of={Examples.ActionMenu} />
 
-### Option selector
+### Searchable class selector
 
-A bounded choice among mutually exclusive values, built on the shadcn `Select`.
+A wider implementation for a variable option set with filtering.
 
-<Canvas of={Examples.OptionSelector} />
+<Canvas of={Examples.ClassSelector} />
 
-### Compact picker
+### Date range
 
-The compact-picker pattern (a bounded local task with draft state and an explicit Apply) is implemented in product code by
-`AnalyticsDateRangeControl`. Its current implementation is still MUI and is kept under
-[Deprecated / Analytics Date Range](?path=/docs/deprecated-analytics-date-range--docs) until it migrates to shadcn.
+Date range is one compact-picker example, not the definition of the small-popup pattern. Its date, time, draft, and Apply behavior belong to the date-range implementation.
+
+<Canvas of={Examples.DateRange} />

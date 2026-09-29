@@ -1,36 +1,28 @@
 import { addons } from 'storybook/manager-api';
 import { create } from 'storybook/theming';
+import kiwiTheme from '../src/Theme.ts';
 
-/* Values mirror the semantic tokens in src/index.css (the manager cannot load
-   the preview's Tailwind CSS, so the tokens are inlined here). */
-const tokens = {
-  primary: '#6a1b9a',
-  background: '#fafafa',
-  card: '#ffffff',
-  border: '#e0e0e0',
-  foreground: '#212121',
-  mutedForeground: '#616161',
-};
+const { palette } = kiwiTheme;
 
 addons.setConfig({
   theme: create({
     base: 'light',
     brandTitle: 'Kiwi Design System',
-    brandUrl: './?path=/docs/getting-started-about--docs',
+    brandUrl: './?path=/docs/storybook-guide-welcome--docs',
     brandTarget: '_self',
-    colorPrimary: tokens.primary,
-    colorSecondary: tokens.primary,
-    appBg: tokens.background,
-    appContentBg: tokens.card,
-    appPreviewBg: tokens.background,
-    appBorderColor: tokens.border,
-    textColor: tokens.foreground,
-    textMutedColor: tokens.mutedForeground,
-    barTextColor: tokens.mutedForeground,
-    barHoverColor: tokens.primary,
-    barSelectedColor: tokens.primary,
-    inputBg: tokens.card,
-    inputBorder: tokens.border,
-    inputTextColor: tokens.foreground,
+    colorPrimary: palette.primary.main,
+    colorSecondary: palette.primary.main,
+    appBg: palette.background.default,
+    appContentBg: palette.background.paper,
+    appPreviewBg: palette.background.default,
+    appBorderColor: palette.divider,
+    textColor: palette.text.primary,
+    textMutedColor: palette.text.secondary,
+    barTextColor: palette.text.secondary,
+    barHoverColor: palette.primary.main,
+    barSelectedColor: palette.primary.main,
+    inputBg: palette.background.paper,
+    inputBorder: palette.divider,
+    inputTextColor: palette.text.primary,
   }),
 });

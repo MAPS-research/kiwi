@@ -4,7 +4,7 @@
   "system": {
     "name": "Kiwi Design System",
     "purpose": "A Storybook workspace that separates repository authoring rules from product-facing Kiwi design contracts.",
-    "framework": "React 19 with shadcn/ui (Base UI) and Tailwind CSS 4; legacy surfaces are migrating off Material UI 7",
+    "framework": "React 19 with Material UI 7",
     "storybook": "Storybook 10 with React and Vite",
     "sourceOfTruth": "This catalog is the canonical source for contract lists. MDX pages and story docs import and render these entries; do not hand-edit a duplicated copy in MDX or stories.",
     "sourceFields": {
@@ -17,7 +17,7 @@
     "storybookGuide": {
       "label": "Storybook Guide",
       "kind": "repository-authoring-contract",
-      "storybookTitle": "Contributing/Authoring Rules",
+      "storybookTitle": "Storybook Guide/Authoring Rules",
       "docSource": ".storybook/stories/StorybookGuide.mdx",
       "owns": [
         "navigation and page naming",
@@ -35,7 +35,7 @@
     "kiwiDesignSystem": {
       "label": "Kiwi Design System",
       "kind": "product-design-contract",
-      "storybookTitle": "Foundations / Guidelines / Patterns / Components",
+      "storybookTitle": "Kiwi Design System",
       "owns": [
         "visual foundations and tokens",
         "component and pattern contracts",
@@ -51,8 +51,8 @@
   "audiences": {
     "kiwi-ui": {
       "label": "React inside Kiwi UI",
-      "contract": "Use shadcn components from src/components/ui and Tailwind semantic tokens (bg-primary, text-muted-foreground, ...). Legacy MUI surfaces keep semantic values from src/Theme.ts until they migrate.",
-      "avoid": "Do not repeat raw color values in product components, mix MUI and Tailwind styling inside one surface, or use the external-app token contract."
+      "contract": "Use semantic MUI values from src/Theme.ts.",
+      "avoid": "Do not repeat raw color values in product components or use the external-app token contract."
     },
     "external-kiwi-app": {
       "label": "External Kiwi App",
@@ -73,27 +73,22 @@
     "general UI heuristics"
   ],
   "navigation": [
-    "Getting Started/About",
-    "Foundations/Colors",
-    "Foundations/Typography",
-    "Guidelines/Analytics",
-    "Guidelines/Quality",
-    "Guidelines/User Management",
-    "Patterns/Forms",
-    "Patterns/Small Popups",
-    "Components/Actions/Button",
-    "Components/Layout/Admin Page",
-    "Components/Layout/Admin Page Header",
-    "Components/Layout/Navigation Sidebar",
-    "Contributing/Authoring Rules",
-    "Contributing/Documentation UIUX",
-    "Contributing/Components/Do Avoid",
-    "Deprecated/Analytics Date Range"
+    "Storybook Guide/Welcome",
+    "Storybook Guide/Authoring Rules",
+    "Storybook Guide/UIUX Rules",
+    "Storybook Guide/Components",
+    "Kiwi Design System/Foundations",
+    "Kiwi Design System/Components",
+    "Kiwi Design System/Forms",
+    "Kiwi Design System/Popups",
+    "Kiwi Design System/Patterns",
+    "Kiwi Design System/Product Guides",
+    "Kiwi Design System/Quality"
   ],
   "storybookGuides": {
     "uiux": {
       "scope": "storybookGuide",
-      "storybookTitle": "Contributing/Documentation UIUX",
+      "storybookTitle": "Storybook Guide/UIUX Rules",
       "docSource": ".storybook/stories/StorybookUIUX.mdx",
       "topics": [
         "information hierarchy",
@@ -109,7 +104,7 @@
     "do-avoid": {
       "scope": "storybookGuide",
       "status": "stable",
-      "storybookTitle": "Contributing/Components/Do Avoid",
+      "storybookTitle": "Storybook Guide/Components/Do Avoid",
       "componentSource": ".storybook/components/DoAvoid.tsx",
       "storySource": ".storybook/stories/DoAvoid.stories.tsx",
       "purpose": "Present directly comparable recommended and discouraged guidance in Storybook documentation.",
@@ -132,74 +127,28 @@
   "foundations": {
     "colors": {
       "scope": "kiwiDesignSystem",
-      "storybookId": "foundations-colors--overview",
+      "storybookId": "kiwi-design-system-foundations-colors--overview",
       "storySource": ".storybook/stories/Theme.stories.tsx",
-      "summary": "Product color comes exclusively from the Tailwind semantic tokens defined in `src/index.css`.",
+      "summary": "Uses 2014 Material Design palettes for the semantic MUI and external-app contracts.",
       "rules": [
-        "Build product UI with the Tailwind semantic token utilities (`bg-primary`, `text-muted-foreground`, `border-border`, `text-destructive`, ...); never hard-code color in product components — no raw hex/rgb values and no Tailwind palette classes such as `amber-500`.",
-        "`src/index.css` is the single source of truth: token values live on `:root` and reach utilities through the `@theme inline` block.",
-        "To add or change a color role, define the custom property in `src/index.css` and expose it in `@theme inline`; do not create component-local palettes or one-off values.",
-        "Pick the role that matches meaning: `primary` for main actions, `secondary` for supporting filled actions, `muted`/`accent` for subdued and hover fills, `destructive` for errors and destructive actions, `success` for positive confirmation, `warning` for caution states, `border`/`input`/`ring` for chrome and focus, `chart-1`…`chart-5` for chart series.",
-        "Do not add a new token when an existing role already expresses the meaning; surface-specific token sets (a sidebar palette, a per-feature palette) are not allowed unless the surface genuinely diverges from the shared roles.",
-        "There is no dark palette yet: `dark:` variants stay inert until a `.dark` token set is defined in `src/index.css`."
+        "Build product UI with semantic MUI roles from `src/Theme.ts` (`primary.main`, `error.main`, `text.secondary`, ...); never repeat raw hex values in product components.",
+        "Choose new roles from `src/theme/material-design-2014.json`, then map the shade to a semantic theme or feature token.",
+        "External Kiwi Apps use the matching CSS custom properties from `public/kiwi-design-tokens.css`; they must not import Kiwi UI theme modules.",
+        "The external semantic token contract mirrors `src/Theme.ts` and must stay in sync when a theme role changes."
       ]
     },
     "typography": {
       "scope": "kiwiDesignSystem",
-      "storybookId": "foundations-typography--overview",
+      "storybookId": "kiwi-design-system-foundations-typography--overview",
       "storySource": ".storybook/stories/Typography.stories.tsx",
-      "summary": "Uses Montserrat for ordinary UI, composed as a small set of shadcn/Tailwind type roles.",
-      "fontFamily": "Montserrat through the `--font-sans` token (aliased by `--font-heading`), self-hosted from @fontsource-variable/montserrat via src/fonts/montserrat.css; `sans-serif` is only a generic fallback for glyphs Montserrat does not cover (e.g. CJK).",
-      "roles": [
-        {
-          "role": "page-title",
-          "label": "Page title",
-          "classes": "text-2xl leading-[1.3] font-semibold tracking-[-0.02em]",
-          "ownedBy": "src/components/AdminPage/AdminPageHeader.tsx",
-          "use": "The single h1 of a page. Rendered by AdminPageHeader; do not restyle it locally."
-        },
-        {
-          "role": "dialog-title",
-          "label": "Dialog title",
-          "classes": "font-heading text-base leading-none font-medium",
-          "ownedBy": "src/components/ui/dialog.tsx",
-          "use": "The heading of a dialog. Rendered by DialogTitle; do not restyle it locally."
-        },
-        {
-          "role": "label",
-          "label": "Label / emphasized UI text",
-          "classes": "text-sm font-medium",
-          "use": "Form labels, table headers, buttons, and other short emphasized UI text."
-        },
-        {
-          "role": "body",
-          "label": "Body UI text",
-          "classes": "text-sm text-foreground",
-          "use": "Default text on shadcn surfaces: table cells, dialog content, list items, and form values."
-        },
-        {
-          "role": "supporting",
-          "label": "Supporting text",
-          "classes": "text-sm text-muted-foreground",
-          "use": "Descriptions, helper text, and secondary copy that accompanies body text."
-        },
-        {
-          "role": "metadata",
-          "label": "Metadata",
-          "classes": "text-xs text-muted-foreground",
-          "use": "Timestamps, counts, keyboard hints, and other short annotations. This is the minimum text size; never use it for paragraphs."
-        }
-      ],
+      "summary": "Uses Montserrat for ordinary UI and semantic MUI typography variants.",
       "rules": [
         "Montserrat is the only typeface for ordinary UI; never reintroduce Roboto, Arial, Helvetica, or a platform default stack.",
         "The only exceptions are math (KaTeX/MathJax), monospace for code, commands, IDs, and JSON, the Ace editor, icon fonts, and third-party component internals.",
-        "Compose text from the documented type roles before inventing a new size, weight, or tracking combination. For small anchored overlays, use the documented Small Popup typography roles.",
-        "When a component owns a role (AdminPageHeader for the page title, DialogTitle for dialog titles, Label for form labels), use the component instead of re-creating its classes.",
-        "`text-sm` is the default UI text size on shadcn surfaces; `text-xs` is the minimum and is reserved for short labels and metadata.",
-        "The full Tailwind size scale (`text-xs` through `text-9xl`) stays available, but ordinary product UI uses the documented roles; sizes above `text-2xl` are reserved for hero, marketing, or empty-state display text.",
-        "Keep heading levels meaningful; visual size and document hierarchy are separate concerns.",
-        "Use semantic text color utilities (`text-foreground`, `text-muted-foreground`, `text-primary`, `text-destructive`) instead of hard-coded grays.",
-        "Surfaces still on MUI keep the semantic variants from `src/Theme.ts` until they migrate; do not mix MUI typography and Tailwind text utilities inside one surface."
+        "Use a semantic MUI `variant` before introducing custom font sizes. For small anchored overlays, use the documented Small Popup typography roles instead of component-local values.",
+        "Use `body1` for primary reading content and `body2` for supporting UI copy.",
+        "Keep heading levels meaningful; visual size and document hierarchy are separate concerns when using `component`.",
+        "Use semantic text colors from the theme instead of hard-coded grays."
       ]
     }
   },
@@ -207,8 +156,7 @@
     "button": {
       "scope": "kiwiDesignSystem",
       "status": "stable",
-      "storybookTitle": "Components/Actions/Button",
-      "componentSource": "src/components/ui/button.tsx",
+      "storybookTitle": "Kiwi Design System/Components/Button",
       "storySource": ".storybook/stories/Button.stories.tsx",
       "purpose": "Trigger an immediate user action.",
       "useWhen": [
@@ -221,21 +169,10 @@
         "An icon alone would make the action ambiguous."
       ],
       "variants": {
-        "default": "One primary action in the current surface or a high-confidence confirmation.",
-        "secondary": "A supporting action that still needs a filled surface next to the primary action.",
-        "outline": "Secondary actions with a visible boundary, including toolbar actions such as Refresh.",
-        "ghost": "Tertiary, reversible, or low-emphasis actions and dense toolbars.",
-        "destructive": "Actions that delete or discard data; pair with an explicit confirmation step.",
-        "link": "Inline actions that read as part of surrounding text."
+        "contained": "One primary action in the current surface or a high-confidence confirmation.",
+        "outlined": "Secondary actions and lower-emphasis destructive actions.",
+        "text": "Tertiary, reversible, or low-emphasis actions."
       },
-      "sizes": {
-        "default": "Standard control height for pages and dialogs.",
-        "sm": "Dense surfaces such as table rows and card toolbars.",
-        "xs": "The most compact chrome, such as inline tag actions.",
-        "lg": "Prominent standalone calls to action.",
-        "icon": "Icon-only actions; requires an aria-label and has icon-xs, icon-sm, and icon-lg counterparts."
-      },
-      "iconSlots": "Mark leading icons with data-icon=\"inline-start\" and trailing icons with data-icon=\"inline-end\" so the button balances its padding.",
       "states": [
         "default",
         "hover",
@@ -245,7 +182,7 @@
         "full-width"
       ],
       "accessibility": [
-        "Use an action-first visible label; icon-only buttons need an aria-label.",
+        "Use an action-first visible label.",
         "Do not rely on color alone to communicate destructive or status meaning.",
         "Keep the accessible name and width stable during processing.",
         "Use native disabled semantics when the action cannot run."
@@ -254,7 +191,7 @@
     "admin-page": {
       "scope": "kiwiDesignSystem",
       "status": "stable",
-      "storybookTitle": "Components/Layout/Admin Page",
+      "storybookTitle": "Kiwi Design System/Patterns/Admin Page",
       "componentSource": "src/components/AdminPage/AdminPage.tsx",
       "storySource": ".storybook/stories/AdminPage.stories.tsx",
       "purpose": "Provide standard content width, responsive gutters, and bottom spacing for Kiwi Admin pages."
@@ -262,34 +199,25 @@
     "admin-page-header": {
       "scope": "kiwiDesignSystem",
       "status": "stable",
-      "storybookTitle": "Components/Layout/Admin Page Header",
+      "storybookTitle": "Kiwi Design System/Patterns/Admin Page Header",
       "componentSource": "src/components/AdminPage/AdminPageHeader.tsx",
       "storySource": ".storybook/stories/AdminPageHeader.stories.tsx",
       "purpose": "Provide a semantic page heading, optional description, status, back action, and responsive actions."
     },
-    "navigation-sidebar": {
-      "scope": "kiwiDesignSystem",
-      "status": "stable",
-      "storybookTitle": "Components/Layout/Navigation Sidebar",
-      "componentSource": "src/components/NavigationSidebar/NavigationSidebar.tsx",
-      "storySource": ".storybook/stories/NavigationSidebar.stories.tsx",
-      "purpose": "Collapsible admin navigation rail on the shared semantic tokens, with fixed icon geometry, tooltip labels when collapsed, and animated nested navigation."
-    },
     "admin-form": {
       "scope": "kiwiDesignSystem",
-      "status": "legacy-mui",
-      "storybookTitle": "Patterns/Forms/Examples",
+      "status": "stable",
+      "storybookTitle": "Kiwi Design System/Forms/Examples",
       "componentSource": "src/components/AdminPage/AdminFormSurface.tsx",
       "storySource": ".storybook/stories/FormExamples.stories.tsx",
-      "purpose": "Provide Admin-specific composition helpers that implement the general Forms guidance.",
-      "note": "AdminFormSurface, AdminFormSection, and AdminFormActions are still MUI implementations pending shadcn migration; the Storybook form examples compose the same structure from shadcn primitives."
+      "purpose": "Provide Admin-specific composition helpers that implement the general Forms guidance."
     }
   },
   "patterns": {
     "forms": {
       "scope": "kiwiDesignSystem",
       "status": "stable",
-      "storybookTitle": "Patterns/Forms/Overview",
+      "storybookTitle": "Kiwi Design System/Forms/Overview",
       "docSource": ".storybook/stories/Forms.mdx",
       "storySource": ".storybook/stories/FormExamples.stories.tsx",
       "purpose": "Define a shared design and interaction contract for forms across Kiwi without prescribing one page-specific component.",
@@ -374,7 +302,7 @@
     "small-popup": {
       "scope": "kiwiDesignSystem",
       "status": "stable",
-      "storybookTitle": "Patterns/Small Popups/Overview",
+      "storybookTitle": "Kiwi Design System/Popups/Overview",
       "docSource": ".storybook/stories/SmallPopup.mdx",
       "storySource": ".storybook/stories/SmallPopupExamples.stories.tsx",
       "tokenSource": "src/theme/compactPopup.ts",
@@ -472,26 +400,27 @@
         "Do not show a visual Escape badge; keyboard dismissal remains supported without adding persistent UI noise."
       ],
       "accessibility": [
-        "Use the matching menu or popover semantics (shadcn DropdownMenu/Select on Base UI; MUI Menu/Popover only on legacy surfaces), preserve keyboard navigation and Escape dismissal, and return focus to the trigger on close.",
+        "Use the matching MUI Menu or Popover semantics, preserve keyboard navigation and Escape dismissal, and return focus to the trigger on close.",
         "Give icon-only triggers an accessible name and expose expanded and controlled state where applicable.",
         "Do not use color alone for selected, disabled, error, or status meaning."
       ],
       "examples": [
         {
           "name": "Action menu",
-          "role": "Baseline small popup example (shadcn DropdownMenu)",
+          "role": "Baseline small popup example",
           "story": "Action menu"
         },
         {
-          "name": "Option selector",
-          "role": "Selector example (shadcn Select)",
-          "story": "Option selector"
+          "name": "Class selector",
+          "role": "Searchable selector example",
+          "story": "Class selector",
+          "componentSource": "src/components/TopNav/ClassSwitcher.tsx"
         },
         {
           "name": "Analytics date range",
-          "role": "Compact picker product reference (MUI implementation pending shadcn migration)",
-          "componentSource": "src/components/Analytics/AnalyticsDateRangeControl.tsx",
-          "storybookTitle": "Deprecated/Analytics Date Range"
+          "role": "Compact picker example",
+          "story": "Date range",
+          "componentSource": "src/components/Analytics/AnalyticsDateRangeControl.tsx"
         }
       ]
     }
@@ -499,7 +428,7 @@
   "productGuides": {
     "analytics": {
       "scope": "kiwiDesignSystem",
-      "storybookTitle": "Guidelines/Analytics/Overview",
+      "storybookTitle": "Kiwi Design System/Product Guides/Analytics/Overview",
       "docSource": ".storybook/stories/AnalyticsDesign.mdx",
       "storySource": ".storybook/stories/AnalyticsDesign.stories.tsx",
       "topics": [
@@ -578,7 +507,7 @@
   "qualityGuides": {
     "delivery": {
       "scope": "kiwiDesignSystem",
-      "storybookTitle": "Guidelines/Quality/Delivery Checklist",
+      "storybookTitle": "Kiwi Design System/Quality/Delivery Checklist",
       "docSource": ".storybook/stories/Quality.mdx",
       "purpose": "Define required evidence for accessible, responsive, visually stable, density-aware, and network-resilient Kiwi interfaces.",
       "documentationLayers": {

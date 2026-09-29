@@ -103,7 +103,7 @@ export const PDFViewer: React.FC<PDFViewerProps> = ({
               </div>
             </div>
           ) : (
-            <p style={{ margin: "1em 0" }}>Please select a file</p>
+            <p>Please select a file</p>
           )}
         </Worker>
       </div>

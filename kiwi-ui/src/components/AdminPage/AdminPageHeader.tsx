@@ -1,16 +1,13 @@
-import type { ComponentProps, ReactNode } from "react";
-import { ArrowLeft } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import type { ReactNode } from "react";
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
+import { Box, IconButton, Stack, Typography } from "@mui/material";
 
 export interface AdminPageHeaderBackAction {
   label: string;
   onClick: () => void;
 }
 
-export interface AdminPageHeaderProps
-  extends Omit<ComponentProps<"header">, "title"> {
+export interface AdminPageHeaderProps {
   title: ReactNode;
   description?: ReactNode;
   back?: AdminPageHeaderBackAction;
@@ -24,73 +21,92 @@ const AdminPageHeader = ({
   back,
   status,
   actions,
-  className,
-  ...props
 }: AdminPageHeaderProps) => (
-  <header
-    {...props}
-    data-slot="admin-page-header"
-    className={cn(
-      "mb-6 flex flex-col items-stretch justify-between gap-4 md:mb-8 md:flex-row md:items-start md:gap-6",
-      className,
-    )}
+  <Box
+    component="header"
+    sx={{
+      display: "flex",
+      flexDirection: { xs: "column", md: "row" },
+      alignItems: { xs: "stretch", md: "flex-start" },
+      justifyContent: "space-between",
+      gap: { xs: 2, md: 3 },
+      mb: { xs: 3, md: 4 },
+    }}
   >
-    <div className="flex w-full min-w-0 items-start gap-2 sm:gap-3 md:w-auto">
+    <Stack
+      direction="row"
+      spacing={{ xs: 1, sm: 1.5 }}
+      alignItems="flex-start"
+      sx={{ minWidth: 0, width: { xs: "100%", md: "auto" } }}
+    >
       {back && (
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
+        <IconButton
+          size="small"
           aria-label={`Back to ${back.label}`}
           onClick={back.onClick}
-          className="mt-0.5"
+          sx={{ mt: 0.25, flexShrink: 0 }}
         >
-          <ArrowLeft aria-hidden="true" />
-        </Button>
+          <ArrowBackOutlinedIcon fontSize="small" />
+        </IconButton>
       )}
 
-      <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-center gap-3">
-          <h1
-            data-slot="admin-page-header-title"
-            className="text-2xl leading-[1.3] font-semibold tracking-[-0.02em] [overflow-wrap:anywhere]"
+      <Box sx={{ minWidth: 0, flex: 1 }}>
+        <Stack
+          direction="row"
+          spacing={1.5}
+          alignItems="center"
+          flexWrap="wrap"
+          useFlexGap
+        >
+          <Typography
+            component="h1"
+            variant="h5"
+            sx={{
+              fontWeight: 600,
+              lineHeight: 1.3,
+              overflowWrap: "anywhere",
+            }}
           >
             {title}
-          </h1>
-          {status && (
-            <div data-slot="admin-page-header-status" className="contents">
-              {status}
-            </div>
-          )}
-        </div>
+          </Typography>
+          {status}
+        </Stack>
 
         {description && (
-          <div
-            data-slot="admin-page-header-description"
-            className="mt-1 max-w-[720px] text-sm leading-5 text-muted-foreground [overflow-wrap:anywhere]"
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ mt: 0.5, maxWidth: 720, overflowWrap: "anywhere" }}
           >
             {description}
-          </div>
+          </Typography>
         )}
-      </div>
-    </div>
+      </Box>
+    </Stack>
 
     {actions && (
-      <div
-        data-slot="admin-page-header-actions"
-        className={cn(
-          "flex w-full shrink flex-wrap items-center justify-start gap-2 md:w-auto md:shrink-0 md:justify-end",
-          "[&>[data-slot=button]]:flex-[1_1_140px] md:[&>[data-slot=button]]:flex-none",
-          "[&>[data-slot=badge]]:flex-[1_1_140px] md:[&>[data-slot=badge]]:flex-none",
-          "[&>.MuiButton-root]:flex-[1_1_140px] md:[&>.MuiButton-root]:flex-none",
-          "[&>.MuiBadge-root]:flex-[1_1_140px] md:[&>.MuiBadge-root]:flex-none",
-          "[&>.MuiBadge-root>.MuiButton-root]:w-full md:[&>.MuiBadge-root>.MuiButton-root]:w-auto",
-        )}
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: { xs: "flex-start", md: "flex-end" },
+          gap: 1,
+          flexWrap: "wrap",
+          width: { xs: "100%", md: "auto" },
+          flexShrink: { xs: 1, md: 0 },
+          "& > .MuiButton-root": {
+            flex: { xs: "1 1 140px", md: "0 0 auto" },
+          },
+          "& > .MuiBadge-root": {
+            flex: { xs: "1 1 140px", md: "0 0 auto" },
+            "& > .MuiButton-root": { width: { xs: "100%", md: "auto" } },
+          },
+        }}
       >
         {actions}
-      </div>
+      </Box>
     )}
-  </header>
+  </Box>
 );
 
 export default AdminPageHeader;

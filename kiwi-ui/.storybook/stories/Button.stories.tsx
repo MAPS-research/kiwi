@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { LoaderCircle, RefreshCw, Save, Trash2 } from 'lucide-react';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
+import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
 import { expect, within } from 'storybook/test';
-import { Button } from '../../src/components/ui/button.tsx';
 import designSystem from '../design-system/catalog.json' with { type: 'json' };
 
 const buttonContract = designSystem.components.button;
@@ -23,19 +25,9 @@ ${buttonContract.avoidWhen.map((item) => `- ${item}`).join('\n')}
 
 ## Variant selection
 
-${Object.entries(buttonContract.variants)
-  .map(([name, guidance]) => `- **${name}:** ${guidance}`)
-  .join('\n')}
-
-## Size selection
-
-${Object.entries(buttonContract.sizes)
-  .map(([name, guidance]) => `- **${name}:** ${guidance}`)
-  .join('\n')}
-
-## Icon slots
-
-${buttonContract.iconSlots}
+- **Contained:** ${buttonContract.variants.contained}
+- **Outlined:** ${buttonContract.variants.outlined}
+- **Text:** ${buttonContract.variants.text}
 
 ## Accessibility contract
 
@@ -43,7 +35,7 @@ ${buttonContract.accessibility.map((item) => `- ${item}`).join('\n')}
 `;
 
 const meta = {
-  title: 'Components/Actions/Button',
+  title: 'Kiwi Design System/Components/Button',
   component: Button,
   tags: ['autodocs'],
   parameters: {
@@ -56,9 +48,11 @@ const meta = {
   },
   args: {
     children: 'Continue',
-    variant: 'default',
-    size: 'default',
+    color: 'primary',
     disabled: false,
+    fullWidth: false,
+    size: 'medium',
+    variant: 'contained',
   },
   argTypes: {
     children: {
@@ -67,15 +61,26 @@ const meta = {
       table: { category: 'Content' },
     },
     variant: {
-      control: 'select',
-      options: ['default', 'secondary', 'outline', 'ghost', 'destructive', 'link'],
+      control: 'inline-radio',
+      options: ['contained', 'outlined', 'text'],
       description: 'Select from action hierarchy, not visual preference.',
       table: { category: 'Hierarchy' },
     },
-    size: {
+    color: {
       control: 'select',
-      options: ['xs', 'sm', 'default', 'lg', 'icon-xs', 'icon-sm', 'icon', 'icon-lg'],
-      description: 'Use default by default; change size only for a clear density or prominence need.',
+      options: ['primary', 'secondary', 'success', 'warning', 'error', 'info', 'inherit'],
+      description: 'Communicate action intent; never rely on color without a clear label.',
+      table: { category: 'Hierarchy' },
+    },
+    size: {
+      control: 'inline-radio',
+      options: ['small', 'medium', 'large'],
+      description: 'Use medium by default; change size only for a clear density or prominence need.',
+      table: { category: 'Layout' },
+    },
+    fullWidth: {
+      control: 'boolean',
+      description: 'Use on narrow surfaces when the action should occupy the available width.',
       table: { category: 'Layout' },
     },
     disabled: {
@@ -83,8 +88,9 @@ const meta = {
       description: 'Use native disabled semantics when the action cannot run.',
       table: { category: 'State' },
     },
-    className: { control: false, table: { disable: true } },
-    render: { control: false, table: { disable: true } },
+    startIcon: { control: false, table: { disable: true } },
+    endIcon: { control: false, table: { disable: true } },
+    sx: { control: false, table: { disable: true } },
   },
 } satisfies Meta<typeof Button>;
 
@@ -106,42 +112,50 @@ export const ActionHierarchy: Story = {
   parameters: {
     docs: {
       description: {
-        story:
-          'Use one default (filled) action as the primary choice, outline for secondary actions, and ghost for low-emphasis or reversible actions.',
+        story: 'Use one contained action as the primary choice, outlined for secondary actions, and text for low-emphasis or reversible actions.',
       },
     },
   },
   render: () => (
-    <div className="flex max-w-2xl flex-col gap-6">
+    <Stack spacing={3} sx={{ maxWidth: 680 }}>
       {[
         {
           label: 'Primary',
           guidance: 'The single preferred next action in this surface.',
-          button: <Button>Save changes</Button>,
+          button: <Button variant="contained">Save changes</Button>,
         },
         {
           label: 'Secondary',
           guidance: 'A valid alternative that should not compete with the primary action.',
-          button: <Button variant="outline">Save as draft</Button>,
+          button: <Button variant="outlined">Save as draft</Button>,
         },
         {
           label: 'Tertiary',
           guidance: 'A reversible or low-emphasis action.',
-          button: <Button variant="ghost">Cancel</Button>,
+          button: <Button variant="text">Cancel</Button>,
         },
       ].map(({ label, guidance, button }) => (
-        <div
+        <Box
           key={label}
-          className="grid items-start gap-4 sm:grid-cols-[140px_minmax(0,1fr)] sm:items-center"
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', sm: '140px minmax(0, 1fr)' },
+            alignItems: { xs: 'start', sm: 'center' },
+            gap: 2,
+          }}
         >
-          <div>{button}</div>
-          <div>
-            <h4 className="text-sm font-semibold text-foreground">{label}</h4>
-            <p className="text-sm text-muted-foreground">{guidance}</p>
-          </div>
-        </div>
+          <Box>{button}</Box>
+          <Box>
+            <Typography component="h4" variant="subtitle2">
+              {label}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {guidance}
+            </Typography>
+          </Box>
+        </Box>
       ))}
-    </div>
+    </Stack>
   ),
 };
 
@@ -150,61 +164,48 @@ export const DestructiveActions: Story = {
   parameters: {
     docs: {
       description: {
-        story:
-          'Use the destructive variant with a visible descriptive label. Route the action through an explicit confirmation step (dialog) instead of styling the trigger more aggressively.',
+        story: 'Use a visible destructive label and error color together. Prefer outlined until the user reaches an explicit confirmation step.',
       },
     },
   },
   render: () => (
-    <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
-      <Button variant="destructive">
-        <Trash2 data-icon="inline-start" />
+    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems={{ xs: 'stretch', sm: 'center' }}>
+      <Button variant="outlined" color="error" startIcon={<DeleteOutlinedIcon />}>
         Delete class
       </Button>
-      <Button variant="destructive" size="sm">
-        <Trash2 data-icon="inline-start" />
-        Remove member
+      <Button variant="contained" color="error" startIcon={<DeleteOutlinedIcon />}>
+        Confirm deletion
       </Button>
-    </div>
+    </Stack>
   ),
 };
 
-export const WithIcons: Story = {
-  name: 'With icons',
+export const StatusActions: Story = {
+  name: 'Status actions',
   parameters: {
     docs: {
       description: {
-        story:
-          'Mark icons with data-icon="inline-start" or data-icon="inline-end" so the button rebalances its padding. Icon-only buttons use an icon size and must carry an aria-label.',
+        story: 'Reserve semantic colors for actions whose outcome matches that meaning; the label and icon still carry the intent.',
       },
     },
   },
   render: () => (
-    <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
-      <Button>
-        <Save data-icon="inline-start" />
-        Save changes
+    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems={{ xs: 'stretch', sm: 'center' }}>
+      <Button variant="contained" color="success" startIcon={<SaveOutlinedIcon />}>
+        Approve submission
       </Button>
-      <Button variant="outline">
-        <RefreshCw data-icon="inline-start" />
-        Refresh
+      <Button variant="outlined" color="warning" startIcon={<RefreshOutlinedIcon />}>
+        Regenerate result
       </Button>
-      <Button variant="outline" size="icon" aria-label="Refresh data">
-        <RefreshCw />
-      </Button>
-    </div>
+    </Stack>
   ),
 };
 
 export const Processing: Story = {
   args: {
-    children: (
-      <>
-        <LoaderCircle data-icon="inline-start" aria-hidden="true" className="animate-spin" />
-        Processing
-      </>
-    ),
+    children: 'Processing',
     disabled: true,
+    startIcon: <CircularProgress color="inherit" size={16} aria-hidden="true" />,
   },
   parameters: {
     docs: {
@@ -240,20 +241,19 @@ export const NarrowSurface: Story = {
   name: 'Narrow surface',
   args: {
     children: 'Continue',
-    className: 'w-full',
+    fullWidth: true,
   },
   decorators: [
     (Story) => (
-      <div className="w-full max-w-90">
+      <Box sx={{ width: 'min(100%, 360px)' }}>
         <Story />
-      </div>
+      </Box>
     ),
   ],
   parameters: {
     docs: {
       description: {
-        story:
-          'Full-width buttons (className="w-full") are useful in narrow forms and mobile action areas; avoid stretching them across wide desktop content.',
+        story: 'Full-width buttons are useful in narrow forms and mobile action areas; avoid stretching them across wide desktop content.',
       },
     },
   },

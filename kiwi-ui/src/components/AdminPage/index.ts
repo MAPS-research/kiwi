@@ -1,5 +1,5 @@
 export { default as AdminPage } from './AdminPage.tsx';
-export type { AdminPageMaxWidth, AdminPageProps } from './AdminPage.tsx';
+export type { AdminPageProps } from './AdminPage.tsx';
 export { default as AdminPageHeader } from './AdminPageHeader.tsx';
 export type { AdminPageHeaderBackAction, AdminPageHeaderProps } from './AdminPageHeader.tsx';
 export { default as AdminFormSurface } from './AdminFormSurface.tsx';

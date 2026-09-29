@@ -181,7 +181,7 @@ const renderText = (
         />
       )}
       {displayText && (
-    <Typography component="div" className="markdown-body" sx={{ fontSize: "0.875rem" }}>
+    <Typography component="div" sx={{ fontSize: "0.875rem" }}>
       <Markdown
         children={displayText}
 remarkPlugins={[remarkMath]}

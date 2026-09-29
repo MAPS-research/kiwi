@@ -11,19 +11,10 @@ const preview: Preview = {
     options: {
       storySort: {
         order: [
-          'Getting Started',
-          ['About'],
-          'Foundations',
-          ['Colors', 'Typography'],
-          'Guidelines',
-          ['Analytics', 'Quality', 'User Management'],
-          'Patterns',
-          ['Forms', 'Small Popups'],
-          'Components',
-          ['Actions', 'Layout'],
-          'Contributing',
-          ['Authoring Rules', 'Documentation UIUX', 'Components'],
-          'Deprecated',
+          'Storybook Guide',
+          ['Welcome', 'Authoring Rules', 'UIUX Rules', 'Components'],
+          'Kiwi Design System',
+          ['Foundations', 'Components', 'Forms', 'Popups', 'Patterns', 'Product Guides', 'Quality'],
           '*',
         ],
       },

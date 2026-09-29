@@ -1,39 +1,20 @@
-import type { ComponentProps, ReactNode } from "react";
+import type { ReactNode } from 'react';
+import { Container } from '@mui/material';
+import type { ContainerProps } from '@mui/material';
 
-import { cn } from "@/lib/utils";
-
-export type AdminPageMaxWidth = "xs" | "sm" | "md" | "lg" | "xl" | false;
-
-const maxWidthClasses: Record<Exclude<AdminPageMaxWidth, false>, string> = {
-  xs: "max-w-[444px]",
-  sm: "max-w-[600px]",
-  md: "max-w-[900px]",
-  lg: "max-w-[1200px]",
-  xl: "max-w-[1536px]",
-};
-
-export interface AdminPageProps extends Omit<ComponentProps<"div">, "children"> {
+export interface AdminPageProps {
   children: ReactNode;
-  maxWidth?: AdminPageMaxWidth;
+  maxWidth?: ContainerProps['maxWidth'];
 }
 
-const AdminPage = ({
-  children,
-  className,
-  maxWidth = "lg",
-  ...props
-}: AdminPageProps) => (
-  <div
-    {...props}
-    data-slot="admin-page"
-    className={cn(
-      "mx-auto w-full px-4 pt-4 pb-8 md:px-6 md:pt-6",
-      maxWidth === false ? "max-w-none" : maxWidthClasses[maxWidth],
-      className,
-    )}
+const AdminPage = ({ children, maxWidth = 'lg' }: AdminPageProps) => (
+  <Container
+    maxWidth={maxWidth}
+    disableGutters
+    sx={{ px: { xs: 2, md: 3 }, pt: { xs: 2, md: 3 }, pb: 4 }}
   >
     {children}
-  </div>
+  </Container>
 );
 
 export default AdminPage;

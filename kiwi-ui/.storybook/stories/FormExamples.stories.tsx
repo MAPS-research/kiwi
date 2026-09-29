@@ -1,176 +1,142 @@
-import { useState } from 'react';
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Save } from 'lucide-react';
-import { AdminPage, AdminPageHeader } from '../../src/components/AdminPage/index.ts';
-import { Button } from '../../src/components/ui/button.tsx';
-import { Input } from '../../src/components/ui/input.tsx';
-import { Label } from '../../src/components/ui/label.tsx';
+import { useState } from "react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../../src/components/ui/select.tsx';
-import { Switch } from '../../src/components/ui/switch.tsx';
-import { Textarea } from '../../src/components/ui/textarea.tsx';
-
-const Field = ({
-  id,
-  label,
-  helper,
-  error,
-  children,
-}: {
-  id: string;
-  label: string;
-  helper?: string;
-  error?: string;
-  children: React.ReactNode;
-}) => (
-  <div className="flex flex-col gap-2">
-    <Label htmlFor={id}>{label}</Label>
-    {children}
-    {helper && !error && (
-      <p id={`${id}-helper`} className="text-sm text-muted-foreground">
-        {helper}
-      </p>
-    )}
-    {error && (
-      <p id={`${id}-error`} className="text-sm text-destructive">
-        {error}
-      </p>
-    )}
-  </div>
-);
+  Box,
+  Button,
+  FormControlLabel,
+  MenuItem,
+  Paper,
+  Stack,
+  Switch,
+  TextField,
+  Typography,
+} from "@mui/material";
+import {
+  AdminFormActions,
+  AdminFormSection,
+  AdminFormSurface,
+  AdminPage,
+  AdminPageHeader,
+} from "../../src/components/AdminPage/index.ts";
 
 const BasicFormPreview = () => (
-  <form onSubmit={(event) => event.preventDefault()} className="w-full max-w-[560px]">
-    <div className="flex flex-col gap-6">
-      <div>
-        <h2 className="text-lg font-semibold">Create profile</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
+  <Box
+    component="form"
+    onSubmit={(event) => event.preventDefault()}
+    sx={{ width: "min(100%, 560px)" }}
+  >
+    <Stack spacing={3}>
+      <Box>
+        <Typography component="h2" variant="h6">
+          Create profile
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
           Add the information people will use to identify you.
-        </p>
-      </div>
-      <div className="flex flex-col gap-5">
-        <Field id="basic-name" label="Display name">
-          <Input id="basic-name" required autoComplete="name" />
-        </Field>
-        <Field id="basic-email" label="Email" helper="Used for account notifications.">
-          <Input
-            id="basic-email"
-            required
-            type="email"
-            autoComplete="email"
-            aria-describedby="basic-email-helper"
-          />
-        </Field>
-      </div>
-      <div className="flex flex-col-reverse justify-end gap-2 sm:flex-row">
-        <Button variant="ghost" type="button">
-          Cancel
-        </Button>
-        <Button type="submit">Create profile</Button>
-      </div>
-    </div>
-  </form>
+        </Typography>
+      </Box>
+      <Stack spacing={2.5}>
+        <TextField required fullWidth label="Display name" autoComplete="name" />
+        <TextField
+          required
+          fullWidth
+          label="Email"
+          type="email"
+          autoComplete="email"
+          helperText="Used for account notifications."
+        />
+      </Stack>
+      <Stack direction={{ xs: "column-reverse", sm: "row" }} spacing={1} justifyContent="flex-end">
+        <Button variant="text">Cancel</Button>
+        <Button variant="contained" type="submit">Create profile</Button>
+      </Stack>
+    </Stack>
+  </Box>
 );
-
-const TERM_OPTIONS = { fall: 'Fall 2026', spring: 'Spring 2027' };
 
 const AdminFormPreview = () => {
   const [customPrompts, setCustomPrompts] = useState(false);
-  const [term, setTerm] = useState('fall');
 
   return (
     <AdminPage maxWidth="md">
-      <AdminPageHeader title="Edit class" description="Update course details and assistant behavior." />
+      <AdminPageHeader
+        title="Edit class"
+        description="Update course details and assistant behavior."
+      />
 
-      <div className="rounded-xl border bg-card">
-        <form onSubmit={(event) => event.preventDefault()}>
-          <div className="px-4 sm:px-6">
-            <section className="border-b py-6">
-              <h3 className="text-sm font-semibold">Basic information</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                The details shown to students and instructors.
-              </p>
-              <div className="mt-5 flex flex-col gap-5">
-                <Field id="admin-class-name" label="Class name">
-                  <Input id="admin-class-name" required defaultValue="Interaction Design" />
-                </Field>
-                <Field id="admin-professor-email" label="Professor email">
-                  <Input id="admin-professor-email" required type="email" defaultValue="alex@example.edu" />
-                </Field>
-                <Field id="admin-term" label="Term" helper="Used to organize the class list.">
-                  <Select value={term} onValueChange={(value) => setTerm(value ?? 'fall')} items={TERM_OPTIONS}>
-                    <SelectTrigger id="admin-term" aria-describedby="admin-term-helper" className="w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(TERM_OPTIONS).map(([value, label]) => (
-                        <SelectItem key={value} value={value}>
-                          {label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </Field>
-              </div>
-            </section>
+      <AdminFormSurface>
+        <Box component="form" onSubmit={(event) => event.preventDefault()}>
+          <Box sx={{ px: { xs: 2, sm: 3 } }}>
+            <AdminFormSection
+              title="Basic information"
+              description="The details shown to students and instructors."
+            >
+              <Stack spacing={2.5}>
+                <TextField required fullWidth label="Class name" defaultValue="Interaction Design" />
+                <TextField required fullWidth label="Professor email" type="email" defaultValue="alex@example.edu" />
+                <TextField
+                  fullWidth
+                  select
+                  label="Term"
+                  defaultValue="fall"
+                  helperText="Used to organize the class list."
+                >
+                  <MenuItem value="fall">Fall 2026</MenuItem>
+                  <MenuItem value="spring">Spring 2027</MenuItem>
+                </TextField>
+              </Stack>
+            </AdminFormSection>
 
-            <section className="py-6">
-              <h3 className="text-sm font-semibold">Assistant behavior</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Reveal advanced controls only when this class needs an override.
-              </p>
-              <div className="mt-5 flex flex-col gap-5">
-                <Label className="gap-3">
-                  <Switch checked={customPrompts} onCheckedChange={setCustomPrompts} />
-                  Enable custom system prompt
-                </Label>
-                {customPrompts && (
-                  <Field
-                    id="admin-system-prompt"
-                    label="System prompt"
-                    helper="Explain the assistant behavior in clear, testable language."
-                  >
-                    <Textarea
-                      id="admin-system-prompt"
-                      rows={4}
-                      aria-describedby="admin-system-prompt-helper"
+            <AdminFormSection
+              title="Assistant behavior"
+              description="Reveal advanced controls only when this class needs an override."
+              divided={false}
+            >
+              <Stack spacing={2.5}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={customPrompts}
+                      onChange={(event) => setCustomPrompts(event.target.checked)}
                     />
-                  </Field>
+                  }
+                  label="Enable custom system prompt"
+                />
+                {customPrompts && (
+                  <TextField
+                    fullWidth
+                    multiline
+                    minRows={4}
+                    label="System prompt"
+                    helperText="Explain the assistant behavior in clear, testable language."
+                  />
                 )}
-              </div>
-            </section>
-          </div>
+              </Stack>
+            </AdminFormSection>
+          </Box>
 
-          <div className="flex justify-end gap-2 border-t px-4 py-4 sm:px-6">
-            <Button variant="outline" type="button">
-              Cancel
-            </Button>
-            <Button type="submit">
-              <Save data-icon="inline-start" />
+          <AdminFormActions>
+            <Button variant="outlined">Cancel</Button>
+            <Button variant="contained" type="submit" startIcon={<SaveOutlinedIcon />}>
               Save changes
             </Button>
-          </div>
-        </form>
-      </div>
+          </AdminFormActions>
+        </Box>
+      </AdminFormSurface>
     </AdminPage>
   );
 };
 
 const meta = {
-  title: 'Patterns/Forms/Examples',
+  title: "Kiwi Design System/Forms/Examples",
   parameters: {
-    layout: 'padded',
+    layout: "padded",
   },
   decorators: [
     (Story) => (
-      <div className="min-h-[720px] bg-background p-4 sm:p-8">
+      <Paper square elevation={0} sx={{ minHeight: 720, p: { xs: 2, sm: 4 }, bgcolor: "background.default" }}>
         <Story />
-      </div>
+      </Paper>
     ),
   ],
 } satisfies Meta;
@@ -179,48 +145,34 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const BasicForm: Story = {
-  name: 'Basic form',
+  name: "Basic form",
   render: () => <BasicFormPreview />,
 };
 
 export const AdminFormComposition: Story = {
-  name: 'Admin form composition',
+  name: "Admin form composition",
   render: () => <AdminFormPreview />,
 };
 
 export const FieldStates: Story = {
-  name: 'Field states',
+  name: "Field states",
   render: () => (
-    <div className="w-full max-w-[560px]">
-      <div className="flex flex-col gap-5">
-        <Field
-          id="state-default"
+    <Box sx={{ width: "min(100%, 560px)" }}>
+      <Stack spacing={2.5}>
+        <TextField
           label="Professor email"
-          helper="Used for course ownership notifications."
-        >
-          <Input
-            id="state-default"
-            type="email"
-            defaultValue="alex@example.edu"
-            aria-describedby="state-default-helper"
-          />
-        </Field>
-        <Field
-          id="state-error"
+          type="email"
+          defaultValue="alex@example.edu"
+          helperText="Used for course ownership notifications."
+        />
+        <TextField
+          error
           label="Webhook URL"
-          error="Enter a complete HTTPS URL, for example https://example.com/webhooks."
-        >
-          <Input
-            id="state-error"
-            defaultValue="example"
-            aria-invalid="true"
-            aria-describedby="state-error-error"
-          />
-        </Field>
-        <Field id="state-disabled" label="Generated identifier">
-          <Input id="state-disabled" disabled defaultValue="class_2026_fall" />
-        </Field>
-      </div>
-    </div>
+          defaultValue="example"
+          helperText="Enter a complete HTTPS URL, for example https://example.com/webhooks."
+        />
+        <TextField disabled label="Generated identifier" defaultValue="class_2026_fall" />
+      </Stack>
+    </Box>
   ),
 };

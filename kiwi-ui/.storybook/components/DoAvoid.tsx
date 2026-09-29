@@ -1,4 +1,6 @@
 import { useId, type ReactNode } from 'react';
+import { alpha } from '@mui/material/styles';
+import { Box, Paper, Stack, Typography } from '@mui/material';
 
 export interface DoAvoidProps {
   doItems: readonly ReactNode[];
@@ -13,36 +15,41 @@ interface GuidancePanelProps {
   title: string;
   titleId: string;
   items: readonly ReactNode[];
-  tone: 'do' | 'avoid';
+  tone: 'success' | 'warning';
   headingLevel: NonNullable<DoAvoidProps['headingLevel']>;
 }
 
-const toneClasses = {
-  do: 'border-green-700/40 border-l-green-700 bg-green-700/5',
-  avoid: 'border-amber-600/40 border-l-amber-600 bg-amber-600/5',
-};
-
-const GuidancePanel = ({ title, titleId, items, tone, headingLevel }: GuidancePanelProps) => {
-  const Heading = headingLevel;
-
-  return (
-    <section
-      aria-labelledby={titleId}
-      className={`min-w-0 rounded-xl border border-l-4 p-4 sm:p-5 ${toneClasses[tone]}`}
-    >
-      <Heading id={titleId} className="mb-2.5 text-sm font-bold text-foreground">
-        {title}
-      </Heading>
-      <ul className="my-0 flex list-disc flex-col gap-2 pl-5">
-        {items.map((item, index) => (
-          <li key={index} className="text-sm leading-relaxed [overflow-wrap:anywhere]">
-            {item}
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-};
+const GuidancePanel = ({ title, titleId, items, tone, headingLevel }: GuidancePanelProps) => (
+  <Paper
+    component="section"
+    aria-labelledby={titleId}
+    variant="outlined"
+    sx={{
+      minWidth: 0,
+      p: { xs: 2, sm: 2.5 },
+      borderColor: `${tone}.main`,
+      borderLeftWidth: 4,
+      borderRadius: 2,
+      bgcolor: (theme) => alpha(theme.palette[tone].main, 0.06),
+    }}
+  >
+    <Typography id={titleId} component={headingLevel} variant="subtitle1" sx={{ mb: 1.25, fontWeight: 700 }}>
+      {title}
+    </Typography>
+    <Stack component="ul" spacing={0.875} sx={{ pl: 2.5, my: 0 }}>
+      {items.map((item, index) => (
+        <Typography
+          component="li"
+          variant="body2"
+          key={index}
+          sx={{ lineHeight: 1.6, overflowWrap: 'anywhere' }}
+        >
+          {item}
+        </Typography>
+      ))}
+    </Stack>
+  </Paper>
+);
 
 export const DoAvoid = ({
   doItems,
@@ -55,24 +62,31 @@ export const DoAvoid = ({
   const id = useId();
 
   return (
-    <section
+    <Box
+      component="section"
       aria-label={ariaLabel}
-      className="sb-unstyled grid max-w-full items-stretch gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))]"
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
+        gap: 2,
+        alignItems: 'stretch',
+        maxWidth: '100%',
+      }}
     >
       <GuidancePanel
         title={doTitle}
         titleId={`${id}-do`}
         items={doItems}
-        tone="do"
+        tone="success"
         headingLevel={headingLevel}
       />
       <GuidancePanel
         title={avoidTitle}
         titleId={`${id}-avoid`}
         items={avoidItems}
-        tone="avoid"
+        tone="warning"
         headingLevel={headingLevel}
       />
-    </section>
+    </Box>
   );
 };

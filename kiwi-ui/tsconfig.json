@@ -10,16 +10,14 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["vitest/globals", "node"],
-    "baseUrl": ".",
+    "types": ["vitest/globals"],
     "paths": {
-      "@/*": ["./src/*"],
       "@mui/styled-engine": ["./node_modules/@mui/styled-engine-sc"],
       "@mui/icons-material": ["./node_modules/@mui/icons-material"]
     }

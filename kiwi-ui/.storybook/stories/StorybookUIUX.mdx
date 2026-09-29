@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import { DoAvoid } from '../components/DoAvoid.tsx';
 
-<Meta title="Contributing/Documentation UIUX" />
+<Meta title="Storybook Guide/UIUX Rules" />
 
 # Storybook documentation UI/UX
 
@@ -16,14 +16,14 @@ import { DoAvoid } from '../components/DoAvoid.tsx';
 
 ## Information hierarchy
 
-Use one page `h1`, stable `h2` section anchors, and `h3` headings inside examples. Keep repository authoring content under **Contributing** and product design content under the **Foundations / Guidelines / Patterns / Components** sections. Page titles should describe the reader's task instead of the file or implementation type.
+Use one page `h1`, stable `h2` section anchors, and `h3` headings inside examples. Keep **Storybook Guide** and **Kiwi Design System** as separate top-level scopes. Page titles should describe the reader's task instead of the file or implementation type.
 
 <DoAvoid
   ariaLabel="Storybook information hierarchy guidance"
   headingLevel="h3"
   doItems={[
     'Use headings and sidebar nesting to expose ownership and reading order.',
-    'Put repository authoring rules under Contributing and product rules under the design-system sections.',
+    'Put repository authoring rules under Storybook Guide and product rules under Kiwi Design System.',
   ]}
   avoidItems={[
     'Mix Storybook authoring conventions and Kiwi product rules in one unlabeled chapter.',
@@ -52,7 +52,7 @@ Lead with purpose, decision rules, supported states, and constraints. Use short 
 
 Components under `.storybook/components/` are documentation primitives. They may render Kiwi guidance, but they do not become part of the Kiwi product component API.
 
-The reusable [Do Avoid component](?path=/docs/contributing-components-do-avoid--docs) uses semantic sections and lists, visible text labels in addition to semantic colors, content-driven height, and a two-column layout that stacks on narrow surfaces.
+The reusable [Do Avoid component](?path=/docs/storybook-guide-components-do-avoid--docs) uses semantic sections and lists, visible text labels in addition to semantic colors, content-driven height, and a two-column layout that stacks on narrow surfaces.
 
 ## Accessibility and responsive behavior
 

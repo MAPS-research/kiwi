@@ -1,49 +1,58 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import theme from '../../src/Theme.ts';
 import designSystem from '../design-system/catalog.json';
 
-<Meta title="Getting Started/About" />
+<Meta title="Storybook Guide/Welcome" />
 
-<div className="mb-8 rounded-2xl bg-linear-to-br from-[#4a148c] via-primary to-[#9c27b0] px-6 py-10 text-primary-foreground sm:px-12 lg:px-18">
-  <div className="text-sm font-bold tracking-[0.12em] uppercase opacity-80">Kiwi Design System</div>
-  <h1 className="my-3 text-[clamp(36px,6vw,64px)] leading-[1.05] text-primary-foreground">Build Kiwi interfaces with confidence.</h1>
-  <div className="max-w-[760px] text-lg leading-relaxed opacity-90">One catalog with two clearly separated scopes: how this Storybook is maintained, and how Kiwi interfaces should be designed.</div>
+<div
+  style={{
+    padding: '40px clamp(24px, 6vw, 72px)',
+    marginBottom: '32px',
+    color: theme.palette.primary.contrastText,
+    background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 58%, ${theme.palette.primary.light} 100%)`,
+    borderRadius: '16px',
+  }}
+>
+  <div style={{ fontSize: '14px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', opacity: 0.78 }}><span style={{ color: theme.palette.primary.contrastText }}>{'Kiwi Design System'}</span></div>
+  <h1 style={{ margin: '12px 0 12px', color: 'inherit', fontSize: 'clamp(36px, 6vw, 64px)', lineHeight: 1.05 }}>{'Build Kiwi interfaces with confidence.'}</h1>
+  <div style={{ maxWidth: '760px', margin: 0, fontSize: '18px', lineHeight: 1.6, opacity: 0.9 }}>{'One catalog with two clearly separated scopes: how this Storybook is maintained, and how Kiwi interfaces should be designed.'}</div>
 </div>
 
 ## Know which contract you are reading
 
-<div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(240px,1fr))]">
-  <a href="?path=/docs/foundations-colors--docs" className="rounded-xl border border-primary bg-primary/5 p-5 text-inherit no-underline">
-    <strong className="mb-2 block text-primary">Kiwi Design System</strong>
-    Product-facing rules for Kiwi foundations, guidelines, patterns, and components — accessibility, content, and domain-specific interfaces included.
-  </a>
-  <a href="?path=/docs/contributing-authoring-rules--docs" className="rounded-xl border border-primary/40 bg-background p-5 text-inherit no-underline">
-    <strong className="mb-2 block text-primary">Contributing</strong>
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+  <a href="?path=/docs/storybook-guide-authoring-rules--docs" style={{ padding: '20px', color: 'inherit', textDecoration: 'none', border: `1px solid ${theme.palette.primary.light}`, borderRadius: '12px', background: theme.palette.background.default }}>
+    <strong style={{ display: 'block', marginBottom: '8px', color: theme.palette.primary.main }}>Storybook Guide</strong>
     Repository-level rules for navigation, documentation, stories, Controls, tests, and publishing. These are not official Storybook framework rules.
+  </a>
+  <a href="?path=/story/kiwi-design-system-foundations-colors--overview" style={{ padding: '20px', color: 'inherit', textDecoration: 'none', border: `1px solid ${theme.palette.primary.main}`, borderRadius: '12px', background: theme.palette.action.selected }}>
+    <strong style={{ display: 'block', marginBottom: '8px', color: theme.palette.primary.main }}>Kiwi Design System</strong>
+    Product-facing rules for Kiwi foundations, components, patterns, content, accessibility, and domain-specific interfaces.
   </a>
 </div>
 
-## Explore the sections
+## Explore the Kiwi Design System
 
-<div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
-  <a href="?path=/story/foundations-colors--overview" className="rounded-xl border p-5 text-inherit no-underline">
-    <strong className="mb-2 block text-primary">Foundations</strong>
-    Color and typography tokens for Kiwi interfaces, built on shadcn/Tailwind semantics.
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+  <a href="?path=/story/kiwi-design-system-foundations-colors--overview" style={{ padding: '20px', color: 'inherit', textDecoration: 'none', border: `1px solid ${theme.palette.divider}`, borderRadius: '12px' }}>
+    <strong style={{ display: 'block', marginBottom: '8px', color: theme.palette.primary.main }}>Foundations</strong>
+    Color and typography contracts for Kiwi interfaces.
   </a>
-  <a href="?path=/docs/components-actions-button--docs" className="rounded-xl border p-5 text-inherit no-underline">
-    <strong className="mb-2 block text-primary">Components</strong>
-    shadcn-based Kiwi UI elements and their public contracts, grouped by category.
+  <a href="?path=/docs/kiwi-design-system-components-button--docs" style={{ padding: '20px', color: 'inherit', textDecoration: 'none', border: `1px solid ${theme.palette.divider}`, borderRadius: '12px' }}>
+    <strong style={{ display: 'block', marginBottom: '8px', color: theme.palette.primary.main }}>Components</strong>
+    Reusable Kiwi UI elements and their public contracts.
   </a>
-  <a href="?path=/docs/patterns-forms-overview--docs" className="rounded-xl border p-5 text-inherit no-underline">
-    <strong className="mb-2 block text-primary">Patterns</strong>
-    Cross-component contracts: forms and small anchored popups.
+  <a href="?path=/docs/kiwi-design-system-forms-overview--docs" style={{ padding: '20px', color: 'inherit', textDecoration: 'none', border: `1px solid ${theme.palette.divider}`, borderRadius: '12px' }}>
+    <strong style={{ display: 'block', marginBottom: '8px', color: theme.palette.primary.main }}>Forms</strong>
+    Shared guidance for form structure, fields, validation, actions, and feedback.
   </a>
-  <a href="?path=/docs/guidelines-analytics-overview--docs" className="rounded-xl border p-5 text-inherit no-underline">
-    <strong className="mb-2 block text-primary">Guidelines</strong>
-    Product-level guidance: analytics behavior, delivery quality, and composed surfaces.
+  <a href="?path=/docs/kiwi-design-system-popups-overview--docs" style={{ padding: '20px', color: 'inherit', textDecoration: 'none', border: `1px solid ${theme.palette.divider}`, borderRadius: '12px' }}>
+    <strong style={{ display: 'block', marginBottom: '8px', color: theme.palette.primary.main }}>Popups</strong>
+    Shared rules and examples for small anchored overlays.
   </a>
-  <a href="?path=/docs/deprecated-analytics-date-range--docs" className="rounded-xl border p-5 text-inherit no-underline">
-    <strong className="mb-2 block text-primary">Deprecated</strong>
-    MUI-era implementations kept as reference while they migrate to shadcn.
+  <a href="?path=/docs/kiwi-design-system-product-guides-analytics-overview--docs" style={{ padding: '20px', color: 'inherit', textDecoration: 'none', border: `1px solid ${theme.palette.divider}`, borderRadius: '12px' }}>
+    <strong style={{ display: 'block', marginBottom: '8px', color: theme.palette.primary.main }}>Product guides</strong>
+    Domain-level Kiwi contracts such as analytics behavior.
   </a>
 </div>
 
