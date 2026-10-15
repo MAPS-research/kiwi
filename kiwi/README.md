@@ -9,7 +9,7 @@ in [`../docs`](../docs/README.md).
 
 ## Requirements
 
-- Node.js 20 (see `.nvmrc`)
+- Node.js 24 (`.nvmrc` pins 24.21.0)
 - Docker
 
 ## Setup
