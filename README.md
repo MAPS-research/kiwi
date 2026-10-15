@@ -57,6 +57,20 @@ and `GOOGLE_CLIENT_SECRET` in `kiwi/.env` and `VITE_ENABLE_GOOGLE_LOGIN=true` in
 See [`kiwi/README.md`](kiwi/README.md) and [`kiwi-ui/README.md`](kiwi-ui/README.md)
 for the full setup.
 
+### Setting up with an AI coding agent
+
+The repository ships a setup skill at
+[`.claude/skills/kiwi-setup/`](.claude/skills/kiwi-setup/SKILL.md). Open the
+repository in Claude Code and ask it to set up Kiwi; it checks your machine,
+walks through each step above, works around common problems (ports already in
+use, the wrong Node version, other Kiwi checkouts sharing a database) and ends
+with a tour of the app. Other agents can follow the same `SKILL.md`. Its
+read-only checker also works on its own:
+
+```bash
+bash .claude/skills/kiwi-setup/scripts/doctor.sh
+```
+
 ## Documentation
 
 The [documentation index](docs/README.md) covers administration and a
