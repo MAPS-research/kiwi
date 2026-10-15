@@ -50,10 +50,11 @@ export const LOGO_URL: string =
 
 /**
  * Wordmark shown in the nav and on the auth panel. Rendered as a CSS mask, so
- * only its shape matters; it takes the surrounding text colour.
+ * only its shape matters; it takes the surrounding text colour. Empty (the
+ * default) shows LOGO_URL in full colour next to the name instead.
+ * `/assets/images/kiwi-logo.svg` is a one-colour Kiwi wordmark for this slot.
  */
-export const LOGO_LIGHT_URL: string =
-  env.VITE_LOGO_LIGHT_URL || "/assets/images/kiwi-logo.svg";
+export const LOGO_LIGHT_URL: string = env.VITE_LOGO_LIGHT_URL || "";
 
 /** Returns true when `email` belongs to the configured SSO domain. */
 export function isSsoEmail(email: string): boolean {

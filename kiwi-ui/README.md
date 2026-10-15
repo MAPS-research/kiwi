@@ -40,7 +40,7 @@ Only variables prefixed with `VITE_` reach browser code (through
 | `VITE_SUPPORT_EMAIL` | `src/config/branding.ts` | Support address shown to users. Empty hides support prompts. |
 | `VITE_SSO_EMAIL_DOMAIN` | `src/config/branding.ts` | Email domain (e.g. `example.edu`) whose accounts sign in with Google. Used only by Admin → User Management, which whitelists those accounts for Google instead of giving them passwords. |
 | `VITE_LOGO_URL` | `src/config/branding.ts` | Square logo image. Defaults to `/assets/images/kiwi-mark.svg`. |
-| `VITE_LOGO_LIGHT_URL` | `src/config/branding.ts` | Wordmark for the nav and sign-in panel. It is rendered as a CSS mask, so only its shape matters. Defaults to `/assets/images/kiwi-logo.svg`. |
+| `VITE_LOGO_LIGHT_URL` | `src/config/branding.ts` | Wordmark for the nav and sign-in panel. It is rendered as a CSS mask, so only its shape matters. Empty by default, which shows the square logo in colour next to "Kiwi"; `/assets/images/kiwi-logo.svg` is a one-colour Kiwi wordmark. |
 | `VITE_CONSENT_FORM_URL` | `src/config/branding.ts` | URL of a consent document (PDF). When set, users must accept it before using the app; when empty, there is no consent gate. |
 
 If you disable password login without enabling Google, nobody can sign in; the
