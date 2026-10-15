@@ -97,6 +97,11 @@ export class LlmService implements OnModuleInit {
     return engineData;
   }
 
+  /** Whether the engine has an API key and can be called. */
+  isEngineEnabled(engineChoice: string): boolean {
+    return this.engines.has(engineChoice);
+  }
+
   onModuleInit() {
     this.initializeEngines();
     this.checkPromptCeiling();
