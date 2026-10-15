@@ -256,19 +256,20 @@ if [ "$DOCKER_UP" = 1 ]; then
     info "This checkout would reuse their database volume (old data, old admin"
     info "password). To keep them apart, set COMPOSE_PROJECT_NAME in kiwi/.env (step 3)."
   fi
-  if docker volume inspect "${PROJECT}_db-data" >/dev/null 2>&1; then
-    info "Database volume ${PROJECT}_db-data already exists; its data will be used."
-  fi
-  states="$(cd "$BE" && docker compose ps -a --format '{{.Service}} {{.State}} {{.Health}} {{.ExitCode}}' 2>/dev/null)"
+  # Fields are |-separated: Health is empty for services without a health check.
+  states="$(cd "$BE" && docker compose ps -a --format '{{.Service}}|{{.State}}|{{.Health}}|{{.ExitCode}}' 2>/dev/null)"
   if [ -z "$states" ]; then
     fail "No Kiwi containers exist yet"
+    if docker volume inspect "${PROJECT}_db-data" >/dev/null 2>&1; then
+      info "A database volume ${PROJECT}_db-data already exists; starting will reuse its data."
+    fi
     next "Start the infrastructure: (cd kiwi && docker compose up -d) (step 4)."
   else
     INFRA_OK=1
     for svc in db redis oss xberg adminer; do
-      line="$(printf '%s\n' "$states" | awk -v s="$svc" '$1 == s')"
-      state="$(printf '%s' "$line" | awk '{print $2}')"
-      health="$(printf '%s' "$line" | awk '{print $3}')"
+      line="$(printf '%s\n' "$states" | awk -F'|' -v s="$svc" '$1 == s')"
+      state="$(printf '%s' "$line" | cut -d'|' -f2)"
+      health="$(printf '%s' "$line" | cut -d'|' -f3)"
       if [ -z "$line" ]; then
         fail "$svc: not created"; INFRA_OK=0
       elif [ "$state" != running ]; then
@@ -281,10 +282,10 @@ if [ "$DOCKER_UP" = 1 ]; then
         ok "$svc: running${health:+ ($health)}"
       fi
     done
-    init="$(printf '%s\n' "$states" | awk '$1 == "oss-init"')"
+    init="$(printf '%s\n' "$states" | awk -F'|' '$1 == "oss-init"')"
     if [ -n "$init" ]; then
-      code="$(printf '%s' "$init" | awk '{print $NF}')"
-      st="$(printf '%s' "$init" | awk '{print $2}')"
+      code="$(printf '%s' "$init" | cut -d'|' -f4)"
+      st="$(printf '%s' "$init" | cut -d'|' -f2)"
       if [ "$st" = exited ] && [ "$code" = 0 ]; then
         ok "oss-init: finished (bucket 'kiwi' created) — 'exited' is expected"
       elif [ "$st" = exited ]; then
