@@ -71,8 +71,8 @@ into your agent:
 
 The skill lives in [`.agents/skills/kiwi-setup/`](.agents/skills/kiwi-setup/SKILL.md)
 in the [Agent Skills](https://agentskills.io) format, which Codex and Cursor
-discover automatically. Claude Code finds it through
-`.claude/skills/kiwi-setup/`, and other agents through [`AGENTS.md`](AGENTS.md).
+discover automatically. Claude Code and other agents find it through
+[`AGENTS.md`](AGENTS.md); the prompt above works in all of them.
 Its read-only checker also works on its own:
 
 ```bash
