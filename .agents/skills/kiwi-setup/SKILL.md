@@ -70,6 +70,11 @@ don't guess the answer. When they reply, **check** that it worked (the
 doctor, or the check named in that step) before moving on. If the check
 fails, say what you saw in plain words and send a corrected "your turn".
 
+If you need **several things at the same point** (step 3 can need a
+decision, a key and a password), put them in one message as numbered items
+①②③ and say how to answer all of them in one reply ("e.g. A, key added,
+generate"). One round trip beats three.
+
 For **decisions**, give two or three options, mark the one you recommend,
 and say what each means for them in practice ("your other project keeps
 running" beats "non-destructive").
@@ -249,9 +254,16 @@ node .agents/skills/kiwi-setup/scripts/check-llm.mjs
 If it fails, translate its reason ("the key was rejected", "no credit",
 "wrong number of dimensions") and send a new "your turn".
 
-**Admin password (optional)** — ask in the same message as the key or right
-after: "Do you want to choose the administrator password, or shall Kiwi
-generate one?" If they choose one, write it with `set-env.sh … SEED_ADMIN_PASSWORD`.
+**No key yet?** That's fine: steps 4–7 don't need one. Say so, mark step 3
+"key pending" in the plan, and ask again before the tour (step 8), which does.
+Uploads and chat are the only things that need it.
+
+**Admin password (optional)** — ask in the same message as the key: "Do you
+want to choose the administrator password, or shall Kiwi generate one?" If
+they give it to you, write it with `set-env.sh … SEED_ADMIN_PASSWORD --stdin`.
+If they'd rather edit `kiwi/.env` themselves, tell them to wrap the password
+in single quotes (`SEED_ADMIN_PASSWORD='…'`) so characters like `$` and `#`
+survive, and to avoid `'` in it.
 
 *Say after:* "✅ Settings saved, and your API key works (tested with one tiny
 request). Next I'll start Kiwi's background services — the first time
@@ -310,11 +322,23 @@ Start the server in the background (it keeps running after this command):
 bash .agents/skills/kiwi-setup/scripts/dev-servers.sh start backend
 ```
 
-It waits until the server answers (about a minute the first time) and prints
-the end of the log if it doesn't. If your environment kills background
-processes when your command ends (the doctor will show the backend down
-again), use a 🙋 your turn instead: ask them to open a new terminal window,
-run `cd <path>/kiwi && npm run start:dev`, and leave that window open.
+It waits until the server answers (usually 10–60 seconds) and prints the end
+of the log if it doesn't. Then, **in a separate command**, run
+`dev-servers.sh status`: some agents kill background processes when a command
+ends. If the backend is gone, use a 🙋 your turn instead: ask them to open a
+new terminal window, run `cd <path>/kiwi && npm run start:dev`, and leave that
+window open.
+
+Some output looks alarming but is normal on a fresh local install — mention
+it only if they see it, or briefly if you quote the log:
+
+- npm: "install scripts not yet covered by allowScripts" — newer npm skips
+  dependencies' install scripts; none of the listed ones are needed.
+- backend log: `Engine … is disabled: API key is not configured` (until
+  there's a key; always for Qwen), `Generating ephemeral keys` (JWT, fine
+  locally), `[CTX-CEILING] no context window known`, a duplicate-DTO warning,
+  and `[EmailService] Email transporter verification failed` — email is in
+  test mode by default and only logged, so there are no SMTP credentials.
 
 *Say after:* "✅ The server is running and your admin account exists.
 📌 Save this: email `admin@example.com`, password `<…>`. Next: the web pages
@@ -369,6 +393,12 @@ Follow [references/using-kiwi.md](references/using-kiwi.md). It has the same
 before/after shape. The person needs a PDF of their own (lecture slides,
 notes) — ask for it in a "your turn".
 
+If the key was left for later, ask for it first (same "your turn" as step 3),
+run `check-llm.mjs`, then restart the backend so it picks the key up — it
+reads `kiwi/.env` only at start:
+`bash .agents/skills/kiwi-setup/scripts/dev-servers.sh stop backend` then
+`… start backend`.
+
 ### Wrap-up message
 
 Show the plan with every step ✅, then:
@@ -383,6 +413,13 @@ Show the plan with every step ✅, then:
   shows what's down.
 - **After updating the code** (`git pull`): `npm install` in `kiwi/` and
   `kiwi-ui/`, and `npx prisma migrate deploy` in `kiwi/`, before starting.
+- **Anything you changed outside Kiwi**, and how to undo it — e.g. if you
+  stopped another project to free a port: how to start it again, and that it
+  can't run at the same time as Kiwi on those ports.
+- **Anything still pending**, such as the API key, and what it unlocks.
+
+If they stop before the tour, give this message anyway, with the unfinished
+steps marked ⬜.
 
 ## Part 4 — Reference
 

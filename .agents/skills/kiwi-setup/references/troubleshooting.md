@@ -78,6 +78,7 @@ Look at the first error in the backend log, not the last.
 | `EADDRINUSE :::3000` | Something already serves 3000 — often a Kiwi backend from an earlier session. `lsof -nP -iTCP:3000 -sTCP:LISTEN` shows it; if it's Kiwi, reuse it or stop it |
 | `Engine openai is disabled: API key is not configured` | A warning, not a crash: `LLM_API_KEY` is empty. Chat and embeddings won't work |
 | `Engine qwen is disabled…` | Expected when not using Qwen |
+| `[EmailService] Email transporter verification failed` | Harmless with `EMAIL_TEST_MODE=true` (the default): emails are logged, not sent. See `docs/email.md` to send real email |
 | TypeScript or module errors on first start | Usually a stale Prisma client after pulling: `npx prisma generate`, restart |
 
 ## Signing in
