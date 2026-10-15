@@ -72,16 +72,16 @@ echo "Kiwi doctor — repository: $ROOT"
 # --- 1. Tools -------------------------------------------------------------------
 section "1. Tools"
 for t in git curl openssl; do
-  if have "$t"; then ok "$t"; else fail "$t is not installed"; next "Install $t."; fi
+  if have "$t"; then ok "$t"; else fail "$t is not installed"; next "Install $t (step 2)."; fi
 done
 
 DOCKER_UP=0
 if ! have docker; then
   fail "Docker is not installed"
-  next "Install Docker Desktop (macOS/Windows) or Docker Engine (Linux)."
+  next "The person installs Docker (step 2)."
 elif ! docker info >/dev/null 2>&1; then
   fail "Docker is installed but the daemon is not running"
-  next "Start Docker Desktop (or the docker service) and wait until it is ready."
+  next "The person starts Docker Desktop and waits until it is running (step 2)."
 else
   DOCKER_UP=1
   ok "Docker $(docker info --format '{{.ServerVersion}}' 2>/dev/null)"
@@ -118,33 +118,30 @@ fi
 NODE_WANT="$(tr -d '[:space:]' < "$BE/.nvmrc" 2>/dev/null)"
 NODE_HAVE="$(node -v 2>/dev/null || true)"
 NVM_SH="${NVM_DIR:-$HOME/.nvm}/nvm.sh"
-NODE_OK=0
+NODE_DIR="${NVM_DIR:-$HOME/.nvm}/versions/node/$NODE_WANT"
 if [ "$NODE_HAVE" = "$NODE_WANT" ]; then
   ok "Node $NODE_HAVE (matches .nvmrc)"
-  NODE_OK=1
+elif [ -s "$NVM_SH" ] && [ -d "$NODE_DIR" ]; then
+  ok "Node $NODE_WANT is installed through nvm (the default on PATH is ${NODE_HAVE:-none})"
+  info "Shell state doesn't carry over between commands, so prefix npm/npx with:"
+  info "  source \"$NVM_SH\" && nvm use $NODE_WANT >/dev/null && <command>"
+  info "(dev-servers.sh does this by itself.)"
+elif have fnm && fnm list 2>/dev/null | grep -q "$NODE_WANT"; then
+  ok "Node $NODE_WANT is installed through fnm (the default on PATH is ${NODE_HAVE:-none})"
+  info "Prefix npm/npx with: eval \"\$(fnm env)\" && fnm use $NODE_WANT >/dev/null && <command>"
 else
-  if [ -n "$NODE_HAVE" ]; then
-    warn "Node on PATH is $NODE_HAVE; the repository pins $NODE_WANT"
-  else
-    warn "Node is not on PATH; the repository pins $NODE_WANT"
-  fi
+  fail "Node $NODE_WANT is not installed (on PATH: ${NODE_HAVE:-none})"
   if [ -s "$NVM_SH" ]; then
-    if [ -d "${NVM_DIR:-$HOME/.nvm}/versions/node/$NODE_WANT" ]; then
-      info "nvm has $NODE_WANT installed. Prefix each command with:"
-    else
-      info "nvm is available. Install once: source \"$NVM_SH\" && nvm install $NODE_WANT"
-      info "then prefix each command with:"
-    fi
-    info "  source \"$NVM_SH\" && nvm use $NODE_WANT >/dev/null && <command>"
+    info "nvm is available: source \"$NVM_SH\" && nvm install $NODE_WANT"
   elif have fnm; then
-    info "fnm is available: fnm install $NODE_WANT, then fnm exec --using $NODE_WANT -- <command>"
+    info "fnm is available: fnm install $NODE_WANT"
   elif have volta; then
     info "volta is available: volta install node@${NODE_WANT#v}"
   else
-    info "No Node version manager found. Install nvm (https://github.com/nvm-sh/nvm)"
-    info "or Node $NODE_WANT directly."
+    info "No Node version manager found. Install nvm (https://github.com/nvm-sh/nvm),"
+    info "then: nvm install $NODE_WANT"
   fi
-  next "Make Node $NODE_WANT available (see section 1)."
+  next "Install Node $NODE_WANT (step 2)."
 fi
 
 # --- 2. Ports -------------------------------------------------------------------
@@ -203,7 +200,7 @@ check_port 3001          "frontend"          host
 if [ "$PORT_CONFLICT" = 1 ]; then
   info "Another program holds a port Kiwi's containers need. Either stop it, or"
   info "move Kiwi to other ports (references/configuration.md → Port conflicts)."
-  next "Resolve the port conflicts in section 2."
+  next "Resolve the port conflicts above with the person (step 2)."
 fi
 
 # --- 3. Configuration -----------------------------------------------------------
@@ -307,7 +304,7 @@ section "5. Dependencies and database"
 if [ -d "$BE/node_modules" ]; then ok "kiwi/node_modules installed"; else
   fail "kiwi/node_modules missing"; next "Install backend dependencies: (cd kiwi && npm install) (step 5)."; fi
 if [ -d "$FE/node_modules" ]; then ok "kiwi-ui/node_modules installed"; else
-  fail "kiwi-ui/node_modules missing"; fi
+  fail "kiwi-ui/node_modules missing (installed in step 6)"; fi
 
 if [ "$INFRA_OK" = 1 ]; then
   psql_q() { (cd "$BE" && docker compose exec -T db psql -U kiwi -d kiwi -tAc "$1") 2>/dev/null | tr -d '[:space:]'; }
@@ -347,14 +344,14 @@ if [ "$c" = 200 ]; then
   ok "Backend is up: http://localhost:$API_PORT (Swagger at /docs)"
 else
   fail "Backend is not answering on :$API_PORT (HTTP $c)"
-  next "Start the backend: (cd kiwi && npm run start:dev), in the background (step 5)."
+  next "Start the backend: bash .agents/skills/kiwi-setup/scripts/dev-servers.sh start backend (step 5)."
 fi
 c="$(http_code "http://localhost:3001/")"
 if [ "$c" = 200 ]; then
   ok "Frontend is up: http://localhost:3001"
 else
   fail "Frontend is not answering on :3001 (HTTP $c)"
-  next "Start the frontend: (cd kiwi-ui && npm run dev), in the background (step 6)."
+  next "Install and start the frontend (step 6)."
 fi
 
 # --- Summary ----------------------------------------------------------------------
