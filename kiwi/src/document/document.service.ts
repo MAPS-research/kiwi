@@ -115,6 +115,15 @@ export class DocumentService {
     }
     perProvider.delete(primary.provider);
 
+    // A provider whose engine has no API key (Qwen, by default) can't embed
+    // anything; trying would log a failure for every chunk. Its gaps are
+    // filled by `reembed-missing.ts` once the key is configured.
+    for (const provider of [...perProvider.keys()]) {
+      if (!this.llmService.isEngineEnabled(provider)) {
+        perProvider.delete(provider);
+      }
+    }
+
     const models: EmbeddingModel[] = [];
     for (const model of perProvider.values()) {
       if (model.dimensions != null) {

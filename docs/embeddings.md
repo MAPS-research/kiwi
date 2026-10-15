@@ -55,10 +55,12 @@ If a row's `dimensions` is `NULL`, Kiwi embeds a short probe string, stores the
 resulting length, and uses it from then on.
 
 **Ingestion.** When a document is embedded, each chunk gets a vector for the
-default provider and for every other provider that has an active row. If a
-secondary provider fails, the error is logged and ingestion continues; run the
-backfill script for that provider afterwards. If you do not use Qwen, set the
-`emb-qwen-bge-m3` row's `isActive` to `false` so ingestion does not try it.
+default provider and for every other provider that has an active row and an
+API key. A provider without a key is skipped, so the seeded Qwen row costs
+nothing until `QWEN_API_KEY` is set; documents uploaded before then have no
+Qwen vectors, so run the backfill script once you enable it. If a secondary
+provider fails, the error is logged and ingestion continues; run the backfill
+script for that provider afterwards.
 
 **Retrieval.** A similarity search always uses exactly one model. The query is
 embedded with that model and compared only with `EmbeddingVector` rows of the

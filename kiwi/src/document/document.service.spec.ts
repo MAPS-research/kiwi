@@ -43,11 +43,16 @@ function mkDbMock(): any {
   const classMaterial = {
     findUnique: jest.fn(),
   };
+  const embeddingModel = {
+    findMany: jest.fn(),
+    update: jest.fn(),
+  };
   const db = {
     document,
     enrollment,
     user,
     classMaterial,
+    embeddingModel,
     $transaction: jest.fn(async (cb: any) => cb({ document, classMaterial })),
   };
   return db;
@@ -69,6 +74,7 @@ describe('DocumentService (unit)', () => {
   let materialAccessServiceMock: any;
   let queueMock: any;
   let storageServiceMock: any;
+  let llmServiceMock: any;
 
   beforeEach(async () => {
     db = mkDbMock();
@@ -103,6 +109,10 @@ describe('DocumentService (unit)', () => {
       getLlmDocumentIds: jest.fn(),
     };
     queueMock = mkQueueMock();
+    llmServiceMock = {
+      isEngineEnabled: jest.fn().mockReturnValue(true),
+      resolveDimensions: jest.fn(),
+    };
     storageServiceMock = {
       uploadFile: jest.fn(),
       getSignedUrl: jest.fn(),
@@ -119,7 +129,7 @@ describe('DocumentService (unit)', () => {
         { provide: DatabaseDocumentService, useValue: documentDbMock },
         { provide: EmbeddingService, useValue: {} },
         { provide: UnstructuredService, useValue: {} },
-        { provide: LlmService, useValue: {} },
+        { provide: LlmService, useValue: llmServiceMock },
         { provide: ClassMaterialService, useValue: {} },
         { provide: StorageService, useValue: storageServiceMock },
 
@@ -642,6 +652,40 @@ describe('DocumentService (unit)', () => {
       await expect(
         service.listVisibleDocumentCommentsForStudent('doc-1', 'student-1'),
       ).rejects.toBeInstanceOf(UnauthorizedException);
+    });
+  });
+
+  describe('secondary embedding models', () => {
+    const openai = {
+      id: 'emb-openai-3-small',
+      provider: 'openai',
+      model: 'text-embedding-3-small',
+      dimensions: 1536,
+    };
+    const qwen = {
+      id: 'emb-qwen-bge-m3',
+      provider: 'qwen',
+      model: 'bge-m3',
+      dimensions: 1024,
+    };
+
+    const resolveOthers = (primary: any) =>
+      (service as any).resolveOtherActiveModels(primary);
+
+    it('includes an active provider whose engine is configured', async () => {
+      db.embeddingModel.findMany.mockResolvedValue([openai, qwen]);
+
+      await expect(resolveOthers(openai)).resolves.toEqual([qwen]);
+    });
+
+    it('skips a provider whose engine has no API key', async () => {
+      db.embeddingModel.findMany.mockResolvedValue([openai, qwen]);
+      llmServiceMock.isEngineEnabled.mockImplementation(
+        (provider: string) => provider !== 'qwen',
+      );
+
+      await expect(resolveOthers(openai)).resolves.toEqual([]);
+      expect(llmServiceMock.resolveDimensions).not.toHaveBeenCalled();
     });
   });
 });
