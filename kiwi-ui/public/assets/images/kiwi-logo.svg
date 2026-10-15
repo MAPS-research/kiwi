@@ -1,9 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 32" role="img" aria-label="Kiwi">
-  <g fill="currentColor">
-    <circle cx="16" cy="16" r="12"/>
-    <circle cx="16" cy="16" r="7" fill="#fff"/>
-    <circle cx="16" cy="16" r="2.5"/>
-  </g>
+  <!-- Used as a CSS mask, so only shape counts: the brand icon's tile with
+       the bird cut out of it (kiwi-mark.svg in one colour), then the name. -->
+  <defs>
+    <mask id="kiwi-logo-bird" maskUnits="userSpaceOnUse" x="0" y="0" width="160" height="160">
+      <rect width="160" height="160" rx="35" fill="#fff"/>
+      <g fill="#000">
+        <path d="M-12 160V92C4 99 12 83 20 72C33 54 50 47 66 51C87 56 101 74 99 91C98 107 80 118 80 133L82 170Z"/>
+        <path d="M25 73C33 51 51 45 68 51C86 56 100 73 99 89C98 108 78 121 58 114C40 108 23 94 25 73Z"/>
+        <path d="M97 68L146 56C151 55 153 59 148 62L103 77C98 79 95 73 97 68Z"/>
+      </g>
+      <circle cx="76" cy="78" r="5.5" fill="#fff"/>
+    </mask>
+  </defs>
+  <rect transform="scale(.2)" width="160" height="160" rx="35" fill="currentColor" mask="url(#kiwi-logo-bird)"/>
   <text x="38" y="22" font-family="system-ui, -apple-system, Segoe UI, sans-serif"
         font-size="19" font-weight="600" fill="currentColor">Kiwi</text>
 </svg>
