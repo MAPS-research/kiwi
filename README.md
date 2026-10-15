@@ -1,10 +1,7 @@
 # Kiwi
 
-Kiwi is an open-source AI learning assistant for university courses. Students ask
-questions against their own course materials; instructors manage classes, upload
-materials, and see how their cohort is doing. Retrieval runs over pgvector with
-pluggable embedding providers, and third-party **Kiwi Apps** can be embedded in
-the UI through a sandboxed postMessage bridge.
+Kiwi is an open-source learning platform that connects course contexts, AI assistance, and custom learning tools. Teachers can build activities around their course goals. Students can create or adapt tools for the way they study. Kiwi connects those tools to their class and course materials.
+
 
 ## Repository layout
 
@@ -87,7 +84,7 @@ experiments, the MCP server, building Kiwi Apps, and backend development.
 
 ## Configuring Kiwi for your institution
 
-Kiwi ships unbranded. Institution name, logo, support address, SSO email domain
+Institution name, logo, support address, SSO email domain
 and consent document are supplied through `VITE_*` environment variables — see
 [`kiwi-ui/.env.example`](kiwi-ui/.env.example) and
 [Administration](docs/administration.md#branding). Course-specific guidance for
@@ -98,8 +95,7 @@ the assistant is set per class; see [How prompts work](docs/prompts.md).
 See [CONTRIBUTING.md](CONTRIBUTING.md). Security issues should be reported
 privately — see [SECURITY.md](SECURITY.md), not the public issue tracker.
 
-Kiwi was built at NYU Shanghai; the people who wrote it are credited in
-[AUTHORS.md](AUTHORS.md).
+Kiwi is developed and maintained by the [MAPS Research Group](https://whongyi.github.io/MAPS-research) at NYU Shanghai. We gratefully acknowledge all contributors listed in [AUTHORS.md](AUTHORS.md).
 
 ## AI assistance
 
