@@ -59,16 +59,24 @@ for the full setup.
 
 ### Setting up with an AI coding agent
 
-The repository ships a setup skill at
-[`.claude/skills/kiwi-setup/`](.claude/skills/kiwi-setup/SKILL.md). Open the
-repository in Claude Code and ask it to set up Kiwi; it checks your machine,
-walks through each step above, works around common problems (ports already in
-use, the wrong Node version, other Kiwi checkouts sharing a database) and ends
-with a tour of the app. Other agents can follow the same `SKILL.md`. Its
-read-only checker also works on its own:
+You don't need to follow the steps above by hand. Any coding agent that can
+run shell commands (Claude Code, Codex, Cursor, GitHub Copilot, Gemini CLI
+and others) can do the setup with you. It explains each step in plain
+language and stops when it needs you, for example for an API key. Paste this
+into your agent:
+
+> Set up Kiwi on my computer: clone https://github.com/MAPS-research/kiwi
+> (skip this if you are already in it), then read
+> `.agents/skills/kiwi-setup/SKILL.md` and follow it with me.
+
+The skill lives in [`.agents/skills/kiwi-setup/`](.agents/skills/kiwi-setup/SKILL.md)
+in the [Agent Skills](https://agentskills.io) format, which Codex and Cursor
+discover automatically. Claude Code finds it through
+`.claude/skills/kiwi-setup/`, and other agents through [`AGENTS.md`](AGENTS.md).
+Its read-only checker also works on its own:
 
 ```bash
-bash .claude/skills/kiwi-setup/scripts/doctor.sh
+bash .agents/skills/kiwi-setup/scripts/doctor.sh
 ```
 
 ## Documentation

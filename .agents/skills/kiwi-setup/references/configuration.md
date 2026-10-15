@@ -43,8 +43,8 @@ services:
 Then point the backend at the new ports in `kiwi/.env`:
 
 ```bash
-bash <skill-dir>/scripts/set-env.sh kiwi/.env DATABASE_URL 'postgresql://kiwi:kiwi@localhost:5433/kiwi'
-bash <skill-dir>/scripts/set-env.sh kiwi/.env REDIS_PORT 6380
+bash .agents/skills/kiwi-setup/scripts/set-env.sh kiwi/.env DATABASE_URL 'postgresql://kiwi:kiwi@localhost:5433/kiwi'
+bash .agents/skills/kiwi-setup/scripts/set-env.sh kiwi/.env REDIS_PORT 6380
 ```
 
 Check the result with `docker compose config` (from `kiwi/`) before starting.
