@@ -457,7 +457,7 @@ Every finding is now folded or decided. A second cold read of this revised text 
 
 ## Appendix A — Route inventory
 
-From `kiwi-ui/src/App.tsx`. Roles: S = student, I = instructor, A = admin. "Admin-only" pages sit behind `AdminProtectedRoute`.
+From `kiwi-ui/src/App.tsx`. Roles: S = student, I = instructor, A = admin. Roles are the intended access model (see the end of this appendix), not today's guards. "Admin-only" means intended for admins only; today only four of those pages sit behind `AdminProtectedRoute`, and it also admits instructors.
 
 **Student and auth areas (comfortable)**
 
@@ -477,26 +477,41 @@ From `kiwi-ui/src/App.tsx`. Roles: S = student, I = instructor, A = admin. "Admi
 | Route | Page | Roles |
 |---|---|---|
 | `/admin/classes` | Classes / My Classes | I, A |
-| `/admin/analytics` | Analytics | I, A |
+| `/admin/analytics` | Analytics | A (admin-only) |
 | `/admin/email` | Email | A (admin-only) |
 | `/admin/email-audit` | Email audit | A (admin-only) |
-| `/admin/feature-flags` | System-wide feature flags | I, A |
-| `/admin/new-class` | New class | I, A |
-| `/admin/webhooks`, `/admin/webhooks/approvals` | Webhooks, approvals | I, A |
+| `/admin/feature-flags` | System-wide feature flags | A (admin-only) |
+| `/admin/new-class` | New class | A (admin-only) |
+| `/admin/webhooks`, `/admin/webhooks/approvals` | Webhooks, approvals | A (admin-only) |
 | `/admin/mcp-servers` | MCP servers | A (admin-only) |
 | `/admin/kiwi-apps` | Kiwi Apps | A (admin-only) |
 | `/admin/app/:appSlug`, `/admin/app/:appSlug/class/:classId` | Admin app view | I, A |
-| `/admin/user-management` | User management | I, A |
+| `/admin/user-management` | User management | A (admin-only) |
 | `/admin/class/:classID` (and `edit-metadata`) | Class settings (`ClassEdit`) | I, A |
 | `/admin/class/:classID/manage-materials` | Materials | I, A |
-| `/admin/class/:classID/feature-flags` | Class feature flags | I, A |
-| `/admin/class/:classID/enroll-students` | Enrolment | I, A |
-| `/admin/class/:classID/send-emails` | Class email | I, A |
+| `/admin/class/:classID/feature-flags` | Class feature flags | A (admin-only) |
+| `/admin/class/:classID/enroll-students` | Enrolment | I (instructors of this class), A |
+| `/admin/class/:classID/send-emails` | Class email | I (instructors of this class), A |
 | `/admin/class/:classID/professor-analytics` | Class analytics | I, A |
 | `/admin/class/:classID/experiments` (+ `new`, `:id/edit`, `:id`) | Experiments | I, A |
-| `/admin/class/:classID/mcp-settings` | Class MCP settings | I, A |
+| `/admin/class/:classID/mcp-settings` | Class MCP settings | A (admin-only) |
 | `/admin/class/:classID/kiwi-apps` | Class Kiwi Apps | I, A |
 | `/admin/class/:classID/app/:appSlug` | Class app (admin view) | I, A |
 | `/admin/class/:classID/:materialID/:documentID` (+ `/annotation`) | PDF annotation (`AnnotateDocument`) | I, A |
 
-Role access per page is as the route guards define it; the plan's verification matrix takes the exact role list from the guards rather than from this table.
+**Intended access model (stated by the user, 2026-10-16):** student accounts cannot enter the teacher/admin interface (`/admin/*`); instructors and admins can enter the student interface. The roles in the tables above follow this model, and so does the plan's verification matrix.
+
+**Instructors in the admin area (decided by the user, 2026-10-16, "按建议" to the recommendation below):**
+- System-level pages are admin-only: Analytics, Email, Email audit, System-wide feature flags, MCP servers, Kiwi Apps, Webhooks, Webhook approvals, User management.
+- Creating a class (New class) is admin-only. This is the coordinator's default, matching today's backend (`POST /class/add` is admin-only) and the Classes page, which hides the create control from instructors. The user may overrule it before Phase 1 is committed.
+- On a class's pages, the instructors of that class may use Enrolment and Class email. Class feature flags and Class MCP settings are admin-only. The other class pages stay I, A.
+- An instructor who reaches an admin-only page should see a no-permission state: not be signed out, and not be sent back with a browser `alert()`. The admin sidebar shows an instructor only the entries they may use.
+- On the student pages, instructors and admins get two controls that students do not: the top bar's view switch and the chat panel's Experiment row (confirmed by the user on same-scale screenshots).
+
+Where today's route guards differ, the difference is a defect, recorded as such and not verified as a supported row:
+- **B1:** the `/admin` layout route has no role guard, so students can reach some admin pages.
+- **AdminProtectedRoute admits instructors** on pages listed here as admin-only.
+- **An instructor on an admin-only page is signed out or bounced:** the backend refuses with 401, which the frontend treats as an expired session (B2); Analytics instead shows an `alert()` and redirects to the class list.
+- **Instructors of a class are refused on Enrolment and Class email:** `ProfGuard` needs a professor enrolment, which assigning an instructor does not create.
+
+The exact per-page outcome under today's guards is recorded next to the matrix as evidence for the fix.

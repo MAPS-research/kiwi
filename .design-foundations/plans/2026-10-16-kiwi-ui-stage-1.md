@@ -1,7 +1,9 @@
 # Plan: Kiwi UI refresh — Stage 1 (visual and verbal layer)
 **Created:** 2026-10-16
-**Status:** ready
-**Current Phase:** —
+**Status:** in-progress
+**Started:** 2026-10-16 05:52
+**Current Phase:** 1
+**Workspace:** feature branch `feature/kiwi-ui-stage-1-design` (in place, repository root `/Users/nutshell/Documents/GitHub/kiwi`); base commit `ef65c1d`
 **Complexity:** complex (Full track)
 **Research:** `.design-foundations/research/2026-10-16-kiwi-ui-visual-refresh.md` (confirmed brief, G1–G15) · `.design-foundations/research/2026-10-16-kiwi-ui-tour.md` (current-state tour)
 **Entry stage:** Discover — no `DESIGN.md` or `JOURNEY.md` exists yet. Discover here covers **as-is page specs only**; JTBD, IA and flow redesign belong to Stage 2.
@@ -136,6 +138,11 @@ Never create a link before its target exists: a dangling link would read as "pre
 |---|---|
 | User approved the plan as presented (2026-10-16): "就先这样看看效果" — proceed to the pre-build mock checkpoint | Approval at PRESENT; Status set to `ready` |
 | Mock checkpoint approved by the user (2026-10-16): "批准，开始 build" | Wireframe review PASS (0 Critical, 1 Major carried to Phases 3/5); swap-an-axis not applicable at wireframe fidelity |
+| Verification-matrix roles follow the intended access model, not today's guards (user, 2026-10-16) | The user stated the logic: students cannot enter the teacher/admin interface; instructors can enter the student interface. Phase 1 review round 2 (F-1) asked for student rows on admin pages because bug B1 lets students in today; those are a defect, recorded with per-page evidence, not rows to verify |
+| Student pages keep three verified rows (S, I, A); the I and A rows carry two extra controls (user, 2026-10-16, after same-scale student vs admin screenshots of the course list and the chat panel): "admin和teacher账号可以在界面里随意切换为学生视角和instructor视角，并且可以进入experiment界面，学生不行" | Confirms JOURNEY.md SR-1 (the top bar's view switch: a shield icon for admins, a cap icon for instructors, absent for students) and SR-6e (the chat panel's Experiment row, absent for students) as intended behaviour, not defects |
+| Instructors' access in the admin area (user, 2026-10-16, "按建议" to the recommendation presented at the Phase 1 escalation): system-level pages are admin-only; on a class's pages its instructors may use Enrolment and Class email, while Class feature flags and Class MCP settings are admin-only; an instructor who reaches an admin-only page sees a no-permission state instead of being signed out or bounced; the sidebar shows an instructor only the entries they may use | Resolves the Phase 1 escalation (review round 3, M-041). The instructor rows of the 11 admin-only pages become record-only defect rows, like B1's student rows; the instructor rows of Enrolment and Class email stay verified rows, with today's refusal recorded as a defect. Brief Appendix A updated to match. The answer authorises a fourth BUILD fix round and a fourth REVIEW |
+| New class (A-02) is admin-only for instructors (coordinator's default, 2026-10-16; the user may overrule it before the Phase 1 commit) | The decision above did not cover A-02. Today the backend refuses an instructor's submit and the Classes page hides the create control from them, so admin-only matches the product as built; the instructor row becomes a record-only defect row |
+| Security findings stay out of committed files until fixed (coordinator, 2026-10-16) | The repository `MAPS-research/kiwi` is public. JOURNEY.md keeps only a pointer and a severity for SEC-1; the details live in the private fix task. The build and review reports under `.design-foundations/build/` (gitignored, and they carry the details) stay local, so the Phase 1 commit does not force-add them |
 | DNA, type and colour are one phase | Avoids changing `DESIGN.md` after it is locked; the pins leave little open |
 | JOURNEY.md is as-is only | No flows change in Stage 1; JTBD and IA would be theatre without Stage 2 research |
 | Companion is its own phase, after the design system | It needs the avatar surface and the Display menu from Phase 3, and its doctrine (ai-native, motion, behavioral) differs |
@@ -595,3 +602,10 @@ From the pre-build `/design-for-ai:mock` on 2026-10-16.
 ## Execution Log
 
 _Filled by `build`._
+
+### Phase 1: As-is page specs and verification matrix (Gate: Standard) — escalated; the user answered, fix round 3 running
+- [x] BUILD: discovery + production, then two fix rounds
+- [ ] REVIEW: FAIL three times (round 1: M1-M3; round 2: F-1, F-2; round 3: M-041, the instructor row of `/admin/analytics`, recorded as a redirect without cells, unlike the other instructor rows). Escalated to the user on 2026-10-16 per the Gate Failure Protocol; no fourth fix round without their answer.
+- Open question that decides the M-041 fix: which admin pages instructors are meant to use (13 pages where an instructor is signed out or sent back today).
+- The user answered on 2026-10-16 ("按建议"; see the Decision Log) and approved a fourth BUILD fix round and a fourth REVIEW.
+- Not committed. Report: `.design-foundations/build/2026-10-16-kiwi-ui-stage-1-phase-1-review.md`.
