@@ -1,3 +1,5 @@
+<img src="kiwi-ui/public/assets/images/kiwi-mark.svg" alt="Kiwi logo" width="96">
+
 # Kiwi
 
 Kiwi is an open-source learning platform that connects course contexts, AI assistance, and custom learning tools. Teachers can build activities around their course goals. Students can create or adapt tools for the way they study. Kiwi connects those tools to their class and course materials.
