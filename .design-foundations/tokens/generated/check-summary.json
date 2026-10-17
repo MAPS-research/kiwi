@@ -1,0 +1,81 @@
+{
+ "date": "2026-10-17",
+ "round": 5,
+ "result": "PASS",
+ "failures": 0,
+ "components": 20,
+ "aliasOk": 114,
+ "aliasBad": 0,
+ "stateGroups": 25,
+ "stateSpecs": 200,
+ "contrast": {
+  "pass": 422,
+  "fail": 0,
+  "informational": 23
+ },
+ "tier": {
+  "refs": 914,
+  "violations": 0
+ },
+ "literals": {
+  "marked": 6,
+  "unmarked": 0,
+  "outsideGlobal": 0,
+  "banned": 0
+ },
+ "public": {
+  "pinned": 143,
+  "unmapped": 0,
+  "notEmitted": 0,
+  "counts": {
+   "kept": 52,
+   "deprecated": 41,
+   "repointed": 50,
+   "added": 11
+  },
+  "classes": {
+   "pinned": 89,
+   "missing": 0,
+   "emitted": 97
+  },
+  "keyframes": {
+   "pinned": 3,
+   "missing": 0,
+   "emitted": 4
+  },
+  "deprecatedClasses": 18,
+  "deprecationViolations": 0
+ },
+ "cues": {
+  "variants": 12,
+  "assertions": 20,
+  "failures": 0
+ },
+ "frozen": {
+  "n": 3,
+  "drifted": 0
+ },
+ "interimChart": {
+  "series": 5,
+  "below": 0
+ },
+ "editorSelection": {
+  "assertions": 23,
+  "failures": 0
+ },
+ "motionGuard": {
+  "moving": 4,
+  "guarded": 4
+ },
+ "muiGrey": {
+  "keys": 32,
+  "mismatches": 0
+ },
+ "densityDeltas": 30,
+ "descriptions": {
+  "tokens": 1233,
+  "described": 226,
+  "groups": 329,
+  "groupsDescribed": 283
+ }
+}
