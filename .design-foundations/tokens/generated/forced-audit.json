@@ -1,0 +1,116 @@
+{
+ "date": "2026-10-17",
+ "sheet": ".design-foundations/mocks/component-sheet.html",
+ "forcedActive": true,
+ "checked": 240,
+ "optOut": 4,
+ "shadowsLeft": 0,
+ "outlines": 124,
+ "outlineColors": [
+  "rgba(5, 0, 73, 0.8)",
+  "rgba(55, 0, 110, 0.8)",
+  "rgb(101, 99, 92)",
+  "rgb(185, 183, 176)"
+ ],
+ "by": {
+  "tertiary toggle (aria-pressed)": {
+   "n": 16,
+   "ok": 16,
+   "cue": {
+    "outline": 16
+   }
+  },
+  "icon button (aria-pressed)": {
+   "n": 44,
+   "ok": 44,
+   "cue": {
+    "outline": 44
+   }
+  },
+  "filter chip (aria-pressed)": {
+   "n": 8,
+   "ok": 8,
+   "cue": {
+    "weight": 8
+   }
+  },
+  "switch (on)": {
+   "n": 48,
+   "ok": 48,
+   "cue": {
+    "thumb": 48
+   }
+  },
+  "checkbox (checked / mixed)": {
+   "n": 16,
+   "ok": 16,
+   "cue": {
+    "glyph": 12,
+    "dot": 4
+   }
+  },
+  "radio (checked)": {
+   "n": 4,
+   "ok": 4,
+   "cue": {
+    "dot": 4
+   }
+  },
+  "tab (aria-selected)": {
+   "n": 40,
+   "ok": 40,
+   "cue": {
+    "outline": 40
+   }
+  },
+  "sidebar / drawer row (aria-current)": {
+   "n": 16,
+   "ok": 16,
+   "cue": {
+    "outline": 16
+   }
+  },
+  "table row (aria-selected)": {
+   "n": 4,
+   "ok": 4,
+   "cue": {
+    "outline": 4
+   }
+  },
+  "menu item (checked)": {
+   "n": 32,
+   "ok": 32,
+   "cue": {
+    "glyph": 32
+   }
+  },
+  "other": {
+   "n": 4,
+   "ok": 4,
+   "cue": {
+    "glyph": 4
+   }
+  },
+  "mark on the paper (forced-color-adjust: none)": {
+   "n": 4,
+   "ok": 4,
+   "cue": {
+    "own colours": 4
+   }
+  },
+  "current thumbnail": {
+   "n": 4,
+   "ok": 4,
+   "cue": {
+    "outline": 4
+   }
+  }
+ },
+ "fails": [],
+ "sample": {
+  "boxShadow": "none",
+  "background": "rgb(255, 255, 255)",
+  "color": "rgb(0, 0, 0)",
+  "outline": "solid 2px rgba(5, 0, 73, 0.8)"
+ }
+}

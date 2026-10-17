@@ -2,7 +2,7 @@
 **Created:** 2026-10-16
 **Status:** in-progress
 **Started:** 2026-10-16 05:52
-**Current Phase:** 3
+**Current Phase:** 4
 **Workspace:** feature branch `feature/kiwi-ui-stage-1-design` (in place, repository root `/Users/nutshell/Documents/GitHub/kiwi`); base commit `ef65c1d`
 **Complexity:** complex (Full track)
 **Research:** `.design-foundations/research/2026-10-16-kiwi-ui-visual-refresh.md` (confirmed brief, G1–G15) · `.design-foundations/research/2026-10-16-kiwi-ui-tour.md` (current-state tour)
@@ -160,6 +160,7 @@ Never create a link before its target exists: a dangling link would read as "pre
 | Phase 3 review round 4 FAILED (2026-10-17): 0 Critical, 1 Major, 10 Minor; fix round 4 dispatched under the user's standing rule | F1: auto-dismissing toasts pause on hover only, the Undo after a destructive action is not keyboard-reachable, and error toasts lack Dismiss. The ten Minors are fixed in the same round. One of them involved no taste call: tool chrome is compact (36 px) on every route, as the brief and JOURNEY say, with 44 px coarse hit areas on student routes |
 | Phase 3 review round 5 FAILED (2026-10-17): 0 Critical, 2 Major, 9 Minor; fix round 5 dispatched under the user's standing rule | 1: two student-route controls miss the 44 px coarse target (the S-02 drawer file rows at 36 px; PDF comment pins at 25 x 24 px), and the exception counts are wrong. 2: the editor selection is a 1.01-1.07:1 tint; the fix is accent-6 in dark and accent-4 plus a 1 px marker in light. Minors 3-11 are fixed in the same round. The reviewer's tool could not write files, so the coordinator persisted the report at the review path |
 | Phase 3 review round 6 FAILED (2026-10-17): 0 Critical, 1 Major, 9 Minor; fix round 6 dispatched under the user's standing rule | F1: MUI's grey scale and `palette.common` are neither mapped nor guarded. The code uses them at 46 sites, including four page canvases. The fix is a `palette.grey` override to the neutral ramp, a migration by role, guard forms for the MUI path strings and accesses, and a hand-off list for the implementation plan, with no token value change. F2 (the switch track drawn as an ellipse) is resolved inside the locked shape rules; `radius.round` is not changed |
+| `radius.round` (50%) interpretation (coordinator, 2026-10-17, from the passing Phase 3 review's Minor 2; the user may object) | The lock reserves 50% for status dots and the mascot backing, and rules out pills. The design system also uses it for the launcher disc, its count badge, radio buttons and PDF comment pins. Read as within the lock's intent: they are dot-like markers or convention-bound circles (radio = circle, checkbox = square), not pills or rounded containers. No value changes |
 | DNA, type and colour are one phase | Avoids changing `DESIGN.md` after it is locked; the pins leave little open |
 | JOURNEY.md is as-is only | No flows change in Stage 1; JTBD and IA would be theatre without Stage 2 research |
 | Companion is its own phase, after the design system | It needs the avatar surface and the Display menu from Phase 3, and its doctrine (ai-native, motion, behavioral) differs |
@@ -652,3 +653,23 @@ Summary: `kiwi-ui/DESIGN.md` is locked as Ruled Folio.
 - **Signature:** a per-block ruler on the message region, with ticks at line-box tops.
 - **Contrast:** 76 explicit role pairs pass AA.
 - **Carry into Phase 3:** declare per mode every composite that references a mode token (gradients, shadows).
+
+### Phase 3: Design system (Gate: Full)
+- [x] BUILD: discovery, design and production, then six fix rounds. The third failure was escalated, and the user then set the standing rule "修，以后同类直接修".
+- [x] REVIEW: PASS in round 7 (0 Critical, 0 Major, 6 Minor). Earlier rounds failed, in order, on:
+  - the react-pdf toolbar mapping;
+  - disabled reasons, a part-variable leak, and dropped v1 classes;
+  - colour-only selection;
+  - toast timing;
+  - coarse targets and editor selection;
+  - MUI grey/common.
+- [x] Committed
+Commit: 53f518c
+Summary: `kiwi-ui/DESIGN.md` `## Design system` specifies:
+- DTCG tiers across colour, density and pointer;
+- 20 components, each with 8 states;
+- code surfaces and the icon policy;
+- the generation spec for the MUI theme and the public CSS (v1 contract kept, 59 deprecations);
+- the raw-colour guard and allowlist, the email mapping, and governance.
+
+`.design-foundations/tokens/` holds the source, emitter, checker and generated outputs; 422 required contrast pairs pass. The six review Minors go to a follow-up commit before Phase 4.

@@ -1,6 +1,10 @@
 {
  "date": "2026-10-17",
- "round": 5,
+ "source": {
+  "version": "2.0.0",
+  "sha256": "75dfd2018832",
+  "commit": "53f518c"
+ },
  "result": "PASS",
  "failures": 0,
  "components": 20,
@@ -11,10 +15,10 @@
  "contrast": {
   "pass": 422,
   "fail": 0,
-  "informational": 23
+  "informational": 24
  },
  "tier": {
-  "refs": 914,
+  "refs": 923,
   "violations": 0
  },
  "literals": {
@@ -31,12 +35,12 @@
    "kept": 52,
    "deprecated": 41,
    "repointed": 50,
-   "added": 11
+   "added": 18
   },
   "classes": {
    "pinned": 89,
    "missing": 0,
-   "emitted": 97
+   "emitted": 98
   },
   "keyframes": {
    "pinned": 3,
@@ -73,9 +77,9 @@
  },
  "densityDeltas": 30,
  "descriptions": {
-  "tokens": 1233,
-  "described": 226,
-  "groups": 329,
-  "groupsDescribed": 283
+  "tokens": 1242,
+  "described": 230,
+  "groups": 330,
+  "groupsDescribed": 284
  }
 }

@@ -403,6 +403,10 @@
           "removeIn": "4.0.0",
           "notBefore": "six months after 2.0.0",
           "note": "no sweeping gradient in the motion budget"
+        },
+        ".kiwi-help": {
+          "status": "added",
+          "note": "the reason or helper line under a control, linked by aria-describedby; data-state=\"error\" or \"success\" takes the status text colour"
         }
       },
       "literalPolicy": "Colour literals: hex only in global.*; semantic.color.logo.* (G2) and semantic.color.on-paper.* (G5, mode-frozen) are the only colour literals outside it; backdrop and shadow.* reference --shadow-ink and carry their alphas in $extensions[\"org.kiwi\"].alpha, composed by the emitter. Component tier: every value is a reference to the semantic tier except a literal marked $extensions[\"org.kiwi\"].literal with its reason (component-specific geometry: the checker lists the marked ones and fails on any other). Forms the guard catches outside the source: hex, rgb()/rgba(), hsl()/hsla(), hwb(), oklch()/oklab(), lab()/lch(), color(), color-mix(), light-dark(), named colours other than transparent, currentColor and inherit, palette-object imports, and the MUI palette paths that bypass the roles: the strings \"grey.NN\" and \"common.white\" / \"common.black\", and the accesses theme.palette.grey[...] / palette.grey.NN and palette.common.* (common allowed in src/components/Brand/InstitutionLogo.tsx only, G2); the scan covers src/** outside src/services/, index.html, public/*.webmanifest, public/**/*.svg (the mascot artwork allowlisted) and .storybook/**.",
@@ -1636,6 +1640,41 @@
         "--kiwi-info-text": {
           "token": "{semantic.color.status.info.text}",
           "status": "added"
+        },
+        "--kiwi-primary-active": {
+          "token": "{semantic.color.accent-solid-active}",
+          "status": "added",
+          "note": "the pressed fill of the filled control (:active), one step beyond hover"
+        },
+        "--kiwi-bg-pressed": {
+          "token": "{semantic.color.accent-bg-subtle-active}",
+          "status": "added",
+          "note": "the pressed tint of outlined and text controls (:active)"
+        },
+        "--kiwi-disabled-surface": {
+          "token": "{semantic.color.disabled.surface}",
+          "status": "added",
+          "note": "the disabled trio: fill"
+        },
+        "--kiwi-disabled-text": {
+          "token": "{semantic.color.disabled.text}",
+          "status": "added",
+          "note": "the disabled trio: label (secondary text on the disabled surface)"
+        },
+        "--kiwi-disabled-border": {
+          "token": "{semantic.color.disabled.border}",
+          "status": "added",
+          "note": "the disabled trio: boundary"
+        },
+        "--kiwi-size-control": {
+          "token": "{semantic.size.control}",
+          "status": "added",
+          "note": "button and input height (comfortable: Kiwi Apps are student-facing)"
+        },
+        "--kiwi-size-chip": {
+          "token": "{semantic.size.chip}",
+          "status": "added",
+          "note": "chip height (comfortable); the hand-written 28 px becomes the token's 32"
         }
       },
       "allowlist": [
@@ -6393,7 +6432,7 @@
       }
     },
     "switch": {
-      "$description": "Switch: a selection control (D4, TD-22). Off = --surface track, --border-interactive boundary and thumb; On = selection tint track, --accent-text boundary and thumb. Status green never styles a switch. Thumb travel 150 ms with --easing-toggle; colours switch instantly. Label always visible; a saving switch shows the ring icon beside its label. Keyboard: Tab to the switch, Space toggles (role=switch, aria-checked); the visible label is the accessible name. Shape: track and thumb are rectangles at --radius-control (2 px): the lock reserves --radius-round for status dots and the mascot's backing circle and allows no pill, so the switch reads as a slider, never as an oval.",
+      "$description": "Switch: a selection control (D4, TD-22). Off = --surface track, --border-interactive boundary and thumb; On = selection tint track, --accent-text boundary and thumb. Status green never styles a switch. Thumb travel 150 ms with --easing-toggle; colours switch instantly. Label always visible; a saving switch shows the ring icon beside its label. Keyboard: Tab to the switch, Space toggles (role=switch, aria-checked); the visible label is the accessible name. Shape: track and thumb are rectangles at --radius-control (2 px): --radius-round is for dot-like marks and convention-bound circles only (the plan's Decision Log, radius.round interpretation) and the lock allows no pill, so the switch reads as a slider, never as an oval.",
       "track-width": {
         "$type": "dimension",
         "$value": "{semantic.size.switch-track-w}"
@@ -6414,7 +6453,7 @@
       "radius": {
         "$type": "dimension",
         "$value": "{semantic.radius.control}",
-        "$description": "The track's corners: --radius-control (2 px). The lock reserves 50 % for status dots and the mascot's backing circle and allows no pill, so the track is a rectangle; 50 % on a 36 × 20 box drew elliptical corners."
+        "$description": "The track's corners: --radius-control (2 px). The lock reserves 50 % for dot-like marks and convention-bound circles (status dots, the mascot's backing; the plan's Decision Log reads the launcher disc, its badge, radios and the PDF pins as the same) and allows no pill, so the track is a rectangle; 50 % on a 36 × 20 box drew elliptical corners."
       },
       "hit": {
         "$type": "dimension",
@@ -7573,6 +7612,11 @@
         "$value": "{semantic.size.hit-tab}",
         "$description": "The hit area of a tab: 44 px on coarse pointers"
       },
+      "disabled-glyph": {
+        "$type": "dimension",
+        "$value": "{semantic.size.icon-sm}",
+        "$description": "The 16 px lock glyph before a disabled tab's label: a shape cue beside the weight, since --disabled-text and weight 400 alone would not tell it from a resting tab"
+      },
       "variant": {
         "selected": {
           "$description": "Variant: selected (aria-selected).",
@@ -7734,7 +7778,7 @@
           }
         },
         "disabled": {
-          "$description": "Disabled tab: the label stays legible in --disabled-text (≥ 4.5) and drops to weight 400 (every other tab label is 600); the reason (\"No plots yet\") is a toggletip that opens on hover, focus and tap, so the tab stays reachable by the arrow keys (aria-disabled, kept in the roving order) and cannot be activated.",
+          "$description": "Disabled tab: the label stays legible in --disabled-text (≥ 4.5), drops to weight 400 (every other tab label is 600) and carries the 16 px lock glyph in --disabled-icon before it (--tabs-disabled-glyph), so the state is a shape, not weight or colour alone; cursor: not-allowed; the reason (\"No plots yet\") is a toggletip that opens on hover, focus and tap, so the tab stays reachable by the arrow keys (aria-disabled, kept in the roving order) and cannot be activated.",
           "fill": {
             "$type": "color",
             "$value": "{semantic.color.fill-none}"
@@ -7742,6 +7786,10 @@
           "text": {
             "$type": "color",
             "$value": "{semantic.color.disabled.text}"
+          },
+          "icon": {
+            "$type": "color",
+            "$value": "{semantic.color.disabled.icon}"
           },
           "weight": {
             "$type": "fontWeight",
@@ -7758,6 +7806,14 @@
                 "fg": "text",
                 "bg": "{semantic.color.background}",
                 "min": 4.5
+              },
+              {
+                "fg": "icon",
+                "bg": "{semantic.color.surface}",
+                "min": 3,
+                "kind": "non-text",
+                "exempt": true,
+                "why": "inactive control; the reason states why"
               }
             ]
           }
@@ -9144,7 +9200,7 @@
       }
     },
     "toast": {
-      "$description": "Toasts (snackbars): a --surface sheet with --shadow-1 and a 1 px --border, max 420 px, entering from the bottom edge by 8 px in 220 ms. Neutral text, or a status icon + label in the status's -11. Bottom-right 24/16 px measured from the safe area (bottom: calc(var(--toast-offset-y) + env(safe-area-inset-bottom, 0px)); bottom-left on app tabs, beside the launcher); one at a time. Timing (WCAG 2.2.1): an info or success toast without an action auto-dismisses after 6 s, and its timer pauses while the pointer is over it, while anything inside it has focus (focus-within) and while the window has lost focus; a toast that carries an action (Undo after a removal) stays until dismissed, or at least 10 s under the same pause rules; error toasts persist until dismissed. Every toast carries Dismiss; an error toast adds Retry where a retry exists; an Undo toast shows Undo beside Dismiss. Keyboard path: the toast is rendered immediately after the control that raised it, so it is the next tab stop (one Tab from the trigger reaches Undo or Dismiss, Shift+Tab returns); the live region announces the message, and an error toast (role=alert) takes focus while an info or success toast (role=status) does not; Escape dismisses the focused toast. Queue: a new info or success toast replaces a visible info or success toast that carries no action; a toast with an action and an error toast are never replaced silently: they stay until dismissed and later toasts queue behind them (first in, first out, at most three queued; identical messages collapse into one with a count).",
+      "$description": "Toasts (snackbars): a --surface sheet with --shadow-1 and a 1 px --border, width: min(100% - 2 × --toast-edge-offset, --toast-max-width) (at most 420 px; on a 390 px phone 342 px, the launcher's 24 px kept from both edges), entering from the bottom edge by 8 px in 220 ms. Neutral text, or a status icon + label in the status's -11. Bottom-right 24/16 px measured from the safe area (bottom: calc(var(--toast-offset-y) + env(safe-area-inset-bottom, 0px)); bottom-left on app tabs, beside the launcher); one at a time. Timing (WCAG 2.2.1): an info or success toast without an action auto-dismisses after 6 s, and its timer pauses while the pointer is over it, while anything inside it has focus (focus-within) and while the window has lost focus; a toast that carries an action (Undo after a removal) stays until dismissed, or at least 10 s under the same pause rules; error toasts persist until dismissed. Every toast carries Dismiss; an error toast adds Retry where a retry exists; an Undo toast shows Undo beside Dismiss. Keyboard path: the toast is rendered immediately after the control that raised it, so it is the next tab stop (one Tab from the trigger reaches Undo or Dismiss, Shift+Tab returns); the live region announces the message, and an error toast (role=alert) takes focus while an info or success toast (role=status) does not; Escape dismisses the focused toast. Queue: a new info or success toast replaces a visible info or success toast that carries no action; a toast with an action and an error toast are never replaced silently: they stay until dismissed and later toasts queue behind them (first in, first out, at most three queued; identical messages collapse into one with a count).",
       "max-width": {
         "$type": "dimension",
         "$value": "{semantic.size.toast-max}"
@@ -9173,6 +9229,11 @@
       "offset-y": {
         "$type": "dimension",
         "$value": "{semantic.space.float-offset-y}"
+      },
+      "edge-offset": {
+        "$type": "dimension",
+        "$value": "{semantic.space.float-offset-x}",
+        "$description": "The distance a toast keeps from both viewport edges: width: min(100% - 2 × --toast-edge-offset, --toast-max-width), so a 390 px phone shows a 342 px toast and a wide viewport the 420 px maximum"
       },
       "shadow": {
         "$type": "shadow",
@@ -12359,6 +12420,35 @@
             ]
           }
         }
+      }
+    },
+    "toggletip": {
+      "$description": "The toggletip that carries a disabled control's reason (and any short explanation): the small-popup contract applied to one line of --type-caption on --surface with a 1 px --border and --shadow-1, at most --size-menu-max wide, --space-label-gap from its control. Not a component with states: it has one look, so these are geometry tokens only. Opens on hover, focus and tap of the control, closes on Escape, on blur and when the pointer leaves control and tip (WCAG 1.4.13: dismissible without moving focus, hoverable, persistent until dismissed); the text is linked by aria-describedby, so it is read with the control.",
+      "max-width": {
+        "$type": "dimension",
+        "$value": "{semantic.size.menu-max}"
+      },
+      "padding-y": {
+        "$type": "dimension",
+        "$value": "{semantic.space.inset-y}"
+      },
+      "padding-x": {
+        "$type": "dimension",
+        "$value": "{semantic.space.inline}"
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{semantic.radius.control}"
+      },
+      "shadow": {
+        "$type": "shadow",
+        "$value": "{semantic.shadow.1}",
+        "$description": "Elevation alias: --shadow-1"
+      },
+      "offset": {
+        "$type": "dimension",
+        "$value": "{semantic.space.label-gap}",
+        "$description": "The gap between the control and the tip"
       }
     }
   },

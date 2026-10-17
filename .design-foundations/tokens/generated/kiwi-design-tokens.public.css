@@ -169,6 +169,13 @@
   --kiwi-error-text: #974843; /* added in 2.0.0 */
   --kiwi-info-surface: #e3f3ff; /* added in 2.0.0 */
   --kiwi-info-text: #3d6886; /* added in 2.0.0 */
+  --kiwi-primary-active: #06100a; /* added in 2.0.0: the pressed fill of the filled control (:active), one step beyond hover */
+  --kiwi-bg-pressed: #d9eee0; /* added in 2.0.0: the pressed tint of outlined and text controls (:active) */
+  --kiwi-disabled-surface: #e9e8e4; /* added in 2.0.0: the disabled trio: fill */
+  --kiwi-disabled-text: #65635c; /* added in 2.0.0: the disabled trio: label (secondary text on the disabled surface) */
+  --kiwi-disabled-border: #c6c3bb; /* added in 2.0.0: the disabled trio: boundary */
+  --kiwi-size-control: 44px; /* added in 2.0.0: button and input height (comfortable: Kiwi Apps are student-facing) */
+  --kiwi-size-chip: 32px; /* added in 2.0.0: chip height (comfortable); the hand-written 28 px becomes the token's 32 */
 }
 
 /* ============================================
@@ -199,19 +206,26 @@
  * COMPONENT PATTERNS (regenerated to the Ruled Folio rules)
  * ============================================ */
 .kiwi-card { background-color: var(--kiwi-bg-paper); border: var(--kiwi-border-width) solid var(--kiwi-border-default); border-radius: var(--kiwi-radius-sm); padding: var(--kiwi-space-4); box-shadow: none; } /* a sheet: one tonal step + a hairline; never a card inside a card */
-.kiwi-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--kiwi-space-2); min-height: 44px; padding: 0 var(--kiwi-space-4); font-family: var(--kiwi-font-family); font-size: var(--kiwi-font-size-sm); font-weight: var(--kiwi-font-weight-semibold); line-height: 1.43; white-space: nowrap; border-radius: var(--kiwi-radius-sm); border: var(--kiwi-border-width) solid transparent; cursor: pointer; }
+.kiwi-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--kiwi-space-2); min-height: var(--kiwi-size-control); padding: 0 var(--kiwi-space-4); font-family: var(--kiwi-font-family); font-size: var(--kiwi-font-size-sm); font-weight: var(--kiwi-font-weight-semibold); line-height: 1.43; white-space: nowrap; border-radius: var(--kiwi-radius-sm); border: var(--kiwi-border-width) solid transparent; cursor: pointer; }
 .kiwi-btn:focus-visible { outline: 2px solid var(--kiwi-border-focus); outline-offset: 2px; } /* never outline: none */
-.kiwi-btn:disabled { background-color: var(--kiwi-bg-subtle); color: var(--kiwi-text-secondary); border-color: var(--kiwi-border-default); cursor: not-allowed; }
+.kiwi-btn[aria-disabled="true"], .kiwi-btn:disabled { background-color: var(--kiwi-disabled-surface); color: var(--kiwi-disabled-text); border-color: var(--kiwi-disabled-border); cursor: not-allowed; } /* aria-disabled="true" is the mechanism (the control stays focusable and keeps its aria-describedby reason); :disabled is kept as an alias */
 .kiwi-btn-primary { background-color: var(--kiwi-primary); color: var(--kiwi-primary-contrast); }
-.kiwi-btn-primary:hover:not(:disabled) { background-color: var(--kiwi-primary-hover); }
+.kiwi-btn-primary:hover:not(:disabled):not([aria-disabled="true"]) { background-color: var(--kiwi-primary-hover); }
+.kiwi-btn-primary:active:not(:disabled):not([aria-disabled="true"]) { background-color: var(--kiwi-primary-active); transform: scale(0.98); } /* pressed: one fill step beyond hover plus the shared press scale */
 .kiwi-btn-secondary { background-color: var(--kiwi-bg-paper); color: var(--kiwi-link); border-color: var(--kiwi-border-interactive); }
-.kiwi-btn-secondary:hover:not(:disabled) { background-color: var(--kiwi-bg-selected); }
-.kiwi-input { width: 100%; min-height: 44px; padding: var(--kiwi-space-2) var(--kiwi-space-4); font-family: var(--kiwi-font-family); font-size: var(--kiwi-font-size-base); line-height: var(--kiwi-line-height-normal); color: var(--kiwi-text-primary); background-color: var(--kiwi-bg-paper); border: var(--kiwi-border-width) solid var(--kiwi-border-interactive); border-radius: var(--kiwi-radius-sm); }
+.kiwi-btn-secondary:hover:not(:disabled):not([aria-disabled="true"]) { background-color: var(--kiwi-bg-selected); }
+.kiwi-btn-secondary:active:not(:disabled):not([aria-disabled="true"]) { background-color: var(--kiwi-bg-pressed); transform: scale(0.98); }
+.kiwi-input { width: 100%; min-height: var(--kiwi-size-control); padding: var(--kiwi-space-2) var(--kiwi-space-4); font-family: var(--kiwi-font-family); font-size: var(--kiwi-font-size-base); line-height: var(--kiwi-line-height-normal); color: var(--kiwi-text-primary); background-color: var(--kiwi-bg-paper); border: var(--kiwi-border-width) solid var(--kiwi-border-interactive); border-radius: var(--kiwi-radius-sm); }
 .kiwi-input:hover { border-color: var(--kiwi-text-primary); }
 .kiwi-input:focus-visible { outline: 2px solid var(--kiwi-border-focus); outline-offset: 2px; }
 .kiwi-input[aria-invalid="true"] { border-color: var(--kiwi-error-text); }
+.kiwi-input[aria-disabled="true"], .kiwi-input:disabled { background-color: var(--kiwi-disabled-surface); color: var(--kiwi-disabled-text); border-color: var(--kiwi-disabled-border); cursor: not-allowed; }
+.kiwi-input[aria-busy="true"] { border-color: var(--kiwi-border-interactive); cursor: progress; } /* loading keeps the boundary: busy is not disabled; the trailing "Loading…" sits in .kiwi-help */
+.kiwi-input[data-state="success"] { border-color: var(--kiwi-border-interactive); } /* success keeps the boundary; the check and the word sit in .kiwi-help[data-state="success"] */
+.kiwi-help { display: block; margin-top: var(--kiwi-space-2); font-size: var(--kiwi-font-size-xs); line-height: var(--kiwi-line-height-normal); color: var(--kiwi-text-secondary); } /* the reason or helper line under a control, linked by aria-describedby; data-state="error" or "success" takes the status text colour */
+.kiwi-help[data-state="error"] { color: var(--kiwi-error-text); } .kiwi-help[data-state="success"] { color: var(--kiwi-success-text); }
 .kiwi-input::placeholder { color: var(--kiwi-text-secondary); }
-.kiwi-label { display: block; margin-bottom: 6px; font-size: var(--kiwi-font-size-sm); font-weight: var(--kiwi-font-weight-semibold); color: var(--kiwi-text-primary); }
+.kiwi-label { display: block; margin-bottom: var(--kiwi-space-2); font-size: var(--kiwi-font-size-sm); font-weight: var(--kiwi-font-weight-semibold); color: var(--kiwi-text-primary); }
 .kiwi-alert { display: flex; gap: var(--kiwi-space-3); align-items: flex-start; padding: var(--kiwi-space-3) var(--kiwi-space-4); border-radius: var(--kiwi-radius-sm); font-size: var(--kiwi-font-size-sm); border: 0; } /* status = surface + icon + label; no coloured border */
 .kiwi-alert-success { background-color: var(--kiwi-success-surface); color: var(--kiwi-success-text); }
 .kiwi-alert-warning { background-color: var(--kiwi-warning-surface); color: var(--kiwi-warning-text); }
@@ -222,9 +236,9 @@
 .kiwi-in-progress { display: inline-flex; align-items: center; gap: var(--kiwi-space-2); color: var(--kiwi-text-secondary); font-size: var(--kiwi-font-size-sm); } /* added in 2.0.0: neutral in-progress text; progress is words + the text dots (G9), never a spinner */
 .kiwi-in-progress::after { content: "…"; display: inline-block; width: 1.2em; text-align: left; animation: kiwi-dots 1.5s steps(1, end) infinite; }
 @keyframes kiwi-dots { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75%, 100% { content: "..."; } }
-.kiwi-chip { display: inline-flex; align-items: center; gap: var(--kiwi-space-2); min-height: 28px; padding: 0 var(--kiwi-space-2); font-size: var(--kiwi-font-size-xs); font-weight: var(--kiwi-font-weight-regular); border-radius: var(--kiwi-radius-sm); background-color: var(--kiwi-bg-subtle); color: var(--kiwi-text-primary); } /* a label chip */
+.kiwi-chip { display: inline-flex; align-items: center; gap: var(--kiwi-space-2); min-height: var(--kiwi-size-chip); padding: 0 var(--kiwi-space-2); font-size: var(--kiwi-font-size-xs); font-weight: var(--kiwi-font-weight-regular); border-radius: var(--kiwi-radius-sm); background-color: var(--kiwi-bg-subtle); color: var(--kiwi-text-primary); } /* a label chip */
 .kiwi-chip-primary { background-color: var(--kiwi-bg-selected); color: var(--kiwi-link); border: var(--kiwi-border-width) solid var(--kiwi-link); font-weight: var(--kiwi-font-weight-semibold); } /* a selected filter chip */
-.kiwi-chip-status { display: inline-flex; align-items: center; gap: var(--kiwi-space-2); min-height: 28px; padding: 0 var(--kiwi-space-2); font-size: var(--kiwi-font-size-xs); font-weight: var(--kiwi-font-weight-semibold); border-radius: var(--kiwi-radius-sm); border: 0; } /* added in 2.0.0: the one tinted chip, status surface + the -11 icon and label */
+.kiwi-chip-status { display: inline-flex; align-items: center; gap: var(--kiwi-space-2); min-height: var(--kiwi-size-chip); padding: 0 var(--kiwi-space-2); font-size: var(--kiwi-font-size-xs); font-weight: var(--kiwi-font-weight-semibold); border-radius: var(--kiwi-radius-sm); border: 0; } /* added in 2.0.0: the one tinted chip, status surface + the -11 icon and label */
 .kiwi-chip-status-success { background-color: var(--kiwi-success-surface); color: var(--kiwi-success-text); }
 .kiwi-chip-status-warning { background-color: var(--kiwi-warning-surface); color: var(--kiwi-warning-text); }
 .kiwi-chip-status-error { background-color: var(--kiwi-error-surface); color: var(--kiwi-error-text); }

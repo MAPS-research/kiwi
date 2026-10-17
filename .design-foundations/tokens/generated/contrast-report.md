@@ -1,4 +1,4 @@
-# Kiwi UI token checks — 2026-10-17 (Phase 3, fix round 6)
+# Kiwi UI token checks — 2026-10-17 · source v2.0.0 (sha256 75dfd2018832) · at 53f518c
 
 Source: `.design-foundations/tokens/kiwi-ui.tokens.json` · Locked block: `kiwi-ui/DESIGN.md` · Result: **PASS**
 
@@ -45,11 +45,11 @@ Source: `.design-foundations/tokens/kiwi-ui.tokens.json` · Locked block: `kiwi-
 
 ## 2. Structure
 
-20 listed components present: yes; 25 state groups, each with exactly the eight states (200 state specifications).
+20 listed components present: yes; 25 state groups, each with exactly the eight states (200 state specifications); geometry-only groups with no states (one look, the small-popup contract applied): toggletip.
 
 ## 3. Per-state contrast (both modes, from the alias values)
 
-Targets: text ≥ 4.5:1, non-text (boundaries, icons, markers, rings) ≥ 3:1. 422 required assertions: 422 pass, 0 fail. 23 informational rows (inactive controls, WCAG 1.4.3/1.4.11 exemption, or decorative hairlines by lock) are reported, not required.
+Targets: text ≥ 4.5:1, non-text (boundaries, icons, markers, rings) ≥ 3:1. 422 required assertions: 422 pass, 0 fail. 24 informational rows (inactive controls, WCAG 1.4.3/1.4.11 exemption, or decorative hairlines by lock) are reported, not required.
 
 | Component | State | Pair | Kind | Min | Light | Dark | Result |
 |---|---|---|---|---|---|---|---|
@@ -259,6 +259,7 @@ Targets: text ≥ 4.5:1, non-text (boundaries, icons, markers, rings) ≥ 3:1. 4
 | tabs | active | text on fill | text | 4.5 | 11.09 (#2f2e2a / #e9e8e4) | 10.46 (#e9e8e3 / #33322e) | PASS |
 | tabs | disabled | text on {surface} | text | 4.5 | 5.70 (#65635c / #faf9f3) | 7.92 (#b9b7b0 / #252218) | PASS |
 | tabs | disabled | text on {background} | text | 4.5 | 5.31 (#65635c / #f4f1e4) | 8.74 (#b9b7b0 / #1b1915) | PASS |
+| tabs | disabled | icon on {surface} | non-text | 3 | 2.18 (#adaba1 / #faf9f3) | 2.53 (#636057 / #252218) | info: below · inactive control; the reason states why |
 | tabs | loading | text on {surface} | text | 4.5 | 5.70 (#65635c / #faf9f3) | 7.92 (#b9b7b0 / #252218) | PASS |
 | tabs | loading | text on {background} | text | 4.5 | 5.31 (#65635c / #f4f1e4) | 8.74 (#b9b7b0 / #1b1915) | PASS |
 | tabs | error | text on {surface} | text | 4.5 | 5.70 (#65635c / #faf9f3) | 7.92 (#b9b7b0 / #252218) | PASS |
@@ -501,7 +502,7 @@ Targets: text ≥ 4.5:1, non-text (boundaries, icons, markers, rings) ≥ 3:1. 4
 
 ## 4. Per-mode closure of the emitted CSS
 
-:root declares 1278 properties. Dark: 813 depend on a mode token (transitively), 813 are redeclared in [data-theme="dark"], 0 missing. Compact: 94 depend on a density token, 94 redeclared in [data-density="compact"], 0 missing. Root-only composites that embed a mode colour (shadows, backdrop): 0.
+:root declares 1287 properties. Dark: 815 depend on a mode token (transitively), 815 are redeclared in [data-theme="dark"], 0 missing. Compact: 96 depend on a density token, 96 redeclared in [data-density="compact"], 0 missing. Root-only composites that embed a mode colour (shadows, backdrop): 0.
 
 ## 10. Coarse pointer
 
@@ -509,7 +510,7 @@ Targets: text ≥ 4.5:1, non-text (boundaries, icons, markers, rings) ≥ 3:1. 4
 
 ## 8. Tier rule
 
-914 component-tier references, 0 outside the semantic tier (the rule: component tokens reference semantic tokens only, never a global, never another component).
+923 component-tier references, 0 outside the semantic tier (the rule: component tokens reference semantic tokens only, never a global, never another component).
 
 ## 12. Component-tier literals
 
@@ -532,11 +533,11 @@ Colour literals outside the global tier: 0 (allowed: the G2 logo black/white and
 
 ## 6. Public CSS coverage
 
-143 v1 names pinned in the source, 0 unmapped, 0 not emitted; the public file on disk has 143 names, 0 of them not pinned. Mapping: 52 kept, 41 deprecated, 50 repointed, 11 added (154 total).
+143 v1 names pinned in the source, 0 unmapped, 0 not emitted; the public file on disk has 143 names, 0 of them not pinned. Mapping: 52 kept, 41 deprecated, 50 repointed, 18 added (161 total).
 
 ## 13. Public classes and keyframes
 
-89 v1 class selectors and 3 keyframes pinned; 0 classes and 0 keyframes missing from the generated CSS (97 classes and 4 keyframes emitted); 18 deprecated with a replacement and the 4.0.0 schedule, 0 violations.
+89 v1 class selectors and 3 keyframes pinned; 0 classes and 0 keyframes missing from the generated CSS (98 classes and 4 keyframes emitted); 18 deprecated with a replacement and the 4.0.0 schedule, 0 violations.
 
 ## 9. Deprecation schedule
 

@@ -710,6 +710,7 @@
   --tabs-marker: var(--size-marker);
   --tabs-gap: var(--space-tab-gap);
   --tabs-hit: var(--size-hit-tab);
+  --tabs-disabled-glyph: var(--size-icon-sm);
   --tabs-variant-selected-fill: var(--fill-none);
   --tabs-variant-selected-text: var(--selection-text);
   --tabs-variant-selected-marker: var(--selection-marker);
@@ -724,6 +725,7 @@
   --tabs-active-text: var(--text);
   --tabs-disabled-fill: var(--fill-none);
   --tabs-disabled-text: var(--disabled-text);
+  --tabs-disabled-icon: var(--disabled-icon);
   --tabs-disabled-weight: var(--type-weight-regular);
   --tabs-loading-fill: var(--fill-none);
   --tabs-loading-text: var(--text-secondary);
@@ -896,6 +898,7 @@
   --toast-icon-size: var(--size-icon);
   --toast-offset-x: var(--space-float-offset-x);
   --toast-offset-y: var(--space-float-offset-y);
+  --toast-edge-offset: var(--space-float-offset-x);
   --toast-shadow: var(--shadow-1);
   --toast-action-underline: var(--border-width-underline);
   --toast-action-underline-hover: var(--border-width-underline-hover);
@@ -1285,6 +1288,12 @@
   --pdf-toolbar-success-icon: var(--icon-default);
   --pdf-toolbar-success-chip: var(--in-progress-surface);
   --pdf-toolbar-success-chip-text: var(--text-secondary);
+  --toggletip-max-width: var(--size-menu-max);
+  --toggletip-padding-y: var(--space-inset-y);
+  --toggletip-padding-x: var(--space-inline);
+  --toggletip-radius: 2px;
+  --toggletip-shadow: var(--shadow-1);
+  --toggletip-offset: var(--space-label-gap);
   font-synthesis: none;
 }
 
@@ -1701,6 +1710,7 @@
   --tabs-active-fill: var(--surface-active);
   --tabs-active-text: var(--text);
   --tabs-disabled-text: var(--disabled-text);
+  --tabs-disabled-icon: var(--disabled-icon);
   --tabs-loading-text: var(--text-secondary);
   --tabs-error-text: var(--text-secondary);
   --tabs-error-icon: var(--status-error-text);
@@ -2102,6 +2112,7 @@
   --pdf-toolbar-success-icon: var(--icon-default);
   --pdf-toolbar-success-chip: var(--in-progress-surface);
   --pdf-toolbar-success-chip-text: var(--text-secondary);
+  --toggletip-shadow: var(--shadow-1);
   color-scheme: light;
 }
 
@@ -2518,6 +2529,7 @@
   --tabs-active-fill: var(--surface-active);
   --tabs-active-text: var(--text);
   --tabs-disabled-text: var(--disabled-text);
+  --tabs-disabled-icon: var(--disabled-icon);
   --tabs-loading-text: var(--text-secondary);
   --tabs-error-text: var(--text-secondary);
   --tabs-error-icon: var(--status-error-text);
@@ -2919,6 +2931,7 @@
   --pdf-toolbar-success-icon: var(--icon-default);
   --pdf-toolbar-success-chip: var(--in-progress-surface);
   --pdf-toolbar-success-chip-text: var(--text-secondary);
+  --toggletip-shadow: var(--shadow-1);
   color-scheme: dark;
 }
 
@@ -3017,6 +3030,8 @@
   --pdf-toolbar-field-hit: var(--size-hit-control);
   --pdf-toolbar-canvas-padding: var(--space-panel);
   --pdf-toolbar-drawer-row-hit: var(--size-hit-control);
+  --toggletip-padding-y: var(--space-inset-y);
+  --toggletip-padding-x: var(--space-inline);
 }
 
 [data-density="compact"] {
@@ -3114,6 +3129,8 @@
   --pdf-toolbar-field-hit: var(--size-hit-control);
   --pdf-toolbar-canvas-padding: var(--space-panel);
   --pdf-toolbar-drawer-row-hit: var(--size-hit-control);
+  --toggletip-padding-y: var(--space-inset-y);
+  --toggletip-padding-x: var(--space-inline);
 }
 
 @media (pointer: coarse) {

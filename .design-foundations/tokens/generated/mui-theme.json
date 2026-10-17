@@ -307,9 +307,9 @@
     "_note": "h1 = --text-3xl (course-list header, large empty states); h2 = --text-2xl page headings (AdminPageHeader renders component=h1 variant=h2); display (custom variant) = --text-4xl, sign-in only. No CSS capitals anywhere."
   },
   "components": {
-    "_illustrative": "prose, not code: each entry names the custom properties the real styleOverrides read; every number inside the prose is interpolated from the token source at build time (18 values), so the preview cannot state a width the tokens do not hold",
+    "_illustrative": "prose, not code: each entry names the custom properties the real styleOverrides read; every number inside the prose is interpolated from the token source at build time (19 values), so the preview cannot state a width the tokens do not hold",
     "MuiCssBaseline": {
-      "styleOverrides": "@import the generated kiwi-ui.tokens.css; html { font-synthesis: none } ; :focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px }"
+      "styleOverrides": "@import the generated kiwi-ui.tokens.css; html { font-synthesis: none } ; :focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px } ; [aria-disabled='true'], [aria-disabled='true'] * { cursor: not-allowed } ; after the locked reduced-motion block: @media (prefers-reduced-motion: reduce) { [data-dots]::after { animation: none; content: \"…\" } } (the text dots rest as a static ellipsis, never a frozen frame)"
     },
     "MuiButton": {
       "defaultProps": {
@@ -357,7 +357,7 @@
     },
     "MuiSwitch": {
       "styleOverrides": {
-        "root": "track var(--switch-track-width)×var(--switch-track-height), fill var(--switch-track) border 1px var(--switch-border), thumb var(--switch-thumb) fill var(--switch-thumb); &.Mui-checked track var(--switch-variant-on-track) border/thumb var(--switch-variant-on-border); thumb travel var(--motion-micro) var(--motion-ease-toggle); track corners var(--switch-radius) and thumb corners var(--switch-thumb-radius), both 2px (--radius-control: a rectangle, no pill; 50 % stays for status dots and the mascot's backing)"
+        "root": "track var(--switch-track-width)×var(--switch-track-height), fill var(--switch-track) border 1px var(--switch-border), thumb var(--switch-thumb) fill var(--switch-thumb); &.Mui-checked track var(--switch-variant-on-track) border/thumb var(--switch-variant-on-border); thumb travel var(--motion-micro) var(--motion-ease-toggle); track corners var(--switch-radius) and thumb corners var(--switch-thumb-radius), both 2px (--radius-control: a rectangle, no pill; 50 % is for dot-like marks and convention-bound circles only, the plan's Decision Log)"
       }
     },
     "MuiChip": {
@@ -372,7 +372,7 @@
     },
     "MuiTab": {
       "styleOverrides": {
-        "root": "minHeight var(--size-tab); font --type-label (600 for all tabs); color var(--text-secondary); &.Mui-selected color var(--selection-text); &:hover background var(--surface-hover) color var(--text); textTransform none; whiteSpace nowrap"
+        "root": "minHeight var(--size-tab); font --type-label (600 for all tabs); color var(--text-secondary); &.Mui-selected color var(--selection-text); &:hover background var(--surface-hover) color var(--text); textTransform none; whiteSpace nowrap; &[aria-disabled='true'] color var(--disabled-text) weight var(--type-weight-regular) with the lock glyph var(--tabs-disabled-glyph) in var(--disabled-icon) before the label, cursor not-allowed, kept in the roving order"
       }
     },
     "MuiListItemButton": {
@@ -416,7 +416,7 @@
     },
     "MuiTooltip": {
       "styleOverrides": {
-        "tooltip": "background var(--surface); color var(--text); border 1px var(--border); boxShadow var(--shadow-1); font --type-caption"
+        "tooltip": "background var(--surface); color var(--text); border 1px var(--border); boxShadow var(--toggletip-shadow); borderRadius var(--toggletip-radius); padding var(--toggletip-padding-y) var(--toggletip-padding-x); maxWidth var(--toggletip-max-width); font --type-caption; offset var(--toggletip-offset) from its control; as a toggletip (a disabled control's reason): opens on hover, focus and tap, Escape closes it without moving focus, the pointer can move onto it, it stays until dismissed (WCAG 1.4.13: dismissible, hoverable, persistent); aria-describedby links the text"
       }
     },
     "MuiAlert": {
@@ -426,7 +426,7 @@
     },
     "MuiSnackbarContent": {
       "styleOverrides": {
-        "root": "background var(--surface); color var(--text); border 1px var(--border); boxShadow var(--shadow-1); maxWidth var(--size-toast-max)"
+        "root": "background var(--surface); color var(--text); border 1px var(--border); boxShadow var(--shadow-1); width min(100% - 2 * var(--toast-edge-offset), var(--toast-max-width)) (at most 420px; the launcher's edge offset kept on narrow viewports)"
       }
     },
     "MuiTableCell": {
