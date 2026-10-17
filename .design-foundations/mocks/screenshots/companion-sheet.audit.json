@@ -612,11 +612,19 @@
    "ariaDisabled": "false",
    "describedBy": "c-reason"
   },
+  "glyph": {
+   "copies": 8,
+   "masks": 0,
+   "colourLiterals": 0,
+   "paths": 8
+  },
+  "peekWallLeftPercent": 13.28,
+  "inkAligned": 12,
   "layout": {
    "innerWidth": 1440,
    "scrollWidth": 1440,
    "horizontalScroll": false,
-   "documentHeight": 11818
+   "documentHeight": 11939
   },
   "fonts": {
    "sourceSans3": true
@@ -629,8 +637,8 @@
   "oneMoverOk": true
  },
  "fullPage": {
-  "height": 11946,
-  "segments": 3
+  "height": 12083,
+  "segments": 4
  },
  "oneMoverLive": {
   "samples": 20,
@@ -1249,11 +1257,19 @@
    "ariaDisabled": "true",
    "describedBy": "c-reason"
   },
+  "glyph": {
+   "copies": 8,
+   "masks": 0,
+   "colourLiterals": 0,
+   "paths": 8
+  },
+  "peekWallLeftPercent": 13.28,
+  "inkAligned": 12,
   "layout": {
    "innerWidth": 1440,
    "scrollWidth": 1440,
    "horizontalScroll": false,
-   "documentHeight": 11982
+   "documentHeight": 12119
   },
   "fonts": {
    "sourceSans3": true

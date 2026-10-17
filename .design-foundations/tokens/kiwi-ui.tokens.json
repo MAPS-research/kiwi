@@ -11029,7 +11029,8 @@
       "icon-size": {
         "$type": "dimension",
         "$value": "{semantic.size.icon-fixed}",
-        "$description": "24 px in both densities: the launcher is a fixed surface"
+        "$description": "24 px in both densities: the launcher is a fixed surface",
+        "$deprecated": "Phase 4 (2026-10-17, review A-10): the launcher's glyph box is companion.slot.launcher (28 px); this 24 px stand-in size is retired for the launcher. Kept emitted per the deprecation policy (removed no earlier than two MAJOR versions after 2.0.0 and six months after it); no other component reads it."
       },
       "radius": {
         "$type": "dimension",
@@ -12456,7 +12457,7 @@
     "$description": "Reserved for Phase 6 (chart.*). Appended, never edited into the tiers above."
   },
   "companion": {
-    "$description": "Phase 4 (2026-10-17), the tutor companion: the slot size per placement and the backing behind the drawn mascot (kiwi-ui/DESIGN.md § Companion; fix round 1 applied 2026-10-17). Registered under the reserved namespace and never edited into the three tiers; every token names its CSS property explicitly (--companion-*). The mascot's artwork keeps its own flat palette (allowlisted, G11) and is not a token: its outline and bill colours are recorded in this group's metadata for check § 20 only, never emitted.",
+    "$description": "Phase 4 (2026-10-17), the tutor companion: the slot size per placement and the backing behind the drawn mascot (kiwi-ui/DESIGN.md § Companion; fix round 1 and the review's follow-up applied 2026-10-17). Registered under the reserved namespace and never edited into the three tiers; every token names its CSS property explicitly (--companion-*). The mascot's artwork keeps its own flat palette (allowlisted, G11) and is not a token: its outline and bill colours are recorded in this group's metadata for check § 20 only, never emitted.",
     "$extensions": {
       "org.kiwi": {
         "artwork": {
@@ -12466,7 +12467,7 @@
           "tan": "#ccbd99",
           "outline": "#234631",
           "bill": "#ccbd99",
-          "note": "The drawn frames' flat palette (G11). outline = the forest silhouette that must clear 3:1 on its backing (DW-4.4); bill = the tan beak, informational (not the outline)."
+          "note": "The drawn frames' four colours: the pinned hue family (G11). Anti-aliased and resampled pixels vary around them, so § 20 asserts the token pairs on outline and also the lightest sampled forest pixel of every shipped asset (export-mascot.py writes the extremes to .design-foundations/mocks/assets/mascot/inventory.json). outline = the forest silhouette that must clear 3:1 on its backing (DW-4.4); bill = the tan beak, informational (not the outline)."
         },
         "assets": ".design-foundations/mocks/assets/mascot/ (stills, resampled atlases, the launcher glyph, provenance.md); source NYUSH-ML/kiwi-ui@fbb4db85f90aeda3a1250c8e9c8aa2d7473e2e11",
         "evidence": ".design-foundations/mocks/companion-sheet.html and its screenshots"
@@ -12487,7 +12488,7 @@
       "peek": {
         "$type": "dimension",
         "$value": "48px",
-        "$description": "The composer peek: a 48 px slot anchored to the composer field's top-right corner: its right edge on the field's right edge and its bottom edge on the field's top edge, inside the 48 px lane formed by the message region's 24 px bottom padding and the composer's 24 px top padding (raised from 12 px for the lane); stamp-peek at 96 px cells (2×). It shows once per focus session, at the first keystroke after the student focused the composer, only while the message region is at scroll end (so it never overlaps text) and the newest avatar is still; it retracts 1.5 s after the last keystroke or on blur, is cut on send (walk has priority) and when the slash-command menu opens, and is removed, not stilled, whenever motion is off at any level.",
+        "$description": "The composer peek: a 48 px slot anchored to the composer field's top-right corner: its right edge on the field's right edge and its bottom edge on the field's top edge, inside the 48 px lane formed by the message region's 24 px bottom padding and the composer's 24 px top padding (raised from 12 px for the lane); stamp-peek at 96 px cells (2×), framed with the drawing's wall (its inked columns end at x = 222 of 256) on the slot's right edge (frame left 13.28 %, width 100 %), not with the union-circle framing, so the head emerges from the edge (review A-3). It shows once per focus session, at the first keystroke after the student focused the composer, only while the message region is at scroll end (so it never overlaps text) and the newest avatar is still; it retracts 1.5 s after the last keystroke or on blur, is cut on send (walk has priority) and when the slash-command menu opens, and is removed, not stilled, whenever motion is off at any level.",
         "$extensions": {
           "org.kiwi": {
             "css": "--companion-slot-peek"

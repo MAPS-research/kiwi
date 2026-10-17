@@ -3,8 +3,9 @@
 - **Source repository:** `NYUSH-ML/kiwi-ui`, branch `kiwi-icon`, commit `fbb4db85f90aeda3a1250c8e9c8aa2d7473e2e11` ("feat: Add Kiwi icon and drawn-frame motion library"). Read-only; nothing was pushed or modified there.
 - **Exported on:** 2026-10-17 by `export-mascot.py` (this directory): `python3 export-mascot.py --source <checkout>`; Pillow 11.1.0.
 - **What the source holds:** `public/kiwi-mascot/` (61 MB: v2 sources, lossless PNG twins, per-frame PNGs, animated preview WebPs, the superseded v1 SVG rigs). Runtime needs only the eight v3 WebP atlases below (`frames.ts`: a state is a sequence over an atlas; 6 × 4 cells of 256 px; the 24 Hz timeline clock with explicit holds).
-- **Pixels:** every `still-<state>.png` is the named cell of the lossless PNG twin of its atlas, unchanged (G11: the artwork keeps its exact colours `#234631 #92ae70 #f5f4e8 #ccbd99`). The `atlas/` and `stills/` files are the same drawings resampled (Lanczos) to the 2× size of their placement and saved as lossless WebP; no recolouring, cropping, warping or interpolation between drawings.
-- **`launcher-glyph.svg`** is a one-colour (`currentColor`) glyph: the `Portrait()` path geometry of `src/components/KiwiMascot/KiwiArtwork.tsx` at the same commit, with the eyes cut out, scaled to 78 % and set bottom-left, plus a filled speech bubble top-right (fix round 1, review F6: at 24 px the head alone read as a ghost; the bubble restores the chat signifier). It is the launcher's icon (Phase 3 icon policy: glyphs are `currentColor`), not mascot art.
+- **Pixels:** every `still-<state>.png` is the named cell of the lossless PNG twin of its atlas, unchanged (G11: the artwork keeps its four colours, the pinned hue family `#234631 #92ae70 #f5f4e8 #ccbd99`; anti-aliased and resampled pixels vary around them, which is why the colour extremes below are sampled and asserted). The `atlas/` and `stills/` files are the same drawings resampled (Lanczos) to the 2× size of their placement and saved as lossless WebP; no recolouring, cropping, warping or interpolation between drawings.
+- **`launcher-glyph.svg`** is a one-colour (`currentColor`) glyph in a single path with no mask and no colour literal: the `Portrait()` body, bill and wing of `src/components/KiwiMascot/KiwiArtwork.tsx` at the same commit, scaled to 78 % and set bottom-left, all wound one way, the two eyes wound the other way so the nonzero rule leaves them unfilled, plus a filled speech bubble top-right (review F6 and A-13). It is the launcher's icon (Phase 3 icon policy: glyphs are `currentColor`), not mascot art.
+- **The peek's wall** (review A-3): the rightmost inked column over the 24 `stamp-peek` drawings is x = 222 of 256 (86.7 %). The peek slot frames the drawing with that column on the slot's right edge (frame left 13.28 %, width 100 %), not with the union-circle framing, so the head emerges from the edge.
 
 ## Runtime assets in the source (the port inventory), measured
 
@@ -24,17 +25,17 @@ Also in the source and **not ported**: `frames-v2/` (32 MB, superseded sources),
 
 ## Stills exported (one per G9 state)
 
-| State | File | Atlas · cell | Bytes (256 px PNG) | 192 px WebP | 128 px WebP | 64 px WebP |
-|---|---|---|---:|---:|---:|---:|
-| `idle` | `still-idle.png` | `portrait-blink` · 0 | 40,170 | 14,776 | 8,130 | 2,998 |
-| `peek` | `still-peek.png` | `stamp-peek` · 23 | 20,058 | 9,346 | 5,006 | 1,964 |
-| `retract` | `still-retract.png` | `stamp-peek` · 0 | 16,662 | 5,466 | 3,128 | 1,230 |
-| `walk` | `still-walk.png` | `full-walk` · 0 | 32,795 | 10,028 | 5,140 | 1,982 |
-| `speaking` | `still-speaking.png` | `portrait-nod-sleep` · 0 | 36,372 | 14,006 | 7,646 | 2,750 |
-| `hop` | `still-hop.png` | `full-hop-flight` · 23 | 32,165 | 9,956 | 5,250 | 1,920 |
-| `wave` | `still-wave.png` | `full-wave-bow` · 8 | 30,951 | 10,536 | 5,474 | 1,974 |
-| `error` | `still-error.png` | `portrait-nod-sleep` · 8 | 28,652 | 11,988 | 6,326 | 2,262 |
-| `offline` | `still-offline.png` | `portrait-doze` · 23 | 32,514 | 13,516 | 7,314 | 2,614 |
+| State | File | Atlas · cell | Bytes (256 px PNG) | 192 px WebP | 128 px WebP | 64 px WebP | Ink box in the slot (left, top, right, bottom; fractions) |
+|---|---|---|---:|---:|---:|---:|---|
+| `idle` | `still-idle.png` | `portrait-blink` · 0 | 40,170 | 14,776 | 8,130 | 2,998 | 0.153, 0.228, 0.856, 0.787 |
+| `peek` | `still-peek.png` | `stamp-peek` · 23 | 20,058 | 9,346 | 5,006 | 1,964 | 0.344, 0.180, 0.781, 0.820 |
+| `retract` | `still-retract.png` | `stamp-peek` · 0 | 16,662 | 5,466 | 3,128 | 1,230 | 0.406, 0.180, 0.781, 0.727 |
+| `walk` | `still-walk.png` | `full-walk` · 0 | 32,795 | 10,028 | 5,140 | 1,982 | 0.156, 0.218, 0.857, 0.775 |
+| `speaking` | `still-speaking.png` | `portrait-nod-sleep` · 0 | 36,372 | 14,006 | 7,646 | 2,750 | 0.153, 0.232, 0.834, 0.797 |
+| `hop` | `still-hop.png` | `full-hop-flight` · 23 | 32,165 | 9,956 | 5,250 | 1,920 | 0.181, 0.289, 0.832, 0.808 |
+| `wave` | `still-wave.png` | `full-wave-bow` · 8 | 30,951 | 10,536 | 5,474 | 1,974 | 0.170, 0.161, 0.783, 0.777 |
+| `error` | `still-error.png` | `portrait-nod-sleep` · 8 | 28,652 | 11,988 | 6,326 | 2,262 | 0.153, 0.349, 0.785, 0.797 |
+| `offline` | `still-offline.png` | `portrait-doze` · 23 | 32,514 | 13,516 | 7,314 | 2,614 | 0.150, 0.255, 0.833, 0.795 |
 
 ## Playback atlases exported (resampled, lossless WebP, 6 × 4 cells)
 
@@ -53,11 +54,49 @@ Also in the source and **not ported**: `frames-v2/` (32 MB, superseded sources),
 | `atlas/stamp-peek.96.webp` | 96 | 60,786 | shipped: the 48 px composer peek at 2× |
 | `atlas/stamp-peek.128.webp` | 128 | 100,186 | evidence only: the companion sheet's 128 px inspection stage |
 
-Before the first answer completes, lazily by state: the welcome row's idle still at 128 px (8,130 B) + the newest row's idle still at 64 px (2,998 B) + `full-walk` + `portrait-nod-sleep` + `full-hop-flight` at 64 px (120,416 B) = **131,544 B**; with `stamp-peek` at 96 px (only if the student typed) **192,330 B**. Budget: 300 KB (brief done-when 7).
+Before the first answer completes, lazily by state: the welcome row's idle still at 128 px (8,130 B) + the newest row's idle still at 64 px (2,998 B) + `full-walk` + `portrait-nod-sleep` + `full-hop-flight` at 64 px (120,416 B) = **131,544 B**; `portrait-nod-sleep` and `full-hop-flight` are prefetched when `walk` begins, so the first answer can speak and hop (review A-6); with `stamp-peek` at 96 px (only if the student typed) **192,330 B**. Budget: 300 KB (brief done-when 7).
 
-The whole shipped set: the five avatar atlases at 64 px (208,456 B) + `stamp-peek` at 96 px (60,786 B) + the stills the placements load (63,854 B: 64 px: idle, walk, speaking, error, offline; 128 px: idle, error; 192 px: idle, walk, error) + the launcher glyph (1,748 B) = **334,844 B**.
+The whole shipped set: the five avatar atlases at 64 px (208,456 B) + `stamp-peek` at 96 px (60,786 B) + the stills the placements load (68,994 B: 64 px: idle, walk, speaking, error, offline; 128 px: idle, error, walk; 192 px: idle, walk, error) + the launcher glyph (1,752 B) = **339,988 B**.
 
-`launcher-glyph.svg`: 1,748 B.
+## Pixel-sampled colour extremes (for `check-tokens.mjs` § 20)
+
+Over every solid pixel (alpha ≥ 128) of each shipped asset, classified by the source's own mask rules (`registration.json`): the lightest and the darkest forest-class pixel, and the lightest tan-class pixel. The checker resolves the backing and the light surfaces from the tokens and asserts the lightest forest pixel of every asset still clears 3:1 on each.
+
+| Asset | Solid px | Forest px | Forest lightest | Forest darkest | Tan lightest |
+|---|---:|---:|---|---|---|
+| `atlas/full-walk.64.webp` | 17,696 | 16,562 | `#5f7767` | `#072614` | `#fdf6eb` |
+| `atlas/portrait-nod-sleep.64.webp` | 33,023 | 29,776 | `#627662` | `#042412` | `#fff8ec` |
+| `atlas/full-hop-flight.64.webp` | 17,075 | 15,926 | `#627b65` | `#072a11` | `#fff8eb` |
+| `atlas/full-wave-bow.64.webp` | 16,689 | 15,655 | `#627768` | `#0f2a18` | `#e2c8a7` |
+| `atlas/portrait-doze.64.webp` | 36,677 | 32,910 | `#637b68` | `#022611` | `#dccda6` |
+| `atlas/stamp-peek.96.webp` | 36,034 | 31,093 | `#5f7565` | `#071e0f` | `#fff8ef` |
+| `stills/idle.192.webp` | 14,550 | 13,065 | `#627260` | `#0c2e1a` | `#fcf5e7` |
+| `stills/idle.128.webp` | 6,471 | 5,804 | `#627866` | `#13301c` | `#fcf5e6` |
+| `stills/idle.64.webp` | 1,617 | 1,444 | `#576e5d` | `#13301d` | `#f6efe0` |
+| `stills/peek.192.webp` | 8,387 | 7,448 | `#627061` | `#0a2213` | `#fff8ef` |
+| `stills/peek.128.webp` | 3,745 | 3,322 | `#5f7060` | `#0a2314` | `#fff8ed` |
+| `stills/peek.64.webp` | 924 | 812 | `#5d6d5d` | `#0a2312` | `#fff5e9` |
+| `stills/retract.192.webp` | 2,742 | 2,048 | `#606d59` | `#051f0b` | `#fff7ec` |
+| `stills/retract.128.webp` | 1,220 | 910 | `#5f6d60` | `#0a2212` | `#f9f1e5` |
+| `stills/retract.64.webp` | 303 | 224 | `#5d6d5e` | `#0c2514` | `#fcf5ea` |
+| `stills/walk.192.webp` | 6,677 | 6,262 | `#5a715c` | `#052514` | `#f3ece0` |
+| `stills/walk.128.webp` | 2,966 | 2,781 | `#54634a` | `#062616` | `#f9f1e5` |
+| `stills/walk.64.webp` | 742 | 694 | `#4d6046` | `#0b2b1a` | `#dcc499` |
+| `stills/speaking.192.webp` | 12,675 | 11,385 | `#627360` | `#123020` | `#fff8ec` |
+| `stills/speaking.128.webp` | 5,632 | 5,057 | `#596650` | `#112f1f` | `#fff8ec` |
+| `stills/speaking.64.webp` | 1,407 | 1,261 | `#627461` | `#11321d` | `#fff8ea` |
+| `stills/hop.192.webp` | 6,331 | 5,890 | `#5f765e` | `#082913` | `#fff8ec` |
+| `stills/hop.128.webp` | 2,810 | 2,614 | `#5d725f` | `#092b15` | `#fff4e7` |
+| `stills/hop.64.webp` | 701 | 653 | `#5a6748` | `#0f321b` | `#debf9a` |
+| `stills/wave.192.webp` | 6,803 | 6,432 | `#5c6f5f` | `#0e2b19` | `#dac2a2` |
+| `stills/wave.128.webp` | 3,031 | 2,863 | `#516955` | `#112e1a` | `#e3c7a8` |
+| `stills/wave.64.webp` | 756 | 713 | `#485d4b` | `#142f1a` | `#e2c8a7` |
+| `stills/error.192.webp` | 10,339 | 9,333 | `#627762` | `#11311d` | `#fff7e9` |
+| `stills/error.128.webp` | 4,594 | 4,145 | `#61735e` | `#16321e` | `#fff8ed` |
+| `stills/error.64.webp` | 1,145 | 1,030 | `#60735f` | `#16321e` | `#fff7eb` |
+| `stills/offline.192.webp` | 13,048 | 11,833 | `#637561` | `#173722` | `#d3c5a2` |
+| `stills/offline.128.webp` | 5,798 | 5,255 | `#5e7766` | `#163620` | `#d5c4a2` |
+| `stills/offline.64.webp` | 1,451 | 1,309 | `#617764` | `#13351d` | `#d3c29f` |
 
 ## Every source file read
 

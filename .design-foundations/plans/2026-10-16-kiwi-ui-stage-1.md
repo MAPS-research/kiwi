@@ -2,7 +2,7 @@
 **Created:** 2026-10-16
 **Status:** in-progress
 **Started:** 2026-10-16 05:52
-**Current Phase:** 4
+**Current Phase:** 5
 **Workspace:** feature branch `feature/kiwi-ui-stage-1-design` (in place, repository root `/Users/nutshell/Documents/GitHub/kiwi`); base commit `ef65c1d`
 **Complexity:** complex (Full track)
 **Research:** `.design-foundations/research/2026-10-16-kiwi-ui-visual-refresh.md` (confirmed brief, G1–G15) · `.design-foundations/research/2026-10-16-kiwi-ui-tour.md` (current-state tour)
@@ -675,3 +675,19 @@ Summary: `kiwi-ui/DESIGN.md` `## Design system` specifies:
 - the raw-colour guard and allowlist, the email mapping, and governance.
 
 `.design-foundations/tokens/` holds the source, emitter, checker and generated outputs; 422 required contrast pairs pass. The six review Minors go to a follow-up commit before Phase 4.
+
+### Phase 4: Companion — the tutor mascot (Gate: Full)
+- [x] BUILD: discovery and production; the user picked timing and clips from GIF previews; one fix round.
+- [x] REVIEW: PASS in round 2 (0 Critical, 0 Major, 13 Minor). Round 1 failed on the peek/avatar hand-off at send and on failure and offline announcements.
+- [x] Committed
+Commit: 3e00b35
+Summary: `## Companion` specifies the tutor mascot:
+- nine states with trigger, exit, duration, interruption, still and text twin;
+- one mover, and the motion precedence flag > reduced motion > switch;
+- placements, with JOURNEY bullets on 12 pages;
+- the dark backing at 10:1;
+- announcements;
+- an asset budget of 131,544 B before the first answer;
+- an ethics pass.
+
+The user's choices: hop about 1 s, a shallow nod, a wave on like. Stills, atlases, the glyph, provenance and GIF previews are under `.design-foundations/mocks/`. Twelve review Minors go to a follow-up before Phase 5; A-7 (no reaction on dislike) waits for the user.

@@ -95,6 +95,46 @@
     "192": 14776,
     "128": 8130,
     "64": 2998
+   },
+   "ink": {
+    "canvasBox": [
+     14,
+     52,
+     243,
+     234
+    ],
+    "slotFractions": {
+     "left": 0.1529,
+     "top": 0.2282,
+     "right": 0.8563,
+     "bottom": 0.7872
+    }
+   },
+   "pixels": {
+    "192": {
+     "solidPixels": 14550,
+     "forestPixels": 13065,
+     "tanPixels": 1178,
+     "forestLightest": "#627260",
+     "forestDarkest": "#0c2e1a",
+     "tanLightest": "#fcf5e7"
+    },
+    "128": {
+     "solidPixels": 6471,
+     "forestPixels": 5804,
+     "tanPixels": 521,
+     "forestLightest": "#627866",
+     "forestDarkest": "#13301c",
+     "tanLightest": "#fcf5e6"
+    },
+    "64": {
+     "solidPixels": 1617,
+     "forestPixels": 1444,
+     "tanPixels": 126,
+     "forestLightest": "#576e5d",
+     "forestDarkest": "#13301d",
+     "tanLightest": "#f6efe0"
+    }
    }
   },
   {
@@ -107,6 +147,46 @@
     "192": 9346,
     "128": 5006,
     "64": 1964
+   },
+   "ink": {
+    "canvasBox": [
+     110,
+     68,
+     222,
+     232
+    ],
+    "slotFractions": {
+     "left": 0.3438,
+     "top": 0.1797,
+     "right": 0.7812,
+     "bottom": 0.8203
+    }
+   },
+   "pixels": {
+    "192": {
+     "solidPixels": 8387,
+     "forestPixels": 7448,
+     "tanPixels": 747,
+     "forestLightest": "#627061",
+     "forestDarkest": "#0a2213",
+     "tanLightest": "#fff8ef"
+    },
+    "128": {
+     "solidPixels": 3745,
+     "forestPixels": 3322,
+     "tanPixels": 316,
+     "forestLightest": "#5f7060",
+     "forestDarkest": "#0a2314",
+     "tanLightest": "#fff8ed"
+    },
+    "64": {
+     "solidPixels": 924,
+     "forestPixels": 812,
+     "tanPixels": 74,
+     "forestLightest": "#5d6d5d",
+     "forestDarkest": "#0a2312",
+     "tanLightest": "#fff5e9"
+    }
    }
   },
   {
@@ -119,6 +199,46 @@
     "192": 5466,
     "128": 3128,
     "64": 1230
+   },
+   "ink": {
+    "canvasBox": [
+     126,
+     68,
+     222,
+     208
+    ],
+    "slotFractions": {
+     "left": 0.4062,
+     "top": 0.1797,
+     "right": 0.7812,
+     "bottom": 0.7266
+    }
+   },
+   "pixels": {
+    "192": {
+     "solidPixels": 2742,
+     "forestPixels": 2048,
+     "tanPixels": 618,
+     "forestLightest": "#606d59",
+     "forestDarkest": "#051f0b",
+     "tanLightest": "#fff7ec"
+    },
+    "128": {
+     "solidPixels": 1220,
+     "forestPixels": 910,
+     "tanPixels": 271,
+     "forestLightest": "#5f6d60",
+     "forestDarkest": "#0a2212",
+     "tanLightest": "#f9f1e5"
+    },
+    "64": {
+     "solidPixels": 303,
+     "forestPixels": 224,
+     "tanPixels": 64,
+     "forestLightest": "#5d6d5e",
+     "forestDarkest": "#0c2514",
+     "tanLightest": "#fcf5ea"
+    }
    }
   },
   {
@@ -131,6 +251,46 @@
     "192": 10028,
     "128": 5140,
     "64": 1982
+   },
+   "ink": {
+    "canvasBox": [
+     46,
+     68,
+     250,
+     230
+    ],
+    "slotFractions": {
+     "left": 0.1563,
+     "top": 0.2182,
+     "right": 0.8574,
+     "bottom": 0.7749
+    }
+   },
+   "pixels": {
+    "192": {
+     "solidPixels": 6677,
+     "forestPixels": 6262,
+     "tanPixels": 344,
+     "forestLightest": "#5a715c",
+     "forestDarkest": "#052514",
+     "tanLightest": "#f3ece0"
+    },
+    "128": {
+     "solidPixels": 2966,
+     "forestPixels": 2781,
+     "tanPixels": 152,
+     "forestLightest": "#54634a",
+     "forestDarkest": "#062616",
+     "tanLightest": "#f9f1e5"
+    },
+    "64": {
+     "solidPixels": 742,
+     "forestPixels": 694,
+     "tanPixels": 38,
+     "forestLightest": "#4d6046",
+     "forestDarkest": "#0b2b1a",
+     "tanLightest": "#dcc499"
+    }
    }
   },
   {
@@ -143,6 +303,46 @@
     "192": 14006,
     "128": 7646,
     "64": 2750
+   },
+   "ink": {
+    "canvasBox": [
+     24,
+     60,
+     234,
+     234
+    ],
+    "slotFractions": {
+     "left": 0.1529,
+     "top": 0.2324,
+     "right": 0.8341,
+     "bottom": 0.7968
+    }
+   },
+   "pixels": {
+    "192": {
+     "solidPixels": 12675,
+     "forestPixels": 11385,
+     "tanPixels": 1143,
+     "forestLightest": "#627360",
+     "forestDarkest": "#123020",
+     "tanLightest": "#fff8ec"
+    },
+    "128": {
+     "solidPixels": 5632,
+     "forestPixels": 5057,
+     "tanPixels": 502,
+     "forestLightest": "#596650",
+     "forestDarkest": "#112f1f",
+     "tanLightest": "#fff8ec"
+    },
+    "64": {
+     "solidPixels": 1407,
+     "forestPixels": 1261,
+     "tanPixels": 114,
+     "forestLightest": "#627461",
+     "forestDarkest": "#11321d",
+     "tanLightest": "#fff8ea"
+    }
    }
   },
   {
@@ -155,6 +355,46 @@
     "192": 9956,
     "128": 5250,
     "64": 1920
+   },
+   "ink": {
+    "canvasBox": [
+     48,
+     61,
+     249,
+     221
+    ],
+    "slotFractions": {
+     "left": 0.1806,
+     "top": 0.2892,
+     "right": 0.8323,
+     "bottom": 0.808
+    }
+   },
+   "pixels": {
+    "192": {
+     "solidPixels": 6331,
+     "forestPixels": 5890,
+     "tanPixels": 366,
+     "forestLightest": "#5f765e",
+     "forestDarkest": "#082913",
+     "tanLightest": "#fff8ec"
+    },
+    "128": {
+     "solidPixels": 2810,
+     "forestPixels": 2614,
+     "tanPixels": 160,
+     "forestLightest": "#5d725f",
+     "forestDarkest": "#092b15",
+     "tanLightest": "#fff4e7"
+    },
+    "64": {
+     "solidPixels": 701,
+     "forestPixels": 653,
+     "tanPixels": 38,
+     "forestLightest": "#5a6748",
+     "forestDarkest": "#0f321b",
+     "tanLightest": "#debf9a"
+    }
    }
   },
   {
@@ -167,6 +407,46 @@
     "192": 10536,
     "128": 5474,
     "64": 1974
+   },
+   "ink": {
+    "canvasBox": [
+     60,
+     64,
+     229,
+     234
+    ],
+    "slotFractions": {
+     "left": 0.1702,
+     "top": 0.1611,
+     "right": 0.7827,
+     "bottom": 0.7772
+    }
+   },
+   "pixels": {
+    "192": {
+     "solidPixels": 6803,
+     "forestPixels": 6432,
+     "tanPixels": 283,
+     "forestLightest": "#5c6f5f",
+     "forestDarkest": "#0e2b19",
+     "tanLightest": "#dac2a2"
+    },
+    "128": {
+     "solidPixels": 3031,
+     "forestPixels": 2863,
+     "tanPixels": 127,
+     "forestLightest": "#516955",
+     "forestDarkest": "#112e1a",
+     "tanLightest": "#e3c7a8"
+    },
+    "64": {
+     "solidPixels": 756,
+     "forestPixels": 713,
+     "tanPixels": 30,
+     "forestLightest": "#485d4b",
+     "forestDarkest": "#142f1a",
+     "tanLightest": "#e2c8a7"
+    }
    }
   },
   {
@@ -179,6 +459,46 @@
     "192": 11988,
     "128": 6326,
     "64": 2262
+   },
+   "ink": {
+    "canvasBox": [
+     24,
+     96,
+     219,
+     234
+    ],
+    "slotFractions": {
+     "left": 0.1529,
+     "top": 0.3492,
+     "right": 0.7855,
+     "bottom": 0.7968
+    }
+   },
+   "pixels": {
+    "192": {
+     "solidPixels": 10339,
+     "forestPixels": 9333,
+     "tanPixels": 893,
+     "forestLightest": "#627762",
+     "forestDarkest": "#11311d",
+     "tanLightest": "#fff7e9"
+    },
+    "128": {
+     "solidPixels": 4594,
+     "forestPixels": 4145,
+     "tanPixels": 395,
+     "forestLightest": "#61735e",
+     "forestDarkest": "#16321e",
+     "tanLightest": "#fff8ed"
+    },
+    "64": {
+     "solidPixels": 1145,
+     "forestPixels": 1030,
+     "tanPixels": 91,
+     "forestLightest": "#60735f",
+     "forestDarkest": "#16321e",
+     "tanLightest": "#fff7eb"
+    }
    }
   },
   {
@@ -191,6 +511,46 @@
     "192": 13516,
     "128": 7314,
     "64": 2614
+   },
+   "ink": {
+    "canvasBox": [
+     20,
+     71,
+     226,
+     234
+    ],
+    "slotFractions": {
+     "left": 0.1503,
+     "top": 0.2547,
+     "right": 0.8331,
+     "bottom": 0.795
+    }
+   },
+   "pixels": {
+    "192": {
+     "solidPixels": 13048,
+     "forestPixels": 11833,
+     "tanPixels": 1057,
+     "forestLightest": "#637561",
+     "forestDarkest": "#173722",
+     "tanLightest": "#d3c5a2"
+    },
+    "128": {
+     "solidPixels": 5798,
+     "forestPixels": 5255,
+     "tanPixels": 461,
+     "forestLightest": "#5e7766",
+     "forestDarkest": "#163620",
+     "tanLightest": "#d5c4a2"
+    },
+    "64": {
+     "solidPixels": 1451,
+     "forestPixels": 1309,
+     "tanPixels": 114,
+     "forestLightest": "#617764",
+     "forestDarkest": "#13351d",
+     "tanLightest": "#d3c29f"
+    }
    }
   }
  ],
@@ -200,7 +560,15 @@
    "cell": 64,
    "file": "atlas/full-walk.64.webp",
    "bytes": 34942,
-   "use": "avatar"
+   "use": "avatar",
+   "pixels": {
+    "solidPixels": 17696,
+    "forestPixels": 16562,
+    "tanPixels": 898,
+    "forestLightest": "#5f7767",
+    "forestDarkest": "#072614",
+    "tanLightest": "#fdf6eb"
+   }
   },
   {
    "atlas": "full-walk",
@@ -214,7 +582,15 @@
    "cell": 64,
    "file": "atlas/portrait-nod-sleep.64.webp",
    "bytes": 50852,
-   "use": "avatar"
+   "use": "avatar",
+   "pixels": {
+    "solidPixels": 33023,
+    "forestPixels": 29776,
+    "tanPixels": 2547,
+    "forestLightest": "#627662",
+    "forestDarkest": "#042412",
+    "tanLightest": "#fff8ec"
+   }
   },
   {
    "atlas": "portrait-nod-sleep",
@@ -228,7 +604,15 @@
    "cell": 64,
    "file": "atlas/full-hop-flight.64.webp",
    "bytes": 34622,
-   "use": "avatar"
+   "use": "avatar",
+   "pixels": {
+    "solidPixels": 17075,
+    "forestPixels": 15926,
+    "tanPixels": 908,
+    "forestLightest": "#627b65",
+    "forestDarkest": "#072a11",
+    "tanLightest": "#fff8eb"
+   }
   },
   {
    "atlas": "full-hop-flight",
@@ -242,7 +626,15 @@
    "cell": 64,
    "file": "atlas/full-wave-bow.64.webp",
    "bytes": 34430,
-   "use": "avatar"
+   "use": "avatar",
+   "pixels": {
+    "solidPixels": 16689,
+    "forestPixels": 15655,
+    "tanPixels": 754,
+    "forestLightest": "#627768",
+    "forestDarkest": "#0f2a18",
+    "tanLightest": "#e2c8a7"
+   }
   },
   {
    "atlas": "full-wave-bow",
@@ -256,7 +648,15 @@
    "cell": 64,
    "file": "atlas/portrait-doze.64.webp",
    "bytes": 53610,
-   "use": "avatar"
+   "use": "avatar",
+   "pixels": {
+    "solidPixels": 36677,
+    "forestPixels": 32910,
+    "tanPixels": 2935,
+    "forestLightest": "#637b68",
+    "forestDarkest": "#022611",
+    "tanLightest": "#dccda6"
+   }
   },
   {
    "atlas": "portrait-doze",
@@ -270,7 +670,15 @@
    "cell": 96,
    "file": "atlas/stamp-peek.96.webp",
    "bytes": 60786,
-   "use": "peek"
+   "use": "peek",
+   "pixels": {
+    "solidPixels": 36034,
+    "forestPixels": 31093,
+    "tanPixels": 3914,
+    "forestLightest": "#5f7565",
+    "forestDarkest": "#071e0f",
+    "tanLightest": "#fff8ef"
+   }
   },
   {
    "atlas": "stamp-peek",
@@ -280,7 +688,63 @@
    "use": "stage"
   }
  ],
- "glyphBytes": 1748,
+ "glyphBytes": 1752,
+ "glyph": {
+  "bodyArea": 11466.4,
+  "billArea": 1290.6,
+  "wingArea": -432.8,
+  "eyeSweep": 0,
+  "reversedToMatchBody": [
+   "wing"
+  ]
+ },
+ "peekWall": {
+  "column": 222,
+  "fractionOfCanvas": 0.8672,
+  "frameLeftPercent": 13.28
+ },
+ "framing": {
+  "full-hop-flight": {
+   "cx": 146.5,
+   "cy": 126,
+   "scale": 0.83003190847445
+  },
+  "full-walk": {
+   "cx": 146,
+   "cy": 150,
+   "scale": 0.8798355627014727
+  },
+  "full-wave-bow": {
+   "cx": 151,
+   "cy": 157.5,
+   "scale": 0.9277835265599006
+  },
+  "portrait-blink": {
+   "cx": 127,
+   "cy": 140.5,
+   "scale": 0.7862688297336701
+  },
+  "portrait-doze": {
+   "cx": 125.5,
+   "cy": 145,
+   "scale": 0.8484632115135211
+  },
+  "portrait-nod-sleep": {
+   "cx": 131,
+   "cy": 142.5,
+   "scale": 0.8304032920387532
+  },
+  "portrait-turn": {
+   "cx": 125.5,
+   "cy": 139,
+   "scale": 0.8160039448611324
+  },
+  "stamp-peek": {
+   "cx": 150,
+   "cy": 150,
+   "scale": 1
+  }
+ },
  "beforeFirstAnswer": {
   "atlases64": 120416,
   "idleStill128": 8130,
@@ -291,9 +755,9 @@
  "shipped": {
   "atlases64": 208456,
   "peek96": 60786,
-  "stillsBytes": 63854,
-  "stillsList": "64 px: idle, walk, speaking, error, offline; 128 px: idle, error; 192 px: idle, walk, error",
-  "glyph": 1748,
-  "total": 334844
+  "stillsBytes": 68994,
+  "stillsList": "64 px: idle, walk, speaking, error, offline; 128 px: idle, error, walk; 192 px: idle, walk, error",
+  "glyph": 1752,
+  "total": 339988
  }
 }
