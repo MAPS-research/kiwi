@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kiwi UI — Ruled Folio swatch sheet (Phase 2 lock)</title>
+  <!-- Phase 2 swatch sheet, fix round 4 (pre-lock): the lock's pixel evidence (plan Lock-scope carve-out 2). The colour token block is the locked block of kiwi-ui/DESIGN.md, pasted verbatim; the type, space, radius and shadow custom properties restate DESIGN.md's Type and Space sections for this demo (Phase 3's generation spec reads them from DESIGN.md, not from here). -->
+  <!-- Every UI colour is a var(); the only literal hexes are the mascot artwork's flat palette (G11) and the black/white probes the ramp labels use to pick a legible annotation ink. -->
+  <!-- Fonts: Source Sans 3 from Google Fonts for this review render only (display=swap; the badge says if it fell back). Production self-hosts the face (DESIGN.md · Type). font-synthesis: none everywhere, so no faux bold or italic is ever synthesised; CJK emphasis is upright weight 600. The sheet's own chrome uses the system face so it does not pose as the product. -->
+  <!-- Signature move as locked: the ruler is a 1 px rule on the message region's left edge (CSS background) and 6 px ticks drawn per text block as generated content with a 1lh tile, so each block ticks its own lines; ticks sit at line-box tops. Nothing on the header, session bar or composer. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ===================== THE LOCKED BLOCK (kiwi-ui/DESIGN.md · Color tokens) ===================== */
+    :root {
+      --neutral-1: #fdfdfc; --neutral-2: #f9f9f7; --neutral-3: #f1f0ed; --neutral-4: #e9e8e4;
+      --neutral-5: #dfded8; --neutral-6: #d4d2cb; --neutral-7: #c6c3bb; --neutral-8: #adaba1;
+      --neutral-9: #bbb7ab; --neutral-10: #a8a599; --neutral-11: #65635c; --neutral-12: #2f2e2a;
+      --accent-1: #fafefb; --accent-2: #f4fbf6; --accent-3: #e6f5eb; --accent-4: #d9eee0;
+      --accent-5: #c9e7d3; --accent-6: #b7ddc4; --accent-7: #a2d1b2; --accent-8: #82ba96;
+      --accent-9: #84ca9e; --accent-10: #74b68d; --accent-11: #486d56; --accent-12: #203327;
+      --paper-1: #fefdf9; --paper-2: #faf9f3; --paper-3: #f4f1e4; --paper-4: #ede8d5;
+      --error-3: #ffebe9;   --error-9: #e1524f;   --error-11: #974843;
+      --success-3: #e0f8e0; --success-9: #5ad664; --success-11: #337437;
+      --warning-3: #f9f0dd; --warning-9: #dbb155; --warning-11: #76602f;
+      --info-3: #e3f3ff;    --info-9: #5baee5;    --info-11: #3d6886;
+      --background: var(--paper-3);
+      --surface: var(--paper-2);
+      --surface-hover: var(--neutral-3);
+      --surface-active: var(--neutral-4);
+      --border-subtle: var(--neutral-6);
+      --border: var(--neutral-7);
+      --border-strong: var(--neutral-8);
+      --text-secondary: var(--neutral-11);
+      --text: var(--neutral-12);
+      --accent-bg-subtle: var(--accent-3);
+      --accent-solid: var(--accent-12);
+      --accent-solid-hover: var(--accent-11);
+      --accent-on-solid: var(--neutral-1);
+      --accent-text: var(--accent-11);
+      --border-interactive: var(--neutral-11);
+      --focus-ring: var(--accent-11);
+      --shadow-ink: var(--accent-12);
+
+      /* type (DESIGN.md · Type), restated for the demo */
+      --font-ui: "Source Sans 3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+      --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "PingFang SC", "Microsoft YaHei", monospace;
+      --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 1rem; --text-lg: 1.125rem;
+      --text-xl: 1.25rem; --text-2xl: 1.5rem; --text-3xl: 1.875rem; --text-4xl: 2.25rem;
+      /* space, shape, depth (DESIGN.md · Space, shape, depth), restated for the demo */
+      --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 24px; --space-6: 32px; --space-7: 48px; --space-8: 64px;
+      --radius-control: 2px; --radius-sheet: 2px;
+      --shadow-1: 0 1px 2px color-mix(in oklab, var(--shadow-ink) 14%, transparent);
+      --shadow-2: 0 1px 2px color-mix(in oklab, var(--shadow-ink) 8%, transparent), 0 12px 32px -12px color-mix(in oklab, var(--shadow-ink) 26%, transparent);
+      /* the ruler: a hard-stop gradient is the only permitted gradient syntax, and only for rules and ticks */
+      --ruler-rule: linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 1px 100% no-repeat;
+      --ruler-ticks: linear-gradient(var(--border-strong) 0 1px, transparent 1px) 0 0 / 6px 1lh repeat-y;
+      /* sheet chrome only */
+      --font-chrome: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    [data-theme="dark"] {
+      --neutral-1: #131312; --neutral-2: #1a1918; --neutral-3: #232220; --neutral-4: #2b2a27;
+      --neutral-5: #33322e; --neutral-6: #3d3c36; --neutral-7: #4b4942; --neutral-8: #636057;
+      --neutral-9: #bbb7ab; --neutral-10: #cecbbe; --neutral-11: #b9b7b0; --neutral-12: #e9e8e3;
+      --accent-1: #111312; --accent-2: #161b18; --accent-3: #1a251e; --accent-4: #1e2f24;
+      --accent-5: #203929; --accent-6: #234430; --accent-7: #29533a; --accent-8: #386e4e;
+      --accent-9: #84ca9e; --accent-10: #9addb2; --accent-11: #9bc3a8; --accent-12: #d7efdf;
+      --paper-1: #131310; --paper-2: #1b1915; --paper-3: #252218; --paper-4: #2e2a1b;
+      --error-3: #331a18;   --error-9: #e1524f;   --error-11: #f49c95;
+      --success-3: #152715; --success-9: #5ad664; --success-11: #88cb8a;
+      --warning-3: #282113; --warning-9: #dbb155; --warning-11: #cdb482;
+      --info-3: #17242d;    --info-9: #5baee5;    --info-11: #90bedf;
+      --background: var(--paper-2);
+      --surface: var(--paper-3);
+      --surface-hover: var(--neutral-4);
+      --surface-active: var(--neutral-5);
+      --border-subtle: var(--neutral-6);
+      --border: var(--neutral-7);
+      --border-strong: var(--neutral-8);
+      --text-secondary: var(--neutral-11);
+      --text: var(--neutral-12);
+      --accent-bg-subtle: var(--accent-3);
+      --accent-solid: var(--accent-9);
+      --accent-solid-hover: var(--accent-10);
+      --accent-on-solid: #06100a;
+      --accent-text: var(--accent-11);
+      --border-interactive: var(--neutral-11);
+      --focus-ring: var(--accent-9);
+      --shadow-ink: #06100a;
+      /* composites that embed a mode token resolve where the property is declared: redeclared here so the dark subtree gets the dark ink */
+      --shadow-1: 0 1px 2px color-mix(in oklab, var(--shadow-ink) 14%, transparent);
+      --shadow-2: 0 1px 2px color-mix(in oklab, var(--shadow-ink) 8%, transparent), 0 12px 32px -12px color-mix(in oklab, var(--shadow-ink) 26%, transparent);
+      /* the ruler gradients embed the border-strong token, so they are redeclared here and the dark subtree paints the dark value (#636057), not the root's #adaba1 */
+      --ruler-rule: linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 1px 100% no-repeat;
+      --ruler-ticks: linear-gradient(var(--border-strong) 0 1px, transparent 1px) 0 0 / 6px 1lh repeat-y;
+      color-scheme: dark;
+    }
+
+    /* ===================== SHEET CHROME (system face; not the product) ===================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; font-synthesis: none; }
+    html { background: var(--neutral-1); }
+    body { font-family: var(--font-chrome); color: var(--text); font-size: 14px; line-height: 1.5; padding: 32px 40px 80px; max-width: 1400px; margin: 0 auto; }
+    h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.2; }
+    h2 { font-size: 20px; font-weight: 600; line-height: 1.25; margin: 0 0 10px; }
+    h3 { font-size: 13px; font-weight: 600; letter-spacing: 0.04em; color: var(--text-secondary); margin-bottom: 8px; }
+    p { margin-bottom: 8px; }
+    :not(pre) > code { font-family: var(--font-mono); font-size: 0.92em; background: var(--neutral-3); padding: 1px 4px; border-radius: 3px; }
+    pre code { font: inherit; background: none; padding: 0; }
+    .meta { color: var(--text-secondary); font-size: 13px; }
+    .lede { max-width: 96ch; }
+    .confirm { max-width: 96ch; font-size: 15px; line-height: 1.5; padding: 12px 14px; border-left: 3px solid var(--accent-solid); background: var(--surface); margin-top: 12px; }
+    .confirm b { font-weight: 600; }
+    header.sheet { border-bottom: 1px solid var(--border-subtle); padding-bottom: 20px; margin-bottom: 28px; }
+    section { margin-bottom: 44px; }
+    table.t { border-collapse: collapse; width: 100%; font-size: 13px; }
+    .t th, .t td { text-align: left; padding: 5px 10px 5px 0; border-bottom: 1px solid var(--neutral-5); vertical-align: top; }
+    .t th { font-weight: 600; color: var(--text-secondary); font-size: 12px; }
+    .num { font-variant-numeric: tabular-nums; }
+    .pass { color: var(--success-11); font-weight: 600; } .fail { color: var(--error-11); font-weight: 600; } .note { color: var(--text-secondary); } .info-row td { color: var(--text-secondary); }
+    .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px 40px; }
+    .two > * { min-width: 0; }
+    .strip { padding: 12px 14px; border-radius: 6px; border: 1px solid var(--border-subtle); background: var(--surface); min-width: 0; }
+    .strip[data-theme="dark"] { border-color: var(--border); }
+    .ramp { display: grid; grid-template-columns: 110px repeat(12, minmax(0, 1fr)); gap: 3px; margin-bottom: 6px; }
+    .ramp .lbl { font-size: 12px; color: var(--text-secondary); align-self: center; }
+    .ramp .cell { height: 52px; border-radius: 3px; position: relative; min-width: 0; overflow: hidden; }
+    .ramp .cell span { position: absolute; left: 3px; top: 3px; font: 10px/1 var(--font-mono); }
+    .ramp .cell em { position: absolute; left: 3px; bottom: 3px; font: 10px/11px var(--font-mono); font-style: normal; display: block; white-space: pre; }
+    .fn-row { display: grid; grid-template-columns: 110px repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 6px; }
+    .fn-row .lbl { font-size: 12px; color: var(--text-secondary); align-self: start; padding-top: 18px; }
+    .fn-group { min-width: 0; }
+    .fn-group .fn-h { font: 600 11px/14px var(--font-chrome); color: var(--text-secondary); margin-bottom: 4px; }
+    .fn { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; }
+    .fn .cell { height: 32px; border-radius: 3px; position: relative; min-width: 0; overflow: hidden; } .fn .cell span { position: absolute; left: 3px; top: 3px; font: 10px/1 var(--font-mono); }
+    .fn-hex { font: 10px/14px var(--font-mono); color: var(--text-secondary); margin-top: 3px; overflow-wrap: anywhere; }
+    .roles { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip { font-family: var(--font-mono); font-size: 11px; padding: 6px 8px; border-radius: 4px; min-width: 112px; line-height: 1.3; }
+    .chip small { display: block; font-size: 10px; line-height: 1.3; }
+    .sw { display: inline-grid; grid-template-columns: 14px 14px; gap: 2px; vertical-align: -3px; margin-right: 6px; }
+    .sw i { width: 14px; height: 14px; display: block; border-radius: 2px; border: 1px solid var(--neutral-5); }
+    svg.ic { width: 12px; height: 12px; flex: none; display: inline-block; vertical-align: -1px; }
+
+    /* ===================== RULED FOLIO IN ROLE ===================== */
+    .mode-col { background: var(--background); color: var(--text); font-family: var(--font-ui); padding: 24px; min-width: 0; } /* the canvas is full-bleed: no frame, no radius */
+    .mode-col .mode-label { font: 11px/15px var(--font-mono); color: var(--text-secondary); margin-bottom: 14px; }
+    .mode-col > * + * { margin-top: 20px; }
+    .mode-col h4 { font: 600 var(--text-sm)/20px var(--font-ui); color: var(--text-secondary); margin-bottom: 8px; }
+    .mode-col p { margin: 0; }
+
+    /* chat panel (SR-6 structure, Stage 1 skin). The ruler lives on the message region only. */
+    .panel { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sheet); overflow: hidden; width: 100%; max-width: 440px; }
+    .p-head { display: flex; align-items: center; justify-content: space-between; height: 52px; padding: 0 16px 0 24px; border-bottom: 1px solid var(--border-subtle); }
+    .p-title { font-size: var(--text-xl); line-height: 28px; font-weight: 600; }   /* --text-xl 20/28; tracking starts at --text-2xl */
+    .p-icons { display: inline-flex; gap: 10px; }
+    .p-icons i { width: 12px; height: 12px; border: 1.5px solid var(--text-secondary); border-radius: var(--radius-control); display: inline-block; }
+    .p-session { font-size: var(--text-xs); line-height: 16px; color: var(--text-secondary); padding: 8px 16px 8px 24px; border-bottom: 1px solid var(--border-subtle); }   /* --text-xs 12/16 */
+    .p-msgs { padding: 12px 0 12px; background: var(--ruler-rule); }                 /* the 1 px rule, full height of the message region */
+    .p-msgs .tick { position: relative; }                                              /* every text block ticks its own lines */
+    .p-msgs .tick::before { content: ""; position: absolute; top: 0; bottom: 0; width: 6px; background: var(--ruler-ticks); }
+    .msg { padding: 12px 16px 12px 24px; }
+    .msg p { font-size: var(--text-base); line-height: 24px; }
+    .msg-student { text-align: right; padding-left: 64px; }       /* as-is SR-6: the student's lines are right-aligned; ticked from the ruler, not seated on it */
+    .msg-student p { font-size: var(--text-lg); line-height: 28px; }   /* --text-lg 18/28: the student's question */
+    .msg-student p::before { left: -64px; }
+    .msg-tutor { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; align-items: start; }   /* 24 + 32 + 12: tutor text begins 68 px right of the ruler; the avatar is marginalia */
+    .avatar { width: 32px; height: 32px; border-radius: 24%; display: block; }
+    .mode-col .answer > * + * { margin-top: 12px; }   /* --space-3 between blocks inside a message; outranks the .mode-col p reset */
+    .answer p::before, .margin::before { left: -68px; }
+    .answer p.cjk { line-height: 28px; }
+    .answer strong { font-weight: 600; }
+    .code { position: relative; font-family: var(--font-mono); font-size: var(--text-sm); line-height: 24px; color: var(--text); border-left: 2px solid var(--border-strong); padding: 0 60px 0 12px; white-space: pre-wrap; overflow-wrap: normal; word-break: normal; }
+    .code::before { left: -70px; }
+    .code .lit { color: var(--accent-text); }
+    .code .copy { position: absolute; top: 0; right: 0; font: 600 var(--text-xs)/20px var(--font-ui); color: var(--accent-text); background: var(--surface); border: 1px solid var(--border-interactive); border-radius: var(--radius-control); padding: 0 8px; }
+    .margin { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; font-size: var(--text-xs); line-height: 16px; color: var(--text-secondary); margin-top: 12px; }   /* --text-xs 12/16: the citation row */
+    .cite { color: var(--accent-text); text-decoration: underline; text-underline-offset: 2px; font-variant-numeric: tabular-nums; }
+    .fb { display: inline-flex; gap: 6px; }
+    .fb i { width: 16px; height: 16px; border: 1px solid var(--border-interactive); border-radius: var(--radius-control); display: inline-grid; place-items: center; font: 600 10px/1 var(--font-ui); color: var(--text-secondary); font-style: normal; }   /* sized to the 16 px line so the row ticks once; Phase 3 sets real targets */
+    .p-composer { display: flex; gap: 8px; padding: 12px 16px 16px 24px; border-top: 1px solid var(--border-subtle); align-items: stretch; }
+    .input { flex: 1; min-height: 40px; border: 1px solid var(--border-interactive); border-radius: var(--radius-control); padding: 9px 12px; color: var(--text-secondary); font-size: var(--text-sm); line-height: 20px; background: var(--surface); }
+    .send { background: var(--accent-solid); color: var(--accent-on-solid); border: 0; border-radius: var(--radius-control); padding: 0 16px; font: 600 var(--text-sm) var(--font-ui); }
+
+    /* buttons */
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .btn { font: 600 var(--text-sm)/20px var(--font-ui); padding: 9px 16px; border-radius: var(--radius-control); border: 1px solid transparent; }
+    .btn-primary { background: var(--accent-solid); color: var(--accent-on-solid); }
+    .btn-primary.hover { background: var(--accent-solid-hover); }
+    .btn-secondary { background: var(--surface); color: var(--accent-text); border-color: var(--border-interactive); }
+    .btn-tertiary { background: transparent; color: var(--accent-text); }
+    .btn-tertiary.hover { background: var(--accent-bg-subtle); }
+    .btn-disabled { background: var(--surface-active); color: var(--text-secondary); border-color: var(--border); }
+    .btn.focus { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+    .btn .tag { font-weight: 400; }
+    .btn-help { font: var(--text-xs)/16px var(--font-ui); color: var(--text-secondary); }
+
+    /* form field */
+    .field { max-width: 420px; min-width: 0; }
+    .field label { display: block; font: 600 var(--text-sm)/20px var(--font-ui); margin-bottom: 6px; }
+    .field .ctl { display: block; width: 100%; border: 1px solid var(--border-interactive); border-radius: var(--radius-control); background: var(--surface); color: var(--text); font: var(--text-base)/24px var(--font-ui); padding: 7px 12px; overflow-wrap: anywhere; }
+    .field .ctl.placeholder { color: var(--text-secondary); }
+    .field .ctl.focus { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+    .field .ctl.error { border-color: var(--error-11); }
+    .field .help { font: var(--text-xs)/16px var(--font-ui); color: var(--text-secondary); margin-top: 6px; }
+    .field .help.err { color: var(--error-11); display: flex; gap: 6px; align-items: flex-start; }
+    .field .help.err svg.ic { margin-top: 2px; }
+    .fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+
+    /* hairline table: rules, not a card; it sits on the canvas */
+    .tbl { width: 100%; border-collapse: collapse; font: var(--text-sm)/20px var(--font-ui); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .tbl th { text-align: left; font-weight: 600; color: var(--text-secondary); padding: 8px 12px; border-bottom: 1px solid var(--border-subtle); }
+    .tbl td { padding: 8px 12px; border-bottom: 1px solid var(--border-subtle); vertical-align: middle; }
+    .tbl tr:last-child td { border-bottom: 0; }
+    .tbl tr.hover td { background: var(--surface-hover); }
+    .tbl tr.selected td { background: var(--accent-bg-subtle); }
+    .tbl tr.selected td:first-child { box-shadow: inset 2px 0 0 var(--accent-solid); }
+    .tbl .r { text-align: right; font-variant-numeric: tabular-nums; }
+    .tbl a { color: var(--accent-text); text-decoration: underline; text-underline-offset: 2px; }
+
+    /* status and chips: -3 surface, -11 icon + label */
+    .status { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px 2px 6px; border-radius: var(--radius-control); font: 600 var(--text-xs)/16px var(--font-ui); white-space: nowrap; }
+    .status.ok { background: var(--success-3); color: var(--success-11); }
+    .status.warn { background: var(--warning-3); color: var(--warning-11); }
+    .status.err { background: var(--error-3); color: var(--error-11); }
+    .status.info { background: var(--info-3); color: var(--info-11); }
+    .status.neutral { background: var(--surface-active); color: var(--text-secondary); }
+    .status .ratio { font-weight: 400; }
+    .chip-ui { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: var(--radius-control); font: var(--text-xs)/18px var(--font-ui); border: 1px solid var(--border-interactive); color: var(--text); background: var(--surface); }
+    .chip-ui.selected { background: var(--accent-bg-subtle); color: var(--accent-text); border-color: var(--accent-text); font-weight: 600; }
+    .chip-ui.role { background: var(--surface-active); border-color: transparent; color: var(--text); } /* a label, not a control: no boundary */
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+    /* type specimen: a reading column, so it carries the ruler too; every block ticks its own leading */
+    .specimen { font-family: var(--font-ui); background: var(--surface); color: var(--text); border: 1px solid var(--border-subtle); border-radius: var(--radius-sheet); padding: 24px 28px 18px 24px; position: relative; background-image: var(--ruler-rule); min-width: 0; }   /* text 24 px from the rule: a single-column reading surface */
+    .specimen .badge { position: absolute; top: 10px; right: 12px; font: 11px var(--font-mono); color: var(--text-secondary); background: var(--background); padding: 3px 8px; border-radius: 3px; }
+    .specimen .tick { position: relative; }
+    .specimen .tick::before { content: ""; position: absolute; left: -24px; top: 0; bottom: 0; width: 6px; background: var(--ruler-ticks); }
+    .specimen .h4xl { font-size: var(--text-4xl); line-height: 44px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 4px; }
+    .specimen .h2xl { font-size: var(--text-2xl); line-height: 32px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 16px; }
+    .specimen .deck { font-size: var(--text-lg); line-height: 28px; color: var(--text-secondary); margin-bottom: 20px; }
+    .specimen .body { font-size: var(--text-base); line-height: 24px; max-width: 68ch; margin-bottom: 12px; }
+    .specimen .cjk { font-size: var(--text-base); line-height: 28px; max-width: 36em; margin-bottom: 12px; }
+    .specimen .ital { font-size: var(--text-base); font-style: italic; line-height: 24px; margin-bottom: 12px; }
+    .specimen .cjk-em { font-size: var(--text-base); line-height: 28px; max-width: 36em; margin-bottom: 12px; }
+    .specimen .cjk-em strong, .specimen .cjk-em em { font-style: normal; font-weight: 600; }   /* CJK has no italic: emphasis is upright weight 600 */
+    .specimen .nums { font-size: var(--text-base); font-variant-numeric: tabular-nums; line-height: 24px; display: grid; grid-template-columns: max-content max-content max-content; gap: 0 28px; margin-bottom: 12px; }
+    .specimen .nums span { text-align: right; } .specimen .nums .lab { text-align: left; color: var(--text-secondary); font-size: var(--text-sm); }
+    .specimen .small { font-size: var(--text-sm); line-height: 20px; color: var(--text-secondary); margin-bottom: 4px; }
+    .specimen .xs { font-size: var(--text-xs); line-height: 16px; color: var(--text-secondary); }
+    .specimen .stack { font: 11px/16px var(--font-mono); color: var(--text-secondary); margin-top: 12px; border-top: 1px solid var(--border-subtle); padding-top: 8px; overflow-wrap: anywhere; }
+    .scale { font-family: var(--font-ui); }
+    .scale .row { display: grid; grid-template-columns: 120px minmax(0, 1fr) 150px; gap: 16px; align-items: baseline; border-bottom: 1px solid var(--neutral-5); padding: 6px 0; }
+    .scale .row code { font-size: 11px; } .scale .row .u { font: 12px var(--font-chrome); color: var(--text-secondary); }
+
+    /* lh support floor (Chrome/Edge 109, Safari 16.4, Firefox 120): below it the rule stays and the ticks are not drawn */
+    @supports not (background-size: 1lh) { .tick::before { display: none; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+    }
+    @media (max-width: 1180px) { .two { grid-template-columns: minmax(0, 1fr); } .fields { grid-template-columns: minmax(0, 1fr); } }
+  </style>
+</head>
+<body>
+  <!-- Mascot artwork (kiwi-ui/public/favicon.svg, idle icon pose), exact colours per G11. Decorative here. Status icons: -11 shape cues (G1 icon + label). -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <clipPath id="kiwi-clip"><rect width="160" height="160" rx="35"/></clipPath>
+      <symbol id="kiwi-avatar" viewBox="0 0 160 160">
+        <rect width="160" height="160" rx="35" fill="#92ae70"/>
+        <g clip-path="url(#kiwi-clip)">
+          <path fill="#234631" d="M-12 160V92C4 99 12 83 20 72C33 54 50 47 66 51C87 56 101 74 99 91C98 107 80 118 80 133L82 170Z"/>
+          <path fill="#234631" d="M25 73C33 51 51 45 68 51C86 56 100 73 99 89C98 108 78 121 58 114C40 108 23 94 25 73Z"/>
+          <path fill="#ccbd99" d="M97 68L146 56C151 55 153 59 148 62L103 77C98 79 95 73 97 68Z"/>
+          <circle fill="#f5f4e8" cx="76" cy="78" r="5.5"/>
+        </g>
+      </symbol>
+      <symbol id="ic-check" viewBox="0 0 12 12"><path d="M2.5 6.5l2.4 2.4 4.6-5.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="ic-warn" viewBox="0 0 12 12"><path d="M6 1.6L11 10.4H1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M6 4.8v2.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="6" cy="8.9" r=".85" fill="currentColor"/></symbol>
+      <symbol id="ic-cross" viewBox="0 0 12 12"><path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+      <symbol id="ic-info" viewBox="0 0 12 12"><circle cx="6" cy="6" r="4.7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6 5.6v2.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="6" cy="3.7" r=".85" fill="currentColor"/></symbol>
+      <symbol id="ic-progress" viewBox="0 0 12 12"><circle cx="6" cy="6" r="4.2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="14 12" stroke-linecap="round"/></symbol>
+    </defs>
+  </svg>
+
+  <template id="role-tpl">
+    <div class="mode-col">
+      <div class="mode-label"><span class="ml-left"></span><br><span class="ml-right"></span></div>
+      <div>
+        <h4>Chat (SR-6 structure, Stage 1 skin). The ruler ticks each block at its own leading: Latin 24 px, Chinese 28 px, code 24 px. Tutor text begins 68 px right of the ruler (the 32 px avatar and its 12 px gap are the margin); the student's lines are right-aligned as today and are ticked, not seated.</h4>
+        <div class="panel">
+          <header class="p-head"><span class="p-title">Kiwi Chat</span><span class="p-icons" aria-hidden="true"><i></i><i></i><i></i></span></header>
+          <div class="p-session">Current session · 3 messages</div>
+          <div class="p-msgs">
+            <div class="msg msg-student"><p class="tick">Why does my loss go up after a few steps of gradient descent? 学习率是不是太大了？</p></div>
+            <div class="msg msg-tutor">
+              <svg class="avatar" aria-hidden="true" focusable="false"><use href="#kiwi-avatar"/></svg>
+              <div>
+                <div class="answer">
+                  <p class="tick">Most likely, yes. When the learning rate is too large, every step <em>overshoots</em> the minimum and the loss climbs instead of settling. Try a tenth of the current value and watch the first 50 steps:</p>
+                  <pre class="code tick"><code>optimizer = torch.optim.SGD(model.parameters(), lr=<span class="lit">0.01</span>)</code><span class="copy">Copy</span></pre>
+                  <p class="cjk tick">如果 50 步之后损失仍在上升，再检查一次<strong>梯度的符号</strong>和数据的尺度，再决定是否继续调整学习率。</p>
+                </div>
+                <div class="margin tick"><a class="cite" href="#">[Page 12]</a><span class="fb" aria-hidden="true"><i>+</i><i>−</i><i>!</i></span></div>
+              </div>
+            </div>
+          </div>
+          <footer class="p-composer"><div class="input">Ask Kiwi…</div><button class="send" type="button">Send</button></footer>
+        </div>
+      </div>
+      <div>
+        <h4>Buttons (one filled primary per region)</h4>
+        <div class="btn-row">
+          <span class="btn btn-primary">Save class</span>
+          <span class="btn btn-primary hover">Save class <span class="tag">(hover)</span></span>
+          <span class="btn btn-secondary">Cancel</span>
+          <span class="btn btn-tertiary">Export CSV</span>
+          <span class="btn btn-tertiary hover">Export CSV <span class="tag">(hover)</span></span>
+          <span class="btn btn-disabled">Enroll users</span>
+          <span class="btn btn-secondary focus">Cancel <span class="tag">(focus)</span></span>
+        </div>
+        <p class="btn-help" style="margin-top:8px">Disabled states say why in Phase 3 (here: “Enter at least one email first”).</p>
+      </div>
+      <div>
+        <h4>Form fields (border-interactive boundary; focus ring 2 px at 2 px offset)</h4>
+        <div class="fields">
+          <div class="field"><label>Class name</label><div class="ctl">Computational Social Science</div><div class="help">Shown on the course list and in the top bar.</div></div>
+          <div class="field"><label>Student emails</label><div class="ctl focus placeholder">name@university.edu, one per line</div><div class="help">Focused: the ring is the only focus signal.</div></div>
+          <div class="field"><label>Webhook URL</label><div class="ctl error">http//example.org/hook</div><div class="help err"><svg class="ic" aria-hidden="true"><use href="#ic-cross"/></svg><span>The URL needs a scheme, such as https://. Add it and save again.</span></div></div>
+          <div class="field"><label>Instructions (optional)</label><div class="ctl placeholder">Tell students how to use the tutor…</div><div class="help">Optional. Students see it on the class page.</div></div>
+        </div>
+      </div>
+      <div>
+        <h4>Hairline table (compact density, tabular numerals, status with icon + label)</h4>
+        <table class="tbl">
+          <thead><tr><th>Student</th><th>Role</th><th>Status</th><th class="r">Questions</th><th class="r">Last active</th></tr></thead>
+          <tbody>
+            <tr><td><a href="#">Lin Yue</a></td><td><span class="chip-ui role">Student</span></td><td><span class="status ok"><svg class="ic" aria-hidden="true"><use href="#ic-check"/></svg>Registered</span></td><td class="r">1,024</td><td class="r">2026-10-14 18:45</td></tr>
+            <tr class="hover"><td><a href="#">Mateo Ruiz</a></td><td><span class="chip-ui role">Student</span></td><td><span class="status warn"><svg class="ic" aria-hidden="true"><use href="#ic-warn"/></svg>Pending</span></td><td class="r">207</td><td class="r">2026-10-12 19:30</td></tr>
+            <tr class="selected"><td><a href="#">Sarah Okafor</a></td><td><span class="chip-ui role">Instructor</span></td><td><span class="status neutral"><svg class="ic" aria-hidden="true"><use href="#ic-progress"/></svg>Importing…</span></td><td class="r">16,384</td><td class="r">2026-10-16 14:30</td></tr>
+            <tr><td><a href="#">Wei Zhang</a></td><td><span class="chip-ui role">Student</span></td><td><span class="status err"><svg class="ic" aria-hidden="true"><use href="#ic-cross"/></svg>Failed</span></td><td class="r">0</td><td class="r">never</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h4>Chips and status (functional -3 surface, -11 icon + label; in-progress is neutral; filter chips carry the border-interactive boundary, selected shows the accent)</h4>
+        <div class="chip-row status-chips"></div>
+        <div class="chip-row" style="margin-top:10px"><span class="chip-ui">All</span><span class="chip-ui selected">Lectures</span><span class="chip-ui">Recitations</span><span class="chip-ui role">Instructor</span><span class="chip-ui role">Admin</span></div>
+      </div>
+    </div>
+  </template>
+
+  <header class="sheet">
+    <p class="meta">Kiwi UI refresh · Stage 1 · Phase 2 lock · fix round 4 (pre-lock) · 2026-10-16 · the pixel evidence for <code>kiwi-ui/DESIGN.md</code> (DW-2.2)</p>
+    <h1>Ruled Folio: swatch sheet</h1>
+    <p class="lede">The picked candidate ("用细线书页"), as dealt: Editorial Minimalism × Editorial Spread, signature <b>baseline-ruler</b>, face <b>Source Sans 3</b>, pins hue 156 · chroma muted. Tokens come from three recorded <code>palette.mjs</code> runs (seed 156 muted → accent; seed 95 muted → cream/tan neutrals and the paper canvas steps; seed 156 balanced → functional colours), spliced into one block with per-mode aliases: in light the filled control is <b>forest</b> (<code>--accent-solid</code> = <code>--accent-12</code>), in dark it is <b>sage</b> (<code>--accent-9</code>). Every number on this page is computed from the token values in the page itself.</p>
+    <p class="lede meta" id="font-report">Font: checking…</p>
+    <p class="confirm"><b>What to confirm by eye:</b> the canvas reads as warm paper, not grey, in light; the dark canvas reads warm, not black; the forest Send in light and the sage Send in dark both look like the one button on the panel; Latin and Chinese sit in one texture in Source Sans 3 with the system CJK fonts, and Chinese emphasis is upright and heavier, never slanted; the status colours read as status beside the sage/forest accent; the ruler's ticks sit at the top of every line of the answer, in the Latin block (24 px) and the Chinese block (28 px) alike, and the ruler stops at the message region.</p>
+  </header>
+
+  <section aria-labelledby="ramps-h">
+    <h2 id="ramps-h">Both ramps, the paper steps and the functional colours</h2>
+    <div class="two">
+      <div><h3>Light</h3><div class="strip" id="ramps-light"></div></div>
+      <div><h3>Dark</h3><div class="strip" data-theme="dark" id="ramps-dark"></div></div>
+    </div>
+    <p class="meta" id="g1-line" style="margin-top:12px"></p>
+    <p class="meta">Step 9 of every ramp is the solid (the hue's chroma cusp), not a mid-step, so steps 8 → 9 → 10 are not monotonic in lightness; no role uses <code>--neutral-9</code> or <code>--neutral-10</code>, and they are not published as role tokens.</p>
+  </section>
+
+  <section aria-labelledby="roles-h">
+    <h2 id="roles-h">Aliases in role (live ratios)</h2>
+    <div class="two">
+      <div><h3>Light</h3><div class="strip roles-light"></div></div>
+      <div><h3>Dark</h3><div class="strip roles-dark" data-theme="dark"></div></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="pairs-h">
+    <h2 id="pairs-h">Contrast: explicit pairs on the locked roles</h2>
+    <p class="meta">Targets: 7:1 for body text on canvas and sheet, 4.5:1 for other text, 3:1 non-text. The functional text pairs <code>palette.mjs</code> does not report (<code>-11</code> on <code>neutral-2</code> and on its own <code>-3</code>) are here, both modes (DW-2.3). The rows under "Informational" are not requirements: they are palette.mjs defaults the roles do not use for that purpose, kept visible so the role decisions stay checkable; they are labelled in neutral ink and never counted.</p>
+    <div class="two">
+      <div><h3>Light <span class="note" id="sum-light"></span></h3><table class="t" id="pairs-light"><thead><tr><th>Pair</th><th>Values</th><th>Ratio</th><th>Target</th><th></th></tr></thead><tbody></tbody></table></div>
+      <div><h3>Dark <span class="note" id="sum-dark"></span></h3><table class="t" id="pairs-dark"><thead><tr><th>Pair</th><th>Values</th><th>Ratio</th><th>Target</th><th></th></tr></thead><tbody></tbody></table></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="type-h">
+    <h2 id="type-h">Type: Source Sans 3 with the CJK stack, on the ruler (each block ticks its own leading)</h2>
+    <div class="two">
+      <div class="specimen">
+        <span class="badge">font: checking…</span>
+        <div class="h4xl tick">Learn with the course beside you</div>
+        <div class="h2xl tick">Gradient descent, step by step</div>
+        <div class="deck tick">A tutor that reads the course with you — 一位和你一起读课件的助教</div>
+        <p class="body tick">Students read long answers that mix prose, math, code and citations. The measure stays between 60 and 75 characters where the width allows, and the leading opens from 24 to 28 px when a block turns Chinese; the ruler follows each block's own lines.</p>
+        <p class="cjk tick">学习率太大时，每一步都会越过最低点，损失反而上升。先把它调到原来的十分之一，观察前 50 步的变化，再决定是否继续调整。</p>
+        <p class="ital tick">Authentic italic — the face carries its own, not a slanted roman, and nothing is ever synthesised.</p>
+        <p class="cjk-em tick">中文没有斜体：强调用<strong>字重 600</strong>，不用倾斜。<em>生成的斜体</em>在中文块里也保持直立。</p>
+        <div class="nums tick"><span class="lab">Tabular figures</span><span>1,024</span><span>14:30</span><span class="lab">right-aligned in tables</span><span>16,384</span><span>2026-10-16</span><span class="lab">counts stay in columns</span><span>207</span><span>18:45</span></div>
+        <p class="small tick">Secondary text at 14 px · Materials · Scratchpad · Enroll students · 课程材料</p>
+        <p class="xs tick">Labels at 12 px · Current session · 3 messages · [Page 12]</p>
+        <p class="stack">font-family: "Source Sans 3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif · weights 400 / 600 · italic 400 (Latin only) · font-synthesis: none · tabular-nums on tables · production self-hosts the face</p>
+      </div>
+      <div class="specimen" data-theme="dark">
+        <span class="badge">dark</span>
+        <div class="h4xl tick">Learn with the course beside you</div>
+        <div class="h2xl tick">Gradient descent, step by step</div>
+        <div class="deck tick">A tutor that reads the course with you — 一位和你一起读课件的助教</div>
+        <p class="body tick">Students read long answers that mix prose, math, code and citations. The measure stays between 60 and 75 characters where the width allows, and the leading opens from 24 to 28 px when a block turns Chinese; the ruler follows each block's own lines.</p>
+        <p class="cjk tick">学习率太大时，每一步都会越过最低点，损失反而上升。先把它调到原来的十分之一，观察前 50 步的变化，再决定是否继续调整。</p>
+        <p class="ital tick">Authentic italic — the face carries its own, not a slanted roman, and nothing is ever synthesised.</p>
+        <p class="cjk-em tick">中文没有斜体：强调用<strong>字重 600</strong>，不用倾斜。<em>生成的斜体</em>在中文块里也保持直立。</p>
+        <div class="nums tick"><span class="lab">Tabular figures</span><span>1,024</span><span>14:30</span><span class="lab">right-aligned in tables</span><span>16,384</span><span>2026-10-16</span><span class="lab">counts stay in columns</span><span>207</span><span>18:45</span></div>
+        <p class="small tick">Secondary text at 14 px · Materials · Scratchpad · Enroll students · 课程材料</p>
+        <p class="xs tick">Labels at 12 px · Current session · 3 messages · [Page 12]</p>
+        <p class="stack">Off-white text #e9e8e3 on the warm dark sheet #252218, 12.96:1</p>
+      </div>
+    </div>
+    <h3 style="margin-top:20px">The scale</h3>
+    <div class="scale">
+      <div class="row"><code>--text-4xl</code><span style="font-size:var(--text-4xl);line-height:44px;font-weight:600;letter-spacing:-0.01em">Sign-in display line</span><span class="u">36 / 44 · sign-in only</span></div>
+      <div class="row"><code>--text-3xl</code><span style="font-size:var(--text-3xl);line-height:36px;font-weight:600;letter-spacing:-0.01em">Your classes</span><span class="u">30 / 36 · course-list header</span></div>
+      <div class="row"><code>--text-2xl</code><span style="font-size:var(--text-2xl);line-height:32px;font-weight:600;letter-spacing:-0.01em">Enroll students</span><span class="u">24 / 32 · page headings</span></div>
+      <div class="row"><code>--text-xl</code><span style="font-size:var(--text-xl);line-height:28px;font-weight:600">Kiwi Chat</span><span class="u">20 / 28 · panel and dialog titles</span></div>
+      <div class="row"><code>--text-lg</code><span style="font-size:var(--text-lg);line-height:28px">Why does my loss go up after a few steps?</span><span class="u">18 / 28 · decks, the student's question</span></div>
+      <div class="row"><code>--text-base</code><span style="font-size:var(--text-base);line-height:24px">Most likely, yes. When the learning rate is too large, every step overshoots the minimum.</span><span class="u">16 / 24 · reading (CJK 28)</span></div>
+      <div class="row"><code>--text-sm</code><span style="font-size:var(--text-sm);line-height:20px">Materials · Scratchpad · Save class · 1,024 questions</span><span class="u">14 / 20 · tool chrome, tables</span></div>
+      <div class="row"><code>--text-xs</code><span style="font-size:var(--text-xs);line-height:16px">Current session · 3 messages · [Page 12] · 2026-10-16</span><span class="u">12 / 16 · labels, timestamps</span></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="role-h">
+    <h2 id="role-h">Ruled Folio in role: light and dark</h2>
+    <div class="two">
+      <div class="role-slot" data-mode="light"></div>
+      <div class="role-slot" data-mode="dark" data-theme="dark"></div>
+    </div>
+  </section>
+
+  <footer class="meta">
+    <p>Regeneration: run the three <code>palette.mjs</code> commands, splice the named ramps, apply the per-mode aliases (<code>kiwi-ui/DESIGN.md</code> · Color tokens). Mascot artwork: <code>kiwi-ui/public/favicon.svg</code>, exact colours (G11); its states and motion are Phase 4. Montserrat appears nowhere on this sheet (it lives only in the wordmark).</p>
+  </footer>
+
+  <script>
+    (function () {
+      const hexToRgb = (h) => { h = h.trim().replace('#', ''); if (h.length === 3) h = h.split('').map((c) => c + c).join(''); return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16) / 255); };
+      const lum = (rgb) => { const [r, g, b] = rgb.map((c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4))); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+      const ratio = (a, b) => { const [x, y] = [lum(hexToRgb(a)), lum(hexToRgb(b))].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+      const oklch = (hex) => {
+        const lin = hexToRgb(hex).map((x) => (x <= 0.04045 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4)));
+        const l = 0.4122214708 * lin[0] + 0.5363325363 * lin[1] + 0.0514459929 * lin[2];
+        const m = 0.2119034982 * lin[0] + 0.6806995451 * lin[1] + 0.1073969566 * lin[2];
+        const s = 0.0883024619 * lin[0] + 0.2817188376 * lin[1] + 0.6299787005 * lin[2];
+        const l_ = Math.cbrt(l), m_ = Math.cbrt(m), s_ = Math.cbrt(s);
+        const L = 0.2104542553 * l_ + 0.793617785 * m_ - 0.0040720468 * s_;
+        const a = 1.9779984951 * l_ - 2.428592205 * m_ + 0.4505937099 * s_;
+        const bb = 0.0259040371 * l_ + 0.7827717662 * m_ - 0.808675766 * s_;
+        let H = (Math.atan2(bb, a) * 180) / Math.PI; if (H < 0) H += 360;
+        return { L, C: Math.hypot(a, bb), H };
+      };
+      const tok = (el, name) => getComputedStyle(el).getPropertyValue(name).trim();
+      const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
+      const svgNS = 'http://www.w3.org/2000/svg', xlink = 'http://www.w3.org/1999/xlink';
+      const icon = (id) => { const s = document.createElementNS(svgNS, 'svg'); s.setAttribute('class', 'ic'); s.setAttribute('aria-hidden', 'true'); const u = document.createElementNS(svgNS, 'use'); u.setAttribute('href', `#${id}`); u.setAttributeNS(xlink, 'xlink:href', `#${id}`); s.appendChild(u); return s; };
+      // Annotation ink for swatches: pure black or white, whichever reads better (sheet chrome, not a product token).
+      const labelInk = (v) => (ratio(v, '#000000') > ratio(v, '#ffffff') ? '#000000' : '#ffffff');
+
+      const light = document.documentElement;
+      const dark = document.getElementById('ramps-dark');
+
+      // ---- ramps (hex printed in two 3-character lines so the label never widens a cell) ----
+      function rampRow(scope, label, prefix, n = 12) {
+        const row = el('div', 'ramp'); if (n !== 12) row.style.gridTemplateColumns = `110px repeat(${n}, minmax(0, 1fr))`;
+        row.appendChild(el('div', 'lbl', label));
+        for (let i = 1; i <= n; i++) {
+          const v = tok(scope, `--${prefix}-${i}`);
+          const c = el('div', 'cell'); c.style.background = v; c.title = `--${prefix}-${i}: ${v}`;
+          const s = el('span', '', `${i}`); s.style.color = labelInk(v); c.appendChild(s);
+          const h = v.slice(1); const e = el('em', '', `${h.slice(0, 3)}\n${h.slice(3)}`); e.style.color = labelInk(v); c.appendChild(e);
+          row.appendChild(c);
+        }
+        return row;
+      }
+      function fnRow(scope) {
+        const row = el('div', 'fn-row'); row.appendChild(el('div', 'lbl', 'functional 3 · 9 · 11'));
+        for (const f of ['error', 'success', 'warning', 'info']) {
+          const g = el('div', 'fn-group'); g.appendChild(el('div', 'fn-h', f));
+          const cells = el('div', 'fn'); const hexes = [];
+          for (const s of [3, 9, 11]) {
+            const v = tok(scope, `--${f}-${s}`); const c = el('div', 'cell'); c.style.background = v; c.title = `--${f}-${s}: ${v}`;
+            const sp = el('span', '', `${s}`); sp.style.color = labelInk(v); c.appendChild(sp); cells.appendChild(c);
+            hexes.push(`${s} ${v.slice(1)}`);
+          }
+          g.appendChild(cells); g.appendChild(el('div', 'fn-hex', hexes.join(' · '))); row.appendChild(g);
+        }
+        return row;
+      }
+      for (const [target, scope] of [[document.getElementById('ramps-light'), light], [dark, dark]]) {
+        target.appendChild(rampRow(scope, 'accent (run A, h156)', 'accent'));
+        target.appendChild(rampRow(scope, 'neutral (run B, h95)', 'neutral'));
+        target.appendChild(rampRow(scope, 'paper (run B accent 1–4)', 'paper', 4));
+        target.appendChild(fnRow(scope));
+      }
+
+      // ---- G1 ----
+      (function () {
+        const s9 = tok(light, '--success-9'), a9 = tok(light, '--accent-9'), a12 = tok(light, '--accent-12');
+        const f = (h) => { const o = oklch(h); return `${h} (L ${o.L.toFixed(3)} C ${o.C.toFixed(3)} H ${o.H.toFixed(1)})`; };
+        const S = oklch(s9), A9 = oklch(a9), A12 = oklch(a12);
+        document.getElementById('g1-line').textContent = `G1, success vs primary: --success-9 ${f(s9)} · dark filled control --accent-9 ${f(a9)} → ${(S.C / A9.C).toFixed(1)}× its chroma · light filled control --accent-12 ${f(a12)} → ${(S.C / A12.C).toFixed(1)}× · hue offset ${(A9.H - S.H).toFixed(1)}°. Holds in both modes.`;
+      })();
+
+      // ---- roles in chips ----
+      const ROLES = ['background', 'surface', 'surface-hover', 'surface-active', 'text', 'text-secondary', 'accent-text', 'accent-solid', 'accent-solid-hover', 'accent-on-solid', 'border-interactive', 'focus-ring', 'border-subtle', 'border', 'border-strong', 'accent-bg-subtle', 'shadow-ink'];
+      function rolesInto(box, scope) {
+        box.style.background = tok(scope, '--background');
+        const wrap = el('div', 'roles');
+        const bg = tok(scope, '--background'), sheet = tok(scope, '--surface');
+        for (const r of ROLES) {
+          const v = tok(scope, `--${r}`); const chip = el('div', 'chip'); chip.textContent = `--${r} ${v}`;
+          if (r === 'accent-on-solid') { chip.style.background = tok(scope, '--accent-solid'); chip.style.color = v; chip.appendChild(el('small', '', `${ratio(v, tok(scope, '--accent-solid')).toFixed(2)}:1 on accent-solid`)); }
+          else if (['accent-solid', 'accent-solid-hover'].includes(r)) { chip.style.background = v; chip.style.color = tok(scope, '--accent-on-solid'); chip.appendChild(el('small', '', `${ratio(v, bg).toFixed(2)}:1 boundary vs background`)); }
+          else if (['text', 'text-secondary', 'accent-text'].includes(r)) { chip.style.background = sheet; chip.style.color = v; chip.appendChild(el('small', '', `${ratio(v, sheet).toFixed(2)}:1 on surface · ${ratio(v, bg).toFixed(2)}:1 on background`)); }
+          else if (['border-interactive', 'focus-ring'].includes(r)) { chip.style.background = sheet; chip.style.color = tok(scope, '--text'); chip.style.border = `2px solid ${v}`; chip.appendChild(el('small', '', `${ratio(v, bg).toFixed(2)}:1 vs background (non-text ≥ 3)`)); }
+          else if (['border-subtle', 'border', 'border-strong'].includes(r)) { chip.style.background = sheet; chip.style.color = tok(scope, '--text-secondary'); chip.style.border = `1px solid ${v}`; chip.appendChild(el('small', '', `${ratio(v, bg).toFixed(2)}:1 · decorative hairline`)); }
+          else if (r === 'shadow-ink') { const o = oklch(v); chip.style.background = sheet; chip.style.color = tok(scope, '--text'); chip.style.boxShadow = `0 12px 32px -12px color-mix(in oklab, ${v} 26%, transparent), 0 1px 2px color-mix(in oklab, ${v} 8%, transparent)`; chip.appendChild(el('small', '', `shadow colour · C ${o.C.toFixed(3)} H ${o.H.toFixed(0)}`)); }
+          else { chip.style.background = v; chip.style.color = tok(scope, '--text'); chip.style.border = `1px solid ${tok(scope, '--border-subtle')}`; chip.appendChild(el('small', '', `${ratio(tok(scope, '--text'), v).toFixed(2)}:1 text on it`)); }
+          wrap.appendChild(chip);
+        }
+        const fc = el('div', 'chip'); fc.textContent = 'filter chip, unselected'; fc.style.background = sheet; fc.style.color = tok(scope, '--text'); fc.style.border = `1px solid ${tok(scope, '--border-interactive')}`;
+        fc.appendChild(el('small', '', `border-interactive ${ratio(tok(scope, '--border-interactive'), bg).toFixed(2)}:1 vs background · label ${ratio(tok(scope, '--text'), sheet).toFixed(2)}:1`)); wrap.appendChild(fc);
+        box.appendChild(wrap);
+      }
+      rolesInto(document.querySelector('.roles-light'), light);
+      rolesInto(document.querySelector('.roles-dark'), document.querySelector('.roles-dark'));
+
+      // ---- explicit pairs ----
+      function pairs(mode) {
+        const rows = [
+          ['text on background', '--text', '--background', 7], ['text on surface', '--text', '--surface', 7],
+          ['text on surface-hover', '--text', '--surface-hover', 4.5], ['text on surface-active', '--text', '--surface-active', 4.5],
+          ['text-secondary on background', '--text-secondary', '--background', 4.5], ['text-secondary on surface', '--text-secondary', '--surface', 4.5],
+          ['text-secondary on surface-hover', '--text-secondary', '--surface-hover', 4.5, 'fix round 2'],
+          ['text-secondary on surface-active (neutral status chip)', '--text-secondary', '--surface-active', 4.5, 'fix round 2'],
+          ['text-secondary on accent-bg-subtle', '--text-secondary', '--accent-bg-subtle', 4.5, 'fix round 2'],
+          ['accent-text (links) on background', '--accent-text', '--background', 4.5], ['accent-text (links) on surface', '--accent-text', '--surface', 4.5],
+          ['accent-text on accent-bg-subtle', '--accent-text', '--accent-bg-subtle', 4.5],
+          ['accent-on-solid on accent-solid (button label)', '--accent-on-solid', '--accent-solid', 4.5],
+          ['accent-on-solid on accent-solid-hover (hover label)', '--accent-on-solid', '--accent-solid-hover', 4.5, 'fix round 2'],
+          ['accent-solid boundary vs background', '--accent-solid', '--background', 3], ['accent-solid boundary vs surface', '--accent-solid', '--surface', 3],
+          ['accent-solid-hover boundary vs surface', '--accent-solid-hover', '--surface', 3],
+          ['border-interactive vs background', '--border-interactive', '--background', 3], ['border-interactive vs surface', '--border-interactive', '--surface', 3],
+          ['filter chip, unselected: border-interactive boundary vs background', '--border-interactive', '--background', 3, 'fix round 1'],
+          ['focus-ring vs background', '--focus-ring', '--background', 3], ['focus-ring vs surface', '--focus-ring', '--surface', 3],
+        ];
+        for (const f of ['error', 'success', 'warning', 'info']) {
+          rows.push([`${f}-11 on neutral-2`, `--${f}-11`, '--neutral-2', 4.5, 'DW-2.3']);
+          rows.push([`${f}-11 on ${f}-3`, `--${f}-11`, `--${f}-3`, 4.5, 'DW-2.3']);
+          rows.push([`${f}-11 on background`, `--${f}-11`, '--background', 4.5]);
+          rows.push([`${f}-11 on surface`, `--${f}-11`, '--surface', 4.5]);
+        }
+        const info = [
+          ['accent-9 (run A solid) vs background', '--accent-9', '--background', 3, mode === 'light' ? 'why the light solid is accent-12' : 'is the dark solid'],
+          ['border (neutral-7) vs background', '--border', '--background', 3, 'decorative hairline, not a boundary'],
+        ];
+        for (const f of ['error', 'success', 'warning', 'info']) info.push([`${f}-9 vs background`, `--${f}-9`, '--background', 3, 'dot or small fill beside a label (G1)']);
+        return { rows, info };
+      }
+      function fill(mode, scope) {
+        const tbody = document.querySelector(`#pairs-${mode} tbody`); const { rows, info } = pairs(mode); let fails = 0;
+        const add = (label, fg, bg, target, note, informational) => {
+          const a = tok(scope, fg), b = tok(scope, bg); const r = ratio(a, b); const ok = r >= target; if (!ok && !informational) fails++;
+          const tr = el('tr', informational ? 'info-row' : '');
+          tr.appendChild(el('td', '', label));
+          const sw = el('td'); const pair = el('span', 'sw'); const i1 = el('i'); i1.style.background = b; i1.title = `${bg} ${b}`; const i2 = el('i'); i2.style.background = a; i2.title = `${fg} ${a}`; pair.appendChild(i1); pair.appendChild(i2); sw.appendChild(pair); sw.appendChild(document.createTextNode(`${fg.slice(2)} on ${bg.slice(2)}`)); tr.appendChild(sw);
+          tr.appendChild(el('td', 'num', r.toFixed(2) + ':1')); tr.appendChild(el('td', 'num', informational ? `(3 reference)` : `≥ ${target}`));
+          const st = el('td');
+          if (informational) st.appendChild(el('span', 'note', (ok ? 'informational: clears 3:1 anyway' : 'informational: below 3:1 by design') + (note ? ' · ' + note : '')));
+          else { st.appendChild(el('span', ok ? 'pass' : 'fail', ok ? 'PASS' : 'FAIL')); if (note) st.appendChild(el('span', 'note', ' ' + note)); }
+          tr.appendChild(st); tbody.appendChild(tr);
+        };
+        for (const [label, fg, bg, target, note] of rows) add(label, fg, bg, target, note, false);
+        const sep = el('tr', 'info-row'); const td = el('td', 'note', 'Informational (not requirements: palette.mjs defaults the roles do not use for this purpose)'); td.colSpan = 5; sep.appendChild(td); tbody.appendChild(sep);
+        for (const [label, fg, bg, target, note] of info) add(label, fg, bg, target, note, true);
+        document.getElementById(`sum-${mode}`).textContent = `· ${rows.length} role pairs, ${fails} failing`;
+      }
+      fill('light', light); fill('dark', dark);
+
+      // ---- Ruled Folio in role: clone into light and dark ----
+      const tpl = document.getElementById('role-tpl');
+      document.querySelectorAll('.role-slot').forEach((slot) => {
+        slot.appendChild(tpl.content.cloneNode(true));
+        const mode = slot.dataset.mode; const scope = mode === 'dark' ? slot : light;
+        slot.querySelector('.ml-left').textContent = `${mode} · background ${tok(scope, '--background')} · surface ${tok(scope, '--surface')} · accent-solid ${tok(scope, '--accent-solid')} · focus-ring ${tok(scope, '--focus-ring')}`;
+        slot.querySelector('.ml-right').textContent = `ruler: 1 px rule on the message region; ticks 6 px per block (1lh tile); tutor text 68 px right of the ruler, student lines right-aligned (as-is)`;
+        const chips = slot.querySelector('.status-chips');
+        for (const [cls, f, ic, label] of [['ok', 'success', 'ic-check', 'Registered'], ['warn', 'warning', 'ic-warn', 'Pending approval'], ['err', 'error', 'ic-cross', 'Upload failed'], ['info', 'info', 'ic-info', 'Approved · 12']]) {
+          const c = el('span', `status ${cls}`); c.appendChild(icon(ic)); c.appendChild(document.createTextNode(label));
+          c.appendChild(el('span', 'ratio', ` ${ratio(tok(scope, `--${f}-11`), tok(scope, `--${f}-3`)).toFixed(1)}:1`)); chips.appendChild(c);
+        }
+        const n = el('span', 'status neutral'); n.appendChild(icon('ic-progress')); n.appendChild(document.createTextNode('Importing… (in progress is neutral)')); chips.appendChild(n);
+      });
+
+      // ---- font and layout report ----
+      function widthProbe(family) {
+        const span = el('span'); span.textContent = 'mmmmmmmmmmwwwwwwwwwwiiiiiiiiii0123456789'; span.style.cssText = 'position:absolute;left:-9999px;font-size:48px;white-space:nowrap';
+        span.style.fontFamily = 'monospace'; document.body.appendChild(span); const base = span.getBoundingClientRect().width;
+        span.style.fontFamily = `"${family}", monospace`; const w = span.getBoundingClientRect().width; span.remove(); return Math.abs(w - base) > 1;
+      }
+      function report() {
+        const fam = 'Source Sans 3';
+        const faces = [...document.fonts].filter((f) => f.family.replace(/["']/g, '') === fam);
+        const ok = faces.some((f) => f.status === 'loaded') && widthProbe(fam);
+        const lh = CSS.supports('background-size', '1lh');
+        const spec = document.querySelector('.specimen');
+        const ital = spec.querySelector('.ital'); const italHasCJK = /[㐀-鿿]/.test(ital.textContent);
+        const emEl = spec.querySelector('.cjk-em strong'); const emCs = getComputedStyle(emEl); const emItal = getComputedStyle(spec.querySelector('.cjk-em em'));
+        const synth = getComputedStyle(spec).fontSynthesis || getComputedStyle(spec).fontSynthesisStyle;
+        const sw = document.documentElement.scrollWidth, cw = document.documentElement.clientWidth;
+        // dark ruler assertion: the rule on the dark message region and a dark tick strip must paint the dark --border-strong
+        const darkSlot = document.querySelector('.role-slot[data-mode="dark"]');
+        const darkMsgs = darkSlot.querySelector('.p-msgs'); const darkTick = darkSlot.querySelector('.answer p.tick');
+        const rgbOf = (hex) => { const [r, g, b] = hexToRgb(hex).map((x) => Math.round(x * 255)); return `rgb(${r}, ${g}, ${b})`; };
+        const darkBS = tok(darkSlot, '--border-strong'); const want = rgbOf(darkBS);
+        const ruleBg = getComputedStyle(darkMsgs).backgroundImage, tickBg = getComputedStyle(darkTick, '::before').backgroundImage;
+        const rulerOk = ruleBg.includes(want) && tickBg.includes(want);
+        // shadow assertion: the dark subtree's --shadow-2 must embed the dark --shadow-ink (same resolution trap as the ruler)
+        const darkInk = tok(darkSlot, '--shadow-ink'); const darkShadow = tok(darkSlot, '--shadow-2'); const lightInk = tok(light, '--shadow-ink');
+        const shadowOk = darkShadow.includes(darkInk) && !darkShadow.includes(lightInk);
+        const parts = [
+          ok ? `Font: ${fam} loaded (Google Fonts, for this render; production self-hosts @fontsource-variable/source-sans-3).` : `Font: ${fam} did NOT load; the specimen shows the fallback stack (system CJK fonts), not the face. Production self-hosts the face.`,
+          `Italic sample: ${italHasCJK ? 'contains CJK (should not)' : 'Latin only'}, true italic 400.`,
+          `CJK emphasis line: strong renders font-style ${emCs.fontStyle}, weight ${emCs.fontWeight}; em inside the CJK block renders ${emItal.fontStyle} ${emItal.fontWeight}; font-synthesis: ${synth || 'none (unsupported query)'}.`,
+          lh ? 'Ruler ticks: this browser supports the lh unit, so ticks follow each block’s leading.' : 'Ruler ticks: this browser lacks the lh unit; the rule is drawn and the ticks are not (the locked fallback).',
+          `Layout: scrollWidth ${sw} px at a ${cw} px viewport${sw > cw ? ' (OVERFLOW)' : ' (no horizontal scroll)'}.`,
+          `Dark ruler: ${rulerOk ? `paints the dark --border-strong ${darkBS} (rule and ticks)` : `MISMATCH: expected the dark --border-strong ${darkBS}, rule ${ruleBg}, ticks ${tickBg}`}.`,
+          `Dark shadows: ${shadowOk ? `--shadow-2 embeds the dark --shadow-ink ${darkInk}` : `MISMATCH: dark --shadow-2 is ${darkShadow}`}.`,
+        ];
+        document.getElementById('font-report').textContent = parts.join(' ');
+        const badge = spec.querySelector('.badge'); if (badge) badge.textContent = ok ? `font: ${fam} loaded` : `font: FALLBACK (${fam} did not load)`;
+        document.documentElement.dataset.docHeight = String(document.documentElement.scrollHeight);
+        document.documentElement.dataset.scrollWidth = String(sw); document.documentElement.dataset.clientWidth = String(cw);
+        // measured after the report text is written, so the page coordinates match the final layout
+        const r = darkMsgs.getBoundingClientRect(), t = darkTick.getBoundingClientRect();
+        const code = darkSlot.querySelector('.code').getBoundingClientRect(), cjk = darkSlot.querySelector('.answer p.cjk').getBoundingClientRect();
+        document.documentElement.dataset.darkRuler = JSON.stringify({ ok: rulerOk, want: darkBS, ruleX: Math.round(r.left + window.scrollX), ruleY: Math.round(r.top + window.scrollY + 40), tickX: Math.round(r.left + window.scrollX + 3), tickY: Math.round(t.top + window.scrollY), tickRowGap: Math.round(parseFloat(getComputedStyle(darkTick).lineHeight)), h: Math.round(r.height), codeToCjkGap: Math.round(cjk.top - code.bottom), shadowOk });
+        // scale fidelity readout (DESIGN.md Type): the four places the round-4 review measured
+        const lightSlot = document.querySelector('.role-slot[data-mode="light"]');
+        const fs = (sel, root) => { const e = root.querySelector(sel); const c = getComputedStyle(e); return `${parseFloat(c.fontSize)}/${parseFloat(c.lineHeight)}${c.letterSpacing !== 'normal' ? ' ls ' + c.letterSpacing : ''}`; };
+        const specRule = spec.getBoundingClientRect(), specText = spec.querySelector('.body').getBoundingClientRect();
+        document.documentElement.dataset.fidelity = JSON.stringify({ studentQuestion: fs('.msg-student p', lightSlot), panelTitle: fs('.p-title', lightSlot), sessionLabel: fs('.p-session', lightSlot), citationRow: fs('.margin', lightSlot), specimenTextFromRule: Math.round(specText.left - specRule.left - 1) });
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => setTimeout(report, 150)); else setTimeout(report, 1500);
+    })();
+  </script>
+</body>
+</html>
