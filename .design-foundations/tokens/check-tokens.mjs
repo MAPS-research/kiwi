@@ -20,6 +20,7 @@
 //  17. Editor selection: the selection tint is visible on --editor-bg (≥ 1.1:1) and differs from the active line, its 1 px outline clears 3:1 against --editor-bg and the active line, and every syntax colour keeps 4.5:1 on the selection, both modes; the generated Ace rule carries both.
 //  18. Public reduced motion: every selector of the public CSS that runs an animation or a transition is listed inside one scoped @media (prefers-reduced-motion: reduce) block, and that block holds no universal selector and no !important.
 //  19. MUI grey: the preview's palette.grey is the locked neutral ramp per mode (every key, both schemes) and palette.common is the G2 logo pair, so a stray grey.NN in the code cannot keep MUI's default greys.
+//  20. Companion backing (Phase 4, DW-4.4): the mascot's forest outline (companion.$extensions["org.kiwi"].artwork.outline, metadata, not a token) clears 3:1 on companion.backing in dark and on every light surface the transparent light backing exposes; § 5 admits a companion.* literal only when it is frozen to a light source, and § 15 reads a frozen literal held in a mode block (frozen.at).
 // Writes ./generated/check-summary.json with every count the DESIGN.md evidence quotes, so the evidence paragraph is generated, not typed.
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { execSync } from "node:child_process";
@@ -170,7 +171,7 @@ log(`\n## 11. Density-invariant components\n\nlauncher and display-menu: ${invar
 const literalAllow = [/^semantic\.color\.logo\./, /^semantic\.color\.on-paper\./, /^global\./]; // backdrop and shadows reference --shadow-ink (alphas composed by the emitter), so they carry no literal
 const literalBad = [];
 walk(tree, (p, t) => {
-  const scan = (v) => { if (typeof v === "string") { if (isHex(v) || /\b(rgba?|hsla?|oklch|oklab|lab|lch|color-mix)\(/.test(v)) { if (!literalAllow.some((re) => re.test(p))) literalBad.push(`${p}: ${v}`); } } else if (Array.isArray(v)) v.forEach(scan); else if (v && typeof v === "object") Object.values(v).forEach(scan); };
+  const scan = (v) => { if (typeof v === "string") { if (isHex(v) || /\b(rgba?|hsla?|oklch|oklab|lab|lch|color-mix)\(/.test(v)) { if (!literalAllow.some((re) => re.test(p)) && !(p.startsWith("companion.") && t.$extensions?.["org.kiwi"]?.frozen)) literalBad.push(`${p}: ${v}`); } } else if (Array.isArray(v)) v.forEach(scan); else if (v && typeof v === "object") Object.values(v).forEach(scan); };
   scan(t.$value); if (t.$extensions?.mode) Object.values(t.$extensions.mode).forEach(scan);
 });
 if (literalBad.length) fail(`colour literals outside the global tier / allowlisted composites: ${literalBad.join("; ")}`);
@@ -180,7 +181,7 @@ for (const [f, txt] of texts) for (const b of meta.banned) { const re = new RegE
 // the JSON names the banned hexes in its own ban list; discount those occurrences
 const bannedReal = bannedHits.filter((h) => !h.startsWith("kiwi-ui.tokens.json"));
 if (bannedReal.length) fail(`banned hex in generated outputs: ${bannedReal.join("; ")}`);
-log(`\n## 5. Literal policy\n\nColour literals outside the global tier: ${literalBad.length} (allowed: the G2 logo black/white and the mode-frozen on-paper marks; the backdrop and the shadows reference --shadow-ink and carry alphas, composed by the emitter). Banned purple-era hex in the generated CSS, public CSS and MUI preview: ${bannedReal.length}.`);
+log(`\n## 5. Literal policy\n\nColour literals outside the global tier: ${literalBad.length} (allowed: the G2 logo black/white, the mode-frozen on-paper marks and a mode-frozen companion.* literal that names its light source (Phase 4: the dark backing); the backdrop and the shadows reference --shadow-ink and carry alphas, composed by the emitter). Banned purple-era hex in the generated CSS, public CSS and MUI preview: ${bannedReal.length}.`);
 
 // ---------- 6. public coverage ----------
 const todayCss = readFileSync(join(ROOT, "kiwi-ui/public/kiwi-design-tokens.css"), "utf8");
@@ -250,8 +251,8 @@ walk(tree, (p, tk) => {
   const ctx = f.context === "dark" ? D : L; let want;
   try { want = String(resolve(tree, refOf(f.source) || f.source, ctx)).toLowerCase(); } catch (e) { fail(`frozen ${p}: ${e.message}`); frozenBad++; return; }
   if (f.alpha != null) want = want.slice(0, 7) + Math.round(f.alpha * 255).toString(16).padStart(2, "0");
-  const got = String(tk.$value).toLowerCase(); const ok = got === want; if (!ok) { fail(`frozen literal ${p} = ${got} no longer equals ${f.source} (${f.context}${f.alpha != null ? ` at ${f.alpha}` : ""}) = ${want}`); frozenBad++; }
-  frozenRows.push([p, got, `${f.source} (${f.context}${f.alpha != null ? `, α ${f.alpha}` : ""})`, want, ok ? "PASS" : "FAIL"]);
+  const got = String(f.at ? tk.$extensions?.mode?.[f.at] : tk.$value).toLowerCase(); const ok = got === want; if (!ok) { fail(`frozen literal ${p} = ${got} no longer equals ${f.source} (${f.context}${f.alpha != null ? ` at ${f.alpha}` : ""}) = ${want}`); frozenBad++; }
+  frozenRows.push([`${p}${f.at ? ` (mode.${f.at})` : ""}`, got, `${f.source} (${f.context}${f.alpha != null ? `, α ${f.alpha}` : ""})`, want, ok ? "PASS" : "FAIL"]);
 });
 log(`\n## 15. Frozen literals\n\n${frozenN} literals name their source in $extensions["org.kiwi"].frozen; ${frozenBad} drifted.\n`);
 log("| Token | Literal | Source | Resolved | Result |\n|---|---|---|---|---|");
@@ -332,6 +333,29 @@ if (!has(/^semantic\.space\./)) fail("no space delta"); if (!has(/^semantic\.siz
 log(`\n## 7. Density deltas (comfortable → compact), identical in both colour modes\n\n| Token | Comfortable | Compact |\n|---|---|---|`);
 for (const [p, a, b] of deltas) log(`| ${p} | ${typeof a === "object" ? `${a.fontSize} / ${a.lineHeight}` : a} | ${typeof b === "object" ? `${b.fontSize} / ${b.lineHeight}` : b} |`);
 
+// ---------- 20. companion backing (Phase 4, DW-4.4) ----------
+// The mascot's outline is artwork (its flat palette is allowlisted, G11), not a token: the checker reads it from the companion
+// group's metadata and asserts it clears 3:1 (WCAG 1.4.11) on the dark backing and, in light, on every surface the transparent
+// light backing exposes. Informational rows: the backing disc's own edge on the dark canvas and sheet, and the tan bill.
+let compN = 0, compBad = 0; const compRows = [];
+{
+  const art = tree.companion?.$extensions?.["org.kiwi"]?.artwork;
+  const backing = getToken(tree, "companion.backing");
+  if (!art?.outline || !backing) fail("companion: no artwork outline metadata or no companion.backing token");
+  else {
+    const check = (label, bg, mode, min = 3) => { const r = contrast(art.outline, bg); compN++; if (r < min) { compBad++; fail(`companion backing ${mode}: outline ${art.outline} on ${label} ${bg} ${r.toFixed(2)} < ${min}`); } compRows.push([mode, `outline on ${label}`, bg, r.toFixed(2), r >= min ? "PASS" : "FAIL"]); };
+    const darkBacking = String(resolve(tree, "companion.backing", D)), lightBacking = String(resolve(tree, "companion.backing", L));
+    check("companion.backing", darkBacking, "dark");
+    if (lightBacking !== "transparent") check("companion.backing", lightBacking, "light");
+    for (const s of ["surface", "background", "surface-hover", "surface-active", "accent-bg-subtle", "status.error.surface"]) check(`--${s.replace(/\./g, "-")} (light backing transparent)`, String(resolve(tree, `semantic.color.${s}`, L)), "light");
+    for (const s of ["background", "surface"]) { const bg = String(resolve(tree, `semantic.color.${s}`, D)); compRows.push(["dark", `backing disc on --${s}`, bg, contrast(darkBacking, bg).toFixed(2), "informational"]); }
+    if (art.bill) compRows.push(["dark", "tan bill on companion.backing (not the outline)", darkBacking, contrast(art.bill, darkBacking).toFixed(2), "informational"]);
+  }
+}
+log(`\n## 20. Companion backing (Phase 4)\n\n${compN} required pairs (the forest outline ≥ 3:1 on the dark backing and on the light surfaces behind the transparent light backing), ${compBad} below.\n`);
+log("| Mode | Pair | Value | Ratio | |\n|---|---|---|---|---|");
+for (const r of compRows) log(`| ${r.join(" | ")} |`);
+
 // ---------- report ----------
 // the run's identity is derived: the clock, the source's version and content hash, and the commit (null when uncommitted or outside git)
 const today = new Date().toISOString().slice(0, 10);
@@ -342,7 +366,7 @@ writeFileSync(join(here, "generated/contrast-report.md"), summary + out.join("\n
 // the machine-readable summary the DESIGN.md evidence paragraph is assembled from
 let descN = 0, tokenN = 0; walk(tree, (p, tk) => { if (!/^(global|semantic|component)\./.test(p)) return; tokenN++; if (tk.$description) descN++; });
 let groupN = 0, groupDescN = 0; walkGroups(tree, (p, g) => { if (!/^(semantic|component)\./.test(p)) return; groupN++; if (g.$description) groupDescN++; });
-writeFileSync(join(here, "generated/check-summary.json"), JSON.stringify({ date: today, source: { version: meta.version, sha256: srcSha, commit }, result: failures.length ? "FAIL" : "PASS", failures: failures.length, components: COMPONENTS.length, aliasOk, aliasBad, stateGroups: stateGroups.length, stateSpecs: stateGroups.length * 8, contrast: { pass, fail: failN, informational: exempt }, tier: { refs: compRefs, violations: tierBad.length }, literals: { marked: compLiterals.length, unmarked: compLiteralUnmarked.length, outsideGlobal: literalBad.length, banned: bannedReal.length }, public: { pinned: pinned.length, unmapped: unmapped.length, notEmitted: notEmitted.length, counts, classes: { pinned: v1Classes.length, missing: missingClasses.length, emitted: genClasses.size }, keyframes: { pinned: v1Keyframes.length, missing: missingKeyframes.length, emitted: genKeyframes.size }, deprecatedClasses: classDeprecated, deprecationViolations: depBad + classDepBad }, cues: { variants: TOGGLES.length, assertions: cueN, failures: cueBad }, frozen: { n: frozenN, drifted: frozenBad }, interimChart: { series: chartN, below: chartBad }, editorSelection: { assertions: selN, failures: selBad }, motionGuard: { moving: motionAnimated, guarded: motionGuarded }, muiGrey: { keys: greyN, mismatches: greyBad }, densityDeltas: deltas.length, descriptions: { tokens: tokenN, described: descN, groups: groupN, groupsDescribed: groupDescN } }, null, 1) + "\n");
+writeFileSync(join(here, "generated/check-summary.json"), JSON.stringify({ date: today, source: { version: meta.version, sha256: srcSha, commit }, result: failures.length ? "FAIL" : "PASS", failures: failures.length, components: COMPONENTS.length, aliasOk, aliasBad, stateGroups: stateGroups.length, stateSpecs: stateGroups.length * 8, contrast: { pass, fail: failN, informational: exempt }, tier: { refs: compRefs, violations: tierBad.length }, literals: { marked: compLiterals.length, unmarked: compLiteralUnmarked.length, outsideGlobal: literalBad.length, banned: bannedReal.length }, public: { pinned: pinned.length, unmapped: unmapped.length, notEmitted: notEmitted.length, counts, classes: { pinned: v1Classes.length, missing: missingClasses.length, emitted: genClasses.size }, keyframes: { pinned: v1Keyframes.length, missing: missingKeyframes.length, emitted: genKeyframes.size }, deprecatedClasses: classDeprecated, deprecationViolations: depBad + classDepBad }, cues: { variants: TOGGLES.length, assertions: cueN, failures: cueBad }, frozen: { n: frozenN, drifted: frozenBad }, interimChart: { series: chartN, below: chartBad }, editorSelection: { assertions: selN, failures: selBad }, motionGuard: { moving: motionAnimated, guarded: motionGuarded }, muiGrey: { keys: greyN, mismatches: greyBad }, companionBacking: { assertions: compN, failures: compBad }, densityDeltas: deltas.length, descriptions: { tokens: tokenN, described: descN, groups: groupN, groupsDescribed: groupDescN } }, null, 1) + "\n");
 console.log(summary.trim());
-console.log(`alias equalities ${aliasOk}/${aliasOk + aliasBad} · state groups ${stateGroups.length} · contrast required ${pass} pass / ${failN} fail, ${exempt} informational · literals outside global ${literalBad.length} · banned ${bannedReal.length} · public unmapped ${unmapped.length} · v1 classes missing ${missingClasses.length}/${v1Classes.length}, keyframes missing ${missingKeyframes.length}/${v1Keyframes.length} · tier violations ${tierBad.length} · component literals ${compLiterals.length} marked / ${compLiteralUnmarked.length} unmarked · deprecation violations ${depBad + classDepBad} (${counts.deprecated} names, ${classDeprecated} classes/keyframes) · density deltas ${deltas.length} · cues ${cueN} assertions / ${cueBad} failures · frozen literals ${frozenN} / ${frozenBad} drifted · interim chart ${chartN} series / ${chartBad} below 3:1 · editor selection ${selN} assertions / ${selBad} failures · public motion guard ${motionGuarded}/${motionAnimated} · MUI grey ${greyN - greyBad}/${greyN}`);
+console.log(`alias equalities ${aliasOk}/${aliasOk + aliasBad} · state groups ${stateGroups.length} · contrast required ${pass} pass / ${failN} fail, ${exempt} informational · literals outside global ${literalBad.length} · banned ${bannedReal.length} · public unmapped ${unmapped.length} · v1 classes missing ${missingClasses.length}/${v1Classes.length}, keyframes missing ${missingKeyframes.length}/${v1Keyframes.length} · tier violations ${tierBad.length} · component literals ${compLiterals.length} marked / ${compLiteralUnmarked.length} unmarked · deprecation violations ${depBad + classDepBad} (${counts.deprecated} names, ${classDeprecated} classes/keyframes) · density deltas ${deltas.length} · cues ${cueN} assertions / ${cueBad} failures · frozen literals ${frozenN} / ${frozenBad} drifted · interim chart ${chartN} series / ${chartBad} below 3:1 · editor selection ${selN} assertions / ${selBad} failures · public motion guard ${motionGuarded}/${motionAnimated} · MUI grey ${greyN - greyBad}/${greyN} · companion backing ${compN - compBad}/${compN}`);
 process.exit(failures.length ? 1 : 0);

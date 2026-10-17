@@ -2,8 +2,8 @@
  "date": "2026-10-17",
  "source": {
   "version": "2.0.0",
-  "sha256": "75dfd2018832",
-  "commit": "53f518c"
+  "sha256": "80ce0a0f5b9e",
+  "commit": "cee10e1"
  },
  "result": "PASS",
  "failures": 0,
@@ -56,7 +56,7 @@
   "failures": 0
  },
  "frozen": {
-  "n": 3,
+  "n": 4,
   "drifted": 0
  },
  "interimChart": {
@@ -74,6 +74,10 @@
  "muiGrey": {
   "keys": 32,
   "mismatches": 0
+ },
+ "companionBacking": {
+  "assertions": 7,
+  "failures": 0
  },
  "densityDeltas": 30,
  "descriptions": {

@@ -1,0 +1,299 @@
+{
+ "repo": "NYUSH-ML/kiwi-ui",
+ "branch": "kiwi-icon",
+ "commit": "fbb4db85f90aeda3a1250c8e9c8aa2d7473e2e11",
+ "runtime": [
+  {
+   "atlas": "full-hop-flight",
+   "file": "public/kiwi-mascot/frames-v3/full-hop-flight.webp",
+   "bytes": 564972,
+   "px": [
+    1536,
+    1024
+   ],
+   "sha256": "d0514dadca7db547318ec799ac94427cf034224ff040014c6560e77b205ab85b"
+  },
+  {
+   "atlas": "full-walk",
+   "file": "public/kiwi-mascot/frames-v3/full-walk.webp",
+   "bytes": 571354,
+   "px": [
+    1536,
+    1024
+   ],
+   "sha256": "aa6589578d81fd1b07085d9193139000279bfc4ce42bf54bcd58d159ae4519f6"
+  },
+  {
+   "atlas": "full-wave-bow",
+   "file": "public/kiwi-mascot/frames-v3/full-wave-bow.webp",
+   "bytes": 496314,
+   "px": [
+    1536,
+    1024
+   ],
+   "sha256": "2c7ab49db2f3152d7cdd9efb1514aa0c7c2167cd03b955985af319906c838daa"
+  },
+  {
+   "atlas": "portrait-blink",
+   "file": "public/kiwi-mascot/frames-v3/portrait-blink.webp",
+   "bytes": 688748,
+   "px": [
+    1536,
+    1024
+   ],
+   "sha256": "b192e2a85a1d2a3d3282fb6d8eda728135cf33eff9050554ed6a425283272e77"
+  },
+  {
+   "atlas": "portrait-doze",
+   "file": "public/kiwi-mascot/frames-v3/portrait-doze.webp",
+   "bytes": 595390,
+   "px": [
+    1536,
+    1024
+   ],
+   "sha256": "ef6c6eb5097617fc4ca40dc23aa0a0df2403ab531b28939755ce6a3fadb4db1f"
+  },
+  {
+   "atlas": "portrait-nod-sleep",
+   "file": "public/kiwi-mascot/frames-v3/portrait-nod-sleep.webp",
+   "bytes": 599782,
+   "px": [
+    1536,
+    1024
+   ],
+   "sha256": "c8979c6155c0f62a40a76e8a0ed1278cd3a42f6bb29740c175925a2efc01b304"
+  },
+  {
+   "atlas": "portrait-turn",
+   "file": "public/kiwi-mascot/frames-v3/portrait-turn.webp",
+   "bytes": 597534,
+   "px": [
+    1536,
+    1024
+   ],
+   "sha256": "1304ec61676eb4683f5751b9bc6268d181b31192695d436d40b6c9b736b3c0b3"
+  },
+  {
+   "atlas": "stamp-peek",
+   "file": "public/kiwi-mascot/frames-v3/stamp-peek.webp",
+   "bytes": 343046,
+   "px": [
+    1536,
+    1024
+   ],
+   "sha256": "61a6b5e434bf9aa892301ff609c261f2e5627a188b17561310c8edc861302d30"
+  }
+ ],
+ "stills": [
+  {
+   "state": "idle",
+   "atlas": "portrait-blink",
+   "cell": 0,
+   "file": "still-idle.png",
+   "bytes": 40170,
+   "sized": {
+    "192": 14776,
+    "128": 8130,
+    "64": 2998
+   }
+  },
+  {
+   "state": "peek",
+   "atlas": "stamp-peek",
+   "cell": 23,
+   "file": "still-peek.png",
+   "bytes": 20058,
+   "sized": {
+    "192": 9346,
+    "128": 5006,
+    "64": 1964
+   }
+  },
+  {
+   "state": "retract",
+   "atlas": "stamp-peek",
+   "cell": 0,
+   "file": "still-retract.png",
+   "bytes": 16662,
+   "sized": {
+    "192": 5466,
+    "128": 3128,
+    "64": 1230
+   }
+  },
+  {
+   "state": "walk",
+   "atlas": "full-walk",
+   "cell": 0,
+   "file": "still-walk.png",
+   "bytes": 32795,
+   "sized": {
+    "192": 10028,
+    "128": 5140,
+    "64": 1982
+   }
+  },
+  {
+   "state": "speaking",
+   "atlas": "portrait-nod-sleep",
+   "cell": 0,
+   "file": "still-speaking.png",
+   "bytes": 36372,
+   "sized": {
+    "192": 14006,
+    "128": 7646,
+    "64": 2750
+   }
+  },
+  {
+   "state": "hop",
+   "atlas": "full-hop-flight",
+   "cell": 23,
+   "file": "still-hop.png",
+   "bytes": 32165,
+   "sized": {
+    "192": 9956,
+    "128": 5250,
+    "64": 1920
+   }
+  },
+  {
+   "state": "wave",
+   "atlas": "full-wave-bow",
+   "cell": 8,
+   "file": "still-wave.png",
+   "bytes": 30951,
+   "sized": {
+    "192": 10536,
+    "128": 5474,
+    "64": 1974
+   }
+  },
+  {
+   "state": "error",
+   "atlas": "portrait-nod-sleep",
+   "cell": 8,
+   "file": "still-error.png",
+   "bytes": 28652,
+   "sized": {
+    "192": 11988,
+    "128": 6326,
+    "64": 2262
+   }
+  },
+  {
+   "state": "offline",
+   "atlas": "portrait-doze",
+   "cell": 23,
+   "file": "still-offline.png",
+   "bytes": 32514,
+   "sized": {
+    "192": 13516,
+    "128": 7314,
+    "64": 2614
+   }
+  }
+ ],
+ "atlases": [
+  {
+   "atlas": "full-walk",
+   "cell": 64,
+   "file": "atlas/full-walk.64.webp",
+   "bytes": 34942,
+   "use": "avatar"
+  },
+  {
+   "atlas": "full-walk",
+   "cell": 128,
+   "file": "atlas/full-walk.128.webp",
+   "bytes": 109236,
+   "use": "stage"
+  },
+  {
+   "atlas": "portrait-nod-sleep",
+   "cell": 64,
+   "file": "atlas/portrait-nod-sleep.64.webp",
+   "bytes": 50852,
+   "use": "avatar"
+  },
+  {
+   "atlas": "portrait-nod-sleep",
+   "cell": 128,
+   "file": "atlas/portrait-nod-sleep.128.webp",
+   "bytes": 163452,
+   "use": "stage"
+  },
+  {
+   "atlas": "full-hop-flight",
+   "cell": 64,
+   "file": "atlas/full-hop-flight.64.webp",
+   "bytes": 34622,
+   "use": "avatar"
+  },
+  {
+   "atlas": "full-hop-flight",
+   "cell": 128,
+   "file": "atlas/full-hop-flight.128.webp",
+   "bytes": 107870,
+   "use": "stage"
+  },
+  {
+   "atlas": "full-wave-bow",
+   "cell": 64,
+   "file": "atlas/full-wave-bow.64.webp",
+   "bytes": 34430,
+   "use": "avatar"
+  },
+  {
+   "atlas": "full-wave-bow",
+   "cell": 128,
+   "file": "atlas/full-wave-bow.128.webp",
+   "bytes": 107118,
+   "use": "stage"
+  },
+  {
+   "atlas": "portrait-doze",
+   "cell": 64,
+   "file": "atlas/portrait-doze.64.webp",
+   "bytes": 53610,
+   "use": "avatar"
+  },
+  {
+   "atlas": "portrait-doze",
+   "cell": 128,
+   "file": "atlas/portrait-doze.128.webp",
+   "bytes": 175252,
+   "use": "stage"
+  },
+  {
+   "atlas": "stamp-peek",
+   "cell": 96,
+   "file": "atlas/stamp-peek.96.webp",
+   "bytes": 60786,
+   "use": "peek"
+  },
+  {
+   "atlas": "stamp-peek",
+   "cell": 128,
+   "file": "atlas/stamp-peek.128.webp",
+   "bytes": 100186,
+   "use": "stage"
+  }
+ ],
+ "glyphBytes": 1748,
+ "beforeFirstAnswer": {
+  "atlases64": 120416,
+  "idleStill128": 8130,
+  "idleStill64": 2998,
+  "total": 131544,
+  "withPeek96": 192330
+ },
+ "shipped": {
+  "atlases64": 208456,
+  "peek96": 60786,
+  "stillsBytes": 63854,
+  "stillsList": "64 px: idle, walk, speaking, error, offline; 128 px: idle, error; 192 px: idle, walk, error",
+  "glyph": 1748,
+  "total": 334844
+ }
+}

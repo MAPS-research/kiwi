@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="28" height="28" fill="currentColor" aria-hidden="true" focusable="false">
+  <!-- Launcher glyph (companion.slot.launcher, 28 px on the 56 px --accent-solid disc, drawn in --accent-on-solid): the companion's portrait as a
+       one-colour silhouette with a filled speech bubble, so the disc reads as "chat with Kiwi" at 1x (Phase 4 review F6: at 24 px the head alone is a ghost).
+       Geometry: the Portrait() paths of NYUSH-ML/kiwi-ui@fbb4db8 src/components/KiwiMascot/KiwiArtwork.tsx, scaled to 78 % and set bottom-left; the eyes
+       are cut out so the disc shows through; the bubble is plain iconography, not mascot art. -->
+  <defs>
+    <mask id="eyes" maskUnits="userSpaceOnUse" x="0" y="0" width="160" height="160">
+      <rect width="160" height="160" fill="#fff"/>
+      <g transform="translate(0 35) scale(0.78)">
+        <circle cx="61" cy="68" r="6.3" fill="#000"/>
+        <ellipse cx="109" cy="49" rx="3.8" ry="5.4" transform="rotate(-24 109 49)" fill="#000"/>
+      </g>
+    </mask>
+  </defs>
+  <g mask="url(#eyes)" transform="translate(0 35) scale(0.78)">
+    <path d="M23 148C26 128 38 117 39 98C33 81 33 62 40 45C49 24 67 17 83 18C106 17 127 34 130 55C132 72 127 88 120 102C123 121 137 132 138 148Z"/>
+    <path d="M39 98C33 81 33 62 40 45C49 24 67 17 83 18C106 17 127 34 130 55C132 72 127 88 120 102C98 115 60 112 39 98Z"/>
+    <path d="M89 63C93 59 98 61 102 65C119 80 139 107 152 131C155 138 151 140 146 134C129 115 110 94 88 77C82 73 83 67 89 63Z"/>
+    <path d="M34 112C19 97 14 106 20 121C25 133 34 137 41 133Z"/>
+  </g>
+  <path d="M104 18h34a12 12 0 0 1 12 12v16a12 12 0 0 1-12 12h-18l-14 12 2-12h-4a12 12 0 0 1-12-12V30a12 12 0 0 1 12-12z"/>
+</svg>

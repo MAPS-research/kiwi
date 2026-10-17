@@ -1,4 +1,4 @@
-# Kiwi UI token checks — 2026-10-17 · source v2.0.0 (sha256 75dfd2018832) · at 53f518c
+# Kiwi UI token checks — 2026-10-17 · source v2.0.0 (sha256 80ce0a0f5b9e) · at cee10e1
 
 Source: `.design-foundations/tokens/kiwi-ui.tokens.json` · Locked block: `kiwi-ui/DESIGN.md` · Result: **PASS**
 
@@ -502,7 +502,7 @@ Targets: text ≥ 4.5:1, non-text (boundaries, icons, markers, rings) ≥ 3:1. 4
 
 ## 4. Per-mode closure of the emitted CSS
 
-:root declares 1287 properties. Dark: 815 depend on a mode token (transitively), 815 are redeclared in [data-theme="dark"], 0 missing. Compact: 96 depend on a density token, 96 redeclared in [data-density="compact"], 0 missing. Root-only composites that embed a mode colour (shadows, backdrop): 0.
+:root declares 1295 properties. Dark: 816 depend on a mode token (transitively), 816 are redeclared in [data-theme="dark"], 0 missing. Compact: 96 depend on a density token, 96 redeclared in [data-density="compact"], 0 missing. Root-only composites that embed a mode colour (shadows, backdrop): 0.
 
 ## 10. Coarse pointer
 
@@ -529,7 +529,7 @@ launcher and display-menu: 0 density-dependent tokens (their geometry is fixed; 
 
 ## 5. Literal policy
 
-Colour literals outside the global tier: 0 (allowed: the G2 logo black/white and the mode-frozen on-paper marks; the backdrop and the shadows reference --shadow-ink and carry alphas, composed by the emitter). Banned purple-era hex in the generated CSS, public CSS and MUI preview: 0.
+Colour literals outside the global tier: 0 (allowed: the G2 logo black/white, the mode-frozen on-paper marks and a mode-frozen companion.* literal that names its light source (Phase 4: the dark backing); the backdrop and the shadows reference --shadow-ink and carry alphas, composed by the emitter). Banned purple-era hex in the generated CSS, public CSS and MUI preview: 0.
 
 ## 6. Public CSS coverage
 
@@ -572,13 +572,14 @@ Policy: A deprecated name keeps a safe value and is removed no earlier than two 
 
 ## 15. Frozen literals
 
-3 literals name their source in $extensions["org.kiwi"].frozen; 0 drifted.
+4 literals name their source in $extensions["org.kiwi"].frozen; 0 drifted.
 
 | Token | Literal | Source | Resolved | Result |
 |---|---|---|---|---|
 | semantic.color.on-paper.pin | #203327 | {global.color.accent.12} (light) | #203327 | PASS |
 | semantic.color.on-paper.chunk | #65635c | {global.color.neutral.11} (light) | #65635c | PASS |
 | semantic.color.on-paper.wash | #2033271f | {semantic.color.on-paper.pin} (light, α 0.12) | #2033271f | PASS |
+| companion.backing (mode.dark) | #faf9f3 | {global.color.paper.2} (light) | #faf9f3 | PASS |
 
 ## 16. Interim chart series (until Phase 6)
 
@@ -664,3 +665,20 @@ Policy: A deprecated name keeps a safe value and is removed no earlier than two 
 | semantic.type.body | 1rem / 24px | 0.875rem / 20px |
 | semantic.type.body-cjk | 1rem / 28px | 0.875rem / 24px |
 | semantic.type.control | 1rem / 24px | 0.875rem / 20px |
+
+## 20. Companion backing (Phase 4)
+
+7 required pairs (the forest outline ≥ 3:1 on the dark backing and on the light surfaces behind the transparent light backing), 0 below.
+
+| Mode | Pair | Value | Ratio | |
+|---|---|---|---|---|
+| dark | outline on companion.backing | #faf9f3 | 10.00 | PASS |
+| light | outline on --surface (light backing transparent) | #faf9f3 | 10.00 | PASS |
+| light | outline on --background (light backing transparent) | #f4f1e4 | 9.31 | PASS |
+| light | outline on --surface-hover (light backing transparent) | #f1f0ed | 9.25 | PASS |
+| light | outline on --surface-active (light backing transparent) | #e9e8e4 | 8.60 | PASS |
+| light | outline on --accent-bg-subtle (light backing transparent) | #e6f5eb | 9.35 | PASS |
+| light | outline on --status-error-surface (light backing transparent) | #ffebe9 | 9.19 | PASS |
+| dark | backing disc on --background | #1b1915 | 16.64 | informational |
+| dark | backing disc on --surface | #252218 | 15.08 | informational |
+| dark | tan bill on companion.backing (not the outline) | #faf9f3 | 1.76 | informational |

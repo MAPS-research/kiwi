@@ -811,7 +811,7 @@
       },
       "reserved": {
         "chart.*": "Phase 6 registers the chart tokens here (five categorical series per mode, ≥3:1 on the plot background); until then the MUI theme keeps palette.chart with the interimChart stand-ins.",
-        "companion.*": "Phase 4 registers companion.slot.* and companion.backing here."
+        "companion.*": "Phase 4 registered companion.slot.* and companion.backing here (2026-10-17); chart.* stays reserved for Phase 6."
       },
       "public": {
         "--kiwi-primary": {
@@ -12456,6 +12456,113 @@
     "$description": "Reserved for Phase 6 (chart.*). Appended, never edited into the tiers above."
   },
   "companion": {
-    "$description": "Reserved for Phase 4 (companion.slot.*, companion.backing). Appended, never edited into the tiers above."
+    "$description": "Phase 4 (2026-10-17), the tutor companion: the slot size per placement and the backing behind the drawn mascot (kiwi-ui/DESIGN.md § Companion; fix round 1 applied 2026-10-17). Registered under the reserved namespace and never edited into the three tiers; every token names its CSS property explicitly (--companion-*). The mascot's artwork keeps its own flat palette (allowlisted, G11) and is not a token: its outline and bill colours are recorded in this group's metadata for check § 20 only, never emitted.",
+    "$extensions": {
+      "org.kiwi": {
+        "artwork": {
+          "forest": "#234631",
+          "sage": "#92ae70",
+          "cream": "#f5f4e8",
+          "tan": "#ccbd99",
+          "outline": "#234631",
+          "bill": "#ccbd99",
+          "note": "The drawn frames' flat palette (G11). outline = the forest silhouette that must clear 3:1 on its backing (DW-4.4); bill = the tan beak, informational (not the outline)."
+        },
+        "assets": ".design-foundations/mocks/assets/mascot/ (stills, resampled atlases, the launcher glyph, provenance.md); source NYUSH-ML/kiwi-ui@fbb4db85f90aeda3a1250c8e9c8aa2d7473e2e11",
+        "evidence": ".design-foundations/mocks/companion-sheet.html and its screenshots"
+      }
+    },
+    "slot": {
+      "$description": "Slot sizes per placement. A slot is the square the drawing is framed in (the library's per-atlas circle framing in both modes, so the mascot keeps one size and position whether or not the backing disc shows). Every size is a 2× multiple of the shipped atlas cell or still, so nothing upscales on a 2× display; only the avatar and the peek play atlases, every other slot loads one still.",
+      "avatar": {
+        "$type": "dimension",
+        "$value": "{semantic.size.avatar}",
+        "$description": "The tutor avatar on every tutor row: 32 px (G9; Phase 3's semantic.size.avatar). The one animated placement in the message region (the newest tutor message only); 64 px atlas cells at 2×.",
+        "$extensions": {
+          "org.kiwi": {
+            "css": "--companion-slot-avatar"
+          }
+        }
+      },
+      "peek": {
+        "$type": "dimension",
+        "$value": "48px",
+        "$description": "The composer peek: a 48 px slot anchored to the composer field's top-right corner: its right edge on the field's right edge and its bottom edge on the field's top edge, inside the 48 px lane formed by the message region's 24 px bottom padding and the composer's 24 px top padding (raised from 12 px for the lane); stamp-peek at 96 px cells (2×). It shows once per focus session, at the first keystroke after the student focused the composer, only while the message region is at scroll end (so it never overlaps text) and the newest avatar is still; it retracts 1.5 s after the last keystroke or on blur, is cut on send (walk has priority) and when the slash-command menu opens, and is removed, not stilled, whenever motion is off at any level.",
+        "$extensions": {
+          "org.kiwi": {
+            "css": "--companion-slot-peek"
+          }
+        }
+      },
+      "launcher": {
+        "$type": "dimension",
+        "$value": "28px",
+        "$description": "The launcher's glyph box: the companion's portrait silhouette with a filled speech bubble (launcher-glyph.svg, currentColor) at 28 px in --accent-on-solid on the locked 56 px --accent-solid disc. 28 and not the 24 px stand-in (Phase 3's --launcher-icon-size): at 24 the eye cut-outs vanish and the head reads as a ghost (Phase 4 review F6); the 14 px margin keeps the 44 px target and the disc unchanged. Chrome: it never animates and takes no backing.",
+        "$extensions": {
+          "org.kiwi": {
+            "css": "--companion-slot-launcher",
+            "literal": "companion-specific: the glyph's own box on the locked disc, chosen on a 1x recognition check (review F6)"
+          }
+        }
+      },
+      "signin": {
+        "$type": "dimension",
+        "$value": "96px",
+        "$description": "Sign-in and register (S-05, S-06): the idle still above the display line on the ruled column from the md breakpoint; companion.slot.inline (64) below md and on S-08's centred card.",
+        "$extensions": {
+          "org.kiwi": {
+            "css": "--companion-slot-signin"
+          }
+        }
+      },
+      "empty": {
+        "$type": "dimension",
+        "$value": "96px",
+        "$description": "Page-level empty states (no classes on S-01 and A-01, no experiments on A-19) and the page-level error frame: the idle (or error) still in the empty-state frame's slot from md; inline (64) below md.",
+        "$extensions": {
+          "org.kiwi": {
+            "css": "--companion-slot-empty"
+          }
+        }
+      },
+      "not-found": {
+        "$type": "dimension",
+        "$value": "96px",
+        "$description": "S-10 not found: the walk still (the standing bird) on the ruled column from md; inline (64) below md.",
+        "$extensions": {
+          "org.kiwi": {
+            "css": "--companion-slot-not-found"
+          }
+        }
+      },
+      "inline": {
+        "$type": "dimension",
+        "$value": "64px",
+        "$description": "The 64 px slot: the chat panel's empty conversation (the welcome frame), the class-card image fallback (S-01, A-01, A-02, A-13), S-08's centred card, and every 96 px slot below md (390 px). One 128 px still at 2×, never an atlas.",
+        "$extensions": {
+          "org.kiwi": {
+            "css": "--companion-slot-inline"
+          }
+        }
+      }
+    },
+    "backing": {
+      "$type": "color",
+      "$value": "{semantic.color.fill-none}",
+      "$description": "The disc behind the drawn mascot (--radius-round at the slot size: the lock's dark-mode backing circle). Transparent in light, where the forest outline clears every light surface by 8.6:1 or more. In dark the light sheet colour, frozen to light paper-2 (#faf9f3): the outline measures 10.0:1 on it and the disc 15-17:1 on the dark surfaces (check § 20). A light value cannot be referenced from the dark context in this resolver, so the dark value is a literal that § 15 holds to its source, like the on-paper marks. Drawn under the avatar, the peek, the empty, sign-in and not-found stills and the class-card fallback; never under the launcher glyph.",
+      "$extensions": {
+        "mode": {
+          "dark": "#faf9f3"
+        },
+        "org.kiwi": {
+          "css": "--companion-backing",
+          "frozen": {
+            "source": "{global.color.paper.2}",
+            "context": "light",
+            "at": "dark"
+          }
+        }
+      }
+    }
   }
 }

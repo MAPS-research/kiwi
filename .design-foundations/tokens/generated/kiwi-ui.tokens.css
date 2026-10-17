@@ -1294,6 +1294,14 @@
   --toggletip-radius: 2px;
   --toggletip-shadow: var(--shadow-1);
   --toggletip-offset: var(--space-label-gap);
+  --companion-slot-avatar: var(--size-avatar);
+  --companion-slot-peek: 48px;
+  --companion-slot-launcher: 28px;
+  --companion-slot-signin: 96px;
+  --companion-slot-empty: 96px;
+  --companion-slot-not-found: 96px;
+  --companion-slot-inline: 64px;
+  --companion-backing: var(--fill-none);
   font-synthesis: none;
 }
 
@@ -2113,6 +2121,7 @@
   --pdf-toolbar-success-chip: var(--in-progress-surface);
   --pdf-toolbar-success-chip-text: var(--text-secondary);
   --toggletip-shadow: var(--shadow-1);
+  --companion-backing: var(--fill-none);
   color-scheme: light;
 }
 
@@ -2932,6 +2941,7 @@
   --pdf-toolbar-success-chip: var(--in-progress-surface);
   --pdf-toolbar-success-chip-text: var(--text-secondary);
   --toggletip-shadow: var(--shadow-1);
+  --companion-backing: #faf9f3;
   color-scheme: dark;
 }
 
