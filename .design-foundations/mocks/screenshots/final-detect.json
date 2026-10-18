@@ -1,0 +1,1232 @@
+{
+ "about": "The design-for-ai static detector (scripts/detect.mjs, Assessment B of the dual-blind review), run by record-detect.mjs on the 12 mocks (from mocks/screens/) and on the preview (from mocks/preview/). The raw output is under runs; accepted gives the written rationale for every hit, each on a deliberate choice.",
+ "accepted": {
+  "mocks": [
+   {
+    "rule": "nested-cards",
+    "hits": 140,
+    "files": [
+     "chat.dark.html",
+     "chat.light.html"
+    ],
+    "perFile": {
+     "chat.dark.html": 70,
+     "chat.light.html": 70
+    },
+    "elements": {
+     "<div class=\"menu\">": 2,
+     "<span class=\"switch\">": 2,
+     "<button class=\"chip chip-filter\">": 4,
+     "<span class=\"chip chip-info\">": 2,
+     "<span class=\"toggletip right\">": 88,
+     "<div class=\"control multiline\">": 10,
+     "<div class=\"control multiline is-disabled\">": 10,
+     "<button class=\"btn btn-secondary\">": 12,
+     "<div class=\"control multiline is-focus\">": 10
+    },
+    "rationale": [
+     "Every hit is a control or a floating surface inside a sheet, never a container inside a container. The detector counts any element with a border plus a radius or a fill as a card, so it reads controls the same way it reads cards.",
+     "Controls (the composer field, the outlined Stop and Retry buttons, the Lecture and Recitation filter chips, the Shared with Kiwi chip, the switch track): DESIGN.md § Space, shape, depth, Controls are not cards: a control boundary inside a sheet is a signifier, not a container, and the review detector configuration must whitelist control boundaries inside sheets and flag only container-in-container nesting. § Never, Nested cards repeats it.",
+     "Floating surfaces (the Display menu, and the toggletips that hold the stated reason of a disabled Regenerate or Share button): DESIGN.md § Space, shape, depth, Depth order: menus, popovers and tooltips are the floating surfaces that take --shadow-1; the disabled pattern puts the reason in a toggletip on the control itself. They float above the sheet; they do not nest inside it.",
+     "The hits appear only in the two chat files, because only the chat screen holds bordered controls inside a hairline-framed region: the chat panel, the crops of its frame strip, the drawer, the PDF bar, and the top bar under the open Display menu."
+    ]
+   }
+  ],
+  "preview": [
+   {
+    "rule": "overused-font",
+    "hits": 1,
+    "files": [
+     "kiwi-ui-preview.html"
+    ],
+    "perFile": {
+     "kiwi-ui-preview.html": 1
+    },
+    "elements": {
+     "overused font \"Montserrat\" as a primary face": 1
+    },
+    "rationale": [
+     "A false positive. The preview inlines its fonts, so the detector reads the @font-face that names the family Montserrat and takes it for a primary face. In the gated mocks the same @font-face sits in assets/fonts/montserrat-wordmark.css, which the detector does not scan.",
+     "Montserrat is the wordmark's face only (G6; DESIGN.md § Type: the family is read through --font-wordmark by one selector, .kiwi-wordmark). Every other text uses --font-ui, Source Sans 3. The render audit counts every text element's computed family and finds none in Montserrat outside the wordmark (final-audit.json, DW-7.7)."
+    ]
+   }
+  ]
+ },
+ "runs": {
+  "mocks": {
+   "detector": "detect.mjs",
+   "version": 1,
+   "attribution": "Rule subset ported from Impeccable (pbakaus/impeccable), Apache-2.0, with modifications — see file header. Catalog: references/visual/ai-tells.md.",
+   "status": "ran",
+   "sources": [
+    "chat.dark.html",
+    "chat.light.html",
+    "code.dark.html",
+    "code.light.html",
+    "course-list.dark.html",
+    "course-list.light.html",
+    "edit-class.dark.html",
+    "edit-class.light.html",
+    "enroll-students.dark.html",
+    "enroll-students.light.html",
+    "sign-in.dark.html",
+    "sign-in.light.html"
+   ],
+   "rules": 16,
+   "findings": [
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"menu\"> is a card inside a card ancestor",
+     "line": 3785
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"switch\"> is a card inside a card ancestor",
+     "line": 3785
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<button class=\"chip chip-filter\"> is a card inside a card ancestor",
+     "line": 3791
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<button class=\"chip chip-filter\"> is a card inside a card ancestor",
+     "line": 3791
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"chip chip-info\"> is a card inside a card ancestor",
+     "line": 3794
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3796
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3796
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline\"> is a card inside a card ancestor",
+     "line": 3796
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3800
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3800
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline\"> is a card inside a card ancestor",
+     "line": 3800
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3804
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3804
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline is-disabled\"> is a card inside a card ancestor",
+     "line": 3804
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<button class=\"btn btn-secondary\"> is a card inside a card ancestor",
+     "line": 3804
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3808
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3808
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline is-disabled\"> is a card inside a card ancestor",
+     "line": 3808
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<button class=\"btn btn-secondary\"> is a card inside a card ancestor",
+     "line": 3808
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3812
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3812
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline is-disabled\"> is a card inside a card ancestor",
+     "line": 3812
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<button class=\"btn btn-secondary\"> is a card inside a card ancestor",
+     "line": 3812
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3816
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3816
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline is-disabled\"> is a card inside a card ancestor",
+     "line": 3816
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<button class=\"btn btn-secondary\"> is a card inside a card ancestor",
+     "line": 3816
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3820
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3820
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3820
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3820
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline is-focus\"> is a card inside a card ancestor",
+     "line": 3820
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3824
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3824
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3824
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3824
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline is-focus\"> is a card inside a card ancestor",
+     "line": 3824
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3828
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3828
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3828
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3828
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline is-focus\"> is a card inside a card ancestor",
+     "line": 3828
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3832
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3832
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3832
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3832
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline is-focus\"> is a card inside a card ancestor",
+     "line": 3832
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3836
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3836
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3836
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3836
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline is-focus\"> is a card inside a card ancestor",
+     "line": 3836
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3840
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3840
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3840
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3840
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline\"> is a card inside a card ancestor",
+     "line": 3840
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3844
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3844
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3844
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3844
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline\"> is a card inside a card ancestor",
+     "line": 3844
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3848
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3848
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<button class=\"btn btn-secondary\"> is a card inside a card ancestor",
+     "line": 3848
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline\"> is a card inside a card ancestor",
+     "line": 3848
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3852
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3852
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline is-disabled\"> is a card inside a card ancestor",
+     "line": 3852
+    },
+    {
+     "source": "chat.dark.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<button class=\"btn btn-secondary\"> is a card inside a card ancestor",
+     "line": 3852
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"menu\"> is a card inside a card ancestor",
+     "line": 3785
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"switch\"> is a card inside a card ancestor",
+     "line": 3785
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<button class=\"chip chip-filter\"> is a card inside a card ancestor",
+     "line": 3791
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<button class=\"chip chip-filter\"> is a card inside a card ancestor",
+     "line": 3791
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"chip chip-info\"> is a card inside a card ancestor",
+     "line": 3794
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3796
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3796
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline\"> is a card inside a card ancestor",
+     "line": 3796
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3800
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3800
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline\"> is a card inside a card ancestor",
+     "line": 3800
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3804
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3804
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline is-disabled\"> is a card inside a card ancestor",
+     "line": 3804
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<button class=\"btn btn-secondary\"> is a card inside a card ancestor",
+     "line": 3804
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3808
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3808
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline is-disabled\"> is a card inside a card ancestor",
+     "line": 3808
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<button class=\"btn btn-secondary\"> is a card inside a card ancestor",
+     "line": 3808
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3812
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3812
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline is-disabled\"> is a card inside a card ancestor",
+     "line": 3812
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<button class=\"btn btn-secondary\"> is a card inside a card ancestor",
+     "line": 3812
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3816
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3816
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline is-disabled\"> is a card inside a card ancestor",
+     "line": 3816
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<button class=\"btn btn-secondary\"> is a card inside a card ancestor",
+     "line": 3816
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3820
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3820
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3820
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3820
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline is-focus\"> is a card inside a card ancestor",
+     "line": 3820
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3824
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3824
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3824
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3824
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline is-focus\"> is a card inside a card ancestor",
+     "line": 3824
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3828
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3828
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3828
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3828
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline is-focus\"> is a card inside a card ancestor",
+     "line": 3828
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3832
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3832
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3832
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3832
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline is-focus\"> is a card inside a card ancestor",
+     "line": 3832
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3836
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3836
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3836
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3836
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline is-focus\"> is a card inside a card ancestor",
+     "line": 3836
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3840
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3840
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3840
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3840
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline\"> is a card inside a card ancestor",
+     "line": 3840
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3844
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3844
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3844
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3844
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline\"> is a card inside a card ancestor",
+     "line": 3844
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3848
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3848
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<button class=\"btn btn-secondary\"> is a card inside a card ancestor",
+     "line": 3848
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline\"> is a card inside a card ancestor",
+     "line": 3848
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3852
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<span class=\"toggletip right\"> is a card inside a card ancestor",
+     "line": 3852
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<div class=\"control multiline is-disabled\"> is a card inside a card ancestor",
+     "line": 3852
+    },
+    {
+     "source": "chat.light.html",
+     "rule": "nested-cards",
+     "category": "layout",
+     "severity": "high",
+     "evidence": "<button class=\"btn btn-secondary\"> is a card inside a card ancestor",
+     "line": 3852
+    }
+   ],
+   "counts": {
+    "total": 140,
+    "byRule": {
+     "nested-cards": 140
+    }
+   }
+  },
+  "preview": {
+   "detector": "detect.mjs",
+   "version": 1,
+   "attribution": "Rule subset ported from Impeccable (pbakaus/impeccable), Apache-2.0, with modifications — see file header. Catalog: references/visual/ai-tells.md.",
+   "status": "ran",
+   "sources": [
+    "kiwi-ui-preview.html"
+   ],
+   "rules": 16,
+   "findings": [
+    {
+     "source": "kiwi-ui-preview.html",
+     "rule": "overused-font",
+     "category": "typography",
+     "severity": "medium",
+     "evidence": "overused font \"Montserrat\" as a primary face",
+     "line": 3399
+    }
+   ],
+   "counts": {
+    "total": 1,
+    "byRule": {
+     "overused-font": 1
+    }
+   }
+  }
+ }
+}

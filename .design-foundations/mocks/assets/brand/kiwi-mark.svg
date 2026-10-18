@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" class="kiwi-artwork kiwi-mascot kiwi-mascot--icon kiwi-mascot--idle" data-motion="reduced" style="--kiwi-duration:4800ms" viewBox="0 0 160 160" fill="none" role="img" aria-label="Kiwi idle" focusable="false"><title>Kiwi idle</title><style>/* Flat reference palette. Feature-local tokens do not override the MUI theme. */
+.kiwi-mascot, .kiwi-stamp, .kiwi-loader {
+  --kiwi-forest: #234631;
+  --kiwi-sage: #92ae70;
+  --kiwi-cream: #f5f4e8;
+  --kiwi-tan: #ccbd99;
+  --kiwi-gaze-x: 0px;
+  --kiwi-gaze-y: 0px;
+}
+.kiwi-mascot { display: inline-block; flex: none; line-height: 0; vertical-align: middle; }
+.kiwi-artwork { width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.kiwi-feather, .kiwi-heart { fill: var(--kiwi-forest); }
+.kiwi-cream { fill: var(--kiwi-cream); }
+.kiwi-bill { fill: var(--kiwi-tan); }
+.kiwi-tile { fill: var(--kiwi-sage); }
+.kiwi-door, .kiwi-attention, .kiwi-sleep-marks { stroke: var(--kiwi-forest); }
+.kiwi-feather-stroke { stroke: var(--kiwi-forest); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.kiwi-shadow { fill: var(--kiwi-forest); opacity: .12; }
+.kiwi-performer { transform-origin: 80px 130px; }
+.kiwi-head, .kiwi-icon-head { transform-origin: 82px 92px; }
+.kiwi-head-side { transform-origin: 102px 65px; }
+.kiwi-body { transform-origin: 75px 120px; }
+.kiwi-hop-body { transform-origin: 75px 140px; }
+.kiwi-leg { transform-origin: 72px 122px; }
+.kiwi-eye { transform-box: fill-box; transform-origin: center; animation: kiwi-blink 4800ms infinite; }
+.kiwi-wing { opacity: 0; transform-origin: 68px 88px; }
+.kiwi-portrait-wing { opacity: 0; transform-origin: 38px 123px; }
+.kiwi-gaze { transform: translate(var(--kiwi-gaze-x), var(--kiwi-gaze-y)); transition: transform 140ms ease-out; }
+.kiwi-icon-peek { opacity: 0; transform: translateX(116px); transition: transform 240ms cubic-bezier(.2,.7,.2,1), opacity 180ms; }
+.kiwi-icon-side { opacity: 1; transition: opacity 180ms; }
+.kiwi-door { opacity: 0; transition: opacity 160ms; }
+.kiwi-emote { transform-origin: 116px 40px; }
+
+.kiwi-mascot--idle .kiwi-performer { animation: kiwi-breathe var(--kiwi-duration) ease-in-out infinite; }
+.kiwi-mascot--thinking .kiwi-head, .kiwi-mascot--thinking .kiwi-icon-head { animation: kiwi-think var(--kiwi-duration) ease-in-out infinite; }
+.kiwi-mascot--listening .kiwi-head, .kiwi-mascot--listening .kiwi-icon-head { animation: kiwi-listen var(--kiwi-duration) ease-in-out infinite; }
+.kiwi-mascot--speaking .kiwi-head, .kiwi-mascot--speaking .kiwi-icon-head { animation: kiwi-nod var(--kiwi-duration) ease-in-out infinite; }
+.kiwi-mascot--curious .kiwi-head, .kiwi-mascot--curious .kiwi-icon-head { animation: kiwi-curious var(--kiwi-duration) ease-in-out infinite; }
+.kiwi-mascot--walk .kiwi-body { animation: kiwi-step var(--kiwi-duration) ease-in-out infinite; }
+.kiwi-mascot--walk .kiwi-leg-front { animation: kiwi-leg var(--kiwi-duration) ease-in-out infinite; }
+.kiwi-mascot--walk .kiwi-leg-back { animation: kiwi-leg var(--kiwi-duration) ease-in-out infinite reverse; }
+.kiwi-mascot--walk:not(.kiwi-mascot--full) .kiwi-performer { animation: kiwi-step var(--kiwi-duration) ease-in-out infinite; }
+.kiwi-mascot--hop .kiwi-performer, .kiwi-mascot--pop .kiwi-performer { animation: kiwi-hop var(--kiwi-duration) cubic-bezier(.3,.1,.3,1) both; }
+.kiwi-mascot--success .kiwi-performer { animation: kiwi-success var(--kiwi-duration) ease-in-out both; }
+.kiwi-mascot--success .kiwi-wing { opacity: 1; animation: kiwi-flap 180ms 3 220ms alternate ease-in-out; }
+.kiwi-mascot--success .kiwi-portrait-wing { opacity: 1; animation: kiwi-wave var(--kiwi-duration) ease-in-out both; }
+.kiwi-mascot--fly .kiwi-hop-body { animation: kiwi-try-flight var(--kiwi-duration) ease-in-out infinite; }
+.kiwi-mascot--fly .kiwi-wing { opacity: 1; animation: kiwi-flap 160ms ease-in-out infinite alternate; }
+.kiwi-mascot--fly .kiwi-wing-back { animation-direction: alternate-reverse; }
+.kiwi-mascot--fly .kiwi-portrait-wing { opacity: 1; animation: kiwi-wave 360ms ease-in-out infinite; }
+.kiwi-mascot--fly:not(.kiwi-mascot--full) .kiwi-performer { animation: kiwi-try-flight var(--kiwi-duration) ease-in-out infinite; }
+.kiwi-mascot--wave .kiwi-performer, .kiwi-mascot--heart .kiwi-performer,
+.kiwi-mascot--peek .kiwi-performer, .kiwi-mascot--retract .kiwi-performer { animation: kiwi-action var(--kiwi-duration) both; }
+.kiwi-mascot--wave .kiwi-wing-front, .kiwi-mascot--wave .kiwi-portrait-wing { opacity: 1; animation: kiwi-wave var(--kiwi-duration) ease-in-out both; }
+.kiwi-mascot--bow .kiwi-performer { animation: kiwi-bow var(--kiwi-duration) ease-in-out both; }
+.kiwi-mascot--error .kiwi-performer { animation: kiwi-settle var(--kiwi-duration) ease-out both; }
+.kiwi-mascot--error .kiwi-head, .kiwi-mascot--error .kiwi-icon-head { transform: rotate(7deg); }
+.kiwi-mascot--offline .kiwi-performer { animation: kiwi-breathe var(--kiwi-duration) ease-in-out infinite; transform: translateY(4px); }
+.kiwi-mascot--sleep .kiwi-performer { animation: kiwi-doze var(--kiwi-duration) ease-in-out infinite; }
+.kiwi-mascot--sleep .kiwi-eye { animation: none; transform: scaleY(.13); }
+.kiwi-mascot--sleep .kiwi-head, .kiwi-mascot--sleep .kiwi-icon-head { transform: rotate(10deg); }
+.kiwi-mascot--sleep .kiwi-emote { animation: kiwi-dream 4200ms ease-in-out infinite; }
+.kiwi-mascot--heart .kiwi-emote { animation: kiwi-heart var(--kiwi-duration) ease-in-out both; }
+.kiwi-mascot--notification .kiwi-performer { animation: kiwi-attend var(--kiwi-duration) ease-out both; }
+.kiwi-mascot--notification .kiwi-emote { animation: kiwi-heart var(--kiwi-duration) ease-out both; }
+.kiwi-mascot--peek .kiwi-icon-peek { transform: translateX(0); opacity: 1; }
+.kiwi-mascot--peek .kiwi-icon-side { opacity: 0; }
+.kiwi-mascot--peek .kiwi-door { opacity: 1; }
+.kiwi-mascot--pop .kiwi-tile { opacity: .55; }
+
+.kiwi-stamp { display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 0; border-radius: 24%; background: transparent; cursor: pointer; touch-action: manipulation; flex: none; }
+.kiwi-stamp:focus-visible { outline: 3px solid var(--kiwi-forest); outline-offset: 5px; }
+.kiwi-stamp:disabled { cursor: default; opacity: .55; }
+/* Pointer gaze values inherit from the actual interactive button. */
+.kiwi-stamp .kiwi-mascot { --kiwi-gaze-x: inherit; --kiwi-gaze-y: inherit; }
+
+.kiwi-loader { display: flex; flex-direction: column; max-width: 100%; gap: 6px; color: var(--kiwi-forest); }
+.kiwi-loader-track { position: relative; height: 66px; width: 100%; }
+.kiwi-loader-line { position: absolute; bottom: 9px; left: 16px; right: 16px; height: 2px; border-radius: 2px; background: var(--kiwi-sage); opacity: .4; }
+.kiwi-loader-finish { position: absolute; bottom: 9px; right: 15px; height: 12px; width: 3px; border-radius: 2px; background: var(--kiwi-tan); }
+.kiwi-loader-traveller { position: absolute; bottom: 5px; left: 0; width: 64px; height: 64px; }
+.kiwi-loader-label { font: inherit; font-size: .8em; line-height: 1.5; }
+.kiwi-loader--journey .kiwi-loader-traveller { animation: kiwi-journey 4800ms linear infinite; }
+.kiwi-loader--journey .kiwi-hop-body { animation: kiwi-journey-hop 4800ms ease-in-out infinite; }
+.kiwi-loader--journey .kiwi-wing { animation: kiwi-journey-wing 4800ms ease-in-out infinite; }
+.kiwi-loader--journey .kiwi-leg-front { animation: kiwi-journey-leg 4800ms ease-in-out infinite; }
+.kiwi-loader--journey .kiwi-leg-back { animation: kiwi-journey-leg-back 4800ms ease-in-out infinite; }
+.kiwi-loader--journey .kiwi-body { animation: kiwi-journey-bob 4800ms ease-in-out infinite; }
+.kiwi-loader--progress .kiwi-loader-traveller { left: clamp(0px, calc(var(--kiwi-progress) - 64px), calc(100% - 64px)); transition: left 260ms ease-out; }
+
+@keyframes kiwi-blink { 0%, 42%, 46%, 100% { transform: scaleY(1); } 44% { transform: scaleY(.08); } }
+@keyframes kiwi-breathe { 0%, 100% { transform: translateY(0) scaleY(1); } 50% { transform: translateY(-1px) scaleY(1.012); } }
+@keyframes kiwi-think { 0%, 100% { transform: rotate(0); } 24%, 44% { transform: rotate(-9deg); } 66%, 80% { transform: rotate(5deg); } }
+@keyframes kiwi-listen { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(-7deg); } }
+@keyframes kiwi-nod { 0%, 30%, 100% { transform: rotate(0); } 55% { transform: rotate(5deg); } 75% { transform: rotate(-2deg); } }
+@keyframes kiwi-curious { 0%, 100% { transform: rotate(0); } 35%, 75% { transform: rotate(-12deg); } }
+@keyframes kiwi-step { 0%, 50%, 100% { transform: translateY(0); } 25%, 75% { transform: translateY(-3px); } }
+@keyframes kiwi-leg { 0%, 100% { transform: rotate(-17deg); } 50% { transform: rotate(17deg); } }
+@keyframes kiwi-hop { 0%, 100% { transform: translateY(0) scale(1); } 18% { transform: translateY(3px) scale(1.04,.94); } 48% { transform: translateY(-25px) scale(.98,1.03); } 80% { transform: translateY(3px) scale(1.04,.95); } }
+@keyframes kiwi-success { 0%, 100% { transform: translateY(0); } 17% { transform: scale(1.03,.94); } 44%, 60% { transform: translateY(-20px); } 82% { transform: scale(1.04,.95); } }
+@keyframes kiwi-try-flight { 0%, 100% { transform: translateY(0); } 35%, 60% { transform: translateY(-12px) rotate(-3deg); } 80% { transform: translateY(2px); } }
+@keyframes kiwi-flap { from { transform: rotate(-27deg) scaleY(.7); } to { transform: rotate(32deg) scaleY(1.1); } }
+@keyframes kiwi-wave { 0%, 100% { transform: rotate(0); } 22%, 62% { transform: rotate(45deg); } 42%, 82% { transform: rotate(-25deg); } }
+@keyframes kiwi-bow { 0%, 100% { transform: rotate(0); } 35%, 60% { transform: rotate(15deg) translateY(3px); } }
+@keyframes kiwi-settle { from { transform: translateY(-2px); } to { transform: translateY(3px); } }
+@keyframes kiwi-doze { 0%, 100% { transform: translateY(7px) scaleY(.96); } 50% { transform: translateY(5px) scaleY(.98); } }
+@keyframes kiwi-dream { 0%, 100% { opacity: .3; transform: translateY(2px); } 50% { opacity: .9; transform: translateY(-3px); } }
+@keyframes kiwi-heart { 0% { opacity: 0; transform: translateY(5px) scale(.6); } 40%, 75% { opacity: 1; transform: translateY(-3px) scale(1); } 100% { opacity: 0; transform: translateY(-12px); } }
+@keyframes kiwi-attend { 0%, 100% { transform: translateY(0); } 35% { transform: translateY(-7px); } 65% { transform: translateY(1px); } }
+@keyframes kiwi-action { from { opacity: .999; } to { opacity: 1; } }
+/* Arrival is an animation beat, never a fabricated completion percentage. */
+@keyframes kiwi-journey { 0%, 6% { left: 0; opacity: 1; } 52%, 84% { left: calc(100% - 64px); opacity: 1; } 89% { left: calc(100% - 64px); opacity: 0; } 90%, 95% { left: 0; opacity: 0; } 100% { left: 0; opacity: 1; } }
+@keyframes kiwi-journey-hop { 0%, 22%, 44%, 58%, 82%, 100% { transform: translateY(0); } 27% { transform: scale(1.04,.94); } 34% { transform: translateY(-20px); } 41% { transform: scale(1.04,.95); } 65%, 72% { transform: translateY(-12px); } 78% { transform: translateY(2px); } }
+@keyframes kiwi-journey-wing { 0%, 58%, 84%, 100% { opacity: 0; transform: rotate(0); } 62%, 68%, 74% { opacity: 1; transform: rotate(-35deg); } 65%, 71%, 77% { opacity: 1; transform: rotate(35deg); } 81% { opacity: 1; transform: rotate(0); } }
+@keyframes kiwi-journey-bob { 0%, 10%, 20%, 40%, 50%, 60%, 100% { transform: translateY(0); } 5%, 15%, 25%, 45%, 55% { transform: translateY(-2px); } }
+@keyframes kiwi-journey-leg { 0%, 10%, 20%, 40%, 50% { transform: rotate(-17deg); } 5%, 15%, 25%, 45% { transform: rotate(17deg); } 58%, 100% { transform: rotate(0); } }
+@keyframes kiwi-journey-leg-back { 0%, 10%, 20%, 40%, 50% { transform: rotate(17deg); } 5%, 15%, 25%, 45% { transform: rotate(-17deg); } 58%, 100% { transform: rotate(0); } }
+
+.kiwi-mascot[data-motion="paused"] *, .kiwi-loader[data-motion="paused"] * { animation-play-state: paused !important; }
+.kiwi-mascot[data-motion="reduced"] *, .kiwi-loader[data-motion="reduced"] * { animation: none !important; transition: none !important; }
+.kiwi-mascot[data-motion="reduced"] .kiwi-performer { transform: none; }
+.kiwi-mascot[data-motion="reduced"].kiwi-mascot--sleep .kiwi-eye { transform: scaleY(.13); }
+.kiwi-mascot[data-motion="reduced"] .kiwi-gaze { transform: none; }
+.kiwi-loader[data-motion="reduced"] .kiwi-loader-traveller { left: 0; opacity: 1; }
+.kiwi-loader--progress[data-motion="reduced"] .kiwi-loader-traveller { left: clamp(0px, calc(var(--kiwi-progress) - 64px), calc(100% - 64px)); }
+@media (prefers-reduced-motion: reduce) {
+  .kiwi-mascot *, .kiwi-loader * { animation: none !important; transition: none !important; }
+  .kiwi-gaze { transform: none; }
+}
+</style><defs><clipPath id="kiwi-_R_0_"><rect width="160" height="160" rx="35"></rect></clipPath></defs><rect class="kiwi-tile" width="160" height="160" rx="35"></rect><g class="kiwi-performer"><g clip-path="url(#kiwi-_R_0_)"><g class="kiwi-icon-side"><path class="kiwi-feather" d="M-12 160V92C4 99 12 83 20 72C33 54 50 47 66 51C87 56 101 74 99 91C98 107 80 118 80 133L82 170Z"></path><g class="kiwi-icon-head"><path class="kiwi-feather" d="M25 73C33 51 51 45 68 51C86 56 100 73 99 89C98 108 78 121 58 114C40 108 23 94 25 73Z"></path><path class="kiwi-bill" d="M97 68L146 56C151 55 153 59 148 62L103 77C98 79 95 73 97 68Z"></path><g class="kiwi-eye"><circle class="kiwi-cream" cx="76" cy="78" r="5.5"></circle></g></g></g><g class="kiwi-icon-peek"><g transform="translate(8 7) scale(.89)"><g class="kiwi-portrait"><path class="kiwi-feather" d="M23 148C26 128 38 117 39 98C33 81 33 62 40 45C49 24 67 17 83 18C106 17 127 34 130 55C132 72 127 88 120 102C123 121 137 132 138 148Z"></path><g class="kiwi-head"><path class="kiwi-feather" d="M39 98C33 81 33 62 40 45C49 24 67 17 83 18C106 17 127 34 130 55C132 72 127 88 120 102C98 115 60 112 39 98Z"></path><g class="kiwi-gaze"><g class="kiwi-eye kiwi-eye-front"><circle class="kiwi-cream" cx="61" cy="68" r="6.3"></circle><ellipse class="kiwi-cream" cx="109" cy="49" rx="3.8" ry="5.4" transform="rotate(-24 109 49)"></ellipse></g><path class="kiwi-bill" d="M89 63C93 59 98 61 102 65C119 80 139 107 152 131C155 138 151 140 146 134C129 115 110 94 88 77C82 73 83 67 89 63Z"></path></g></g><g class="kiwi-portrait-wing"><path class="kiwi-feather" d="M34 112C19 97 14 106 20 121C25 133 34 137 41 133Z"></path></g></g></g></g><path class="kiwi-door" d="M139 17V143" stroke-width="6" stroke-linecap="round"></path></g></g><g class="kiwi-emote" stroke-linecap="round" stroke-linejoin="round"></g></svg>
