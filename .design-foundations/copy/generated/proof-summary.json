@@ -1,6 +1,6 @@
 {
  "about": "Written by prove-checks.mjs. check-copy.mjs (R1) reads it: every proof the coverage table names is here and was caught, and codeHash is the hash of the checker, its library, the resolver, the proofs and the TypeScript scanner, so a summary older than a change to any of them is stale.",
- "codeHash": "62a1f958cb868a9c",
+ "codeHash": "5d089688097177fb",
  "unit": {
   "total": 189,
   "ok": 189,
@@ -2559,6 +2559,68 @@
     "rule": "TERM",
     "corpus": "data",
     "expect": "F18",
+    "ok": true
+   }
+  ]
+ },
+ "lock": {
+  "total": 11,
+  "ok": 11,
+  "controls": 1,
+  "cases": [
+   {
+    "id": "LOCK-0",
+    "part": null,
+    "ok": true
+   },
+   {
+    "id": "LOCK-1",
+    "part": "design",
+    "ok": true
+   },
+   {
+    "id": "LOCK-2",
+    "part": "design",
+    "ok": true
+   },
+   {
+    "id": "LOCK-3",
+    "part": "design",
+    "ok": true
+   },
+   {
+    "id": "LOCK-4",
+    "part": "journey",
+    "ok": true
+   },
+   {
+    "id": "LOCK-5",
+    "part": "design",
+    "ok": true
+   },
+   {
+    "id": "LOCK-6",
+    "part": "design",
+    "ok": true
+   },
+   {
+    "id": "LOCK-7",
+    "part": "design",
+    "ok": true
+   },
+   {
+    "id": "LOCK-8",
+    "part": "journey",
+    "ok": true
+   },
+   {
+    "id": "LOCK-9",
+    "part": "design",
+    "ok": true
+   },
+   {
+    "id": "LOCK-10",
+    "part": "design",
     "ok": true
    }
   ]

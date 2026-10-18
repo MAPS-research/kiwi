@@ -12730,7 +12730,7 @@
       }
     },
     "slot": {
-      "$description": "Slot sizes per placement. A slot is the square the drawing is framed in (the library's per-atlas circle framing in both modes, so the mascot keeps one size and position whether or not the backing disc shows). Every size is a 2× multiple of the shipped atlas cell or still, so nothing upscales on a 2× display; only the avatar and the peek play atlases, every other slot loads one still.",
+      "$description": "Slot sizes per placement. A slot is the square the drawing is framed in, in both modes, so the mascot keeps one size and position whether or not the backing disc shows (the tutor avatar and the welcome frame in one framing shared by the three full-body atlases since the 2026-10-18 amendment, every other slot in its atlas's circle framing). Every size is a 2× multiple of the shipped atlas cell or still, so nothing upscales on a 2× display; only the avatar and the peek play atlases, every other slot loads one still.",
       "avatar": {
         "$type": "dimension",
         "$value": "{semantic.size.avatar}",

@@ -1,4 +1,4 @@
-# Kiwi UI token checks — 2026-10-18 · source v2.0.0 (sha256 99c99554452b) · at 26652e2
+# Kiwi UI token checks — 2026-10-18 · source v2.0.0 (sha256 e6d4e43f3934) · at 14229be
 
 Source: `.design-foundations/tokens/kiwi-ui.tokens.json` · Locked block: `kiwi-ui/DESIGN.md` · Result: **PASS**
 
@@ -708,7 +708,7 @@ Policy: A deprecated name keeps a safe value and is removed no earlier than two 
 
 ## 20. Companion backing (Phase 4)
 
-7 required token pairs (the forest outline ≥ 3:1 on the dark backing and on the light surfaces behind the transparent light backing), 0 below; 33 shipped assets pixel-sampled (the lightest forest-class pixel of each on the dark backing and on light --surface-active), 0 below 3.
+7 required token pairs (the forest outline ≥ 3:1 on the dark backing and on the light surfaces behind the transparent light backing), 0 below; 21 shipped assets pixel-sampled (the lightest forest-class pixel of each on the dark backing and on light --surface-active), 0 below 3.
 
 | Mode | Pair | Value | Ratio | |
 |---|---|---|---|---|
@@ -726,35 +726,23 @@ Policy: A deprecated name keeps a safe value and is removed no earlier than two 
 | Asset (pixel-sampled) | Forest px | Lightest forest | on dark backing | on light surface-active | tan lightest on backing (info) | |
 |---|---:|---|---|---|---|---|
 | atlas/full-walk.64.webp | 16,562 | #5f7767 | 4.61 | 3.96 | 1.02 | PASS |
-| atlas/portrait-nod-sleep.64.webp | 29,776 | #627662 | 4.64 | 4.00 | 1.00 | PASS |
 | atlas/full-hop-flight.64.webp | 15,926 | #627b65 | 4.38 | 3.77 | 1.00 | PASS |
 | atlas/full-wave-bow.64.webp | 15,655 | #627768 | 4.57 | 3.93 | 1.53 | PASS |
-| atlas/portrait-doze.64.webp | 32,910 | #637b68 | 4.36 | 3.75 | 1.49 | PASS |
 | atlas/stamp-peek.96.webp | 31,093 | #5f7565 | 4.72 | 4.06 | 1.00 | PASS |
-| stills/idle.64.webp | 1,444 | #576e5d | 5.25 | 4.51 | 1.09 | PASS |
+| stills/stand.64.webp | 653 | #5a6748 | 5.74 | 4.94 | 1.66 | PASS |
+| stills/stand.128.webp | 2,614 | #5d725f | 4.93 | 4.24 | 1.03 | PASS |
 | stills/idle.128.webp | 5,804 | #627866 | 4.53 | 3.89 | 1.03 | PASS |
 | stills/idle.192.webp | 13,065 | #627260 | 4.86 | 4.18 | 1.03 | PASS |
+| stills/error.128.webp | 4,145 | #61735e | 4.83 | 4.15 | 1.00 | PASS |
+| stills/error.192.webp | 9,333 | #627762 | 4.59 | 3.95 | 1.01 | PASS |
+| stills/walk.128.webp | 2,781 | #54634a | 6.11 | 5.25 | 1.06 | PASS |
+| stills/walk.192.webp | 6,262 | #5a715c | 5.04 | 4.33 | 1.11 | PASS |
+| stills/wave.64.webp | 713 | #485d4b | 6.77 | 5.82 | 1.53 | PASS |
+| stills/wave.128.webp | 2,863 | #516955 | 5.69 | 4.89 | 1.53 | PASS |
+| stills/wave.192.webp | 6,432 | #5c6f5f | 5.11 | 4.40 | 1.63 | PASS |
 | stills/peek.64.webp | 812 | #5d6d5d | 5.22 | 4.49 | 1.02 | PASS |
 | stills/peek.128.webp | 3,322 | #5f7060 | 5.01 | 4.31 | 1.00 | PASS |
 | stills/peek.192.webp | 7,448 | #627061 | 4.97 | 4.27 | 1.00 | PASS |
 | stills/retract.64.webp | 224 | #5d6d5e | 5.22 | 4.49 | 1.03 | PASS |
 | stills/retract.128.webp | 910 | #5f6d60 | 5.18 | 4.46 | 1.06 | PASS |
 | stills/retract.192.webp | 2,048 | #606d59 | 5.20 | 4.47 | 1.01 | PASS |
-| stills/walk.64.webp | 694 | #4d6046 | 6.47 | 5.57 | 1.61 | PASS |
-| stills/walk.128.webp | 2,781 | #54634a | 6.11 | 5.25 | 1.06 | PASS |
-| stills/walk.192.webp | 6,262 | #5a715c | 5.04 | 4.33 | 1.11 | PASS |
-| stills/speaking.64.webp | 1,261 | #627461 | 4.75 | 4.09 | 1.00 | PASS |
-| stills/speaking.128.webp | 5,057 | #596650 | 5.79 | 4.98 | 1.00 | PASS |
-| stills/speaking.192.webp | 11,385 | #627360 | 4.81 | 4.14 | 1.00 | PASS |
-| stills/hop.64.webp | 653 | #5a6748 | 5.74 | 4.94 | 1.66 | PASS |
-| stills/hop.128.webp | 2,614 | #5d725f | 4.93 | 4.24 | 1.03 | PASS |
-| stills/hop.192.webp | 5,890 | #5f765e | 4.70 | 4.04 | 1.00 | PASS |
-| stills/wave.64.webp | 713 | #485d4b | 6.77 | 5.82 | 1.53 | PASS |
-| stills/wave.128.webp | 2,863 | #516955 | 5.69 | 4.89 | 1.53 | PASS |
-| stills/wave.192.webp | 6,432 | #5c6f5f | 5.11 | 4.40 | 1.63 | PASS |
-| stills/error.64.webp | 1,030 | #60735f | 4.84 | 4.16 | 1.01 | PASS |
-| stills/error.128.webp | 4,145 | #61735e | 4.83 | 4.15 | 1.00 | PASS |
-| stills/error.192.webp | 9,333 | #627762 | 4.59 | 3.95 | 1.01 | PASS |
-| stills/offline.64.webp | 1,309 | #617764 | 4.60 | 3.95 | 1.66 | PASS |
-| stills/offline.128.webp | 5,255 | #5e7766 | 4.62 | 3.98 | 1.63 | PASS |
-| stills/offline.192.webp | 11,833 | #637561 | 4.69 | 4.03 | 1.62 | PASS |

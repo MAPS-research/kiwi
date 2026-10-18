@@ -1,8 +1,8 @@
 {
- "motionOn": {
+ "page": {
   "page": "companion-sheet",
-  "round": "fix round 1",
-  "date": "2026-10-17",
+  "round": "amendment 2026-10-18 (one full-body framing)",
+  "date": "2026-10-18",
   "motion": {
    "flag": true,
    "reduced": false,
@@ -12,46 +12,74 @@
    "why": "on"
   },
   "assets": {
-   "loaded": 23,
-   "total": 23
+   "loaded": 16,
+   "total": 16
   },
   "states": {
    "cards": 9,
-   "names": [
-    "peek",
-    "retract",
-    "walk",
-    "speaking",
-    "hop",
-    "wave",
-    "error",
-    "offline",
-    "idle"
-   ],
    "textTwins": 9
   },
   "durations": {
-   "peek": 2.3333333333333335,
-   "retract": 2.3333333333333335,
    "walk": 2,
-   "speaking": 3.5,
-   "hop": 1.1666666666666667,
+   "hop": 1.167,
    "wave": 2.125,
-   "error": 2.625,
-   "offline": 3,
-   "wake": 2,
-   "hop-gallery": 3.5,
-   "speaking-gallery": 5.125,
-   "bow": 2.4166666666666665
+   "peek": 2.333,
+   "retract": 2.333
   },
   "hopDrawings": 24,
-  "stills": {
-   "rows": 2,
-   "perRow": 9,
-   "total": 18
+  "avatarFraming": {
+   "avatars": 153,
+   "distinctFramings": 1,
+   "shared": [
+    4.4933,
+    7.887,
+    78.9811,
+    78.9811
+   ],
+   "notShared": 0,
+   "allShared": true,
+   "clipsDrawn": [
+    "full-hop-flight:0:shared",
+    "full-hop-flight:11:shared",
+    "full-hop-flight:14:shared",
+    "full-hop-flight:18:shared",
+    "full-hop-flight:23:shared",
+    "full-hop-flight:4:shared",
+    "full-hop-flight:6:shared",
+    "full-hop-flight:8:shared",
+    "full-walk:0:shared",
+    "full-walk:12:shared",
+    "full-walk:16:shared",
+    "full-walk:18:shared",
+    "full-walk:4:shared",
+    "full-walk:6:shared",
+    "full-wave-bow:0:shared",
+    "full-wave-bow:14:shared",
+    "full-wave-bow:17:shared",
+    "full-wave-bow:8:shared",
+    "stand",
+    "walk"
+   ]
   },
+  "portraitInAvatar": 0,
+  "pageStills": [
+   "peek-out:peek-out:wall",
+   "peek-out:peek-out:wall",
+   "peek-in:peek-in:wall",
+   "peek-in:peek-in:wall",
+   "signin:portrait:own",
+   "not-found:walk-standing:own",
+   "empty:portrait:own",
+   "error-frame:error-portrait:own",
+   "card:portrait:own",
+   "signin:portrait:own",
+   "not-found:walk-standing:own",
+   "empty:portrait:own",
+   "error-frame:error-portrait:own",
+   "card:portrait:own"
+  ],
   "ariaHidden": {
-   "kiwi": 104,
+   "kiwi": 205,
    "missing": 0
   },
   "placements": [
@@ -61,70 +89,16 @@
     "expect": 32,
     "width": 32,
     "height": 32,
-    "suppressed": false,
+    "hidden": false,
     "ok": true
    },
    {
     "placement": "avatar",
     "theme": "light",
     "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "peek",
-    "theme": "light",
-    "expect": 48,
-    "width": 48,
-    "height": 48,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "avatar-older",
-    "theme": "dark",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "avatar",
-    "theme": "dark",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "peek",
-    "theme": "dark",
-    "expect": 48,
-    "width": 48,
-    "height": 48,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "avatar-older",
-    "theme": "light",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "avatar",
-    "theme": "light",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
+    "width": 0,
+    "height": 0,
+    "hidden": true,
     "ok": true
    },
    {
@@ -133,7 +107,7 @@
     "expect": 48,
     "width": 0,
     "height": 0,
-    "suppressed": true,
+    "hidden": true,
     "ok": true
    },
    {
@@ -142,16 +116,16 @@
     "expect": 32,
     "width": 32,
     "height": 32,
-    "suppressed": false,
+    "hidden": false,
     "ok": true
    },
    {
     "placement": "avatar",
     "theme": "dark",
     "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
+    "width": 0,
+    "height": 0,
+    "hidden": true,
     "ok": true
    },
    {
@@ -160,16 +134,7 @@
     "expect": 48,
     "width": 0,
     "height": 0,
-    "suppressed": true,
-    "ok": true
-   },
-   {
-    "placement": "avatar-older",
-    "theme": "light",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
+    "hidden": true,
     "ok": true
    },
    {
@@ -178,7 +143,34 @@
     "expect": 32,
     "width": 32,
     "height": 32,
-    "suppressed": false,
+    "hidden": false,
+    "ok": true
+   },
+   {
+    "placement": "avatar",
+    "theme": "dark",
+    "expect": 32,
+    "width": 32,
+    "height": 32,
+    "hidden": false,
+    "ok": true
+   },
+   {
+    "placement": "avatar-older",
+    "theme": "light",
+    "expect": 32,
+    "width": 32,
+    "height": 32,
+    "hidden": false,
+    "ok": true
+   },
+   {
+    "placement": "avatar",
+    "theme": "light",
+    "expect": 32,
+    "width": 0,
+    "height": 0,
+    "hidden": true,
     "ok": true
    },
    {
@@ -187,7 +179,7 @@
     "expect": 48,
     "width": 0,
     "height": 0,
-    "suppressed": true,
+    "hidden": true,
     "ok": true
    },
    {
@@ -196,16 +188,16 @@
     "expect": 32,
     "width": 32,
     "height": 32,
-    "suppressed": false,
+    "hidden": false,
     "ok": true
    },
    {
     "placement": "avatar",
     "theme": "dark",
     "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
+    "width": 0,
+    "height": 0,
+    "hidden": true,
     "ok": true
    },
    {
@@ -214,7 +206,7 @@
     "expect": 48,
     "width": 0,
     "height": 0,
-    "suppressed": true,
+    "hidden": true,
     "ok": true
    },
    {
@@ -223,34 +215,25 @@
     "expect": 32,
     "width": 32,
     "height": 32,
-    "suppressed": false,
+    "hidden": false,
     "ok": true
    },
    {
     "placement": "avatar",
     "theme": "light",
     "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
+    "width": 0,
+    "height": 0,
+    "hidden": true,
     "ok": true
    },
    {
-    "placement": "avatar-older",
+    "placement": "peek",
     "theme": "light",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "avatar",
-    "theme": "light",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
+    "expect": 48,
+    "width": 0,
+    "height": 0,
+    "hidden": true,
     "ok": true
    },
    {
@@ -259,16 +242,52 @@
     "expect": 32,
     "width": 32,
     "height": 32,
-    "suppressed": false,
+    "hidden": false,
     "ok": true
    },
    {
     "placement": "avatar",
     "theme": "dark",
     "expect": 32,
+    "width": 0,
+    "height": 0,
+    "hidden": true,
+    "ok": true
+   },
+   {
+    "placement": "peek",
+    "theme": "dark",
+    "expect": 48,
+    "width": 0,
+    "height": 0,
+    "hidden": true,
+    "ok": true
+   },
+   {
+    "placement": "avatar-older",
+    "theme": "light",
+    "expect": 32,
     "width": 32,
     "height": 32,
-    "suppressed": false,
+    "hidden": false,
+    "ok": true
+   },
+   {
+    "placement": "avatar",
+    "theme": "light",
+    "expect": 32,
+    "width": 0,
+    "height": 0,
+    "hidden": true,
+    "ok": true
+   },
+   {
+    "placement": "peek",
+    "theme": "light",
+    "expect": 48,
+    "width": 0,
+    "height": 0,
+    "hidden": true,
     "ok": true
    },
    {
@@ -277,16 +296,115 @@
     "expect": 32,
     "width": 32,
     "height": 32,
-    "suppressed": false,
+    "hidden": false,
     "ok": true
    },
    {
     "placement": "avatar",
     "theme": "dark",
     "expect": 32,
+    "width": 0,
+    "height": 0,
+    "hidden": true,
+    "ok": true
+   },
+   {
+    "placement": "peek",
+    "theme": "dark",
+    "expect": 48,
+    "width": 0,
+    "height": 0,
+    "hidden": true,
+    "ok": true
+   },
+   {
+    "placement": "avatar-older",
+    "theme": "light",
+    "expect": 32,
     "width": 32,
     "height": 32,
-    "suppressed": false,
+    "hidden": false,
+    "ok": true
+   },
+   {
+    "placement": "avatar",
+    "theme": "light",
+    "expect": 32,
+    "width": 0,
+    "height": 0,
+    "hidden": true,
+    "ok": true
+   },
+   {
+    "placement": "peek",
+    "theme": "light",
+    "expect": 48,
+    "width": 0,
+    "height": 0,
+    "hidden": true,
+    "ok": true
+   },
+   {
+    "placement": "avatar-older",
+    "theme": "dark",
+    "expect": 32,
+    "width": 32,
+    "height": 32,
+    "hidden": false,
+    "ok": true
+   },
+   {
+    "placement": "avatar",
+    "theme": "dark",
+    "expect": 32,
+    "width": 0,
+    "height": 0,
+    "hidden": true,
+    "ok": true
+   },
+   {
+    "placement": "peek",
+    "theme": "dark",
+    "expect": 48,
+    "width": 0,
+    "height": 0,
+    "hidden": true,
+    "ok": true
+   },
+   {
+    "placement": "avatar-older",
+    "theme": "light",
+    "expect": 32,
+    "width": 32,
+    "height": 32,
+    "hidden": false,
+    "ok": true
+   },
+   {
+    "placement": "avatar",
+    "theme": "light",
+    "expect": 32,
+    "width": 32,
+    "height": 32,
+    "hidden": false,
+    "ok": true
+   },
+   {
+    "placement": "avatar-older",
+    "theme": "light",
+    "expect": 32,
+    "width": 32,
+    "height": 32,
+    "hidden": false,
+    "ok": true
+   },
+   {
+    "placement": "avatar",
+    "theme": "light",
+    "expect": 32,
+    "width": 32,
+    "height": 32,
+    "hidden": false,
     "ok": true
    },
    {
@@ -295,7 +413,7 @@
     "expect": 64,
     "width": 64,
     "height": 64,
-    "suppressed": false,
+    "hidden": false,
     "ok": true
    },
    {
@@ -304,7 +422,7 @@
     "expect": 56,
     "width": 56,
     "height": 56,
-    "suppressed": false,
+    "hidden": false,
     "ok": true
    },
    {
@@ -313,6 +431,43 @@
     "expect": 28,
     "width": 28,
     "height": 28,
+    "hidden": false,
+    "ok": true
+   },
+   {
+    "placement": "avatar-older",
+    "theme": "dark",
+    "expect": 32,
+    "width": 32,
+    "height": 32,
+    "hidden": false,
+    "ok": true
+   },
+   {
+    "placement": "avatar",
+    "theme": "dark",
+    "expect": 32,
+    "width": 32,
+    "height": 32,
+    "hidden": false,
+    "ok": true
+   },
+   {
+    "placement": "avatar-older",
+    "theme": "dark",
+    "expect": 32,
+    "width": 32,
+    "height": 32,
+    "hidden": false,
+    "ok": true
+   },
+   {
+    "placement": "avatar",
+    "theme": "dark",
+    "expect": 32,
+    "width": 32,
+    "height": 32,
+    "hidden": false,
     "ok": true
    },
    {
@@ -321,7 +476,7 @@
     "expect": 64,
     "width": 64,
     "height": 64,
-    "suppressed": false,
+    "hidden": false,
     "ok": true
    },
    {
@@ -330,7 +485,7 @@
     "expect": 56,
     "width": 56,
     "height": 56,
-    "suppressed": false,
+    "hidden": false,
     "ok": true
    },
    {
@@ -339,6 +494,7 @@
     "expect": 28,
     "width": 28,
     "height": 28,
+    "hidden": false,
     "ok": true
    },
    {
@@ -347,7 +503,7 @@
     "expect": 96,
     "width": 96,
     "height": 96,
-    "suppressed": false,
+    "hidden": false,
     "ok": true
    },
    {
@@ -356,7 +512,34 @@
     "expect": 96,
     "width": 96,
     "height": 96,
-    "suppressed": false,
+    "hidden": false,
+    "ok": true
+   },
+   {
+    "placement": "empty",
+    "theme": "light",
+    "expect": 96,
+    "width": 96,
+    "height": 96,
+    "hidden": false,
+    "ok": true
+   },
+   {
+    "placement": "error-frame",
+    "theme": "light",
+    "expect": 96,
+    "width": 96,
+    "height": 96,
+    "hidden": false,
+    "ok": true
+   },
+   {
+    "placement": "card",
+    "theme": "light",
+    "expect": 64,
+    "width": 64,
+    "height": 64,
+    "hidden": false,
     "ok": true
    },
    {
@@ -365,7 +548,7 @@
     "expect": 96,
     "width": 96,
     "height": 96,
-    "suppressed": false,
+    "hidden": false,
     "ok": true
    },
    {
@@ -374,25 +557,7 @@
     "expect": 96,
     "width": 96,
     "height": 96,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "empty",
-    "theme": "light",
-    "expect": 96,
-    "width": 96,
-    "height": 96,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "error-frame",
-    "theme": "light",
-    "expect": 96,
-    "width": 96,
-    "height": 96,
-    "suppressed": false,
+    "hidden": false,
     "ok": true
    },
    {
@@ -401,7 +566,7 @@
     "expect": 96,
     "width": 96,
     "height": 96,
-    "suppressed": false,
+    "hidden": false,
     "ok": true
    },
    {
@@ -410,16 +575,7 @@
     "expect": 96,
     "width": 96,
     "height": 96,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "card",
-    "theme": "light",
-    "expect": 64,
-    "width": 64,
-    "height": 64,
-    "suppressed": false,
+    "hidden": false,
     "ok": true
    },
    {
@@ -428,81 +584,12 @@
     "expect": 64,
     "width": 64,
     "height": 64,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "signin-narrow",
-    "theme": "light",
-    "expect": 64,
-    "width": 64,
-    "height": 64,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "avatar-narrow",
-    "theme": "light",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "peek-narrow",
-    "theme": "light",
-    "expect": 48,
-    "width": 48,
-    "height": 48,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "signin-narrow",
-    "theme": "dark",
-    "expect": 64,
-    "width": 64,
-    "height": 64,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "avatar-narrow",
-    "theme": "dark",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "peek-narrow",
-    "theme": "dark",
-    "expect": 48,
-    "width": 48,
-    "height": 48,
-    "suppressed": false,
+    "hidden": false,
     "ok": true
    }
   ],
   "placementsFailing": 0,
-  "placementsSuppressed": 4,
-  "avatarStillSizes": [
-   "peek@128",
-   "retract@128",
-   "walk@128",
-   "speaking@128",
-   "hop@128",
-   "wave@128",
-   "error@128",
-   "offline@128",
-   "idle@192",
-   "idle@128",
-   "idle@64",
-   "walk@192",
-   "error@192"
-  ],
+  "placementsHidden": 20,
   "backing": [
    {
     "theme": "light",
@@ -615,701 +702,1654 @@
   "glyph": {
    "copies": 8,
    "masks": 0,
-   "colourLiterals": 0,
-   "paths": 8
+   "colourLiterals": 0
   },
-  "peekWallLeftPercent": 13.28,
-  "inkAligned": 12,
+  "inkAligned": 10,
   "layout": {
    "innerWidth": 1440,
    "scrollWidth": 1440,
    "horizontalScroll": false,
-   "documentHeight": 11939
+   "documentHeight": 16254
   },
   "fonts": {
    "sourceSans3": true
   },
-  "oneMover": {
-   "exhibits": 14,
-   "samples": 8,
-   "maxMovers": 1
-  },
-  "oneMoverOk": true
- },
- "fullPage": {
-  "height": 12083,
-  "segments": 4
- },
- "oneMoverLive": {
-  "samples": 20,
-  "maxMoversPerExhibit": 1
- },
- "reducedMotion": {
-  "page": "companion-sheet",
-  "round": "fix round 1",
-  "date": "2026-10-17",
-  "motion": {
-   "flag": true,
-   "reduced": true,
-   "os": true,
-   "sw": true,
-   "on": false,
-   "why": "off (reduced motion)"
-  },
-  "assets": {
-   "loaded": 23,
-   "total": 23
-  },
-  "states": {
-   "cards": 9,
-   "names": [
-    "peek",
-    "retract",
-    "walk",
-    "speaking",
-    "hop",
-    "wave",
-    "error",
-    "offline",
-    "idle"
+  "sequence": {
+   "points": [
+    {
+     "t": 500,
+     "clip": "stand",
+     "cell": 23,
+     "playing": false,
+     "newRowShown": false
+    },
+    {
+     "t": 1000,
+     "clip": "walk",
+     "cell": 0,
+     "playing": true,
+     "newRowShown": true
+    },
+    {
+     "t": 1900,
+     "clip": "walk",
+     "cell": 10,
+     "playing": true,
+     "newRowShown": true
+    },
+    {
+     "t": 3499,
+     "clip": "walk",
+     "cell": 5,
+     "playing": true,
+     "newRowShown": true
+    },
+    {
+     "t": 3500,
+     "clip": "walk",
+     "cell": 6,
+     "playing": true,
+     "newRowShown": true
+    },
+    {
+     "t": 4800,
+     "clip": "walk",
+     "cell": 21,
+     "playing": true,
+     "newRowShown": true
+    },
+    {
+     "t": 7499,
+     "clip": "walk",
+     "cell": 5,
+     "playing": true,
+     "newRowShown": true
+    },
+    {
+     "t": 7540.666666666666,
+     "clip": "walk",
+     "cell": 6,
+     "playing": true,
+     "newRowShown": true
+    },
+    {
+     "t": 7541.666666666666,
+     "clip": "hop",
+     "cell": 0,
+     "playing": true,
+     "newRowShown": true
+    },
+    {
+     "t": 7999.999999999999,
+     "clip": "hop",
+     "cell": 10,
+     "playing": true,
+     "newRowShown": true
+    },
+    {
+     "t": 8687.5,
+     "clip": "hop",
+     "cell": 23,
+     "playing": true,
+     "newRowShown": true
+    },
+    {
+     "t": 8750,
+     "clip": "stand",
+     "cell": 23,
+     "playing": false,
+     "newRowShown": true
+    },
+    {
+     "t": 10500,
+     "clip": "stand",
+     "cell": 23,
+     "playing": false,
+     "newRowShown": true
+    }
    ],
-   "textTwins": 9
+   "runStartsAtCell0OnSend": true,
+   "noRestartAtFirstToken": true,
+   "hopEntersAtNextTickFromCell0": true,
+   "landsOnTheStandingDrawing": true
   },
-  "durations": {
-   "peek": 2.3333333333333335,
-   "retract": 2.3333333333333335,
-   "walk": 2,
-   "speaking": 3.5,
-   "hop": 1.1666666666666667,
-   "wave": 2.125,
-   "error": 2.625,
-   "offline": 3,
-   "wake": 2,
-   "hop-gallery": 3.5,
-   "speaking-gallery": 5.125,
-   "bow": 2.4166666666666665
-  },
-  "hopDrawings": 24,
-  "stills": {
-   "rows": 2,
-   "perRow": 9,
-   "total": 18
-  },
-  "ariaHidden": {
-   "kiwi": 104,
-   "missing": 0
-  },
-  "placements": [
-   {
-    "placement": "avatar-older",
-    "theme": "light",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
+  "motionOff": {
+   "flag off @2000": {
+    "playing": 0,
+    "avatarsNotStanding": 0,
+    "avatars": 85,
+    "peeksVisible": 0,
+    "switchHidden": true,
+    "switchInert": false
    },
-   {
-    "placement": "avatar",
-    "theme": "light",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
+   "flag off @5000": {
+    "playing": 0,
+    "avatarsNotStanding": 0,
+    "avatars": 85,
+    "peeksVisible": 0,
+    "switchHidden": true,
+    "switchInert": false
    },
-   {
-    "placement": "peek",
-    "theme": "light",
-    "expect": 48,
-    "width": 0,
-    "height": 0,
-    "suppressed": true,
-    "ok": true
+   "flag off @8000": {
+    "playing": 0,
+    "avatarsNotStanding": 0,
+    "avatars": 85,
+    "peeksVisible": 0,
+    "switchHidden": true,
+    "switchInert": false
    },
-   {
-    "placement": "avatar-older",
-    "theme": "dark",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
+   "reduced motion @2000": {
+    "playing": 0,
+    "avatarsNotStanding": 0,
+    "avatars": 85,
+    "peeksVisible": 0,
+    "switchHidden": false,
+    "switchInert": true
    },
-   {
-    "placement": "avatar",
-    "theme": "dark",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
+   "reduced motion @5000": {
+    "playing": 0,
+    "avatarsNotStanding": 0,
+    "avatars": 85,
+    "peeksVisible": 0,
+    "switchHidden": false,
+    "switchInert": true
    },
-   {
-    "placement": "peek",
-    "theme": "dark",
-    "expect": 48,
-    "width": 0,
-    "height": 0,
-    "suppressed": true,
-    "ok": true
+   "reduced motion @8000": {
+    "playing": 0,
+    "avatarsNotStanding": 0,
+    "avatars": 85,
+    "peeksVisible": 0,
+    "switchHidden": false,
+    "switchInert": true
    },
-   {
-    "placement": "avatar-older",
-    "theme": "light",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
+   "switch off @2000": {
+    "playing": 0,
+    "avatarsNotStanding": 0,
+    "avatars": 85,
+    "peeksVisible": 0,
+    "switchHidden": false,
+    "switchInert": false
    },
-   {
-    "placement": "avatar",
-    "theme": "light",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
+   "switch off @5000": {
+    "playing": 0,
+    "avatarsNotStanding": 0,
+    "avatars": 85,
+    "peeksVisible": 0,
+    "switchHidden": false,
+    "switchInert": false
    },
-   {
-    "placement": "peek",
-    "theme": "light",
-    "expect": 48,
-    "width": 0,
-    "height": 0,
-    "suppressed": true,
-    "ok": true
-   },
-   {
-    "placement": "avatar-older",
-    "theme": "dark",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "avatar",
-    "theme": "dark",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "peek",
-    "theme": "dark",
-    "expect": 48,
-    "width": 0,
-    "height": 0,
-    "suppressed": true,
-    "ok": true
-   },
-   {
-    "placement": "avatar-older",
-    "theme": "light",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "avatar",
-    "theme": "light",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "peek",
-    "theme": "light",
-    "expect": 48,
-    "width": 0,
-    "height": 0,
-    "suppressed": true,
-    "ok": true
-   },
-   {
-    "placement": "avatar-older",
-    "theme": "dark",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "avatar",
-    "theme": "dark",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "peek",
-    "theme": "dark",
-    "expect": 48,
-    "width": 0,
-    "height": 0,
-    "suppressed": true,
-    "ok": true
-   },
-   {
-    "placement": "avatar-older",
-    "theme": "light",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "avatar",
-    "theme": "light",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "avatar-older",
-    "theme": "light",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "avatar",
-    "theme": "light",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "avatar-older",
-    "theme": "dark",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "avatar",
-    "theme": "dark",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "avatar-older",
-    "theme": "dark",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "avatar",
-    "theme": "dark",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "welcome",
-    "theme": "light",
-    "expect": 64,
-    "width": 64,
-    "height": 64,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "launcher",
-    "theme": "light",
-    "expect": 56,
-    "width": 56,
-    "height": 56,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "launcher-glyph",
-    "theme": "light",
-    "expect": 28,
-    "width": 28,
-    "height": 28,
-    "ok": true
-   },
-   {
-    "placement": "welcome",
-    "theme": "dark",
-    "expect": 64,
-    "width": 64,
-    "height": 64,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "launcher",
-    "theme": "dark",
-    "expect": 56,
-    "width": 56,
-    "height": 56,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "launcher-glyph",
-    "theme": "dark",
-    "expect": 28,
-    "width": 28,
-    "height": 28,
-    "ok": true
-   },
-   {
-    "placement": "signin",
-    "theme": "light",
-    "expect": 96,
-    "width": 96,
-    "height": 96,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "not-found",
-    "theme": "light",
-    "expect": 96,
-    "width": 96,
-    "height": 96,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "signin",
-    "theme": "dark",
-    "expect": 96,
-    "width": 96,
-    "height": 96,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "not-found",
-    "theme": "dark",
-    "expect": 96,
-    "width": 96,
-    "height": 96,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "empty",
-    "theme": "light",
-    "expect": 96,
-    "width": 96,
-    "height": 96,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "error-frame",
-    "theme": "light",
-    "expect": 96,
-    "width": 96,
-    "height": 96,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "empty",
-    "theme": "dark",
-    "expect": 96,
-    "width": 96,
-    "height": 96,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "error-frame",
-    "theme": "dark",
-    "expect": 96,
-    "width": 96,
-    "height": 96,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "card",
-    "theme": "light",
-    "expect": 64,
-    "width": 64,
-    "height": 64,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "card",
-    "theme": "dark",
-    "expect": 64,
-    "width": 64,
-    "height": 64,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "signin-narrow",
-    "theme": "light",
-    "expect": 64,
-    "width": 64,
-    "height": 64,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "avatar-narrow",
-    "theme": "light",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "peek-narrow",
-    "theme": "light",
-    "expect": 48,
-    "width": 0,
-    "height": 0,
-    "suppressed": true,
-    "ok": true
-   },
-   {
-    "placement": "signin-narrow",
-    "theme": "dark",
-    "expect": 64,
-    "width": 64,
-    "height": 64,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "avatar-narrow",
-    "theme": "dark",
-    "expect": 32,
-    "width": 32,
-    "height": 32,
-    "suppressed": false,
-    "ok": true
-   },
-   {
-    "placement": "peek-narrow",
-    "theme": "dark",
-    "expect": 48,
-    "width": 0,
-    "height": 0,
-    "suppressed": true,
-    "ok": true
+   "switch off @8000": {
+    "playing": 0,
+    "avatarsNotStanding": 0,
+    "avatars": 85,
+    "peeksVisible": 0,
+    "switchHidden": false,
+    "switchInert": false
    }
-  ],
-  "placementsFailing": 0,
-  "placementsSuppressed": 8,
-  "avatarStillSizes": [
-   "peek@128",
-   "retract@128",
-   "walk@128",
-   "speaking@128",
-   "hop@128",
-   "wave@128",
-   "error@128",
-   "offline@128",
-   "idle@192",
-   "idle@128",
-   "idle@64",
-   "walk@192",
-   "error@192"
-  ],
-  "backing": [
-   {
-    "theme": "light",
-    "backing": "rgba(0, 0, 0, 0)",
-    "pairs": [
-     {
-      "against": "--surface",
-      "value": "rgb(250, 249, 243)",
-      "ratio": 10
-     },
-     {
-      "against": "--background",
-      "value": "rgb(244, 241, 228)",
-      "ratio": 9.31
-     },
-     {
-      "against": "--surface-hover",
-      "value": "rgb(241, 240, 237)",
-      "ratio": 9.25
-     },
-     {
-      "against": "--surface-active",
-      "value": "rgb(233, 232, 228)",
-      "ratio": 8.6
-     },
-     {
-      "against": "--accent-bg-subtle",
-      "value": "rgb(230, 245, 235)",
-      "ratio": 9.35
-     },
-     {
-      "against": "--status-error-surface",
-      "value": "rgb(255, 235, 233)",
-      "ratio": 9.19
-     }
-    ],
-    "lowestRequired": 8.6
-   },
-   {
-    "theme": "dark",
-    "backing": "rgb(250, 249, 243)",
-    "pairs": [
-     {
-      "against": "--companion-backing",
-      "value": "rgb(250, 249, 243)",
-      "ratio": 10
-     },
-     {
-      "against": "backing disc on --surface",
-      "value": "rgb(37, 34, 24)",
-      "ratio": 15.08,
-      "informational": true
-     },
-     {
-      "against": "backing disc on --background",
-      "value": "rgb(27, 25, 21)",
-      "ratio": 16.64,
-      "informational": true
-     },
-     {
-      "against": "backing disc on --surface-hover",
-      "value": "rgb(43, 42, 39)",
-      "ratio": 13.61,
-      "informational": true
-     },
-     {
-      "against": "backing disc on --surface-active",
-      "value": "rgb(51, 50, 46)",
-      "ratio": 12.17,
-      "informational": true
-     },
-     {
-      "against": "backing disc on --accent-bg-subtle",
-      "value": "rgb(26, 37, 30)",
-      "ratio": 15,
-      "informational": true
-     },
-     {
-      "against": "backing disc on --status-error-surface",
-      "value": "rgb(51, 26, 24)",
-      "ratio": 15.29,
-      "informational": true
-     }
-    ],
-    "lowestRequired": 10
-   }
-  ],
-  "backingRequiredPairs": 7,
-  "backingBelow3": 0,
-  "companionProps": {
-   "--companion-slot-avatar": "32px",
-   "--companion-slot-peek": "48px",
-   "--companion-slot-launcher": "28px",
-   "--companion-slot-signin": "96px",
-   "--companion-slot-empty": "96px",
-   "--companion-slot-not-found": "96px",
-   "--companion-slot-inline": "64px",
-   "--companion-backing": "transparent"
-  },
-  "liveRegions": {
-   "alerts": 2,
-   "status": 2
-  },
-  "duplicateIds": [],
-  "switchControl": {
-   "nativeDisabled": false,
-   "ariaDisabled": "true",
-   "describedBy": "c-reason"
-  },
-  "glyph": {
-   "copies": 8,
-   "masks": 0,
-   "colourLiterals": 0,
-   "paths": 8
-  },
-  "peekWallLeftPercent": 13.28,
-  "inkAligned": 12,
-  "layout": {
-   "innerWidth": 1440,
-   "scrollWidth": 1440,
-   "horizontalScroll": false,
-   "documentHeight": 12119
-  },
-  "fonts": {
-   "sourceSans3": true
   },
   "oneMover": {
-   "exhibits": 14,
-   "samples": 0,
-   "maxMovers": 0
+   "exhibits": 18,
+   "samples": 8,
+   "maxMovers": 1,
+   "frozenSamples": 88
   },
-  "peeksVisible": 0,
-  "playing": 0,
-  "switchInert": true
+  "oneMoverOk": true,
+  "motionOffOk": true
  },
- "flagOff": {
-  "motion": {
-   "flag": false,
-   "reduced": false,
-   "os": false,
-   "sw": true,
-   "on": false,
-   "why": "off (the deployment flag)"
+ "render": {
+  "chrome": "Chrome/155.0.8059.85",
+  "frozenAtMs": 5200,
+  "fullHeight": 16430,
+  "reducedMotion": {
+   "motion": {
+    "flag": true,
+    "reduced": true,
+    "os": true,
+    "sw": true,
+    "on": false,
+    "why": "off (reduced motion)"
+   },
+   "sequenceTracks": [
+    "stand:false",
+    "stand:false"
+   ]
   },
-  "switchHidden": true,
-  "playing": 0,
-  "peeksVisible": 0
- },
- "switchOff": {
-  "motion": {
-   "flag": true,
-   "reduced": false,
-   "os": false,
-   "sw": false,
-   "on": false,
-   "why": "off (the Kiwi animation switch)"
+  "switchOff": {
+   "motion": {
+    "flag": true,
+    "reduced": false,
+    "os": false,
+    "sw": false,
+    "on": false,
+    "why": "off (the Kiwi animation switch)"
+   },
+   "sequenceTracks": [
+    "stand:false",
+    "stand:false"
+   ]
   },
-  "playing": 0,
-  "peeksVisible": 0
+  "fullPage": {
+   "size": [
+    1440,
+    16430
+   ],
+   "segments": 5,
+   "longestUniformRowRun": 69
+  }
  },
- "at1280": {
-  "scrollWidth": 1280,
-  "innerWidth": 1280
+ "previews": [
+  {
+   "file": "screenshots/companion-sequence.32.gif",
+   "deviceScale": 1,
+   "ticks": 264,
+   "frames": 120,
+   "durationMs": 11000,
+   "size": [
+    896,
+    703
+   ],
+   "bytes": 454343
+  },
+  {
+   "file": "screenshots/companion-sequence.32@2x.gif",
+   "deviceScale": 2,
+   "ticks": 264,
+   "frames": 120,
+   "durationMs": 11000,
+   "size": [
+    1688,
+    660
+   ],
+   "bytes": 631567
+  },
+  {
+   "file": "screenshots/companion-before-after.gif",
+   "deviceScale": 1,
+   "ticks": 196,
+   "frames": 94,
+   "durationMs": 8167,
+   "size": [
+    820,
+    180
+   ],
+   "bytes": 714316
+  },
+  {
+   "file": "screenshots/companion-like.32.gif",
+   "deviceScale": 1,
+   "ticks": 144,
+   "frames": 17,
+   "durationMs": 6000,
+   "size": [
+    896,
+    533
+   ],
+   "bytes": 117890
+  },
+  {
+   "file": "screenshots/companion-stop.32.gif",
+   "deviceScale": 1,
+   "ticks": 168,
+   "frames": 52,
+   "durationMs": 7000,
+   "size": [
+    896,
+    623
+   ],
+   "bytes": 209932
+  },
+  {
+   "file": "screenshots/companion-error.32.gif",
+   "deviceScale": 1,
+   "ticks": 168,
+   "frames": 43,
+   "durationMs": 7000,
+   "size": [
+    896,
+    663
+   ],
+   "bytes": 177181
+  },
+  {
+   "file": "screenshots/companion-offline.32.gif",
+   "deviceScale": 1,
+   "ticks": 192,
+   "frames": 43,
+   "durationMs": 8000,
+   "size": [
+    896,
+    613
+   ],
+   "bytes": 144449
+  },
+  {
+   "file": "screenshots/companion-peek-send.32.gif",
+   "deviceScale": 1,
+   "ticks": 216,
+   "frames": 92,
+   "durationMs": 9000,
+   "size": [
+    896,
+    613
+   ],
+   "bytes": 308019
+  },
+  {
+   "file": "screenshots/companion-walk.gif",
+   "deviceScale": 1,
+   "ticks": 48,
+   "frames": 24,
+   "durationMs": 2000,
+   "size": [
+    646,
+    176
+   ],
+   "bytes": 119649
+  },
+  {
+   "file": "screenshots/companion-speaking.gif",
+   "deviceScale": 1,
+   "ticks": 48,
+   "frames": 24,
+   "durationMs": 2000,
+   "size": [
+    646,
+    176
+   ],
+   "bytes": 119657
+  },
+  {
+   "file": "screenshots/companion-hop.gif",
+   "deviceScale": 1,
+   "ticks": 88,
+   "frames": 25,
+   "durationMs": 3667,
+   "size": [
+    646,
+    176
+   ],
+   "bytes": 119554
+  },
+  {
+   "file": "screenshots/companion-wave.gif",
+   "deviceScale": 1,
+   "ticks": 111,
+   "frames": 18,
+   "durationMs": 4625,
+   "size": [
+    646,
+    176
+   ],
+   "bytes": 91945
+  },
+  {
+   "file": "screenshots/companion-error.gif",
+   "deviceScale": 1,
+   "ticks": 96,
+   "frames": 26,
+   "durationMs": 4000,
+   "size": [
+    646,
+    176
+   ],
+   "bytes": 124181
+  },
+  {
+   "file": "screenshots/companion-offline.gif",
+   "deviceScale": 1,
+   "ticks": 96,
+   "frames": 25,
+   "durationMs": 4000,
+   "size": [
+    646,
+    176
+   ],
+   "bytes": 124330
+  },
+  {
+   "file": "screenshots/companion-idle.gif",
+   "deviceScale": 1,
+   "ticks": 1,
+   "frames": 1,
+   "durationMs": 42,
+   "size": [
+    646,
+    176
+   ],
+   "bytes": 8595
+  },
+  {
+   "file": "screenshots/companion-states.strip.gif",
+   "deviceScale": 1,
+   "ticks": 264,
+   "frames": 182,
+   "durationMs": 11000,
+   "size": [
+    1376,
+    193
+   ],
+   "bytes": 943635
+  }
+ ],
+ "geometryRendered": {
+  "method": "the 2x screenshots; a pixel is the figure when its colour is farther from the slot's backing (or the canvas behind a transparent backing) than half the tan bill's distance; CSS px of the 32 px slot",
+  "slots": {
+   "companion-sheet.geometry.2x.png": [
+    {
+     "label": "stand",
+     "theme": "light",
+     "clip": "stand",
+     "box": [
+      6.0,
+      9.0,
+      25.5,
+      24.5
+     ],
+     "size": [
+      19.5,
+      15.5
+     ],
+     "centroid": [
+      13.43,
+      17.34
+     ],
+     "vsStand": {
+      "boxEdge": 0.0,
+      "centroid": 0.0
+     }
+    },
+    {
+     "label": "walk 0",
+     "theme": "light",
+     "clip": "full-walk:0:shared",
+     "box": [
+      6.0,
+      10.0,
+      25.5,
+      25.5
+     ],
+     "size": [
+      19.5,
+      15.5
+     ],
+     "centroid": [
+      13.24,
+      17.76
+     ],
+     "vsStand": {
+      "boxEdge": 1.0,
+      "centroid": 0.42
+     }
+    },
+    {
+     "label": "walk 12",
+     "theme": "light",
+     "clip": "full-walk:12:shared",
+     "box": [
+      6.5,
+      10.0,
+      26.0,
+      25.5
+     ],
+     "size": [
+      19.5,
+      15.5
+     ],
+     "centroid": [
+      13.93,
+      17.76
+     ],
+     "vsStand": {
+      "boxEdge": 1.0,
+      "centroid": 0.5
+     }
+    },
+    {
+     "label": "hop 0",
+     "theme": "light",
+     "clip": "full-hop-flight:0:shared",
+     "box": [
+      5.5,
+      9.5,
+      25.5,
+      25.0
+     ],
+     "size": [
+      20.0,
+      15.5
+     ],
+     "centroid": [
+      13.16,
+      17.43
+     ],
+     "vsStand": {
+      "boxEdge": 0.5,
+      "centroid": 0.27
+     }
+    },
+    {
+     "label": "hop 11",
+     "theme": "light",
+     "clip": "full-hop-flight:11:shared",
+     "box": [
+      6.0,
+      5.5,
+      25.5,
+      22.5
+     ],
+     "size": [
+      19.5,
+      17.0
+     ],
+     "centroid": [
+      13.5,
+      14.33
+     ],
+     "vsStand": {
+      "boxEdge": 3.5,
+      "centroid": 3.01
+     }
+    },
+    {
+     "label": "hop 23",
+     "theme": "light",
+     "clip": "full-hop-flight:23:shared",
+     "box": [
+      6.0,
+      9.0,
+      25.5,
+      24.5
+     ],
+     "size": [
+      19.5,
+      15.5
+     ],
+     "centroid": [
+      13.43,
+      17.34
+     ],
+     "vsStand": {
+      "boxEdge": 0.0,
+      "centroid": 0.0
+     }
+    },
+    {
+     "label": "wave 0",
+     "theme": "light",
+     "clip": "full-wave-bow:0:shared",
+     "box": [
+      7.5,
+      10.5,
+      24.0,
+      26.0
+     ],
+     "size": [
+      16.5,
+      15.5
+     ],
+     "centroid": [
+      13.83,
+      18.18
+     ],
+     "vsStand": {
+      "boxEdge": 1.5,
+      "centroid": 0.84
+     }
+    },
+    {
+     "label": "wave 8",
+     "theme": "light",
+     "clip": "full-wave-bow:8:shared",
+     "box": [
+      7.5,
+      9.5,
+      23.5,
+      26.0
+     ],
+     "size": [
+      16.0,
+      16.5
+     ],
+     "centroid": [
+      13.1,
+      17.12
+     ],
+     "vsStand": {
+      "boxEdge": 2.0,
+      "centroid": 0.33
+     }
+    },
+    {
+     "label": "wave 14",
+     "theme": "light",
+     "clip": "full-wave-bow:14:shared",
+     "box": [
+      6.5,
+      11.0,
+      24.0,
+      26.0
+     ],
+     "size": [
+      17.5,
+      15.0
+     ],
+     "centroid": [
+      13.08,
+      18.02
+     ],
+     "vsStand": {
+      "boxEdge": 2.0,
+      "centroid": 0.68
+     }
+    },
+    {
+     "label": "stand",
+     "theme": "dark",
+     "clip": "stand",
+     "box": [
+      6.0,
+      9.0,
+      25.5,
+      24.5
+     ],
+     "size": [
+      19.5,
+      15.5
+     ],
+     "centroid": [
+      13.45,
+      17.32
+     ],
+     "vsStand": {
+      "boxEdge": 0.0,
+      "centroid": 0.0
+     }
+    },
+    {
+     "label": "walk 0",
+     "theme": "dark",
+     "clip": "full-walk:0:shared",
+     "box": [
+      6.0,
+      10.0,
+      25.5,
+      25.5
+     ],
+     "size": [
+      19.5,
+      15.5
+     ],
+     "centroid": [
+      13.26,
+      17.73
+     ],
+     "vsStand": {
+      "boxEdge": 1.0,
+      "centroid": 0.41
+     }
+    },
+    {
+     "label": "walk 12",
+     "theme": "dark",
+     "clip": "full-walk:12:shared",
+     "box": [
+      6.5,
+      10.0,
+      26.0,
+      25.5
+     ],
+     "size": [
+      19.5,
+      15.5
+     ],
+     "centroid": [
+      13.93,
+      17.75
+     ],
+     "vsStand": {
+      "boxEdge": 1.0,
+      "centroid": 0.48
+     }
+    },
+    {
+     "label": "hop 0",
+     "theme": "dark",
+     "clip": "full-hop-flight:0:shared",
+     "box": [
+      5.5,
+      9.5,
+      25.5,
+      25.0
+     ],
+     "size": [
+      20.0,
+      15.5
+     ],
+     "centroid": [
+      13.17,
+      17.43
+     ],
+     "vsStand": {
+      "boxEdge": 0.5,
+      "centroid": 0.28
+     }
+    },
+    {
+     "label": "hop 11",
+     "theme": "dark",
+     "clip": "full-hop-flight:11:shared",
+     "box": [
+      6.0,
+      5.5,
+      25.5,
+      22.5
+     ],
+     "size": [
+      19.5,
+      17.0
+     ],
+     "centroid": [
+      13.47,
+      14.36
+     ],
+     "vsStand": {
+      "boxEdge": 3.5,
+      "centroid": 2.96
+     }
+    },
+    {
+     "label": "hop 23",
+     "theme": "dark",
+     "clip": "full-hop-flight:23:shared",
+     "box": [
+      6.0,
+      9.0,
+      25.5,
+      24.5
+     ],
+     "size": [
+      19.5,
+      15.5
+     ],
+     "centroid": [
+      13.45,
+      17.32
+     ],
+     "vsStand": {
+      "boxEdge": 0.0,
+      "centroid": 0.0
+     }
+    },
+    {
+     "label": "wave 0",
+     "theme": "dark",
+     "clip": "full-wave-bow:0:shared",
+     "box": [
+      7.5,
+      11.0,
+      24.0,
+      26.0
+     ],
+     "size": [
+      16.5,
+      15.0
+     ],
+     "centroid": [
+      13.82,
+      18.2
+     ],
+     "vsStand": {
+      "boxEdge": 2.0,
+      "centroid": 0.88
+     }
+    },
+    {
+     "label": "wave 8",
+     "theme": "dark",
+     "clip": "full-wave-bow:8:shared",
+     "box": [
+      7.5,
+      9.5,
+      23.5,
+      26.0
+     ],
+     "size": [
+      16.0,
+      16.5
+     ],
+     "centroid": [
+      13.11,
+      17.14
+     ],
+     "vsStand": {
+      "boxEdge": 2.0,
+      "centroid": 0.34
+     }
+    },
+    {
+     "label": "wave 14",
+     "theme": "dark",
+     "clip": "full-wave-bow:14:shared",
+     "box": [
+      6.5,
+      11.0,
+      24.0,
+      26.0
+     ],
+     "size": [
+      17.5,
+      15.0
+     ],
+     "centroid": [
+      13.06,
+      18.0
+     ],
+     "vsStand": {
+      "boxEdge": 2.0,
+      "centroid": 0.68
+     }
+    }
+   ],
+   "companion-sheet.before-after.2x.png": [
+    {
+     "label": "before walk",
+     "theme": "light",
+     "clip": "full-walk:0:own",
+     "box": [
+      5.0,
+      7.5,
+      27.0,
+      25.0
+     ],
+     "size": [
+      22.0,
+      17.5
+     ],
+     "centroid": [
+      13.2,
+      16.46
+     ],
+     "vsIdle": {
+      "boxEdge": 0.5,
+      "centroid": 2.45
+     }
+    },
+    {
+     "label": "before idle",
+     "theme": "light",
+     "clip": "idle-1017",
+     "box": [
+      5.5,
+      7.0,
+      27.5,
+      25.0
+     ],
+     "size": [
+      22.0,
+      18.0
+     ],
+     "centroid": [
+      15.65,
+      17.21
+     ],
+     "vsIdle": {
+      "boxEdge": 0.0,
+      "centroid": 0.0
+     }
+    },
+    {
+     "label": "before speaking",
+     "theme": "light",
+     "clip": "portrait-nod-sleep:0:own",
+     "box": [
+      5.0,
+      7.5,
+      26.0,
+      25.5
+     ],
+     "size": [
+      21.0,
+      18.0
+     ],
+     "centroid": [
+      14.95,
+      17.58
+     ],
+     "vsIdle": {
+      "boxEdge": 1.5,
+      "centroid": 0.7
+     }
+    },
+    {
+     "label": "before hop end",
+     "theme": "light",
+     "clip": "full-hop-flight:23:own",
+     "box": [
+      5.5,
+      9.5,
+      26.5,
+      25.5
+     ],
+     "size": [
+      21.0,
+      16.0
+     ],
+     "centroid": [
+      13.42,
+      17.89
+     ],
+     "vsIdle": {
+      "boxEdge": 2.5,
+      "centroid": 2.23
+     }
+    },
+    {
+     "label": "before wave",
+     "theme": "light",
+     "clip": "full-wave-bow:8:own",
+     "box": [
+      5.5,
+      5.5,
+      24.0,
+      24.5
+     ],
+     "size": [
+      18.5,
+      19.0
+     ],
+     "centroid": [
+      11.96,
+      14.3
+     ],
+     "vsIdle": {
+      "boxEdge": 3.5,
+      "centroid": 3.69
+     }
+    },
+    {
+     "label": "before error",
+     "theme": "light",
+     "clip": "portrait-nod-sleep:8:own",
+     "box": [
+      5.0,
+      11.5,
+      24.5,
+      25.5
+     ],
+     "size": [
+      19.5,
+      14.0
+     ],
+     "centroid": [
+      15.42,
+      19.48
+     ],
+     "vsIdle": {
+      "boxEdge": 4.5,
+      "centroid": 2.27
+     }
+    },
+    {
+     "label": "before offline",
+     "theme": "light",
+     "clip": "portrait-doze:23:own",
+     "box": [
+      5.0,
+      8.5,
+      26.0,
+      25.5
+     ],
+     "size": [
+      21.0,
+      17.0
+     ],
+     "centroid": [
+      14.83,
+      18.02
+     ],
+     "vsIdle": {
+      "boxEdge": 1.5,
+      "centroid": 0.82
+     }
+    },
+    {
+     "label": "after walk",
+     "theme": "light",
+     "clip": "full-walk:0:shared",
+     "box": [
+      5.5,
+      10.0,
+      26.0,
+      25.5
+     ],
+     "size": [
+      20.5,
+      15.5
+     ],
+     "centroid": [
+      13.21,
+      17.83
+     ],
+     "vsIdle": {
+      "boxEdge": 1.0,
+      "centroid": 0.49
+     }
+    },
+    {
+     "label": "after idle",
+     "theme": "light",
+     "clip": "stand",
+     "box": [
+      5.5,
+      9.0,
+      25.0,
+      24.5
+     ],
+     "size": [
+      19.5,
+      15.5
+     ],
+     "centroid": [
+      12.93,
+      17.34
+     ],
+     "vsIdle": {
+      "boxEdge": 0.0,
+      "centroid": 0.0
+     }
+    },
+    {
+     "label": "after speaking",
+     "theme": "light",
+     "clip": "full-walk:12:shared",
+     "box": [
+      6.0,
+      10.0,
+      25.5,
+      25.5
+     ],
+     "size": [
+      19.5,
+      15.5
+     ],
+     "centroid": [
+      13.43,
+      17.76
+     ],
+     "vsIdle": {
+      "boxEdge": 1.0,
+      "centroid": 0.5
+     }
+    },
+    {
+     "label": "after hop end",
+     "theme": "light",
+     "clip": "full-hop-flight:23:shared",
+     "box": [
+      6.0,
+      9.0,
+      25.5,
+      24.5
+     ],
+     "size": [
+      19.5,
+      15.5
+     ],
+     "centroid": [
+      13.43,
+      17.34
+     ],
+     "vsIdle": {
+      "boxEdge": 0.5,
+      "centroid": 0.5
+     }
+    },
+    {
+     "label": "after wave",
+     "theme": "light",
+     "clip": "full-wave-bow:8:shared",
+     "box": [
+      7.5,
+      9.5,
+      23.5,
+      26.0
+     ],
+     "size": [
+      16.0,
+      16.5
+     ],
+     "centroid": [
+      13.1,
+      17.12
+     ],
+     "vsIdle": {
+      "boxEdge": 2.0,
+      "centroid": 0.22
+     }
+    },
+    {
+     "label": "after error",
+     "theme": "light",
+     "clip": "stand",
+     "box": [
+      6.0,
+      9.0,
+      25.5,
+      24.5
+     ],
+     "size": [
+      19.5,
+      15.5
+     ],
+     "centroid": [
+      13.43,
+      17.34
+     ],
+     "vsIdle": {
+      "boxEdge": 0.5,
+      "centroid": 0.5
+     }
+    },
+    {
+     "label": "after offline",
+     "theme": "light",
+     "clip": "stand",
+     "box": [
+      6.0,
+      9.0,
+      25.5,
+      24.5
+     ],
+     "size": [
+      19.5,
+      15.5
+     ],
+     "centroid": [
+      13.43,
+      17.34
+     ],
+     "vsIdle": {
+      "boxEdge": 0.5,
+      "centroid": 0.5
+     }
+    },
+    {
+     "label": "before walk",
+     "theme": "dark",
+     "clip": "full-walk:0:own",
+     "box": [
+      5.0,
+      7.5,
+      27.0,
+      25.0
+     ],
+     "size": [
+      22.0,
+      17.5
+     ],
+     "centroid": [
+      13.19,
+      16.45
+     ],
+     "vsIdle": {
+      "boxEdge": 0.5,
+      "centroid": 2.47
+     }
+    },
+    {
+     "label": "before idle",
+     "theme": "dark",
+     "clip": "idle-1017",
+     "box": [
+      5.5,
+      7.0,
+      27.5,
+      25.0
+     ],
+     "size": [
+      22.0,
+      18.0
+     ],
+     "centroid": [
+      15.66,
+      17.21
+     ],
+     "vsIdle": {
+      "boxEdge": 0.0,
+      "centroid": 0.0
+     }
+    },
+    {
+     "label": "before speaking",
+     "theme": "dark",
+     "clip": "portrait-nod-sleep:0:own",
+     "box": [
+      5.0,
+      7.5,
+      26.0,
+      25.5
+     ],
+     "size": [
+      21.0,
+      18.0
+     ],
+     "centroid": [
+      14.95,
+      17.58
+     ],
+     "vsIdle": {
+      "boxEdge": 1.5,
+      "centroid": 0.71
+     }
+    },
+    {
+     "label": "before hop end",
+     "theme": "dark",
+     "clip": "full-hop-flight:23:own",
+     "box": [
+      5.5,
+      9.5,
+      26.5,
+      25.5
+     ],
+     "size": [
+      21.0,
+      16.0
+     ],
+     "centroid": [
+      13.39,
+      17.9
+     ],
+     "vsIdle": {
+      "boxEdge": 2.5,
+      "centroid": 2.27
+     }
+    },
+    {
+     "label": "before wave",
+     "theme": "dark",
+     "clip": "full-wave-bow:8:own",
+     "box": [
+      5.5,
+      5.5,
+      24.0,
+      24.5
+     ],
+     "size": [
+      18.5,
+      19.0
+     ],
+     "centroid": [
+      11.97,
+      14.3
+     ],
+     "vsIdle": {
+      "boxEdge": 3.5,
+      "centroid": 3.69
+     }
+    },
+    {
+     "label": "before error",
+     "theme": "dark",
+     "clip": "portrait-nod-sleep:8:own",
+     "box": [
+      5.0,
+      11.5,
+      24.5,
+      25.5
+     ],
+     "size": [
+      19.5,
+      14.0
+     ],
+     "centroid": [
+      15.43,
+      19.48
+     ],
+     "vsIdle": {
+      "boxEdge": 4.5,
+      "centroid": 2.27
+     }
+    },
+    {
+     "label": "before offline",
+     "theme": "dark",
+     "clip": "portrait-doze:23:own",
+     "box": [
+      5.0,
+      8.5,
+      26.0,
+      25.5
+     ],
+     "size": [
+      21.0,
+      17.0
+     ],
+     "centroid": [
+      14.84,
+      18.04
+     ],
+     "vsIdle": {
+      "boxEdge": 1.5,
+      "centroid": 0.83
+     }
+    },
+    {
+     "label": "after walk",
+     "theme": "dark",
+     "clip": "full-walk:0:shared",
+     "box": [
+      5.5,
+      10.0,
+      26.0,
+      25.5
+     ],
+     "size": [
+      20.5,
+      15.5
+     ],
+     "centroid": [
+      13.19,
+      17.81
+     ],
+     "vsIdle": {
+      "boxEdge": 1.0,
+      "centroid": 0.49
+     }
+    },
+    {
+     "label": "after idle",
+     "theme": "dark",
+     "clip": "stand",
+     "box": [
+      5.5,
+      9.0,
+      25.0,
+      24.5
+     ],
+     "size": [
+      19.5,
+      15.5
+     ],
+     "centroid": [
+      12.95,
+      17.32
+     ],
+     "vsIdle": {
+      "boxEdge": 0.0,
+      "centroid": 0.0
+     }
+    },
+    {
+     "label": "after speaking",
+     "theme": "dark",
+     "clip": "full-walk:12:shared",
+     "box": [
+      6.0,
+      10.0,
+      25.5,
+      25.5
+     ],
+     "size": [
+      19.5,
+      15.5
+     ],
+     "centroid": [
+      13.43,
+      17.75
+     ],
+     "vsIdle": {
+      "boxEdge": 1.0,
+      "centroid": 0.48
+     }
+    },
+    {
+     "label": "after hop end",
+     "theme": "dark",
+     "clip": "full-hop-flight:23:shared",
+     "box": [
+      6.0,
+      9.0,
+      25.5,
+      24.5
+     ],
+     "size": [
+      19.5,
+      15.5
+     ],
+     "centroid": [
+      13.45,
+      17.32
+     ],
+     "vsIdle": {
+      "boxEdge": 0.5,
+      "centroid": 0.5
+     }
+    },
+    {
+     "label": "after wave",
+     "theme": "dark",
+     "clip": "full-wave-bow:8:shared",
+     "box": [
+      7.5,
+      9.5,
+      23.5,
+      26.0
+     ],
+     "size": [
+      16.0,
+      16.5
+     ],
+     "centroid": [
+      13.11,
+      17.14
+     ],
+     "vsIdle": {
+      "boxEdge": 2.0,
+      "centroid": 0.18
+     }
+    },
+    {
+     "label": "after error",
+     "theme": "dark",
+     "clip": "stand",
+     "box": [
+      6.0,
+      9.0,
+      25.5,
+      24.5
+     ],
+     "size": [
+      19.5,
+      15.5
+     ],
+     "centroid": [
+      13.45,
+      17.32
+     ],
+     "vsIdle": {
+      "boxEdge": 0.5,
+      "centroid": 0.5
+     }
+    },
+    {
+     "label": "after offline",
+     "theme": "dark",
+     "clip": "stand",
+     "box": [
+      6.0,
+      9.0,
+      25.5,
+      24.5
+     ],
+     "size": [
+      19.5,
+      15.5
+     ],
+     "centroid": [
+      13.45,
+      17.32
+     ],
+     "vsIdle": {
+      "boxEdge": 0.5,
+      "centroid": 0.5
+     }
+    }
+   ]
+  },
+  "summary": {
+   "walk 0 vs stand (light)": {
+    "boxEdge": 1.0,
+    "centroid": 0.42
+   },
+   "walk 12 vs stand (light)": {
+    "boxEdge": 1.0,
+    "centroid": 0.5
+   },
+   "hop 0 vs stand (light)": {
+    "boxEdge": 0.5,
+    "centroid": 0.27
+   },
+   "hop 11 vs stand (light)": {
+    "boxEdge": 3.5,
+    "centroid": 3.01
+   },
+   "hop 23 vs stand (light)": {
+    "boxEdge": 0.0,
+    "centroid": 0.0
+   },
+   "wave 0 vs stand (light)": {
+    "boxEdge": 1.5,
+    "centroid": 0.84
+   },
+   "wave 8 vs stand (light)": {
+    "boxEdge": 2.0,
+    "centroid": 0.33
+   },
+   "wave 14 vs stand (light)": {
+    "boxEdge": 2.0,
+    "centroid": 0.68
+   },
+   "walk 0 vs stand (dark)": {
+    "boxEdge": 1.0,
+    "centroid": 0.41
+   },
+   "walk 12 vs stand (dark)": {
+    "boxEdge": 1.0,
+    "centroid": 0.48
+   },
+   "hop 0 vs stand (dark)": {
+    "boxEdge": 0.5,
+    "centroid": 0.28
+   },
+   "hop 11 vs stand (dark)": {
+    "boxEdge": 3.5,
+    "centroid": 2.96
+   },
+   "hop 23 vs stand (dark)": {
+    "boxEdge": 0.0,
+    "centroid": 0.0
+   },
+   "wave 0 vs stand (dark)": {
+    "boxEdge": 2.0,
+    "centroid": 0.88
+   },
+   "wave 8 vs stand (dark)": {
+    "boxEdge": 2.0,
+    "centroid": 0.34
+   },
+   "wave 14 vs stand (dark)": {
+    "boxEdge": 2.0,
+    "centroid": 0.68
+   },
+   "before: spread over the seven resting drawings (light)": {
+    "width": [
+     18.5,
+     22.0
+    ],
+    "height": [
+     14.0,
+     19.0
+    ],
+    "centroidX": [
+     11.96,
+     15.65
+    ],
+    "centroidY": [
+     14.3,
+     19.48
+    ],
+    "worstVsIdle": {
+     "boxEdge": 4.5,
+     "centroid": 3.69
+    }
+   },
+   "after: spread over the seven resting drawings (light)": {
+    "width": [
+     16.0,
+     20.5
+    ],
+    "height": [
+     15.5,
+     16.5
+    ],
+    "centroidX": [
+     12.93,
+     13.43
+    ],
+    "centroidY": [
+     17.12,
+     17.83
+    ],
+    "worstVsIdle": {
+     "boxEdge": 2.0,
+     "centroid": 0.5
+    }
+   },
+   "before: spread over the seven resting drawings (dark)": {
+    "width": [
+     18.5,
+     22.0
+    ],
+    "height": [
+     14.0,
+     19.0
+    ],
+    "centroidX": [
+     11.97,
+     15.66
+    ],
+    "centroidY": [
+     14.3,
+     19.48
+    ],
+    "worstVsIdle": {
+     "boxEdge": 4.5,
+     "centroid": 3.69
+    }
+   },
+   "after: spread over the seven resting drawings (dark)": {
+    "width": [
+     16.0,
+     20.5
+    ],
+    "height": [
+     15.5,
+     16.5
+    ],
+    "centroidX": [
+     12.95,
+     13.45
+    ],
+    "centroidY": [
+     17.14,
+     17.81
+    ],
+    "worstVsIdle": {
+     "boxEdge": 2.0,
+     "centroid": 0.5
+    }
+   }
+  }
  }
 }

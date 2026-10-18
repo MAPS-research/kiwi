@@ -1,0 +1,212 @@
+{
+ "note": "The lock amendments of kiwi-ui/DESIGN.md and kiwi-ui/JOURNEY.md, recorded line for line (the SHA-256 of each line's text): what each one replaces and with what, what it inserts and where, what it appends, and its base, the commit before it. check-copy.mjs L7 and L8 read it (section 8b); L1 and L4 read DESIGN.md at the base. Written with the amendment, never typed.",
+ "amendments": [
+  {
+   "id": "2026-10-18-full-body-avatar",
+   "base": "14229be579ed26965fcd3f52174a2bda58c3945d",
+   "decided": "2026-10-18",
+   "decision": "The tutor avatar keeps one small, full-body framing; Kiwi keeps running until the answer is complete, then flies once (plan Decision Log, the two newest companion rows)",
+   "design": {
+    "section": "## Companion",
+    "replaced": [
+     {
+      "starts": "**Source and assets.** The drawings are `NYUSH-M",
+      "was": "248cb7b416c4edbfc392e31c9ac7bec3dc2d26f7cf52273cbe9c5e7226dcb664",
+      "is": "2211069eddc5c6d48e2e10f959161f6e97ef960c4a3741c89436b733e022474d"
+     },
+     {
+      "starts": "1. **React at moments, quiet while reading (G9b,",
+      "was": "fd6987a524b29d21f5b6c4823efe989c60e0fc265a3003a3c46f0116bd928250",
+      "is": "4ca4cc7b0b02afc30511da8ea5dd5d28c9bd7d8b005922512bb8ca0d34a11a87"
+     },
+     {
+      "starts": "2. **A clip ships only if it communicates a stat",
+      "was": "770390fbbf4dec06654c736650aa2e6d62618e3aac61e659d47ef25bc7a3fa77",
+      "is": "c2068d6ab4f60f90fbf18f574e7483edf7405153b06042457f2a01c5d7b60b7c"
+     },
+     {
+      "starts": "5. **Calibrated.** The companion never signals m",
+      "was": "236796216a0d3f923271fa9d4bc23ee901fe9a74825350e83142775fbcc23b59",
+      "is": "0ffae017f2a0fcdc21bc97768158d819d2fa4d9e28201d4e5ee57d4547dc70b3"
+     },
+     {
+      "starts": "6. **Transitions are cuts, and the player steps ",
+      "was": "3d3821e424758af718dbcb6afce24907565ff6da84139d9f8249a1fea913bd4a",
+      "is": "31438d7af8e6a33fc85862352f2529939ecfd9387f00c353745a19e0962d3a98"
+     },
+     {
+      "starts": "**Framing.** Every slot draws its atlas cell wit",
+      "was": "836633702318ffd0171af259cb7e30905a809256195cfa379b8e531293d512da",
+      "is": "77c13a95f1232e545e88090ecea682bb75c35d47b04c57882a6e33d68568c630"
+     },
+     {
+      "starts": "| `walk` | Waiting for the first token, or a too",
+      "was": "16a5b55deff10b3fd1fc77f491a863509f17579587cde9b19e2db44438d85631",
+      "is": "f1ef47608decd30ba873f0f01c95ef9c2eac7f8ff7fecb417d4c9d9af3708ede"
+     },
+     {
+      "starts": "| `speaking` | Answer text is streaming: the new",
+      "was": "dc2d8bdcf7bd9dcd459584235b1f873c5e89046b3420a8770d90b8fb3306b729",
+      "is": "ed2eb11a8211857f41d2228fd541d9644e53799f5162b41f8aed4b7d56c8cda8"
+     },
+     {
+      "starts": "| `hop` | Answer complete: `streaming` becomes `",
+      "was": "7e70ca684d7deb92e4e8a94efb0b712d82cfbd1ee14a7382675810a578ad0d58",
+      "is": "f30af985f7c534c9daba0549f5ae434b443e92a64c77da59e38491cb34006041"
+     },
+     {
+      "starts": "| `wave` | The student likes the newest answer: ",
+      "was": "43fb74c2bad90a69211a3d8dceae343e25ab59ea2232c2df869bc20b06834171",
+      "is": "ac680625314a8ae75635efa3ea8277a7abd6916be3c7c7a05f3d569d390e99dc"
+     },
+     {
+      "starts": "| `error` | The newest message's `error` is set,",
+      "was": "b6cf9af95a385355bdc9229be5cdbf3fa197e2920a6e473a8aa54e64e98b9c1b",
+      "is": "ee5e8992957f8148400a62cebfc78cab59e9a6eaf61e0527a32e67a2282721ee"
+     },
+     {
+      "starts": "| `offline` | The browser reports `navigator.onL",
+      "was": "cd5b1ec723f953577671a89910c7e6d35edfbe44ae354d9ed9ac01ab869eb984",
+      "is": "d2edde20b848c997f55a4d96c70fcb62d70f886513778e6e99062e08064b8769"
+     },
+     {
+      "starts": "| `idle` | Everything else: after `hop`, `wave`,",
+      "was": "ae4f2aad11e8fd68fcbe2774b11782069215f74fa952515f3521ba58cbe1abb3",
+      "is": "caa0d15ef9e29182304921407b25a974473455e2fa47d1c6c16036fa30fb1243"
+     },
+     {
+      "starts": "**Collisions (one clause each).** A tool or agen",
+      "was": "da247f835c2a37d56d9d7b7cbc4101b99f50640bd5f3ae76953464b020b770e3",
+      "is": "4524198ca283040e865cdd4f817e456b44e9b02346bccbdbcb3ef5af637bfebb"
+     },
+     {
+      "starts": "Motion plays only when all three levels allow it",
+      "was": "f41682eefff2998001de183488d21a23336f210449af0cd596818510d483eee5",
+      "is": "7cbafecce53b96fd9c55195dddc1def0b2b9fec1b1015252bbfd76559fc1c4e3"
+     },
+     {
+      "starts": "Also paused, at every level: a hidden tab and an",
+      "was": "322493ceea465916517364a79bf6f6f95105cc9c0794793a27f893b92b273a7f",
+      "is": "f8740caeaae8e662c68f2365bf9880124eb3330607bf7e36297e55ab7b05e1d7"
+     },
+     {
+      "starts": "| SR-6 tutor rows: the avatar | `avatar` | 32 / ",
+      "was": "3de263546f4ce60060473b4400db4f8a3f1422b3e2f184413a11153b49f77e3a",
+      "is": "31ec90c7370514b42016ca63be93c0faaaed2f95a47024be411bb6a56626ea08"
+     },
+     {
+      "starts": "| SR-6 empty conversation (the welcome row) | `i",
+      "was": "d2602db7b5ec0f768c5aaf102a4d8093f6667f9cd63df4bf1298958f85edad9a",
+      "is": "72eb8f9e62bb64060c9da47e4da0f0a1adea2194c362e70a9744a9b667a06db6"
+     },
+     {
+      "starts": "**Pixel-sampled (review A-5).** Once anti-aliase",
+      "was": "705285946fb80c755f2dca13c41733f64980336722cbf1f03edbadc806ed3562",
+      "is": "4ebaded5abdca68387e1bf245a850aeceed23d213debf7872d6063d2abb54dfd"
+     },
+     {
+      "starts": "**Runtime assets in the source** (`public/kiwi-m",
+      "was": "6db32829ea41a821973ab4d68f6d98da0228ab6a3f5fabc76b8a88d87e1ff0d7",
+      "is": "746e0762f74fd220734137d74fd70b887ee24d270847a5448b606e5543907492"
+     },
+     {
+      "starts": "| tutor avatar 32 px | 64 (2×) | `full-walk` (wa",
+      "was": "786d53eff820d942903757eb49e77df02fc7369ee0c838fcf3bff46fdd5282a3",
+      "is": "9e013090cf493c2b6b363bd1d2782fb3668628e9d909d5c0e37e874a5242b35f"
+     },
+     {
+      "starts": "| every still slot (96 / 64 / the 32 px avatar a",
+      "was": "82551893a36c117dfae03e603082c654df0286e69eeab36a543d38a3164eb150",
+      "is": "3da00eb55928dbf56a04f80c30272836e4d52ef3c0f0b834f36581fc0ffe06a2"
+     },
+     {
+      "starts": "**Loading order (lazy, per state, with one prefe",
+      "was": "c7fd181be35b20769bbd301afdcb0d5ee2cac06bb047239c7a65b6401bce754e",
+      "is": "edcca04f641154925c0152ce695f49326f1c4ee55f9d1d232e88044bf62de2b9"
+     },
+     {
+      "starts": "- **Hidden tab or scrolled-away avatar:** playba",
+      "was": "72efb8ca1ab28b6ab4c97d474c405ffee6ed704a07e1ffd2bdb6e1f382b3d830",
+      "is": "0d3fdca602c2cfa03d5e0f88343ddc12ae6147c023ccb70a0671f4ee8fda9330"
+     },
+     {
+      "starts": "- **Implementation plan (classification and size",
+      "was": "65fd35a879464f9bec4da5a39f8f2aa13490c532edd6a7708397f9ea0698d5f1",
+      "is": "96b7e1899f3e1b7a8217b3b30dba0569db5d7faee872953342e8558287a8428e"
+     }
+    ],
+    "inserted": [
+     {
+      "after": "**Phase 4 (2026-10-17), appended under the lock;",
+      "lines": [
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "f40e14f469b985d535778f47c999e852e87f447abd48a4a9c33a124631597af9"
+      ]
+     },
+     {
+      "after": "**The user's decisions (2026-10-17, on the rende",
+      "lines": [
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "e3c5dc64c04e70803e27c73d3a1a90c144428eada6bbe89c164a0f58b98a2d21"
+      ]
+     },
+     {
+      "after": "Every placement names its slot token, size from ",
+      "lines": [
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "be613ffd4296731fe929a65a28aafb704f24910c094c321709b0dc982b3a61e2"
+      ]
+     },
+     {
+      "after": "| 9 Pricing opacity | not applicable | none |",
+      "lines": [
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "5044084cbd29f8220c25eaddac13cbe1a45e5b4117644b9d90fda716b625de9a"
+      ]
+     },
+     {
+      "after": "### Evidence",
+      "lines": [
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "c42df6d8c3efbca7f18a8b138afb1dbfc0c71a135fc68321594c438343a7e623"
+      ]
+     },
+     {
+      "after": "- **Implementation plan:** port `src/components/",
+      "lines": [
+       "ba9c2f65b117fd0f89aa2d707140da32f7780e49a0ec3368c1dde30d91ad05f8",
+       "7c0ef4705d4a747d7dc381bd5d0cc6b5301a28f8065d3c510afdb5d03c7b9a7f"
+      ]
+     }
+    ],
+    "appended": {
+     "heading": "## Lock amendments",
+     "lines": [
+      "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "cc2f796ccea3b0c76435b248a9f032466e226a5981815ee016e9209dc38b7d9c",
+      "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "17c3706f8c10f21f83578f65e8abd932219771d2f576e157f142c5fb0332539e",
+      "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "843c550e22254408f1130494812412038b26e1f73ea7c36a70c464e12cefb275",
+      "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "0e4d0804c9de900ef68db580b6dc5d9c5e395c9063094eacc5c2ef689d127254",
+      "1a3045f5f6b41a4c01eb3c046ce09041b4ba94d632366981704bd6b983b7474b",
+      "2d25da297445775a745666eaf92cbd608ca0fae40384cb39e173d0a875e9ae8c",
+      "f0a6b0bd9af762eca30e8e5607df2be0619599483af9d67d7ee04b45663eabef",
+      "2a503418bef722e20e66ca66b5056426ea2e9b44f1c492b1fc0bfafe951e5bb1"
+     ]
+    }
+   },
+   "journey": {
+    "inserted": [
+     {
+      "after": "- **Companion (Phase 4):** (1) **Tutor avatar**,",
+      "lines": [
+       "9e0dd8747689a4df43dbe24b79600a30004334a26c267b5e4c6c731dc979334b"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

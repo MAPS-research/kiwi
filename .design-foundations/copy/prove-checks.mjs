@@ -9,13 +9,14 @@
 // An end-to-end proof copies the data, the guide and the source into a throwaway root, plants ONE defect, runs check-copy.mjs there and asks whether the named check
 // failed (an expected check written "!ID" is a control: the copy is changed in a way that must leave that check quiet); the real files are never written, and the copy is deleted afterwards. The copy is checked first with no defect: it must pass everything but the lock checks
 // (L1 to L3 read git, which a copy does not have). Exit code 1 if a proof is missed or the baseline is not clean.
+// The lock proofs (proofs.mjs LOCK: the lock amendments' check, L7 and L8) run in this process, like the unit proofs, since L7 and L8 read git too.
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { ROOT, UI, HERE, OUT_DIR, codeHash } from "./copy-lib.mjs";
-import { UNIT, E2E, runUnit } from "./proofs.mjs";
+import { UNIT, E2E, LOCK, runUnit, runLock } from "./proofs.mjs";
 
 const run = promisify(execFile);
 const args = process.argv.slice(2);
@@ -97,8 +98,8 @@ async function check(dir) {
   try { const r = await run("node", [script], { maxBuffer: 256 * 1024 * 1024 }); return { out: r.stdout }; }
   catch (e) { return { out: String(e.stdout || "") }; }
 }
-// L1 to L6 read git, which a copy does not have; R1 reads the summary this run is about to write, so it cannot be a baseline of the run that writes it
-const failing = (out) => [...out.matchAll(/^FAIL  (\S+)/gm)].map((m) => m[1]).filter((id) => !/^(L[1-6]|R1)$/.test(id)); // L4 to L6 (Phase 6's lock) read git too
+// L1 to L8 read git, which a copy does not have; R1 reads the summary this run is about to write, so it cannot be a baseline of the run that writes it
+const failing = (out) => [...out.matchAll(/^FAIL  (\S+)/gm)].map((m) => m[1]).filter((id) => !/^(L[1-8]|R1)$/.test(id)); // L4 to L6 (Phase 6's lock) and L7, L8 (the 2026-10-18 amendment, proved in process: LOCK) read git too
 
 // ---------------------------------------------------------------------------------------------------------------- unit proofs
 const unit = [];
@@ -108,8 +109,18 @@ for (const c of UNIT) {
   unit.push({ id: c.id, rule: c.rule, how: c.how, negative: c.expect === null, ok: r.ok, ...(r.ok ? {} : { text: c.text, hits: r.hits }) });
 }
 const unitMiss = unit.filter((x) => !x.ok);
+// ---------------------------------------------------------------------------------------------------------------- lock proofs (in process)
+const lock = [];
+for (const c of LOCK) {
+  if (ONLY && !ONLY.has(c.id)) continue;
+  let r; try { r = runLock(c); } catch (err) { r = { ok: false, hits: [`(${err.message})`] }; }
+  lock.push({ id: c.id, part: c.part, name: c.name, control: c.expect === null, ok: r.ok, ...(r.ok ? {} : { hits: r.hits }) });
+}
+const lockMiss = lock.filter((x) => !x.ok);
 console.log(`unit proofs: ${unit.length - unitMiss.length} of ${unit.length} behave as planted (${unit.filter((x) => x.negative).length} are controls that must stay quiet)`);
 for (const m of unitMiss) console.log(`  MISSED ${m.id} (${m.rule}) ${JSON.stringify(m.text)} -> ${JSON.stringify(m.hits)}`);
+console.log(`lock proofs: ${lock.length - lockMiss.length} of ${lock.length} behave as planted (${lock.filter((x) => x.control).length} a control that must stay quiet)`);
+for (const m of lockMiss) console.log(`  MISSED ${m.id} (${m.name}) -> ${JSON.stringify(m.hits)}`);
 
 // ---------------------------------------------------------------------------------------------------------------- end-to-end proofs
 let e2e = [], baselineBad = [];
@@ -158,9 +169,10 @@ if (!ONLY && !flag("--unit-only")) {
     codeHash: codeHash(),
     unit: { total: unit.length, ok: unit.length - unitMiss.length, controls: unit.filter((x) => x.negative).length, cases: unit.map((x) => ({ id: x.id, rule: x.rule, ok: x.ok })) },
     e2e: { total: e2e.length, caught: e2e.length - e2eMiss.length, baselineClean: baselineBad.length === 0, cases: e2e.map((x) => ({ id: x.id, rule: x.rule, corpus: x.corpus, expect: x.expect, ok: x.ok })) },
+    lock: { total: lock.length, ok: lock.length - lockMiss.length, controls: lock.filter((x) => x.control).length, cases: lock.map((x) => ({ id: x.id, part: x.part, ok: x.ok })) },
   };
   fs.mkdirSync(OUT_DIR, { recursive: true });
   fs.writeFileSync(path.join(OUT_DIR, "proof-summary.json"), JSON.stringify(summary, null, 1) + "\n");
   console.log(`wrote generated/proof-summary.json (codeHash ${summary.codeHash})`);
 }
-process.exit(unitMiss.length || e2eMiss.length || baselineBad.length ? 1 : 0);
+process.exit(unitMiss.length || lockMiss.length || e2eMiss.length || baselineBad.length ? 1 : 0);

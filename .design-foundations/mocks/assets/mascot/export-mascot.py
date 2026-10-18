@@ -1,20 +1,30 @@
 #!/usr/bin/env python3
-"""export-mascot.py — Phase 4 (Companion) export from the mascot source repository.
+"""export-mascot.py — Phase 4 (Companion) export from the mascot source repository, as amended on 2026-10-18.
 
-Exports into this script's own directory, from a read-only checkout of
-NYUSH-ML/kiwi-ui at the pinned commit (branch kiwi-icon):
+The amendment (the user's decisions, plan Decision Log): the tutor avatar draws full-body drawings only, in one framing shared by
+full-walk, full-hop-flight and full-wave-bow, runs from the send until the answer is complete, flies once and otherwise stands on the
+standing still. The page placements outside the chat panel keep their drawings. Exports into this script's own directory, from a
+read-only checkout of NYUSH-ML/kiwi-ui at the pinned commit (branch kiwi-icon):
 
-  still-<state>.png      one still per G9 state: the named 256 px atlas cell, pixels unchanged (G11)
-  stills/<state>.<N>.webp the same still resampled to the 2x size of its placement (192 = 96 px slots, 128 = 64 px slots, 64 = the 32 px avatar)
-  atlas/<atlas>.<N>.webp  the runtime atlases resampled to N px cells (64: the 32 px avatar at 2x; 96: the 48 px peek at 2x;
-                          128: the companion sheet's inspection stage), lossless WebP, 6 x 4 cells like the source
-  launcher-glyph.svg      the launcher's one-colour (currentColor) glyph: the portrait silhouette derived from the source's own
-                          KiwiArtwork.tsx Portrait() geometry, scaled to 78 % and set bottom-left, with a filled speech bubble
-                          top-right (review F6). One path, no mask, no colour literal: the eyes are subpaths wound against the
-                          body, so the nonzero fill rule leaves them unfilled (review A-13); an icon, not mascot art
-  provenance.md          repo, commit, source paths, SHA-256 of every source file read, measured sizes, this command
-  inventory.json         the machine-readable twin: sizes, the budget sums, the peek wall column, each still's ink box under the
-                          circle framing, and the pixel-sampled colour extremes of every shipped asset (for check-tokens.mjs § 20)
+  still-<drawing>.png       one still per drawing a placement shows: the named 256 px atlas cell, pixels unchanged (G11).
+                            stand = full-hop-flight 23, the avatar's standing still (every state it rests on) and the welcome frame;
+                            idle, error, walk = the page placements' portrait, lowered head and standing bird;
+                            wave, peek, retract = inspection stills of the like reaction and the composer peek
+  stills/<drawing>.<N>.webp the same drawings at the 2x size of the placements that load them (192 = 96 px slots, 128 = 64 px slots,
+                            64 = the 32 px avatar); the inspection stills at all three sizes
+  atlas/<atlas>.<N>.webp    playback atlases resampled to N px cells, lossless WebP, 6 x 4 cells like the source: full-walk,
+                            full-hop-flight and full-wave-bow at 64 (the 32 px avatar at 2x) and 128 (the companion sheet's stage);
+                            stamp-peek at 96 (the 48 px peek at 2x) and 128; portrait-nod-sleep and portrait-doze at 128 only, evidence
+                            for the sheet's 2026-10-17 row (not shipped)
+  launcher-glyph.svg        the launcher's one-colour (currentColor) glyph: the portrait silhouette derived from the source's own
+                            KiwiArtwork.tsx Portrait() geometry, scaled to 78 % and set bottom-left, with a filled speech bubble
+                            top-right (review F6). One path, no mask, no colour literal: the eyes are subpaths wound against the
+                            body, so the nonzero fill rule leaves them unfilled (review A-13); an icon, not mascot art
+  provenance.md             repo, commit, source paths, SHA-256 of every source file read, measured sizes, the amendment, this command
+  inventory.json            the machine-readable twin: sizes, the budget sums, the peek wall column, the avatar's shared framing (framing.ts's
+                            circle-fit rule over all 72 full-body drawings, checked against framing.ts for all eight atlases), the figure's
+                            geometry at 32 px, each still's ink box, and the pixel-sampled colour extremes of every shipped asset (for
+                            check-tokens.mjs § 20)
 
 Usage:  python3 export-mascot.py --source <path to the kiwi-ui checkout at fbb4db8> [--commit <sha>]
 Requires Pillow (webp support) and NumPy. Nothing here is machine-specific: the only path is the --source argument.
@@ -45,39 +55,115 @@ COLS, ROWS = 6, 4
 # The eight runtime atlases of the source (frames.ts: a state is a sequence over an atlas).
 ATLASES = ["full-hop-flight", "full-walk", "full-wave-bow", "portrait-blink",
            "portrait-doze", "portrait-nod-sleep", "portrait-turn", "stamp-peek"]
-
-# G9 state -> (atlas, still cell). The still is the drawing shown whenever motion is off
-# at any level (DESIGN.md ## Companion, state table).
-STILLS = {
-    "idle": ("portrait-blink", 0),
-    "peek": ("stamp-peek", 23),
-    "retract": ("stamp-peek", 0),
-    "walk": ("full-walk", 0),
-    "speaking": ("portrait-nod-sleep", 0),
-    "hop": ("full-hop-flight", 23),
-    "wave": ("full-wave-bow", 8),
-    "error": ("portrait-nod-sleep", 8),
-    "offline": ("portrait-doze", 23),
-}
-# Which atlases play (the stills above come from the lossless PNG twins; playback uses these).
-PLAYBACK = ["full-walk", "portrait-nod-sleep", "full-hop-flight", "full-wave-bow", "portrait-doze", "stamp-peek"]
-ATLAS_STATES = {
-    "full-walk": ["walk"], "portrait-nod-sleep": ["speaking", "error"], "full-hop-flight": ["hop"],
-    "full-wave-bow": ["wave"], "portrait-doze": ["offline"], "stamp-peek": ["peek", "retract"],
-    "portrait-blink": ["idle (still only)"], "portrait-turn": ["none (thinking / listening / curious / notification are not G9 states)"],
-}
-SIZES = {"avatar": 64, "peek": 96, "stage": 128}
-STILL_SIZES = [192, 128, 64]
-# the stills the placements load: 64 px for the states the 32 px avatar can rest on with motion off (hop and wave are skipped),
-# 128 px for the inline slots (idle; error on S-08 view A; walk on not-found below md), 192 px for the 96 px slots
-SHIPPED_STILLS = {64: ["idle", "walk", "speaking", "error", "offline"], 128: ["idle", "error", "walk"], 192: ["idle", "walk", "error"]}
-# framing.ts: one union centre and scale per atlas (256 px camera)
+# framing.ts: one union centre and scale per atlas (256 px camera); the page placements and the peek's stills keep these
 FRAMING = {
     "full-hop-flight": (146.5, 126, 0.83003190847445), "full-walk": (146, 150, 0.8798355627014727),
     "full-wave-bow": (151, 157.5, 0.9277835265599006), "portrait-blink": (127, 140.5, 0.7862688297336701),
     "portrait-doze": (125.5, 145, 0.8484632115135211), "portrait-nod-sleep": (131, 142.5, 0.8304032920387532),
     "portrait-turn": (125.5, 139, 0.8160039448611324), "stamp-peek": (150, 150, 1),
 }
+# The avatar's three full-body atlases share one union centre and scale: the library's circle-fit rule applied to all 72 of their
+# drawings at once, so the figure keeps one size and position in every state (DESIGN.md ## Companion, framing).
+AVATAR_ATLASES = ["full-walk", "full-hop-flight", "full-wave-bow"]
+SAFE_RADIUS = 0.92 * CELL / 2         # framing.ts: the presented radius leaves 8 % of the circle free
+AVATAR_SLOT = 32                      # the geometry below is in CSS px of the 32 px avatar slot
+# drawing -> (atlas, cell, sizes exported, framing of its ink box, who shows it)
+DRAWINGS = {
+    "stand": ("full-hop-flight", 23, [128, 64], "shared", "the tutor avatar in every state it rests on (idle, error, offline; walk, speaking and the end of hop with motion off), and the welcome frame"),
+    "idle": ("portrait-blink", 0, [192, 128], "own", "the page placements' portrait: sign-in and register, the empty states, S-08 views B and C, the class-card fallback"),
+    "error": ("portrait-nod-sleep", 8, [192, 128], "own", "the page-level error frame and S-08 view A"),
+    "walk": ("full-walk", 0, [192, 128], "own", "not found"),
+    "wave": ("full-wave-bow", 8, [192, 128, 64], "shared", "inspection: the like reaction with the wing at its highest"),
+    "peek": ("stamp-peek", 23, [192, 128, 64], "own", "inspection: the composer peek fully out"),
+    "retract": ("stamp-peek", 0, [192, 128, 64], "own", "inspection: the composer peek's beak tip"),
+}
+# the stills the placements load: 64 px for the 32 px avatar at rest, 128 px for the 64 px slots (the welcome frame; the inline page
+# slots: idle, error on S-08 view A, walk on not-found below md), 192 px for the 96 px page slots
+SHIPPED_STILLS = {64: ["stand"], 128: ["stand", "idle", "error", "walk"], 192: ["idle", "walk", "error"]}
+# atlas -> cell sizes exported; the shipped ones carry pixel extremes
+PLAYBACK = {"full-walk": [64, 128], "full-hop-flight": [64, 128], "full-wave-bow": [64, 128], "stamp-peek": [96, 128],
+            "portrait-nod-sleep": [128], "portrait-doze": [128]}
+SHIPPED_ATLASES = [("full-walk", 64), ("full-hop-flight", 64), ("full-wave-bow", 64), ("stamp-peek", 96)]
+ATLAS_USE = {
+    "full-walk": "walk and speaking (one loop); the page placements' walk still (not found)",
+    "full-hop-flight": "hop; its cell 23 is the standing still",
+    "full-wave-bow": "wave",
+    "stamp-peek": "peek, retract (the composer)",
+    "portrait-blink": "the page placements' portrait still only (cell 0)",
+    "portrait-nod-sleep": "the page error still only (cell 8); not played since 2026-10-18",
+    "portrait-doze": "not ported since 2026-10-18 (the 128 px set is evidence for the sheet's 2026-10-17 row)",
+    "portrait-turn": "not ported (thinking / listening / curious / notification are not G9 states)",
+}
+# state -> what the avatar draws (DESIGN.md ## Companion, as amended); "stand" is the standing still
+AVATAR_MAP = {
+    "idle": {"clip": None, "still": "stand"},
+    "walk": {"clip": "full-walk 0->23 at 2 ticks, loop (2.0 s), from cell 0 at send; one clock for the whole turn", "still": "stand"},
+    "speaking": {"clip": "the walk loop, continuing (no restart, no cut at the first token)", "still": "stand"},
+    "hop": {"clip": "full-hop-flight 0->23 at 1 tick, hold 23 x 4 (1.17 s), entered at the next tick from the current walk drawing; ends on the standing still", "still": "stand"},
+    "wave": {"clip": "full-wave-bow 0->14 at 3 ticks, hold 14 x 6 (2.13 s), then the standing still", "still": "stand"},
+    "error": {"clip": None, "still": "stand"},
+    "offline": {"clip": None, "still": "stand"},
+}
+# what the 2026-10-17 export shipped (for the comparison in the amended spec)
+WAS = {"beforeFirstAnswer": 131544, "withPeek96": 192330, "shipped": 339988}
+# retired on 2026-10-18 (step 2 of the amendment): no placement or page loads them any more. Deleted after checking with rg that nothing in
+# the repository named them (the last four once Phase 7 had regenerated its screenshots/final-audit.json, which named them).
+KEEP = None
+RETIRED = [
+    ("atlas/portrait-nod-sleep.64.webp", "the speaking dip and the error droop (portrait) left the avatar", None),
+    ("atlas/portrait-doze.64.webp", "the offline doze (portrait) left the avatar", None),
+    ("stills/idle.64.webp", "the 32 px avatar rests on stills/stand.64.webp; the page placements load the portrait at 128 and 192 only", None),
+    ("stills/walk.64.webp", "the avatar's motion-off still is the standing still; not found loads walk at 128 and 192 only", None),
+    ("stills/error.64.webp", "the avatar's error still is the standing still; the page error frame loads error at 128 and 192 only", None),
+    ("stills/speaking.64.webp", "speaking is the walk loop; its still is the standing still", None), ("stills/speaking.128.webp", "as above", None),
+    ("stills/speaking.192.webp", "as above", None), ("still-speaking.png", "as above", None),
+    ("stills/offline.64.webp", "offline rests on the standing still", None), ("stills/offline.128.webp", "as above", None),
+    ("stills/offline.192.webp", "as above", None), ("still-offline.png", "as above", None),
+    ("stills/hop.64.webp", "the same drawing as stills/stand.64.webp (full-hop-flight 23)", None), ("stills/hop.128.webp", "the same drawing as stills/stand.128.webp", None),
+    ("stills/hop.192.webp", "the same drawing, at a size no placement loads", None), ("still-hop.png", "the same drawing as still-stand.png", None),
+]
+
+def circle_fit(cells: list[np.ndarray]) -> dict:
+    """framing.ts's rule (artifacts/kiwi-framing-2026-10-14/verify-circle-fit.py in the source): the union box of every alpha > 0
+    pixel over the given drawings; its centre; the farthest corner of any alpha > 0 pixel from that centre; scale = min(1, 0.92 r0 / r)."""
+    boxes = []
+    for c in cells:
+        ys, xs = np.where(c[:, :, 3] > 0)
+        boxes.append((int(xs.min()), int(ys.min()), int(xs.max()) + 1, int(ys.max()) + 1))
+    b = [min(x[0] for x in boxes), min(x[1] for x in boxes), max(x[2] for x in boxes), max(x[3] for x in boxes)]
+    cx, cy = (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
+    r2 = 0.0
+    for c in cells:
+        ys, xs = np.where(c[:, :, 3] > 0)
+        dx = np.maximum(np.abs(xs - cx), np.abs(xs + 1 - cx)); dy = np.maximum(np.abs(ys - cy), np.abs(ys + 1 - cy))
+        r2 = max(r2, float((dx * dx + dy * dy).max()))
+    r = math.sqrt(r2); s = min(1.0, SAFE_RADIUS / r)
+    return {"unionBounds": b, "cx": cx, "cy": cy, "radius": r, "scale": s,
+            "leftPercent": 50 - cx / CELL * s * 100, "topPercent": 50 - cy / CELL * s * 100, "sizePercent": s * 100}
+
+def atlas_cells(frames_dir: str, atlas: str) -> list[np.ndarray]:
+    with Image.open(os.path.join(frames_dir, atlas + ".png")) as im:
+        a = np.asarray(im.convert("RGBA"))
+    return [a[y0:y1, x0:x1] for (x0, y0, x1, y1) in (cell_box(i) for i in range(COLS * ROWS))]
+
+def figure_geometry(cell: np.ndarray, fr: dict, slot: int = AVATAR_SLOT, threshold: int = 128) -> dict:
+    """The drawn figure in a slot under framing fr: the box of the pixels with alpha >= threshold and their centroid, in CSS px."""
+    a = cell[:, :, 3]; m = a >= threshold
+    ys, xs = np.where(m)
+    to = lambda v, c: slot * (0.5 + fr["scale"] * (v - c) / CELL)
+    box = [to(xs.min(), fr["cx"]), to(ys.min(), fr["cy"]), to(xs.max() + 1, fr["cx"]), to(ys.max() + 1, fr["cy"])]
+    cxm, cym = float(xs.mean()) + 0.5, float(ys.mean()) + 0.5
+    r = lambda v: round(float(v), 2)
+    return {"box": [r(v) for v in box], "width": r(box[2] - box[0]), "height": r(box[3] - box[1]),
+            "boxCentre": [r((box[0] + box[2]) / 2), r((box[1] + box[3]) / 2)], "centroid": [r(to(cxm, fr["cx"])), r(to(cym, fr["cy"]))]}
+
+def max_delta(g1: dict, g2: dict) -> dict:
+    """The largest difference between two figures: any box edge, the box centre, the centroid (CSS px)."""
+    edge = max(abs(a - b) for a, b in zip(g1["box"], g2["box"]))
+    bc = max(abs(a - b) for a, b in zip(g1["boxCentre"], g2["boxCentre"]))
+    cen = max(abs(a - b) for a, b in zip(g1["centroid"], g2["centroid"]))
+    return {"boxEdge": round(edge, 2), "boxCentre": round(bc, 2), "centroid": round(cen, 2)}
+
 # registration.json mask rules of the source (the forest silhouette and the tan bill)
 def is_forest(r, g, b, a): return (a > 100) & (g > r * 1.12) & (r < 100)
 def is_tan(r, g, b, a): return (a > 100) & (r > 140) & (g > 115) & (b > 75) & (r > g + 6) & (g > b + 8)
@@ -239,50 +325,63 @@ def main() -> int:
         read_files.append((f"{FRAMES}/{a}.webp", os.path.getsize(webp), sha256(webp)))
         read_files.append((f"{FRAMES}/{a}.png", os.path.getsize(png), sha256(png)))
 
+    # 0. the framing: the rule reproduces framing.ts for every atlas, or the shared framing cannot be trusted
+    cells = {a: atlas_cells(frames_dir, a) for a in ATLASES}
+    fit_check = {}
+    for a in ATLASES:
+        f = circle_fit(cells[a]); cx, cy, s = FRAMING[a]
+        ok = abs(f["cx"] - cx) < 1e-9 and abs(f["cy"] - cy) < 1e-9 and abs(f["scale"] - s) < 1e-9
+        fit_check[a] = ok
+        if not ok:
+            print(f"error: the circle-fit rule gives {f['cx']}, {f['cy']}, {f['scale']} for {a}; framing.ts says {cx}, {cy}, {s}", file=sys.stderr)
+            return 3
+    shared = circle_fit([c for a in AVATAR_ATLASES for c in cells[a]])
+    shared["over"] = f"all {len(AVATAR_ATLASES) * COLS * ROWS} drawings of " + ", ".join(AVATAR_ATLASES)
+    framing_of = lambda kind, atlas: ({"cx": shared["cx"], "cy": shared["cy"], "scale": shared["scale"]} if kind == "shared"
+                                      else {"cx": FRAMING[atlas][0], "cy": FRAMING[atlas][1], "scale": FRAMING[atlas][2]})
+
     # the peek's drawn wall (review A-3): the rightmost column with any ink, over all 24 drawings of stamp-peek
-    with Image.open(os.path.join(frames_dir, "stamp-peek.png")) as im:
-        arr = np.asarray(im.convert("RGBA"))
     wall = 0
-    for i in range(24):
-        x0, y0, x1, y1 = cell_box(i); cols = np.where(arr[y0:y1, x0:x1, 3] > 0)[1]
+    for c in cells["stamp-peek"]:
+        cols = np.where(c[:, :, 3] > 0)[1]
         if cols.size: wall = max(wall, int(cols.max()) + 1)
     peek_wall = {"column": wall, "fractionOfCanvas": round(wall / CELL, 4), "frameLeftPercent": round((CELL - wall) / CELL * 100, 2)}
 
-    # 1. stills: the named cell of the lossless PNG twin, pixels unchanged; plus the ink box under the circle framing and the pixel extremes
+    # 1. stills, one per drawing: the named cell of the lossless PNG twin, pixels unchanged; the sizes the placements load; the ink box
+    #    under the drawing's framing; the pixel extremes of every size (check-tokens.mjs § 20 reads them: `state` names the file stem)
     stills_out = []
-    for state, (atlas, cell) in STILLS.items():
+    for name, (atlas, cell, sizes, kind, use) in DRAWINGS.items():
         with Image.open(os.path.join(frames_dir, atlas + ".png")) as im:
             im = im.convert("RGBA")
             frame = im.crop(cell_box(cell))
-            p = os.path.join(HERE, f"still-{state}.png")
+            p = os.path.join(HERE, f"still-{name}.png")
             frame.save(p, "PNG", optimize=True)
             sized = {}; extremes = {}
-            for n in STILL_SIZES:
-                q = os.path.join(HERE, "stills", f"{state}.{n}.webp")
+            for n in sizes:
+                q = os.path.join(HERE, "stills", f"{name}.{n}.webp")
                 small = frame.resize((n, n), Image.LANCZOS); small.save(q, "WEBP", lossless=True, quality=100, method=6)
                 sized[n] = os.path.getsize(q); extremes[n] = pixel_extremes(small)
             alpha = np.asarray(frame)[:, :, 3]; ys, xs = np.where(alpha > 0)
-            cx, cy, s = FRAMING[atlas]
-            left, top = 0.5 - cx / CELL * s, 0.5 - cy / CELL * s
-            ink = {"canvasBox": [int(xs.min()), int(ys.min()), int(xs.max()) + 1, int(ys.max()) + 1],
+            fr = framing_of(kind, atlas); s = fr["scale"]
+            left, top = 0.5 - fr["cx"] / CELL * s, 0.5 - fr["cy"] / CELL * s
+            ink = {"framing": kind, "canvasBox": [int(xs.min()), int(ys.min()), int(xs.max()) + 1, int(ys.max()) + 1],
                    "slotFractions": {"left": round(left + xs.min() / CELL * s, 4), "top": round(top + ys.min() / CELL * s, 4),
                                      "right": round(left + (xs.max() + 1) / CELL * s, 4), "bottom": round(top + (ys.max() + 1) / CELL * s, 4)}}
-        stills_out.append({"state": state, "atlas": atlas, "cell": cell, "file": f"still-{state}.png", "bytes": os.path.getsize(p), "sized": sized, "ink": ink, "pixels": extremes})
+        stills_out.append({"state": name, "drawing": name, "atlas": atlas, "cell": cell, "use": use, "file": f"still-{name}.png",
+                           "bytes": os.path.getsize(p), "sized": sized, "ink": ink, "pixels": extremes})
 
     # 2. playback atlases at the shipped and the inspection cell sizes, with pixel extremes of the shipped ones
     atlases_out = []
-    for a in PLAYBACK:
+    for a, sizes in PLAYBACK.items():
         with Image.open(os.path.join(frames_dir, a + ".png")) as im:
             im = im.convert("RGBA")
-            for label, n in SIZES.items():
-                if label == "peek" and a != "stamp-peek":
-                    continue
-                if label == "avatar" and a == "stamp-peek":
-                    continue  # the peek never plays in the 32 px avatar slot; it ships at 96 only
+            for n in sizes:
                 q = os.path.join(HERE, "atlas", f"{a}.{n}.webp")
                 small = resample_atlas(im, n); small.save(q, "WEBP", lossless=True, quality=100, method=6)
-                entry = {"atlas": a, "cell": n, "file": f"atlas/{a}.{n}.webp", "bytes": os.path.getsize(q), "use": label}
-                if label != "stage":
+                shipped = (a, n) in SHIPPED_ATLASES
+                use = ("avatar" if n == 64 else "peek") if shipped else ("stage" if a in AVATAR_ATLASES + ["stamp-peek"] else "evidence")
+                entry = {"atlas": a, "cell": n, "file": f"atlas/{a}.{n}.webp", "bytes": os.path.getsize(q), "use": use}
+                if shipped:
                     entry["pixels"] = pixel_extremes(small)
                 atlases_out.append(entry)
 
@@ -292,49 +391,90 @@ def main() -> int:
         f.write(svg)
     glyph_bytes = os.path.getsize(os.path.join(HERE, "launcher-glyph.svg"))
 
-    # 4. sums
+    # 4. the figure at 32 px under the shared framing (alpha >= 128, the source's mask threshold for a solid pixel): every drawing the avatar shows
+    geo = {a: [figure_geometry(c, shared) for c in cells[a]] for a in AVATAR_ATLASES}
+    stand_g = geo["full-hop-flight"][23]
+    def span_of(gs):
+        return {"left": [min(g["box"][0] for g in gs), max(g["box"][0] for g in gs)], "top": [min(g["box"][1] for g in gs), max(g["box"][1] for g in gs)],
+                "right": [min(g["box"][2] for g in gs), max(g["box"][2] for g in gs)], "bottom": [min(g["box"][3] for g in gs), max(g["box"][3] for g in gs)],
+                "centroidX": [min(g["centroid"][0] for g in gs), max(g["centroid"][0] for g in gs)], "centroidY": [min(g["centroid"][1] for g in gs), max(g["centroid"][1] for g in gs)]}
+    walk_g, hop_g, wave_g = geo["full-walk"], geo["full-hop-flight"], geo["full-wave-bow"][:15]
+    worst = lambda gs: {k: max(max_delta(g, stand_g)[k] for g in gs) for k in ("boxEdge", "boxCentre", "centroid")}
+    # the 2026-10-17 avatar's resting drawings, each in its own atlas's framing (what the user rejected)
+    was_stills = {"idle": ("portrait-blink", 0), "walk": ("full-walk", 0), "speaking": ("portrait-nod-sleep", 0), "hop": ("full-hop-flight", 23),
+                  "wave": ("full-wave-bow", 8), "error": ("portrait-nod-sleep", 8), "offline": ("portrait-doze", 23)}
+    geometry32 = {
+        "slot": AVATAR_SLOT, "threshold": "alpha >= 128", "framing": "shared",
+        "stand": stand_g, "restingStates": {st: "stand" for st in AVATAR_MAP},
+        "walkLoop": span_of(walk_g), "hopClip": span_of(hop_g), "waveClip": span_of(wave_g),
+        "handovers": {
+            "send: stand -> full-walk 0": max_delta(stand_g, walk_g[0]),
+            "completion: full-walk n -> full-hop-flight 0 (worst over the 24 walk drawings)": {k: max(max_delta(g, hop_g[0])[k] for g in walk_g) for k in ("boxEdge", "boxCentre", "centroid")},
+            "landing: full-hop-flight 23 -> stand": max_delta(hop_g[23], stand_g),
+            "like: stand -> full-wave-bow 0": max_delta(stand_g, wave_g[0]),
+            "wave ends: full-wave-bow 14 -> stand": max_delta(wave_g[14], stand_g),
+            "hop 0 vs stand": max_delta(hop_g[0], stand_g),
+            "run vs stand (worst over the 24 walk drawings)": worst(walk_g),
+            "wave vs stand (worst over cells 0 to 14)": worst(wave_g),
+        },
+        "flightRise": round(stand_g["centroid"][1] - min(g["centroid"][1] for g in hop_g), 2),
+        "beforeAmendment": {"note": "the 2026-10-17 avatar's resting drawings, each in its own atlas's framing (framing.ts)",
+                            "figures": {st: dict(figure_geometry(cells[a][c], framing_of("own", a)), atlas=a, cell=c) for st, (a, c) in was_stills.items()}},
+    }
+
+    # 5. sums
     by = {(a["atlas"], a["cell"]): a["bytes"] for a in atlases_out}
     sized = {s["state"]: s["sized"] for s in stills_out}
-    first_atlases = by[("full-walk", 64)] + by[("portrait-nod-sleep", 64)] + by[("full-hop-flight", 64)]
-    first = first_atlases + sized["idle"][128] + sized["idle"][64]
+    first_atlases = by[("full-walk", 64)] + by[("full-hop-flight", 64)]
+    first = first_atlases + sized["stand"][128] + sized["stand"][64]
     stills_bytes = sum(sized[st][n] for n, lst in SHIPPED_STILLS.items() for st in lst)
     stills_list = "; ".join(f"{n} px: {', '.join(lst)}" for n, lst in SHIPPED_STILLS.items())
-    atlases64 = sum(b for (a, c), b in by.items() if c == 64)
+    atlases64 = sum(by[(a, 64)] for a in AVATAR_ATLASES)
     shipped_total = atlases64 + by[("stamp-peek", 96)] + stills_bytes + glyph_bytes
     total_runtime = sum(r["bytes"] for r in runtime)
 
-    # 5. provenance
+    # 6. provenance
+    sh = shared; g = geometry32
     lines = []
-    lines.append("# Mascot assets — provenance (Phase 4, Companion)\n")
+    lines.append("# Mascot assets — provenance (Phase 4, Companion; amended 2026-10-18)\n")
     lines.append(f"- **Source repository:** `{REPO}`, branch `{BRANCH}`, commit `{commit}` (\"feat: Add Kiwi icon and drawn-frame motion library\"). Read-only; nothing was pushed or modified there.")
     lines.append(f"- **Exported on:** {date.today().isoformat()} by `export-mascot.py` (this directory): `python3 export-mascot.py --source <checkout>`; Pillow {getattr(Image, '__version__', 'n/a')}.")
     lines.append("- **What the source holds:** `public/kiwi-mascot/` (61 MB: v2 sources, lossless PNG twins, per-frame PNGs, animated preview WebPs, the superseded v1 SVG rigs). Runtime needs only the eight v3 WebP atlases below (`frames.ts`: a state is a sequence over an atlas; 6 × 4 cells of 256 px; the 24 Hz timeline clock with explicit holds).")
-    lines.append("- **Pixels:** every `still-<state>.png` is the named cell of the lossless PNG twin of its atlas, unchanged (G11: the artwork keeps its four colours, the pinned hue family `#234631 #92ae70 #f5f4e8 #ccbd99`; anti-aliased and resampled pixels vary around them, which is why the colour extremes below are sampled and asserted). The `atlas/` and `stills/` files are the same drawings resampled (Lanczos) to the 2× size of their placement and saved as lossless WebP; no recolouring, cropping, warping or interpolation between drawings.")
+    lines.append("- **The amendment of 2026-10-18** (the user's decisions, plan Decision Log, the two newest companion rows): the tutor avatar draws full-body drawings only, in one framing shared by `full-walk`, `full-hop-flight` and `full-wave-bow`; it runs from the send until the answer is complete, flies once and otherwise stands on the standing still, `full-hop-flight` cell 23. The page placements outside the chat panel keep their drawings and their per-atlas framing.")
+    lines.append("- **Pixels:** every `still-<drawing>.png` is the named cell of the lossless PNG twin of its atlas, unchanged (G11: the artwork keeps its four colours, the pinned hue family `#234631 #92ae70 #f5f4e8 #ccbd99`; anti-aliased and resampled pixels vary around them, which is why the colour extremes below are sampled and asserted). The `atlas/` and `stills/` files are the same drawings resampled (Lanczos) to the 2× size of their placement and saved as lossless WebP; no recolouring, cropping, warping or interpolation between drawings.")
     lines.append("- **`launcher-glyph.svg`** is a one-colour (`currentColor`) glyph in a single path with no mask and no colour literal: the `Portrait()` body, bill and wing of `src/components/KiwiMascot/KiwiArtwork.tsx` at the same commit, scaled to 78 % and set bottom-left, all wound one way, the two eyes wound the other way so the nonzero rule leaves them unfilled, plus a filled speech bubble top-right (review F6 and A-13). It is the launcher's icon (Phase 3 icon policy: glyphs are `currentColor`), not mascot art.")
-    lines.append(f"- **The peek's wall** (review A-3): the rightmost inked column over the 24 `stamp-peek` drawings is x = {peek_wall['column']} of 256 ({peek_wall['fractionOfCanvas'] * 100:.1f} %). The peek slot frames the drawing with that column on the slot's right edge (frame left {peek_wall['frameLeftPercent']} %, width 100 %), not with the union-circle framing, so the head emerges from the edge.\n")
+    lines.append(f"- **The peek's wall** (review A-3): the rightmost inked column over the 24 `stamp-peek` drawings is x = {peek_wall['column']} of 256 ({peek_wall['fractionOfCanvas'] * 100:.1f} %). The peek slot frames the drawing with that column on the slot's right edge (frame left {peek_wall['frameLeftPercent']} %, width 100 %), not with the union-circle framing, so the head emerges from the edge.")
+    lines.append(f"- **The avatar's shared framing:** framing.ts's own rule (every alpha > 0 pixel corner; one union centre; scale = min(1, 0.92 × 128 / radius)), applied to {sh['over']}: union box {sh['unionBounds']}, centre ({sh['cx']}, {sh['cy']}), radius {sh['radius']:.4f}, scale {sh['scale']:.6f}; as CSS on the frame: left {sh['leftPercent']:.4f} %, top {sh['topPercent']:.4f} %, width and height {sh['sizePercent']:.4f} %. The rule reproduces framing.ts exactly for all eight atlases ({sum(fit_check.values())} of 8), so the shared values are the library's method, not a new one.")
+    lines.append(f"- **The figure at 32 px** (alpha ≥ 128, CSS px of the slot, shared framing): the standing still's box {g['stand']['box']} and centroid {g['stand']['centroid']}, the same drawing in every state the avatar rests on. The largest difference from it (any box edge / the centroid): " + "; ".join(f"{k} {v['boxEdge']} / {v['centroid']}" for k, v in g["handovers"].items()) + f". The flight lifts the centroid by up to {g['flightRise']} px, by design.\n")
     lines.append("## Runtime assets in the source (the port inventory), measured\n")
-    lines.append("| Atlas | Source path | Bytes | Pixels | SHA-256 | G9 states |")
+    lines.append("| Atlas | Source path | Bytes | Pixels | SHA-256 | Use since 2026-10-18 |")
     lines.append("|---|---|---:|---|---|---|")
     for r in runtime:
-        lines.append(f"| `{r['atlas']}` | `{r['file']}` | {r['bytes']:,} | {r['px'][0]} × {r['px'][1]} (256 px cells) | `{r['sha256']}` | {', '.join(ATLAS_STATES[r['atlas']])} |")
+        lines.append(f"| `{r['atlas']}` | `{r['file']}` | {r['bytes']:,} | {r['px'][0]} × {r['px'][1]} (256 px cells) | `{r['sha256']}` | {ATLAS_USE[r['atlas']]} |")
     lines.append(f"| **Total** | | **{total_runtime:,}** | | | |\n")
     lines.append("Also in the source and **not ported**: `frames-v2/` (32 MB, superseded sources), `*.png` lossless twins (used here only to cut stills), `*.source.png`, the per-frame `<atlas>/frame-NNN.png` directories, the animated `kiwi-<state>.webp` previews (gallery downloads; no pause, reduced-motion or completion API), the v1 `kiwi-<state>.svg` rigs (superseded by the drawn frames), `KiwiLoader` (a walking journey whose end means nothing), `KiwiStamp` as the launcher (the peek moves to the composer edge, G9).\n")
-    lines.append("## Stills exported (one per G9 state)\n")
-    lines.append("| State | File | Atlas · cell | Bytes (256 px PNG) | 192 px WebP | 128 px WebP | 64 px WebP | Ink box in the slot (left, top, right, bottom; fractions) |")
-    lines.append("|---|---|---|---:|---:|---:|---:|---|")
+    lines.append("## Stills exported (one per drawing a placement shows)\n")
+    lines.append("| Drawing | File | Atlas · cell | Shown by | Bytes (256 px PNG) | 192 px WebP | 128 px WebP | 64 px WebP | Ink box in the slot (left, top, right, bottom; fractions; framing) |")
+    lines.append("|---|---|---|---|---:|---:|---:|---:|---|")
     for s in stills_out:
-        f = s["ink"]["slotFractions"]
-        lines.append(f"| `{s['state']}` | `{s['file']}` | `{s['atlas']}` · {s['cell']} | {s['bytes']:,} | {s['sized'][192]:,} | {s['sized'][128]:,} | {s['sized'][64]:,} | {f['left']:.3f}, {f['top']:.3f}, {f['right']:.3f}, {f['bottom']:.3f} |")
+        f = s["ink"]["slotFractions"]; z = lambda n: f"{s['sized'][n]:,}" if n in s["sized"] else "—"
+        lines.append(f"| `{s['state']}` | `{s['file']}` | `{s['atlas']}` · {s['cell']} | {s['use']} | {s['bytes']:,} | {z(192)} | {z(128)} | {z(64)} | {f['left']:.3f}, {f['top']:.3f}, {f['right']:.3f}, {f['bottom']:.3f} ({s['ink']['framing']}) |")
     lines.append("")
     lines.append("## Playback atlases exported (resampled, lossless WebP, 6 × 4 cells)\n")
     lines.append("| File | Cell | Bytes | Use |")
     lines.append("|---|---:|---:|---|")
     for a in atlases_out:
-        use = {"avatar": "shipped: the 32 px tutor avatar at 2×", "peek": "shipped: the 48 px composer peek at 2×", "stage": "evidence only: the companion sheet's 128 px inspection stage"}[a["use"]]
+        use = {"avatar": "shipped: the 32 px tutor avatar at 2×", "peek": "shipped: the 48 px composer peek at 2×", "stage": "evidence only: the companion sheet's 128 px inspection stage",
+               "evidence": "evidence only: the companion sheet's 2026-10-17 row (not shipped since 2026-10-18)"}[a["use"]]
         lines.append(f"| `{a['file']}` | {a['cell']} | {a['bytes']:,} | {use} |")
     lines.append("")
-    lines.append(f"Before the first answer completes, lazily by state: the welcome row's idle still at 128 px ({sized['idle'][128]:,} B) + the newest row's idle still at 64 px ({sized['idle'][64]:,} B) + `full-walk` + `portrait-nod-sleep` + `full-hop-flight` at 64 px ({first_atlases:,} B) = **{first:,} B**; `portrait-nod-sleep` and `full-hop-flight` are prefetched when `walk` begins, so the first answer can speak and hop (review A-6); with `stamp-peek` at 96 px (only if the student typed) **{first + by[('stamp-peek', 96)]:,} B**. Budget: 300 KB (brief done-when 7).")
-    lines.append(f"\nThe whole shipped set: the five avatar atlases at 64 px ({atlases64:,} B) + `stamp-peek` at 96 px ({by[('stamp-peek', 96)]:,} B) + the stills the placements load ({stills_bytes:,} B: {stills_list}) + the launcher glyph ({glyph_bytes:,} B) = **{shipped_total:,} B**.")
+    lines.append(f"Before the first answer completes, lazily by state: the welcome frame's standing still at 128 px ({sized['stand'][128]:,} B) + the welcome row's standing still at 64 px once a message exists ({sized['stand'][64]:,} B) + `full-walk` + `full-hop-flight` at 64 px ({first_atlases:,} B) = **{first:,} B**; `full-hop-flight` is prefetched when `walk` begins (review A-6), and no portrait atlas is fetched for the avatar; with `stamp-peek` at 96 px (only if the student typed) **{first + by[('stamp-peek', 96)]:,} B**. Budget: 300 KB (brief done-when 7). Before the amendment: {WAS['beforeFirstAnswer']:,} B ({WAS['withPeek96']:,} B with the peek).")
+    lines.append(f"\nThe whole shipped set: the three avatar atlases at 64 px ({atlases64:,} B) + `stamp-peek` at 96 px ({by[('stamp-peek', 96)]:,} B) + the stills the placements load ({stills_bytes:,} B: {stills_list}) + the launcher glyph ({glyph_bytes:,} B) = **{shipped_total:,} B** (before the amendment {WAS['shipped']:,} B).")
+    lines.append("\n## Retired on 2026-10-18 (step 2 of the amendment)\n")
+    lines.append("No placement or page loads these any more. Deleted after checking that nothing in the repository named them: " + "; ".join(f"`{f}` ({w})" for f, w, k in RETIRED if not k) + ".")
+    kept = [f for f, w, k in RETIRED if k]
+    if kept:
+        lines.append("\nKept for now, unshipped, because another file still names them: " + ", ".join(f"`{f}`" for f in kept) + ".")
     lines.append("\n## Pixel-sampled colour extremes (for `check-tokens.mjs` § 20)\n")
     lines.append("Over every solid pixel (alpha ≥ 128) of each shipped asset, classified by the source's own mask rules (`registration.json`): the lightest and the darkest forest-class pixel, and the lightest tan-class pixel. The checker resolves the backing and the light surfaces from the tokens and asserts the lightest forest pixel of every asset still clears 3:1 on each.\n")
     lines.append("| Asset | Solid px | Forest px | Forest lightest | Forest darkest | Tan lightest |")
@@ -343,7 +483,7 @@ def main() -> int:
         if "pixels" in a:
             px = a["pixels"]; lines.append(f"| `{a['file']}` | {px['solidPixels']:,} | {px['forestPixels']:,} | `{px.get('forestLightest', '—')}` | `{px.get('forestDarkest', '—')}` | `{px.get('tanLightest', '—')}` |")
     for s in stills_out:
-        for n in STILL_SIZES:
+        for n in sorted(s["pixels"], reverse=True):
             px = s["pixels"][n]; lines.append(f"| `stills/{s['state']}.{n}.webp` | {px['solidPixels']:,} | {px['forestPixels']:,} | `{px.get('forestLightest', '—')}` | `{px.get('forestDarkest', '—')}` | `{px.get('tanLightest', '—')}` |")
     lines.append("\n## Every source file read\n")
     lines.append("| Path (repo-relative) | Bytes | SHA-256 |")
@@ -354,12 +494,20 @@ def main() -> int:
         q = os.path.join(src, extra); lines.append(f"| `{extra}` ({why}) | {os.path.getsize(q):,} | `{sha256(q)}` |")
     with open(os.path.join(HERE, "provenance.md"), "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
+
+    # 7. the machine-readable twin
     with open(os.path.join(HERE, "inventory.json"), "w", encoding="utf-8") as f:
-        json.dump({"repo": REPO, "branch": BRANCH, "commit": commit, "runtime": runtime, "stills": stills_out, "atlases": atlases_out,
-                   "glyphBytes": glyph_bytes, "glyph": glyph_meta, "peekWall": peek_wall, "framing": {k: {"cx": v[0], "cy": v[1], "scale": v[2]} for k, v in FRAMING.items()},
-                   "beforeFirstAnswer": {"atlases64": first_atlases, "idleStill128": sized["idle"][128], "idleStill64": sized["idle"][64], "total": first, "withPeek96": first + by[("stamp-peek", 96)]},
-                   "shipped": {"atlases64": atlases64, "peek96": by[("stamp-peek", 96)], "stillsBytes": stills_bytes, "stillsList": stills_list, "glyph": glyph_bytes, "total": shipped_total}}, f, indent=1)
-    print(f"exported {len(stills_out)} stills, {len(atlases_out)} atlases, glyph ({glyph_bytes} B, eyes sweep {glyph_meta['eyeSweep']}, body area {glyph_meta['bodyArea']}); peek wall x={peek_wall['column']}; runtime total {total_runtime:,} B; before-first-answer {first:,} B (+peek {first + by[('stamp-peek', 96)]:,} B); shipped {shipped_total:,} B")
+        json.dump({"repo": REPO, "branch": BRANCH, "commit": commit, "amended": "2026-10-18", "runtime": runtime, "stills": stills_out, "atlases": atlases_out,
+                   "glyphBytes": glyph_bytes, "glyph": glyph_meta, "peekWall": peek_wall,
+                   "framing": {**{k: {"cx": v[0], "cy": v[1], "scale": v[2]} for k, v in FRAMING.items()}, "shared": {"cx": sh["cx"], "cy": sh["cy"], "scale": sh["scale"]}},
+                   "avatar": {"atlases": AVATAR_ATLASES, "states": AVATAR_MAP, "sharedFraming": sh, "framingRuleReproducesFramingTs": fit_check, "geometry32": geometry32},
+                   "beforeFirstAnswer": {"atlases64": first_atlases, "standStill128": sized["stand"][128], "standStill64": sized["stand"][64], "total": first, "withPeek96": first + by[("stamp-peek", 96)]},
+                   "shipped": {"atlases64": atlases64, "peek96": by[("stamp-peek", 96)], "stillsBytes": stills_bytes, "stillsList": stills_list, "glyph": glyph_bytes, "total": shipped_total},
+                   "was": WAS, "retired": [{"file": f, "why": w, "status": ("kept: " + k) if k else "deleted"} for f, w, k in RETIRED]}, f, indent=1)
+    print(f"exported {len(stills_out)} stills, {len(atlases_out)} atlases, glyph ({glyph_bytes} B); shared framing centre ({sh['cx']}, {sh['cy']}) scale {sh['scale']:.6f}; peek wall x={peek_wall['column']}; runtime total {total_runtime:,} B; before-first-answer {first:,} B (+peek {first + by[('stamp-peek', 96)]:,} B); shipped {shipped_total:,} B")
+    stale = [f for f, _, k in RETIRED if not k and os.path.exists(os.path.join(HERE, f))]
+    if stale:
+        print(f"note: {len(stale)} retired file(s) still present: " + ", ".join(stale), file=sys.stderr)
     return 0
 
 

@@ -1000,3 +1000,59 @@ export function reconcileText(c) {
   return `**Reconciling the counts.** The Tests column holds ${c.total} references (a reference is one row and one test line). ${c.equal} of them are a line that holds the old string as a quoted literal (${c.eqString} string queries and ${c.eqText} other lines that quote it). A scan of the test files that does not use the column, over each test file's whole import closure, finds ${c.scanReached + c.notReached} pairs of a row and a line where a quoted literal equals an old string: ${c.scanReached} reach the row's anchor file, and they are the ${c.equal} the column holds; ${c.notReached} do not, because the test is another page's and quotes the same word (the reach rule above), so ${c.scanReached} + ${c.notReached} = ${c.scanReached + c.notReached}. The other ${c.other} references are what a scan for literals cannot see: ${c.regex} regular-expression queries (\`r\`), ${c.asksNew} queries for the new text (\`n\`), ${c.asksKept} for a part the row keeps (\`k\`), ${c.otherString} sentence queries matched by containment and ${c.otherText} lines that quote only part of the string (\`m\`), so ${c.equal} + ${c.other} = ${c.total}.`;
 }
 
+
+// ---------------------------------------------------------------------------------------------------------------
+// The lock amendments (check-copy.mjs § 8b, checks L7 and L8; lock-amendments.json). A pure function of the texts, so proofs.mjs can plant
+// defects in process: L7 and L8 read the base texts from git, which a throwaway copy does not have. Given DESIGN.md and JOURNEY.md as they were
+// at the amendment's base commit, the working texts and the recorded amendment, it returns what differs from the record:
+//   DESIGN.md: every line before `## Companion`, and every line from `## Voice and tone` to the base's end, is the base's, byte for byte; inside
+//   `## Companion` the lines that left are exactly the recorded replaced lines and the lines that arrived exactly their replacements and the
+//   recorded insertions (as multisets of SHA-256, each as often as recorded); the file ends with the recorded `## Lock amendments`, line for line.
+//   JOURNEY.md: the working text is the base with exactly the recorded lines inserted after their anchor.
+// ---------------------------------------------------------------------------------------------------------------
+export const sha256hex = (t) => crypto.createHash("sha256").update(t, "utf8").digest("hex");
+// the blocks check-copy.mjs writes into DESIGN.md with --write: the Phase 5 Evidence table, the coverage table, the Phase 6 Evidence table
+export const WRITTEN_BLOCKS = ["evidence", "coverage", "evidence-p6"];
+export function generatedBlocks(text) {
+  const out = {};
+  for (const n of WRITTEN_BLOCKS) { const a = text.indexOf(`<!-- copy:${n}:start -->`), b = text.indexOf(`<!-- copy:${n}:end -->`); if (a >= 0 && b > a) out[n] = text.slice(a, b); }
+  return out;
+}
+const withBlocks = (text, blocks) => { let t = text; for (const [n, body] of Object.entries(blocks)) { const a = t.indexOf(`<!-- copy:${n}:start -->`), b = t.indexOf(`<!-- copy:${n}:end -->`); if (a >= 0 && b > a) t = t.slice(0, a) + body + t.slice(b); } return t; };
+// `written`: the blocks this run of the checker writes. They are the checker's output, not the amendment's: both texts are read with them in place, and a
+// block in the working text that is not what the checker writes (a hand edit, or a run without --write after the data changed) is reported.
+export function amendmentHits({ baseDesign, design, baseJourney, journey, amendment, written = {} }) {
+  const out = { design: [], journey: [] };
+  const have = generatedBlocks(design);
+  for (const [n, body] of Object.entries(written)) if (n in have && have[n] !== body) out.design.push(`the generated block copy:${n} is not what the checker writes: run check-copy.mjs --write`);
+  baseDesign = withBlocks(baseDesign, written); design = withBlocks(design, written);
+  const tally = (arr) => arr.reduce((m, x) => m.set(x, (m.get(x) || 0) + 1), new Map());
+  const minus = (a, b) => { const left = tally(b), r = []; for (const x of a) { const n = left.get(x) || 0; if (n) left.set(x, n - 1); else r.push(x); } return r; };
+  const short = (hs) => hs.map((h) => h.slice(0, 12)).join(", ");
+  const bl = baseDesign.split("\n"), wl = design.split("\n");
+  const bS = bl.indexOf("## Companion"), bE = bl.indexOf("## Voice and tone"), wS = wl.indexOf("## Companion"), wE = wl.indexOf("## Voice and tone");
+  if (bS < 0 || bE < 0 || wS < 0 || wE < 0) out.design.push("## Companion or ## Voice and tone is missing");
+  else {
+    const bTrail = bl[bl.length - 1] === "" ? 1 : 0, wTrail = wl[wl.length - 1] === "" ? 1 : 0;
+    const app = amendment.design.appended.lines, tail = wl.length - wTrail - app.length;
+    if (tail < wE || wl.slice(tail, wl.length - wTrail).map(sha256hex).join() !== app.join()) out.design.push("the file does not end with the recorded ## Lock amendments");
+    if (bl.slice(0, bS).join("\n") !== wl.slice(0, wS).join("\n")) out.design.push("a line before ## Companion differs from the base");
+    if (bl.slice(bE, bl.length - bTrail).join("\n") !== wl.slice(wE, Math.max(wE, tail)).join("\n")) out.design.push("a line from ## Voice and tone to the base's end differs from the base");
+    const bComp = bl.slice(bS, bE).map(sha256hex), wComp = wl.slice(wS, wE).map(sha256hex);
+    const left = minus(bComp, wComp), arrived = minus(wComp, bComp);
+    const wantLeft = amendment.design.replaced.map((r) => r.was);
+    const wantArrived = [...amendment.design.replaced.map((r) => r.is), ...amendment.design.inserted.flatMap((x) => x.lines)];
+    const l1 = minus(left, wantLeft), l2 = minus(wantLeft, left), a1 = minus(arrived, wantArrived), a2 = minus(wantArrived, arrived);
+    if (l1.length || l2.length) out.design.push(`the lines that left ## Companion are not the recorded ones (unrecorded: ${short(l1) || "none"}; recorded but kept: ${short(l2) || "none"})`);
+    if (a1.length || a2.length) out.design.push(`the lines that arrived in ## Companion are not the recorded ones (unrecorded: ${short(a1) || "none"}; recorded but missing: ${short(a2) || "none"})`);
+  }
+  let jw = journey.split("\n");
+  for (const ins of amendment.journey.inserted) {
+    const k = jw.findIndex((l) => l.startsWith(ins.after));
+    if (k < 0) { out.journey.push(`the anchor "${ins.after.slice(0, 40)}…" is missing`); continue; }
+    if (jw.slice(k + 1, k + 1 + ins.lines.length).map(sha256hex).join() !== ins.lines.join()) { out.journey.push(`the recorded lines do not follow "${ins.after.slice(0, 40)}…"`); continue; }
+    jw = [...jw.slice(0, k + 1), ...jw.slice(k + 1 + ins.lines.length)];
+  }
+  if (!out.journey.length && jw.join("\n") !== baseJourney) out.journey.push("a line other than the recorded insertion differs from the base");
+  return out;
+}

@@ -2,9 +2,10 @@
 //
 //   UNIT   a string run through one lint function, in this process: the lint must hit it (or, for a negative control, must not).
 //   E2E    one defect planted into a throwaway copy of the data, the guide or the source; check-copy.mjs runs on the copy and the named check must fail.
+//   LOCK   one defect planted into a small made-up DESIGN.md or JOURNEY.md, run through the lock amendments' check (amendmentHits, L7 and L8) in this process.
 //
 // A proof that is not caught is a lint with a hole, so prove-checks.mjs exits 1 and writes the miss into generated/proof-summary.json.
-import { lintString, lintSource, bareCountHits, agreeCountHits, enDashHits, scopedTermHits, sentencePartOf, AUDIT } from "./copy-lib.mjs";
+import { lintString, lintSource, bareCountHits, agreeCountHits, enDashHits, scopedTermHits, sentencePartOf, AUDIT, amendmentHits, sha256hex, generatedBlocks } from "./copy-lib.mjs";
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 // UNIT: [id, rule, how, where, text, expect]
@@ -519,3 +520,55 @@ e("E-ERR-16", "ERR", "guide", "F22", "C10 no longer says that the clamp is focus
 export const E2E = E;
 // a proof id names one proof: a second proof with the same id would hide the first from the summary, so a duplicate stops the run here
 { const seen = new Set(); for (const c of [...U, ...E]) { if (seen.has(c.id)) throw new Error(`duplicate proof id ${c.id}`); seen.add(c.id); } }
+
+// ------------------------------------------------------------------------------------------------------------------------------------
+// LOCK: the lock amendments' check (copy-lib.mjs amendmentHits; check-copy.mjs L7 and L8, lock-amendments.json), proved in this process on a small
+// made-up DESIGN.md and JOURNEY.md with a recorded amendment, because L7 and L8 read their base from git and a throwaway copy has none. Each proof
+// plants one defect into the made-up working texts and names the part that must report it (`design` or `journey`) with what it must say; the
+// control plants nothing (the exact amendment, with the checker's Evidence block regenerated) and both parts must stay quiet. LOCK-1 to LOCK-4 are the four tests run against the real amendment
+// of 2026-10-18 before it was applied: a line outside `## Companion` changed, a twin's word changed in an amended row, an amended paragraph edited,
+// the JOURNEY.md line removed.
+// ------------------------------------------------------------------------------------------------------------------------------------
+const AMD = (() => {
+  const base = ["# Design", "", "## Direction", "", "It is still while the student reads.", "", "## Companion", "", "Intro.", "",
+    "| `walk` | waits | `full-walk` | \"Thinking…\" |", "| `idle` | rests | `portrait-blink` | none |", "", "## Voice and tone", "", "Words.", "",
+    "<!-- copy:evidence:start -->", "| K2 | 44 lines |", "<!-- copy:evidence:end -->", ""];
+  const was = { walk: base[10], idle: base[11] };
+  const is = { walk: "| `walk` | runs from the send | `full-walk`, the shared framing | \"Thinking…\" |", idle: "| `idle` | rests | the standing still | none |" };
+  const inserted = ["", "**Amended.** The avatar keeps one framing."];
+  const appended = ["", "## Lock amendments", "", "- **Relaxes:** the stillness while the answer streams."];
+  // the checker rewrites its Evidence block from this run (48 lines now that the amendment added four): a generated change, not the amendment's
+  const work = [...base.slice(0, 9), ...inserted, base[9], is.walk, is.idle, ...base.slice(12, 17), base[17], "| K2 | 48 lines |", base[19], ...appended, ""];
+  const jBase = ["# Journey", "", "- **Companion (Phase 4):** (1) **Tutor avatar**, the bullet.", "- **Copy (Phase 5):** the next bullet.", ""];
+  const jLine = "- **Companion (amended 2026-10-18):** one framing.";
+  const jWork = [...jBase.slice(0, 3), jLine, ...jBase.slice(3)];
+  const amendment = {
+    design: { replaced: [{ was: sha256hex(was.walk), is: sha256hex(is.walk) }, { was: sha256hex(was.idle), is: sha256hex(is.idle) }],
+              inserted: [{ after: "Intro.", lines: inserted.map(sha256hex) }], appended: { heading: "## Lock amendments", lines: appended.map(sha256hex) } },
+    journey: { inserted: [{ after: "- **Companion (Phase 4):** (1) **Tutor avatar**", lines: [sha256hex(jLine)] }] },
+  };
+  const design = work.join("\n");
+  return { baseDesign: base.join("\n"), design, baseJourney: jBase.join("\n"), journey: jWork.join("\n"), amendment, written: generatedBlocks(design) };
+})();
+const L = [];
+const lock = (id, part, expect, name, plant) => L.push({ id, part, expect, name, plant });
+const dEdit = (from, to) => (t) => { if (!t.design.includes(from)) throw new Error(`LOCK: "${from}" is not in the made-up DESIGN.md`); return { ...t, design: t.design.replace(from, to) }; };
+lock("LOCK-0", null, null, "the exact amendment: both parts stay quiet", (t) => t);
+lock("LOCK-1", "design", /from ## Voice and tone to the base's end differs/, "a line outside ## Companion changed (in the Voice section)", dEdit("Words.", "Other words."));
+lock("LOCK-2", "design", /arrived in ## Companion are not the recorded ones/, "a twin's word changed in an amended row", dEdit("runs from the send | `full-walk`, the shared framing | \"Thinking…\"", "runs from the send | `full-walk`, the shared framing | \"Thinking\""));
+lock("LOCK-3", "design", /arrived in ## Companion are not the recorded ones/, "an amended paragraph edited", dEdit("The avatar keeps one framing.", "The avatar keeps two framings."));
+lock("LOCK-4", "journey", /the recorded lines do not follow/, "the JOURNEY.md line removed", (t) => ({ ...t, journey: t.baseJourney }));
+lock("LOCK-5", "design", /before ## Companion differs/, "a line before ## Companion changed (a locked sentence)", dEdit("It is still while the student reads.", "It moves while the student reads."));
+lock("LOCK-6", "design", /does not end with the recorded ## Lock amendments/, "the appended section dropped", (t) => ({ ...t, design: t.design.slice(0, t.design.indexOf("\n## Lock amendments")) + "\n" }));
+lock("LOCK-7", "design", /left ## Companion are not the recorded ones/, "a recorded replacement reverted (the old row kept)", dEdit("| `idle` | rests | the standing still | none |", "| `idle` | rests | `portrait-blink` | none |"));
+lock("LOCK-8", "journey", /other than the recorded insertion differs/, "another JOURNEY.md line changed", (t) => ({ ...t, journey: t.journey.replace("the next bullet.", "a changed bullet.") }));
+lock("LOCK-9", "design", /arrived in ## Companion are not the recorded ones/, "an unrecorded line added inside ## Companion", dEdit("Intro.\n", "Intro.\nAn extra line.\n"));
+lock("LOCK-10", "design", /generated block copy:evidence is not what the checker writes/, "a hand edit inside the checker's generated Evidence block", dEdit("| K2 | 48 lines |", "| K2 | 50 lines |"));
+export const LOCK = L;
+export function runLock(c) {
+  const t = c.plant({ ...AMD });
+  const hits = amendmentHits({ baseDesign: t.baseDesign, design: t.design, baseJourney: t.baseJourney, journey: t.journey, amendment: t.amendment, written: t.written });
+  const all = [...hits.design, ...hits.journey];
+  const ok = c.expect === null ? all.length === 0 : hits[c.part].some((h) => c.expect.test(h));
+  return { ok, hits: all };
+}

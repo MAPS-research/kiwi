@@ -427,7 +427,8 @@ let compN = 0, compBad = 0; const compRows = [];
 }
 // pixel-sampled (review A-5): the export writes, for every shipped asset, the lightest forest-class pixel it contains (alpha ≥ 128, the
 // source's own mask rule); that pixel must still clear 3:1 on the dark backing and on the lowest light surface, so resampling can never
-// hide an outline that fails. 27 stills (9 states × 64/128/192 px) and the 6 shipped atlases.
+// hide an outline that fails. Every still and every shipped atlas inventory.json lists (since the 2026-10-18 amendment: 17 stills, one per drawing at
+// the sizes it is exported, and the 4 shipped atlases).
 let pixN = 0, pixBad = 0; const pixRows = [];
 {
   const invFile = join(ROOT, ".design-foundations/mocks/assets/mascot/inventory.json");

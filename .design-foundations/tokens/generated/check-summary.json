@@ -2,8 +2,8 @@
  "date": "2026-10-18",
  "source": {
   "version": "2.0.0",
-  "sha256": "99c99554452b",
-  "commit": "26652e2"
+  "sha256": "e6d4e43f3934",
+  "commit": "14229be"
  },
  "result": "PASS",
  "failures": 0,
@@ -124,7 +124,7 @@
  "companionBacking": {
   "assertions": 7,
   "failures": 0,
-  "pixelAssets": 33,
+  "pixelAssets": 21,
   "pixelFailures": 0
  },
  "densityDeltas": 30,
