@@ -9,7 +9,7 @@
      self-hosted Source Sans 3 (assets/fonts/source-sans-3.css, OFL); the charts are hand-drawn SVG, no library. Every colour is a var(), with no literal: the swatch
      captions sit on the sheet in text tokens, never on a series colour. The page audits itself: it reads --chart-1…5 and --chart-other from the computed styles, recomputes
      the contrasts and the pairwise OKLab distances under the Machado 2009 simulations (the donut slices' too), writes them onto the strip and sets data-audit-done.
-     Switch modes with data-theme on <html>. -->
+     Switch modes with data-theme on <html>: the page redraws and re-audits itself when it changes (a MutationObserver), so the numbers always match the chips. -->
 <link rel="stylesheet" href="assets/fonts/source-sans-3.css">
 <style id="tokens">
 /* GENERATED: .design-foundations/tokens/generated/kiwi-ui.tokens.css, pasted by shoot-chart-sheet.mjs. Do not edit. */
@@ -3517,6 +3517,9 @@
 (function () {
   // the bar charts measure their labels as rendered, so the drawing waits for the self-hosted face
   function run() {
+  // a redraw (a theme switch) starts from the static markup: the drawn parts are emptied first
+  for (const id of ["swatches", "pairs", "tiles-row", "topics"]) document.getElementById(id).innerHTML = "";
+  for (const sv of document.querySelectorAll("svg[id^=svg-]")) sv.innerHTML = "";
   // ---------- colour maths (OKLab, Machado 2009 severity 1.0, WCAG), the same formulas as chart-lib.mjs ----------
   const s2lin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
   const parse = (s) => { s = s.trim(); let m = s.match(/^#([0-9a-f]{6})$/i); if (m) return [0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16) / 255); m = s.match(/rgba?\(([^)]+)\)/); return m ? m[1].split(",").slice(0, 3).map((x) => parseFloat(x) / 255) : null; };
@@ -3567,6 +3570,8 @@
   // integer ticks for counts: steps of 1, 2, 5 or 10 × a power of ten, never a fraction (the encoding rule for counts of people, sessions and questions)
   const niceStep = (max, ticks) => { const raw = Math.max(1, max / ticks), p = 10 ** Math.floor(Math.log10(raw)), c = raw / p; return Math.max(1, (c <= 1 ? 1 : c <= 2 ? 2 : c <= 5 ? 5 : 10) * p); };
   const fmt = (n) => n.toLocaleString("en-US");
+  // shares drawn together sum to 100: each is floored and the leftover points go to the largest remainders (largest-remainder rounding)
+  const shares = (vals) => { const t = vals.reduce((a, b) => a + b, 0), raw = vals.map((v) => (v / t) * 100), fl = raw.map(Math.floor); let left = 100 - fl.reduce((a, b) => a + b, 0); raw.map((r, i) => [r - fl[i], i]).sort((a, b) => b[0] - a[0] || a[1] - b[1]).forEach(([, i]) => { if (left > 0) { fl[i]++; left--; } }); return fl; };
   // bars from a zero baseline: integer ticks, solid horizontal gridlines, 4 px radius at the data end only, a 2 px surface gap;
   // the highest bar carries its value (the extreme of the series), and a near-empty series labels every non-zero bar
   function columns(id, data, labels, unit, labelAll) {
@@ -3602,7 +3607,7 @@
   // the category gutter is as wide as the longest label as rendered
   function hbars(id, items, H, shareLabel) {
     const root = svg(id), W = 654, total = items.reduce((n, d) => n + d[1], 0), max = Math.max(...items.map((d) => d[1]));
-    const tipText = items.map(([, v]) => (shareLabel ? `${Math.round((v / total) * 100)}%` : fmt(v)));
+    const sh = shares(items.map((d) => d[1])), tipText = items.map(([, v], i) => (shareLabel ? `${sh[i]}%` : fmt(v)));
     const probe = el("text", { class: "tick", x: 0, y: 0 }); root.appendChild(probe);
     const wOf = (t, cls) => { probe.setAttribute("class", cls); probe.textContent = t; return probe.getComputedTextLength(); };
     const gutter = Math.ceil(Math.max(...items.map(([n]) => wOf(n, "tick")))) + 8, tipW = Math.ceil(Math.max(...tipText.map((t) => wOf(t, "label")))) + 6;
@@ -3625,11 +3630,11 @@
   function donut(id, parts, centre, unit) {
     const root = svg(id), W = 302, H = 160, cx = 151, cy = 80, R = 66, r0 = 44, total = parts.reduce((n, p) => n + p[0], 0);
     const P = (rr, a) => [cx + rr * Math.cos(a), cy + rr * Math.sin(a)];
-    let a0 = -Math.PI / 2; const slices = [];
-    parts.forEach(([v, cls, name, token]) => {
+    let a0 = -Math.PI / 2; const slices = [], sh = shares(parts.map((p) => p[0]));
+    parts.forEach(([v, cls, name, token], k) => {
       const a1 = a0 + (v / total) * 2 * Math.PI, big = a1 - a0 > Math.PI ? 1 : 0, f = (p) => p.map((q) => q.toFixed(2)).join(",");
       root.appendChild(el("path", { d: `M${f(P(R, a0))} A${R},${R} 0 ${big} 1 ${f(P(R, a1))} L${f(P(r0, a1))} A${r0},${r0} 0 ${big} 0 ${f(P(r0, a0))} Z`, class: cls, stroke: "var(--chart-plot)", "stroke-width": 2, "data-name": name }));
-      slices.push({ name, token, share: Math.round((v / total) * 100), a0, a1, mid: (a0 + a1) / 2, thin: v / total < 0.1 });
+      slices.push({ name, token, share: sh[k], a0, a1, mid: (a0 + a1) / 2, thin: v / total < 0.1 });
       a0 = a1;
     });
     root.appendChild(el("text", { x: cx, y: cy - 2, "text-anchor": "middle", class: "label", style: "font-size:20px;font-weight:600" }, centre));
@@ -3646,7 +3651,7 @@
     // identifiability (review round 2, Minor 1): each slice's colour distance to every other under the simulations, and the label that names it
     const cv = slices.map((s) => viewsOf(read(s.token)));
     const pairs = []; for (let i = 0; i < slices.length; i++) for (let j = i + 1; j < slices.length; j++) pairs.push({ pair: `${slices[i].name} vs ${slices[j].name}`, protan: +dE(cv[i].p, cv[j].p).toFixed(2), deutan: +dE(cv[i].d, cv[j].d).toFixed(2), normal: +dE(cv[i].n, cv[j].n).toFixed(2) });
-    window.__chartAudit.donuts[id] = { slices: slices.map((s) => ({ name: s.name, token: s.token, share: s.share, thin: s.thin })), pairs, minCvd: Math.min(...pairs.map((p) => Math.min(p.protan, p.deutan))) };
+    window.__chartAudit.donuts[id] = { slices: slices.map((s) => ({ name: s.name, token: s.token, share: s.share, thin: s.thin })), shareSum: slices.reduce((n, s) => n + s.share, 0), pairs, minCvd: Math.min(...pairs.map((p) => Math.min(p.protan, p.deutan))) };
   }
   donut("svg-duration", [[1224, "s1", "Chat", "--chart-1"], [750, "s2", "Scratchpad", "--chart-2"]], "33", "hours");
   donut("svg-model", [[402, "s1", "ChatGPT", "--chart-1"], [188, "s2", "Qwen", "--chart-2"], [22, "so", "Unknown", "--chart-other"]], "612", "requests");
@@ -3672,10 +3677,14 @@
     window.__tipKeys = true;
     document.addEventListener("keydown", (e) => {
       if (e.key !== "Escape") return;
-      for (const t of document.querySelectorAll(".trunc")) if (t.matches(":hover") || t === document.activeElement || t.querySelector(".tip.shown")) { t.classList.add("dismissed"); t.querySelector(".tip").classList.remove("shown"); }
+      for (const t of document.querySelectorAll(".trunc")) { t.querySelector(".tip").classList.remove("shown"); if (t.matches(":hover") || t === document.activeElement) t.classList.add("dismissed"); } // the demo tip only closes; a span is dismissed only while it is hovered or focused
     });
+    // the demo-open tip is the sheet's static figure of the open state: the first focus or pointer in the table closes it, so it never covers a focused span (WCAG 2.4.11)
+    const closeDemo = () => { const d = document.querySelector(".tip.shown"); if (d) d.classList.remove("shown"); };
+    for (const tb of document.querySelectorAll("table.data")) { tb.addEventListener("focusin", closeDemo); tb.addEventListener("pointerover", closeDemo); }
     for (const t of document.querySelectorAll(".trunc")) {
       t.addEventListener("focus", () => t.classList.remove("dismissed")); // a new focus brings the tip back, even after an Escape with nothing focused (review: m5)
+      t.addEventListener("mouseenter", () => t.classList.remove("dismissed")); // a new hover brings it back too (§ Chart tokens › Tables)
       t.addEventListener("blur", () => t.classList.remove("dismissed"));
       t.addEventListener("mouseleave", () => { if (document.activeElement !== t) t.classList.remove("dismissed"); });
     }
@@ -3685,7 +3694,10 @@
   document.documentElement.dataset.auditDone = "1";
   }
   const load = (w) => (document.fonts && document.fonts.load ? document.fonts.load(`${w} 12px "Source Sans 3"`) : Promise.resolve());
-  Promise.all([load(400), load(600)]).catch(() => null).then(run);
+  Promise.all([load(400), load(600)]).catch(() => null).then(() => {
+    run();
+    new MutationObserver(() => { delete document.documentElement.dataset.auditDone; run(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  });
 })();
 </script>
 </body>

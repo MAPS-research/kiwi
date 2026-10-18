@@ -43,6 +43,7 @@
        "thin": false
       }
      ],
+     "shareSum": 100,
      "pairs": [
       {
        "pair": "Chat vs Scratchpad",
@@ -70,10 +71,11 @@
       {
        "name": "Unknown",
        "token": "--chart-other",
-       "share": 4,
+       "share": 3,
        "thin": true
       }
      ],
+     "shareSum": 100,
      "pairs": [
       {
        "pair": "ChatGPT vs Qwen",
@@ -163,7 +165,7 @@
       "labels": [
        "ChatGPT 66%",
        "Qwen 31%",
-       "Unknown 4%"
+       "Unknown 3%"
       ],
       "named": true,
       "labelsInsideFigure": true,
@@ -340,6 +342,17 @@
      "bars": 0,
      "alert": true
     },
+    "demoTipOnTab2": {
+     "focusedRow2": true,
+     "demoTip": "none",
+     "underRow2Centre": "its own span",
+     "ringVisible": true
+    },
+    "escapeAtLoadThenHover": {
+     "demoTip": "none",
+     "dismissedSpans": 0,
+     "tipOnFirstHover": "block"
+    },
     "tipHover": {
      "display": "block",
      "hit": "tip"
@@ -347,18 +360,18 @@
     "tipFocus": {
      "focusVisible": true,
      "outline": "solid 2px",
-     "display": "block",
-     "hit": "tip"
+     "display": "none",
+     "hit": "main"
     },
     "ring": {
      "outlineOffset": "-2px",
      "outlineWidth": "2px",
-     "tipClearOfRingPx": 8
+     "tipClearOfRingPx": -536
     },
     "tipEscape": {
      "display": "none",
-     "focusKept": true,
-     "returnsOnNextFocus": "block"
+     "focusKept": false,
+     "returnsOnNextFocus": "none"
     },
     "tipLong": {
      "chars": 388,
@@ -533,6 +546,7 @@
        "thin": false
       }
      ],
+     "shareSum": 100,
      "pairs": [
       {
        "pair": "Chat vs Scratchpad",
@@ -560,10 +574,11 @@
       {
        "name": "Unknown",
        "token": "--chart-other",
-       "share": 4,
+       "share": 3,
        "thin": true
       }
      ],
+     "shareSum": 100,
      "pairs": [
       {
        "pair": "ChatGPT vs Qwen",
@@ -653,7 +668,7 @@
       "labels": [
        "ChatGPT 66%",
        "Qwen 31%",
-       "Unknown 4%"
+       "Unknown 3%"
       ],
       "named": true,
       "labelsInsideFigure": true,
@@ -830,6 +845,17 @@
      "bars": 0,
      "alert": true
     },
+    "demoTipOnTab2": {
+     "focusedRow2": true,
+     "demoTip": "none",
+     "underRow2Centre": "its own span",
+     "ringVisible": true
+    },
+    "escapeAtLoadThenHover": {
+     "demoTip": "none",
+     "dismissedSpans": 0,
+     "tipOnFirstHover": "block"
+    },
     "tipHover": {
      "display": "block",
      "hit": "tip"
@@ -837,18 +863,18 @@
     "tipFocus": {
      "focusVisible": true,
      "outline": "solid 2px",
-     "display": "block",
-     "hit": "tip"
+     "display": "none",
+     "hit": "main"
     },
     "ring": {
      "outlineOffset": "-2px",
      "outlineWidth": "2px",
-     "tipClearOfRingPx": 8
+     "tipClearOfRingPx": -536
     },
     "tipEscape": {
      "display": "none",
-     "focusKept": true,
-     "returnsOnNextFocus": "block"
+     "focusKept": false,
+     "returnsOnNextFocus": "none"
     },
     "tipLong": {
      "chars": 388,
@@ -1013,6 +1039,7 @@
        "thin": false
       }
      ],
+     "shareSum": 100,
      "pairs": [
       {
        "pair": "Chat vs Scratchpad",
@@ -1040,10 +1067,11 @@
       {
        "name": "Unknown",
        "token": "--chart-other",
-       "share": 4,
+       "share": 3,
        "thin": true
       }
      ],
+     "shareSum": 100,
      "pairs": [
       {
        "pair": "ChatGPT vs Qwen",
@@ -1099,6 +1127,7 @@
        "thin": false
       }
      ],
+     "shareSum": 100,
      "pairs": [
       {
        "pair": "Chat vs Scratchpad",
@@ -1126,10 +1155,11 @@
       {
        "name": "Unknown",
        "token": "--chart-other",
-       "share": 4,
+       "share": 3,
        "thin": true
       }
      ],
+     "shareSum": 100,
      "pairs": [
       {
        "pair": "ChatGPT vs Qwen",

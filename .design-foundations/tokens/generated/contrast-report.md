@@ -1,4 +1,4 @@
-# Kiwi UI token checks — 2026-10-18 · source v2.0.0 (sha256 99c99554452b) · at 1bec5c2
+# Kiwi UI token checks — 2026-10-18 · source v2.0.0 (sha256 99c99554452b) · at 26652e2
 
 Source: `.design-foundations/tokens/kiwi-ui.tokens.json` · Locked block: `kiwi-ui/DESIGN.md` · Result: **PASS**
 
