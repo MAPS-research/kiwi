@@ -391,9 +391,9 @@
    "files": 7
   },
   "handoffKeeps": {
-   "clauses": 120,
-   "keepClauses": 10,
-   "sections": 3,
+   "clauses": 127,
+   "keepClauses": 11,
+   "sections": 4,
    "native": 9
   },
   "native": 9,
@@ -424,6 +424,7 @@
    "unread": 0,
    "page": "fix/access-control:docs/logic-changes.md"
   },
+  "noteCites6": 27,
   "noteCites": {
    "notes": 148,
    "voice": 219
@@ -434,6 +435,13 @@
    "nonClaim": 4,
    "handoff": 3
   },
+  "phase6": {
+   "rows": 47,
+   "groups": 2,
+   "summaries": 11,
+   "sourceAnchored": 19,
+   "newText": 28
+  },
   "designDiff": {
    "twinLinesEdited": 6,
    "principleEdits": 1,
@@ -443,10 +451,17 @@
    "introEdits": 1,
    "linesAppended": 707
   },
+  "designDiff6": {
+   "linesAppended": 121
+  },
+  "journeyDiff6": {
+   "added": 120,
+   "removed": 0
+  },
   "securityPhrases": {
    "skipped": false,
    "phrases": 63,
-   "files": 30
+   "files": 31
   },
   "coverage": {
    "rules": 18,
@@ -463,9 +478,9 @@
    "terminologyRows": 24,
    "block": "Read from `.design-foundations/copy/rule-coverage.json` and `generated/proof-summary.json` at assembly time, never typed. A **lint** is a check that runs over strings (`over`: **new** every New string, **kept** every kept string and every source string no row touches, **source** every string in the source, **examples** the guide's own examples, **code** the source code the checks read, **data** the revision data, **guide** this text); a **planted defect** is a string or an edit that breaks the rule, put into a throwaway copy by `prove-checks.mjs`, and the lint is proved only when the run reports it caught (189 unit proofs, 45 of them controls that must stay quiet, and 229 end-to-end proofs, 2 of them a control that must stay quiet, all behaving as planted). What no lint can see is checked by hand: the rows read, and the result.\n\n| Rule | Lints that run over the strings | Planted defects | Checked by hand |\n|---|---|---|---|\n| `C1` Case | B1 (new), H17 (kept), H1 (source), H7 (code); the audit's own: C1-A, C1-B | 10 unit, 7 end to end | nothing a lint cannot see |\n| `C2` Buttons | B1 (new), H12 (code), H8 (data); the audit's own: C2-A | 8 unit, 4 end to end | 11 rows read: 11 of 11 need the extra words: 3 name a provider (Sign in with Google, Sign up with Google), 2 are a count and its noun (Approve 3 events), 1 is the person's own voice (I've copied the secret), 1 is two actions in one button (Sign in and allow access), 4 carry a qualifier that separates the button from its neighbour (Ask Kiwi to check, Go to your classes, Create first MCP server, Assign existing MCP servers); none can lose a word without losing its object |\n| `C3` Dates and times | B1 (new), H17 (kept), H1 (source), H2 (code), H20 (guide); the audit's own: C3-A | 12 unit, 6 end to end | nothing a lint cannot see |\n| `C4` Numbers and plurals | B1 (new), D3 (new), D6 (new), H17 (kept), H1 (source), H10 (code); the audit's own: C4-A, C4-B, C4-C | 29 unit, 17 end to end | nothing a lint cannot see |\n| `C5` Marks | B1 (new), H17 (kept), H1 (source), F20 (examples), H19 (data); the audit's own: C5-A, C5-B | 13 unit, 12 end to end | nothing a lint cannot see |\n| `C6` Terminology | B1 (new), D8 (new), H17 (kept), H1 (source), H18 (data); the audit's own: C6-A | 29 unit, 12 end to end | nothing a lint cannot see |\n| `C7` Page names | B1 (new), H17 (kept), H1 (source), F8 (data) | 6 unit, 4 end to end | nothing a lint cannot see |\n| `C8` Person | B1 (new), H17 (kept); the audit's own: C8-A | 10 unit, 5 end to end | nothing a lint cannot see |\n| `C9` Errors | B1 (new), D1 (new), D2 (new), H17 (kept), H1 (source); the audit's own: C9-A, C9-B | 7 unit, 14 end to end | nothing a lint cannot see |\n| `C10` Raw text | B1 (new), D10 (new), H17 (kept), H1 (source); the audit's own: C10-A | 6 unit, 5 end to end | nothing a lint cannot see |\n| `C11` Confirmations | B1 (new), H17 (kept), H1 (source), H16 (data); the audit's own: C11-A | 5 unit, 5 end to end | 20 rows read: 20 read: 19 state what happens before whether it can be undone and each claim was checked against the code (DS.32 is the pattern's placeholder); one, A-09.09, promised permanence for a webhook that the backend only sets inactive (`webhooks/webhooks.service.ts:173-177`), and now says what happens and how to turn it on again |\n| `C12` Empty states | B1 (new), H17 (kept), H1 (source); the audit's own: C12-A | 6 unit, 3 end to end | 74 rows read: read in full: 0 say \"Nothing here\" or \"No … found\"; each is a \"No {things} yet\" or \"No {things} match\" state line (C5's one-clause form, for a secondary pane), a sentence that names the first step, or a sentence that says who acts and when; 0 defects |\n| `C13` Loading and progress | B1 (new), H17 (kept), H1 (source); the audit's own: C13-A, C13-B | 6 unit, 4 end to end | nothing a lint cannot see |\n| `C14` Labels, helpers, placeholders | B1 (new), H17 (kept), H1 (source); the audit's own: C14-A, C14-B, C14-C | 14 unit, 6 end to end | 103 rows read: read in full, and each helper compared with the labels within 15 lines of its anchor by word overlap: 12 helper and label pairs overlap by 60% or more of the label's words (page descriptions that use the page title; a field's purpose beside its name), and in each the helper adds information beyond the label (a format, a default, a consequence or a purpose); 0 defects |\n| `C15` Icon-only names | B1 (new), H1 (source) | 4 unit, 2 end to end | 82 rows read: read in full: 9 are the glyph's name \"No value\" (DS.54), the rest are verb phrases, the toolbar words the component tables name, or a tooltip that adds a sentence to a label that is already visible and so is not an icon's name (A-08.24 and A-08.78 on the approval chip, A-09.66 on the secret); 2 defects found and fixed, A-05.11 (\"View details\" in every row of the email table, now \"View email details\") and A-09.27 (a bare noun phrase, now \"View delivery history\") |\n| `C16` Claims | B1 (new), H17 (kept), H1 (source), D12 (code), D12 (data), K11 (examples), D13 (data), D13 (guide); the audit's own: C16-A | 8 unit, 22 end to end | 36 rows read: 36 rows that state what the product does were checked against the code they run, and the ones that say who can act against the access model on `fix/access-control`: 5 were corrected (A-09.09 promised that deleting a webhook can't be undone, and A-09.42, the dialog's title and its button and the row's control said delete, when the backend only sets the webhook inactive: they now say deactivate; A-09.66's tooltip now says only what the page does: it shows the secret once; A-14.26 said everything Kiwi learned from it, where the code removes the comments, the summaries, the search index and the stored file; A-12.10 sent every non-admin to an administrator for what a class's instructor may do under the model); 31 hold, S-01.07 once the branch merges (it ships with or after it, like S-05.06) |\n| `C17` Branding | B1 (new), H17 (kept), H1 (source), D4 (data); the audit's own: C17-A | 5 unit, 4 end to end | nothing a lint cannot see |\n| `C18` Spelling | B1 (new), H17 (kept), H1 (source); the audit's own: C18-A | 7 unit, 3 end to end | nothing a lint cannot see |\n\n**§ Errors.**\n\n| Item | Lints | Checked by hand |\n|---|---|---|\n| Anatomy. | D1, D2, D9 (D9 (every error row cites C9) is built into the generator: composeError adds C9 to every error row, so a row cannot omit it) | nothing a lint cannot see |\n| The cause lines. | F5, D1 | nothing a lint cannot see |\n| On the MCP pages the server has a name. | H18 | nothing a lint cannot see |\n| Kiwi once. | K5 | nothing a lint cannot see |\n| What is safe. | D11 | nothing a lint cannot see |\n| A batch is a partial result. | D1 (H14 (every function that sends requests one after another has a partial-result row) reads the source's loops; its proof ran in round 4 and it is unchanged) | nothing a lint cannot see |\n| Raw backend text (C10). | D10, F22 | nothing a lint cannot see |\n| Where a message comes from. | D10, F22 | nothing a lint cannot see |\n| Where this section supersedes the Companion's hand-off. | K4, K9 | nothing a lint cannot see |\n\n**§ Dates, times and numbers.**\n\n| Item | Lints | Checked by hand |\n|---|---|---|\n| Date | B1, H2 | nothing a lint cannot see |\n| Date and time | B1, H2 | nothing a lint cannot see |\n| Time | B1 | nothing a lint cannot see |\n| Range | B1, F6 | nothing a lint cannot see |\n| Calendar header | F17, H2 | nothing a lint cannot see |\n| Calendar day (accessible name) | F17 | nothing a lint cannot see |\n| Weekday heading | F17 | nothing a lint cannot see |\n| Count | B1, F6 | nothing a lint cannot see |\n| Count with a noun | D3, H10 | nothing a lint cannot see |\n| Machine files | B1, F6 | nothing a lint cannot see |\n\n**§ Step labels.**\n\n| Item | Lints | Checked by hand |\n|---|---|---|\n| Wait | K3 | nothing a lint cannot see |\n| Reading | K3 | nothing a lint cannot see |\n| Acting | K3 | nothing a lint cannot see |\n| Tool | K3 | nothing a lint cannot see |\n| No name | K3 | nothing a lint cannot see |\n\n**The terminology table.**\n\n| Item | Lints | Checked by hand |\n|---|---|---|\n| sign in, sign out, sign-in (the noun) | B1 | nothing a lint cannot see |\n| Kiwi | B1 | nothing a lint cannot see |\n| allowlist | B1 | nothing a lint cannot see |\n| class; cover image | B1 | nothing a lint cannot see |\n| instructor | B1 | nothing a lint cannot see |\n| student for a role, user for a mixed group, roster for a class's people | B1 | 46 rows read: 46 read: 0 calls a mixed group students (the email recipients are the class roster's students; the mixed group is called users or the roster; the new caption of A-18.39 counts the students of one lecture, a role) |\n| chat (Kiwi chat) | B1, D8 | nothing a lint cannot see |\n| session, in analytics only (one run of a user's activity) | D8, H17 | nothing a lint cannot see |\n| sign-in (the signed-in period | B1, D8 | nothing a lint cannot see |\n| instructions (what staff write for Kiwi) | B1, D8 | nothing a lint cannot see |\n| prompt (a registered app's admin-approved prompt) | F18 | nothing a lint cannot see |\n| model | B1 | nothing a lint cannot see |\n| group (the students) and variant (the chat setup) | B1 | nothing a lint cannot see |\n| feature flag, flag | D8 | nothing a lint cannot see |\n| API token (a credential); usage limit (what a student runs out of) | B1 | 34 rows read: 34 read: 28 are the webhook's API token (a credential), 3 the model tokens of the analytics, 1 the model setting, 1 an OAuth token URL, 1 a design note about a model stream; 0 mixes the credential with the usage limit |\n| MCP server (a registered tool provider) | H18 | nothing a lint cannot see |\n| identifier | B1 | nothing a lint cannot see |\n| setup | B1 | nothing a lint cannot see |\n| answer | D8 | nothing a lint cannot see |\n| choose (an option, a file, a date) | B1 | nothing a lint cannot see |\n| assistant (the experiment assistant | B1, D8 | nothing a lint cannot see |\n| data (of a webhook event) | B1 | nothing a lint cannot see |\n| deactivate, for a webhook (it stops receiving events and can be turned on again) | B1, D12 | nothing a lint cannot see |\n| scratchpad (the tab) | B1 | nothing a lint cannot see |\n\n**The guide's own examples (K11).** Every row that a voice attribute's in-range sample or a tone-map sample quotes holds to C16 like any string: verified against the code, declared to claim nothing about the product, or true only once a hand-off step is taken.\n\n| Row | The sample says | It holds because |\n|---|---|---|\n| `SR-6.21` | an answer did not finish, the cause is not known, and trying again is the way out | verified: `ChatCore.tsx:976-992` and `useChatLane.ts:244-250`: the stream closed before any frame and the loader becomes this error bubble |\n| `A-13.12` | a failed save leaves the form as it was | verified: `ClassEdit.tsx:160-175`: the page leaves only after the save, and the catch only sets the message |\n| `CP.13` | the thumb was saved | waits on a hand-off step (announces \"Feedback saved.\" only after the save call has returned); the gap: `Feedback.tsx:24-32` and `useSaveInteraction.ts:51-58`: the thumb is marked at once and a failed save is only logged |\n| `DS.22` | the text was copied | verified: `CopyButton.tsx:21-24`: the label changes after the clipboard write has resolved |\n| `A-16.15` | the selected users were removed, and how many | verified: `ClassEnroll.tsx:119-135`: the toast is set after both removal calls have returned, for the users selected |\n| `A-09.40` | the webhook exists | verified: `WebhookManagement.tsx:160-172`: the toast is set after the create call has returned |\n| `A-01.10` | the administrator has no classes at all, with no search active | verified: `Classes.tsx:283-293`: the empty block already splits on `search`, and the first-use case is the one with none |\n| `S-01.07` | an instructor or an administrator adds a student to a class | waits on a hand-off step (ship S-05.06 and S-01.07 with or after the `fix/access-control` merge); the gap: `admin/ClassLayout.tsx:41` and `admin/ClassLayout.tsx:155`: today's class menu hides Enroll Students from instructors |\n| `A-01.12` | there is a control that creates the first class | verified: `Classes.tsx:296-310`: the button shows when no search is active and the user may create (`Classes.tsx:39`) |\n| `SR-6.69` | Kiwi is waiting for the first step or token | verified: `ChatMessages.tsx:377` and `ChatMessages.tsx:452`: a message that is typing draws the loader; the word is the user's own (G9) and the one concession in `§ Voice` |\n| `SR-6.48` | the step is a search of the class materials | waits on a hand-off step (matches the built-in search by its exact tool name); the gap: `AgentStepChain.tsx:125` and `AgentStepChain.tsx:133-134`: the label is drawn for every tool whose name matches `/rag\\|search/i` |\n| `DS.37` | the analysis is running | verified: `TopicsPanel.tsx:91-95`: drawn while `generating` |\n| `S-05.02` | nothing about the product | an instruction: it says what to type into the field and asserts nothing about the product (the row replaces a marketing claim, C16) |\n| `A-14.26` | what a file delete removes, and that chats keep their answers | verified: `common/database/document.service.ts:73-80` and `document/document.service.ts:1094-1120`: the comments, summaries, embeddings and the row go in one transaction, then the stored file |\n| `A-14.22` | the button deletes the file, and the verb is exact | verified: `document/document.service.ts:1094-1120`: the row, what hangs from it and the stored file are removed |\n| `A-02.07` | a failed upload leaves the form as it was | verified: `AddNewClass.tsx:104-115`: the catch only sets the message |\n| `SR-6.01` | a question can be about the class materials or about code | verified: `ChatCore.tsx:606-625` and `ClassIDE.tsx:245-249`: the question carries the class, the material and the page, and code goes to the chat |\n| `SR-6.52` | a step ran more than twice in a row | verified: `AgentStepChain.tsx:206` and `AgentStepChain.tsx:354-359`: the line shows when a step repeats more than twice |\n| `A-16.06` | the roster counts its users, the active and the pending | verified: `ClassEnroll.tsx:312`: the three counts are taken from the loaded list |\n| `A-16.04` | nothing about the product | an imperative on the page's button: it names the page's job and asserts nothing about the product |\n| `A-22.10` | nothing about the product | an imperative tooltip that names what its control does; it asserts nothing about the product |\n| `A-10.23` | nothing about the product | an imperative on a control that names its act; it asserts nothing about the product |\n| `A-09.36` | the token is deleted for good, and what used it stops working | verified: `api-tokens/api-tokens.service.ts:153-168` and `api-tokens/api-tokens.service.ts:171-175`: the row is deleted, and a token is accepted only if it is found among the active stored ones |\n| `A-23.19` | switching the app off ends the students' access to it in that class | verified: `kiwi-app/kiwi-app.service.ts:650-663` and `kiwi-app/kiwi-app.service.ts:864-868`: the class's switch is set off, and a use of the app is refused while it is off |\n| `A-10.37` | how many events were approved and that the rest were not | verified: `WebhookEventApprovals.tsx:366-380`: the loop counts each approval and each failure |"
   },
-  "checks": 100,
+  "checks": 109,
   "failed": 0,
-  "groups": 49,
+  "groups": 51,
   "dsRows": 54,
   "attributes": {
    "students": 4,
@@ -867,7 +882,7 @@
    "id": "K6",
    "name": "every row id that a text cites (the Voice section, every row's note, every page's note) is a row in the index",
    "ok": true,
-   "detail": "1271 ids; the cites in the Voice section and in 1324 notes all resolve"
+   "detail": "1318 ids; the cites in the Voice section and in 1373 notes all resolve"
   },
   {
    "id": "K7",
@@ -1059,7 +1074,7 @@
    "id": "K9",
    "name": "no hand-off keeps a string the index revises: the native alert, confirm and prompt calls ship the index's New text, and only the browser's own OK and Cancel buttons stay until a flow change (C2 cannot reach them)",
    "ok": true,
-   "detail": "120 hand-off clauses read in 3 sections, 10 say something keeps its copy and none keeps a string a row revises; the 9 native calls all have rows (A-08.40 and A-09.36 are the two confirms)"
+   "detail": "127 hand-off clauses read in 4 sections, 11 say something keeps its copy and none keeps a string a row revises; the 9 native calls all have rows (A-08.40 and A-09.36 are the two confirms)"
   },
   {
    "id": "D12",
@@ -1086,20 +1101,74 @@
    "detail": "25 rows quoted by the samples: 18 verified, 4 claim nothing, 3 wait on a hand-off step"
   },
   {
+   "id": "Q1",
+   "name": "every Phase 6 string passes the Phase 5 lints (case, marks, terms, person, plurals, dates) and cites rules that exist",
+   "ok": true,
+   "detail": "47 strings in 2 groups"
+  },
+  {
+   "id": "Q2",
+   "name": "every Phase 6 row is anchored: a changed string at the source line that holds it, a new string at the file and line it will be drawn at",
+   "ok": true,
+   "detail": "19 source-anchored, 28 new strings anchored to a file and line"
+  },
+  {
+   "id": "Q3",
+   "name": "every Phase 6 row is in its page's Copy (Phase 6) bullet, which follows the entry's Phase 5 block, and once in the table under \"Rows appended by later phases\", below the sentence Phase 5 left",
+   "ok": true,
+   "detail": "47 appended rows, 2 bullets"
+  },
+  {
+   "id": "Q4",
+   "name": "the four explicit en-US display calls of chartXAxis.ts (:50, :80, :85, :91) each have a Phase 6 format row whose New is the C3 form (D MMM for a date tick, HH:mm for an hour, D MMM YYYY, HH:mm for the tooltip)",
+   "ok": true,
+   "detail": "4 of 4 sites, 4 rows"
+  },
+  {
+   "id": "Q5",
+   "name": "every chart has a text summary row (the nine charts, in each reading they have): a sentence with the key figure first, the period or the scope stated and no claim the counts cannot back",
+   "ok": true,
+   "detail": "11 summaries for 7 charts"
+  },
+  {
+   "id": "Q6",
+   "name": "no Phase 6 row is counted among the Phase 5 rows, and none sits in the Phase 5 index table",
+   "ok": true,
+   "detail": "1261 Phase 5 rows, 47 Phase 6 rows"
+  },
+  {
    "id": "L1",
    "name": "DESIGN.md: only the Companion's text-twin cells, principle 4, the drafts line, the state-table intro's one sentence, the hand-off's draft wording and the intro's one phrase changed, and the new section was appended",
    "ok": true,
-   "detail": "6 twin lines edited (last cell only), principle 4 (1), the drafts line (1), the state-table intro's one sentence (1), the hand-off's two draft words (1) and the intro's one phrase (1) reworded, 707 lines appended"
+   "detail": "6 twin lines edited (last cell only), principle 4 (1), the drafts line (1), the state-table intro's one sentence (1), the hand-off's two draft words (1) and the intro's one phrase (1) reworded, 828 lines appended"
   },
   {
    "id": "L2",
    "name": "JOURNEY.md: insertions only, apart from the one intro paragraph that gains a sentence and the SR-6 Companion bullet's draft string, replaced by the final one",
    "ok": true,
-   "detail": "2 lines replaced (the intro paragraph, the SR-6 bullet), 2594 lines added"
+   "detail": "2 lines replaced (the intro paragraph, the SR-6 bullet), 2714 lines added"
   },
   {
    "id": "L3",
    "name": "nothing under kiwi-ui/src, kiwi-ui/public or kiwi/ differs from the commit before Phase 5 (committed, staged, unstaged or untracked)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "L4",
+   "name": "DESIGN.md: since the commit before Phase 6 (bd45ade) the file only grew at its end (## Chart tokens), and no earlier line changed",
+   "ok": true,
+   "detail": "121 lines appended, nothing else"
+  },
+  {
+   "id": "L5",
+   "name": "JOURNEY.md: since the commit before Phase 6 (bd45ade) the file only gained lines (the data-surface bullets, the Copy (Phase 6) bullets, the appended rows); none was changed or removed",
+   "ok": true,
+   "detail": "120 lines added, none removed"
+  },
+  {
+   "id": "L6",
+   "name": "nothing under kiwi-ui/src, kiwi-ui/public or kiwi/ differs from the commit before Phase 6 (committed, staged, unstaged or untracked)",
    "ok": true,
    "detail": ""
   },
@@ -1113,7 +1182,7 @@
    "id": "P2",
    "name": "no phrase of the private security list is in a committed file (DESIGN.md, JOURNEY.md, .design-foundations/copy/**)",
    "ok": true,
-   "detail": "63 phrases read from the private list; none is in the 30 committed files"
+   "detail": "63 phrases read from the private list; none is in the 31 committed files"
   },
   {
    "id": "R1",

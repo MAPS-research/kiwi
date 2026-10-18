@@ -1,9 +1,9 @@
 {
- "date": "2026-10-17",
+ "date": "2026-10-18",
  "source": {
   "version": "2.0.0",
-  "sha256": "32d7ac8015ae",
-  "commit": "3e00b35"
+  "sha256": "042bb145e50d",
+  "commit": "caa7b31"
  },
  "result": "PASS",
  "failures": 0,
@@ -59,9 +59,55 @@
   "n": 4,
   "drifted": 0
  },
- "interimChart": {
-  "series": 5,
-  "below": 0
+ "chart": {
+  "series": 10,
+  "failures": 0,
+  "measured": {
+   "light": {
+    "target": 0.56,
+    "spread": 0.13,
+    "minContrast": 3.02,
+    "minCvd": 8.14,
+    "minCvdKind": "protanopia",
+    "minCvdPair": [
+     1,
+     3
+    ],
+    "minAdjacentCvd": 14.78,
+    "minNormal": 15.26,
+    "minNormalPair": [
+     1,
+     2
+    ],
+    "other": {
+     "hex": "#77746d",
+     "minContrast": 4.09,
+     "minCvdToSeries": 4.66
+    }
+   },
+   "dark": {
+    "target": 0.634,
+    "spread": 0.135,
+    "minContrast": 3.05,
+    "minCvd": 8.16,
+    "minCvdKind": "deuteranopia",
+    "minCvdPair": [
+     1,
+     3
+    ],
+    "minAdjacentCvd": 16.45,
+    "minNormal": 15.37,
+    "minNormalPair": [
+     1,
+     4
+    ],
+    "other": {
+     "hex": "#8d8b83",
+     "minContrast": 4.21,
+     "minCvdToSeries": 5.57
+    }
+   }
+  }
  },
  "editorSelection": {
   "assertions": 23,

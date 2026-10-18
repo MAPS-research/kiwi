@@ -410,16 +410,6 @@
         }
       },
       "literalPolicy": "Colour literals: hex only in global.*; semantic.color.logo.* (G2) and semantic.color.on-paper.* (G5, mode-frozen) are the only colour literals outside it; backdrop and shadow.* reference --shadow-ink and carry their alphas in $extensions[\"org.kiwi\"].alpha, composed by the emitter. Component tier: every value is a reference to the semantic tier except a literal marked $extensions[\"org.kiwi\"].literal with its reason (component-specific geometry: the checker lists the marked ones and fails on any other). Forms the guard catches outside the source: hex, rgb()/rgba(), hsl()/hsla(), hwb(), oklch()/oklab(), lab()/lch(), color(), color-mix(), light-dark(), named colours other than transparent, currentColor and inherit, palette-object imports, and the MUI palette paths that bypass the roles: the strings \"grey.NN\" and \"common.white\" / \"common.black\", and the accesses theme.palette.grey[...] / palette.grey.NN and palette.common.* (common allowed in src/components/Brand/InstitutionLogo.tsx only, G2); the scan covers src/** outside src/services/, index.html, public/*.webmanifest, public/**/*.svg (the mascot artwork allowlisted) and .storybook/**.",
-      "interimChart": {
-        "note": "Interim until Phase 6 registers chart.* (five categorical series per mode, hue-separated and colour-blind-checked). The -11 steps (and accent-12) clear 3:1 on --surface in both modes (asserted by check-tokens.mjs § 16), so the stand-ins meet the brief's release gate for chart marks even before Phase 6. Theme.ts declares Palette.chart.series1-5 and StandaloneUserActivity, StandaloneDailySessions, StandaloneUserEngine, StandaloneTopActions, StandaloneUserDuration and Theme.test.ts read them, so the theme swap keeps the keys with these no-purple stand-ins from the locked ramps (no red in analytical views) and Theme.test.ts expects these values until Phase 6 replaces them.",
-        "series": {
-          "series1": "{global.color.accent.11}",
-          "series2": "{global.color.info.11}",
-          "series3": "{global.color.warning.11}",
-          "series4": "{global.color.neutral.11}",
-          "series5": "{global.color.accent.12}"
-        }
-      },
       "codeThemes": {
         "ace": {
           "cssClass": {
@@ -810,7 +800,7 @@
         }
       },
       "reserved": {
-        "chart.*": "Phase 6 registers the chart tokens here (five categorical series per mode, ≥3:1 on the plot background); until then the MUI theme keeps palette.chart with the interimChart stand-ins.",
+        "chart.*": "Phase 6 registered chart.series.1-5, chart.other and the chart chrome roles here (2026-10-18), replacing the interim palette.chart stand-ins; the MUI theme's palette.chart now reads them.",
         "companion.*": "Phase 4 registered companion.slot.* and companion.backing here (2026-10-17); chart.* stays reserved for Phase 6."
       },
       "public": {
@@ -12454,7 +12444,283 @@
     }
   },
   "chart": {
-    "$description": "Reserved for Phase 6 (chart.*). Appended, never edited into the tiers above."
+    "$description": "Phase 6 (2026-10-18), the data colours (kiwi-ui/DESIGN.md § Chart tokens): five categorical series at one target lightness per mode (± 0.07), the neutral for Other and Unknown, and the chart chrome roles as references. Registered under the reserved namespace and never edited into the three tiers; every token names its CSS property, so the resolver's naming rule is untouched. The series and the neutral are literals derived by derive-chart.mjs from recorded OKLCH parameters (§ 5 admits a chart.* literal that carries `derived`; § 16 re-renders and re-asserts it), replacing the interim palette.chart stand-ins of Phase 3.",
+    "$extensions": {
+      "org.kiwi": {
+        "derivation": {
+          "script": ".design-foundations/tokens/derive-chart.mjs",
+          "seed": 20261018,
+          "model": "Machado, Oliveira & Fernandes (2009) at severity 1.0, in linear sRGB; distances are Euclidean in OKLab × 100",
+          "gates": {
+            "contrast": 3,
+            "band": 0.07,
+            "chromaMax": 0.14,
+            "chromaMin": 0.1,
+            "arc": [
+              45,
+              255
+            ],
+            "cvdMin": 8,
+            "normalMin": 15,
+            "anchorHue": 156
+          },
+          "surfaces": {
+            "light": [
+              "#faf9f3",
+              "#f4f1e4",
+              "#f1f0ed"
+            ],
+            "dark": [
+              "#252218",
+              "#1b1915",
+              "#2b2a27"
+            ]
+          },
+          "order": "slot 1 is the accent hue; slots 2–5 maximise the minimum adjacent distance (14.78)",
+          "measured": {
+            "light": {
+              "target": 0.56,
+              "spread": 0.13,
+              "minContrast": 3.02,
+              "minCvd": 8.14,
+              "minCvdKind": "protanopia",
+              "minCvdPair": [
+                1,
+                3
+              ],
+              "minAdjacentCvd": 14.78,
+              "minNormal": 15.26,
+              "minNormalPair": [
+                1,
+                2
+              ],
+              "neutral": {
+                "minCvdToSeries": 4.66,
+                "minContrast": 4.09
+              }
+            },
+            "dark": {
+              "target": 0.634,
+              "spread": 0.135,
+              "minContrast": 3.05,
+              "minCvd": 8.16,
+              "minCvdKind": "deuteranopia",
+              "minCvdPair": [
+                1,
+                3
+              ],
+              "minAdjacentCvd": 16.45,
+              "minNormal": 15.37,
+              "minNormalPair": [
+                1,
+                4
+              ],
+              "neutral": {
+                "minCvdToSeries": 5.57,
+                "minContrast": 4.21
+              }
+            }
+          },
+          "note": "At one exact lightness per mode five hue-separated series cannot clear the colour-blind gate at muted chroma (best 6.3 at C <= 0.14; 8.2 only at C 0.22, with a normal-vision minimum of 8.7): lightness is the channel dichromats keep. At ± 0.06 the gate still fails at C <= 0.14 (7.9) and passes at C 0.15 by 0.09 only; ± 0.07 at C <= 0.14 is the smallest band, in steps of 0.01, that clears both gates with a margin (DESIGN.md § Chart tokens › Matched lightness, as measured)."
+        }
+      }
+    },
+    "series": {
+      "1": {
+        "$type": "color",
+        "$value": "#2b774d",
+        "$description": "Categorical series 1, the accent hue (156°): every single-series chart draws in it, so one accent per view holds with the brand hue while --accent-solid stays the control colour. A literal derived by derive-chart.mjs from the recorded OKLCH parameters (hue, L, C per mode; gamut-mapped, rounded to 8 bits); check § 16 re-renders them and re-asserts the gates. A mark colour only: never text, never a status surface, never outside a plot.",
+        "$extensions": {
+          "mode": {
+            "dark": "#3f895e"
+          },
+          "org.kiwi": {
+            "css": "--chart-1",
+            "derived": {
+              "hue": 156,
+              "light": {
+                "L": 0.51,
+                "C": 0.1
+              },
+              "dark": {
+                "L": 0.57,
+                "C": 0.1
+              }
+            }
+          }
+        }
+      },
+      "2": {
+        "$type": "color",
+        "$value": "#0098af",
+        "$description": "Categorical series 2 (teal). A literal derived by derive-chart.mjs from the recorded OKLCH parameters (hue, L, C per mode; gamut-mapped, rounded to 8 bits); check § 16 re-renders them and re-asserts the gates. A mark colour only: never text, never a status surface, never outside a plot.",
+        "$extensions": {
+          "mode": {
+            "dark": "#00b2cc"
+          },
+          "org.kiwi": {
+            "css": "--chart-2",
+            "derived": {
+              "hue": 213,
+              "light": {
+                "L": 0.625,
+                "C": 0.115
+              },
+              "dark": {
+                "L": 0.7,
+                "C": 0.14
+              }
+            }
+          }
+        }
+      },
+      "3": {
+        "$type": "color",
+        "$value": "#a64e00",
+        "$description": "Categorical series 3 (amber). A literal derived by derive-chart.mjs from the recorded OKLCH parameters (hue, L, C per mode; gamut-mapped, rounded to 8 bits); check § 16 re-renders them and re-asserts the gates. A mark colour only: never text, never a status surface, never outside a plot.",
+        "$extensions": {
+          "mode": {
+            "dark": "#b65a15"
+          },
+          "org.kiwi": {
+            "css": "--chart-3",
+            "derived": {
+              "hue": 51,
+              "light": {
+                "L": 0.525,
+                "C": 0.14
+              },
+              "dark": {
+                "L": 0.57,
+                "C": 0.14
+              }
+            }
+          }
+        }
+      },
+      "4": {
+        "$type": "color",
+        "$value": "#0064ad",
+        "$description": "Categorical series 4 (blue). A literal derived by derive-chart.mjs from the recorded OKLCH parameters (hue, L, C per mode; gamut-mapped, rounded to 8 bits); check § 16 re-renders them and re-asserts the gates. A mark colour only: never text, never a status surface, never outside a plot.",
+        "$extensions": {
+          "mode": {
+            "dark": "#3e7ab4"
+          },
+          "org.kiwi": {
+            "css": "--chart-4",
+            "derived": {
+              "hue": 250,
+              "light": {
+                "L": 0.495,
+                "C": 0.14
+              },
+              "dark": {
+                "L": 0.565,
+                "C": 0.11
+              }
+            }
+          }
+        }
+      },
+      "5": {
+        "$type": "color",
+        "$value": "#958b00",
+        "$description": "Categorical series 5 (olive). A literal derived by derive-chart.mjs from the recorded OKLCH parameters (hue, L, C per mode; gamut-mapped, rounded to 8 bits); check § 16 re-renders them and re-asserts the gates. A mark colour only: never text, never a status surface, never outside a plot.",
+        "$extensions": {
+          "mode": {
+            "dark": "#a99d15"
+          },
+          "org.kiwi": {
+            "css": "--chart-5",
+            "derived": {
+              "hue": 104,
+              "light": {
+                "L": 0.625,
+                "C": 0.135
+              },
+              "dark": {
+                "L": 0.685,
+                "C": 0.14
+              }
+            }
+          }
+        }
+      }
+    },
+    "other": {
+      "$type": "color",
+      "$value": "#77746d",
+      "$description": "The neutral series for Other and Unknown: the neutral ramp's hue and chroma at the mode's target lightness, so it carries the same weight as the five and reads as de-emphasis (always with its label; never the only category).",
+      "$extensions": {
+        "mode": {
+          "dark": "#8d8b83"
+        },
+        "org.kiwi": {
+          "css": "--chart-other",
+          "derived": {
+            "hue": 93.7,
+            "light": {
+              "L": 0.56,
+              "C": 0.012
+            },
+            "dark": {
+              "L": 0.635,
+              "C": 0.012
+            }
+          }
+        }
+      }
+    },
+    "grid": {
+      "$type": "color",
+      "$value": "{semantic.color.border-subtle}",
+      "$description": "Gridlines: solid hairlines one step off the surface, never dashed (figure/ground: data is figure, the grid is ground).",
+      "$extensions": {
+        "org.kiwi": {
+          "css": "--chart-grid"
+        }
+      }
+    },
+    "baseline": {
+      "$type": "color",
+      "$value": "{semantic.color.border-strong}",
+      "$description": "The zero line and the axis rule, a 1 px hairline; bars grow from it.",
+      "$extensions": {
+        "org.kiwi": {
+          "css": "--chart-baseline"
+        }
+      }
+    },
+    "track": {
+      "$type": "color",
+      "$value": "{semantic.color.surface-active}",
+      "$description": "The unfilled track behind an inline bar (the topic frequency bars) and the progress bar's track.",
+      "$extensions": {
+        "org.kiwi": {
+          "css": "--chart-track"
+        }
+      }
+    },
+    "tick-text": {
+      "$type": "color",
+      "$value": "{semantic.color.text-secondary}",
+      "$description": "Axis ticks, legend text and direct labels: text wears text tokens, never a series colour.",
+      "$extensions": {
+        "org.kiwi": {
+          "css": "--chart-tick-text"
+        }
+      }
+    },
+    "plot": {
+      "$type": "color",
+      "$value": "{semantic.color.surface}",
+      "$description": "The plot background: the sheet the chart sits on. Every series clears 3:1 on it, on the canvas and on the hover row.",
+      "$extensions": {
+        "org.kiwi": {
+          "css": "--chart-plot"
+        }
+      }
+    }
   },
   "companion": {
     "$description": "Phase 4 (2026-10-17), the tutor companion: the slot size per placement and the backing behind the drawn mascot (kiwi-ui/DESIGN.md § Companion; fix round 1 and the review's follow-up applied 2026-10-17). Registered under the reserved namespace and never edited into the three tiers; every token names its CSS property explicitly (--companion-*). The mascot's artwork keeps its own flat palette (allowlisted, G11) and is not a token: its outline and bill colours are recorded in this group's metadata for check § 20 only, never emitted.",

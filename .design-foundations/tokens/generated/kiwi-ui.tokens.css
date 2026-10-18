@@ -1294,6 +1294,17 @@
   --toggletip-radius: 2px;
   --toggletip-shadow: var(--shadow-1);
   --toggletip-offset: var(--space-label-gap);
+  --chart-1: #2b774d;
+  --chart-2: #0098af;
+  --chart-3: #a64e00;
+  --chart-4: #0064ad;
+  --chart-5: #958b00;
+  --chart-other: #77746d;
+  --chart-grid: var(--border-subtle);
+  --chart-baseline: var(--border-strong);
+  --chart-track: var(--surface-active);
+  --chart-tick-text: var(--text-secondary);
+  --chart-plot: var(--surface);
   --companion-slot-avatar: var(--size-avatar);
   --companion-slot-peek: 48px;
   --companion-slot-launcher: 28px;
@@ -2121,6 +2132,17 @@
   --pdf-toolbar-success-chip: var(--in-progress-surface);
   --pdf-toolbar-success-chip-text: var(--text-secondary);
   --toggletip-shadow: var(--shadow-1);
+  --chart-1: #2b774d;
+  --chart-2: #0098af;
+  --chart-3: #a64e00;
+  --chart-4: #0064ad;
+  --chart-5: #958b00;
+  --chart-other: #77746d;
+  --chart-grid: var(--border-subtle);
+  --chart-baseline: var(--border-strong);
+  --chart-track: var(--surface-active);
+  --chart-tick-text: var(--text-secondary);
+  --chart-plot: var(--surface);
   --companion-backing: var(--fill-none);
   color-scheme: light;
 }
@@ -2941,6 +2963,17 @@
   --pdf-toolbar-success-chip: var(--in-progress-surface);
   --pdf-toolbar-success-chip-text: var(--text-secondary);
   --toggletip-shadow: var(--shadow-1);
+  --chart-1: #3f895e;
+  --chart-2: #00b2cc;
+  --chart-3: #b65a15;
+  --chart-4: #3e7ab4;
+  --chart-5: #a99d15;
+  --chart-other: #8d8b83;
+  --chart-grid: var(--border-subtle);
+  --chart-baseline: var(--border-strong);
+  --chart-track: var(--surface-active);
+  --chart-tick-text: var(--text-secondary);
+  --chart-plot: var(--surface);
   --companion-backing: #faf9f3;
   color-scheme: dark;
 }

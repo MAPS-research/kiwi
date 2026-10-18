@@ -1,4 +1,4 @@
-# Kiwi UI token checks — 2026-10-17 · source v2.0.0 (sha256 32d7ac8015ae) · at 3e00b35
+# Kiwi UI token checks — 2026-10-18 · source v2.0.0 (sha256 042bb145e50d) · at caa7b31
 
 Source: `.design-foundations/tokens/kiwi-ui.tokens.json` · Locked block: `kiwi-ui/DESIGN.md` · Result: **PASS**
 
@@ -502,7 +502,7 @@ Targets: text ≥ 4.5:1, non-text (boundaries, icons, markers, rings) ≥ 3:1. 4
 
 ## 4. Per-mode closure of the emitted CSS
 
-:root declares 1295 properties. Dark: 816 depend on a mode token (transitively), 816 are redeclared in [data-theme="dark"], 0 missing. Compact: 96 depend on a density token, 96 redeclared in [data-density="compact"], 0 missing. Root-only composites that embed a mode colour (shadows, backdrop): 0.
+:root declares 1306 properties. Dark: 827 depend on a mode token (transitively), 827 are redeclared in [data-theme="dark"], 0 missing. Compact: 96 depend on a density token, 96 redeclared in [data-density="compact"], 0 missing. Root-only composites that embed a mode colour (shadows, backdrop): 0.
 
 ## 10. Coarse pointer
 
@@ -529,7 +529,7 @@ launcher and display-menu: 0 density-dependent tokens (their geometry is fixed; 
 
 ## 5. Literal policy
 
-Colour literals outside the global tier: 0 (allowed: the G2 logo black/white, the mode-frozen on-paper marks and a mode-frozen companion.* literal that names its light source (Phase 4: the dark backing); the backdrop and the shadows reference --shadow-ink and carry alphas, composed by the emitter). Banned purple-era hex in the generated CSS, public CSS and MUI preview: 0.
+Colour literals outside the global tier: 0 (allowed: the G2 logo black/white, the mode-frozen on-paper marks, a mode-frozen companion.* literal that names its light source (Phase 4: the dark backing), and a chart.* literal that carries its derivation and that § 16 re-renders (Phase 6: the five series and the neutral); the backdrop and the shadows reference --shadow-ink and carry alphas, composed by the emitter). Banned purple-era hex in the generated CSS, public CSS and MUI preview: 0.
 
 ## 6. Public CSS coverage
 
@@ -581,17 +581,58 @@ Policy: A deprecated name keeps a safe value and is removed no earlier than two 
 | semantic.color.on-paper.wash | #2033271f | {semantic.color.on-paper.pin} (light, α 0.12) | #2033271f | PASS |
 | companion.backing (mode.dark) | #faf9f3 | {global.color.paper.2} (light) | #faf9f3 | PASS |
 
-## 16. Interim chart series (until Phase 6)
+## 16. Chart series (Phase 6)
 
-5 series, 0 below 3:1 on --surface.
+10 series values (five per mode) and the neutral, 0 failures. Gates: ≥ 3:1 on --surface, --background and --surface-hover; OKLCH L within ± 0.07 of one target per mode; chroma 0.1–0.14; hue inside 45°–255°; minimum pairwise OKLab distance (× 100) ≥ 8 under protanopia and deuteranopia (Machado 2009, severity 1.0) and ≥ 15 under normal vision, all pairs; every hex equal to its recorded parameters re-rendered.
 
-| Series | Token | Light | Dark | Result |
+- light: target L 0.56, spread 0.13; min contrast 3.02:1; min distance under protanopia 8.14 (series 1 vs 3), adjacent 14.78; min distance under normal vision 15.26 (series 1 vs 2); Other #77746d at 4.09:1, 4.66 from the nearest series under simulation (informational).
+- dark: target L 0.634, spread 0.135; min contrast 3.05:1; min distance under deuteranopia 8.16 (series 1 vs 3), adjacent 16.45; min distance under normal vision 15.37 (series 1 vs 4); Other #8d8b83 at 4.21:1, 5.57 from the nearest series under simulation (informational).
+
+| Mode | Token | Hex | Hue | L | C | on --surface | on --background | on --surface-hover | |
+|---|---|---|---|---|---|---|---|---|---|
+| light | --chart-1 | #2b774d | 155.8° | 0.511 | 0.101 | 5.17 | 4.82 | 4.79 | PASS |
+| light | --chart-2 | #0098af | 213.3° | 0.625 | 0.109 | 3.26 | 3.04 | 3.02 | PASS |
+| light | --chart-3 | #a64e00 | 51.1° | 0.526 | 0.137 | 5.36 | 5.00 | 4.97 | PASS |
+| light | --chart-4 | #0064ad | 249.8° | 0.495 | 0.140 | 5.81 | 5.41 | 5.38 | PASS |
+| light | --chart-5 | #958b00 | 104.5° | 0.626 | 0.132 | 3.33 | 3.11 | 3.09 | PASS |
+| light | --chart-other | #77746d | 87.5° | 0.559 | 0.011 | 4.42 | 4.12 | 4.09 | PASS |
+| dark | --chart-1 | #3f895e | 155.8° | 0.571 | 0.100 | 3.75 | 4.14 | 3.38 | PASS |
+| dark | --chart-2 | #00b2cc | 212.9° | 0.701 | 0.123 | 6.24 | 6.89 | 5.63 | PASS |
+| dark | --chart-3 | #b65a15 | 50.8° | 0.570 | 0.140 | 3.38 | 3.73 | 3.05 | PASS |
+| dark | --chart-4 | #3e7ab4 | 249.7° | 0.566 | 0.110 | 3.52 | 3.88 | 3.18 | PASS |
+| dark | --chart-5 | #a99d15 | 103.8° | 0.685 | 0.140 | 5.69 | 6.29 | 5.14 | PASS |
+| dark | --chart-other | #8d8b83 | 95.2° | 0.636 | 0.012 | 4.66 | 5.14 | 4.21 | PASS |
+
+| Mode | Pair | Protanopia | Deuteranopia | Normal | |
+|---|---|---|---|---|---|
+| light | 1 vs 2 | 16.05 | 14.78 | 15.26 | PASS |
+| light | 1 vs 3 | 8.14 | 8.14 | 18.99 | PASS |
+| light | 1 vs 4 | 17.31 | 17.86 | 17.84 | PASS |
+| light | 1 vs 5 | 11.13 | 15.22 | 15.57 | PASS |
+| light | 2 vs 3 | 24.14 | 19.58 | 26.26 | PASS |
+| light | 2 vs 4 | 15.73 | 15.70 | 15.37 | PASS |
+| light | 2 vs 5 | 17.96 | 19.39 | 19.72 | PASS |
+| light | 3 vs 4 | 22.33 | 25.57 | 27.45 | PASS |
+| light | 3 vs 5 | 15.25 | 9.63 | 15.68 | PASS |
+| light | 4 vs 5 | 26.31 | 30.44 | 29.06 | PASS |
+| dark | 1 vs 2 | 18.05 | 16.45 | 16.98 | PASS |
+| dark | 1 vs 3 | 10.07 | 8.16 | 19.23 | PASS |
+| dark | 1 vs 4 | 14.67 | 14.47 | 15.37 | PASS |
+| dark | 1 vs 5 | 11.83 | 15.70 | 15.95 | PASS |
+| dark | 2 vs 3 | 28.07 | 22.05 | 29.12 | PASS |
+| dark | 2 vs 4 | 15.91 | 14.24 | 15.45 | PASS |
+| dark | 2 vs 5 | 20.28 | 20.85 | 21.48 | PASS |
+| dark | 3 vs 4 | 21.37 | 22.43 | 24.68 | PASS |
+| dark | 3 vs 5 | 16.88 | 11.27 | 17.01 | PASS |
+| dark | 4 vs 5 | 24.77 | 27.75 | 26.70 | PASS |
+
+| Chrome role | References | Light | Dark | |
 |---|---|---|---|---|
-| series1 | {global.color.accent.11} | 5.53 | 8.15 | PASS |
-| series2 | {global.color.info.11} | 5.65 | 8.04 | PASS |
-| series3 | {global.color.warning.11} | 5.71 | 7.91 | PASS |
-| series4 | {global.color.neutral.11} | 5.70 | 7.92 | PASS |
-| series5 | {global.color.accent.12} | 12.73 | 13.10 | PASS |
+| --chart-grid | {semantic.color.border-subtle} | #d4d2cb | #3d3c36 | PASS |
+| --chart-baseline | {semantic.color.border-strong} | #adaba1 | #636057 | PASS |
+| --chart-track | {semantic.color.surface-active} | #e9e8e4 | #33322e | PASS |
+| --chart-tick-text | {semantic.color.text-secondary} | #65635c | #b9b7b0 | PASS |
+| --chart-plot | {semantic.color.surface} | #faf9f3 | #252218 | PASS |
 
 ## 17. Editor selection
 

@@ -36,16 +36,18 @@ const testsText = (t) => {
   return `${t.length} · ` + [...byFile].map(([n, ls]) => `${n}:${ls.join(",")}`).join("; ");
 };
 
-function pageBlock(g) {
+function pageBlock(g, phase = 5) {
   // a kept row holds a position (so ids never move) and says nothing here: the string is already right
   const rows = g.rowsResolved.filter((r) => !r.keep);
   const head = [];
   if (!rows.length) {
-    head.push(`- **Copy (Phase 5):** no change. ${g.noChange || "Nothing here carries copy."}`);
+    head.push(`- **Copy (Phase ${phase}):** no change. ${g.noChange || "Nothing here carries copy."}`);
   } else {
     const used = [...new Set(rows.flatMap((r) => r.rules))].sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
     const kept = g.kept && g.kept.length ? ` Kept as is, because it already follows the guide: ${g.kept.join("; ")}.` : "";
-    head.push(`- **Copy (Phase 5):** ${rows.length} string${rows.length === 1 ? "" : "s"} revised (rules ${used.join(", ")}); every row is in the [Revision index](#revision-index).${kept}${g.note ? " " + g.note : ""}`);
+    // a later phase adds strings (Phase 6: the chart summaries, range lines, tile baselines and table units) and its rows sit under "Rows appended by later phases"
+    const where = phase === 5 ? "" : " under [Rows appended by later phases](#rows-appended-by-later-phases)";
+    head.push(`- **Copy (Phase ${phase}):** ${rows.length} string${rows.length === 1 ? "" : "s"} ${phase === 5 ? "revised" : "added or revised"} (rules ${used.join(", ")}); every row is in the [Revision index](#revision-index)${where}.${kept}${g.note ? " " + g.note : ""}`);
     for (const r of rows) {
       const refs = r.refs ? ` [${r.refs.replace(/,/g, ", ")}]` : "";
       head.push(`  - \`${r.id}\` ${code(r.old)} → ${code(r.new)} · ${r.rules.join(", ")} · ${r.why}${refs}`);
@@ -54,9 +56,9 @@ function pageBlock(g) {
   return head.join("\n");
 }
 
-function indexTable() {
+function indexTable(phase = 5) {
   const lines = ["| ID | Route | Anchor | Old | New | Rules | Tests |", "|---|---|---|---|---|---|---|"];
-  for (const g of groups) {
+  for (const g of groups.filter((x) => (x.phase || 5) === phase)) {
     for (const r of g.rowsResolved.filter((x) => !x.keep)) {
       const route = g.route ? `${g.id} \`${g.route}\`` : g.id;
       lines.push(`| \`${r.id}\` | ${esc(route)} | ${esc(anchorText(r.anchors))} | ${esc(code(r.old))} | ${esc(code(r.new))} | ${r.rules.join(", ")} | ${testsText(r.tests)} |`);
@@ -93,14 +95,16 @@ function dateFieldsTable() {
 
 const byKind = {};
 for (const r of resolved) byKind[r.kind] = (byKind[r.kind] || 0) + 1;
-const changed = resolved.filter((r) => !r.keep);
+const changed = resolved.filter((r) => !r.keep && !r.phase6);
+const changed6 = resolved.filter((r) => !r.keep && r.phase6); // Phase 6 rows: counted and indexed apart, so no Phase 5 number or line moves
 const summary = {
   groups: groups.length, rows: resolved.length, changed: changed.length,
-  routes: groups.filter((g) => g.rowsResolved.length).length,
+  routes: groups.filter((g) => (g.phase || 5) === 5 && g.rowsResolved.length).length, // Phase 5's groups only: this number is written into the index intro
   byKind, errors: byKind.error || 0,
   anchored: changed.filter((r) => r.anchors.some((a) => a.file)).length,
   withTests: changed.filter((r) => r.tests.length).length,
   problems: problems.length,
+  changed6: changed6.length,
 };
 
 console.log(JSON.stringify(summary));
@@ -142,6 +146,17 @@ for (const g of groups) {
   const at = h.index + h[0].length + t;
   j = j.slice(0, at) + M(g.id, "start") + "\n" + block + "\n" + M(g.id, "end") + "\n" + j.slice(at);
 }
+// Phase 6 groups (`phase: 6`, `page`: the entry they belong to): a `Copy (Phase 6)` bullet under their own markers, placed right after the entry's Phase 5 block
+for (const g of groups.filter((x) => x.phase === 6)) {
+  if (!g.page) { console.error(`${g.id}: a Phase 6 group names the page it belongs to (page)`); process.exit(1); }
+  const block = pageBlock(g, 6);
+  const replaced = replaceBetween(j, g.id, block);
+  if (replaced !== null) { j = replaced; continue; }
+  const endMark = M(g.page, "end"); const at = j.indexOf(endMark);
+  if (at < 0) { console.error(`no Phase 5 block for ${g.page} in JOURNEY.md (needed to place ${g.id})`); process.exit(1); }
+  const ins = at + endMark.length;
+  j = j.slice(0, ins) + "\n" + M(g.id, "start") + "\n" + block + "\n" + M(g.id, "end") + j.slice(ins);
+}
 // redirects R-1..R-5
 const rGroups = groups.filter((g) => /^R-\d$/.test(g.id));
 if (rGroups.length) {
@@ -170,11 +185,10 @@ const indexIntro = [
   "",
 ].join("\n");
 const indexBody = indexTable();
-const appendedKeep = (() => {
-  const a = j.indexOf(M("appended", "start")), b = j.indexOf(M("appended", "end"));
-  return a >= 0 && b > a ? j.slice(a + M("appended", "start").length, b).trim() : "Later phases append their rows here, in the same columns, with the id prefix of their phase (Phase 6: chart summaries and table units, `P6-…`). Phase 5 rows above never change id.";
-})();
-const indexSection = `${M("index", "start")}\n${indexIntro}\n${indexBody}\n\n### Rows appended by later phases\n\n${M("appended", "start")}\n${appendedKeep}\n${M("appended", "end")}\n${M("index", "end")}`;
+// the sentence Phase 5 left is kept as it was (a later phase inserts below it and never edits a Phase 5 line); the Phase 6 rows follow in the same columns
+const APPENDED_SENTENCE = "Later phases append their rows here, in the same columns, with the id prefix of their phase (Phase 6: chart summaries and table units, `P6-…`). Phase 5 rows above never change id.";
+const appended6 = changed6.length ? `\n\n**Phase 6 (Data surfaces): ${changed6.length} rows** in ${groups.filter((g) => g.phase === 6 && g.rowsResolved.some((r) => !r.keep)).length} groups (\`P6-<route>.nn\`), generated from \`revisions/09-data-surfaces.json\` like the rows above; each page's \`Copy (Phase 6)\` bullet lists the same rows. A row whose Old is \`(none)\` is new text (a chart's text summary, a tile's baseline line, an axis unit); a \`format\` row's New shows what the formatter displays. \`check-copy.mjs\` (Q1 to Q6) lints them with the Phase 5 lints and keeps them out of the Phase 5 counts.\n\n${indexTable(6)}` : "";
+const indexSection = `${M("index", "start")}\n${indexIntro}\n${indexBody}\n\n### Rows appended by later phases\n\n${M("appended", "start")}\n${APPENDED_SENTENCE}${appended6}\n${M("appended", "end")}\n${M("index", "end")}`;
 {
   const a = j.indexOf(M("index", "start")), b = j.indexOf(M("index", "end"));
   if (a >= 0 && b > a) j = j.slice(0, a) + indexSection + j.slice(b + M("index", "end").length);

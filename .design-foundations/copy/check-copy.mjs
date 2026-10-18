@@ -3,6 +3,7 @@
 //   node check-copy.mjs            run every check and print the report
 //   node check-copy.mjs --write    also write generated/check-summary.json and the Evidence table in DESIGN.md
 //
+// Phase 6 (Data surfaces) added Q1 to Q6 (its rows, linted and placed apart from Phase 5's) and the lock checks L4 to L6 against the commit before Phase 6; L1 to L3 are unchanged.
 // Reads (never writes, except with --write): ./revisions/*.json, the source files they name, kiwi-ui/JOURNEY.md, kiwi-ui/DESIGN.md,
 // and `git diff` of those two files against the commit before Phase 5 (the lock check: HEAD holds Phase 5 since it was committed). No path in this file is machine-specific.
 import fs from "node:fs";
@@ -29,7 +30,9 @@ const ALL = process.argv.includes("--all");
 const list = (a, n = 12) => (ALL ? a : a.slice(0, n)).join("\n        ") + (!ALL && a.length > n ? `\n        … and ${a.length - n} more` : "");
 
 const { groups, resolved, problems } = resolveAll();
-const rows = resolved.filter((r) => !r.keep);
+const rows = resolved.filter((r) => !r.keep && !r.phase6); // Phase 5's rows: every Phase 5 count, lint population and block below is computed from these
+const rows6 = resolved.filter((r) => !r.keep && r.phase6); // Phase 6's rows (revisions/09-data-surfaces.json, `phase: 6`): linted and indexed apart (Q1 to Q6)
+const groups6 = groups.filter((g) => g.phase === 6);
 const journey = fs.readFileSync(JOURNEY_MD, "utf8");
 const design = fs.readFileSync(DESIGN_MD, "utf8");
 // The files and directories the source scan leaves out, each with its reason (moved up in the tenth review: A1 and E9 read the type scan too).
@@ -104,7 +107,7 @@ for (const r of rows) {
 for (const r of rows) if (r.ax && !axUsed.has(r.id)) driftFails.push(`${r.id}: has an ax, but every anchored line holds its text or a fragment of it, so the ax says nothing true: remove it`);
 stats.anchors = { ...axStats, axRows: axUsed.size };
 check("A1", "every old string is found at its anchor in the source, and the anchor is exact: the cited line holds the text (or a fragment of a split sentence), or the row says why it cites a neighbouring line (ax); where the line builds its text with a conditional, the Old is a whole reading of it and a row that drops a slot replaces the reading without it", problems.length === 0 && driftFails.length === 0, problems.length || driftFails.length ? `\n        ${list([...problems, ...driftFails], 40)}` : `${srcAnchored.length} source-anchored rows, ${rows.length - srcAnchored.length} anchored by section (DESIGN.md or JOURNEY.md); ${axStats.exact + axStats.fragment + axStats.reading + axStats.exempt + axStats.stated} anchored lines: ${axStats.exact} hold the text, ${axStats.fragment} a fragment of it, ${axStats.reading} a whole reading of a text the code builds with a conditional, ${axStats.exempt} are lookups, code or slots, ${axStats.stated} cite a neighbour with a stated reason (${axUsed.size} rows)`);
-stats.rows = rows.length; stats.keptShared = resolved.length - rows.length; stats.sourceAnchored = srcAnchored.length;
+stats.rows = rows.length; stats.keptShared = resolved.filter((r) => !r.phase6).length - rows.length; stats.sourceAnchored = srcAnchored.length;
 const ids = new Set(); const dup = [];
 for (const r of resolved) { if (ids.has(r.id)) dup.push(r.id); ids.add(r.id); }
 check("A2", "revision ids are unique", dup.length === 0, dup.join(", "));
@@ -351,7 +354,7 @@ check("E2", "every entry's Copy (Phase 5) bullet is present and lists its rows o
 stats.entries = pageGroups.length + rGroups.length; stats.noChange = noChangeBlocks;
 const ia = journey.indexOf("<!-- copy:index:start -->"), ib = journey.indexOf("<!-- copy:index:end -->");
 const indexText = ia >= 0 && ib > ia ? journey.slice(ia, ib) : "";
-const indexIds = [...indexText.matchAll(/^\| `([A-Za-z0-9-]+\.\d+)` \|/gm)].map((m) => m[1]);
+const indexIds = [...indexText.matchAll(/^\| `([A-Za-z0-9-]+\.\d+)` \|/gm)].map((m) => m[1]).filter((id) => !id.startsWith("P6-")); // the Phase 6 rows sit under "Rows appended by later phases" (Q3, Q6)
 const wantIds = rows.map((r) => r.id);
 const missIdx = wantIds.filter((i) => !indexIds.includes(i)), extraIdx = indexIds.filter((i) => !wantIds.includes(i));
 check("E3", "the revision index lists every changed string once, and nothing else", missIdx.length === 0 && extraIdx.length === 0 && indexIds.length === wantIds.length, `${indexIds.length} index rows for ${wantIds.length} changed strings${missIdx.length ? "; missing " + missIdx.slice(0, 5).join(", ") : ""}${extraIdx.length ? "; extra " + extraIdx.slice(0, 5).join(", ") : ""}`);
@@ -374,7 +377,7 @@ for (const line of indexText.split("\n")) {
   const id = (line.match(/^\| `([A-Za-z0-9-]+\.\d+)` \|/) || [])[1];
   if (!id) continue;
   const cell = (line.match(/\| (-|\d+ · [^|]*?) \|$/) || [])[1];
-  const row = rows.find((r) => r.id === id);
+  const row = rows.find((r) => r.id === id) || rows6.find((r) => r.id === id); // a Phase 6 row (the appended block) keeps the same column rule
   if (!row || cell === undefined) { cellBad.push(`${id}: no Tests cell`); continue; }
   if (cell === "-") { if (row.tests.length) cellBad.push(`${id}: empty cell, ${row.tests.length} references`); continue; }
   const n = Number(cell.split(" · ")[0]);
@@ -544,7 +547,9 @@ check("E5", "the Tests column is regex-aware and untruncated: every string, regu
 }
 // ---------------------------------------------------------------- 5. the Voice and tone section
 const vi = design.indexOf("\n## Voice and tone");
-const voice = vi >= 0 ? design.slice(vi) : "";
+// the Voice section ends where the next top-level section begins (Phase 6 appended `## Chart tokens` after it), so `sect()` and the hand-off reads stay Phase 5's
+const voiceEnd = vi >= 0 ? design.indexOf("\n## ", vi + 1) : -1;
+const voice = vi >= 0 ? design.slice(vi, voiceEnd < 0 ? undefined : voiceEnd) : "";
 check("F0", "DESIGN.md has a `## Voice and tone` section after `## Companion`", vi > design.indexOf("\n## Companion") && vi > 0);
 const sect = (title) => { const a = voice.indexOf(`### ${title}`); if (a < 0) return ""; const rest = voice.slice(a + 4); const n = rest.search(/\n##+ /); return n < 0 ? rest : rest.slice(0, n); };
 const tableRows = (text) => text.split("\n").filter((l) => /^\|/.test(l) && !/^\|[-| ]+\|$/.test(l)).slice(1);
@@ -985,7 +990,7 @@ stats.crossSection = { regions: xReport, declared: docStrings.length, byKind: Ob
   for (const r of resolved) scan(`the note of ${r.id}`, r.note || "");
   for (const g of groups) scan(`the note of ${g.id}`, g.note || "");
   const uniq = [...new Set(bad)];
-  stats.cites = { ids: ids.size, notes: resolved.length + groups.length };
+  stats.cites = { ids: [...ids].filter((id) => !id.startsWith("P6-")).length, notes: resolved.filter((r) => !r.phase6).length + groups.filter((g) => g.phase !== 6).length }; // the Phase 5 figures; every id and note was validated above
   check("K6", "every row id that a text cites (the Voice section, every row's note, every page's note) is a row in the index", uniq.length === 0, uniq.length ? `\n        ${list(uniq, 20)}` : `${ids.size} ids; the cites in the Voice section and in ${resolved.length + groups.length} notes all resolve`);
 }
 
@@ -1500,7 +1505,10 @@ for (const g of groups) {
 // Every string in scope that no row touches is kept as well, listed or not: the source scan's candidates that no lint hits and no row names (`--unchanged`).
 // A fragment of a longer sentence (the text after a link, a lowercase run) is read with its sentence by the census, so a fragment is skipped here.
 const hitSetK = new Set(need);
-const strictCoveredK = (c) => { const t = strip(c.text.replace(/\$\{[^}]*$/, "")); return (oldTexts.get(c.file) || []).some((e) => e.old.length >= 3 && t.length >= 3 && (e.old.includes(t) || t.includes(e.old))) || keptTexts.some((k) => k === t.toLowerCase()); };
+// the kept population is Phase 5's: a string a Phase 6 row revises was kept as it was by Phase 5 and is still linted here (its revision is linted in Q1), so the coverage test reads Phase 5 rows
+const oldTexts5 = new Map();
+for (const { r } of rawRows) if (!r.phase6) for (const a of r.anchors) if (a.file) { if (!oldTexts5.has(a.file)) oldTexts5.set(a.file, []); oldTexts5.get(a.file).push({ id: r.id, old: strip(r.old) }); }
+const strictCoveredK = (c) => { const t = strip(c.text.replace(/\$\{[^}]*$/, "")); return (oldTexts5.get(c.file) || []).some((e) => e.old.length >= 3 && t.length >= 3 && (e.old.includes(t) || t.includes(e.old))) || keptTexts.some((k) => k === t.toLowerCase()); };
 const unchangedCands = candidates.filter((c) => !hitSetK.has(c) && !EXEMPT.some(([re]) => re.test(c.text)) && !strictCoveredK(c) && /^[A-Z"“{]/.test(c.text) && c.text.split(/\s+/).length >= 2);
 for (const c of unchangedCands) keptStrings.push({ group: c.file.split("/").pop(), file: c.file, text: normText(c.text.replace(/\$\{[^}]*\}/g, "{x}")), x: [], from: `${c.file}:${c.line}`, source: true });
 const keptBad = []; const keptExemptUsed = new Set();
@@ -1763,7 +1771,7 @@ const OCC_EXEMPT = [
 ];
 const occTargets = new Map();
 for (const r of resolved) {
-  if (r.keep || !r.old) continue;
+  if (r.keep || !r.old || r.phase6) continue; // Phase 5's strings: the figure is the Phase 5 evidence's; a Phase 6 row anchors every line that holds its old text (Q2)
   const o = normText(r.old);
   if (/[{}$()=]|\.\.\./.test(o)) continue; // a slot, a code expression or a truncation: not a whole literal
   const icon = r.kind === "tooltip" || r.kind === "aria";
@@ -2159,9 +2167,11 @@ stats.native = nativeSites.length;
 {
   const bad = []; let nNotes = 0, nVoice = 0;
   const scan = (label, text, counter) => { for (const c of citesIn(text)) { counter(); if (c.error) bad.push(`${label}: ${c.error}`); } };
-  for (const r of resolved) scan(`${r.id} note`, r.note, () => nNotes++);
-  for (const g of groups) for (const t of [g.note, g.noChange, ...(g.kept || [])]) scan(`${g.id} page note`, t || "", () => nNotes++);
-  scan("§ Voice and tone", design.slice(design.indexOf("## Voice and tone")), () => nVoice++);
+  let nNotes6 = 0;
+  for (const r of resolved) scan(`${r.id} note`, r.note, () => (r.phase6 ? nNotes6++ : nNotes++));
+  for (const g of groups) for (const t of [g.note, g.noChange, ...(g.kept || [])]) scan(`${g.id} page note`, t || "", () => (g.phase === 6 ? nNotes6++ : nNotes++));
+  scan("§ Voice and tone", design.slice(design.indexOf("## Voice and tone"), voiceEnd < 0 ? undefined : voiceEnd), () => nVoice++); // the Phase 5 figure as Phase 5 computed it (its start is the first mention of the heading), ended where Phase 6's section begins; the Phase 6 cites are counted in its own block
+  stats.noteCites6 = nNotes6;
   const uniq = [...new Set(bad)];
   stats.noteCites = { notes: nNotes, voice: nVoice };
   check("K10", "every source cite in a note and in the Voice section (File.tsx:123 or File.tsx:123-130) names one file, and its line is inside it", uniq.length === 0, uniq.length ? `\n        ${list(uniq, 20)}` : `${nNotes} cites in notes and ${nVoice} in the Voice section resolve to one file and a line inside it`);
@@ -2194,6 +2204,73 @@ stats.native = nativeSites.length;
   check("K11", "every row that a voice sample or a tone-map sample quotes holds to C16: verified against the code (a cite that resolves), declared to claim nothing about the product, or true only once a hand-off step that the Voice section's hand-offs state is taken; the list is exactly the rows the samples quote", bad.length === 0, bad.length ? `\n        ${list(bad, 20)}` : `${exRows.size} rows quoted by the samples: ${by("verified")} verified, ${by("nonClaim")} claim nothing, ${by("handoff")} wait on a hand-off step`);
 }
 
+// ---------------------------------------------------------------- 7b. Phase 6 (Data surfaces): the chart rows
+// The rows of revisions/09-data-surfaces.json (`phase: 6`) are linted with the Phase 5 lints and kept out of every Phase 5 count; their place in the two documents is their
+// own: a `Copy (Phase 6)` bullet under `copy:P6-<page>` markers after the entry's Phase 5 block, and a table under "Rows appended by later phases" below the sentence Phase 5 left.
+{
+  const bad1 = [];
+  for (const r of rows6) {
+    for (const h of lintString(r.new, r.kind, r.x)) bad1.push(`${r.id}: ${h}`);
+    for (const c of r.rules) if (!RULES[c]) bad1.push(`${r.id}: unknown rule ${c}`);
+    if (r.kind === "error") bad1.push(`${r.id}: Phase 6 adds no error message`);
+  }
+  check("Q1", "every Phase 6 string passes the Phase 5 lints (case, marks, terms, person, plurals, dates) and cites rules that exist", bad1.length === 0, bad1.length ? `\n        ${list(bad1)}` : `${rows6.length} strings in ${groups6.length} groups`);
+  const bad2 = [];
+  for (const r of rows6) {
+    if (!r.anchors.length) bad2.push(`${r.id}: no anchor`);
+    for (const a of r.anchors) if (a.at) { const c = citesIn(a.at); if (!c.length || c.some((x) => x.error)) bad2.push(`${r.id}: the anchor "${a.at.slice(0, 70)}" names no file and line that exists`); }
+    if (r.old && !r.anchors.some((a) => a.file)) bad2.push(`${r.id}: an old string with no source anchor`);
+  }
+  check("Q2", "every Phase 6 row is anchored: a changed string at the source line that holds it, a new string at the file and line it will be drawn at", bad2.length === 0, bad2.length ? `\n        ${list(bad2)}` : `${rows6.filter((r) => r.anchors.some((a) => a.file)).length} source-anchored, ${rows6.filter((r) => r.anchors.some((a) => a.at)).length} new strings anchored to a file and line`);
+  const bad3 = [];
+  for (const g of groups6) {
+    const a = journey.indexOf(`<!-- copy:${g.id}:start -->`), b = journey.indexOf(`<!-- copy:${g.id}:end -->`);
+    if (a < 0 || b < a) { bad3.push(`${g.id}: no Copy (Phase 6) block`); continue; }
+    const block = journey.slice(a, b);
+    if (!/\*\*Copy \(Phase 6\):\*\*/.test(block)) bad3.push(`${g.id}: no Copy (Phase 6) bullet`);
+    for (const r of g.rowsResolved.filter((x) => !x.keep)) if (!block.includes(`\`${r.id}\``)) bad3.push(`${g.id}: ${r.id} missing from its bullet`);
+    const pEnd = journey.indexOf(`<!-- copy:${g.page}:end -->`);
+    if (pEnd < 0 || pEnd > a) bad3.push(`${g.id}: its block does not follow ${g.page}'s Phase 5 block`);
+  }
+  const aa = journey.indexOf("<!-- copy:appended:start -->"), ab = journey.indexOf("<!-- copy:appended:end -->");
+  const appendedText = aa >= 0 && ab > aa ? journey.slice(aa, ab) : "";
+  const appendedIds = [...appendedText.matchAll(/^\| `(P6-[A-Za-z0-9-]+\.\d+)` \|/gm)].map((m) => m[1]);
+  const want6 = rows6.map((r) => r.id);
+  const miss6 = want6.filter((i) => !appendedIds.includes(i)), extra6 = appendedIds.filter((i) => !want6.includes(i));
+  if (!appendedText.includes("Later phases append their rows here, in the same columns")) bad3.push("the sentence Phase 5 left in the appended block is gone");
+  if (miss6.length) bad3.push(`missing from the appended table: ${miss6.slice(0, 6).join(", ")}`);
+  if (extra6.length || appendedIds.length !== want6.length) bad3.push(`extra or repeated in the appended table: ${extra6.slice(0, 6).join(", ")}`);
+  check("Q3", "every Phase 6 row is in its page's Copy (Phase 6) bullet, which follows the entry's Phase 5 block, and once in the table under \"Rows appended by later phases\", below the sentence Phase 5 left", bad3.length === 0, bad3.length ? `\n        ${list(bad3)}` : `${appendedIds.length} appended rows, ${groups6.length} bullets`);
+  const bad4 = [];
+  const want4 = { 50: /^\d{1,2} [A-Z][a-z]{2}$/, 80: /^\d{1,2} [A-Z][a-z]{2}$/, 85: /^\d{2}:\d{2}$/, 91: /^\d{1,2} [A-Z][a-z]{2} \d{4}, \d{2}:\d{2}$/ };
+  for (const [ln, re] of Object.entries(want4)) {
+    const row = rows6.find((r) => r.kind === "format" && r.anchors.some((a) => a.file === "src/components/Analytics/chartXAxis.ts" && a.lines.includes(Number(ln))));
+    if (!row) { bad4.push(`chartXAxis.ts:${ln}: no format row`); continue; }
+    if (!re.test(row.new)) bad4.push(`${row.id}: "${row.new}" is not the C3 form for chartXAxis.ts:${ln}`);
+    if (!/en-US/.test(row.old)) bad4.push(`${row.id}: its Old is not the en-US call`);
+  }
+  const n4 = rows6.filter((r) => r.anchors.some((a) => a.file === "src/components/Analytics/chartXAxis.ts")).length;
+  if (n4 !== 4) bad4.push(`${n4} rows anchored in chartXAxis.ts, expected 4`);
+  check("Q4", "the four explicit en-US display calls of chartXAxis.ts (:50, :80, :85, :91) each have a Phase 6 format row whose New is the C3 form (D MMM for a date tick, HH:mm for an hour, D MMM YYYY, HH:mm for the tooltip)", bad4.length === 0, bad4.length ? `\n        ${list(bad4)}` : "4 of 4 sites, 4 rows");
+  const bad5 = [];
+  const CHARTS = [["P6-A-03", "StandaloneUserActivity.tsx", 2], ["P6-A-03", "StandaloneDailySessions.tsx", 2], ["P6-A-03", "StandaloneTopActions.tsx", 1], ["P6-A-03", "StandaloneUserDuration.tsx", 1], ["P6-A-03", "StandaloneUserEngine.tsx", 1], ["P6-A-18", "IntentsPanel.tsx", 2], ["P6-A-18", "TopicsPanel.tsx", 2]];
+  const sums = rows6.filter((r) => r.sum);
+  for (const [g, file, n] of CHARTS) { const have = sums.filter((r) => r.group === g && r.anchors.some((a) => a.at && a.at.includes(file))).length; if (have !== n) bad5.push(`${file}: ${have} summaries, expected ${n}`); }
+  const CLAIM = /\b(improv|better|worse|trend|grow|declin|increas|decreas|healthy|engag|popular|success)\w*/i;
+  for (const r of sums) {
+    if (!/\{[a-zA-Z]+: count [a-z ]+\}/.test(r.new.split(";")[0])) bad5.push(`${r.id}: no count helper in the first clause (the key figure first)`);
+    if (r.group === "P6-A-03" && !r.new.includes("{range}")) bad5.push(`${r.id}: the period is not stated`);
+    if (!/\.$/.test(r.new)) bad5.push(`${r.id}: no full stop`);
+    if (CLAIM.test(r.new)) bad5.push(`${r.id}: a claim word the counts cannot back: ${r.new.match(CLAIM)[0]}`);
+    if (r.kind !== "body") bad5.push(`${r.id}: a summary is a body row`);
+  }
+  if (sums.length !== CHARTS.reduce((n, c) => n + c[2], 0)) bad5.push(`${sums.length} summaries in all`);
+  check("Q5", "every chart has a text summary row (the nine charts, in each reading they have): a sentence with the key figure first, the period or the scope stated and no claim the counts cannot back", bad5.length === 0, bad5.length ? `\n        ${list(bad5)}` : `${sums.length} summaries for ${CHARTS.length} charts`);
+  const p5Index = [...(indexText || "").matchAll(/^\| `([A-Za-z0-9-]+\.\d+)` \|/gm)].map((m) => m[1]).filter((id) => id.startsWith("P6-") && !appendedIds.includes(id));
+  check("Q6", "no Phase 6 row is counted among the Phase 5 rows, and none sits in the Phase 5 index table", rows.every((r) => !r.phase6) && p5Index.length === 0, p5Index.length ? `in the Phase 5 table: ${p5Index.slice(0, 5).join(", ")}` : `${rows.length} Phase 5 rows, ${rows6.length} Phase 6 rows`);
+  stats.phase6 = { rows: rows6.length, groups: groups6.length, summaries: sums.length, sourceAnchored: rows6.filter((r) => r.anchors.some((a) => a.file)).length, newText: rows6.filter((r) => !r.old).length };
+}
+
 // ---------------------------------------------------------------- 8. the lock
 // The lock is Phase 5's: the ways DESIGN.md and JOURNEY.md may differ from what Phase 4 left. So the diff is read against the commit before Phase 5 (aed7b42, "address Phase 4 review
 // minor findings"), not against HEAD. HEAD holds Phase 5 since it was committed (b5a9cf9), so a diff against it shows no change at all, and after a later phase it would show that
@@ -2223,6 +2300,7 @@ else {
     const body = h.split("\n").slice(1);
     const removed = body.filter((l) => l.startsWith("-")).map((l) => l.slice(1)), added = body.filter((l) => l.startsWith("+")).map((l) => l.slice(1));
     if (oCount === 0 && oStart >= oldLines) { appended += added.length; if (removed.length) bad.push("removal in an append hunk"); continue; }
+    // (a later phase's append is counted by its own lock check, L4, and taken off the Phase 5 figure below)
     if (removed.length === added.length && removed.length > 0) {
       removed.forEach((o, i) => {
         // the two one-line edits the fix round allows outside the twin column: principle 4 and the line that called the twins drafts
@@ -2241,7 +2319,8 @@ else {
     bad.push(`hunk at line ${oStart}: ${removed.length} removed, ${added.length} added`);
   }
   check("L1", "DESIGN.md: only the Companion's text-twin cells, principle 4, the drafts line, the state-table intro's one sentence, the hand-off's draft wording and the intro's one phrase changed, and the new section was appended", bad.length === 0 && appended > 0 && principleEdits === 1 && draftEdits === 1 && handoffEdits === 1 && introEdits === 1 && tableIntroEdits === 1, bad.length ? list(bad) : `${cellEdits} twin lines edited (last cell only), principle 4 (${principleEdits}), the drafts line (${draftEdits}), the state-table intro's one sentence (${tableIntroEdits}), the hand-off's two draft words (${handoffEdits}) and the intro's one phrase (${introEdits}) reworded, ${appended} lines appended`);
-  stats.designDiff = { twinLinesEdited: cellEdits, principleEdits, draftEdits, tableIntroEdits, handoffEdits, introEdits, linesAppended: appended };
+  const appendedSince6 = (() => { const d6 = git("diff", "-U0", "bd45ade6238f3747ab98f3c15d6208d169411e54", "--", rel(DESIGN_MD)); if (d6 === null) return 0; const t6 = git("show", `bd45ade6238f3747ab98f3c15d6208d169411e54:${rel(DESIGN_MD)}`) || ""; const n6 = t6.split("\n").length - (t6.endsWith("\n") ? 1 : 0); let n = 0; for (const h of d6.split(/^@@ /m).slice(1)) { const m = h.match(/^-(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@/); if (+m[1] >= n6 && (m[2] === undefined ? 1 : +m[2]) === 0) n += h.split("\n").slice(1).filter((l) => l.startsWith("+")).length; } return n; })();
+  stats.designDiff = { twinLinesEdited: cellEdits, principleEdits, draftEdits, tableIntroEdits, handoffEdits, introEdits, linesAppended: appended - appendedSince6 }; // Phase 5's own append: what Phase 6 appended after it (L4) is taken off
 }
 const jDiff = git("diff", "-U0", LOCK_BASE, "--", rel(JOURNEY_MD));
 if (jDiff === null) check("L2", "JOURNEY.md: insertions only, apart from the intro line and the SR-6 Companion bullet's draft strings", false, "git diff against the commit before Phase 5 (aed7b42) is unavailable: is that commit in this clone?");
@@ -2262,6 +2341,37 @@ else {
 const protectedChanged = git("diff", "--name-only", LOCK_BASE, "--", "kiwi-ui/src", "kiwi-ui/public", "kiwi");
 const protectedNew = git("ls-files", "--others", "--exclude-standard", "--", "kiwi-ui/src", "kiwi-ui/public", "kiwi");
 check("L3", "nothing under kiwi-ui/src, kiwi-ui/public or kiwi/ differs from the commit before Phase 5 (committed, staged, unstaged or untracked)", protectedChanged !== null && protectedNew !== null && protectedChanged.trim() === "" && protectedNew.trim() === "", `${protectedChanged || ""} ${protectedNew || ""}`.trim().slice(0, 200));
+// Phase 6 (Data surfaces) extends the lock and changes nothing in L1 to L3. Against the commit before Phase 6 (bd45ade, "address Phase 5 review minor findings"): DESIGN.md may only
+// grow at its end (`## Chart tokens`, whose generated Phase 6 evidence block lives inside it, so no Phase 5 line is rewritten), JOURNEY.md may only gain lines (the data-surface
+// bullets, the Copy (Phase 6) bullets and the appended rows), and the three protected paths must not differ at all.
+const LOCK_BASE_6 = "bd45ade6238f3747ab98f3c15d6208d169411e54";
+const dDiff6 = git("diff", "-U0", LOCK_BASE_6, "--", rel(DESIGN_MD));
+if (dDiff6 === null) check("L4", "DESIGN.md: only appended since the commit before Phase 6", false, "git diff against the commit before Phase 6 (bd45ade) is unavailable: is that commit in this clone?");
+else {
+  const headText6 = git("show", `${LOCK_BASE_6}:${rel(DESIGN_MD)}`) || "";
+  const oldLines6 = headText6.split("\n").length - (headText6.endsWith("\n") ? 1 : 0);
+  const bad6 = []; let appended6 = 0;
+  for (const h of dDiff6.split(/^@@ /m).slice(1)) {
+    const m = h.match(/^-(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@/);
+    const oStart = +m[1], oCount = m[2] === undefined ? 1 : +m[2];
+    const body = h.split("\n").slice(1);
+    const removed = body.filter((l) => l.startsWith("-")).length, added = body.filter((l) => l.startsWith("+")).length;
+    if (oCount === 0 && oStart >= oldLines6 && removed === 0) appended6 += added; else bad6.push(`hunk at line ${oStart}: ${removed} removed, ${added} added, not an append`);
+  }
+  check("L4", "DESIGN.md: since the commit before Phase 6 (bd45ade) the file only grew at its end (## Chart tokens), and no earlier line changed", bad6.length === 0 && appended6 > 0, bad6.length ? list(bad6) : `${appended6} lines appended, nothing else`);
+  stats.designDiff6 = { linesAppended: appended6 };
+}
+const jDiff6 = git("diff", "-U0", LOCK_BASE_6, "--", rel(JOURNEY_MD));
+if (jDiff6 === null) check("L5", "JOURNEY.md: insertions only since the commit before Phase 6", false, "git diff against the commit before Phase 6 (bd45ade) is unavailable: is that commit in this clone?");
+else {
+  const dl6 = jDiff6.split("\n");
+  const removed6 = dl6.filter((l) => l.startsWith("-") && !l.startsWith("---")).map((l) => l.slice(1));
+  const added6 = dl6.filter((l) => l.startsWith("+") && !l.startsWith("+++")).length;
+  check("L5", "JOURNEY.md: since the commit before Phase 6 (bd45ade) the file only gained lines (the data-surface bullets, the Copy (Phase 6) bullets, the appended rows); none was changed or removed", removed6.length === 0, removed6.length ? removed6.map((l) => l.slice(0, 80)).join(" / ") : `${added6} lines added, none removed`);
+  stats.journeyDiff6 = { added: added6, removed: removed6.length };
+}
+const protectedChanged6 = git("diff", "--name-only", LOCK_BASE_6, "--", "kiwi-ui/src", "kiwi-ui/public", "kiwi");
+check("L6", "nothing under kiwi-ui/src, kiwi-ui/public or kiwi/ differs from the commit before Phase 6 (committed, staged, unstaged or untracked)", protectedChanged6 !== null && protectedNew !== null && protectedChanged6.trim() === "" && protectedNew.trim() === "", `${protectedChanged6 || ""} ${protectedNew || ""}`.trim().slice(0, 200));
 
 // ---------------------------------------------------------------- 9. paths
 const pathRe = /(\/Users\/|\/private\/|\/home\/[a-z]|[A-Z]:\\\\|\/tmp\/claude)/;
@@ -2483,6 +2593,21 @@ if (WRITE) {
   // the coverage table (R1): the data, written out
   const ca = outDesign.indexOf("<!-- copy:coverage:start -->"), cb = outDesign.indexOf("<!-- copy:coverage:end -->");
   if (ca >= 0 && cb > ca && s.coverage?.block) outDesign = outDesign.slice(0, ca) + "<!-- copy:coverage:start -->\n" + s.coverage.block + "\n" + outDesign.slice(cb);
+  // Phase 6: its own evidence block inside `## Chart tokens`; the Phase 5 table above is rewritten from unchanged numbers, so it stays byte-identical
+  const pa = outDesign.indexOf("<!-- copy:evidence-p6:start -->"), pb = outDesign.indexOf("<!-- copy:evidence-p6:end -->");
+  if (pa >= 0 && pb > pa) {
+    const p6 = s.phase6 || {};
+    const q = (id) => { const r = report.find((x) => x.id === id); return r ? (r.ok ? "PASS" : "FAIL") : "not run"; };
+    const ev6 = [
+      "| Check | Result | Source |", "|---|---|---|",
+      `| Phase 6 rows | ${p6.rows} strings in ${p6.groups} groups: ${p6.sourceAnchored} anchored at the source line that holds the old string and ${p6.newText} new strings anchored to the file and line they will be drawn at, all linted with the Phase 5 lints (case, marks, terms, person, plurals, dates); ${p6.summaries} chart summaries, each with the key figure first, the period or scope stated and no claim the counts cannot back | Q1, Q2, Q5 |`,
+      `| Placement | each row once in its page's \`Copy (Phase 6)\` bullet, after the entry's Phase 5 block, and once under "Rows appended by later phases" below the sentence Phase 5 left; no Phase 6 row in a Phase 5 count or table | Q3, Q6 |`,
+      `| Chart ticks | the four explicit en-US display calls of \`chartXAxis.ts\` (:50, :80, :85, :91) each have a format row with the C3 form | Q4 |`,
+      `| The Phase 6 lock | against the commit before Phase 6 (bd45ade): DESIGN.md grew only at its end (${s.designDiff6?.linesAppended ?? "?"} lines); JOURNEY.md gained ${s.journeyDiff6?.added ?? "?"} lines and lost none; nothing under \`kiwi-ui/src\`, \`kiwi-ui/public\` or \`kiwi/\` differs; L1 to L3 are unchanged and still pass | L4, L5, L6 |`,
+      `| Results | Q1 ${q("Q1")} · Q2 ${q("Q2")} · Q3 ${q("Q3")} · Q4 ${q("Q4")} · Q5 ${q("Q5")} · Q6 ${q("Q6")} · L4 ${q("L4")} · L5 ${q("L5")} · L6 ${q("L6")} | this run |`,
+    ].join("\n");
+    outDesign = outDesign.slice(0, pa) + "<!-- copy:evidence-p6:start -->\n" + `Read from \`generated/check-summary.json\` (written by \`node .design-foundations/copy/check-copy.mjs --write\`) at assembly time, never typed; a re-run rewrites this table.\n\n` + ev6 + "\n" + outDesign.slice(pb);
+  }
   if (outDesign !== design) fs.writeFileSync(DESIGN_MD, outDesign);
   console.log("wrote generated/check-summary.json, the Evidence table and the coverage table");
 }

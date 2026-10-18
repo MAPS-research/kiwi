@@ -15,7 +15,10 @@
 //  12. Component-tier literals: a component token's value is a semantic reference unless it is marked $extensions["org.kiwi"].literal with a reason; the marked ones are listed.
 //  13. Public classes and keyframes: every v1 class selector and keyframe is present in the generated public CSS; the deprecated ones are marked and scheduled like the tokens.
 //  14. Selection and pressed cues: every toggle-like variant carries a non-colour cue ($extensions["org.kiwi.cue"]) and a marker or glyph cue clears 3:1 against the selected fill and the unselected surfaces, in both modes (WCAG 1.4.1 / 1.4.11).
-//  16. Interim chart: every interim palette.chart series clears 3:1 on --surface in both modes (the brief's release gate for chart marks), until Phase 6 registers chart.*.
+//  16. Chart series (Phase 6, DW-6.1): chart.series.1-5 and chart.other are registered for both modes; every series clears 3:1 on --surface, --background and --surface-hover;
+//      the five sit within ± 0.07 OKLCH L of one target per mode (the measured reading of "matched lightness"), inside the admissible hue arc, at chroma 0.08-0.14; their minimum
+//      pairwise OKLab distance under protanopia and deuteranopia (Machado 2009) is >= 8 and under normal vision >= 15 (chart-lib.mjs GATES); every recorded hex is what its
+//      recorded OKLCH parameters render (derived, never typed); the chrome roles reference semantic tokens; and the MUI preview's palette.chart reads the tokens, not the interim stand-ins.
 //  15. Frozen literals: every literal that names a source in $extensions["org.kiwi"].frozen still equals that source resolved in the named context (the on-paper marks against the light globals), so a palette.mjs re-run cannot leave them behind.
 //  17. Editor selection: the selection tint is visible on --editor-bg (≥ 1.1:1) and differs from the active line, its 1 px outline clears 3:1 against --editor-bg and the active line, and every syntax colour keeps 4.5:1 on the selection, both modes; the generated Ace rule carries both.
 //  18. Public reduced motion: every selector of the public CSS that runs an animation or a transition is listed inside one scoped @media (prefers-reduced-motion: reduce) block, and that block holds no universal selector and no !important.
@@ -28,6 +31,7 @@ import { createHash } from "node:crypto";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadTokens, walk, walkGroups, getToken, getNode, resolve, refOf, cssNameFor, contrast, isHex, CONTEXTS, STATES, COMPONENTS, variesWith, TOKENS_DIR, REPO_ROOT } from "./tokens-lib.mjs";
+import { GATES as CHART_GATES, assertSeries, renderHex, oklchOfHex, views, dE, inArc } from "./chart-lib.mjs";
 
 const here = TOKENS_DIR; // relative to this script; nothing machine-specific
 const ROOT = REPO_ROOT;
@@ -171,7 +175,8 @@ log(`\n## 11. Density-invariant components\n\nlauncher and display-menu: ${invar
 const literalAllow = [/^semantic\.color\.logo\./, /^semantic\.color\.on-paper\./, /^global\./]; // backdrop and shadows reference --shadow-ink (alphas composed by the emitter), so they carry no literal
 const literalBad = [];
 walk(tree, (p, t) => {
-  const scan = (v) => { if (typeof v === "string") { if (isHex(v) || /\b(rgba?|hsla?|oklch|oklab|lab|lch|color-mix)\(/.test(v)) { if (!literalAllow.some((re) => re.test(p)) && !(p.startsWith("companion.") && t.$extensions?.["org.kiwi"]?.frozen)) literalBad.push(`${p}: ${v}`); } } else if (Array.isArray(v)) v.forEach(scan); else if (v && typeof v === "object") Object.values(v).forEach(scan); };
+  // Phase 6: a chart.* colour literal is admitted only when it carries its derivation (hue, L and C per mode); § 16 re-renders it and fails on any drift
+  const scan = (v) => { if (typeof v === "string") { if (isHex(v) || /\b(rgba?|hsla?|oklch|oklab|lab|lch|color-mix)\(/.test(v)) { if (!literalAllow.some((re) => re.test(p)) && !(p.startsWith("companion.") && t.$extensions?.["org.kiwi"]?.frozen) && !(p.startsWith("chart.") && t.$extensions?.["org.kiwi"]?.derived)) literalBad.push(`${p}: ${v}`); } } else if (Array.isArray(v)) v.forEach(scan); else if (v && typeof v === "object") Object.values(v).forEach(scan); };
   scan(t.$value); if (t.$extensions?.mode) Object.values(t.$extensions.mode).forEach(scan);
 });
 if (literalBad.length) fail(`colour literals outside the global tier / allowlisted composites: ${literalBad.join("; ")}`);
@@ -181,7 +186,7 @@ for (const [f, txt] of texts) for (const b of meta.banned) { const re = new RegE
 // the JSON names the banned hexes in its own ban list; discount those occurrences
 const bannedReal = bannedHits.filter((h) => !h.startsWith("kiwi-ui.tokens.json"));
 if (bannedReal.length) fail(`banned hex in generated outputs: ${bannedReal.join("; ")}`);
-log(`\n## 5. Literal policy\n\nColour literals outside the global tier: ${literalBad.length} (allowed: the G2 logo black/white, the mode-frozen on-paper marks and a mode-frozen companion.* literal that names its light source (Phase 4: the dark backing); the backdrop and the shadows reference --shadow-ink and carry alphas, composed by the emitter). Banned purple-era hex in the generated CSS, public CSS and MUI preview: ${bannedReal.length}.`);
+log(`\n## 5. Literal policy\n\nColour literals outside the global tier: ${literalBad.length} (allowed: the G2 logo black/white, the mode-frozen on-paper marks, a mode-frozen companion.* literal that names its light source (Phase 4: the dark backing), and a chart.* literal that carries its derivation and that § 16 re-renders (Phase 6: the five series and the neutral); the backdrop and the shadows reference --shadow-ink and carry alphas, composed by the emitter). Banned purple-era hex in the generated CSS, public CSS and MUI preview: ${bannedReal.length}.`);
 
 // ---------- 6. public coverage ----------
 const todayCss = readFileSync(join(ROOT, "kiwi-ui/public/kiwi-design-tokens.css"), "utf8");
@@ -258,17 +263,74 @@ log(`\n## 15. Frozen literals\n\n${frozenN} literals name their source in $exten
 log("| Token | Literal | Source | Resolved | Result |\n|---|---|---|---|---|");
 for (const r of frozenRows) log(`| ${r.join(" | ")} |`);
 
-// ---------- 16. the interim chart series ----------
-let chartN = 0, chartBad = 0; const chartRows = [];
-for (const [k, ref] of Object.entries(meta.interimChart?.series || {})) {
-  const res = {};
-  for (const [mode, ctx] of [["light", L], ["dark", D]]) { const fg = resolve(tree, refOf(ref), ctx), bg = resolve(tree, "semantic.color.surface", ctx); res[mode] = isHex(fg) && isHex(bg) ? contrast(fg, bg) : 0; }
-  chartN++; const ok = res.light >= 3 && res.dark >= 3; if (!ok) { fail(`interim chart ${k} (${ref}) light ${res.light.toFixed(2)} dark ${res.dark.toFixed(2)} < 3 on --surface`); chartBad++; }
-  chartRows.push([k, ref, res.light.toFixed(2), res.dark.toFixed(2), ok ? "PASS" : "FAIL"]);
+// ---------- 16. the chart series (Phase 6, DW-6.1; kiwi-ui/DESIGN.md § Chart tokens) ----------
+// The gates are chart-lib.mjs GATES: the series are asserted on their rendered hex values in both modes, and every recorded hex must be
+// what its recorded OKLCH parameters render, so the palette is reproducible from its record as the locked block is from its three runs.
+let chartN = 0, chartBad = 0; const chartRows = [], chartPairRows = [], chartMeasured = {}, chartChromeRows = [];
+{
+  const ids = ["1", "2", "3", "4", "5"];
+  const chartFail = (s) => { fail(`chart: ${s}`); chartBad++; };
+  for (const i of ids) if (!getToken(tree, `chart.series.${i}`)) chartFail(`chart.series.${i} is not registered`);
+  const SC = (p, ctx) => resolve(tree, `semantic.color.${p}`, ctx);
+  const muiPath = join(here, "generated/mui-theme.json"); const mui = existsSync(muiPath) ? JSON.parse(readFileSync(muiPath, "utf8")) : null;
+  for (const [mode, ctx] of [["light", L], ["dark", D]]) {
+    const hexes = ids.map((i) => (getToken(tree, `chart.series.${i}`) ? String(resolve(tree, `chart.series.${i}`, ctx)).toLowerCase() : null));
+    if (hexes.some((h) => !h || !isHex(h))) { chartFail(`${mode}: a series does not resolve to an opaque hex`); continue; }
+    const surfaces = [SC("surface", ctx), SC("background", ctx), SC("surface-hover", ctx)];
+    const r = assertSeries(hexes, surfaces, { gates: CHART_GATES });
+    chartN += hexes.length;
+    for (const f of r.failures) chartFail(`${mode}: ${f}`);
+    ids.forEach((i, k) => {
+      const t = getToken(tree, `chart.series.${i}`), d = t.$extensions?.["org.kiwi"]?.derived, css = t.$extensions?.["org.kiwi"]?.css;
+      if (css !== `--chart-${i}`) chartFail(`chart.series.${i} does not name --chart-${i}`);
+      if (!d || !d[mode]) chartFail(`chart.series.${i} carries no derivation for ${mode}`);
+      else { const want = renderHex(d[mode].L, d[mode].C, d.hue); if (want !== hexes[k]) chartFail(`chart.series.${i} ${mode} ${hexes[k]} is not what its recorded parameters render (${want})`); if (k === 0 && d.hue !== CHART_GATES.anchorHue) chartFail(`chart.series.1 hue ${d.hue} is not the accent hue ${CHART_GATES.anchorHue}`); }
+      const o = r.measures.oklch[k];
+      chartRows.push([mode, `--chart-${i}`, hexes[k], `${o.H.toFixed(1)}°`, o.L.toFixed(3), o.C.toFixed(3), ...r.measures.contrast[k].map((c) => c.toFixed(2)), r.failures.some((f) => f.startsWith(`series ${k + 1} `)) ? "FAIL" : "PASS"]);
+    });
+    for (const p of r.measures.pairs) chartPairRows.push([mode, `${p.i + 1} vs ${p.j + 1}`, p.protan.toFixed(2), p.deutan.toFixed(2), p.normal.toFixed(2), Math.min(p.protan, p.deutan) >= CHART_GATES.cvdMin && p.normal >= CHART_GATES.normalMin ? "PASS" : "FAIL"]);
+    // the neutral for Other: at the band's target, ≥ 3:1, derived like the series (its distance to the series is informational: Other is de-emphasis with a label)
+    const other = getToken(tree, "chart.other");
+    let otherRow = null;
+    if (!other) chartFail("chart.other is not registered");
+    else {
+      const oh = String(resolve(tree, "chart.other", ctx)).toLowerCase(), d = other.$extensions?.["org.kiwi"]?.derived;
+      const cr = Math.min(...surfaces.map((s) => contrast(oh, s)));
+      if (cr < CHART_GATES.contrast) chartFail(`${mode}: chart.other ${oh} measures ${cr.toFixed(2)}:1`);
+      if (other.$extensions?.["org.kiwi"]?.css !== "--chart-other") chartFail("chart.other does not name --chart-other");
+      if (!d || !d[mode]) chartFail(`chart.other carries no derivation for ${mode}`);
+      else { const want = renderHex(d[mode].L, d[mode].C, d.hue); if (want !== oh) chartFail(`chart.other ${mode} ${oh} is not what its recorded parameters render (${want})`); if (Math.abs(d[mode].L - r.measures.target) > 0.0051) chartFail(`chart.other ${mode} L ${d[mode].L} is not the band's target ${r.measures.target.toFixed(3)}`); }
+      const nv = views(oh), sv = hexes.map(views);
+      otherRow = { hex: oh, contrast: cr, minCvd: Math.min(...sv.map((v) => Math.min(dE(v.protan, nv.protan), dE(v.deutan, nv.deutan)))), oklch: oklchOfHex(oh) };
+      chartRows.push([mode, "--chart-other", oh, `${otherRow.oklch.H.toFixed(1)}°`, otherRow.oklch.L.toFixed(3), otherRow.oklch.C.toFixed(3), ...surfaces.map((s) => contrast(oh, s).toFixed(2)), cr >= CHART_GATES.contrast ? "PASS" : "FAIL"]);
+    }
+    // the MUI preview reads the tokens, not the interim stand-ins
+    if (mui) {
+      const pc = mui.colorSchemes?.[mode]?.palette?.chart || {};
+      if (pc._interim) chartFail(`mui-theme.json ${mode} palette.chart is still marked _interim`);
+      ids.forEach((i, k) => { if (String(pc[`series${i}`] || "").toLowerCase() !== hexes[k]) chartFail(`mui-theme.json ${mode} palette.chart.series${i} (${pc[`series${i}`]}) is not chart.series.${i} (${hexes[k]})`); });
+      if (otherRow && String(pc.other || "").toLowerCase() !== otherRow.hex) chartFail(`mui-theme.json ${mode} palette.chart.other (${pc.other}) is not chart.other (${otherRow.hex})`);
+    } else chartFail("generated/mui-theme.json is missing: run build-tokens.mjs");
+    chartMeasured[mode] = { target: +r.measures.target.toFixed(3), spread: +r.measures.spread.toFixed(3), minContrast: +r.measures.minContrast.toFixed(2), minCvd: +r.measures.cvd.toFixed(2), minCvdKind: r.measures.cvdKind, minCvdPair: r.measures.cvdPair.map((i) => i + 1), minAdjacentCvd: +r.measures.adjacentCvd.toFixed(2), minNormal: +r.measures.normal.toFixed(2), minNormalPair: r.measures.normalPair.map((i) => i + 1), other: otherRow ? { hex: otherRow.hex, minContrast: +otherRow.contrast.toFixed(2), minCvdToSeries: +otherRow.minCvd.toFixed(2) } : null };
+  }
+  // the chrome roles are references to semantic tokens and name their CSS property
+  for (const [n, want] of [["grid", "semantic.color.border-subtle"], ["baseline", "semantic.color.border-strong"], ["track", "semantic.color.surface-active"], ["tick-text", "semantic.color.text-secondary"], ["plot", "semantic.color.surface"]]) {
+    const t = getToken(tree, `chart.${n}`);
+    if (!t) { chartFail(`chart.${n} is not registered`); continue; }
+    const ok = refOf(t.$value) === want && t.$extensions?.["org.kiwi"]?.css === `--chart-${n}`;
+    if (!ok) chartFail(`chart.${n} must reference {${want}} and name --chart-${n}`);
+    chartChromeRows.push([`--chart-${n}`, `{${want}}`, resolve(tree, `chart.${n}`, L), resolve(tree, `chart.${n}`, D), ok ? "PASS" : "FAIL"]);
+  }
+  if (meta.interimChart) chartFail("$extensions[\"org.kiwi\"].interimChart is still present: the interim mapping was replaced by chart.*");
 }
-log(`\n## 16. Interim chart series (until Phase 6)\n\n${chartN} series, ${chartBad} below 3:1 on --surface.\n`);
-log("| Series | Token | Light | Dark | Result |\n|---|---|---|---|---|");
+log(`\n## 16. Chart series (Phase 6)\n\n${chartN} series values (five per mode) and the neutral, ${chartBad} failures. Gates: ≥ ${CHART_GATES.contrast}:1 on --surface, --background and --surface-hover; OKLCH L within ± ${CHART_GATES.band} of one target per mode; chroma ${CHART_GATES.chromaMin}–${CHART_GATES.chromaMax}; hue inside ${CHART_GATES.arc.join("°–")}°; minimum pairwise OKLab distance (× 100) ≥ ${CHART_GATES.cvdMin} under protanopia and deuteranopia (Machado 2009, severity 1.0) and ≥ ${CHART_GATES.normalMin} under normal vision, all pairs; every hex equal to its recorded parameters re-rendered.\n`);
+for (const [mode, m] of Object.entries(chartMeasured)) log(`- ${mode}: target L ${m.target}, spread ${m.spread}; min contrast ${m.minContrast}:1; min distance under ${m.minCvdKind} ${m.minCvd} (series ${m.minCvdPair.join(" vs ")}), adjacent ${m.minAdjacentCvd}; min distance under normal vision ${m.minNormal} (series ${m.minNormalPair.join(" vs ")}); Other ${m.other?.hex} at ${m.other?.minContrast}:1, ${m.other?.minCvdToSeries} from the nearest series under simulation (informational).`);
+log("\n| Mode | Token | Hex | Hue | L | C | on --surface | on --background | on --surface-hover | |\n|---|---|---|---|---|---|---|---|---|---|");
 for (const r of chartRows) log(`| ${r.join(" | ")} |`);
+log("\n| Mode | Pair | Protanopia | Deuteranopia | Normal | |\n|---|---|---|---|---|---|");
+for (const r of chartPairRows) log(`| ${r.join(" | ")} |`);
+log("\n| Chrome role | References | Light | Dark | |\n|---|---|---|---|---|");
+for (const r of chartChromeRows) log(`| ${r.join(" | ")} |`);
 
 // ---------- 17. the editor selection (Major 2 of review round 5) ----------
 let selN = 0, selBad = 0; const selRows = [];
@@ -388,7 +450,7 @@ writeFileSync(join(here, "generated/contrast-report.md"), summary + out.join("\n
 // the machine-readable summary the DESIGN.md evidence paragraph is assembled from
 let descN = 0, tokenN = 0; walk(tree, (p, tk) => { if (!/^(global|semantic|component)\./.test(p)) return; tokenN++; if (tk.$description) descN++; });
 let groupN = 0, groupDescN = 0; walkGroups(tree, (p, g) => { if (!/^(semantic|component)\./.test(p)) return; groupN++; if (g.$description) groupDescN++; });
-writeFileSync(join(here, "generated/check-summary.json"), JSON.stringify({ date: today, source: { version: meta.version, sha256: srcSha, commit }, result: failures.length ? "FAIL" : "PASS", failures: failures.length, components: COMPONENTS.length, aliasOk, aliasBad, stateGroups: stateGroups.length, stateSpecs: stateGroups.length * 8, contrast: { pass, fail: failN, informational: exempt }, tier: { refs: compRefs, violations: tierBad.length }, literals: { marked: compLiterals.length, unmarked: compLiteralUnmarked.length, outsideGlobal: literalBad.length, banned: bannedReal.length }, public: { pinned: pinned.length, unmapped: unmapped.length, notEmitted: notEmitted.length, counts, classes: { pinned: v1Classes.length, missing: missingClasses.length, emitted: genClasses.size }, keyframes: { pinned: v1Keyframes.length, missing: missingKeyframes.length, emitted: genKeyframes.size }, deprecatedClasses: classDeprecated, deprecationViolations: depBad + classDepBad }, cues: { variants: TOGGLES.length, assertions: cueN, failures: cueBad }, frozen: { n: frozenN, drifted: frozenBad }, interimChart: { series: chartN, below: chartBad }, editorSelection: { assertions: selN, failures: selBad }, motionGuard: { moving: motionAnimated, guarded: motionGuarded }, muiGrey: { keys: greyN, mismatches: greyBad }, companionBacking: { assertions: compN, failures: compBad, pixelAssets: pixN, pixelFailures: pixBad }, densityDeltas: deltas.length, descriptions: { tokens: tokenN, described: descN, groups: groupN, groupsDescribed: groupDescN } }, null, 1) + "\n");
+writeFileSync(join(here, "generated/check-summary.json"), JSON.stringify({ date: today, source: { version: meta.version, sha256: srcSha, commit }, result: failures.length ? "FAIL" : "PASS", failures: failures.length, components: COMPONENTS.length, aliasOk, aliasBad, stateGroups: stateGroups.length, stateSpecs: stateGroups.length * 8, contrast: { pass, fail: failN, informational: exempt }, tier: { refs: compRefs, violations: tierBad.length }, literals: { marked: compLiterals.length, unmarked: compLiteralUnmarked.length, outsideGlobal: literalBad.length, banned: bannedReal.length }, public: { pinned: pinned.length, unmapped: unmapped.length, notEmitted: notEmitted.length, counts, classes: { pinned: v1Classes.length, missing: missingClasses.length, emitted: genClasses.size }, keyframes: { pinned: v1Keyframes.length, missing: missingKeyframes.length, emitted: genKeyframes.size }, deprecatedClasses: classDeprecated, deprecationViolations: depBad + classDepBad }, cues: { variants: TOGGLES.length, assertions: cueN, failures: cueBad }, frozen: { n: frozenN, drifted: frozenBad }, chart: { series: chartN, failures: chartBad, measured: chartMeasured }, editorSelection: { assertions: selN, failures: selBad }, motionGuard: { moving: motionAnimated, guarded: motionGuarded }, muiGrey: { keys: greyN, mismatches: greyBad }, companionBacking: { assertions: compN, failures: compBad, pixelAssets: pixN, pixelFailures: pixBad }, densityDeltas: deltas.length, descriptions: { tokens: tokenN, described: descN, groups: groupN, groupsDescribed: groupDescN } }, null, 1) + "\n");
 console.log(summary.trim());
-console.log(`alias equalities ${aliasOk}/${aliasOk + aliasBad} · state groups ${stateGroups.length} · contrast required ${pass} pass / ${failN} fail, ${exempt} informational · literals outside global ${literalBad.length} · banned ${bannedReal.length} · public unmapped ${unmapped.length} · v1 classes missing ${missingClasses.length}/${v1Classes.length}, keyframes missing ${missingKeyframes.length}/${v1Keyframes.length} · tier violations ${tierBad.length} · component literals ${compLiterals.length} marked / ${compLiteralUnmarked.length} unmarked · deprecation violations ${depBad + classDepBad} (${counts.deprecated} names, ${classDeprecated} classes/keyframes) · density deltas ${deltas.length} · cues ${cueN} assertions / ${cueBad} failures · frozen literals ${frozenN} / ${frozenBad} drifted · interim chart ${chartN} series / ${chartBad} below 3:1 · editor selection ${selN} assertions / ${selBad} failures · public motion guard ${motionGuarded}/${motionAnimated} · MUI grey ${greyN - greyBad}/${greyN} · companion backing ${compN - compBad}/${compN} pairs, ${pixN - pixBad}/${pixN} assets pixel-sampled`);
+console.log(`alias equalities ${aliasOk}/${aliasOk + aliasBad} · state groups ${stateGroups.length} · contrast required ${pass} pass / ${failN} fail, ${exempt} informational · literals outside global ${literalBad.length} · banned ${bannedReal.length} · public unmapped ${unmapped.length} · v1 classes missing ${missingClasses.length}/${v1Classes.length}, keyframes missing ${missingKeyframes.length}/${v1Keyframes.length} · tier violations ${tierBad.length} · component literals ${compLiterals.length} marked / ${compLiteralUnmarked.length} unmarked · deprecation violations ${depBad + classDepBad} (${counts.deprecated} names, ${classDeprecated} classes/keyframes) · density deltas ${deltas.length} · cues ${cueN} assertions / ${cueBad} failures · frozen literals ${frozenN} / ${frozenBad} drifted · chart ${chartN} series values / ${chartBad} failures · editor selection ${selN} assertions / ${selBad} failures · public motion guard ${motionGuarded}/${motionAnimated} · MUI grey ${greyN - greyBad}/${greyN} · companion backing ${compN - compBad}/${compN} pairs, ${pixN - pixBad}/${pixN} assets pixel-sampled`);
 process.exit(failures.length ? 1 : 0);

@@ -97,8 +97,8 @@ async function check(dir) {
   try { const r = await run("node", [script], { maxBuffer: 256 * 1024 * 1024 }); return { out: r.stdout }; }
   catch (e) { return { out: String(e.stdout || "") }; }
 }
-// L1 to L3 read git, which a copy does not have; R1 reads the summary this run is about to write, so it cannot be a baseline of the run that writes it
-const failing = (out) => [...out.matchAll(/^FAIL  (\S+)/gm)].map((m) => m[1]).filter((id) => !/^(L[123]|R1)$/.test(id));
+// L1 to L6 read git, which a copy does not have; R1 reads the summary this run is about to write, so it cannot be a baseline of the run that writes it
+const failing = (out) => [...out.matchAll(/^FAIL  (\S+)/gm)].map((m) => m[1]).filter((id) => !/^(L[1-6]|R1)$/.test(id)); // L4 to L6 (Phase 6's lock) read git too
 
 // ---------------------------------------------------------------------------------------------------------------- unit proofs
 const unit = [];

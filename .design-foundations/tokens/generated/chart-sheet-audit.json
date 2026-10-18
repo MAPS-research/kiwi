@@ -1,0 +1,165 @@
+{
+ "date": "2026-10-18",
+ "sheet": ".design-foundations/mocks/chart-sheet.html",
+ "chrome": "Chrome/155.0.8059.85",
+ "modes": {
+  "light": {
+   "mode": "light",
+   "plot": "#faf9f3",
+   "series": [
+    "#2b774d",
+    "#0098af",
+    "#a64e00",
+    "#0064ad",
+    "#958b00",
+    "#77746d"
+   ],
+   "minCvd": 8.135591860714493,
+   "minAdjacentCvd": 14.784816675076565,
+   "minNormal": 15.257922582168534,
+   "minOtherCvd": 4.661691835568995,
+   "contrasts": [
+    4.79,
+    3.02,
+    4.97,
+    5.38,
+    3.09,
+    4.09
+   ],
+   "measure": {
+    "scale": {
+     "svg-daily": 1,
+     "svg-hourly": 1,
+     "svg-actions": 1,
+     "svg-duration": 1,
+     "svg-model": 1,
+     "svg-intents": 1,
+     "svg-sparse": 1
+    },
+    "maxBarPx": 24,
+    "linePx": 2,
+    "hairlinePx": 1,
+    "chartTextPx": [
+     12
+    ],
+    "donutCentrePx": [
+     20
+    ],
+    "tileIconPx": [
+     20,
+     20
+    ],
+    "tokenIconPx": 20,
+    "idTextWidth": 281.8,
+    "idCellWidth": 176,
+    "truncates": true,
+    "tipPreopened": {
+     "display": "block",
+     "hit": "tip",
+     "visibleWidth": 220.6
+    },
+    "tipHover": {
+     "display": "block",
+     "hit": "tip"
+    },
+    "tipFocus": {
+     "focusVisible": true,
+     "outline": "solid 2px",
+     "display": "block",
+     "hit": "tip"
+    }
+   }
+  },
+  "dark": {
+   "mode": "dark",
+   "plot": "#252218",
+   "series": [
+    "#3f895e",
+    "#00b2cc",
+    "#b65a15",
+    "#3e7ab4",
+    "#a99d15",
+    "#8d8b83"
+   ],
+   "minCvd": 8.163702128760033,
+   "minAdjacentCvd": 16.445222421473463,
+   "minNormal": 15.369006636425745,
+   "minOtherCvd": 5.5664837764338,
+   "contrasts": [
+    3.38,
+    5.63,
+    3.05,
+    3.18,
+    5.14,
+    4.21
+   ],
+   "measure": {
+    "scale": {
+     "svg-daily": 1,
+     "svg-hourly": 1,
+     "svg-actions": 1,
+     "svg-duration": 1,
+     "svg-model": 1,
+     "svg-intents": 1,
+     "svg-sparse": 1
+    },
+    "maxBarPx": 24,
+    "linePx": 2,
+    "hairlinePx": 1,
+    "chartTextPx": [
+     12
+    ],
+    "donutCentrePx": [
+     20
+    ],
+    "tileIconPx": [
+     20,
+     20
+    ],
+    "tokenIconPx": 20,
+    "idTextWidth": 281.8,
+    "idCellWidth": 176,
+    "truncates": true,
+    "tipPreopened": {
+     "display": "block",
+     "hit": "tip",
+     "visibleWidth": 220.6
+    },
+    "tipHover": {
+     "display": "block",
+     "hit": "tip"
+    },
+    "tipFocus": {
+     "focusVisible": true,
+     "outline": "solid 2px",
+     "display": "block",
+     "hit": "tip"
+    }
+   }
+  }
+ },
+ "cvd": {
+  "light": {
+   "method": "Chrome Emulation.setEmulatedVisionDeficiency (DevTools › Rendering › Emulate vision deficiencies) on the sheet's series strip",
+   "files": [
+    "chart-sheet.cvd-none.png",
+    "chart-sheet.cvd-deuteranopia.png",
+    "chart-sheet.cvd-protanopia.png"
+   ],
+   "minPairwiseDistanceAfterSimulation": 8.135591860714493,
+   "minAdjacent": 14.784816675076565,
+   "minNormal": 15.257922582168534
+  },
+  "dark": {
+   "method": "Chrome Emulation.setEmulatedVisionDeficiency (DevTools › Rendering › Emulate vision deficiencies) on the sheet's series strip",
+   "files": [
+    "chart-sheet.cvd-none.dark.png",
+    "chart-sheet.cvd-deuteranopia.dark.png",
+    "chart-sheet.cvd-protanopia.dark.png"
+   ],
+   "minPairwiseDistanceAfterSimulation": 8.163702128760033,
+   "minAdjacent": 16.445222421473463,
+   "minNormal": 15.369006636425745
+  }
+ }
+}

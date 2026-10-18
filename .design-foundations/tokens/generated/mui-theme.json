@@ -92,13 +92,18 @@
           "_note": "MUI's grey scale overridden with the locked neutral ramp per mode (50 → neutral-1, 100 → 2, 200 → 3, 300 → 5, 400 → 7, 500 → 8, 600 → 10, 700 → 11, 800 → 12, 900 → 12; A100 → 3, A200 → 5, A400 → 8, A700 → 11), so a stray grey.NN or palette.grey[...] still flips with data-theme; a safety net, not a role: migrate by role (page canvas → background.default; sunken band or table head → action.hover; hairline → divider; wordmark fallback → the mascot); the guard flags every grey.NN and palette.grey access"
         },
         "chart": {
-          "series1": "#486d56",
-          "series2": "#3d6886",
-          "series3": "#76602f",
-          "series4": "#65635c",
-          "series5": "#203327",
-          "_interim": true,
-          "_note": "Interim until Phase 6 registers chart.* (five categorical series per mode, hue-separated and colour-blind-checked). The -11 steps (and accent-12) clear 3:1 on --surface in both modes (asserted by check-tokens.mjs § 16), so the stand-ins meet the brief's release gate for chart marks even before Phase 6. Theme.ts declares Palette.chart.series1-5 and StandaloneUserActivity, StandaloneDailySessions, StandaloneUserEngine, StandaloneTopActions, StandaloneUserDuration and Theme.test.ts read them, so the theme swap keeps the keys with these no-purple stand-ins from the locked ramps (no red in analytical views) and Theme.test.ts expects these values until Phase 6 replaces them."
+          "series1": "#2b774d",
+          "series2": "#0098af",
+          "series3": "#a64e00",
+          "series4": "#0064ad",
+          "series5": "#958b00",
+          "other": "#77746d",
+          "grid": "#d4d2cb",
+          "baseline": "#adaba1",
+          "track": "#e9e8e4",
+          "tickText": "#65635c",
+          "plot": "#faf9f3",
+          "_note": "series1–5 are --chart-1…5 (categorical, fixed order, marks only: never text, never a status surface); other is --chart-other (Other and Unknown); grid, baseline, track, tickText and plot are the chart chrome roles (references to semantic tokens). Replaces Phase 3's interim stand-ins; Theme.ts's ChartPalette gains `other` and the chrome keys, and Theme.test.ts expects these values (§ Chart tokens › Hand-offs)"
         },
         "_kiwi": {
           "focusRing": "#486d56",
@@ -201,13 +206,18 @@
           "_note": "MUI's grey scale overridden with the locked neutral ramp per mode (50 → neutral-1, 100 → 2, 200 → 3, 300 → 5, 400 → 7, 500 → 8, 600 → 10, 700 → 11, 800 → 12, 900 → 12; A100 → 3, A200 → 5, A400 → 8, A700 → 11), so a stray grey.NN or palette.grey[...] still flips with data-theme; a safety net, not a role: migrate by role (page canvas → background.default; sunken band or table head → action.hover; hairline → divider; wordmark fallback → the mascot); the guard flags every grey.NN and palette.grey access"
         },
         "chart": {
-          "series1": "#9bc3a8",
-          "series2": "#90bedf",
-          "series3": "#cdb482",
-          "series4": "#b9b7b0",
-          "series5": "#d7efdf",
-          "_interim": true,
-          "_note": "Interim until Phase 6 registers chart.* (five categorical series per mode, hue-separated and colour-blind-checked). The -11 steps (and accent-12) clear 3:1 on --surface in both modes (asserted by check-tokens.mjs § 16), so the stand-ins meet the brief's release gate for chart marks even before Phase 6. Theme.ts declares Palette.chart.series1-5 and StandaloneUserActivity, StandaloneDailySessions, StandaloneUserEngine, StandaloneTopActions, StandaloneUserDuration and Theme.test.ts read them, so the theme swap keeps the keys with these no-purple stand-ins from the locked ramps (no red in analytical views) and Theme.test.ts expects these values until Phase 6 replaces them."
+          "series1": "#3f895e",
+          "series2": "#00b2cc",
+          "series3": "#b65a15",
+          "series4": "#3e7ab4",
+          "series5": "#a99d15",
+          "other": "#8d8b83",
+          "grid": "#3d3c36",
+          "baseline": "#636057",
+          "track": "#33322e",
+          "tickText": "#b9b7b0",
+          "plot": "#252218",
+          "_note": "series1–5 are --chart-1…5 (categorical, fixed order, marks only: never text, never a status surface); other is --chart-other (Other and Unknown); grid, baseline, track, tickText and plot are the chart chrome roles (references to semantic tokens). Replaces Phase 3's interim stand-ins; Theme.ts's ChartPalette gains `other` and the chrome keys, and Theme.test.ts expects these values (§ Chart tokens › Hand-offs)"
         },
         "_kiwi": {
           "focusRing": "#84ca9e",

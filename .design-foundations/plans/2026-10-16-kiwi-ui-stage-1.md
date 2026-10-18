@@ -2,7 +2,7 @@
 **Created:** 2026-10-16
 **Status:** in-progress
 **Started:** 2026-10-16 05:52
-**Current Phase:** 6
+**Current Phase:** 7
 **Workspace:** feature branch `feature/kiwi-ui-stage-1-design` (in place, at the repository root); base commit `ef65c1d`
 **Complexity:** complex (Full track)
 **Research:** `.design-foundations/research/2026-10-16-kiwi-ui-visual-refresh.md` (confirmed brief, G1–G15) · `.design-foundations/research/2026-10-16-kiwi-ui-tour.md` (current-state tour)
@@ -177,6 +177,11 @@ Never create a link before its target exists: a dangling link would read as "pre
 | Phase 5 review round 9 FAILED (2026-10-17): 0 Critical, 2 Major, 4 Minor; fix round 9 dispatched under the user's standing rule | MAJ-1: EM.21 dropped the instructor's name from the enrolment email; it is restored as a conditional. MAJ-2: committed copy rationale described a security gap, against the 2026-10-16 rule that security findings stay out of committed files until fixed. The coordinator's sweep found more passages of the same kind in DESIGN.md, JOURNEY.md and the copy data. All of them move to a private, git-ignored note; committed text keeps neutral rationales and severity-only pointers (a new SEC-2 row); and a guard that reads its phrase list from the private note fails if any detail returns. Minors: "Your classes" for both roles under C8; C3 lists every date variant; the CSS hand-off lists PrimaryButton.test.tsx:43; DS.29 states the cause |
 | Phase 5 review round 10 FAILED (2026-10-18): 2 Critical, 1 Major, 4 Minor; fix round 10 dispatched under the user's standing rule | C-1: the DateTimeField errors DS.45-DS.49 gave only the rule and the correction. The round-7 ruling (N-3) accepts an input error whose first sentence states what is wrong ("MCP server name is required."), not one with no such sentence, so these five get a what's-wrong sentence and § Errors states the narrower form. This refines N-3 and does not reverse it. C-2: the Google sign-in errors S-07.04 and S-07.05 carried the with-address text as Old; the no-address branches get their own Old, and their two test lines are listed. Major: S-05.03's generic fallback stops pointing at the password. The four Minors are fixed as proposed. The checker closes its fragment and template-conditional gaps |
 | Phase 5 review round 11 PASSED (2026-10-18): 0 Critical, 0 Major, 4 Minor | DW-5.1 to DW-5.7 and every edge case pass on evidence the reviewer re-derived. The four Minors go to a follow-up before Phase 6, as after Phases 3 and 4: a count that breaks verb agreement (A-16.55), a row pointed to by colour (A-14.03), a voice sample whose claim needs a code cite or a replacement, and the keyboard reach of clamped server text |
+| Phase 6 BUILD: "matched OKLCH lightness" is met as a measured band of ±0.07 per mode, not strict equality (build agent, 2026-10-18; shown to the user for objection) | An exhaustive search found that five hue-separated series at one exact lightness cannot be colour-blind-safe at the locked muted chroma. The best result was 6.3 against the gate of 8, and reaching 8 needs vivid chroma 0.22, which breaks the muted pin. A band of ±0.06 fails at chroma 0.14 or below; ±0.07 at chroma 0.10-0.14 passes both gates with margin (minimum simulated distance 8.14 light, 8.16 dark; 15.26 and 15.37 under normal vision). The alternatives are a vivid set, which changes a locked pin, fewer series, which changes scope, or a tighter band, which fails DW-6.1's colour-vision clause. The chart sheet and colour-vision strips went to the user on 2026-10-18; the band stands unless the user objects |
+| Phase 6 review round 1 FAILED (2026-10-18): 0 Critical, 4 Major, 9 Minor; fix round 1 dispatched under the user's standing rule | F1 (the table tooltip clipped and the id never truncating) and F2 (the chart SVGs scaled up, so bars, type and lines exceed the sheet's own rules) are fixed on the evidence page and re-shot. F4, the lightness band, was independently confirmed as the only admissible reading and stands unless the user objects. F3, near-empty data, goes to the user. Meanwhile the render is brought in line with today's written rule (two bars with their value labels). N7: the chart entrance animation follows the locked Motion budget, with no exception. F5-F11, F13, N3 and N5 are fixed as proposed. F12 (accent equals slot 1) is a Phase 7 call |
+| Near-empty chart data draws sparse bars with their value labels (user, 2026-10-18: "数据很少时画稀疏柱子，柱顶标上数字") | Resolves Phase 6 review round 1, F3. It amends the Phase 6 edge case "Empty or near-empty data ... renders the empty state": empty data still renders the empty state, while one or two non-zero buckets draw as bars, each labelled with its value, never as a flat or zero-filled chart. This is the rule DESIGN.md § Chart tokens already states and the sheet now draws. The user gave this answer without objecting to the ±0.07 lightness band, so the band stands, as its row says |
+| Every subagent runs on Opus from Phase 6 onward (user, 2026-10-18: "要改为所有阶段都用opus effort可以选择xhigh或者max") | It replaces the plan's model ladder (fable, sonnet, haiku, with the review one tier below the build) and the rows above that chose a model per phase. BUILD runs at effort max and REVIEW at effort xhigh, on the same model. The Phase 6 build so far ran on Fable. Its fix work from here goes to a fresh Opus build agent that reads the discovery file and the review reports. The interrupted round-2 review is re-run on Opus |
+| Phase 6 review round 2 PASSED (2026-10-18, Opus at effort xhigh): 0 Critical, 0 Major, 13 Minor | DW-6.1 to DW-6.7 and every edge case pass on the reviewer's own render, measurements and colour-vision computation. The 13 Minors go to a follow-up on a fresh Opus build agent, as after earlier phases. The donut near-merge of slot 1 and Other under simulation joins F12 as a Phase 7 call |
 | DNA, type and colour are one phase | Avoids changing `DESIGN.md` after it is locked; the pins leave little open |
 | JOURNEY.md is as-is only | No flows change in Stage 1; JTBD and IA would be theatre without Stage 2 research |
 | Companion is its own phase, after the design system | It needs the avatar surface and the Display menu from Phase 3, and its doctrine (ai-native, motion, behavioral) differs |
@@ -481,7 +486,7 @@ Never create a link before its target exists: a dangling link would read as "pre
 
 ### Phase 6: Data surfaces
 **Stage:** Design
-**Model:** fable
+**Model:** opus (BUILD effort max, REVIEW effort xhigh; user, 2026-10-18)
 **Doctrine:** data-viz, usability
 **Gate:** Full
 
@@ -532,7 +537,7 @@ Never create a link before its target exists: a dangling link would read as "pre
 
 ### Phase 7: Final mocks and sign-off
 **Stage:** Design
-**Model:** fable
+**Model:** opus (BUILD effort max, REVIEW effort xhigh; user, 2026-10-18)
 **Doctrine:** checklists, ai-tells, usability, responsive, content-design
 **Gate:** Full
 
