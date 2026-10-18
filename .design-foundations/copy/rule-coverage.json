@@ -175,7 +175,8 @@
      "proofs": [
       "E-C4-new-4",
       "E-C4-new-6",
-      "E-C4-new-7"
+      "E-C4-new-7",
+      "E-C4-new-8"
      ]
     },
     {
@@ -192,7 +193,8 @@
       "E-C4-kept-1",
       "E-C4-kept-2",
       "E-C4-kept-3",
-      "E-C4-kept-4"
+      "E-C4-kept-4",
+      "E-C4-kept-5"
      ]
     },
     {
@@ -591,20 +593,30 @@
      "over": "new",
      "proofs": [
       "E-C14-new-1",
-      "E-C14-new-2"
+      "E-C14-new-2",
+      "E-C14-new-3"
+     ]
+    },
+    {
+     "check": "H17",
+     "over": "kept",
+     "proofs": [
+      "E-C14-kept-1"
      ]
     },
     {
      "check": "H1",
      "over": "source",
      "proofs": [
-      "E-C14-src-1"
+      "E-C14-src-1",
+      "E-C14-src-2"
      ]
     }
    ],
    "audit": [
     "C14-A",
-    "C14-B"
+    "C14-B",
+    "C14-C"
    ],
    "manual": {
     "what": "\"a helper adds information and never repeats the label\" compares a helper with its field's label, which a string lint cannot see",
@@ -937,7 +949,10 @@
       {
        "check": "F22",
        "proofs": [
-        "E-ERR-9"
+        "E-ERR-9",
+        "E-ERR-14",
+        "E-ERR-15",
+        "E-ERR-16"
        ]
       }
      ]

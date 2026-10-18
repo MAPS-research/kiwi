@@ -39,7 +39,7 @@ export const RULES = {
   C11: ["a confirmation states the consequence first, then permanence, then the way out", "Yifrah stakes-clarity; Nielsen #5"],
   C12: ["an empty state says what goes here and the first step, or who acts", "Redish; NN/g empty-state types; peak-end"],
   C13: ["progress names what is happening, in the present tense", "Nielsen #1; Doherty threshold"],
-  C14: ["labels persist, helper text adds information, placeholders are examples", "Redish; WCAG 3.3.2; Yifrah"],
+  C14: ["labels persist, helper text adds information, placeholders are examples, and a line points at a place in words, not by colour", "Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah"],
   C15: ["an icon-only control is named by a verb phrase, in its tooltip and its aria-label alike", "Nielsen #6; WCAG 4.1.2"],
   C16: ["no claim the product cannot back, and no developer text in the interface", "G12; ai-native: calibrate"],
   C17: ["institution and support details come only from branding config", "plan constraint; src/config/branding.ts"],
@@ -729,6 +729,15 @@ export const AUDIT = [
   // C14: a label carries no asterisk and says "(optional)" in lowercase, and a placeholder is an example, never an instruction
   { id: "C14-A", rule: "C14", scope: "string", test: (t, ctx) => (["label", "heading"].includes(ctx.kind) && (/\*\s*$/.test(t.trim()) || /\((?:Optional|required|Required)\)/.test(t))) ? ["C14: no asterisk in a label; an optional field ends \"(optional)\" and a required one says nothing"] : [] },
   { id: "C14-B", rule: "C14", scope: "string", test: (t, ctx) => ctx.kind === "placeholder" && /^(?:Enter|Type|Select|Choose|Input|Please|Your|Put)\b/.test(t.trim()) ? ["C14: a placeholder is an example (e.g. …), not an instruction or a second label"] : [] },
+  // C14: text that points at a place says where in words. A colour is not a pointer: "Each red row says why" fails the reader who cannot tell red from the row's other colours and the
+  // one who hears the page read aloud (WCAG 1.3.3 and 1.4.1; the lock's "Never the only signal"). The nouns are the places and things a line points at; the verbs are how it says what it points with.
+  { id: "C14-C", rule: "C14", scope: "both", test: (t) => {
+    const colour = "red|green|blue|yellow|orange|amber|purple|violet|pink|gr[ae]y|teal|cyan|magenta";
+    const noun = "rows?|chips?|buttons?|banners?|badges?|icons?|text|labels?|cells?|dots?|lines?|items?|fields?|boxe?s?|messages?|alerts?|sections?|tabs?|links?|bars?|cards?|columns?|tags?|markers?|marks?|flags?|borders?|outlines?|highlights?|warnings?|errors?|notices?|ones?|stars?|asterisks?|entries|entry|files?";
+    const verb = "marked|shown|highlighted|colou?red|indicated|flagged|outlined|displayed|written|printed|underlined|circled";
+    const s = stripSlots(t).replace(/`[^`]*`/g, " ");
+    const m = new RegExp(`\\b(?:${colour})\\s+(?:${noun})\\b|\\b(?:${verb})\\s+(?:in\\s+)?(?:${colour})\\b`, "i").exec(s);
+    return m ? [`C14: a colour is not a pointer (WCAG 1.3.3, 1.4.1): say where in words ("Each failed row"), not by colour ("${m[0]}")`] : []; } },
   // C16: a claim the product cannot back
   { id: "C16-A", rule: "C16", scope: "both", test: (t) => /\b(?:knows everything|understands (?:you|how|your)|guarantee[ds]?|accurate (?:answers?|results?)|always (?:right|correct|accurate)|never (?:wrong|makes? mistakes?)|100% (?:accurate|correct|private|safe)|perfect(?:ly)?|flawless(?:ly)?|effortless(?:ly)?|revolutionary|cutting-edge|state-of-the-art|best-in-class|world-class)\b/i.test(t) ? ["C16: a claim the product cannot back (accuracy, understanding, perfection)"] : [] },
   // C17: an email address or an institution's name typed into a string (branding config holds both)
@@ -833,6 +842,18 @@ export function bareCountHits(text, { source = false } = {}) {
     if (NOT_NOUN.has(noun) || /(ss|us|is)$/.test(noun) || (m[1] && NOT_NOUN.has(m[1]))) continue;
     hits.push(m[0]);
   }
+  return hits;
+}
+
+// The follow-up to the eleventh review: a count helper writes the noun by the count, and a verb that must agree with it does not follow ("{n: count entry} don't look like email addresses"
+// reads "1 entry don't" at n = 1). The verbs that take a number are the ones in the list: the forms of "be", "have" and "do", and the plain verbs a line of this product uses after a
+// count; a participle ("removed", "selected") and a preposition do not agree with anything. A row that has such a count must split the singular (its note says which counts it is for,
+// and a sibling row at the same anchor says the singular without the helper), or the line must be worded so that it reads at every count ("Some entries don't look like email addresses").
+const AGREE_VERB = /^(?:don't|doesn't|aren't|isn't|weren't|wasn't|haven't|hasn't|are|is|were|was|have|has|do|does|need|needs|look|looks|match|matches|remain|remains|fail|fails|exist|exists|contain|contains|appear|appears|stay|stays|seem|seems|show|shows|keep|keeps|expire|expires|belong|belongs|work|works|miss|misses)$/i;
+export function agreeCountHits(text) {
+  const t = String(text).replace(/`[^`]*`/g, " ");
+  const hits = [];
+  for (const m of t.matchAll(/(\{[A-Za-z_][\w.]*:\s*count\s[^}]*\})\s+(?:(?:still|also|now|already|just|all|both|each)\s+)?([A-Za-z']+)/g)) if (AGREE_VERB.test(m[2])) hits.push(`${m[1]} ${m[2]}`);
   return hits;
 }
 

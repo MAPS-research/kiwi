@@ -177,10 +177,10 @@
     "what": "Uploaded {n} of {total: count file}.",
     "c": "partial",
     "why": "The server didn't accept the other {m}.",
-    "fix": "Each red row says why. Try those again.",
+    "fix": "Each failed row says why. Try those again.",
     "m": "Uploaded. Processing continues on the server",
-    "t": "When at least one file failed, in place of A-14.02 (the same source line: the success toast showed even when rows failed). Each failed row keeps its own message (A-14.06). The noun follows the total and is written by the helper (C4).",
-    "r": "C9,C4"
+    "t": "When at least one file failed, in place of A-14.02 (the same source line: the success toast showed even when rows failed). Each failed row keeps its own message (A-14.06). A failed row is the one that shows A-14.06 under its file name, drawn by the design system's inline status as a cross icon and the message (never the only signal, G1), so the line points at a message and not at a colour (C14: WCAG 1.4.1). The noun follows the total and is written by the helper (C4).",
+    "r": "C9,C4,C14"
    },
    {
     "k": "error",
@@ -1115,12 +1115,12 @@
    {
     "k": "error",
     "o": "",
-    "what": "{n: count entry} don't look like email addresses: {list}.",
+    "what": "Some entries don't look like email addresses: {list}.",
     "c": "input",
     "fix": "Correct them, then enroll.",
     "refs": "TD-32",
     "m": "Please enter at least one email address",
-    "t": "When several entries are wrong (n is 2 or more); A-16.18 is the form for one. The helper writes the noun."
+    "t": "When several entries are wrong (n is 2 or more); A-16.18 is the form for one. \"Some entries\" reads right at every count this row is for, so the line carries no count: a count helper before \"don't\" would read \"1 entry don't\" at n = 1 (D3)."
    }
   ]
  },

@@ -1,10 +1,10 @@
 {
  "about": "Written by prove-checks.mjs. check-copy.mjs (R1) reads it: every proof the coverage table names is here and was caught, and codeHash is the hash of the checker, its library, the resolver, the proofs and the TypeScript scanner, so a summary older than a change to any of them is stale.",
- "codeHash": "d5c4c06bd8bbc497",
+ "codeHash": "a1b3c4dd846d9115",
  "unit": {
-  "total": 176,
-  "ok": 176,
-  "controls": 40,
+  "total": 189,
+  "ok": 189,
+  "controls": 45,
   "cases": [
    {
     "id": "U-C1-1",
@@ -885,12 +885,77 @@
     "id": "U-E5-n2",
     "rule": "TESTS",
     "ok": true
+   },
+   {
+    "id": "U-C4-15",
+    "rule": "C4",
+    "ok": true
+   },
+   {
+    "id": "U-C4-16",
+    "rule": "C4",
+    "ok": true
+   },
+   {
+    "id": "U-C4-17",
+    "rule": "C4",
+    "ok": true
+   },
+   {
+    "id": "U-C4-18",
+    "rule": "C4",
+    "ok": true
+   },
+   {
+    "id": "U-C4-n9",
+    "rule": "C4",
+    "ok": true
+   },
+   {
+    "id": "U-C4-n10",
+    "rule": "C4",
+    "ok": true
+   },
+   {
+    "id": "U-C4-n11",
+    "rule": "C4",
+    "ok": true
+   },
+   {
+    "id": "U-C14-7",
+    "rule": "C14",
+    "ok": true
+   },
+   {
+    "id": "U-C14-8",
+    "rule": "C14",
+    "ok": true
+   },
+   {
+    "id": "U-C14-9",
+    "rule": "C14",
+    "ok": true
+   },
+   {
+    "id": "U-C14-10",
+    "rule": "C14",
+    "ok": true
+   },
+   {
+    "id": "U-C14-n3",
+    "rule": "C14",
+    "ok": true
+   },
+   {
+    "id": "U-C14-n4",
+    "rule": "C14",
+    "ok": true
    }
   ]
  },
  "e2e": {
-  "total": 212,
-  "caught": 212,
+  "total": 229,
+  "caught": 229,
   "baselineClean": true,
   "cases": [
    {
@@ -1111,6 +1176,13 @@
     "ok": true
    },
    {
+    "id": "E-C14-kept-1",
+    "rule": "C14",
+    "corpus": "kept",
+    "expect": "H17",
+    "ok": true
+   },
+   {
     "id": "E-C14-new-1",
     "rule": "C14",
     "corpus": "new",
@@ -1125,7 +1197,21 @@
     "ok": true
    },
    {
+    "id": "E-C14-new-3",
+    "rule": "C14",
+    "corpus": "new",
+    "expect": "B1",
+    "ok": true
+   },
+   {
     "id": "E-C14-src-1",
+    "rule": "C14",
+    "corpus": "source",
+    "expect": "H1",
+    "ok": true
+   },
+   {
+    "id": "E-C14-src-2",
     "rule": "C14",
     "corpus": "source",
     "expect": "H1",
@@ -1328,6 +1414,13 @@
     "ok": true
    },
    {
+    "id": "E-C4-kept-5",
+    "rule": "C4",
+    "corpus": "kept",
+    "expect": "H17",
+    "ok": true
+   },
+   {
     "id": "E-C4-new-1",
     "rule": "C4",
     "corpus": "new",
@@ -1374,6 +1467,20 @@
     "rule": "C4",
     "corpus": "new",
     "expect": "D3",
+    "ok": true
+   },
+   {
+    "id": "E-C4-new-8",
+    "rule": "C4",
+    "corpus": "new",
+    "expect": "D3",
+    "ok": true
+   },
+   {
+    "id": "E-C4-new-9",
+    "rule": "C4",
+    "corpus": "new",
+    "expect": "!D3",
     "ok": true
    },
    {
@@ -1888,6 +1995,27 @@
     "ok": true
    },
    {
+    "id": "E-ERR-14",
+    "rule": "ERR",
+    "corpus": "guide",
+    "expect": "F22",
+    "ok": true
+   },
+   {
+    "id": "E-ERR-15",
+    "rule": "ERR",
+    "corpus": "guide",
+    "expect": "F22",
+    "ok": true
+   },
+   {
+    "id": "E-ERR-16",
+    "rule": "ERR",
+    "corpus": "guide",
+    "expect": "F22",
+    "ok": true
+   },
+   {
     "id": "E-ERR-2",
     "rule": "ERR",
     "corpus": "data",
@@ -2137,6 +2265,62 @@
     "rule": "XSEC",
     "corpus": "data",
     "expect": "F27",
+    "ok": true
+   },
+   {
+    "id": "E-F28-1",
+    "rule": "XSEC",
+    "corpus": "data",
+    "expect": "F28",
+    "ok": true
+   },
+   {
+    "id": "E-F28-2",
+    "rule": "XSEC",
+    "corpus": "data",
+    "expect": "F28",
+    "ok": true
+   },
+   {
+    "id": "E-F28-3",
+    "rule": "XSEC",
+    "corpus": "data",
+    "expect": "F28",
+    "ok": true
+   },
+   {
+    "id": "E-F28-4",
+    "rule": "XSEC",
+    "corpus": "guide",
+    "expect": "F28",
+    "ok": true
+   },
+   {
+    "id": "E-F28-5",
+    "rule": "XSEC",
+    "corpus": "guide",
+    "expect": "F28",
+    "ok": true
+   },
+   {
+    "id": "E-F28-6",
+    "rule": "XSEC",
+    "corpus": "guide",
+    "expect": "F28",
+    "ok": true
+   },
+   {
+    "id": "E-F28-7",
+    "rule": "XSEC",
+    "corpus": "data",
+    "expect": "F28",
+    "ok": true
+   },
+   {
+    "id": "E-F28-8",
+    "rule": "XSEC",
+    "corpus": "guide",
+    "expect": "F28",
     "ok": true
    },
    {

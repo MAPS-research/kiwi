@@ -675,6 +675,11 @@
    "text": "Enter a date like 17 Oct 2026.",
    "kind": "wrong",
    "why": "an input error that opens with the correction, the form D1 fails (§ Errors): the first sentence DS.45 had before the tenth review; never shipped"
+  },
+  {
+   "text": "Each red row says why",
+   "kind": "wrong",
+   "why": "a line that points at a row by its colour, the left side of C14's second wrong to right pair (WCAG 1.4.1); never shipped"
   }
  ]
 }

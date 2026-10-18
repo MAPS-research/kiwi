@@ -291,7 +291,7 @@
      "rules": [
       "C14"
      ],
-     "why": "The field already has the name \"Search classes\"; the placeholder said a second thing for the same control. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "The field already has the name \"Search classes\"; the placeholder said a second thing for the same control. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "The field already has the name \"Search classes\"; the placeholder said a second thing for the same control.",
      "refs": "",
      "tests": [
@@ -1866,7 +1866,7 @@
      "rules": [
       "C14"
      ],
-     "why": "No em dash; one idea per sentence; \"compare\" names the goal. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "No em dash; one idea per sentence; \"compare\" names the goal. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "No em dash; one idea per sentence; \"compare\" names the goal.",
      "refs": "",
      "tests": [],
@@ -4256,7 +4256,7 @@
      "rules": [
       "C14"
      ],
-     "why": "No \"I\", no \"config\"; says who does what. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "No \"I\", no \"config\"; says who does what. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "No \"I\", no \"config\"; says who does what.",
      "refs": "",
      "tests": [],
@@ -8234,7 +8234,7 @@
      "rules": [
       "C14"
      ],
-     "why": "The disabled-reason line the button lacked: it names the control that unlocks it. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "The disabled-reason line the button lacked: it names the control that unlocks it. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "The disabled-reason line the button lacked: it names the control that unlocks it.",
      "refs": "SF-05",
      "tests": [],
@@ -11084,7 +11084,7 @@
      "rules": [
       "C14"
      ],
-     "why": "The reason Apply is disabled while the range is invalid (the disabled-reason pattern). (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "The reason Apply is disabled while the range is invalid (the disabled-reason pattern). (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "The reason Apply is disabled while the range is invalid (the disabled-reason pattern).",
      "refs": "",
      "tests": [],
@@ -12399,7 +12399,7 @@
      "rules": [
       "C14"
      ],
-     "why": "A placeholder is an example, not a second label (C14). (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "A placeholder is an example, not a second label (C14). (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "A placeholder is an example, not a second label (C14).",
      "refs": "",
      "tests": [],
@@ -12472,7 +12472,7 @@
      "rules": [
       "C14"
      ],
-     "why": "The reason Send is disabled until both fields hold text (the disabled-reason pattern). (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "The reason Send is disabled until both fields hold text (the disabled-reason pattern). (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "The reason Send is disabled until both fields hold text (the disabled-reason pattern).",
      "refs": "",
      "tests": [],
@@ -13346,7 +13346,7 @@
      "rules": [
       "C14"
      ],
-     "why": "The helper repeated its label (TD-32's pattern); it now adds what the field does. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "The helper repeated its label (TD-32's pattern); it now adds what the field does. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "The helper repeated its label (TD-32's pattern); it now adds what the field does.",
      "refs": "TD-32",
      "tests": [],
@@ -13381,7 +13381,7 @@
      "rules": [
       "C14"
      ],
-     "why": "Terminology, and the optional mark moves into the label (C14). (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "Terminology, and the optional mark moves into the label (C14). (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "Terminology, and the optional mark moves into the label (C14).",
      "refs": "",
      "tests": [],
@@ -13416,7 +13416,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "",
      "tests": [],
@@ -13486,7 +13486,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "TD-32",
      "tests": [],
@@ -13591,7 +13591,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "TD-32",
      "tests": [],
@@ -13661,7 +13661,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "TD-32",
      "tests": [],
@@ -13801,7 +13801,7 @@
      "rules": [
       "C14"
      ],
-     "why": "Says what the template is for, not how it looks. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "Says what the template is for, not how it looks. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "Says what the template is for, not how it looks.",
      "refs": "",
      "tests": [],
@@ -13836,7 +13836,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "TD-37",
      "tests": [],
@@ -17510,7 +17510,7 @@
      "rules": [
       "C14"
      ],
-     "why": "Says what happens, not just that the field is optional. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "Says what happens, not just that the field is optional. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "Says what happens, not just that the field is optional.",
      "refs": "",
      "tests": [],
@@ -17545,7 +17545,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "",
      "tests": [
@@ -17662,7 +17662,7 @@
      "rules": [
       "C14"
      ],
-     "why": "On the MCP pages the record is \"MCP server\" in full (§ Terminology). (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "On the MCP pages the record is \"MCP server\" in full (§ Terminology). (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
      "refs": "",
      "tests": [],
@@ -19142,7 +19142,7 @@
      "rules": [
       "C14"
      ],
-     "why": "A placeholder is an example, not an instruction; \"optional\" moves to the label. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "A placeholder is an example, not an instruction; \"optional\" moves to the label. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "A placeholder is an example, not an instruction; \"optional\" moves to the label.",
      "refs": "",
      "tests": [
@@ -19188,7 +19188,7 @@
      "rules": [
       "C14"
      ],
-     "why": "An optional field says so in its label. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "An optional field says so in its label. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "An optional field says so in its label.",
      "refs": "",
      "tests": [
@@ -20240,7 +20240,7 @@
       "C14",
       "C6"
      ],
-     "why": "A registered app's prompt keeps \"prompt\", and its text keeps \"system prompt\": the SDK's word (`kiwi-app-sdk/README.md:111`: `contextualChat` \"runs an admin-approved prompt\"), the MCP tools' (`kiwi_app_list_prompts`) and the API's `systemPrompt` field, which the apps' developers use. \"Instructions\" is the tutor's and the experiment form's word (C6). (C14, C6: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "A registered app's prompt keeps \"prompt\", and its text keeps \"system prompt\": the SDK's word (`kiwi-app-sdk/README.md:111`: `contextualChat` \"runs an admin-approved prompt\"), the MCP tools' (`kiwi_app_list_prompts`) and the API's `systemPrompt` field, which the apps' developers use. \"Instructions\" is the tutor's and the experiment form's word (C6). (C14, C6: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "A registered app's prompt keeps \"prompt\", and its text keeps \"system prompt\": the SDK's word (`kiwi-app-sdk/README.md:111`: `contextualChat` \"runs an admin-approved prompt\"), the MCP tools' (`kiwi_app_list_prompts`) and the API's `systemPrompt` field, which the apps' developers use. \"Instructions\" is the tutor's and the experiment form's word (C6).",
      "refs": "",
      "tests": [],
@@ -20525,7 +20525,7 @@
      "rules": [
       "C14"
      ],
-     "why": "Says what the identifier is for. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "Says what the identifier is for. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "Says what the identifier is for.",
      "refs": "",
      "tests": [],
@@ -21762,7 +21762,7 @@
      "rules": [
       "C14"
      ],
-     "why": "\"e.g.\" without the comma, as in the guide's own examples. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "\"e.g.\" without the comma, as in the guide's own examples. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "\"e.g.\" without the comma, as in the guide's own examples.",
      "refs": "",
      "tests": [],
@@ -21798,7 +21798,7 @@
      "rules": [
       "C14"
      ],
-     "why": "\"e.g.\" without the comma. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "\"e.g.\" without the comma. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "\"e.g.\" without the comma.",
      "refs": "",
      "tests": [],
@@ -21833,7 +21833,7 @@
      "rules": [
       "C14"
      ],
-     "why": "\"e.g.\" without the comma. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "\"e.g.\" without the comma. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "\"e.g.\" without the comma.",
      "refs": "",
      "tests": [],
@@ -21869,7 +21869,7 @@
       "C14",
       "C16"
      ],
-     "why": "The label says \"Base URL (optional)\"; the helper says what the address is, makes no claim about what Kiwi does with it (C16), and ends with its full stop. (C14, C16: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "The label says \"Base URL (optional)\"; the helper says what the address is, makes no claim about what Kiwi does with it (C16), and ends with its full stop. (C14, C16: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "The label says \"Base URL (optional)\"; the helper says what the address is, makes no claim about what Kiwi does with it (C16), and ends with its full stop.",
      "refs": "",
      "tests": [],
@@ -21905,7 +21905,7 @@
      "rules": [
       "C14"
      ],
-     "why": "An example, not an instruction; the button says what is added. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "An example, not an instruction; the button says what is added. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "An example, not an instruction; the button says what is added.",
      "refs": "",
      "tests": [],
@@ -21942,7 +21942,7 @@
       "C14",
       "C15"
      ],
-     "why": "The field has no visible label, only a placeholder; its accessible name is \"Scope\", and the section's own text above names the list. (C14, C15: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "The field has no visible label, only a placeholder; its accessible name is \"Scope\", and the section's own text above names the list. (C14, C15: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "The field has no visible label, only a placeholder; its accessible name is \"Scope\", and the section's own text above names the list.",
      "refs": "",
      "tests": [],
@@ -25075,7 +25075,7 @@
      "rules": [
       "C14"
      ],
-     "why": "The helper carries the format; a helper never repeats the label (C14). (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "The helper carries the format; a helper never repeats the label (C14). (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "The helper carries the format; a helper never repeats the label (C14).",
      "refs": "",
      "tests": [],
@@ -25112,7 +25112,7 @@
       "C14",
       "C5"
      ],
-     "why": "Two short sentences, each with its full stop. (C14, C5: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "Two short sentences, each with its full stop. (C14, C5: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "Two short sentences, each with its full stop.",
      "refs": "",
      "tests": [],
@@ -25183,7 +25183,7 @@
       "C14",
       "C5"
      ],
-     "why": "The label says \"Token name\"; the helper says what makes a good one. (C14, C5: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "The label says \"Token name\"; the helper says what makes a good one. (C14, C5: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "The label says \"Token name\"; the helper says what makes a good one.",
      "refs": "",
      "tests": [],
@@ -26517,7 +26517,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "",
      "tests": [],
@@ -26552,7 +26552,7 @@
      "rules": [
       "C14"
      ],
-     "why": "The interval was not stated on screen. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "The interval was not stated on screen. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "The interval was not stated on screen.",
      "refs": "",
      "tests": [],
@@ -27741,7 +27741,7 @@
      "rules": [
       "C14"
      ],
-     "why": "Plain words for the same four jobs. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "Plain words for the same four jobs. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "Plain words for the same four jobs.",
      "refs": "",
      "tests": [],
@@ -28026,7 +28026,7 @@
      "rules": [
       "C14"
      ],
-     "why": "The reason Export CSV is disabled when no rows match (the disabled-reason pattern). (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "The reason Export CSV is disabled when no rows match (the disabled-reason pattern). (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "The reason Export CSV is disabled when no rows match (the disabled-reason pattern).",
      "refs": "",
      "tests": [],
@@ -31036,7 +31036,7 @@
      "rules": [
       "C14"
      ],
-     "why": "Short enough not to truncate at 960 px (TD-25). (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "Short enough not to truncate at 960 px (TD-25). (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "Short enough not to truncate at 960 px (TD-25).",
      "refs": "TD-25",
      "tests": [],
@@ -31094,7 +31094,7 @@
      "group": "A-14",
      "kind": "error",
      "old": "",
-     "new": "Uploaded {n} of {total: count file}. The server didn't accept the other {m}. Each red row says why. Try those again.",
+     "new": "Uploaded {n} of {total: count file}. The server didn't accept the other {m}. Each failed row says why. Try those again.",
      "anchors": [
       {
        "file": "src/pages/admin/Materials.tsx",
@@ -31105,10 +31105,11 @@
      ],
      "rules": [
       "C9",
-      "C4"
+      "C4",
+      "C14"
      ],
-     "why": "When at least one file failed, in place of A-14.02 (the same source line: the success toast showed even when rows failed). Each failed row keeps its own message (A-14.06). The noun follows the total and is written by the helper (C4). (C9, C4: Yifrah; Nielsen #9)",
-     "note": "When at least one file failed, in place of A-14.02 (the same source line: the success toast showed even when rows failed). Each failed row keeps its own message (A-14.06). The noun follows the total and is written by the helper (C4).",
+     "why": "When at least one file failed, in place of A-14.02 (the same source line: the success toast showed even when rows failed). Each failed row keeps its own message (A-14.06). A failed row is the one that shows A-14.06 under its file name, drawn by the design system's inline status as a cross icon and the message (never the only signal, G1), so the line points at a message and not at a colour (C14: WCAG 1.4.1). The noun follows the total and is written by the helper (C4). (C9, C4, C14: Yifrah; Nielsen #9)",
+     "note": "When at least one file failed, in place of A-14.02 (the same source line: the success toast showed even when rows failed). Each failed row keeps its own message (A-14.06). A failed row is the one that shows A-14.06 under its file name, drawn by the design system's inline status as a cross icon and the message (never the only signal, G1), so the line points at a message and not at a colour (C14: WCAG 1.4.1). The noun follows the total and is written by the helper (C4).",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -31127,7 +31128,7 @@
       "what": "Uploaded {n} of {total: count file}.",
       "c": "partial",
       "why": "The server didn't accept the other {m}.",
-      "fix": "Each red row says why. Try those again."
+      "fix": "Each failed row says why. Try those again."
      }
     },
     {
@@ -32782,7 +32783,7 @@
      "rules": [
       "C14"
      ],
-     "why": "The label drops the typed asterisk and the instruction; the helper carries the instruction (C14). (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "The label drops the typed asterisk and the instruction; the helper carries the instruction (C14). (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "The label drops the typed asterisk and the instruction; the helper carries the instruction (C14).",
      "refs": "TD-32",
      "tests": [
@@ -32828,7 +32829,7 @@
      "rules": [
       "C14"
      ],
-     "why": "The helper repeated the label; it now says what happens to an address with no account (the backend records it as a pending enrollment, `class/class.service.ts:197-199`). (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "The helper repeated the label; it now says what happens to an address with no account (the backend records it as a pending enrollment, `class/class.service.ts:197-199`). (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "The helper repeated the label; it now says what happens to an address with no account (the backend records it as a pending enrollment, `class/class.service.ts:197-199`).",
      "refs": "TD-32",
      "tests": [],
@@ -33060,7 +33061,7 @@
      "rules": [
       "C14"
      ],
-     "why": "The reason Remove is disabled while nothing is selected (the disabled-reason pattern). (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "The reason Remove is disabled while nothing is selected (the disabled-reason pattern). (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "The reason Remove is disabled while nothing is selected (the disabled-reason pattern).",
      "refs": "TD-34",
      "tests": [],
@@ -33864,7 +33865,7 @@
      "rules": [
       "C14"
      ],
-     "why": "Matches the subject the template produces. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "Matches the subject the template produces. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "Matches the subject the template produces.",
      "refs": "SF-23",
      "tests": [],
@@ -33934,7 +33935,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "",
      "tests": [],
@@ -34758,7 +34759,7 @@
      "group": "A-16",
      "kind": "error",
      "old": "",
-     "new": "{n: count entry} don't look like email addresses: {list}. Correct them, then enroll.",
+     "new": "Some entries don't look like email addresses: {list}. Correct them, then enroll.",
      "anchors": [
       {
        "file": "src/pages/admin/ClassEnroll.tsx",
@@ -34770,8 +34771,8 @@
      "rules": [
       "C9"
      ],
-     "why": "When several entries are wrong (n is 2 or more); A-16.18 is the form for one. The helper writes the noun. (C9: Yifrah; Nielsen #9)",
-     "note": "When several entries are wrong (n is 2 or more); A-16.18 is the form for one. The helper writes the noun.",
+     "why": "When several entries are wrong (n is 2 or more); A-16.18 is the form for one. \"Some entries\" reads right at every count this row is for, so the line carries no count: a count helper before \"don't\" would read \"1 entry don't\" at n = 1 (D3). (C9: Yifrah; Nielsen #9)",
+     "note": "When several entries are wrong (n is 2 or more); A-16.18 is the form for one. \"Some entries\" reads right at every count this row is for, so the line carries no count: a count helper before \"don't\" would read \"1 entry don't\" at n = 1 (D3).",
      "refs": "TD-32",
      "tests": [],
      "tq": null,
@@ -34787,7 +34788,7 @@
      "uses": null,
      "lkVals": null,
      "err": {
-      "what": "{n: count entry} don't look like email addresses: {list}.",
+      "what": "Some entries don't look like email addresses: {list}.",
       "c": "input",
       "fix": "Correct them, then enroll."
      }
@@ -35256,7 +35257,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "",
      "tests": [],
@@ -37130,7 +37131,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "SF-30",
      "tests": [],
@@ -37820,7 +37821,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "SF-30",
      "tests": [],
@@ -37855,7 +37856,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "SF-30",
      "tests": [],
@@ -38036,7 +38037,7 @@
      "rules": [
       "C14"
      ],
-     "why": "The reason Remove is disabled at two variants. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "The reason Remove is disabled at two variants. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "The reason Remove is disabled at two variants.",
      "refs": "",
      "tests": [],
@@ -38071,7 +38072,7 @@
      "rules": [
       "C14"
      ],
-     "why": "No text said what the Σ chip must show. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "No text said what the Σ chip must show. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "No text said what the Σ chip must show.",
      "refs": "",
      "tests": [],
@@ -38141,7 +38142,7 @@
      "rules": [
       "C14"
      ],
-     "why": "No \"Invalid\". (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "No \"Invalid\". (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "No \"Invalid\".",
      "refs": "",
      "tests": [],
@@ -38176,7 +38177,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "",
      "tests": [],
@@ -39073,7 +39074,7 @@
       "C14",
       "C1"
      ],
-     "why": "An example, not a description; the format moves to a helper. (C14, C1: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "An example, not a description; the format moves to a helper. (C14, C1: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "An example, not a description; the format moves to a helper.",
      "refs": "",
      "tests": [],
@@ -39108,7 +39109,7 @@
      "rules": [
       "C14"
      ],
-     "why": "The format the placeholder used to carry. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "The format the placeholder used to carry. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "The format the placeholder used to carry.",
      "refs": "",
      "tests": [],
@@ -39426,7 +39427,7 @@
       "C14",
       "C1"
      ],
-     "why": "The caption points to the button by the name the screen now spells (\"Reshuffle groups\", C1); plain words for \"re-rolls\". (C14, C1: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "The caption points to the button by the name the screen now spells (\"Reshuffle groups\", C1); plain words for \"re-rolls\". (C14, C1: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "The caption points to the button by the name the screen now spells (\"Reshuffle groups\", C1); plain words for \"re-rolls\".",
      "refs": "",
      "tests": [],
@@ -39462,7 +39463,7 @@
       "C14",
       "C1"
      ],
-     "why": "When the groups are the manual lists, the Allocation field is disabled because the backend ignores it and assigns by the member lists (`experiment/experiment.service.ts:77`, `:415`; the field is disabled at `ExperimentForm.tsx:938`). A helper is a sentence with a capital and a full stop, and \"roster\" is the class roster elsewhere (A-16), so the lists are named instead. (C14, C1: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "When the groups are the manual lists, the Allocation field is disabled because the backend ignores it and assigns by the member lists (`experiment/experiment.service.ts:77`, `:415`; the field is disabled at `ExperimentForm.tsx:938`). A helper is a sentence with a capital and a full stop, and \"roster\" is the class roster elsewhere (A-16), so the lists are named instead. (C14, C1: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "When the groups are the manual lists, the Allocation field is disabled because the backend ignores it and assigns by the member lists (`experiment/experiment.service.ts:77`, `:415`; the field is disabled at `ExperimentForm.tsx:938`). A helper is a sentence with a capital and a full stop, and \"roster\" is the class roster elsewhere (A-16), so the lists are named instead.",
      "refs": "",
      "tests": [],
@@ -41089,7 +41090,7 @@
      "rules": [
       "C14"
      ],
-     "why": "The modal also unassigns, with no warning. On the MCP pages the record is \"MCP server\" in full (§ Terminology). (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "The modal also unassigns, with no warning. On the MCP pages the record is \"MCP server\" in full (§ Terminology). (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "The modal also unassigns, with no warning. On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
      "refs": "SF-40",
      "tests": [],
@@ -42789,7 +42790,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "SF-39",
      "tests": [],
@@ -42964,7 +42965,7 @@
      "rules": [
       "C14"
      ],
-     "why": "One name for the maximum scopes. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "One name for the maximum scopes. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "One name for the maximum scopes.",
      "refs": "SF-39",
      "tests": [],
@@ -43735,7 +43736,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "",
      "tests": [],
@@ -43984,7 +43985,7 @@
      "rules": [
       "C14"
      ],
-     "why": "The pins had no legend (a Stage 1 hook in the page spec). (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "The pins had no legend (a Stage 1 hook in the page spec). (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "The pins had no legend (a Stage 1 hook in the page spec).",
      "refs": "",
      "tests": [],
@@ -44680,7 +44681,7 @@
      "rules": [
       "C14"
      ],
-     "why": "An example, as in the new-summary field (A-24.21). (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "An example, as in the new-summary field (A-24.21). (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "An example, as in the new-summary field (A-24.21).",
      "refs": "",
      "tests": [],
@@ -45223,7 +45224,7 @@
      "rules": [
       "C14"
      ],
-     "why": "States the reason and its effect (the disabled-reason pattern). (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "States the reason and its effect (the disabled-reason pattern). (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "States the reason and its effect (the disabled-reason pattern).",
      "refs": "",
      "tests": [],
@@ -45255,7 +45256,7 @@
      "rules": [
       "C14"
      ],
-     "why": "What happened, why, and what it means. When storage is blocked the choice lives in memory, so it lasts until the page is reloaded; \"for the session\" in `§ The Display menu` means this. The caption does not say \"until you close this tab\": a reload also clears it. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "What happened, why, and what it means. When storage is blocked the choice lives in memory, so it lasts until the page is reloaded; \"for the session\" in `§ The Display menu` means this. The caption does not say \"until you close this tab\": a reload also clears it. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "What happened, why, and what it means. When storage is blocked the choice lives in memory, so it lasts until the page is reloaded; \"for the session\" in `§ The Display menu` means this. The caption does not say \"until you close this tab\": a reload also clears it.",
      "refs": "",
      "tests": [],
@@ -45287,7 +45288,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "",
      "tests": [],
@@ -45351,7 +45352,7 @@
      "rules": [
       "C14"
      ],
-     "why": "A reason specific to its control, never a page label. (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "A reason specific to its control, never a page label. (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "A reason specific to its control, never a page label.",
      "refs": "",
      "tests": [],
@@ -45383,7 +45384,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "",
      "tests": [],
@@ -45493,7 +45494,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "",
      "tests": [],
@@ -45525,7 +45526,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "",
      "tests": [],
@@ -46219,7 +46220,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "",
      "tests": [],
@@ -46315,7 +46316,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "",
      "tests": [],
@@ -46347,7 +46348,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "",
      "tests": [],
@@ -46379,7 +46380,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "",
      "tests": [],
@@ -46411,7 +46412,7 @@
      "rules": [
       "C14"
      ],
-     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2; Yifrah)",
+     "why": "a helper adds information; a placeholder is an example (C14: Redish; WCAG 3.3.2, 1.3.3, 1.4.1; Yifrah)",
      "note": "",
      "refs": "",
      "tests": [],

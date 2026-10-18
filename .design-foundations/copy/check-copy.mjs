@@ -4,12 +4,12 @@
 //   node check-copy.mjs --write    also write generated/check-summary.json and the Evidence table in DESIGN.md
 //
 // Reads (never writes, except with --write): ./revisions/*.json, the source files they name, kiwi-ui/JOURNEY.md, kiwi-ui/DESIGN.md,
-// and `git diff` of those two files against HEAD (the lock check). No path in this file is machine-specific.
+// and `git diff` of those two files against the commit before Phase 5 (the lock check: HEAD holds Phase 5 since it was committed). No path in this file is machine-specific.
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import {
-  ROOT, UI, DESIGN_MD, JOURNEY_MD, OUT_DIR, HERE, RULES, CAUSES, CAUSES_MCP, MCP_GROUPS, UI_REFS, lintString, lintSource, normText, PROPER, loadTestInventory, rowObject, readSource, lineOfOffset, loadIdentifiers, SINGLE_VERB_OK, EXIT_WORDS, CAUSE_STEMS, bareCountHits, NOT_NOUN, TWO_WORD_OK, NON_OBJECT, namesObject, SAFE_LINE, WRITE_VERBS, EXEMPT_VERBS, citesIn, anchorVerdict, oldKeys, readingKey, isTextReading, SCOPED_TERMS, scopedTermHits, AUDIT, codeHash, manualPopulation, reconcileTests, reconcileText,
+  ROOT, UI, DESIGN_MD, JOURNEY_MD, OUT_DIR, HERE, RULES, CAUSES, CAUSES_MCP, MCP_GROUPS, UI_REFS, lintString, lintSource, normText, PROPER, agreeCountHits, loadTestInventory, rowObject, readSource, lineOfOffset, loadIdentifiers, SINGLE_VERB_OK, EXIT_WORDS, CAUSE_STEMS, bareCountHits, NOT_NOUN, TWO_WORD_OK, NON_OBJECT, namesObject, SAFE_LINE, WRITE_VERBS, EXEMPT_VERBS, citesIn, anchorVerdict, oldKeys, readingKey, isTextReading, SCOPED_TERMS, scopedTermHits, AUDIT, codeHash, manualPopulation, reconcileTests, reconcileText,
 } from "./copy-lib.mjs";
 import { resolveAll } from "./resolve.mjs";
 import { scanSources } from "./scan-ts.mjs";
@@ -171,7 +171,20 @@ check("D2", "a string that says something could not be done is an error row (wha
 // source line that shows a count in H10, and over the guide's own examples in F20.
 const pluralFail = [];
 for (const r of rows) for (const h of bareCountHits(r.new)) pluralFail.push(`${r.id}: "${h}" in "${r.new.slice(0, 70)}": write the count with the helper, {n: count noun}`);
-check("D3", "no count slot stands bare before a plural noun in a new string (\"{n} events\" reads \"1 events\"): the helper writes the noun, {n: count event}, with or without a note (C4)", pluralFail.length === 0, pluralFail.length ? `\n        ${list(pluralFail, 40)}` : `${rows.length} new strings read; every count with a noun uses the helper`);
+// The follow-up to the eleventh review: the helper writes the noun by the count, and a verb that must agree with it cannot follow ("{n: count entry} don't look like email addresses" reads
+// "1 entry don't"). A row may keep such a count only when it splits the singular: its note says which counts it is for ("n is 2 or more"), and a sibling row at the same anchor says the
+// singular without the helper (A-16.18 beside A-16.55 was the pair). Otherwise the line is worded to read at every count ("Some entries don't look like email addresses").
+const sameAnchor = (a, b) => a.anchors.some((x) => x.file && b.anchors.some((y) => y.file === x.file && x.lines.some((l) => y.lines.includes(l))));
+let agreeRead = 0, agreeSplit = 0;
+for (const r of rows) for (const h of agreeCountHits(r.new)) {
+  agreeRead++;
+  const ranged = /\b[a-z] is (?:2 or more|1)\b/.test(r.note);
+  const sibling = rows.find((o) => o !== r && o.group === r.group && sameAnchor(o, r) && !agreeCountHits(o.new).length && !/\{[A-Za-z_][\w.]*:\s*count\b/.test(o.new));
+  if (ranged && sibling) { agreeSplit++; continue; }
+  pluralFail.push(`${r.id}: "${h}" in "${r.new.slice(0, 70)}": a verb that agrees with the count reads wrong at the other number ("1 entry don't"); word the line to read at every count ("Some entries don't…"), or split the singular into a row of its own and say in the note which counts this row is for ("n is 2 or more")`);
+}
+stats.agreeCounts = { read: agreeRead, split: agreeSplit };
+check("D3", "no count slot stands bare before a plural noun in a new string (\"{n} events\" reads \"1 events\"): the helper writes the noun, {n: count event}, with or without a note (C4); and no verb that must agree follows the helper (\"{n: count entry} don't\" reads \"1 entry don't\") unless the row splits the singular", pluralFail.length === 0, pluralFail.length ? `\n        ${list(pluralFail, 40)}` : `${rows.length} new strings read; every count with a noun uses the helper, and ${agreeRead} counts are followed by a verb that agrees (${agreeSplit} of them in a row that splits the singular)`);
 // D6: no New string holds an alternation of forms: not "student(s)", not "1 class, or {n} classes", not "{enabled or disabled}". A count writes its noun
 // as `{n: count student}`; a value that alternates is one row per value, each saying when it shows (E7).
 const altRes = [
@@ -1019,6 +1032,10 @@ stats.crossSection = { regions: xReport, declared: docStrings.length, byKind: Ob
   if (!/Show full message/.test(c10)) bad.push("C10 does not mention the touch control");
   if (!/\(6\) on a touch screen[^;]*"Show full message"[^;]*"Hide full message"/.test(hand)) bad.push("the messages hand-off does not specify the touch control");
   if (!/\(5\) the backend writes any message it returns in a response body for the person who reads it/.test(hand)) bad.push("the messages hand-off has no backend requirement for user-safe messages");
+  // the follow-up to the eleventh review: the clamp is a focusable element, so a keyboard user and a screen reader reach what it hides; § Errors, C10 and the hand-off all say so
+  if (!/The clamped element is focusable \(`tabindex="0"`\) and its accessible description is the full text/.test(errT)) bad.push("§ Errors does not say that the clamped element is focusable (tabindex=\"0\") and that its accessible description is the full text");
+  if (!/the clamp a focusable element whose accessible description is the full text/.test(c10)) bad.push("C10 does not say that the clamp is a focusable element whose accessible description is the full text");
+  if (!/\(2\) clamped server text \(C10\) is a focusable element \(`tabIndex=\{0\}`\) whose accessible description is the full text/.test(hand)) bad.push("the messages hand-off does not make the clamped server text a focusable element with the full text as its accessible description");
   if (!/Only a message the backend wrote for the person who reads it is quoted/.test(errT)) bad.push("§ Errors does not say that only a user-safe message is quoted");
   if (/A-14\.34/.test(voice)) bad.push("the hand-off still cites A-14.34, a kept row with no index entry");
   const s10 = groups.find((g) => g.id === "S-10");
@@ -1033,7 +1050,7 @@ stats.crossSection = { regions: xReport, declared: docStrings.length, byKind: Ob
   const sr5 = groups.find((g) => g.id === "SR-5").rowsResolved[0], sr61 = groups.find((g) => g.id === "SR-6").rowsResolved[0];
   if (sr5.new !== sr61.new) bad.push(`the sign-in aside's line (SR-5.01 "${sr5.new}") and the chat's welcome line (SR-6.01 "${sr61.new}") do not say what Kiwi does in the same words`);
   if (!/Teaching assistant/.test(rows.map((r) => r.new).join("\n"))) bad.push("the role label \"Teaching assistant\" is gone from the rows");
-  check("F22", "the statements the round-5 review asked for are written: the visible \"Show full message\" control on a touch screen, user-safe backend messages in the hand-off, a terminology row for \"assistant\", the way-back controls on existing routes, no cite of a kept row, one string for one state", bad.length === 0, bad.length ? `\n        ${list(bad, 20)}` : "the touch control (DS.51, DS.52), the backend requirement, the assistant row, S-10's note, A-01 and SR-1 agree, SR-5.01 is SR-6.01");
+  check("F22", "the statements the round-5 review asked for are written: the clamped server text is a focusable element with the full text as its accessible description (§ Errors, C10, the hand-off) and has the visible \"Show full message\" control on a touch screen, user-safe backend messages in the hand-off, a terminology row for \"assistant\", the way-back controls on existing routes, no cite of a kept row, one string for one state", bad.length === 0, bad.length ? `\n        ${list(bad, 20)}` : "the focusable clamp and the touch control (DS.51, DS.52), the backend requirement, the assistant row, S-10's note, A-01 and SR-1 agree, SR-5.01 is SR-6.01");
 }
 
 // F23: the statements the seventh review asked for are written (X1 to X6, N-3, N-8). The webhook's Delete is a deactivate in every place that draws it; the guide says what
@@ -1182,6 +1199,36 @@ stats.crossSection = { regions: xReport, declared: docStrings.length, byKind: Ob
   const w28 = row("A-20.28")?.err || {};
   if (!/\bname\b/.test(w28.why || "") || !/\bkey\b/.test(w28.why || "") || !/1\.00/.test(w28.why || "")) bad.push("A-20.28 does not name the rules its setup can break (a name, a key for each variant, allocations that add up to 1.00)");
   check("F27", "the statements the tenth review asked for are written: the DateTimeField's field errors open with what is wrong, S-07.04 and S-07.05 have the Old of their own reading and S-07.05 lists its two asserts, S-05.03 does not point at the password, SR-1.10 says who acts, the Voice section names no archetype, SR-5.02 and SR-5.03 cite a content principle first, and A-20.28 names its rules", bad.length === 0, bad.length ? `\n        ${list(bad, 20)}` : "DS.45 to DS.49, S-07.02 to S-07.05, S-05.03, SR-1.10, SR-5.02, SR-5.03 and A-20.28 are as the review asked; the Voice section names no archetype");
+}
+
+// F28: the statements the follow-up to the eleventh review asked for. (1) A-16.55 reads at every count, with no count helper before a verb that must agree (D3 holds the rule for every row);
+// (2) A-14.03 points at the failed rows in words and its note says which row carries the text status, and C14 says that a line points in words, not by colour (C14-C holds it);
+// (3) the Voice sample "Kiwi repeated this step. It may be stuck." has its cite beside it, and the cited lines hold the detection and the sentence; (4) the Voice section's intro names every
+// touch the lock allows on an earlier section (L1 counts them); (5) the index header says that some New cells show what a control or a formatter displays.
+{
+  const bad = [];
+  const row = (id) => rows.find((r) => r.id === id);
+  const want = (id, text) => { const r = row(id); if (!r || r.new !== text) bad.push(`${id} is ${JSON.stringify(r?.new)}, not ${JSON.stringify(text)}`); };
+  // (1) and (2)
+  want("A-16.55", "Some entries don't look like email addresses: {list}. Correct them, then enroll.");
+  want("A-14.03", "Uploaded {n} of {total: count file}. The server didn't accept the other {m}. Each failed row says why. Try those again.");
+  const n3 = row("A-14.03")?.note || "";
+  if (!/shows A-14\.06 under its file name/.test(n3) || !/cross icon and the message/.test(n3)) bad.push("A-14.03's note does not say which row carries the text status (the one that shows A-14.06 under its file name, with its cross icon)");
+  const c14 = (voice.match(/^\| `C14` \|.*$/m) || [""])[0];
+  if (!/A line that points at a place says where in words, never by a colour or a shape/.test(c14) || !/Each failed row says why\./.test(c14) || !/C14-C/.test(c14)) bad.push("C14 does not say that a line points at a place in words and not by colour (with its example), and that C14-C holds it");
+  // (3)
+  const candid = (voice.match(/^\| \*\*Candid about the AI\*\* \|.*$/m) || [""])[0];
+  if (!/"Kiwi repeated this step\. It may be stuck\." \([^)]*`AgentStepChain\.tsx:206`[^)]*`AgentStepChain\.tsx:354-359`[^)]*\)/.test(candid)) bad.push("the Voice sample \"Kiwi repeated this step. It may be stuck.\" has no cite beside it (AgentStepChain.tsx:206 and :354-359)");
+  const ac = readSource("src/components/Chat/AgentStepChain.tsx");
+  if (!ac || !/repeats\s*>\s*2/.test(ac.lines[205] || "")) bad.push("AgentStepChain.tsx:206 does not hold the detection of a step that repeats more than twice");
+  if (!ac || !/The same step repeated/.test(ac.lines.slice(353, 359).join(" "))) bad.push("AgentStepChain.tsx:354-359 does not draw the sentence the sample quotes (the Old of SR-6.52)");
+  // (4)
+  const introP = (voice.match(/^\*\*Phase 5 \(2026-10-17\), appended under the lock\.\*\*.*$/m) || [""])[0];
+  for (const [re, what] of [[/text-twin column/, "the Companion's text-twin column"], [/principle 4's wording/, "principle 4's wording"], [/the line that called the twins drafts/, "the line that called the twins drafts"], [/draft wording of the Phase 5 hand-off/, "the draft wording of the Phase 5 hand-off"], [/one phrase of the Phase 4 intro/, "the one phrase of the Phase 4 intro"], [/one sentence of the state-table intro/, "the one sentence of the state-table intro"]]) if (!re.test(introP)) bad.push(`the Voice section's intro does not name a touch that the lock allows on an earlier section: ${what}`);
+  // (5)
+  const hdr = indexText.split("\n| ID | Route")[0];
+  if (!/native control/.test(hdr) || !["A-10.43", "A-19.09", "A-14.18"].every((id) => hdr.includes(id))) bad.push("the index header does not say that some New cells show what a control or a formatter displays (A-14.18, A-10.43, A-19.09)");
+  check("F28", "the statements the follow-up to the eleventh review asked for are written: A-16.55 reads at every count, A-14.03 points in words and says which row carries the text status, C14 bans a colour as a pointer, the Voice sample about a repeated step has its cite and the cited lines hold it, the Voice intro names every touch the lock allows, and the index header says that some New cells show a control's or formatter's output", bad.length === 0, bad.length ? `\n        ${list(bad, 20)}` : "A-16.55, A-14.03, C14, the sample's cite (AgentStepChain.tsx:206 and :354-359), the intro's six touches and the index header are as the follow-up asked");
 }
 
 // ---------------------------------------------------------------- 7. the source scan
@@ -1421,6 +1468,7 @@ const keptLints = (text, x = [], listEntry = false, where = {}) => {
   if (NEG_RE.test(text) && !x.includes("not-an-error")) hits.push("D2: says something could not be done");
   for (const [re, w] of ALT_RES) if (re.test(text)) hits.push(w);
   for (const h of bareCountHits(text, { source: true })) hits.push(`C4: a bare count before a plural noun (${h}): write {n: count noun}`);
+  for (const h of agreeCountHits(text)) hits.push(`C4: a verb that must agree follows the count helper (${h}): it reads wrong at one of the two numbers`);
   for (const h of lintString(text, /[.?!…]$/.test(text) && text.split(/\s+/).length > 3 ? "body" : "label")) {
     // the end-punctuation rules need the string's kind, which a kept string does not give; the case, term and mark rules do not
     if (/sentence has no end|a longer message|one-clause result|label ends with a period/.test(h)) continue;
@@ -2147,12 +2195,16 @@ stats.native = nativeSites.length;
 }
 
 // ---------------------------------------------------------------- 8. the lock
+// The lock is Phase 5's: the ways DESIGN.md and JOURNEY.md may differ from what Phase 4 left. So the diff is read against the commit before Phase 5 (aed7b42, "address Phase 4 review
+// minor findings"), not against HEAD. HEAD holds Phase 5 since it was committed (b5a9cf9), so a diff against it shows no change at all, and after a later phase it would show that
+// phase's. A later phase that only appends to the two documents leaves these checks as they are. Only the lock reads git: every other check reads the working tree.
+const LOCK_BASE = "aed7b4291518fff1f54237ba6e49fafc267641c3";
 function git(...args) { try { return execFileSync("git", ["-C", ROOT, ...args], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }); } catch (e) { return null; } }
 const rel = (p) => path.relative(ROOT, p).split(path.sep).join("/");
-const dDiff = git("diff", "-U0", "HEAD", "--", rel(DESIGN_MD));
-if (dDiff === null) check("L1", "DESIGN.md: only the Companion's text-twin cells changed, and the new section was appended", false, "git diff unavailable");
+const dDiff = git("diff", "-U0", LOCK_BASE, "--", rel(DESIGN_MD));
+if (dDiff === null) check("L1", "DESIGN.md: only the Companion's text-twin cells changed, and the new section was appended", false, "git diff against the commit before Phase 5 (aed7b42) is unavailable: is that commit in this clone?");
 else {
-  const headText = git("show", `HEAD:${rel(DESIGN_MD)}`) || "";
+  const headText = git("show", `${LOCK_BASE}:${rel(DESIGN_MD)}`) || "";
   const oldLines = headText.split("\n").length - (headText.endsWith("\n") ? 1 : 0);
   const bad = []; let appended = 0, cellEdits = 0, principleEdits = 0, draftEdits = 0, handoffEdits = 0, introEdits = 0, tableIntroEdits = 0;
   // the Companion state table's intro paragraph said the twins are drafts; the seventh review asked for the final form (one sentence, the coordinator recorded it)
@@ -2191,8 +2243,8 @@ else {
   check("L1", "DESIGN.md: only the Companion's text-twin cells, principle 4, the drafts line, the state-table intro's one sentence, the hand-off's draft wording and the intro's one phrase changed, and the new section was appended", bad.length === 0 && appended > 0 && principleEdits === 1 && draftEdits === 1 && handoffEdits === 1 && introEdits === 1 && tableIntroEdits === 1, bad.length ? list(bad) : `${cellEdits} twin lines edited (last cell only), principle 4 (${principleEdits}), the drafts line (${draftEdits}), the state-table intro's one sentence (${tableIntroEdits}), the hand-off's two draft words (${handoffEdits}) and the intro's one phrase (${introEdits}) reworded, ${appended} lines appended`);
   stats.designDiff = { twinLinesEdited: cellEdits, principleEdits, draftEdits, tableIntroEdits, handoffEdits, introEdits, linesAppended: appended };
 }
-const jDiff = git("diff", "-U0", "HEAD", "--", rel(JOURNEY_MD));
-if (jDiff === null) check("L2", "JOURNEY.md: insertions only, apart from the intro line and the SR-6 Companion bullet's draft strings", false, "git diff unavailable");
+const jDiff = git("diff", "-U0", LOCK_BASE, "--", rel(JOURNEY_MD));
+if (jDiff === null) check("L2", "JOURNEY.md: insertions only, apart from the intro line and the SR-6 Companion bullet's draft strings", false, "git diff against the commit before Phase 5 (aed7b42) is unavailable: is that commit in this clone?");
 else {
   const dl = jDiff.split("\n");
   const removed = dl.filter((l) => l.startsWith("-") && !l.startsWith("---")).map((l) => l.slice(1));
@@ -2206,8 +2258,10 @@ else {
   const other = removed.filter((l) => !intro.includes(l) && !sr6Old.includes(l));
   check("L2", "JOURNEY.md: insertions only, apart from the one intro paragraph that gains a sentence and the SR-6 Companion bullet's draft string, replaced by the final one", other.length === 0 && sr6ok, other.map((l) => l.slice(0, 80)).join(" / ") || (sr6ok ? `${removed.length} lines replaced (the intro paragraph, the SR-6 bullet), ${added.length - 2} lines added` : "the SR-6 bullet changed beyond its draft string"));
 }
-const protectedChanged = git("status", "--porcelain", "--", "kiwi-ui/src", "kiwi-ui/public", "kiwi");
-check("L3", "nothing under kiwi-ui/src, kiwi-ui/public or kiwi/ changed", protectedChanged !== null && protectedChanged.trim() === "", (protectedChanged || "").trim().slice(0, 200));
+// L3 reads the working tree against the same base: a file under the three paths that differs from what Phase 4 left, committed, staged, unstaged or untracked, fails it
+const protectedChanged = git("diff", "--name-only", LOCK_BASE, "--", "kiwi-ui/src", "kiwi-ui/public", "kiwi");
+const protectedNew = git("ls-files", "--others", "--exclude-standard", "--", "kiwi-ui/src", "kiwi-ui/public", "kiwi");
+check("L3", "nothing under kiwi-ui/src, kiwi-ui/public or kiwi/ differs from the commit before Phase 5 (committed, staged, unstaged or untracked)", protectedChanged !== null && protectedNew !== null && protectedChanged.trim() === "" && protectedNew.trim() === "", `${protectedChanged || ""} ${protectedNew || ""}`.trim().slice(0, 200));
 
 // ---------------------------------------------------------------- 9. paths
 const pathRe = /(\/Users\/|\/private\/|\/home\/[a-z]|[A-Z]:\\\\|\/tmp\/claude)/;
@@ -2371,7 +2425,7 @@ if (WRITE) {
     `| Anchors | ${s.sourceAnchored} of ${s.sourceAnchored} source-anchored rows have the old string found at the cited \`file:line\`, and the cited line itself holds it: ${s.anchors?.exact} lines hold it as a whole word or phrase, ${s.anchors?.fragment} a fragment of a sentence the code splits, ${s.anchors?.reading} a whole text that the code builds with a conditional (\`Login failed.\` and \`Login failed. Please contact {SUPPORT_EMAIL}.\` are two, each with its own row; a fragment is not enough there, and a row that drops a slot is the reading without it), ${s.anchors?.exempt} are lookups, code or slots, and ${s.anchors?.stated} in ${s.anchors?.axRows} rows cite a neighbouring line with a stated reason (\`ax\`); a text is found as a word, never inside an identifier; the other ${s.rows - s.sourceAnchored} rows are anchored by section (DESIGN.md, JOURNEY.md) | \`check-copy.mjs\` A1 |`,
     `| Source cites | ${s.noteCites?.notes} cites in the rows' and pages' notes and ${s.noteCites?.voice} in the Voice section (a file name, a colon and a line number) each name one file and a line inside it | K10 |`,
     `| Failed writes | ${s.failedWrites?.total} error rows are failed writes (a save, create, update, send, change, add, upload, assign, enroll or register): ${s.failedWrites?.safe} keep what was typed and say "Your changes are still in the form.", each citing the line that keeps it, and ${s.failedWrites?.nosafe} say why not (an inline switch or a one-click action, a batch, a page that clears the form, a loop that stopped partway); ${s.failedWrites?.cites} cites resolve and ${s.failedWrites?.catchBlocks} catch blocks are read to see that none clears the form; ${s.failedWrites?.exemptRows} other failures open with a verb that is listed as exempt, with its reason | D11 |`,
-    `| Lints on new strings | ${s.rows} strings: case (a capital on the first word, none typed), the marks and dashes, terminology (the table's words, retired page names and the terms scoped to pages), person (we, our, let's), plurals (a count slot bare before a noun, singular or plural, with up to three words between), digits and units, dates (the day before the month, no numeric date, no 12-hour clock), vague and blaming errors, claims and spelling, with ${s.coverage?.auditLints} lints added by the rule-coverage audit; ${s.exempted} carry a written exemption | B1, D2, D3, D4, D6, D8 |`,
+    `| Lints on new strings | ${s.rows} strings: case (a capital on the first word, none typed), the marks and dashes, terminology (the table's words, retired page names and the terms scoped to pages), person (we, our, let's), plurals (a count slot bare before a noun, singular or plural, with up to three words between, and a verb that must agree after a count helper, unless the row splits the singular), digits and units, dates (the day before the month, no numeric date, no 12-hour clock), vague and blaming errors, a colour used as a pointer ("Each red row"), claims and spelling, with ${s.coverage?.auditLints} lints added by the rule-coverage audit; ${s.exempted} carry a written exemption | B1, D2, D3, D4, D6, D8 |`,
     `| Error anatomy | ${s.errors} errors, each with what happened, why and what to do, with no exception: a row that opens with its cause fails; the ${s.inputRows} input-error rows each open with a statement of what is wrong, the rule applied to the field, and then give the correction (one that opens with the instruction fails), and ${s.inputWhyless} of them leave the cause to that statement; by cause ${JSON.stringify(s.byCause)}; a string that says something could not be done is always an error row | D1, D2 |`,
     `| Page coverage | ${s.entries} of 46 entries (7 shared regions, 34 pages, 5 redirects) carry a \`Copy (Phase 5)\` bullet; ${s.noChange} say "no change" with a reason | E1, E2 |`,
     `| Revision index | ${s.rows} rows, one per changed string, none extra; no string is both kept as it is and changed in the same group | E3, E6 |`,
@@ -2413,12 +2467,13 @@ if (WRITE) {
     `| The guide's own examples | ${s.exampleRows?.rows} rows are quoted by the voice attributes' in-range samples and the tone map's samples; each is verified against the code (${s.exampleRows?.verified}, a cite that resolves), declared to claim nothing about the product (${s.exampleRows?.nonClaim}) or true only once a hand-off step the Voice section states is taken (${s.exampleRows?.handoff}); \`§ Rule coverage\` lists them | K11 |`,
     `| The round-8 statements | the refused sign-in opens with what happened like its three siblings (S-05.04), and D1 keeps no cause-first exception; the two counts that read wrong at 1 use the helper (S-02.07, A-04.40) and D3 reads a count slot before a singular noun and before a modifier and a noun; the webhook's state chip is two lookup rows, one value each, and H13 fails a conditional whose two branches are one lookup row; the Tests column lists a part of a sentence only when the query is a whole sentence of it | F24, D1, D3, H13 |`,
     `| The email table | ${s.emailTable?.rows} EM rows occur word for word in \`§ Email templates\`, and the ${s.emailTable?.quoted} quoted strings of its ${s.emailTable?.templates} template rows are each exactly a New text or a kept string: the match is exact, so a sentence cannot lose a part the table keeps (EM.21 once dropped the instructor's name) and a slot is spelled one way ({SUPPORT_EMAIL}) in both | F25, F13 |`,
+    `| The follow-up statements | A-16.55 reads at every count ("Some entries don't look like email addresses") and D3 now fails a verb that must agree after a count helper unless the row splits the singular; A-14.03 says "Each failed row", its note says which row carries the text status, and C14-C fails a colour used as a pointer; the Voice sample about a repeated step has its cite beside it and the cited lines hold the detection (\`AgentStepChain.tsx:206\`) and the sentence (\`:354-359\`); the Voice intro names all six touches that the lock allows; the index header says that some New cells show a control's or formatter's output; the clamped server text is a focusable element (F22) | F28, F22, D3 |`,
     `| The round-10 statements | the DateTimeField's field errors (DS.45 to DS.49) open with what is wrong and give the correction second; S-07.04 and S-07.05 have the Old of their own reading (the text with no support address), S-07.02 and S-07.03 the text with it, and S-07.05 lists the two asserts of \`Login failed.\`; the generic sign-in fallback (S-05.03) does not point at the password, which stays in S-05.04; the instructor's empty class list says who acts (SR-1.10); the Voice section names no archetype; the two branches of the sign-in aside cite a content principle first; the experiment form's save error names the rules it can break | F27 |`,
     `| The round-9 statements | the enrollment mail keeps the instructor's name where the backend template writes it, and the two template lines its note cites are read; the class list is "Your classes" in the sidebar and as the page title, for both roles; the no-access heading says whose account lacks access; C3 lists the ${s.c3Variants} formats of \`§ Dates, times and numbers\`, the seconds of an audit log and the weekday's full name, read from the table; every finding after SEC-1 in the Security finding table is a pointer and a severity | F26 |`,
     `| The round-7 statements | the webhook's Delete is a deactivate in the title, the button, the row's control, the toast and the failed-action line, and the decision is in the hand-off; the file delete names what it removes and says chats keep their answers; the offline line keeps what happened first and the tone rule says so; the twins are final in every sentence of the Companion; the expired chat error says what happens to the question; the input error's anatomy is explained (the tenth review refined it: it opens with a statement of what is wrong, never with the correction); the one step of two kinds is classified | F23, G3 |`,
-    `| The round-5 statements | the touch control for clamped server text (DS.51, DS.52), user-safe backend messages in the hand-off, the "assistant" terminology row, S-10's way-back links, no cite of a kept row, one string for one state (A-01 and SR-1, SR-5.01 and SR-6.01) | F22 |`,
+    `| The round-5 statements | clamped server text is a focusable element whose accessible description is the full text (\`§ Errors\`, C10 and the hand-off), with the touch control as well (DS.51, DS.52), user-safe backend messages in the hand-off, the "assistant" terminology row, S-10's way-back links, no cite of a kept row, one string for one state (A-01 and SR-1, SR-5.01 and SR-6.01) | F22 |`,
     `| Companion | ${cpRows.length} twin and announcement rows occur verbatim in \`§ Companion\`; the like and dislike text is neutral on A-7; principle 4, the drafts line and the state-table intro's one sentence are reworded; G3 reads every claim that the twins are drafts | G1 to G3 |`,
-    `| The lock | DESIGN.md: ${s.designDiff?.twinLinesEdited ?? "?"} twin lines edited (last cell only), principle 4, the drafts line, the state-table intro's one sentence (it called the twins drafts), the Phase 5 hand-off's draft wording and the Phase 4 intro's one phrase reworded, and ${s.designDiff?.linesAppended ?? "?"} lines appended, nothing else; JOURNEY.md: insertions only, apart from the intro paragraph and the SR-6 bullet's one draft string; nothing under \`kiwi-ui/src\`, \`kiwi-ui/public\` or \`kiwi/\` | L1 to L3 |`,
+    `| The lock | read against the commit before Phase 5 (aed7b42), because HEAD holds Phase 5 since it was committed; DESIGN.md: ${s.designDiff?.twinLinesEdited ?? "?"} twin lines edited (last cell only), principle 4, the drafts line, the state-table intro's one sentence (it called the twins drafts), the Phase 5 hand-off's draft wording and the Phase 4 intro's one phrase reworded, and ${s.designDiff?.linesAppended ?? "?"} lines appended, nothing else; JOURNEY.md: insertions only, apart from the intro paragraph and the SR-6 bullet's one draft string; nothing under \`kiwi-ui/src\`, \`kiwi-ui/public\` or \`kiwi/\` differs from that commit, committed or not | L1 to L3 |`,
     `| Paths | no machine-specific path in the scripts, data or generated text | P1 |`,
     `| Security detail | no phrase of a private, git-ignored list (kept with the security notes, outside the repository) is in DESIGN.md, JOURNEY.md or any file under \`.design-foundations/copy/\`, generated files and data included; where the list is not present the check says that it was skipped, and the committed checker holds no phrase | P2 |`,
   ].join("\n");

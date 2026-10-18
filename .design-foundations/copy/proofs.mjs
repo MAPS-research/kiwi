@@ -4,12 +4,13 @@
 //   E2E    one defect planted into a throwaway copy of the data, the guide or the source; check-copy.mjs runs on the copy and the named check must fail.
 //
 // A proof that is not caught is a lint with a hole, so prove-checks.mjs exits 1 and writes the miss into generated/proof-summary.json.
-import { lintString, lintSource, bareCountHits, enDashHits, scopedTermHits, sentencePartOf, AUDIT } from "./copy-lib.mjs";
+import { lintString, lintSource, bareCountHits, agreeCountHits, enDashHits, scopedTermHits, sentencePartOf, AUDIT } from "./copy-lib.mjs";
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 // UNIT: [id, rule, how, where, text, expect]
 //   how   "string" (lintString, where = the row kind), "source" (lintSource, where = the attribute), "bare" (bareCountHits), "dash" (enDashHits),
-//         "scoped" (scopedTermHits, where = { group, file }), "part" (sentencePartOf: where = the old string, text = the query)
+//         "scoped" (scopedTermHits, where = { group, file }), "part" (sentencePartOf: where = the old string, text = the query),
+//         "agree" (agreeCountHits: a verb that must agree after a count helper)
 //   expect  a RegExp the first hit must match; null for a negative control (nothing may be reported)
 // ------------------------------------------------------------------------------------------------------------------------------------
 const U = [];
@@ -210,6 +211,20 @@ u("U-E5-1", "TESTS", "part", OLD_A2231, "Add MCP servers to enable additional to
 u("U-E5-2", "TESTS", "part", OLD_A2231, "Built-in tools (RAG and Code Interpreter) should appear automatically", /part/);
 u("U-E5-n1", "TESTS", "part", OLD_A2231, "Code Interpreter", null);
 u("U-E5-n2", "TESTS", "part", OLD_A2231, "Add MCP servers to enable additional tools", null);
+// the follow-up to the eleventh review: a verb that must agree after a count helper (D3), and a colour used as a pointer (C14-C)
+u("U-C4-15", "C4", "agree", null, "{n: count entry} don't look like email addresses: {list}.", /\{n: count entry\} don't/);
+u("U-C4-16", "C4", "agree", null, "{n: count file} aren't ready.", /aren't/);
+u("U-C4-17", "C4", "agree", null, "{m: count class} were removed from the list.", /were/);
+u("U-C4-18", "C4", "agree", null, "{n: count user} still need a role.", /need/);
+u("U-C4-n9", "C4", "agree", null, "Some entries don't look like email addresses: {list}.", null);
+u("U-C4-n10", "C4", "agree", null, "{n: count user} removed from the roster", null);
+u("U-C4-n11", "C4", "agree", null, "Created {n} of {total: count account}. The server returned an error for the other {m}.", null);
+u("U-C14-7", "C14", "string", "body", "Each red row says why.", /colour is not a pointer/, "C14-C");
+u("U-C14-8", "C14", "string", "helper", "Fix the fields shown in red.", /colour is not a pointer/);
+u("U-C14-9", "C14", "source", "jsx", "Anything you change is marked red until you submit.", /colour is not a pointer/);
+u("U-C14-10", "C14", "string", "body", "Select the green one.", /colour is not a pointer/);
+u("U-C14-n3", "C14", "string", "body", "Each failed row says why.", null);
+u("U-C14-n4", "C14", "string", "label", "Decorative green gradient", null);
 export const UNIT = U;
 
 export function runUnit(c) {
@@ -217,6 +232,7 @@ export function runUnit(c) {
   if (c.how === "string") hits = lintString(c.text, c.where, []);
   else if (c.how === "source") hits = lintSource(c.text, c.where);
   else if (c.how === "bare") hits = bareCountHits(c.text).map((h) => `bare count: ${h}`);
+  else if (c.how === "agree") hits = agreeCountHits(c.text).map((h) => `agreeing verb after a count: ${h}`);
   else if (c.how === "dash") hits = enDashHits(c.text).map((h) => `an en dash outside a date or number range: ${h}`);
   else if (c.how === "scoped") hits = scopedTermHits(c.text, c.where);
   else if (c.how === "part") hits = sentencePartOf(c.text, c.where) ? [`part: ${c.text}`] : [];
@@ -482,4 +498,24 @@ e("E-F27-4", "XSEC", "data", "F27", "SR-5.03 cites the branding rule before its 
 e("E-F27-5", "XSEC", "data", "F27", "A-20.28 says only that the setup breaks one of the rules", (c) => c.row("A-20.28", { why: "The setup breaks one of the rules." }));
 e("E-F27-6", "XSEC", "data", "F27", "DS.47 opens with the correction again", (c) => c.row("DS.47", { what: "Enter a time like 14:05." }));
 e("E-F27-7", "XSEC", "data", "F27", "S-07.04's rationale is garbled again", (c) => c.row("S-07.04", { t: "When SUPPORT_EMAIL is empty (S-07.02 is the variant for a configured address)." }));
+// the follow-up to the eleventh review
+newRow("E-C4-new-8", "C4", "D3", "A-16.18", "what", "{n: count entry} don't look like email addresses: {list}.", "C4: a verb that must agree after a count helper, in a row that does not say which counts it is for (\"1 entry don't\")");
+e("E-C4-new-9", "C4", "new", "!D3", "C4: the same count and verb in a row that splits the singular (its note says n is 2 or more, and A-16.18 is the singular) stays allowed, so the exemption is real", (c) => c.row("A-16.55", { what: "{n: count entry} don't look like email addresses: {list}." }));
+keptStr("E-C4-kept-5", "C4", "{n: count entry} don't look like email addresses.");
+newRow("E-C14-new-3", "C14", "B1", V.body, "n", "Each red row says why.");
+keptStr("E-C14-kept-1", "C14", "Fix the fields shown in red.");
+srcStr("E-C14-src-2", "C14", "Zebra the red rows say why");
+e("E-F28-1", "XSEC", "data", "F28", "A-16.55 reads \"{n: count entry} don't\" again", (c) => c.row("A-16.55", { what: "{n: count entry} don't look like email addresses: {list}." }));
+e("E-F28-2", "XSEC", "data", "F28", "A-14.03 points at the red rows again", (c) => c.row("A-14.03", { fix: "Each red row says why. Try those again." }));
+e("E-F28-3", "XSEC", "data", "F28", "A-14.03's rationale no longer says which row carries the text status", (c) => c.row("A-14.03", { t: "When at least one file failed, in place of A-14.02. Each failed row keeps its own message (A-14.06)." }));
+e("E-F28-4", "XSEC", "guide", "F28", "the Voice sample about a repeated step has lost its cite", (c) => c.design((t) => t.replace(" (shown when the same tool step runs more than twice in a row: `AgentStepChain.tsx:206` decides, `AgentStepChain.tsx:354-359` draws it)", "")));
+e("E-F28-5", "XSEC", "guide", "F28", "the Voice sample's cite points at a line that holds no detection (the line above it)", (c) => c.design((t) => t.replace("`AgentStepChain.tsx:206` decides", "`AgentStepChain.tsx:205` decides")));
+e("E-F28-6", "XSEC", "guide", "F28", "the Voice intro leaves out the hand-off's draft wording, which the lock allows", (c) => c.design((t) => t.replace(" and the draft wording of the Phase 5 hand-off,", ",")));
+e("E-F28-7", "XSEC", "data", "F28", "the index header no longer says that some New cells show a control's output", (c) => c.journey((t) => t.replace("or the control that replaces the native one with its output (`DateTimeField (date): 17 Oct 2026` for A-14.18)", "or the replacing control")));
+e("E-F28-8", "XSEC", "guide", "F28", "C14 no longer says that a line points in words and not by colour", (c) => c.design((t) => t.replace("A line that points at a place says where in words, never by a colour or a shape:", "A line may point at a place:")));
+e("E-ERR-14", "ERR", "guide", "F22", "§ Errors no longer says that the clamped element is focusable", (c) => c.design((t) => t.replace("The clamped element is focusable (`tabindex=\"0\"`) and its accessible description is the full text, so a keyboard user and a screen reader reach what the clamp hides, and the full text shows", "The clamped element shows the full text")));
+e("E-ERR-15", "ERR", "guide", "F22", "the messages hand-off no longer makes the clamped text a focusable element", (c) => c.design((t) => t.replace("is a focusable element (`tabIndex={0}`) whose accessible description is the full text, so a keyboard user", "has its full text on hover, so a pointer user")));
+e("E-ERR-16", "ERR", "guide", "F22", "C10 no longer says that the clamp is focusable", (c) => c.design((t) => t.replace("the clamp a focusable element whose accessible description is the full text, with a visible", "with a visible")));
 export const E2E = E;
+// a proof id names one proof: a second proof with the same id would hide the first from the summary, so a duplicate stops the run here
+{ const seen = new Set(); for (const c of [...U, ...E]) { if (seen.has(c.id)) throw new Error(`duplicate proof id ${c.id}`); seen.add(c.id); } }

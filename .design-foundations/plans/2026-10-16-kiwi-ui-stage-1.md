@@ -3,7 +3,7 @@
 **Status:** in-progress
 **Started:** 2026-10-16 05:52
 **Current Phase:** 6
-**Workspace:** feature branch `feature/kiwi-ui-stage-1-design` (in place, repository root `/Users/nutshell/Documents/GitHub/kiwi`); base commit `ef65c1d`
+**Workspace:** feature branch `feature/kiwi-ui-stage-1-design` (in place, at the repository root); base commit `ef65c1d`
 **Complexity:** complex (Full track)
 **Research:** `.design-foundations/research/2026-10-16-kiwi-ui-visual-refresh.md` (confirmed brief, G1–G15) · `.design-foundations/research/2026-10-16-kiwi-ui-tour.md` (current-state tour)
 **Entry stage:** Discover — no `DESIGN.md` or `JOURNEY.md` exists yet. Discover here covers **as-is page specs only**; JTBD, IA and flow redesign belong to Stage 2.
@@ -705,3 +705,30 @@ Summary: `## Companion` specifies the tutor mascot:
 - an ethics pass.
 
 The user's choices: hop about 1 s, a shallow nod, a wave on like. Stills, atlases, the glyph, provenance and GIF previews are under `.design-foundations/mocks/`. Twelve review Minors go to a follow-up before Phase 5; A-7 (no reaction on dislike) waits for the user.
+
+### Phase 5: Words (Gate: Standard)
+- [x] BUILD: discovery, design and production, then ten fix rounds under the user's standing rule (no fix round was refused or deferred).
+- [x] REVIEW: PASS in round 11 (0 Critical, 0 Major, 4 Minor). Rounds 1 to 10 failed, in order, on:
+  - native date controls and nine copy gaps;
+  - date-fns labels and frozen sample dates;
+  - raw identifiers and partial failures;
+  - a kept error state and unlisted test lines;
+  - walk-state words and the "No token" mapping;
+  - bare counts and the native-confirm hand-off;
+  - the webhook's soft delete;
+  - the refused sign-in sentence;
+  - the enrolment email, and security-relevant detail in committed text (moved to a private, git-ignored note);
+  - input errors and the Google sign-in branches.
+- [x] Committed
+Commit: b5a9cf9 (fonts for Phase 7: 6e06f91)
+Summary: `kiwi-ui/DESIGN.md` `## Voice and tone` is the words law, and `kiwi-ui/JOURNEY.md` carries every revision.
+- **Voice and tone:** one voice in two registers (students; instructors and admins), six tones and eighteen microcopy rules.
+- **Formats and errors:** one English date format with the DateTimeField control, and the error anatomy with closed cause lines.
+- **Vocabulary and strings:** the terminology table, page names, shared strings, the final companion twins and the email templates.
+- **Revisions:** 1,261 changed strings with test references, per-route Copy bullets, and hand-offs. Gated copy ships with the `fix/access-control` merge.
+- **Tooling:** `.design-foundations/copy/` holds the data, the generator and a 99-check read-only checker.
+- **Carried into Phase 6:**
+  - the chart ticks' en-US formats (`chartXAxis.ts:50`, `:80`, `:85`, `:91`) must follow § Dates;
+  - chart summaries follow the voice guide;
+  - new strings go through the copy pipeline;
+  - security-relevant detail stays out of committed files (guard P2).
