@@ -198,7 +198,7 @@ Carried into the design-DNA step as dealer pins.
 
 ## References
 
-- **Kiwi website** — the user's local project at `/Users/nutshell/Documents/GitHub/kiwi-website`. It is buildless; preview it with `python3 -m http.server 4173 --bind 127.0.0.1 --directory dist` and open `http://127.0.0.1:4173`. It already uses the mascot family:
+- **Kiwi website** — the user's local `kiwi-website` project (a sibling folder of this repository). It is buildless; preview it with `python3 -m http.server 4173 --bind 127.0.0.1 --directory dist` and open `http://127.0.0.1:4173`. It already uses the mascot family:
   - colours: paper `#f6f5ed`, ink `#263d2b`, green `#31573b`, lime `#e5f1b8`, line `#dfe3d8`, muted `#667065`;
   - type: DM Sans (body; headings at weight 500 with tight tracking) and Instrument Serif (italic accents);
   - wordmark: brand-icon tile + lowercase "kiwi" with a green full stop (`#78934c`);
