@@ -1,13 +1,13 @@
 {
  "summary": {
   "groups": 51,
-  "rows": 1322,
+  "rows": 1328,
   "changed": 1261,
   "routes": 44,
   "byKind": {
    "aria": 51,
    "tooltip": 32,
-   "label": 284,
+   "label": 287,
    "placeholder": 20,
    "empty": 71,
    "new": 5,
@@ -18,7 +18,7 @@
    "helper": 84,
    "heading": 133,
    "cbutton": 26,
-   "format": 71,
+   "format": 74,
    "remove": 10,
    "confirm": 20,
    "announce": 3
@@ -27,7 +27,7 @@
   "anchored": 1202,
   "withTests": 128,
   "problems": 0,
-  "changed6": 47
+  "changed6": 53
  },
  "groups": [
   {
@@ -52769,8 +52769,8 @@
      "rules": [
       "C3"
      ],
-     "why": "The chart's second line states the unit, the bucket and the period (`§ Chart tokens › Encoding rules`): `{range}` is a preset in its sentence form (\"the last 7 days\", the preset rows of this group) or a custom range as the dates (A-03.43, `D MMM – D MMM YYYY`). The hourly reading of the template at StandaloneUserActivity.tsx:121; the next row is the daily one. (C3: Nielsen #4; G12)",
-     "note": "The chart's second line states the unit, the bucket and the period (`§ Chart tokens › Encoding rules`): `{range}` is a preset in its sentence form (\"the last 7 days\", the preset rows of this group) or a custom range as the dates (A-03.43, `D MMM – D MMM YYYY`). The hourly reading of the template at StandaloneUserActivity.tsx:121; the next row is the daily one.",
+     "why": "The chart's second line states the unit, the bucket and the period (`§ Chart tokens › Encoding rules`): `{range}` is a custom range as its dates (A-03.43, `D MMM – D MMM YYYY`; a single day as its date, `D MMM YYYY`) or a preset in its sentence form (the preset rows of this group) with its dates in brackets after it (the bracketed-dates row of this group), so the line always states its days and its year, which the X ticks leave out (\"Users per hour, 17 Oct 2026\"; \"Users per hour, the last 24 hours (6 Oct – 7 Oct 2026)\"). The hourly reading of the template at StandaloneUserActivity.tsx:121; the next row is the daily one. (C3: Nielsen #4; G12)",
+     "note": "The chart's second line states the unit, the bucket and the period (`§ Chart tokens › Encoding rules`): `{range}` is a custom range as its dates (A-03.43, `D MMM – D MMM YYYY`; a single day as its date, `D MMM YYYY`) or a preset in its sentence form (the preset rows of this group) with its dates in brackets after it (the bracketed-dates row of this group), so the line always states its days and its year, which the X ticks leave out (\"Users per hour, 17 Oct 2026\"; \"Users per hour, the last 24 hours (6 Oct – 7 Oct 2026)\"). The hourly reading of the template at StandaloneUserActivity.tsx:121; the next row is the daily one.",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -52807,8 +52807,8 @@
      "rules": [
       "C3"
      ],
-     "why": "The daily reading of the template at StandaloneUserActivity.tsx:121 (the previous row is the hourly one); `{range}` as in the previous row. (C3: Nielsen #4; G12)",
-     "note": "The daily reading of the template at StandaloneUserActivity.tsx:121 (the previous row is the hourly one); `{range}` as in the previous row.",
+     "why": "The daily reading of the template at StandaloneUserActivity.tsx:121 (the previous row is the hourly one); `{range}` as in the previous row: \"Users per day, the last 7 days (1 Oct – 7 Oct 2026)\" for a preset, \"Users per day, 1 Oct – 7 Oct 2026\" for a custom range. (C3: Nielsen #4; G12)",
+     "note": "The daily reading of the template at StandaloneUserActivity.tsx:121 (the previous row is the hourly one); `{range}` as in the previous row: \"Users per day, the last 7 days (1 Oct – 7 Oct 2026)\" for a preset, \"Users per day, 1 Oct – 7 Oct 2026\" for a custom range.",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -52845,8 +52845,8 @@
      "rules": [
       "C3"
      ],
-     "why": "The sessions chart's second line, the hourly reading of the template at StandaloneDailySessions.tsx:121; `{range}` is a preset in its sentence form (the preset rows of this group) or a custom range as the dates (A-03.43). (C3: Nielsen #4; G12)",
-     "note": "The sessions chart's second line, the hourly reading of the template at StandaloneDailySessions.tsx:121; `{range}` is a preset in its sentence form (the preset rows of this group) or a custom range as the dates (A-03.43).",
+     "why": "The sessions chart's second line, the hourly reading of the template at StandaloneDailySessions.tsx:121: `{range}` is a custom range as its dates (A-03.43, `D MMM – D MMM YYYY`; a single day as its date, `D MMM YYYY`) or a preset in its sentence form (the preset rows of this group) with its dates in brackets after it (the bracketed-dates row of this group), so the line always states its days and its year, which the X ticks leave out (\"Sessions per hour, 17 Oct 2026\"). (C3: Nielsen #4; G12)",
+     "note": "The sessions chart's second line, the hourly reading of the template at StandaloneDailySessions.tsx:121: `{range}` is a custom range as its dates (A-03.43, `D MMM – D MMM YYYY`; a single day as its date, `D MMM YYYY`) or a preset in its sentence form (the preset rows of this group) with its dates in brackets after it (the bracketed-dates row of this group), so the line always states its days and its year, which the X ticks leave out (\"Sessions per hour, 17 Oct 2026\").",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -52883,8 +52883,8 @@
      "rules": [
       "C3"
      ],
-     "why": "The daily reading of the same template (StandaloneDailySessions.tsx:121). (C3: Nielsen #4; G12)",
-     "note": "The daily reading of the same template (StandaloneDailySessions.tsx:121).",
+     "why": "The daily reading of the same template (StandaloneDailySessions.tsx:121); `{range}` as in the previous row. (C3: Nielsen #4; G12)",
+     "note": "The daily reading of the same template (StandaloneDailySessions.tsx:121); `{range}` as in the previous row.",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -52921,8 +52921,8 @@
      "rules": [
       "C3"
      ],
-     "why": "The Top actions chart's second line: the unit (interactions), the grouping and the period; `{range}` is a preset in its sentence form (the preset rows of this group) or a custom range as the dates (A-03.43). (C3: Nielsen #4; G12)",
-     "note": "The Top actions chart's second line: the unit (interactions), the grouping and the period; `{range}` is a preset in its sentence form (the preset rows of this group) or a custom range as the dates (A-03.43).",
+     "why": "The Top actions chart's second line: the unit (interactions), the grouping and the period; `{range}` is a custom range as its dates (A-03.43, `D MMM – D MMM YYYY`; a single day as its date, `D MMM YYYY`) or a preset in its sentence form (the preset rows of this group) with its dates in brackets after it (the bracketed-dates row of this group), so the line always states its days and its year, which the X ticks leave out. (C3: Nielsen #4; G12)",
+     "note": "The Top actions chart's second line: the unit (interactions), the grouping and the period; `{range}` is a custom range as its dates (A-03.43, `D MMM – D MMM YYYY`; a single day as its date, `D MMM YYYY`) or a preset in its sentence form (the preset rows of this group) with its dates in brackets after it (the bracketed-dates row of this group), so the line always states its days and its year, which the X ticks leave out.",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -52960,8 +52960,8 @@
       "C3",
       "C16"
      ],
-     "why": "The User duration chart's second line gains the period; \"Estimated\" stays, because the minutes are an estimate (chat actions × 2 and code actions × 5, StandaloneUserDuration.tsx:48-55) and the chart may not claim a measurement (C16). (C3, C16: Nielsen #4; G12)",
-     "note": "The User duration chart's second line gains the period; \"Estimated\" stays, because the minutes are an estimate (chat actions × 2 and code actions × 5, StandaloneUserDuration.tsx:48-55) and the chart may not claim a measurement (C16).",
+     "why": "The User duration chart's second line gains the period (`{range}` as in the rows above: a custom range as its dates, a preset with its dates in brackets); \"Estimated\" stays, because the minutes are an estimate (chat actions × 2 and code actions × 5, StandaloneUserDuration.tsx:48-55) and the chart may not claim a measurement (C16). (C3, C16: Nielsen #4; G12)",
+     "note": "The User duration chart's second line gains the period (`{range}` as in the rows above: a custom range as its dates, a preset with its dates in brackets); \"Estimated\" stays, because the minutes are an estimate (chat actions × 2 and code actions × 5, StandaloneUserDuration.tsx:48-55) and the chart may not claim a measurement (C16).",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -52999,8 +52999,8 @@
       "C3",
       "C6"
      ],
-     "why": "The Model choice chart's second line: the unit the legend already uses (requests, A-03.53), the grouping and the period (C3); \"usage\" and \"distribution\" went (C6). (C3, C6: Nielsen #4; G12)",
-     "note": "The Model choice chart's second line: the unit the legend already uses (requests, A-03.53), the grouping and the period (C3); \"usage\" and \"distribution\" went (C6).",
+     "why": "The Model choice chart's second line: the unit the legend already uses (requests, A-03.53), the grouping and the period (C3; `{range}` as in the rows above); \"usage\" and \"distribution\" went (C6). (C3, C6: Nielsen #4; G12)",
+     "note": "The Model choice chart's second line: the unit the legend already uses (requests, A-03.53), the grouping and the period (C3; `{range}` as in the rows above); \"usage\" and \"distribution\" went (C6).",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -53105,7 +53105,7 @@
      "group": "P6-A-03",
      "kind": "body",
      "old": "",
-     "new": "Active users in {range}: {total: count different user} in all; the busiest hour, {peakAt: D MMM YYYY, HH:mm}, had {peak: count user}.",
+     "new": "Active users for {range}: {total: count different user} in all; the busiest hour, {peakAt: D MMM YYYY, HH:mm}, had {peak: count user}.",
      "anchors": [
       {
        "at": "src/components/Analytics/StandaloneUserActivity.tsx:134 (the figure's caption and accessible description; new text)"
@@ -53116,8 +53116,8 @@
       "C4",
       "C3"
      ],
-     "why": "The text summary of the hourly active-users chart (`§ Chart tokens › Text summaries`): the key figure first, the period stated, then the peak, all computed from the drawn series (StandaloneUserActivity.tsx:134); no trend claim the data cannot back (C16). `{total}` is the range's unique users (the Active users tile): \"different users\", because a user active on several days counts once and the figure is not the sum of the bars, `{peak}` the largest bucket and `{peakAt}` its start. (C16, C4, C3: G12; ai-native: calibrate)",
-     "note": "The text summary of the hourly active-users chart (`§ Chart tokens › Text summaries`): the key figure first, the period stated, then the peak, all computed from the drawn series (StandaloneUserActivity.tsx:134); no trend claim the data cannot back (C16). `{total}` is the range's unique users (the Active users tile): \"different users\", because a user active on several days counts once and the figure is not the sum of the bars, `{peak}` the largest bucket and `{peakAt}` its start.",
+     "why": "The text summary of the hourly active-users chart (`§ Chart tokens › Text summaries`): the key figure first, the period stated, then the peak, all computed from the drawn series (StandaloneUserActivity.tsx:134); no trend claim the data cannot back (C16). The period follows \"for\", which reads with every form of `{range}` (\"for the last 24 hours\", \"for 6 Oct – 7 Oct 2026\", \"for 17 Oct 2026\", where \"in 17 Oct 2026\" would not), so one template serves a preset, a custom range and a single day; a preset's dates are on the range line above the plot and are not repeated here. `{total}` is the range's unique users (the Active users tile): \"different users\", because a user active on several days counts once and the figure is not the sum of the bars, `{peak}` the largest bucket and `{peakAt}` its start. (C16, C4, C3: G12; ai-native: calibrate)",
+     "note": "The text summary of the hourly active-users chart (`§ Chart tokens › Text summaries`): the key figure first, the period stated, then the peak, all computed from the drawn series (StandaloneUserActivity.tsx:134); no trend claim the data cannot back (C16). The period follows \"for\", which reads with every form of `{range}` (\"for the last 24 hours\", \"for 6 Oct – 7 Oct 2026\", \"for 17 Oct 2026\", where \"in 17 Oct 2026\" would not), so one template serves a preset, a custom range and a single day; a preset's dates are on the range line above the plot and are not repeated here. `{total}` is the range's unique users (the Active users tile): \"different users\", because a user active on several days counts once and the figure is not the sum of the bars, `{peak}` the largest bucket and `{peakAt}` its start.",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -53142,7 +53142,7 @@
      "group": "P6-A-03",
      "kind": "body",
      "old": "",
-     "new": "Active users in {range}: {total: count different user} in all; the busiest day, {peakAt: D MMM YYYY}, had {peak: count user}.",
+     "new": "Active users for {range}: {total: count different user} in all; the busiest day, {peakAt: D MMM YYYY}, had {peak: count user}.",
      "anchors": [
       {
        "at": "src/components/Analytics/StandaloneUserActivity.tsx:134 (the figure's caption and accessible description; new text)"
@@ -53153,8 +53153,8 @@
       "C4",
       "C3"
      ],
-     "why": "The daily reading of the active-users summary (the previous row is the hourly one): the bucket is a day. The total counts different users, as in the hourly reading. (C16, C4, C3: G12; ai-native: calibrate)",
-     "note": "The daily reading of the active-users summary (the previous row is the hourly one): the bucket is a day. The total counts different users, as in the hourly reading.",
+     "why": "The daily reading of the active-users summary (the previous row is the hourly one): the bucket is a day, and the period follows \"for\" as there. The total counts different users, as in the hourly reading. (C16, C4, C3: G12; ai-native: calibrate)",
+     "note": "The daily reading of the active-users summary (the previous row is the hourly one): the bucket is a day, and the period follows \"for\" as there. The total counts different users, as in the hourly reading.",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -53179,7 +53179,7 @@
      "group": "P6-A-03",
      "kind": "body",
      "old": "",
-     "new": "Sessions in {range}: {total: count session} in all; the busiest hour, {peakAt: D MMM YYYY, HH:mm}, had {peak: count session}.",
+     "new": "Sessions for {range}: {total: count session} in all; the busiest hour, {peakAt: D MMM YYYY, HH:mm}, had {peak: count session}.",
      "anchors": [
       {
        "at": "src/components/Analytics/StandaloneDailySessions.tsx:134 (the figure's caption and accessible description; new text)"
@@ -53190,8 +53190,8 @@
       "C4",
       "C3"
      ],
-     "why": "The text summary of the hourly sessions chart, from the drawn series (StandaloneDailySessions.tsx:134): `{total}` is the Sessions tile's count. (C16, C4, C3: G12; ai-native: calibrate)",
-     "note": "The text summary of the hourly sessions chart, from the drawn series (StandaloneDailySessions.tsx:134): `{total}` is the Sessions tile's count.",
+     "why": "The text summary of the hourly sessions chart, from the drawn series (StandaloneDailySessions.tsx:134): `{total}` is the Sessions tile's count. The period follows \"for\", which reads with every form of `{range}` (\"for the last 24 hours\", \"for 6 Oct – 7 Oct 2026\", \"for 17 Oct 2026\", where \"in 17 Oct 2026\" would not), so one template serves a preset, a custom range and a single day; a preset's dates are on the range line above the plot and are not repeated here. (C16, C4, C3: G12; ai-native: calibrate)",
+     "note": "The text summary of the hourly sessions chart, from the drawn series (StandaloneDailySessions.tsx:134): `{total}` is the Sessions tile's count. The period follows \"for\", which reads with every form of `{range}` (\"for the last 24 hours\", \"for 6 Oct – 7 Oct 2026\", \"for 17 Oct 2026\", where \"in 17 Oct 2026\" would not), so one template serves a preset, a custom range and a single day; a preset's dates are on the range line above the plot and are not repeated here.",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -53216,7 +53216,7 @@
      "group": "P6-A-03",
      "kind": "body",
      "old": "",
-     "new": "Sessions in {range}: {total: count session} in all; the busiest day, {peakAt: D MMM YYYY}, had {peak: count session}.",
+     "new": "Sessions for {range}: {total: count session} in all; the busiest day, {peakAt: D MMM YYYY}, had {peak: count session}.",
      "anchors": [
       {
        "at": "src/components/Analytics/StandaloneDailySessions.tsx:134 (the figure's caption and accessible description; new text)"
@@ -53227,8 +53227,8 @@
       "C4",
       "C3"
      ],
-     "why": "The daily reading of the sessions summary. (C16, C4, C3: G12; ai-native: calibrate)",
-     "note": "The daily reading of the sessions summary.",
+     "why": "The daily reading of the sessions summary; the period follows \"for\" as in the hourly reading. (C16, C4, C3: G12; ai-native: calibrate)",
+     "note": "The daily reading of the sessions summary; the period follows \"for\" as in the hourly reading.",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -53253,7 +53253,7 @@
      "group": "P6-A-03",
      "kind": "body",
      "old": "",
-     "new": "Interactions in {range}: {total: count interaction} in all; {top} was the most common, with {topCount} ({topShare}%).",
+     "new": "Interactions for {range}: {total: count interaction} in all; {top} was the most common, with {topCount} ({topShare}%).",
      "anchors": [
       {
        "at": "src/components/Analytics/StandaloneTopActions.tsx:196 (the figure's caption and accessible description; new text)"
@@ -53263,8 +53263,8 @@
       "C16",
       "C4"
      ],
-     "why": "The text summary of the Top actions chart, from its six counts (StandaloneTopActions.tsx:196): `{top}` is the largest action's name as the axis writes it (A-03.08 to A-03.13), `{topCount}` its count and `{topShare}` its share, rounded to a whole percent. (C16, C4: G12; ai-native: calibrate)",
-     "note": "The text summary of the Top actions chart, from its six counts (StandaloneTopActions.tsx:196): `{top}` is the largest action's name as the axis writes it (A-03.08 to A-03.13), `{topCount}` its count and `{topShare}` its share, rounded to a whole percent.",
+     "why": "The text summary of the Top actions chart, from its six counts (StandaloneTopActions.tsx:196): `{top}` is the largest action's name as the axis writes it (A-03.08 to A-03.13), `{topCount}` its count and `{topShare}` its share, rounded to a whole percent. The period follows \"for\" (a preset, a custom range or a single day). (C16, C4: G12; ai-native: calibrate)",
+     "note": "The text summary of the Top actions chart, from its six counts (StandaloneTopActions.tsx:196): `{top}` is the largest action's name as the axis writes it (A-03.08 to A-03.13), `{topCount}` its count and `{topShare}` its share, rounded to a whole percent. The period follows \"for\" (a preset, a custom range or a single day).",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -53289,7 +53289,7 @@
      "group": "P6-A-03",
      "kind": "body",
      "old": "",
-     "new": "Estimated active time in {range}: about {hours: count hour}, {chatShare}% in chat and {codeShare}% in the scratchpad.",
+     "new": "Estimated active time for {range}: about {hours: count hour}, {chatShare}% in chat and {codeShare}% in the scratchpad.",
      "anchors": [
       {
        "at": "src/components/Analytics/StandaloneUserDuration.tsx:206 (the figure's caption and accessible description; new text)"
@@ -53299,8 +53299,8 @@
       "C16",
       "C4"
      ],
-     "why": "The text summary of the User duration donut (StandaloneUserDuration.tsx:206): it says estimated and about, because the minutes are an estimate from action counts (C16); `{hours}` is the centre figure, the shares are the legend's percentages. (C16, C4: G12; ai-native: calibrate)",
-     "note": "The text summary of the User duration donut (StandaloneUserDuration.tsx:206): it says estimated and about, because the minutes are an estimate from action counts (C16); `{hours}` is the centre figure, the shares are the legend's percentages.",
+     "why": "The text summary of the User duration donut (StandaloneUserDuration.tsx:206): it says estimated and about, because the minutes are an estimate from action counts (C16); `{hours}` is the centre figure, in hours to two significant figures like every figure on this chart (the hours rows of this group: \"about 33 hours\", never \"about 32.9\"), and the shares are the slices' direct labels. The period follows \"for\" (a preset, a custom range or a single day). (C16, C4: G12; ai-native: calibrate)",
+     "note": "The text summary of the User duration donut (StandaloneUserDuration.tsx:206): it says estimated and about, because the minutes are an estimate from action counts (C16); `{hours}` is the centre figure, in hours to two significant figures like every figure on this chart (the hours rows of this group: \"about 33 hours\", never \"about 32.9\"), and the shares are the slices' direct labels. The period follows \"for\" (a preset, a custom range or a single day).",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -53325,7 +53325,7 @@
      "group": "P6-A-03",
      "kind": "body",
      "old": "",
-     "new": "Requests in {range}: {total: count request} in all; {top} handled {topShare}%.",
+     "new": "Requests for {range}: {total: count request} in all; {top} handled {topShare}%.",
      "anchors": [
       {
        "at": "src/components/Analytics/StandaloneUserEngine.tsx:165 (the figure's caption and accessible description; new text)"
@@ -53335,8 +53335,8 @@
       "C16",
       "C4"
      ],
-     "why": "The text summary of the Model choice donut (StandaloneUserEngine.tsx:165): `{top}` is the model's display name (A-03.24, A-03.25), `{topShare}` its share of the requests. (C16, C4: G12; ai-native: calibrate)",
-     "note": "The text summary of the Model choice donut (StandaloneUserEngine.tsx:165): `{top}` is the model's display name (A-03.24, A-03.25), `{topShare}` its share of the requests.",
+     "why": "The text summary of the Model choice donut (StandaloneUserEngine.tsx:165): `{top}` is the model's display name (A-03.24, A-03.25), `{topShare}` its share of the requests. The period follows \"for\" (a preset, a custom range or a single day). (C16, C4: G12; ai-native: calibrate)",
+     "note": "The text summary of the Model choice donut (StandaloneUserEngine.tsx:165): `{top}` is the model's display name (A-03.24, A-03.25), `{topShare}` its share of the requests. The period follows \"for\" (a preset, a custom range or a single day).",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -53411,8 +53411,8 @@
       "C1",
       "C3"
      ],
-     "why": "The sentence form of the preset A-03.33, used wherever `{range}` is written into a line or a sentence (a chart's range line, \"Users per day, the last 24 hours\"; a text summary, \"Active users in the last 24 hours: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start. (C1, C3: Redish: lowercase-led labels scan faster; Nielsen #4; the lock's Never list)",
-     "note": "The sentence form of the preset A-03.33, used wherever `{range}` is written into a line or a sentence (a chart's range line, \"Users per day, the last 24 hours\"; a text summary, \"Active users in the last 24 hours: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start.",
+     "why": "The sentence form of the preset A-03.33, used wherever `{range}` is written into a line or a sentence: a chart's range line, with the preset's dates in brackets after it (\"Users per hour, the last 24 hours (6 Oct – 7 Oct 2026)\", the bracketed-dates row), and a text summary, after \"for\" (\"Active users for the last 24 hours: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start. (C1, C3: Redish: lowercase-led labels scan faster; Nielsen #4; the lock's Never list)",
+     "note": "The sentence form of the preset A-03.33, used wherever `{range}` is written into a line or a sentence: a chart's range line, with the preset's dates in brackets after it (\"Users per hour, the last 24 hours (6 Oct – 7 Oct 2026)\", the bracketed-dates row), and a text summary, after \"for\" (\"Active users for the last 24 hours: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start.",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -53449,8 +53449,8 @@
       "C1",
       "C3"
      ],
-     "why": "The sentence form of the preset A-03.34, used wherever `{range}` is written into a line or a sentence (a chart's range line, \"Users per day, the last 7 days\"; a text summary, \"Active users in the last 7 days: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start. (C1, C3: Redish: lowercase-led labels scan faster; Nielsen #4; the lock's Never list)",
-     "note": "The sentence form of the preset A-03.34, used wherever `{range}` is written into a line or a sentence (a chart's range line, \"Users per day, the last 7 days\"; a text summary, \"Active users in the last 7 days: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start.",
+     "why": "The sentence form of the preset A-03.34, used wherever `{range}` is written into a line or a sentence: a chart's range line, with the preset's dates in brackets after it (\"Users per day, the last 7 days (1 Oct – 7 Oct 2026)\", the bracketed-dates row), and a text summary, after \"for\" (\"Active users for the last 7 days: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start. (C1, C3: Redish: lowercase-led labels scan faster; Nielsen #4; the lock's Never list)",
+     "note": "The sentence form of the preset A-03.34, used wherever `{range}` is written into a line or a sentence: a chart's range line, with the preset's dates in brackets after it (\"Users per day, the last 7 days (1 Oct – 7 Oct 2026)\", the bracketed-dates row), and a text summary, after \"for\" (\"Active users for the last 7 days: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start.",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -53487,8 +53487,8 @@
       "C1",
       "C3"
      ],
-     "why": "The sentence form of the preset A-03.38, used wherever `{range}` is written into a line or a sentence (a chart's range line, \"Users per day, the last 30 days\"; a text summary, \"Active users in the last 30 days: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start. (C1, C3: Redish: lowercase-led labels scan faster; Nielsen #4; the lock's Never list)",
-     "note": "The sentence form of the preset A-03.38, used wherever `{range}` is written into a line or a sentence (a chart's range line, \"Users per day, the last 30 days\"; a text summary, \"Active users in the last 30 days: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start.",
+     "why": "The sentence form of the preset A-03.38, used wherever `{range}` is written into a line or a sentence: a chart's range line, with the preset's dates in brackets after it (\"Users per day, the last 30 days (8 Sep – 7 Oct 2026)\", the bracketed-dates row), and a text summary, after \"for\" (\"Active users for the last 30 days: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start. (C1, C3: Redish: lowercase-led labels scan faster; Nielsen #4; the lock's Never list)",
+     "note": "The sentence form of the preset A-03.38, used wherever `{range}` is written into a line or a sentence: a chart's range line, with the preset's dates in brackets after it (\"Users per day, the last 30 days (8 Sep – 7 Oct 2026)\", the bracketed-dates row), and a text summary, after \"for\" (\"Active users for the last 30 days: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start.",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -53525,8 +53525,8 @@
       "C1",
       "C3"
      ],
-     "why": "The sentence form of the preset A-03.35, used wherever `{range}` is written into a line or a sentence (a chart's range line, \"Users per day, the last 3 months\"; a text summary, \"Active users in the last 3 months: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start. (C1, C3: Redish: lowercase-led labels scan faster; Nielsen #4; the lock's Never list)",
-     "note": "The sentence form of the preset A-03.35, used wherever `{range}` is written into a line or a sentence (a chart's range line, \"Users per day, the last 3 months\"; a text summary, \"Active users in the last 3 months: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start.",
+     "why": "The sentence form of the preset A-03.35, used wherever `{range}` is written into a line or a sentence: a chart's range line, with the preset's dates in brackets after it (\"Users per day, the last 3 months (7 Jul – 7 Oct 2026)\", the bracketed-dates row), and a text summary, after \"for\" (\"Active users for the last 3 months: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start. (C1, C3: Redish: lowercase-led labels scan faster; Nielsen #4; the lock's Never list)",
+     "note": "The sentence form of the preset A-03.35, used wherever `{range}` is written into a line or a sentence: a chart's range line, with the preset's dates in brackets after it (\"Users per day, the last 3 months (7 Jul – 7 Oct 2026)\", the bracketed-dates row), and a text summary, after \"for\" (\"Active users for the last 3 months: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start.",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -53563,8 +53563,8 @@
       "C1",
       "C3"
      ],
-     "why": "The sentence form of the preset A-03.39, used wherever `{range}` is written into a line or a sentence (a chart's range line, \"Users per day, the last 6 months\"; a text summary, \"Active users in the last 6 months: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start. (C1, C3: Redish: lowercase-led labels scan faster; Nielsen #4; the lock's Never list)",
-     "note": "The sentence form of the preset A-03.39, used wherever `{range}` is written into a line or a sentence (a chart's range line, \"Users per day, the last 6 months\"; a text summary, \"Active users in the last 6 months: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start.",
+     "why": "The sentence form of the preset A-03.39, used wherever `{range}` is written into a line or a sentence: a chart's range line, with the preset's dates in brackets after it (\"Users per day, the last 6 months (7 Apr – 7 Oct 2026)\", the bracketed-dates row), and a text summary, after \"for\" (\"Active users for the last 6 months: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start. (C1, C3: Redish: lowercase-led labels scan faster; Nielsen #4; the lock's Never list)",
+     "note": "The sentence form of the preset A-03.39, used wherever `{range}` is written into a line or a sentence: a chart's range line, with the preset's dates in brackets after it (\"Users per day, the last 6 months (7 Apr – 7 Oct 2026)\", the bracketed-dates row), and a text summary, after \"for\" (\"Active users for the last 6 months: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start.",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -53601,8 +53601,8 @@
       "C1",
       "C3"
      ],
-     "why": "The sentence form of the preset A-03.40, used wherever `{range}` is written into a line or a sentence (a chart's range line, \"Users per day, the last 12 months\"; a text summary, \"Active users in the last 12 months: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start. (C1, C3: Redish: lowercase-led labels scan faster; Nielsen #4; the lock's Never list)",
-     "note": "The sentence form of the preset A-03.40, used wherever `{range}` is written into a line or a sentence (a chart's range line, \"Users per day, the last 12 months\"; a text summary, \"Active users in the last 12 months: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start.",
+     "why": "The sentence form of the preset A-03.40, used wherever `{range}` is written into a line or a sentence: a chart's range line, with the preset's dates in brackets after it (\"Users per day, the last 12 months (7 Oct 2025 – 7 Oct 2026)\", the bracketed-dates row), and a text summary, after \"for\" (\"Active users for the last 12 months: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start. (C1, C3: Redish: lowercase-led labels scan faster; Nielsen #4; the lock's Never list)",
+     "note": "The sentence form of the preset A-03.40, used wherever `{range}` is written into a line or a sentence: a chart's range line, with the preset's dates in brackets after it (\"Users per day, the last 12 months (7 Oct 2025 – 7 Oct 2026)\", the bracketed-dates row), and a text summary, after \"for\" (\"Active users for the last 12 months: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start.",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -53614,6 +53614,161 @@
      "x": [
       "begins with a lowercase letter"
      ],
+     "br": null,
+     "dt": null,
+     "lk": null,
+     "uses": null,
+     "lkVals": null,
+     "err": null,
+     "phase6": true,
+     "page": "A-03",
+     "sum": false
+    },
+    {
+     "id": "P6-A-03.32",
+     "group": "P6-A-03",
+     "kind": "label",
+     "old": "",
+     "new": "({dates})",
+     "anchors": [
+      {
+       "at": "src/components/Analytics/StandaloneUserActivity.tsx:121 (after a preset's sentence form in each chart's range line; new text)"
+      }
+     ],
+     "rules": [
+      "C3"
+     ],
+     "why": "A preset's range line gives the preset's dates in brackets after its sentence form (\"Users per day, the last 7 days (1 Oct – 7 Oct 2026)\"): the X ticks leave the year out because the range line states it, and a relative period alone states neither the days nor the year once the page is shared or printed (`§ Chart tokens › Encoding rules`). `{dates}` is the preset's first and last day in the range format of A-03.43 (`D MMM – D MMM YYYY`, the year written twice when the years differ: \"the last 12 months (7 Oct 2025 – 7 Oct 2026)\"); the last 24 hours give their two calendar days (\"6 Oct – 7 Oct 2026\"). Every range line on the page takes it (StandaloneUserActivity.tsx:121, StandaloneDailySessions.tsx:121, StandaloneTopActions.tsx:183, StandaloneUserDuration.tsx:175, StandaloneUserEngine.tsx:145); a custom range is already its dates and adds nothing, and the summaries do not repeat them. (C3: Nielsen #4; G12)",
+     "note": "A preset's range line gives the preset's dates in brackets after its sentence form (\"Users per day, the last 7 days (1 Oct – 7 Oct 2026)\"): the X ticks leave the year out because the range line states it, and a relative period alone states neither the days nor the year once the page is shared or printed (`§ Chart tokens › Encoding rules`). `{dates}` is the preset's first and last day in the range format of A-03.43 (`D MMM – D MMM YYYY`, the year written twice when the years differ: \"the last 12 months (7 Oct 2025 – 7 Oct 2026)\"); the last 24 hours give their two calendar days (\"6 Oct – 7 Oct 2026\"). Every range line on the page takes it (StandaloneUserActivity.tsx:121, StandaloneDailySessions.tsx:121, StandaloneTopActions.tsx:183, StandaloneUserDuration.tsx:175, StandaloneUserEngine.tsx:145); a custom range is already its dates and adds nothing, and the summaries do not repeat them.",
+     "refs": "",
+     "tests": [],
+     "tq": null,
+     "shared": false,
+     "keep": false,
+     "m": null,
+     "ax": null,
+     "lnPin": null,
+     "x": [],
+     "br": null,
+     "dt": null,
+     "lk": null,
+     "uses": null,
+     "lkVals": null,
+     "err": null,
+     "phase6": true,
+     "page": "A-03",
+     "sum": false
+    },
+    {
+     "id": "P6-A-03.33",
+     "group": "P6-A-03",
+     "kind": "label",
+     "old": "",
+     "new": "{name} {share}%",
+     "anchors": [
+      {
+       "at": "src/components/Analytics/StandaloneUserEngine.tsx:166 (each slice's direct label; new text)"
+      }
+     ],
+     "rules": [
+      "C4"
+     ],
+     "why": "Each donut slice's direct label (`§ Chart tokens › Encoding rules › Donuts`): its name as the legend writes it (ChatGPT, Qwen, Unknown, A-03.24 and A-03.25; Chat and Scratchpad, P6-A-03.16) over its share, a whole percent, outside the ring beside the slice and joined to a thin slice by a leader. It names every slice in words, so no slice is told by colour alone (WCAG 1.4.1): under colour-vision simulation ChatGPT (`--chart-1`) and Unknown (`--chart-other`) are only 4.66 apart (light, protanopia). The User duration donut takes the same label (StandaloneUserDuration.tsx:207); the shares leave the legends, which keep the values with their units. (C4: Redish; Nielsen #4)",
+     "note": "Each donut slice's direct label (`§ Chart tokens › Encoding rules › Donuts`): its name as the legend writes it (ChatGPT, Qwen, Unknown, A-03.24 and A-03.25; Chat and Scratchpad, P6-A-03.16) over its share, a whole percent, outside the ring beside the slice and joined to a thin slice by a leader. It names every slice in words, so no slice is told by colour alone (WCAG 1.4.1): under colour-vision simulation ChatGPT (`--chart-1`) and Unknown (`--chart-other`) are only 4.66 apart (light, protanopia). The User duration donut takes the same label (StandaloneUserDuration.tsx:207); the shares leave the legends, which keep the values with their units.",
+     "refs": "",
+     "tests": [],
+     "tq": null,
+     "shared": false,
+     "keep": false,
+     "m": null,
+     "ax": null,
+     "lnPin": null,
+     "x": [],
+     "br": null,
+     "dt": null,
+     "lk": null,
+     "uses": null,
+     "lkVals": null,
+     "err": null,
+     "phase6": true,
+     "page": "A-03",
+     "sum": false
+    },
+    {
+     "id": "P6-A-03.34",
+     "group": "P6-A-03",
+     "kind": "format",
+     "old": "item.duration.toLocaleString() min",
+     "new": "about {hours: count hour}",
+     "anchors": [
+      {
+       "file": "src/components/Analytics/StandaloneUserDuration.tsx",
+       "lines": [
+        304
+       ]
+      }
+     ],
+     "rules": [
+      "C4"
+     ],
+     "why": "Supersedes A-03.22's New at this line only (the User duration legend's value, StandaloneUserDuration.tsx:304): the chart has one unit, the hour (`§ Chart tokens › Encoding rules › Donuts`), so the legend gives each activity's estimate in hours, to two significant figures like the centre, where it gave minutes beside a centre in hours. It says about, as the summary does: the hours are rounded from an estimate whose minutes also give the shares, so \"about 20 hours\" (62%) and \"about 13 hours\" (38%) agree with \"33 hours\" within the rounding, where bare figures would not (20 of 33 is 61%). It begins lowercase because it follows the activity's name in the legend (\"Chat about 20 hours\") and never stands alone (C1): the written exemption covers the lowercase start. Its share moves to the slice's direct label (the slice-label row). (C4: Redish; Nielsen #4)",
+     "note": "Supersedes A-03.22's New at this line only (the User duration legend's value, StandaloneUserDuration.tsx:304): the chart has one unit, the hour (`§ Chart tokens › Encoding rules › Donuts`), so the legend gives each activity's estimate in hours, to two significant figures like the centre, where it gave minutes beside a centre in hours. It says about, as the summary does: the hours are rounded from an estimate whose minutes also give the shares, so \"about 20 hours\" (62%) and \"about 13 hours\" (38%) agree with \"33 hours\" within the rounding, where bare figures would not (20 of 33 is 61%). It begins lowercase because it follows the activity's name in the legend (\"Chat about 20 hours\") and never stands alone (C1): the written exemption covers the lowercase start. Its share moves to the slice's direct label (the slice-label row).",
+     "refs": "",
+     "tests": [],
+     "tq": null,
+     "shared": false,
+     "keep": false,
+     "m": "toLocaleString()} min",
+     "ax": null,
+     "lnPin": [
+      304
+     ],
+     "x": [
+      "begins with a lowercase letter"
+     ],
+     "br": null,
+     "dt": null,
+     "lk": null,
+     "uses": null,
+     "lkVals": null,
+     "err": null,
+     "phase6": true,
+     "page": "A-03",
+     "sum": false
+    },
+    {
+     "id": "P6-A-03.35",
+     "group": "P6-A-03",
+     "kind": "format",
+     "old": "(totalDuration / 60).toFixed(1)",
+     "new": "33",
+     "anchors": [
+      {
+       "file": "src/components/Analytics/StandaloneUserDuration.tsx",
+       "lines": [
+        117,
+        130
+       ]
+      }
+     ],
+     "rules": [
+      "C4",
+      "C16"
+     ],
+     "why": "The User duration figure in hours, to two significant figures (\"33\" for 32.9 hours, \"4.5\", \"0.33\": never more digits, and never 0 for a part that is not 0), in place of one decimal (\"32.9\"), which claims a precision the estimate does not have (C16: the minutes are action counts times 2 and 5, StandaloneUserDuration.tsx:48-51). Two sites: the centre total (StandaloneUserDuration.tsx:130, drawn over its noun, \"hours\", or \"hour\" when the figure is 1) and the tooltip's figure (StandaloneUserDuration.tsx:117, which A-03.49 writes as \"Duration: {hours: count hour}\"). The legend (the row above) and the summary (P6-A-03.23) read the same figure. (C4, C16: Redish; Nielsen #4)",
+     "note": "The User duration figure in hours, to two significant figures (\"33\" for 32.9 hours, \"4.5\", \"0.33\": never more digits, and never 0 for a part that is not 0), in place of one decimal (\"32.9\"), which claims a precision the estimate does not have (C16: the minutes are action counts times 2 and 5, StandaloneUserDuration.tsx:48-51). Two sites: the centre total (StandaloneUserDuration.tsx:130, drawn over its noun, \"hours\", or \"hour\" when the figure is 1) and the tooltip's figure (StandaloneUserDuration.tsx:117, which A-03.49 writes as \"Duration: {hours: count hour}\"). The legend (the row above) and the summary (P6-A-03.23) read the same figure.",
+     "refs": "",
+     "tests": [],
+     "tq": null,
+     "shared": false,
+     "keep": false,
+     "m": "/ 60).toFixed(1)",
+     "ax": null,
+     "lnPin": [
+      117,
+      130
+     ],
+     "x": [],
      "br": null,
      "dt": null,
      "lk": null,
@@ -53636,7 +53791,7 @@
      "group": "P6-A-18",
      "kind": "label",
      "old": "",
-     "new": "{m: count question} in the week of {weekStart: D MMM YYYY}",
+     "new": "Last full week: {m: count question}, up from {previous} the week before",
      "anchors": [
       {
        "at": "src/components/ClassAnalytics/ClassAnalytics.tsx:429 (the Questions tile's third line; new text)"
@@ -53646,8 +53801,8 @@
       "C4",
       "C3"
      ],
-     "why": "The Questions tile's baseline (`§ Chart tokens › KPI tiles`): the last complete week of `weeklyActivity`, which the page fetches today and never draws (classAnalyticsApi.ts:20); `{m}` is that week's count and `{weekStart}` its first day, `formatDate`. A partial current week is never the baseline. When the series has no complete week the line is \"No earlier period to compare\" (the next rows). (C4, C3: Redish; Nielsen #4)",
-     "note": "The Questions tile's baseline (`§ Chart tokens › KPI tiles`): the last complete week of `weeklyActivity`, which the page fetches today and never draws (classAnalyticsApi.ts:20); `{m}` is that week's count and `{weekStart}` its first day, `formatDate`. A partial current week is never the baseline. When the series has no complete week the line is \"No earlier period to compare\" (the next rows).",
+     "why": "The Questions tile's third line (`§ Chart tokens › KPI tiles`): a week-on-week trend from the weekly series the page already fetches and never draws (`weeklyActivity`, classAnalyticsApi.ts:20), so the tile carries a trend and not just context. This reading shows when the last full week had more questions than the week before (`{m}` > `{previous}`); the other directions are P6-A-18.17 (down) and P6-A-18.18 (the same). The weeks are the backend's UTC Mondays (`date_trunc('week')` over the class's chat questions, ../kiwi/src/analytics/class-analytics.service.ts:177-183, sent as the UTC instant of Monday 00:00 by `toISOString()`): the last full week is the latest Monday-to-Sunday week that has ended in UTC, and the week before is the Monday seven days earlier; a week missing from the series counts as 0, because the GROUP BY returns no row for a week without questions. The comparison is drawn only when the week before falls on or after the series' first week; otherwise, with an empty series, and while a lecture is chosen (the value is then that lecture's count and the series the whole class's), the line is \"No earlier period to compare\" (the tile rows below). The line takes the Phase 3 tile's direction glyph in its own colour (`--kpi-tile-trend`), hidden from assistive technology: the words state the direction, so neither the glyph nor a colour carries it. No percentage: a change between small counts reads larger than it is, and a week from 0 has none. (C4, C3: Redish; Nielsen #4)",
+     "note": "The Questions tile's third line (`§ Chart tokens › KPI tiles`): a week-on-week trend from the weekly series the page already fetches and never draws (`weeklyActivity`, classAnalyticsApi.ts:20), so the tile carries a trend and not just context. This reading shows when the last full week had more questions than the week before (`{m}` > `{previous}`); the other directions are P6-A-18.17 (down) and P6-A-18.18 (the same). The weeks are the backend's UTC Mondays (`date_trunc('week')` over the class's chat questions, ../kiwi/src/analytics/class-analytics.service.ts:177-183, sent as the UTC instant of Monday 00:00 by `toISOString()`): the last full week is the latest Monday-to-Sunday week that has ended in UTC, and the week before is the Monday seven days earlier; a week missing from the series counts as 0, because the GROUP BY returns no row for a week without questions. The comparison is drawn only when the week before falls on or after the series' first week; otherwise, with an empty series, and while a lecture is chosen (the value is then that lecture's count and the series the whole class's), the line is \"No earlier period to compare\" (the tile rows below). The line takes the Phase 3 tile's direction glyph in its own colour (`--kpi-tile-trend`), hidden from assistive technology: the words state the direction, so neither the glyph nor a colour carries it. No percentage: a change between small counts reads larger than it is, and a week from 0 has none.",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -53848,25 +54003,28 @@
     {
      "id": "P6-A-18.07",
      "group": "P6-A-18",
-     "kind": "label",
-     "old": "",
-     "new": "Questions",
+     "kind": "format",
+     "old": "${intent.label} · ${intent.questionCount} (${Math.round(share)}%)",
+     "new": "{n: count question}",
      "anchors": [
       {
-       "at": "src/components/ClassAnalytics/IntentsPanel.tsx:64 (the intent chart's value axis; new text)"
+       "file": "src/components/ClassAnalytics/IntentsPanel.tsx",
+       "lines": [
+        80
+       ]
       }
      ],
      "rules": [
-      "C1"
+      "C4"
      ],
-     "why": "The intent chart's value axis names its unit (`§ Chart tokens › Encoding rules`: units on axes); the chart replaces the stacked bar at IntentsPanel.tsx:64-96. (C1: Redish: lowercase-led labels scan faster; Nielsen #4; the lock's Never list)",
-     "note": "The intent chart's value axis names its unit (`§ Chart tokens › Encoding rules`: units on axes); the chart replaces the stacked bar at IntentsPanel.tsx:64-96.",
+     "why": "Each intent bar's tooltip, on hover and on focus (IntentsPanel.tsx:80): the count its share stands for, with its unit by the helper (\"71 questions\"). The bar's button already shows the intent's name and its share (the next row), so the tooltip no longer repeats them, and it never gates: the cards below carry every count (IntentsPanel.tsx:177). The row holds the id the chart's value-axis title had until the follow-up after review round 2 dropped the axis (the labels are the values, `§ Chart tokens › Encoding rules`). (C4: Redish; Nielsen #4)",
+     "note": "Each intent bar's tooltip, on hover and on focus (IntentsPanel.tsx:80): the count its share stands for, with its unit by the helper (\"71 questions\"). The bar's button already shows the intent's name and its share (the next row), so the tooltip no longer repeats them, and it never gates: the cards below carry every count (IntentsPanel.tsx:177). The row holds the id the chart's value-axis title had until the follow-up after review round 2 dropped the axis (the labels are the values, `§ Chart tokens › Encoding rules`).",
      "refs": "",
      "tests": [],
      "tq": null,
      "shared": false,
      "keep": false,
-     "m": null,
+     "m": "${intent.label} · ${intent.questionCount}",
      "ax": null,
      "lnPin": null,
      "x": [],
@@ -53894,8 +54052,8 @@
      "rules": [
       "C4"
      ],
-     "why": "Each intent bar's direct label: its share of the analyzed questions, a whole percent (the card below carries the count, IntentsPanel.tsx:177). (C4: Redish; Nielsen #4)",
-     "note": "Each intent bar's direct label: its share of the analyzed questions, a whole percent (the card below carries the count, IntentsPanel.tsx:177).",
+     "why": "Each intent bar's direct label: its share of the analyzed questions, a whole percent. The bar's length is that share, and no value axis is drawn (the labels are the values, as on Top actions; `§ Chart tokens › Encoding rules`), so the label and the length say one thing; the counts are in the cards below (IntentsPanel.tsx:177) and the summary. (C4: Redish; Nielsen #4)",
+     "note": "Each intent bar's direct label: its share of the analyzed questions, a whole percent. The bar's length is that share, and no value axis is drawn (the labels are the values, as on Top actions; `§ Chart tokens › Encoding rules`), so the label and the length say one thing; the counts are in the cards below (IntentsPanel.tsx:177) and the summary.",
      "refs": "",
      "tests": [],
      "tq": null,
@@ -54180,6 +54338,76 @@
      ],
      "why": "The topic bars' scope line when a lecture is chosen (`lectureName` is set, TopicsPanel.tsx:68-70). (C3: Nielsen #4; G12)",
      "note": "The topic bars' scope line when a lecture is chosen (`lectureName` is set, TopicsPanel.tsx:68-70).",
+     "refs": "",
+     "tests": [],
+     "tq": null,
+     "shared": false,
+     "keep": false,
+     "m": null,
+     "ax": null,
+     "lnPin": null,
+     "x": [],
+     "br": null,
+     "dt": null,
+     "lk": null,
+     "uses": null,
+     "lkVals": null,
+     "err": null,
+     "phase6": true,
+     "page": "A-18",
+     "sum": false
+    },
+    {
+     "id": "P6-A-18.17",
+     "group": "P6-A-18",
+     "kind": "label",
+     "old": "",
+     "new": "Last full week: {m: count question}, down from {previous} the week before",
+     "anchors": [
+      {
+       "at": "src/components/ClassAnalytics/ClassAnalytics.tsx:429 (the Questions tile's third line when the last full week had fewer questions than the week before; new text)"
+      }
+     ],
+     "rules": [
+      "C4"
+     ],
+     "why": "The Questions tile's trend when the last full week had fewer questions than the week before (`{m}` < `{previous}`), with the down glyph; otherwise as P6-A-18.01, which states the weeks, the zero-filled gaps and when the line says that there is no earlier period. A week with no question reads \"Last full week: 0 questions, down from 9 the week before\". (C4: Redish; Nielsen #4)",
+     "note": "The Questions tile's trend when the last full week had fewer questions than the week before (`{m}` < `{previous}`), with the down glyph; otherwise as P6-A-18.01, which states the weeks, the zero-filled gaps and when the line says that there is no earlier period. A week with no question reads \"Last full week: 0 questions, down from 9 the week before\".",
+     "refs": "",
+     "tests": [],
+     "tq": null,
+     "shared": false,
+     "keep": false,
+     "m": null,
+     "ax": null,
+     "lnPin": null,
+     "x": [],
+     "br": null,
+     "dt": null,
+     "lk": null,
+     "uses": null,
+     "lkVals": null,
+     "err": null,
+     "phase6": true,
+     "page": "A-18",
+     "sum": false
+    },
+    {
+     "id": "P6-A-18.18",
+     "group": "P6-A-18",
+     "kind": "label",
+     "old": "",
+     "new": "Last full week: {m: count question}, the same as the week before",
+     "anchors": [
+      {
+       "at": "src/components/ClassAnalytics/ClassAnalytics.tsx:429 (the Questions tile's third line when the last full week had as many questions as the week before; new text)"
+      }
+     ],
+     "rules": [
+      "C4"
+     ],
+     "why": "The Questions tile's trend when the two weeks had the same count (`{m}` equals the week before's), with the level glyph; otherwise as P6-A-18.01. (C4: Redish; Nielsen #4)",
+     "note": "The Questions tile's trend when the two weeks had the same count (`{m}` equals the week before's), with the level glyph; otherwise as P6-A-18.01.",
      "refs": "",
      "tests": [],
      "tq": null,

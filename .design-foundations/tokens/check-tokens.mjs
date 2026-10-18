@@ -314,7 +314,7 @@ let chartN = 0, chartBad = 0; const chartRows = [], chartPairRows = [], chartMea
     chartMeasured[mode] = { target: +r.measures.target.toFixed(3), spread: +r.measures.spread.toFixed(3), minContrast: +r.measures.minContrast.toFixed(2), minCvd: +r.measures.cvd.toFixed(2), minCvdKind: r.measures.cvdKind, minCvdPair: r.measures.cvdPair.map((i) => i + 1), minAdjacentCvd: +r.measures.adjacentCvd.toFixed(2), minNormal: +r.measures.normal.toFixed(2), minNormalPair: r.measures.normalPair.map((i) => i + 1), other: otherRow ? { hex: otherRow.hex, minContrast: +otherRow.contrast.toFixed(2), minCvdToSeries: +otherRow.minCvd.toFixed(2) } : null };
   }
   // the chrome roles are references to semantic tokens and name their CSS property
-  for (const [n, want] of [["grid", "semantic.color.border-subtle"], ["baseline", "semantic.color.border-strong"], ["track", "semantic.color.surface-active"], ["tick-text", "semantic.color.text-secondary"], ["plot", "semantic.color.surface"]]) {
+  for (const [n, want] of [["grid", "semantic.color.border-subtle"], ["baseline", "semantic.color.border-strong"], ["tick-text", "semantic.color.text-secondary"], ["plot", "semantic.color.surface"]]) {
     const t = getToken(tree, `chart.${n}`);
     if (!t) { chartFail(`chart.${n} is not registered`); continue; }
     const ok = refOf(t.$value) === want && t.$extensions?.["org.kiwi"]?.css === `--chart-${n}`;
@@ -322,6 +322,17 @@ let chartN = 0, chartBad = 0; const chartRows = [], chartPairRows = [], chartMea
     chartChromeRows.push([`--chart-${n}`, `{${want}}`, resolve(tree, `chart.${n}`, L), resolve(tree, `chart.${n}`, D), ok ? "PASS" : "FAIL"]);
   }
   if (meta.interimChart) chartFail("$extensions[\"org.kiwi\"].interimChart is still present: the interim mapping was replaced by chart.*");
+  // review round 2 (F8): every surface a data mark can sit on is asserted. The series are asserted on the plot, the canvas and the hover row above; the topic bars'
+  // track was retired by the Phase 6 follow-up (the bars grow from a common zero with no track), so no chart surface is left unasserted. A chart.* entry outside the
+  // known roles fails, and a re-registered track (a future meter) is asserted here at once: every series at >= 3:1 on it in both modes.
+  {
+    const KNOWN = new Set(["series", "other", "grid", "baseline", "tick-text", "plot", "track"]);
+    for (const k of Object.keys(tree.chart || {})) if (!k.startsWith("$") && !KNOWN.has(k)) chartFail(`chart.${k} is not a known chart role: register a surface a mark sits on with its 3:1 assertion here`);
+    if (getToken(tree, "chart.track")) for (const [mode, ctx] of [["light", L], ["dark", D]]) {
+      const tr = String(resolve(tree, "chart.track", ctx)).toLowerCase();
+      for (const i of ["1", "2", "3", "4", "5"]) { const h = String(resolve(tree, `chart.series.${i}`, ctx)).toLowerCase(), cr = contrast(h, tr); if (cr < CHART_GATES.contrast) chartFail(`${mode}: --chart-${i} ${h} on --chart-track ${tr} measures ${cr.toFixed(2)}:1`); }
+    }
+  }
 }
 log(`\n## 16. Chart series (Phase 6)\n\n${chartN} series values (five per mode) and the neutral, ${chartBad} failures. Gates: ≥ ${CHART_GATES.contrast}:1 on --surface, --background and --surface-hover; OKLCH L within ± ${CHART_GATES.band} of one target per mode; chroma ${CHART_GATES.chromaMin}–${CHART_GATES.chromaMax}; hue inside ${CHART_GATES.arc.join("°–")}°; minimum pairwise OKLab distance (× 100) ≥ ${CHART_GATES.cvdMin} under protanopia and deuteranopia (Machado 2009, severity 1.0) and ≥ ${CHART_GATES.normalMin} under normal vision, all pairs; every hex equal to its recorded parameters re-rendered.\n`);
 for (const [mode, m] of Object.entries(chartMeasured)) log(`- ${mode}: target L ${m.target}, spread ${m.spread}; min contrast ${m.minContrast}:1; min distance under ${m.minCvdKind} ${m.minCvd} (series ${m.minCvdPair.join(" vs ")}), adjacent ${m.minAdjacentCvd}; min distance under normal vision ${m.minNormal} (series ${m.minNormalPair.join(" vs ")}); Other ${m.other?.hex} at ${m.other?.minContrast}:1, ${m.other?.minCvdToSeries} from the nearest series under simulation (informational).`);

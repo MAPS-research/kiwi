@@ -164,7 +164,8 @@ const chart = {
   },
   grid: { $type: "color", $value: "{semantic.color.border-subtle}", $description: "Gridlines: solid hairlines one step off the surface, never dashed (figure/ground: data is figure, the grid is ground).", $extensions: { "org.kiwi": { css: "--chart-grid" } } },
   baseline: { $type: "color", $value: "{semantic.color.border-strong}", $description: "The zero line and the axis rule, a 1 px hairline; bars grow from it.", $extensions: { "org.kiwi": { css: "--chart-baseline" } } },
-  track: { $type: "color", $value: "{semantic.color.surface-active}", $description: "The unfilled track behind an inline bar (the topic frequency bars) and the progress bar's track.", $extensions: { "org.kiwi": { css: "--chart-track" } } },
+  // no track: the Phase 6 follow-up (review round 2) draws the topic bars from a common zero with no track behind them, and the progress bar's track is
+  // Phase 3's --in-progress-track; a future meter (a value against a real maximum) registers chart.track with its 3:1 assertion (check-tokens.mjs § 16)
   "tick-text": { $type: "color", $value: "{semantic.color.text-secondary}", $description: "Axis ticks, legend text and direct labels: text wears text tokens, never a series colour.", $extensions: { "org.kiwi": { css: "--chart-tick-text" } } },
   plot: { $type: "color", $value: "{semantic.color.surface}", $description: "The plot background: the sheet the chart sits on. Every series clears 3:1 on it, on the canvas and on the hover row.", $extensions: { "org.kiwi": { css: "--chart-plot" } } },
 };

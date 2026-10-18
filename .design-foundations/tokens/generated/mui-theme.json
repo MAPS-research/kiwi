@@ -100,10 +100,9 @@
           "other": "#77746d",
           "grid": "#d4d2cb",
           "baseline": "#adaba1",
-          "track": "#e9e8e4",
           "tickText": "#65635c",
           "plot": "#faf9f3",
-          "_note": "series1–5 are --chart-1…5 (categorical, fixed order, marks only: never text, never a status surface); other is --chart-other (Other and Unknown); grid, baseline, track, tickText and plot are the chart chrome roles (references to semantic tokens). Replaces Phase 3's interim stand-ins; Theme.ts's ChartPalette gains `other` and the chrome keys, and Theme.test.ts expects these values (§ Chart tokens › Hand-offs)"
+          "_note": "series1–5 are --chart-1…5 (categorical, fixed order, marks only: never text, never a status surface); other is --chart-other (Other and Unknown); grid, baseline, tickText and plot are the chart chrome roles (references to semantic tokens); no track is registered (the topic bars have none since the Phase 6 follow-up; the progress bar's track is --in-progress-track). Replaces Phase 3's interim stand-ins; Theme.ts's ChartPalette gains `other` and the chrome keys, and Theme.test.ts expects these values (§ Chart tokens › Hand-offs)"
         },
         "_kiwi": {
           "focusRing": "#486d56",
@@ -214,10 +213,9 @@
           "other": "#8d8b83",
           "grid": "#3d3c36",
           "baseline": "#636057",
-          "track": "#33322e",
           "tickText": "#b9b7b0",
           "plot": "#252218",
-          "_note": "series1–5 are --chart-1…5 (categorical, fixed order, marks only: never text, never a status surface); other is --chart-other (Other and Unknown); grid, baseline, track, tickText and plot are the chart chrome roles (references to semantic tokens). Replaces Phase 3's interim stand-ins; Theme.ts's ChartPalette gains `other` and the chrome keys, and Theme.test.ts expects these values (§ Chart tokens › Hand-offs)"
+          "_note": "series1–5 are --chart-1…5 (categorical, fixed order, marks only: never text, never a status surface); other is --chart-other (Other and Unknown); grid, baseline, tickText and plot are the chart chrome roles (references to semantic tokens); no track is registered (the topic bars have none since the Phase 6 follow-up; the progress bar's track is --in-progress-track). Replaces Phase 3's interim stand-ins; Theme.ts's ChartPalette gains `other` and the chrome keys, and Theme.test.ts expects these values (§ Chart tokens › Hand-offs)"
         },
         "_kiwi": {
           "focusRing": "#84ca9e",

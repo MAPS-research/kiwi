@@ -391,8 +391,8 @@
    "files": 7
   },
   "handoffKeeps": {
-   "clauses": 127,
-   "keepClauses": 11,
+   "clauses": 128,
+   "keepClauses": 10,
    "sections": 4,
    "native": 9
   },
@@ -424,7 +424,7 @@
    "unread": 0,
    "page": "fix/access-control:docs/logic-changes.md"
   },
-  "noteCites6": 27,
+  "noteCites6": 39,
   "noteCites": {
    "notes": 148,
    "voice": 219
@@ -436,11 +436,11 @@
    "handoff": 3
   },
   "phase6": {
-   "rows": 47,
+   "rows": 53,
    "groups": 2,
    "summaries": 11,
-   "sourceAnchored": 19,
-   "newText": 28
+   "sourceAnchored": 22,
+   "newText": 31
   },
   "designDiff": {
    "twinLinesEdited": 6,
@@ -452,10 +452,10 @@
    "linesAppended": 707
   },
   "designDiff6": {
-   "linesAppended": 121
+   "linesAppended": 126
   },
   "journeyDiff6": {
-   "added": 120,
+   "added": 132,
    "removed": 0
   },
   "securityPhrases": {
@@ -882,7 +882,7 @@
    "id": "K6",
    "name": "every row id that a text cites (the Voice section, every row's note, every page's note) is a row in the index",
    "ok": true,
-   "detail": "1318 ids; the cites in the Voice section and in 1373 notes all resolve"
+   "detail": "1324 ids; the cites in the Voice section and in 1379 notes all resolve"
   },
   {
    "id": "K7",
@@ -1074,7 +1074,7 @@
    "id": "K9",
    "name": "no hand-off keeps a string the index revises: the native alert, confirm and prompt calls ship the index's New text, and only the browser's own OK and Cancel buttons stay until a flow change (C2 cannot reach them)",
    "ok": true,
-   "detail": "127 hand-off clauses read in 4 sections, 11 say something keeps its copy and none keeps a string a row revises; the 9 native calls all have rows (A-08.40 and A-09.36 are the two confirms)"
+   "detail": "128 hand-off clauses read in 4 sections, 10 say something keeps its copy and none keeps a string a row revises; the 9 native calls all have rows (A-08.40 and A-09.36 are the two confirms)"
   },
   {
    "id": "D12",
@@ -1104,19 +1104,19 @@
    "id": "Q1",
    "name": "every Phase 6 string passes the Phase 5 lints (case, marks, terms, person, plurals, dates) and cites rules that exist",
    "ok": true,
-   "detail": "47 strings in 2 groups"
+   "detail": "53 strings in 2 groups"
   },
   {
    "id": "Q2",
    "name": "every Phase 6 row is anchored: a changed string at the source line that holds it, a new string at the file and line it will be drawn at",
    "ok": true,
-   "detail": "19 source-anchored, 28 new strings anchored to a file and line"
+   "detail": "22 source-anchored, 31 new strings anchored to a file and line"
   },
   {
    "id": "Q3",
    "name": "every Phase 6 row is in its page's Copy (Phase 6) bullet, which follows the entry's Phase 5 block, and once in the table under \"Rows appended by later phases\", below the sentence Phase 5 left",
    "ok": true,
-   "detail": "47 appended rows, 2 bullets"
+   "detail": "53 appended rows, 2 bullets"
   },
   {
    "id": "Q4",
@@ -1126,7 +1126,7 @@
   },
   {
    "id": "Q5",
-   "name": "every chart has a text summary row (the nine charts, in each reading they have): a sentence with the key figure first, the period or the scope stated and no claim the counts cannot back",
+   "name": "every chart has a text summary row (the seven charts, in each reading they have): a sentence with the key figure first, the period or the scope stated and no claim the counts cannot back",
    "ok": true,
    "detail": "11 summaries for 7 charts"
   },
@@ -1134,19 +1134,19 @@
    "id": "Q6",
    "name": "no Phase 6 row is counted among the Phase 5 rows, and none sits in the Phase 5 index table",
    "ok": true,
-   "detail": "1261 Phase 5 rows, 47 Phase 6 rows"
+   "detail": "1261 Phase 5 rows, 53 Phase 6 rows"
   },
   {
    "id": "L1",
    "name": "DESIGN.md: only the Companion's text-twin cells, principle 4, the drafts line, the state-table intro's one sentence, the hand-off's draft wording and the intro's one phrase changed, and the new section was appended",
    "ok": true,
-   "detail": "6 twin lines edited (last cell only), principle 4 (1), the drafts line (1), the state-table intro's one sentence (1), the hand-off's two draft words (1) and the intro's one phrase (1) reworded, 828 lines appended"
+   "detail": "6 twin lines edited (last cell only), principle 4 (1), the drafts line (1), the state-table intro's one sentence (1), the hand-off's two draft words (1) and the intro's one phrase (1) reworded, 833 lines appended"
   },
   {
    "id": "L2",
    "name": "JOURNEY.md: insertions only, apart from the one intro paragraph that gains a sentence and the SR-6 Companion bullet's draft string, replaced by the final one",
    "ok": true,
-   "detail": "2 lines replaced (the intro paragraph, the SR-6 bullet), 2714 lines added"
+   "detail": "2 lines replaced (the intro paragraph, the SR-6 bullet), 2726 lines added"
   },
   {
    "id": "L3",
@@ -1158,13 +1158,13 @@
    "id": "L4",
    "name": "DESIGN.md: since the commit before Phase 6 (bd45ade) the file only grew at its end (## Chart tokens), and no earlier line changed",
    "ok": true,
-   "detail": "121 lines appended, nothing else"
+   "detail": "126 lines appended, nothing else"
   },
   {
    "id": "L5",
    "name": "JOURNEY.md: since the commit before Phase 6 (bd45ade) the file only gained lines (the data-surface bullets, the Copy (Phase 6) bullets, the appended rows); none was changed or removed",
    "ok": true,
-   "detail": "120 lines added, none removed"
+   "detail": "132 lines added, none removed"
   },
   {
    "id": "L6",

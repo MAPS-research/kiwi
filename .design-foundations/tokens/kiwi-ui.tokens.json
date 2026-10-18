@@ -12691,16 +12691,6 @@
         }
       }
     },
-    "track": {
-      "$type": "color",
-      "$value": "{semantic.color.surface-active}",
-      "$description": "The unfilled track behind an inline bar (the topic frequency bars) and the progress bar's track.",
-      "$extensions": {
-        "org.kiwi": {
-          "css": "--chart-track"
-        }
-      }
-    },
     "tick-text": {
       "$type": "color",
       "$value": "{semantic.color.text-secondary}",

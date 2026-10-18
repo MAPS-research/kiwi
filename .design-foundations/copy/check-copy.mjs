@@ -2265,7 +2265,7 @@ stats.native = nativeSites.length;
     if (r.kind !== "body") bad5.push(`${r.id}: a summary is a body row`);
   }
   if (sums.length !== CHARTS.reduce((n, c) => n + c[2], 0)) bad5.push(`${sums.length} summaries in all`);
-  check("Q5", "every chart has a text summary row (the nine charts, in each reading they have): a sentence with the key figure first, the period or the scope stated and no claim the counts cannot back", bad5.length === 0, bad5.length ? `\n        ${list(bad5)}` : `${sums.length} summaries for ${CHARTS.length} charts`);
+  check("Q5", "every chart has a text summary row (the seven charts, in each reading they have): a sentence with the key figure first, the period or the scope stated and no claim the counts cannot back", bad5.length === 0, bad5.length ? `\n        ${list(bad5)}` : `${sums.length} summaries for ${CHARTS.length} charts`);
   const p5Index = [...(indexText || "").matchAll(/^\| `([A-Za-z0-9-]+\.\d+)` \|/gm)].map((m) => m[1]).filter((id) => id.startsWith("P6-") && !appendedIds.includes(id));
   check("Q6", "no Phase 6 row is counted among the Phase 5 rows, and none sits in the Phase 5 index table", rows.every((r) => !r.phase6) && p5Index.length === 0, p5Index.length ? `in the Phase 5 table: ${p5Index.slice(0, 5).join(", ")}` : `${rows.length} Phase 5 rows, ${rows6.length} Phase 6 rows`);
   stats.phase6 = { rows: rows6.length, groups: groups6.length, summaries: sums.length, sourceAnchored: rows6.filter((r) => r.anchors.some((a) => a.file)).length, newText: rows6.filter((r) => !r.old).length };

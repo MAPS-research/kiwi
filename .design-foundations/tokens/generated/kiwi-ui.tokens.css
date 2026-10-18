@@ -1302,7 +1302,6 @@
   --chart-other: #77746d;
   --chart-grid: var(--border-subtle);
   --chart-baseline: var(--border-strong);
-  --chart-track: var(--surface-active);
   --chart-tick-text: var(--text-secondary);
   --chart-plot: var(--surface);
   --companion-slot-avatar: var(--size-avatar);
@@ -2140,7 +2139,6 @@
   --chart-other: #77746d;
   --chart-grid: var(--border-subtle);
   --chart-baseline: var(--border-strong);
-  --chart-track: var(--surface-active);
   --chart-tick-text: var(--text-secondary);
   --chart-plot: var(--surface);
   --companion-backing: var(--fill-none);
@@ -2971,7 +2969,6 @@
   --chart-other: #8d8b83;
   --chart-grid: var(--border-subtle);
   --chart-baseline: var(--border-strong);
-  --chart-track: var(--surface-active);
   --chart-tick-text: var(--text-secondary);
   --chart-plot: var(--surface);
   --companion-backing: #faf9f3;

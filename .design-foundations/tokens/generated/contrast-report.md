@@ -1,4 +1,4 @@
-# Kiwi UI token checks — 2026-10-18 · source v2.0.0 (sha256 042bb145e50d) · at caa7b31
+# Kiwi UI token checks — 2026-10-18 · source v2.0.0 (sha256 99c99554452b) · at 1bec5c2
 
 Source: `.design-foundations/tokens/kiwi-ui.tokens.json` · Locked block: `kiwi-ui/DESIGN.md` · Result: **PASS**
 
@@ -502,7 +502,7 @@ Targets: text ≥ 4.5:1, non-text (boundaries, icons, markers, rings) ≥ 3:1. 4
 
 ## 4. Per-mode closure of the emitted CSS
 
-:root declares 1306 properties. Dark: 827 depend on a mode token (transitively), 827 are redeclared in [data-theme="dark"], 0 missing. Compact: 96 depend on a density token, 96 redeclared in [data-density="compact"], 0 missing. Root-only composites that embed a mode colour (shadows, backdrop): 0.
+:root declares 1305 properties. Dark: 826 depend on a mode token (transitively), 826 are redeclared in [data-theme="dark"], 0 missing. Compact: 96 depend on a density token, 96 redeclared in [data-density="compact"], 0 missing. Root-only composites that embed a mode colour (shadows, backdrop): 0.
 
 ## 10. Coarse pointer
 
@@ -630,7 +630,6 @@ Policy: A deprecated name keeps a safe value and is removed no earlier than two 
 |---|---|---|---|---|
 | --chart-grid | {semantic.color.border-subtle} | #d4d2cb | #3d3c36 | PASS |
 | --chart-baseline | {semantic.color.border-strong} | #adaba1 | #636057 | PASS |
-| --chart-track | {semantic.color.surface-active} | #e9e8e4 | #33322e | PASS |
 | --chart-tick-text | {semantic.color.text-secondary} | #65635c | #b9b7b0 | PASS |
 | --chart-plot | {semantic.color.surface} | #faf9f3 | #252218 | PASS |
 
