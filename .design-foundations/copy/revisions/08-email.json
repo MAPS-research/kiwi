@@ -1,0 +1,330 @@
+[
+ {
+  "id": "EM",
+  "name": "Email templates (copy; colours are mapped in Phase 3)",
+  "route": "(email templates)",
+  "file": "src/components/Email/TemplatedEmailForm.tsx",
+  "rows": [
+   [
+    "This email was sent from Kiwi Platform. Please do not reply to this email.",
+    "Sent by Kiwi.",
+    "body",
+    "TD-37",
+    "Three template footers said \"Kiwi Platform\" and \"do not reply\", but the sender sets a Reply-To (`kiwi/src/config/configuration.ts`), so the instruction is not reliably true (C6, C16). The support address, where configured, is in each body.",
+    "This email was sent from Kiwi Platform. Please do not reply to this email.",
+    [
+     "src/components/Email/TemplatedEmailForm.tsx",
+     "../kiwi/src/email/email.templates.ts"
+    ]
+   ],
+   {
+    "o": "This is an automated message from Kiwi Platform Administration. Please do not reply to this email.",
+    "n": "Sent by Kiwi.",
+    "k": "body",
+    "refs": "TD-37",
+    "t": "The same footer in the notification template. When the mail is sent as HTML (EM.03 is the plain-text version, on the same lines).",
+    "m": "This is an automated message from Kiwi Platform Administration. Please do not reply to this email.",
+    "f": [
+     "src/components/Email/TemplatedEmailForm.tsx",
+     "../kiwi/src/email/email.templates.ts"
+    ]
+   },
+   {
+    "o": "This is an automated message from Kiwi Platform Administration.\nPlease do not reply to this email.",
+    "n": "Sent by Kiwi.",
+    "k": "body",
+    "refs": "TD-37",
+    "t": "The plain-text footer of the notification template. When the mail is read as plain text (EM.02 is the HTML version, on the same lines).",
+    "m": "This is an automated message from Kiwi Platform Administration.",
+    "f": "../kiwi/src/email/email.templates.ts"
+   },
+   [
+    "Class Announcement: {{className}}",
+    "Class announcement: {{className}}",
+    "label",
+    "SF-23",
+    "The subject in sentence case; the announcement composer's helper now quotes this exact form.",
+    "Class Announcement: {{className}}",
+    [
+     "src/components/Email/TemplatedEmailForm.tsx",
+     "../kiwi/src/email/email.templates.ts"
+    ]
+   ],
+   [
+    "Class Announcement",
+    "Class announcement",
+    "heading",
+    "",
+    "The header line.",
+    "Class Announcement\n",
+    [
+     "src/components/Email/TemplatedEmailForm.tsx",
+     "../kiwi/src/email/email.templates.ts"
+    ]
+   ],
+   [
+    "Important Notification from Kiwi Platform",
+    "Important notification from Kiwi",
+    "label",
+    "TD-37",
+    "The subject: \"Kiwi\", not \"Kiwi Platform\".",
+    "Important Notification from Kiwi Platform",
+    [
+     "src/components/Email/TemplatedEmailForm.tsx",
+     "../kiwi/src/email/email.templates.ts"
+    ]
+   ],
+   [
+    "Kiwi Platform",
+    "Kiwi",
+    "heading",
+    "TD-37",
+    "The header line of the notification.",
+    "Kiwi Platform\n",
+    [
+     "src/components/Email/TemplatedEmailForm.tsx",
+     "../kiwi/src/email/email.templates.ts"
+    ]
+   ],
+   [
+    "Important Notification",
+    "Important notification",
+    "heading",
+    "",
+    "The sub-header.",
+    "Important Notification",
+    [
+     "src/components/Email/TemplatedEmailForm.tsx",
+     "../kiwi/src/email/email.templates.ts"
+    ]
+   ],
+   {
+    "o": "KIWI PLATFORM - IMPORTANT NOTIFICATION",
+    "n": "Kiwi: important notification",
+    "k": "heading",
+    "refs": "TD-37",
+    "t": "The plain-text header was typed in capitals, in the preview (`TemplatedEmailForm.tsx:168`) and in the mail alike.",
+    "m": "KIWI PLATFORM - IMPORTANT NOTIFICATION",
+    "f": [
+     "src/components/Email/TemplatedEmailForm.tsx",
+     "../kiwi/src/email/email.templates.ts"
+    ]
+   },
+   [
+    "Access granted for Kiwi",
+    "You can now sign in to Kiwi",
+    "label",
+    "TD-37",
+    "The subject says what happened and what the reader can do; \"granted\" is the system's word.",
+    "Access granted for Kiwi",
+    [
+     "src/components/Email/TemplatedEmailForm.tsx",
+     "../kiwi/src/email/email.templates.ts"
+    ]
+   ],
+   {
+    "o": "Welcome!",
+    "n": "Welcome to {brandLabel}",
+    "k": "heading",
+    "refs": "TD-37",
+    "t": "The browser preview's header: no exclamation mark, and the name from branding (C17). brandLabel is \"{institutionName} Kiwi\" when an institution name is configured and \"Kiwi\" when it is not (the rule of `BRAND_LABEL` in `src/config/branding.ts`: an unbranded deployment never reads \"Kiwi Kiwi\"); the browser preview and the backend mail apply the same rule, the backend to its `INSTITUTION_NAME`.",
+    "m": "Welcome!",
+    "f": "src/components/Email/TemplatedEmailForm.tsx"
+   },
+   {
+    "o": "Welcome to {institutionName or Kiwi}!",
+    "n": "Welcome to {brandLabel}",
+    "k": "heading",
+    "refs": "TD-37",
+    "t": "The backend header, and the first line of the plain-text version, which has no header block (`email.templates.ts:255`, `:278`): no exclamation mark; the same words and rule as EM.11. brandLabel is \"{institutionName} Kiwi\" when an institution name is configured and \"Kiwi\" when it is not (the rule of `BRAND_LABEL` in `src/config/branding.ts`: an unbranded deployment never reads \"Kiwi Kiwi\"); the browser preview and the backend mail apply the same rule, the backend to its `INSTITUTION_NAME`.",
+    "m": "Welcome to ${data.institutionName || 'Kiwi'}!",
+    "f": "../kiwi/src/email/email.templates.ts",
+    "ln": [
+     255,
+     278
+    ]
+   },
+   {
+    "o": "Welcome to {institutionName or Kiwi}!",
+    "k": "remove",
+    "refs": "TD-37",
+    "t": "The HTML paragraph repeated the header word for word (`:258`), so the HTML loses it. The plain-text version has no header block: its line `Welcome to …` (`:278`) is its heading, so it stays and takes EM.12's wording.",
+    "m": "Welcome to <strong>${data.institutionName || 'Kiwi'}</strong>!",
+    "f": "../kiwi/src/email/email.templates.ts"
+   },
+   [
+    "Dear Students,",
+    "Hello,",
+    "body",
+    "TD-37",
+    "The email goes to anyone granted access, not only students, and \"Dear\" is formal for a product notice.",
+    "Dear Students,",
+    [
+     "src/components/Email/TemplatedEmailForm.tsx",
+     "../kiwi/src/email/email.templates.ts"
+    ],
+    "",
+    "end punctuation"
+   ],
+   {
+    "o": "You have been granted access to Kiwi as per your request. You can now log in from the website.",
+    "n": "You can now sign in to Kiwi with the email address this message was sent to.",
+    "k": "body",
+    "refs": "TD-37",
+    "t": "\"As per your request\" is a claim the product cannot back; the sentence says what changed and how to use it. It makes no claim about when the account is created. An earlier draft added \"If you haven't signed in before, Kiwi sets up your account the first time you do\", which is false for a recipient whose account an administrator created with a password: the System email page sends this template to any user the administrator selects (`email.controller.ts:392-421`, `email.service.ts:254`), and an administrator-created password account exists from the moment the administrator submits the form (`auth.controller.ts:51-60` and `auth.service.ts:145-186`: `registerUser` creates the user, its allowlist entry and its enrollments at once). The first sentence holds for every recipient: a pending user signs in with Google, a password account with its password.",
+    "m": "as per your request",
+    "f": [
+     "src/components/Email/TemplatedEmailForm.tsx",
+     "../kiwi/src/email/email.templates.ts"
+    ]
+   },
+   [
+    "website",
+    "Open Kiwi",
+    "button",
+    "TD-37",
+    "The link's text says where it goes (Redish); it is the link on the welcome email, and in the plain-text version the address follows \"Sign in at\".",
+    ">website</a>",
+    [
+     "src/components/Email/TemplatedEmailForm.tsx",
+     "../kiwi/src/email/email.templates.ts"
+    ]
+   ],
+   [
+    "Please follow this guide to learn about how to best use Kiwi to support your self-learning experience with AI.",
+    "New to Kiwi? Read the guide to get started.",
+    "body",
+    "TD-37",
+    "Plain words, no \"please\", no claim about AI; the link text is \"Read the guide\".",
+    "Please follow this",
+    "../kiwi/src/email/email.templates.ts"
+   ],
+   [
+    "If you have any issues while exploring Kiwi, please contact us at: {SUPPORT_EMAIL}",
+    "Need help? Contact {SUPPORT_EMAIL}.",
+    "body",
+    "TD-37",
+    "No \"we\" or \"please\"; shown only when a support address is configured (C17).",
+    "If you have any issues while exploring Kiwi",
+    [
+     "src/components/Email/TemplatedEmailForm.tsx",
+     "../kiwi/src/email/email.templates.ts"
+    ]
+   ],
+   [
+    "Happy Kiwi-ing!",
+    "",
+    "remove",
+    "TD-37",
+    "Hype and an exclamation mark; the email ends with the support line.",
+    "Happy Kiwi-ing!",
+    [
+     "src/components/Email/TemplatedEmailForm.tsx",
+     "../kiwi/src/email/email.templates.ts"
+    ]
+   ],
+   [
+    "Kiwi Support Team",
+    "",
+    "remove",
+    "TD-37",
+    "A sign-off that claims a team the product cannot back (C16).",
+    "Kiwi Support Team",
+    [
+     "src/components/Email/TemplatedEmailForm.tsx",
+     "../kiwi/src/email/email.templates.ts"
+    ]
+   ],
+   {
+    "o": "You have been added to {className} on Kiwi.",
+    "n": "You've been added to {className}{ ({professorName})} on Kiwi.",
+    "k": "body",
+    "t": "A contraction in the same quiet voice. The parenthesis after the class name is kept: the source writes it only when the instructor's name is set (`professorName ? ... : ''`, `email.templates.ts:96` and `:120`), so the part in the second braces is left out when the name is not set, and the spec's email table quotes this exact string. The dialog's prefilled message uses the sentence without that part (A-16.43): the dialog does not know the name.",
+    "m": "You have been added to",
+    "f": "../kiwi/src/email/email.templates.ts"
+   },
+   [
+    "The class will be in your course list as soon as you sign in.",
+    "The class appears in your classes when you sign in.",
+    "body",
+    "",
+    "\"Course list\" is \"your classes\" everywhere else (C6).",
+    "The class will be in your course list as soon as you sign in.",
+    "../kiwi/src/email/email.templates.ts"
+   ],
+   [
+    "The class will be in your course list.",
+    "The class will appear in your classes.",
+    "body",
+    "",
+    "",
+    "The class will be in your course list.",
+    "../kiwi/src/email/email.templates.ts"
+   ],
+   {
+    "o": "It is already in your course list at {url}.",
+    "n": "It's already in your classes at {url}.",
+    "k": "body",
+    "m": "It is already in your course list at",
+    "f": "../kiwi/src/email/email.templates.ts",
+    "t": "The dialog's prefilled message uses these words for an active user (A-16.43)."
+   },
+   {
+    "o": "If you have any issues, contact us at {SUPPORT_EMAIL}.",
+    "n": "Need help? Contact {SUPPORT_EMAIL}.",
+    "k": "body",
+    "t": "No \"we\". Shown only when a support address is configured (C17); the source already omits the line when the address is empty.",
+    "m": "If you have any issues, contact us at",
+    "f": "../kiwi/src/email/email.templates.ts"
+   },
+   {
+    "k": "label",
+    "o": "Kiwi Platform",
+    "n": "Kiwi",
+    "m": "name: process.env.AWS_SES_FROM_NAME || 'Kiwi Platform'",
+    "f": "../kiwi/src/config/configuration.ts",
+    "r": "C6",
+    "refs": "TD-37",
+    "t": "The sender's display name when AWS_SES_FROM_NAME is unset: \"Kiwi\", not \"Kiwi Platform\". `docs/email.md` quotes the old default (lines 28 and 29) and the old subject (line 91)."
+   },
+   {
+    "k": "label",
+    "o": "Kiwi Platform Support",
+    "n": "Kiwi support",
+    "m": "name: process.env.AWS_SES_REPLY_TO_NAME || 'Kiwi Platform Support'",
+    "f": "../kiwi/src/config/configuration.ts",
+    "r": "C6",
+    "refs": "TD-37",
+    "t": "The Reply-To display name when AWS_SES_REPLY_TO_NAME is unset."
+   },
+   {
+    "k": "heading",
+    "o": "",
+    "n": "Welcome to {brandLabel}",
+    "m": "Dear Students,",
+    "f": "src/components/Email/TemplatedEmailForm.tsx",
+    "ln": [
+     222
+    ],
+    "r": "C17",
+    "refs": "TD-37",
+    "t": "The browser preview's plain-text tab has no heading line, while the mail's plain text starts with one (`email.templates.ts:278`, EM.12): the preview gains it, so the two read alike. It follows \"Hello,\" (EM.14)."
+   },
+   [
+    "",
+    "Notice",
+    "label",
+    "",
+    "New copy that Phase 3's email mapping promises (\"the box opens with a \\\"Notice\\\" label (Phase 5 wording)\"): the warning surface carries no coloured border, so the box says what it is in one word and the signal is not colour alone (G9, WCAG 1.4.1). A bold line at the top of the box, before the message, in both copies (the browser preview and the backend template). The plain-text version has no box, and its heading already says \"Kiwi: important notification\" (EM.09).",
+    "background-color: #fff3cd",
+    [
+     "src/components/Email/TemplatedEmailForm.tsx",
+     "../kiwi/src/email/email.templates.ts"
+    ]
+   ]
+  ],
+  "kept": [
+   "Welcome to Kiwi"
+  ]
+ }
+]

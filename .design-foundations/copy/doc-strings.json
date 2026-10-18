@@ -1,0 +1,680 @@
+{
+ "about": "Words that the sections quote and that are not strings of the product: a placeholder or a shape, a purpose, the name of an old path, a superseded wording quoted as history, a rule, a composition, a code name, or an example written to the section's rules. check-copy.mjs (K1, K2) resolves every other quoted word to an index row, a kept string or a closed cause line, and fails on a quote that is neither listed here nor one of those, and on an entry here that nothing quotes any more. A sample is accepted only where the section says it is an example: the tone map and the voice attributes' in-range column; everywhere else a quote must be a row, a kept string, a cause line or one of the other kinds. The kinds: shape (a placeholder or pattern), purpose, path (the name of an old code path), old (a superseded wording quoted as history), rule, composition (made from rows), excerpt (a clause of a row's string), wrong (what the rules rule out, never shipped), dev (developer or library text, never shown), code, sample.",
+ "strings": [
+  {
+   "text": "text is arriving",
+   "kind": "purpose",
+   "why": "the honest purpose of the speaking state (§ Companion, the twin cell's last clause): a description of what the state means, not a string the product draws"
+  },
+  {
+   "text": "cannot answer now",
+   "kind": "purpose",
+   "why": "the honest purpose of the offline state (§ Companion): what the state means, not a string the product draws"
+  },
+  {
+   "text": "none",
+   "kind": "purpose",
+   "why": "the twin of a state that conveys nothing (peek, retract, idle): the word names the absence of a twin and is not drawn"
+  },
+  {
+   "text": "every state that conveys information has a text twin",
+   "kind": "rule",
+   "why": "principle 4 of § Companion, quoted by the Companion text"
+  },
+  {
+   "text": "Token expired",
+   "kind": "path",
+   "why": "the name of the chat's old path, as the Phase 4 hand-off spells it (SR-6.14's old text begins with it)"
+  },
+  {
+   "text": "N steps",
+   "kind": "shape",
+   "why": "the chain's header when the turn ends (\"1 step\", \"3 steps\"): the count and its noun are the source's own and are kept (AgentStepChain.tsx:209)"
+  },
+  {
+   "text": "Running ⟨what⟩",
+   "kind": "shape",
+   "why": "the label shape of a tool step (§ Step labels); \"Running code\" is the one label that has it"
+  },
+  {
+   "text": "Doing ⟨action⟩…",
+   "kind": "old",
+   "why": "the Phase 4 draft's shape for an acting step, replaced by the labels that end \"for you\" (CP.03)"
+  },
+  {
+   "text": "Running ⟨tool⟩…",
+   "kind": "old",
+   "why": "the Phase 4 shorthand in § Companion › Collisions (the brief's own words), now the tool step's shape (§ Step labels)"
+  },
+  {
+   "text": "Sign in to Kiwi",
+   "kind": "composition",
+   "why": "the sign-in page's display line: S-05.01, \"Sign in to\", followed by the wordmark"
+  },
+  {
+   "text": "Delete this chat?",
+   "kind": "sample",
+   "why": "the tone map's pattern for the first destructive action a student gets; none exists today, so there is no row (the map says so)"
+  },
+  {
+   "text": "Its messages are deleted. This can't be undone.",
+   "kind": "sample",
+   "why": "the same pattern's body, written to the confirmation rule (C11)"
+  },
+  {
+   "text": "Delete chat",
+   "kind": "sample",
+   "why": "the same pattern's button, repeating the verb and the object (C11)"
+  },
+  {
+   "text": "Choose a class to start.",
+   "kind": "sample",
+   "why": "an in-range example of Plain, written to the rules; no row, because no screen says it"
+  },
+  {
+   "text": "Kiwi is reading this page.",
+   "kind": "sample",
+   "why": "an in-range example of Plain; the product's own words are the step label \"Reading this page\" (SR-6.45)"
+  },
+  {
+   "text": "3 students removed",
+   "kind": "sample",
+   "why": "an in-range example of Specific: a count and its noun, as C4 writes them"
+  },
+  {
+   "text": "Select a class.",
+   "kind": "sample",
+   "why": "an in-range example of Specific, an action with its object"
+  },
+  {
+   "text": "whitelist",
+   "kind": "rule",
+   "why": "the word the lock's Never list bans (\"Copy tells\"); C6 and the allowlist rows replace it"
+  },
+  {
+   "text": "out of tokens",
+   "kind": "path",
+   "why": "the Phase 4 hand-off's name for the 429 path (SR-6.17's old text)"
+  },
+  {
+   "text": "not allowed",
+   "kind": "path",
+   "why": "the Phase 4 hand-off's name for the 403 path (SR-6.18's old text)"
+  },
+  {
+   "text": "Error: {raw message}",
+   "kind": "path",
+   "why": "the prefix of the tutor bubble that carries backend text, as the Phase 4 text and the as-is JOURNEY spell it; the code builds it"
+  },
+  {
+   "text": "Kiwi animation: on / off",
+   "kind": "composition",
+   "why": "the Display menu's switch (DS.04, \"Kiwi animation\") in its two positions, in Phase 4's ethics table"
+  },
+  {
+   "text": "Paused: no connection.",
+   "kind": "old",
+   "why": "the Phase 4 draft that CP.11 replaces (\"Paused while you're offline\")"
+  },
+  {
+   "text": "Failed to",
+   "kind": "wrong",
+   "why": "the phrase the guide bans (C9), quoted to say so; never shipped"
+  },
+  {
+   "text": "Oops",
+   "kind": "wrong",
+   "why": "the word the guide bans (C9), quoted to say so; never shipped"
+  },
+  {
+   "text": "Couldn't …",
+   "kind": "shape",
+   "why": "the shape of a what-happened sentence (C9), with the object left open"
+  },
+  {
+   "text": "Select Retry",
+   "kind": "shape",
+   "why": "how a sentence points at a control: the name is spelled as the screen spells it (C1)"
+  },
+  {
+   "text": "Your account doesn't have access to {this}.",
+   "kind": "shape",
+   "why": "the `denied` cause line's pattern in § Errors; each page writes its own line (DS.29, DS.33)"
+  },
+  {
+   "text": "Ask {an administrator, your instructor} for access.",
+   "kind": "shape",
+   "why": "the `denied` fix's pattern in § Errors"
+  },
+  {
+   "text": "server",
+   "kind": "wrong",
+   "why": "the bare word the MCP pages never use for the record (H18), quoted to say so"
+  },
+  {
+   "text": "Kiwi couldn't finish answering. It couldn't reach the server. Try again.",
+   "kind": "composition",
+   "why": "the example of the name said once (§ Errors, K5): the retryable bubble (CP.06) with the net cause line"
+  },
+  {
+   "text": "…, and some may already have changed",
+   "kind": "shape",
+   "why": "the ending of a partial result for a loop that counts nothing (§ Errors, A batch is a partial result)"
+  },
+  {
+   "text": "Your sign-in has expired",
+   "kind": "excerpt",
+   "why": "the clause of S-05.06 and SR-6.13 that names the cause, without its full stop"
+  },
+  {
+   "text": "Response returned an error code",
+   "kind": "dev",
+   "why": "the generated client's ResponseError message (`services/runtime.ts:140`): the library's text, never shown (C16)"
+  },
+  {
+   "text": "The request failed and the interceptors did not return an alternative response",
+   "kind": "dev",
+   "why": "the generated client's FetchError message: the library's text, never shown (C16)"
+  },
+  {
+   "text": "Internal Server Error",
+   "kind": "dev",
+   "why": "a status's reason phrase, quoted to say it is never the server's words (D10)"
+  },
+  {
+   "text": "Check the text near character {n}.",
+   "kind": "excerpt",
+   "why": "the fix of A-20.25 and A-20.26, which go on \", then apply it again\" or \", then import it again\""
+  },
+  {
+   "text": "at position {n}",
+   "kind": "dev",
+   "why": "the parser's own text that the position is read from: developer text, never shown (C16)"
+  },
+  {
+   "text": "Look through the text for one that is missing or extra.",
+   "kind": "excerpt",
+   "why": "the fix of A-20.50, which goes on \", then apply it again\""
+  },
+  {
+   "text": "HTTP 500: Internal Server Error",
+   "kind": "dev",
+   "why": "the status line the fetch helpers build today: a status code standing in for words, never shown (C9)"
+  },
+  {
+   "text": "Are you sure?",
+   "kind": "wrong",
+   "why": "the confirmation the guide bans (C11), quoted to say so; never shipped"
+  },
+  {
+   "text": "Consequence first",
+   "kind": "rule",
+   "why": "Yifrah's pattern, the name of the staff attribute and the rule for a confirmation body (C11)"
+  },
+  {
+   "text": "(optional)",
+   "kind": "shape",
+   "why": "the suffix an optional field's label takes (C14)"
+  },
+  {
+   "text": "Kiwi Kiwi",
+   "kind": "wrong",
+   "why": "what an unbranded deployment would read without the brandLabel rule (§ Email templates): quoted to say it never does"
+  },
+  {
+   "text": "already in your classes",
+   "kind": "excerpt",
+   "why": "the clause of EM.24 and A-16.45 that the enrollment table names"
+  },
+  {
+   "text": "Please do not reply to this email",
+   "kind": "old",
+   "why": "the old footer sentence (EM.01), quoted as the reason the footer changed"
+  },
+  {
+   "text": "Kiwi Platform",
+   "kind": "old",
+   "why": "the old brand string (EM.07, EM.26), quoted as what the templates drop"
+  },
+  {
+   "text": "Kiwi Platform Support",
+   "kind": "old",
+   "why": "the old sender name (EM.27), quoted as what the default drops"
+  },
+  {
+   "text": "Happy Kiwi-ing!",
+   "kind": "old",
+   "why": "the old sign-off (EM.19), quoted as what the welcome email drops"
+  },
+  {
+   "text": "no CSS capitals on labels or buttons",
+   "kind": "rule",
+   "why": "the lock's wording of the rule (§ Never), quoted by the CSS-capitals hand-off"
+  },
+  {
+   "text": "Connection lost",
+   "kind": "path",
+   "why": "the chat's old path (SR-6.20's old text begins with it), as the offline trigger names it"
+  },
+  {
+   "text": "~0.7 s",
+   "kind": "code",
+   "why": "the brief's stale duration for the hop, quoted by the user's decisions line (a stale constant the library overwrites at load)"
+  },
+  {
+   "text": "the Experiments page",
+   "kind": "shape",
+   "why": "how a sentence points to a page: by its label, as the screen spells it (C1's example; SR-6.10 writes it)"
+  },
+  {
+   "text": "Create New Class",
+   "kind": "old",
+   "why": "the old wording of A-02.01 (the string the code shows today), quoted as history: the left side of C1's wrong to right pair"
+  },
+  {
+   "text": "ENROLL USERS",
+   "kind": "old",
+   "why": "the old wording of A-16.04 (the string the code shows today), quoted as history: the left side of C1's wrong to right pair"
+  },
+  {
+   "text": "Submit",
+   "kind": "old",
+   "why": "the old wording of S-09.03 (the string the code shows today), quoted as history: C2 quotes it as a generic button label to avoid"
+  },
+  {
+   "text": "{n} event(s) selected",
+   "kind": "old",
+   "why": "the old wording of A-10.05 (the string the code shows today), quoted as history: the left side of C4's second pair"
+  },
+  {
+   "text": "Loading...",
+   "kind": "old",
+   "why": "the old wording of S-07.01 (the string the code shows today), quoted as history: the left side of C5's pair"
+  },
+  {
+   "text": "Login & Authorize",
+   "kind": "old",
+   "why": "the old wording of S-08.08 (the string the code shows today), quoted as history: the left side of C5's pair"
+  },
+  {
+   "text": "Whitelist",
+   "kind": "old",
+   "why": "the old wording of A-08.03 (the string the code shows today), quoted as history: the left side of C6's pair"
+  },
+  {
+   "text": "System Email",
+   "kind": "old",
+   "why": "the old wording of SR-3.04 (the string the code shows today), quoted as history: the left side of C7's pair"
+  },
+  {
+   "text": "Email Management",
+   "kind": "old",
+   "why": "the old wording of A-04.01 (the string the code shows today), quoted as history: the left side of C7's pair"
+  },
+  {
+   "text": "Failed to load MCP servers",
+   "kind": "old",
+   "why": "the old wording of A-22.36 (the string the code shows today), quoted as history: the left side of C9's pair"
+  },
+  {
+   "text": "Are you sure you want to delete this webhook? This action cannot be undone.",
+   "kind": "old",
+   "why": "the old wording of A-09.09 (the string the code shows today), quoted as history: the left side of C11's pair"
+  },
+  {
+   "text": "No classes found",
+   "kind": "old",
+   "why": "the old wording of A-01.10 (the string the code shows today), quoted as history: the left side of C12's pair"
+  },
+  {
+   "text": "Loading sessions...",
+   "kind": "old",
+   "why": "the old wording of SR-6.07 (the string the code shows today), quoted as history: the left side of C13's pair"
+  },
+  {
+   "text": "Navigating",
+   "kind": "old",
+   "why": "the old wording of SR-6.43 (the string the code shows today), quoted as history: the left side of C13's second pair"
+  },
+  {
+   "text": "Enter the name of the class for this announcement",
+   "kind": "old",
+   "why": "the old wording of A-04.44 (the string the code shows today), quoted as history: the left side of C14's pair"
+  },
+  {
+   "text": "close",
+   "kind": "old",
+   "why": "the old wording of SR-6.34 (the string the code shows today), quoted as history: the left side of C15's pair"
+  },
+  {
+   "text": "Continue learning with AI-powered support.",
+   "kind": "old",
+   "why": "the old wording of S-05.02 (the string the code shows today), quoted as history: the left side of C16's pair"
+  },
+  {
+   "text": "Professor",
+   "kind": "old",
+   "why": "the old wording of A-17.20 (the string the code shows today), quoted as history: the role the interface never draws (terminology: instructor)"
+  },
+  {
+   "text": "OK",
+   "kind": "wrong",
+   "why": "a generic button label that C2 rules out, quoted to say so; never shipped"
+  },
+  {
+   "text": "Yes",
+   "kind": "wrong",
+   "why": "a generic button label that C2 rules out, quoted to say so; never shipped"
+  },
+  {
+   "text": "Confirm",
+   "kind": "wrong",
+   "why": "a generic button label that C2 rules out, quoted to say so; never shipped"
+  },
+  {
+   "text": "12月31日",
+   "kind": "wrong",
+   "why": "a date as a Chinese locale draws it today (TD-24), the left side of C3's wrong to right pair; never shipped"
+  },
+  {
+   "text": "student(s)",
+   "kind": "wrong",
+   "why": "an alternation of forms that D6 fails (C4), quoted to say so; never shipped"
+  },
+  {
+   "text": "1 student, or {n} students",
+   "kind": "wrong",
+   "why": "an alternation of forms that D6 fails (C4), quoted to say so; never shipped"
+  },
+  {
+   "text": "1 events",
+   "kind": "wrong",
+   "why": "a count that reads wrong when n is 1, the example of the bare count slot (C4, D3); never shipped"
+  },
+  {
+   "text": "minutes",
+   "kind": "wrong",
+   "why": "a unit written another way than the one C4 allows, quoted to say so; never shipped"
+  },
+  {
+   "text": "mins",
+   "kind": "wrong",
+   "why": "a unit written another way than the one C4 allows, quoted to say so; never shipped"
+  },
+  {
+   "text": "2 variants",
+   "kind": "shape",
+   "why": "the form C4 gives for a number: digits, then the noun"
+  },
+  {
+   "text": "two variants",
+   "kind": "wrong",
+   "why": "a number spelled out, which C4-B rules out; never shipped"
+  },
+  {
+   "text": "1 classes",
+   "kind": "wrong",
+   "why": "the left side of C4's first wrong to right pair: a count that reads wrong when n is 1; never shipped"
+  },
+  {
+   "text": "1 class",
+   "kind": "shape",
+   "why": "the right side of that pair: the real singular"
+  },
+  {
+   "text": "no value",
+   "kind": "purpose",
+   "why": "what the empty-value glyph means (C5); its accessible name is No value (DS.54)"
+  },
+  {
+   "text": "N/A",
+   "kind": "wrong",
+   "why": "another way to say no value, which C5 rules out; never shipped"
+  },
+  {
+   "text": "dash",
+   "kind": "wrong",
+   "why": "what a screen reader says for a lone dash, quoted as the reason the glyph carries an accessible name (C5)"
+  },
+  {
+   "text": "3–5",
+   "kind": "shape",
+   "why": "a number range with an en dash, C5's second allowed use"
+  },
+  {
+   "text": "Last used: 17 Oct 2026",
+   "kind": "shape",
+   "why": "a caption that introduces its value and keeps its colon, C5's example of a written exemption (`WebhookManagement.tsx:1391` draws the caption)"
+  },
+  {
+   "text": "Loading…",
+   "kind": "shape",
+   "why": "the right side of C5's pair: the ellipsis character, never three full stops"
+  },
+  {
+   "text": "we",
+   "kind": "wrong",
+   "why": "a first-person word that C8 rules out in chrome, quoted to say so; never shipped"
+  },
+  {
+   "text": "our",
+   "kind": "wrong",
+   "why": "a first-person word that C8 rules out in chrome, quoted to say so; never shipped"
+  },
+  {
+   "text": "let's",
+   "kind": "wrong",
+   "why": "a first-person word that C8 rules out in chrome, quoted to say so; never shipped"
+  },
+  {
+   "text": "please",
+   "kind": "rule",
+   "why": "the word C8 allows only to ask for real effort and never in an error"
+  },
+  {
+   "text": "Please contact us at",
+   "kind": "wrong",
+   "why": "the left side of C8's first pair: a first-person line with the address left out; never shipped"
+  },
+  {
+   "text": "Contact {SUPPORT_EMAIL}",
+   "kind": "shape",
+   "why": "the right side of C8's pair: the support line in the third person, with the address from branding config (C17)"
+  },
+  {
+   "text": "I'll draft the config",
+   "kind": "old",
+   "why": "an excerpt of the old text of SR-7.03 (\"Describe it · I'll draft the config\"), the left side of C8's second pair"
+  },
+  {
+   "text": "Backend error: … This is a known issue",
+   "kind": "old",
+   "why": "an excerpt of the old text at `WebhookManagement.tsx:194` (the webhook error's developer text), the left side of C10's pair"
+  },
+  {
+   "text": "The server needs user authentication set up for webhooks. Ask whoever maintains this Kiwi deployment to fix it.",
+   "kind": "excerpt",
+   "why": "the why and the fix of the webhook error row A-09.57, which replace the developer text (C10's example)"
+  },
+  {
+   "text": "…built for the {INSTITUTION_NAME} community",
+   "kind": "old",
+   "why": "an excerpt of the sign-in aside's old line (\"An AI learning companion built for the {INSTITUTION_NAME} community.\", `AuthLayout.tsx:96`), the left side of C17's pair"
+  },
+  {
+   "text": "enroll",
+   "kind": "rule",
+   "why": "an American spelling that C18 requires, quoted by the rule"
+  },
+  {
+   "text": "analyze",
+   "kind": "rule",
+   "why": "an American spelling that C18 requires, quoted by the rule"
+  },
+  {
+   "text": "canceled",
+   "kind": "rule",
+   "why": "an American spelling that C18 requires, quoted by the rule"
+  },
+  {
+   "text": "2026/10/14 01:19:43",
+   "kind": "wrong",
+   "why": "the app registry's date as the default locale draws it today (TD-24), quoted as what C3 replaces"
+  },
+  {
+   "text": "28 Dec 2025 – 3 Jan 2026",
+   "kind": "shape",
+   "why": "a date range across two years, the range row's example"
+  },
+  {
+   "text": "1.5 hours",
+   "kind": "shape",
+   "why": "a fraction takes the plural: the helper's example (C4)"
+  },
+  {
+   "text": "1 students",
+   "kind": "wrong",
+   "why": "the example of a bare count slot reading 1 students when n is 1 (D3); never shipped"
+  },
+  {
+   "text": "1 of 1 class",
+   "kind": "shape",
+   "why": "the helper goes on the total: C4's example"
+  },
+  {
+   "text": "2 of 3 classes",
+   "kind": "shape",
+   "why": "the helper goes on the total: C4's example"
+  },
+  {
+   "text": "(local time)",
+   "kind": "shape",
+   "why": "a table column's caption that names the zone, in § Dates, times and numbers' note on zones"
+  },
+  {
+   "text": "Sept",
+   "kind": "wrong",
+   "why": "how ICU spells September in some locales, quoted as the reason the month table is fixed"
+  },
+  {
+   "text": "2026/10/14",
+   "kind": "wrong",
+   "why": "a date as a non-English default locale draws it (TD-24): what a native date input shows"
+  },
+  {
+   "text": "17 oct 2026",
+   "kind": "shape",
+   "why": "a lowercase month that the DateTimeField accepts when typed and rewrites to the shown format"
+  },
+  {
+   "text": "2026-10-17",
+   "kind": "shape",
+   "why": "an ISO date that the DateTimeField accepts when typed and rewrites to the shown format"
+  },
+  {
+   "text": "enrolled users",
+   "kind": "wrong",
+   "why": "the phrase the terminology table replaces (student, user or roster), quoted to say so; never shipped"
+  },
+  {
+   "text": "students",
+   "kind": "wrong",
+   "why": "the word for everyone, which the table replaces by role (student for a role, user for a mixed group)"
+  },
+  {
+   "text": "visit",
+   "kind": "wrong",
+   "why": "the word the table does not use for an analytics session"
+  },
+  {
+   "text": "session",
+   "kind": "rule",
+   "why": "the word allowed in a new string only on the analytics pages (D8)"
+  },
+  {
+   "text": "runs an admin-approved prompt",
+   "kind": "excerpt",
+   "why": "the SDK's own description of `contextualChat` (`kiwi-app-sdk/README.md:111`), which keeps the word prompt"
+  },
+  {
+   "text": "this server",
+   "kind": "wrong",
+   "why": "a wording the MCP pages never use for the record (H18), quoted to say so; never shipped"
+  },
+  {
+   "text": "Create server",
+   "kind": "wrong",
+   "why": "a wording the MCP pages never use for the record (H18), quoted to say so; never shipped"
+  },
+  {
+   "text": "global servers",
+   "kind": "wrong",
+   "why": "a wording the MCP pages never use for the record (H18), quoted to say so; never shipped"
+  },
+  {
+   "text": "the server",
+   "kind": "rule",
+   "why": "the phrase a cause line uses for Kiwi's backend (§ Errors)"
+  },
+  {
+   "text": "the assistant",
+   "kind": "shape",
+   "why": "how the experiment assistant is named once it has been named (the terminology row)"
+  },
+  {
+   "text": "Teaching assistant",
+   "kind": "excerpt",
+   "why": "the label of the role lookup's `ta` value (`identifiers.json`), drawn in A-08.71's role list"
+  },
+  {
+   "text": "QwenModel",
+   "kind": "code",
+   "why": "an enum value as the program names it, quoted as what the interface never draws (H11)"
+  },
+  {
+   "text": "Usage limit",
+   "kind": "wrong",
+   "why": "the label a flag's tooltip must not carry: the flag exempts a user from the limit, so the label would say the opposite; never shipped"
+  },
+  {
+   "text": "Create password accounts",
+   "kind": "path",
+   "why": "the heading of a section on the Users page as the screen spells it (`UserManagement.tsx:1045`), quoted to say which table the status column belongs to"
+  },
+  {
+   "text": "Unknown user",
+   "kind": "excerpt",
+   "why": "the fallback of the user lookup when the email cannot be read (`identifiers.json`), drawn inside a row's sentence"
+  },
+  {
+   "text": "this webhook",
+   "kind": "excerpt",
+   "why": "the fallback of the webhook lookup when its address cannot be read (`identifiers.json`), drawn inside a row's sentence"
+  },
+  {
+   "text": "Audit ID",
+   "kind": "excerpt",
+   "why": "a label the source draws and keeps, an id labelled as an id (H11's exemption; `WebhookEventApprovals.tsx:1042`)"
+  },
+  {
+   "text": "Management",
+   "kind": "old",
+   "why": "a word the old page titles carried, dropped where it added nothing (C7, TD-21)"
+  },
+  {
+   "text": "Registry",
+   "kind": "old",
+   "why": "a word the old page titles carried, dropped where it added nothing (C7, TD-21)"
+  },
+  {
+   "text": "My",
+   "kind": "wrong",
+   "why": "the first-person possessive C8 rules out in chrome, quoted to say so; never shipped"
+  },
+  {
+   "text": "Enter a date like 17 Oct 2026.",
+   "kind": "wrong",
+   "why": "an input error that opens with the correction, the form D1 fails (§ Errors): the first sentence DS.45 had before the tenth review; never shipped"
+  }
+ ]
+}

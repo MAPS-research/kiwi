@@ -1,0 +1,1607 @@
+{
+ "about": "Which lint covers which written rule, over which strings, and with which planted defect (proofs.mjs); what a lint cannot see is checked by hand, with the rows read and the result. check-copy.mjs (R1) reads this file, the guide and generated/proof-summary.json and fails when a rule, a § Errors item, a § Dates row, a § Step labels kind or a terminology row has no entry, when a named proof is missing or was not caught, or when a hand-checked population has changed since it was read. \"over\" names the strings a lint reads: new (every New string, B1 and its siblings), kept (every kept string and every source string no row touches, H17), source (every string in the source, H1), examples (the guide's own examples, F20), code (the code the checks read), data (the revision data), guide (the text of DESIGN.md).",
+ "wiring": {
+  "new": {
+   "check": "B1",
+   "note": "lintString runs over every New string with its row's kind",
+   "proofs": [
+    "E-C1-new-1"
+   ]
+  },
+  "kept": {
+   "check": "H17",
+   "note": "the same lints run over every kept string and kept row and every source string no row touches",
+   "proofs": [
+    "E-C1-kept-1"
+   ]
+  },
+  "source": {
+   "check": "H1",
+   "note": "lintSource runs over every string in the source and fails when one has no row",
+   "proofs": [
+    "E-C1-src-1"
+   ]
+  },
+  "examples": {
+   "check": "F20",
+   "note": "lintString runs over the guide's own examples",
+   "proofs": [
+    "E-F20-examples-1"
+   ]
+  }
+ },
+ "rules": {
+  "C1": {
+   "name": "Case",
+   "lints": [
+    {
+     "check": "B1",
+     "over": "new",
+     "proofs": [
+      "E-C1-new-1",
+      "E-C1-new-2",
+      "E-C1-new-3"
+     ]
+    },
+    {
+     "check": "H17",
+     "over": "kept",
+     "proofs": [
+      "E-C1-kept-1"
+     ]
+    },
+    {
+     "check": "H1",
+     "over": "source",
+     "proofs": [
+      "E-C1-src-1"
+     ]
+    },
+    {
+     "check": "H7",
+     "over": "code",
+     "proofs": [
+      "E-C1-code-1",
+      "E-C1-code-2"
+     ]
+    }
+   ],
+   "audit": [
+    "C1-A",
+    "C1-B"
+   ]
+  },
+  "C2": {
+   "name": "Buttons",
+   "lints": [
+    {
+     "check": "B1",
+     "over": "new",
+     "proofs": [
+      "E-C2-new-1",
+      "E-C2-new-2"
+     ]
+    },
+    {
+     "check": "H12",
+     "over": "code",
+     "proofs": [
+      "E-C2-code-1"
+     ]
+    },
+    {
+     "check": "H8",
+     "over": "data",
+     "proofs": [
+      "E-C2-data-1"
+     ]
+    }
+   ],
+   "audit": [
+    "C2-A"
+   ],
+   "manual": {
+    "what": "\"three words where they fit\" (TD-34) is a judgement about each label, so only the ceiling of five words is linted",
+    "population": {
+     "kind": [
+      "button",
+      "cbutton"
+     ],
+     "minWords": 4
+    },
+    "result": "11 of 11 need the extra words: 3 name a provider (Sign in with Google, Sign up with Google), 2 are a count and its noun (Approve 3 events), 1 is the person's own voice (I've copied the secret), 1 is two actions in one button (Sign in and allow access), 4 carry a qualifier that separates the button from its neighbour (Ask Kiwi to check, Go to your classes, Create first MCP server, Assign existing MCP servers); none can lose a word without losing its object",
+    "rows": 11
+   }
+  },
+  "C3": {
+   "name": "Dates and times",
+   "lints": [
+    {
+     "check": "B1",
+     "over": "new",
+     "proofs": [
+      "E-C3-new-1",
+      "E-C3-new-2"
+     ]
+    },
+    {
+     "check": "H17",
+     "over": "kept",
+     "proofs": [
+      "E-C3-kept-1"
+     ]
+    },
+    {
+     "check": "H1",
+     "over": "source",
+     "proofs": [
+      "E-C3-src-1"
+     ]
+    },
+    {
+     "check": "H2",
+     "over": "code",
+     "proofs": [
+      "E-C3-code-1"
+     ]
+    },
+    {
+     "check": "H20",
+     "over": "guide",
+     "proofs": [
+      "E-C3-guide-1"
+     ]
+    }
+   ],
+   "audit": [
+    "C3-A"
+   ]
+  },
+  "C4": {
+   "name": "Numbers and plurals",
+   "lints": [
+    {
+     "check": "B1",
+     "over": "new",
+     "proofs": [
+      "E-C4-new-1",
+      "E-C4-new-2",
+      "E-C4-new-3"
+     ]
+    },
+    {
+     "check": "D3",
+     "over": "new",
+     "proofs": [
+      "E-C4-new-4",
+      "E-C4-new-6",
+      "E-C4-new-7"
+     ]
+    },
+    {
+     "check": "D6",
+     "over": "new",
+     "proofs": [
+      "E-C4-new-5"
+     ]
+    },
+    {
+     "check": "H17",
+     "over": "kept",
+     "proofs": [
+      "E-C4-kept-1",
+      "E-C4-kept-2",
+      "E-C4-kept-3",
+      "E-C4-kept-4"
+     ]
+    },
+    {
+     "check": "H1",
+     "over": "source",
+     "proofs": [
+      "E-C4-src-1",
+      "E-C4-src-2"
+     ]
+    },
+    {
+     "check": "H10",
+     "over": "code",
+     "proofs": [
+      "E-C4-code-1"
+     ]
+    }
+   ],
+   "audit": [
+    "C4-A",
+    "C4-B",
+    "C4-C"
+   ]
+  },
+  "C5": {
+   "name": "Marks",
+   "lints": [
+    {
+     "check": "B1",
+     "over": "new",
+     "proofs": [
+      "E-C5-new-1",
+      "E-C5-new-2",
+      "E-C5-new-3",
+      "E-C5-new-4",
+      "E-C5-new-5"
+     ]
+    },
+    {
+     "check": "H17",
+     "over": "kept",
+     "proofs": [
+      "E-C5-kept-1",
+      "E-C5-kept-2",
+      "E-C5-kept-3"
+     ]
+    },
+    {
+     "check": "H1",
+     "over": "source",
+     "proofs": [
+      "E-C5-src-1",
+      "E-C5-src-2"
+     ]
+    },
+    {
+     "check": "F20",
+     "over": "examples",
+     "proofs": [
+      "E-F20-examples-1"
+     ]
+    },
+    {
+     "check": "H19",
+     "over": "data",
+     "proofs": [
+      "E-C5-data-1"
+     ]
+    }
+   ],
+   "audit": [
+    "C5-A",
+    "C5-B"
+   ]
+  },
+  "C6": {
+   "name": "Terminology",
+   "lints": [
+    {
+     "check": "B1",
+     "over": "new",
+     "proofs": [
+      "E-C6-new-1",
+      "E-C6-new-2",
+      "E-C6-new-3"
+     ]
+    },
+    {
+     "check": "D8",
+     "over": "new",
+     "proofs": [
+      "E-C6-new-4"
+     ]
+    },
+    {
+     "check": "H17",
+     "over": "kept",
+     "proofs": [
+      "E-C6-kept-1",
+      "E-C6-kept-2",
+      "E-C6-kept-3"
+     ]
+    },
+    {
+     "check": "H1",
+     "over": "source",
+     "proofs": [
+      "E-C6-src-1",
+      "E-C6-src-2"
+     ]
+    },
+    {
+     "check": "H18",
+     "over": "data",
+     "proofs": [
+      "E-C6-data-1"
+     ]
+    }
+   ],
+   "audit": [
+    "C6-A"
+   ]
+  },
+  "C7": {
+   "name": "Page names",
+   "lints": [
+    {
+     "check": "B1",
+     "over": "new",
+     "proofs": [
+      "E-C7-new-1"
+     ]
+    },
+    {
+     "check": "H17",
+     "over": "kept",
+     "proofs": [
+      "E-C7-kept-1"
+     ]
+    },
+    {
+     "check": "H1",
+     "over": "source",
+     "proofs": [
+      "E-C7-src-1"
+     ]
+    },
+    {
+     "check": "F8",
+     "over": "data",
+     "proofs": [
+      "E-C7-data-1"
+     ]
+    }
+   ],
+   "audit": []
+  },
+  "C8": {
+   "name": "Person",
+   "lints": [
+    {
+     "check": "B1",
+     "over": "new",
+     "proofs": [
+      "E-C8-new-1",
+      "E-C8-new-2",
+      "E-C8-new-3"
+     ]
+    },
+    {
+     "check": "H17",
+     "over": "kept",
+     "proofs": [
+      "E-C8-kept-1",
+      "E-C8-kept-2"
+     ]
+    }
+   ],
+   "audit": [
+    "C8-A"
+   ]
+  },
+  "C9": {
+   "name": "Errors",
+   "lints": [
+    {
+     "check": "B1",
+     "over": "new",
+     "proofs": [
+      "E-C9-new-1",
+      "E-C9-new-2",
+      "E-C9-new-3"
+     ]
+    },
+    {
+     "check": "D1",
+     "over": "new",
+     "proofs": [
+      "E-C9-new-5",
+      "E-C9-new-6",
+      "E-C9-new-7",
+      "E-C9-new-8",
+      "E-C9-new-9",
+      "E-C9-new-10",
+      "E-C9-new-11"
+     ]
+    },
+    {
+     "check": "D2",
+     "over": "new",
+     "proofs": [
+      "E-C9-new-4"
+     ]
+    },
+    {
+     "check": "H17",
+     "over": "kept",
+     "proofs": [
+      "E-C9-kept-1",
+      "E-C9-kept-2"
+     ]
+    },
+    {
+     "check": "H1",
+     "over": "source",
+     "proofs": [
+      "E-C9-src-1"
+     ]
+    }
+   ],
+   "audit": [
+    "C9-A",
+    "C9-B"
+   ]
+  },
+  "C10": {
+   "name": "Raw text",
+   "lints": [
+    {
+     "check": "B1",
+     "over": "new",
+     "proofs": [
+      "E-C10-new-1",
+      "E-C10-new-2"
+     ]
+    },
+    {
+     "check": "D10",
+     "over": "new",
+     "proofs": [
+      "E-C10-new-3"
+     ]
+    },
+    {
+     "check": "H17",
+     "over": "kept",
+     "proofs": [
+      "E-C10-kept-1"
+     ]
+    },
+    {
+     "check": "H1",
+     "over": "source",
+     "proofs": [
+      "E-C10-src-1"
+     ]
+    }
+   ],
+   "audit": [
+    "C10-A"
+   ]
+  },
+  "C11": {
+   "name": "Confirmations",
+   "lints": [
+    {
+     "check": "B1",
+     "over": "new",
+     "proofs": [
+      "E-C11-new-1",
+      "E-C11-new-2"
+     ]
+    },
+    {
+     "check": "H17",
+     "over": "kept",
+     "proofs": [
+      "E-C11-kept-1"
+     ]
+    },
+    {
+     "check": "H1",
+     "over": "source",
+     "proofs": [
+      "E-C11-src-1"
+     ]
+    },
+    {
+     "check": "H16",
+     "over": "data",
+     "proofs": [
+      "E-C11-data-1"
+     ]
+    }
+   ],
+   "audit": [
+    "C11-A"
+   ],
+   "manual": {
+    "what": "\"the consequence first, then permanence, then the way out\" is a reading of each body (the lints catch the old patterns and H16 the title, the button and the permanence), so each body is read against the code that makes it true",
+    "population": {
+     "kind": [
+      "confirm"
+     ]
+    },
+    "result": "20 read: 19 state what happens before whether it can be undone and each claim was checked against the code (DS.32 is the pattern's placeholder); one, A-09.09, promised permanence for a webhook that the backend only sets inactive (`webhooks/webhooks.service.ts:173-177`), and now says what happens and how to turn it on again",
+    "rows": 20
+   }
+  },
+  "C12": {
+   "name": "Empty states",
+   "lints": [
+    {
+     "check": "B1",
+     "over": "new",
+     "proofs": [
+      "E-C12-new-1"
+     ]
+    },
+    {
+     "check": "H17",
+     "over": "kept",
+     "proofs": [
+      "E-C12-kept-1"
+     ]
+    },
+    {
+     "check": "H1",
+     "over": "source",
+     "proofs": [
+      "E-C12-src-1"
+     ]
+    }
+   ],
+   "audit": [
+    "C12-A"
+   ],
+   "manual": {
+    "what": "\"the first step, or who acts\" and \"names what was searched\" are readings of each state (the lint catches \"Nothing here\" and \"No … found\")",
+    "population": {
+     "kind": [
+      "empty",
+      "new"
+     ]
+    },
+    "result": "read in full: 0 say \"Nothing here\" or \"No … found\"; each is a \"No {things} yet\" or \"No {things} match\" state line (C5's one-clause form, for a secondary pane), a sentence that names the first step, or a sentence that says who acts and when; 0 defects",
+    "rows": 74
+   }
+  },
+  "C13": {
+   "name": "Loading and progress",
+   "lints": [
+    {
+     "check": "B1",
+     "over": "new",
+     "proofs": [
+      "E-C13-new-1",
+      "E-C13-new-2"
+     ]
+    },
+    {
+     "check": "H17",
+     "over": "kept",
+     "proofs": [
+      "E-C13-kept-1"
+     ]
+    },
+    {
+     "check": "H1",
+     "over": "source",
+     "proofs": [
+      "E-C13-src-1"
+     ]
+    }
+   ],
+   "audit": [
+    "C13-A",
+    "C13-B"
+   ]
+  },
+  "C14": {
+   "name": "Labels, helpers, placeholders",
+   "lints": [
+    {
+     "check": "B1",
+     "over": "new",
+     "proofs": [
+      "E-C14-new-1",
+      "E-C14-new-2"
+     ]
+    },
+    {
+     "check": "H1",
+     "over": "source",
+     "proofs": [
+      "E-C14-src-1"
+     ]
+    }
+   ],
+   "audit": [
+    "C14-A",
+    "C14-B"
+   ],
+   "manual": {
+    "what": "\"a helper adds information and never repeats the label\" compares a helper with its field's label, which a string lint cannot see",
+    "population": {
+     "kind": [
+      "helper",
+      "placeholder"
+     ]
+    },
+    "result": "read in full, and each helper compared with the labels within 15 lines of its anchor by word overlap: 12 helper and label pairs overlap by 60% or more of the label's words (page descriptions that use the page title; a field's purpose beside its name), and in each the helper adds information beyond the label (a format, a default, a consequence or a purpose); 0 defects",
+    "rows": 103
+   }
+  },
+  "C15": {
+   "name": "Icon-only names",
+   "lints": [
+    {
+     "check": "B1",
+     "over": "new",
+     "proofs": [
+      "E-C15-new-1"
+     ]
+    },
+    {
+     "check": "H1",
+     "over": "source",
+     "proofs": [
+      "E-C15-src-1"
+     ]
+    }
+   ],
+   "audit": [],
+   "manual": {
+    "what": "\"a verb phrase naming its object, the same in the tooltip and the aria-label\" needs the control, which a string lint cannot see (the first-letter lint, H9's every-copy rule and the repeated-row lint of lintSource cover what they can)",
+    "population": {
+     "kind": [
+      "aria",
+      "tooltip"
+     ]
+    },
+    "result": "read in full: 9 are the glyph's name \"No value\" (DS.54), the rest are verb phrases, the toolbar words the component tables name, or a tooltip that adds a sentence to a label that is already visible and so is not an icon's name (A-08.24 and A-08.78 on the approval chip, A-09.66 on the secret); 2 defects found and fixed, A-05.11 (\"View details\" in every row of the email table, now \"View email details\") and A-09.27 (a bare noun phrase, now \"View delivery history\")",
+    "rows": 82
+   }
+  },
+  "C16": {
+   "name": "Claims",
+   "lints": [
+    {
+     "check": "B1",
+     "over": "new",
+     "proofs": [
+      "E-C16-new-1",
+      "E-C16-new-2"
+     ]
+    },
+    {
+     "check": "H17",
+     "over": "kept",
+     "proofs": [
+      "E-C16-kept-1"
+     ]
+    },
+    {
+     "check": "H1",
+     "over": "source",
+     "proofs": [
+      "E-C16-src-1"
+     ]
+    },
+    {
+     "check": "D12",
+     "over": "code",
+     "proofs": [
+      "E-D12-1"
+     ]
+    },
+    {
+     "check": "D12",
+     "over": "data",
+     "proofs": [
+      "E-D12-2",
+      "E-D12-3",
+      "E-D12-4",
+      "E-D12-5"
+     ]
+    },
+    {
+     "check": "K11",
+     "over": "examples",
+     "proofs": [
+      "E-K11-1",
+      "E-K11-2",
+      "E-K11-3",
+      "E-K11-4",
+      "E-K11-5",
+      "E-K11-6"
+     ]
+    },
+    {
+     "check": "D13",
+     "over": "data",
+     "proofs": [
+      "E-D13-1",
+      "E-D13-2",
+      "E-D13-3",
+      "E-D13-4"
+     ]
+    },
+    {
+     "check": "D13",
+     "over": "guide",
+     "proofs": [
+      "E-D13-5",
+      "E-D13-6",
+      "E-D13-7"
+     ]
+    }
+   ],
+   "audit": [
+    "C16-A"
+   ],
+   "manual": {
+    "what": "\"nothing the page does not do\" can only be checked against the code",
+    "population": {
+     "ids": [
+      "A-07.13",
+      "A-07.14",
+      "A-07.85",
+      "A-08.37",
+      "A-08.40",
+      "A-09.09",
+      "A-09.36",
+      "A-09.78",
+      "A-10.19",
+      "A-10.20",
+      "A-10.21",
+      "A-10.22",
+      "A-10.46",
+      "A-10.55",
+      "A-14.24",
+      "A-14.25",
+      "A-14.26",
+      "A-22.14",
+      "A-23.19",
+      "A-09.42",
+      "A-09.50",
+      "A-09.51",
+      "A-09.52",
+      "A-09.66",
+      "A-10.28",
+      "A-11.08",
+      "A-14.14",
+      "A-14.31",
+      "A-14.32",
+      "A-18.07",
+      "A-20.12",
+      "A-20.13",
+      "A-22.31",
+      "A-04.46",
+      "S-01.07",
+      "A-12.10"
+     ]
+    },
+    "result": "36 rows that state what the product does were checked against the code they run, and the ones that say who can act against the access model on `fix/access-control`: 5 were corrected (A-09.09 promised that deleting a webhook can't be undone, and A-09.42, the dialog's title and its button and the row's control said delete, when the backend only sets the webhook inactive: they now say deactivate; A-09.66's tooltip now says only what the page does: it shows the secret once; A-14.26 said everything Kiwi learned from it, where the code removes the comments, the summaries, the search index and the stored file; A-12.10 sent every non-admin to an administrator for what a class's instructor may do under the model); 31 hold, S-01.07 once the branch merges (it ships with or after it, like S-05.06)",
+    "rows": 36
+   }
+  },
+  "C17": {
+   "name": "Branding",
+   "lints": [
+    {
+     "check": "B1",
+     "over": "new",
+     "proofs": [
+      "E-C17-new-1"
+     ]
+    },
+    {
+     "check": "H17",
+     "over": "kept",
+     "proofs": [
+      "E-C17-kept-1"
+     ]
+    },
+    {
+     "check": "H1",
+     "over": "source",
+     "proofs": [
+      "E-C17-src-1"
+     ]
+    },
+    {
+     "check": "D4",
+     "over": "data",
+     "proofs": [
+      "E-C17-data-1"
+     ]
+    }
+   ],
+   "audit": [
+    "C17-A"
+   ]
+  },
+  "C18": {
+   "name": "Spelling",
+   "lints": [
+    {
+     "check": "B1",
+     "over": "new",
+     "proofs": [
+      "E-C18-new-1"
+     ]
+    },
+    {
+     "check": "H17",
+     "over": "kept",
+     "proofs": [
+      "E-C18-kept-1"
+     ]
+    },
+    {
+     "check": "H1",
+     "over": "source",
+     "proofs": [
+      "E-C18-src-1"
+     ]
+    }
+   ],
+   "audit": [
+    "C18-A"
+   ]
+  }
+ },
+ "sections": {
+  "errors": {
+   "items": {
+    "Anatomy.": {
+     "lints": [
+      {
+       "check": "D1",
+       "proofs": [
+        "E-ERR-1",
+        "E-C9-new-6",
+        "E-C9-new-8",
+        "E-C9-new-9",
+        "E-C9-new-10",
+        "E-C9-new-11"
+       ]
+      },
+      {
+       "check": "D2",
+       "proofs": [
+        "E-C9-new-4"
+       ]
+      },
+      {
+       "check": "D9",
+       "proofs": []
+      }
+     ],
+     "note": "D9 (every error row cites C9) is built into the generator: composeError adds C9 to every error row, so a row cannot omit it"
+    },
+    "The cause lines.": {
+     "lints": [
+      {
+       "check": "F5",
+       "proofs": [
+        "E-ERR-2"
+       ]
+      },
+      {
+       "check": "D1",
+       "proofs": [
+        "E-ERR-1"
+       ]
+      }
+     ]
+    },
+    "On the MCP pages the server has a name.": {
+     "lints": [
+      {
+       "check": "H18",
+       "proofs": [
+        "E-C6-data-1"
+       ]
+      }
+     ]
+    },
+    "Kiwi once.": {
+     "lints": [
+      {
+       "check": "K5",
+       "proofs": [
+        "E-ERR-6"
+       ]
+      }
+     ]
+    },
+    "What is safe.": {
+     "lints": [
+      {
+       "check": "D11",
+       "proofs": [
+        "E-ERR-3",
+        "E-ERR-4",
+        "E-ERR-5"
+       ]
+      }
+     ]
+    },
+    "A batch is a partial result.": {
+     "lints": [
+      {
+       "check": "D1",
+       "proofs": [
+        "E-ERR-1"
+       ]
+      }
+     ],
+     "note": "H14 (every function that sends requests one after another has a partial-result row) reads the source's loops; its proof ran in round 4 and it is unchanged"
+    },
+    "Raw backend text (C10).": {
+     "lints": [
+      {
+       "check": "D10",
+       "proofs": [
+        "E-C10-new-3"
+       ]
+      },
+      {
+       "check": "F22",
+       "proofs": [
+        "E-ERR-9"
+       ]
+      }
+     ]
+    },
+    "Where a message comes from.": {
+     "lints": [
+      {
+       "check": "D10",
+       "proofs": [
+        "E-C10-new-3"
+       ]
+      },
+      {
+       "check": "F22",
+       "proofs": [
+        "E-ERR-9"
+       ]
+      }
+     ]
+    },
+    "Where this section supersedes the Companion's hand-off.": {
+     "lints": [
+      {
+       "check": "K4",
+       "proofs": [
+        "E-ERR-7",
+        "E-ERR-8"
+       ]
+      },
+      {
+       "check": "K9",
+       "proofs": [
+        "E-ERR-10"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "dates": {
+   "items": {
+    "Date": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "E-C3-new-1"
+       ]
+      },
+      {
+       "check": "H2",
+       "proofs": [
+        "E-C3-code-1"
+       ]
+      }
+     ]
+    },
+    "Date and time": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "E-C3-new-2"
+       ]
+      },
+      {
+       "check": "H2",
+       "proofs": [
+        "E-C3-code-1"
+       ]
+      }
+     ]
+    },
+    "Time": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "E-C3-new-2"
+       ]
+      }
+     ]
+    },
+    "Range": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "E-C5-new-3"
+       ]
+      },
+      {
+       "check": "F6",
+       "proofs": [
+        "E-DT-1"
+       ]
+      }
+     ]
+    },
+    "Calendar header": {
+     "lints": [
+      {
+       "check": "F17",
+       "proofs": [
+        "E-DT-2"
+       ]
+      },
+      {
+       "check": "H2",
+       "proofs": [
+        "E-C3-code-1"
+       ]
+      }
+     ]
+    },
+    "Calendar day (accessible name)": {
+     "lints": [
+      {
+       "check": "F17",
+       "proofs": [
+        "E-DT-2"
+       ]
+      }
+     ]
+    },
+    "Weekday heading": {
+     "lints": [
+      {
+       "check": "F17",
+       "proofs": [
+        "E-DT-2"
+       ]
+      }
+     ]
+    },
+    "Count": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "E-C4-new-1"
+       ]
+      },
+      {
+       "check": "F6",
+       "proofs": [
+        "E-DT-1"
+       ]
+      }
+     ]
+    },
+    "Count with a noun": {
+     "lints": [
+      {
+       "check": "D3",
+       "proofs": [
+        "E-C4-new-4"
+       ]
+      },
+      {
+       "check": "H10",
+       "proofs": [
+        "E-C4-code-1"
+       ]
+      }
+     ]
+    },
+    "Machine files": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "E-C3-new-1"
+       ]
+      },
+      {
+       "check": "F6",
+       "proofs": [
+        "E-DT-1"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "stepLabels": {
+   "items": {
+    "Wait": {
+     "lints": [
+      {
+       "check": "K3",
+       "proofs": [
+        "E-STEP-3"
+       ]
+      }
+     ]
+    },
+    "Reading": {
+     "lints": [
+      {
+       "check": "K3",
+       "proofs": [
+        "E-STEP-1"
+       ]
+      }
+     ]
+    },
+    "Acting": {
+     "lints": [
+      {
+       "check": "K3",
+       "proofs": [
+        "E-STEP-1"
+       ]
+      }
+     ]
+    },
+    "Tool": {
+     "lints": [
+      {
+       "check": "K3",
+       "proofs": [
+        "E-STEP-1"
+       ]
+      }
+     ]
+    },
+    "No name": {
+     "lints": [
+      {
+       "check": "K3",
+       "proofs": [
+        "E-STEP-2"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "terminology": {
+   "items": {
+    "sign in, sign out, sign-in (the noun)": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "U-C6-3"
+       ]
+      }
+     ]
+    },
+    "Kiwi": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "U-C6-2"
+       ]
+      }
+     ]
+    },
+    "allowlist": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "E-C6-new-1"
+       ]
+      }
+     ]
+    },
+    "class; cover image": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "U-C6-12"
+       ]
+      }
+     ]
+    },
+    "instructor": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "U-C6-4"
+       ]
+      }
+     ]
+    },
+    "student for a role, user for a mixed group, roster for a class's people": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "U-C6-8"
+       ]
+      }
+     ],
+     "manual": {
+      "what": "\"students\" for everyone is a reading of the audience of each string",
+      "population": {
+       "regex": "\\bstudents?\\b"
+      },
+      "result": "46 read: 0 calls a mixed group students (the email recipients are the class roster's students; the mixed group is called users or the roster; the new caption of A-18.39 counts the students of one lecture, a role)",
+      "rows": 46
+     }
+    },
+    "chat (Kiwi chat)": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "U-C6-9"
+       ]
+      },
+      {
+       "check": "D8",
+       "proofs": [
+        "E-C6-new-4"
+       ]
+      }
+     ]
+    },
+    "session, in analytics only (one run of a user's activity)": {
+     "lints": [
+      {
+       "check": "D8",
+       "proofs": [
+        "E-C6-new-4"
+       ]
+      },
+      {
+       "check": "H17",
+       "proofs": [
+        "E-C6-kept-3"
+       ]
+      }
+     ]
+    },
+    "sign-in (the signed-in period": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "U-C6-24"
+       ]
+      },
+      {
+       "check": "D8",
+       "proofs": [
+        "E-C6-new-4"
+       ]
+      }
+     ]
+    },
+    "instructions (what staff write for Kiwi)": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "U-C6-11"
+       ]
+      },
+      {
+       "check": "D8",
+       "proofs": [
+        "U-C6-21"
+       ]
+      }
+     ]
+    },
+    "prompt (a registered app's admin-approved prompt)": {
+     "lints": [
+      {
+       "check": "F18",
+       "proofs": [
+        "E-TERM-2"
+       ]
+      }
+     ]
+    },
+    "model": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "U-C6-14"
+       ]
+      }
+     ]
+    },
+    "group (the students) and variant (the chat setup)": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "U-C6-7"
+       ]
+      }
+     ]
+    },
+    "feature flag, flag": {
+     "lints": [
+      {
+       "check": "D8",
+       "proofs": [
+        "E-C6-data-2"
+       ]
+      }
+     ]
+    },
+    "API token (a credential); usage limit (what a student runs out of)": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "U-C6-10"
+       ]
+      }
+     ],
+     "manual": {
+      "what": "\"token\" for both senses is a reading of each string (the lint catches \"out of tokens\")",
+      "population": {
+       "regex": "\\btokens?\\b"
+      },
+      "result": "34 read: 28 are the webhook's API token (a credential), 3 the model tokens of the analytics, 1 the model setting, 1 an OAuth token URL, 1 a design note about a model stream; 0 mixes the credential with the usage limit",
+      "rows": 34
+     }
+    },
+    "MCP server (a registered tool provider)": {
+     "lints": [
+      {
+       "check": "H18",
+       "proofs": [
+        "E-C6-data-1"
+       ]
+      }
+     ]
+    },
+    "identifier": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "E-C6-new-2"
+       ]
+      }
+     ]
+    },
+    "setup": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "E-C6-new-3"
+       ]
+      }
+     ]
+    },
+    "answer": {
+     "lints": [
+      {
+       "check": "D8",
+       "proofs": [
+        "U-C6-22"
+       ]
+      }
+     ]
+    },
+    "choose (an option, a file, a date)": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "U-C6-15"
+       ]
+      }
+     ]
+    },
+    "assistant (the experiment assistant": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "U-C6-16"
+       ]
+      },
+      {
+       "check": "D8",
+       "proofs": [
+        "U-C6-23"
+       ]
+      }
+     ]
+    },
+    "data (of a webhook event)": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "U-C6-13"
+       ]
+      }
+     ]
+    },
+    "deactivate, for a webhook (it stops receiving events and can be turned on again)": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "U-C6-25",
+        "E-C6-new-5"
+       ]
+      },
+      {
+       "check": "D12",
+       "proofs": [
+        "E-D12-2"
+       ]
+      }
+     ]
+    },
+    "scratchpad (the tab)": {
+     "lints": [
+      {
+       "check": "B1",
+       "proofs": [
+        "U-C6-17"
+       ]
+      }
+     ]
+    }
+   }
+  }
+ },
+ "examples": {
+  "about": "The guide's own samples (the voice attributes' in-range examples and the tone map's samples) hold to C16 like any string: each index row they quote is verified (a cite shows the code that makes what it says true), declared to claim nothing about the product (an instruction or the name of a control), or true only once a hand-off step is taken (a cite shows the gap and the hand-offs name the step). K1 finds the rows the samples quote; R1 fails on a quoted row that is in none of the three, on an entry no sample quotes any more, on a cite that does not resolve to a line of one file, and on a hand-off step the Voice section does not state.",
+  "rows": {
+   "SR-6.21": {
+    "kind": "verified",
+    "says": "an answer did not finish, the cause is not known, and trying again is the way out",
+    "cite": "`ChatCore.tsx:976-992` and `useChatLane.ts:244-250`: the stream closed before any frame and the loader becomes this error bubble"
+   },
+   "A-13.12": {
+    "kind": "verified",
+    "says": "a failed save leaves the form as it was",
+    "cite": "`ClassEdit.tsx:160-175`: the page leaves only after the save, and the catch only sets the message"
+   },
+   "CP.13": {
+    "kind": "handoff",
+    "says": "the thumb was saved",
+    "cite": "`Feedback.tsx:24-32` and `useSaveInteraction.ts:51-58`: the thumb is marked at once and a failed save is only logged",
+    "needs": "announces \"Feedback saved.\" only after the save call has returned"
+   },
+   "DS.22": {
+    "kind": "verified",
+    "says": "the text was copied",
+    "cite": "`CopyButton.tsx:21-24`: the label changes after the clipboard write has resolved"
+   },
+   "A-16.15": {
+    "kind": "verified",
+    "says": "the selected users were removed, and how many",
+    "cite": "`ClassEnroll.tsx:119-135`: the toast is set after both removal calls have returned, for the users selected"
+   },
+   "A-09.40": {
+    "kind": "verified",
+    "says": "the webhook exists",
+    "cite": "`WebhookManagement.tsx:160-172`: the toast is set after the create call has returned"
+   },
+   "A-01.10": {
+    "kind": "verified",
+    "says": "the administrator has no classes at all, with no search active",
+    "cite": "`Classes.tsx:283-293`: the empty block already splits on `search`, and the first-use case is the one with none"
+   },
+   "S-01.07": {
+    "kind": "handoff",
+    "says": "an instructor or an administrator adds a student to a class",
+    "cite": "`admin/ClassLayout.tsx:41` and `admin/ClassLayout.tsx:155`: today's class menu hides Enroll Students from instructors",
+    "needs": "ship S-05.06 and S-01.07 with or after the `fix/access-control` merge"
+   },
+   "A-01.12": {
+    "kind": "verified",
+    "says": "there is a control that creates the first class",
+    "cite": "`Classes.tsx:296-310`: the button shows when no search is active and the user may create (`Classes.tsx:39`)"
+   },
+   "SR-6.69": {
+    "kind": "verified",
+    "says": "Kiwi is waiting for the first step or token",
+    "cite": "`ChatMessages.tsx:377` and `ChatMessages.tsx:452`: a message that is typing draws the loader; the word is the user's own (G9) and the one concession in `§ Voice`"
+   },
+   "SR-6.48": {
+    "kind": "handoff",
+    "says": "the step is a search of the class materials",
+    "cite": "`AgentStepChain.tsx:125` and `AgentStepChain.tsx:133-134`: the label is drawn for every tool whose name matches `/rag|search/i`",
+    "needs": "matches the built-in search by its exact tool name"
+   },
+   "DS.37": {
+    "kind": "verified",
+    "says": "the analysis is running",
+    "cite": "`TopicsPanel.tsx:91-95`: drawn while `generating`"
+   },
+   "S-05.02": {
+    "kind": "nonClaim",
+    "why": "an instruction: it says what to type into the field and asserts nothing about the product (the row replaces a marketing claim, C16)"
+   },
+   "A-14.26": {
+    "kind": "verified",
+    "says": "what a file delete removes, and that chats keep their answers",
+    "cite": "`common/database/document.service.ts:73-80` and `document/document.service.ts:1094-1120`: the comments, summaries, embeddings and the row go in one transaction, then the stored file"
+   },
+   "A-14.22": {
+    "kind": "verified",
+    "says": "the button deletes the file, and the verb is exact",
+    "cite": "`document/document.service.ts:1094-1120`: the row, what hangs from it and the stored file are removed"
+   },
+   "A-02.07": {
+    "kind": "verified",
+    "says": "a failed upload leaves the form as it was",
+    "cite": "`AddNewClass.tsx:104-115`: the catch only sets the message"
+   },
+   "SR-6.01": {
+    "kind": "verified",
+    "says": "a question can be about the class materials or about code",
+    "cite": "`ChatCore.tsx:606-625` and `ClassIDE.tsx:245-249`: the question carries the class, the material and the page, and code goes to the chat"
+   },
+   "SR-6.52": {
+    "kind": "verified",
+    "says": "a step ran more than twice in a row",
+    "cite": "`AgentStepChain.tsx:206` and `AgentStepChain.tsx:354-359`: the line shows when a step repeats more than twice"
+   },
+   "A-16.06": {
+    "kind": "verified",
+    "says": "the roster counts its users, the active and the pending",
+    "cite": "`ClassEnroll.tsx:312`: the three counts are taken from the loaded list"
+   },
+   "A-16.04": {
+    "kind": "nonClaim",
+    "why": "an imperative on the page's button: it names the page's job and asserts nothing about the product"
+   },
+   "A-22.10": {
+    "kind": "nonClaim",
+    "why": "an imperative tooltip that names what its control does; it asserts nothing about the product"
+   },
+   "A-10.23": {
+    "kind": "nonClaim",
+    "why": "an imperative on a control that names its act; it asserts nothing about the product"
+   },
+   "A-09.36": {
+    "kind": "verified",
+    "says": "the token is deleted for good, and what used it stops working",
+    "cite": "`api-tokens/api-tokens.service.ts:153-168` and `api-tokens/api-tokens.service.ts:171-175`: the row is deleted, and a token is accepted only if it is found among the active stored ones"
+   },
+   "A-23.19": {
+    "kind": "verified",
+    "says": "switching the app off ends the students' access to it in that class",
+    "cite": "`kiwi-app/kiwi-app.service.ts:650-663` and `kiwi-app/kiwi-app.service.ts:864-868`: the class's switch is set off, and a use of the app is refused while it is off"
+   },
+   "A-10.37": {
+    "kind": "verified",
+    "says": "how many events were approved and that the rest were not",
+    "cite": "`WebhookEventApprovals.tsx:366-380`: the loop counts each approval and each failure"
+   }
+  }
+ }
+}

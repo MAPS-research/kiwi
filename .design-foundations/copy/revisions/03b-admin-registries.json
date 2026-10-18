@@ -1,0 +1,3630 @@
+[
+ {
+  "id": "A-07",
+  "name": "MCP server registry",
+  "route": "/admin/mcp-servers",
+  "file": "src/pages/admin/MCPServerManagement.tsx",
+  "kept": [
+   "Refresh",
+   "Name",
+   "Transport",
+   "Status",
+   "OAuth",
+   "Actions",
+   "Active",
+   "Inactive",
+   "Required",
+   "HTTP",
+   "SSE",
+   "Headers (optional)",
+   "Value",
+   "Cancel",
+   "Close",
+   "Available tools"
+  ],
+  "note": "Shared with A-22: the three dialogs (`MCPServerDialog`, `MCPTestResultDialog`, `DeleteConfirmDialog`) read the same strings there. The delete confirmation names the consequence first; its button repeats the verb and object.",
+  "rows": [
+   [
+    "MCP Server Management",
+    "MCP servers",
+    "heading",
+    "TD-21",
+    "The title equals the sidebar label (C7).",
+    "MCP Server Management"
+   ],
+   [
+    "Manage global MCP servers and assign them to classes from class settings.",
+    "Manage global MCP servers, then assign them to classes from each class's MCP and tools page.",
+    "helper",
+    "TD-21",
+    "Names the page the assignment happens on (C7).",
+    "Manage global MCP servers and assign them to classes from class settings."
+   ],
+   [
+    "Create Server",
+    "Create MCP server",
+    "button",
+    "SF-39",
+    "One create wording on this page, with the empty state's. On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "Create Server"
+   ],
+   [
+    "Assigned Classes",
+    "Assigned classes",
+    "label",
+    "",
+    "",
+    "Assigned Classes"
+   ],
+   {
+    "o": "{n} classes",
+    "n": "{n: count class}",
+    "k": "format",
+    "t": "A count chip needs a real singular (C4): the count picks its noun, 1 class or {n} classes (§ Dates, times and numbers).",
+    "m": "assignedClassCount || 0} classes",
+    "r": "C4"
+   },
+   [
+    "No MCP Servers Configured",
+    "No MCP servers yet",
+    "heading",
+    "",
+    "",
+    "No MCP Servers Configured"
+   ],
+   [
+    "Create a global MCP server, then assign it to classes from the class MCP settings page.",
+    "Create a global MCP server, then assign it to classes from each class's MCP and tools page.",
+    "empty",
+    "",
+    "",
+    "Create a global MCP server, then assign it to classes from the class MCP settings page."
+   ],
+   [
+    "Create Your First Server",
+    "Create first MCP server",
+    "button",
+    "SF-39",
+    "On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "Create Your First Server"
+   ],
+   [
+    "Test Connection",
+    "Test connection",
+    "tooltip",
+    "",
+    "",
+    "Test Connection"
+   ],
+   [
+    "Edit",
+    "Edit MCP server",
+    "tooltip",
+    "",
+    "An icon-only row action names its object (C15). On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "title=\"Edit\"",
+    "",
+    ""
+   ],
+   [
+    "Delete",
+    "Delete MCP server",
+    "tooltip",
+    "",
+    "On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "title=\"Delete\"",
+    "",
+    ""
+   ],
+   [
+    "Delete MCP Server",
+    "Delete this MCP server?",
+    "heading",
+    "SF-40",
+    "A confirmation title asks the question the body answers (Yifrah).",
+    "Delete MCP Server"
+   ],
+   [
+    "Are you sure you want to delete \"{name}\"?",
+    "\"{name}\" is removed from the registry.",
+    "confirm",
+    "SF-40",
+    "The first sentence of the delete dialog's body: the consequence (C11). The dialog composes three sentences in this order: this one, A-07.14 when the server is assigned to a class, then the permanence sentence (A-07.85). The server is deleted outright, with its class assignments and their tool settings (`mcp.service.ts:165`).",
+    "Are you sure you want to delete \"${serverToDelete.name}\"?"
+   ],
+   [
+    "This server is currently assigned to {n} classes. Deleting it will remove it from all classes.",
+    "It is also removed from every class that uses it ({n: count class}).",
+    "confirm",
+    "SF-40",
+    "Said only when the server is assigned to a class: the second sentence of the delete dialog's body, after A-07.13 and before the permanence sentence (A-07.85). The count picks its noun (1 class); a clause with \"that use it\" would not agree with a count of one.",
+    "This server is currently assigned to",
+    "",
+    "C11,C4"
+   ],
+   [
+    "Delete",
+    "Delete MCP server",
+    "cbutton",
+    "SF-40",
+    "The confirm button repeats the verb and the object. On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "Delete",
+    "src/components/MCP/DeleteConfirmDialog.tsx"
+   ],
+   [
+    "Authorization Required",
+    "Connect your account",
+    "heading",
+    "",
+    "",
+    "Authorization Required"
+   ],
+   [
+    "The MCP server \"{name}\" requires OAuth authentication. You need to authorize your account before testing the connection.",
+    "\"{name}\" needs you to connect your account before Kiwi can test it.",
+    "body",
+    "",
+    "",
+    "requires OAuth authentication"
+   ],
+   [
+    "Authorize",
+    "Connect account",
+    "cbutton",
+    "",
+    "",
+    "Authorize"
+   ],
+   [
+    "Redirecting...",
+    "Redirecting…",
+    "status",
+    "",
+    "",
+    "Redirecting..."
+   ],
+   {
+    "k": "error",
+    "o": "Failed to load MCP servers",
+    "what": "Couldn't load MCP servers.",
+    "c": "unknown",
+    "fix": "Select Refresh.",
+    "m": "Failed to load MCP servers",
+    "v": "mcp",
+    "t": "The cause line names Kiwi's server, so it cannot be read as the MCP server (§ Errors, the MCP pages)."
+   },
+   {
+    "k": "error",
+    "o": "Failed to delete MCP server",
+    "what": "Couldn't delete the MCP server.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to delete MCP server",
+    "v": "mcp",
+    "t": "The cause line names Kiwi's server, so it cannot be read as the MCP server (§ Errors, the MCP pages)."
+   },
+   {
+    "k": "error",
+    "o": "Failed to test server connection",
+    "what": "Couldn't test the connection.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to test server connection",
+    "v": "mcp",
+    "t": "The cause line names Kiwi's server, so it cannot be read as the MCP server (§ Errors, the MCP pages)."
+   },
+   {
+    "k": "error",
+    "o": "Failed to start authorization",
+    "what": "Couldn't start connecting your account.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to start authorization",
+    "v": "mcp",
+    "t": "The cause line names Kiwi's server, so it cannot be read as the MCP server (§ Errors, the MCP pages)."
+   },
+   {
+    "k": "error",
+    "o": "Failed to save MCP server",
+    "what": "Couldn't save the MCP server.",
+    "c": "unknown",
+    "fix": "Check the details and try again.",
+    "m": "Failed to save MCP server",
+    "v": "mcp",
+    "t": "The cause line names Kiwi's server, so it cannot be read as the MCP server (§ Errors, the MCP pages).",
+    "safe": "the dialog closes only after the save (MCPServerManagement.tsx:242) and the catch only shows the message (MCPServerManagement.tsx:243-246)"
+   },
+   [
+    "MCP server deleted successfully",
+    "MCP server deleted",
+    "status",
+    "",
+    "\"Successfully\" adds nothing.",
+    "MCP server deleted successfully"
+   ],
+   [
+    "MCP server updated successfully",
+    "MCP server updated",
+    "status",
+    "",
+    "",
+    "MCP server updated successfully"
+   ],
+   [
+    "MCP server created successfully",
+    "MCP server created",
+    "status",
+    "",
+    "",
+    "MCP server created successfully"
+   ],
+   [
+    "Add MCP Server",
+    "Add MCP server",
+    "heading",
+    "SF-39",
+    "",
+    "Add MCP Server",
+    "src/components/MCP/MCPServerDialog.tsx"
+   ],
+   [
+    "Edit MCP Server",
+    "Edit MCP server",
+    "heading",
+    "SF-39",
+    "",
+    "Edit MCP Server",
+    "src/components/MCP/MCPServerDialog.tsx"
+   ],
+   [
+    "Basic Information",
+    "Basic information",
+    "heading",
+    "",
+    "",
+    "Basic Information",
+    "src/components/MCP/MCPServerDialog.tsx"
+   ],
+   [
+    "Server Name",
+    "MCP server name",
+    "label",
+    "",
+    "On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "Server Name",
+    "src/components/MCP/MCPServerDialog.tsx"
+   ],
+   [
+    "Transport Protocol",
+    "Transport protocol",
+    "heading",
+    "",
+    "",
+    "Transport Protocol",
+    "src/components/MCP/MCPServerDialog.tsx"
+   ],
+   [
+    "Server-Sent Events",
+    "Server-sent events",
+    "label",
+    "",
+    "",
+    "Server-Sent Events",
+    "src/components/MCP/MCPServerDialog.tsx"
+   ],
+   [
+    "Connection Settings",
+    "Connection settings",
+    "heading",
+    "",
+    "",
+    "Connection Settings",
+    "src/components/MCP/MCPServerDialog.tsx"
+   ],
+   [
+    "Header Name",
+    "Header name",
+    "label",
+    "",
+    "",
+    "Header Name",
+    "src/components/MCP/MCPServerDialog.tsx"
+   ],
+   [
+    "Add Header",
+    "Add header",
+    "button",
+    "",
+    "",
+    "Add Header",
+    "src/components/MCP/MCPServerDialog.tsx"
+   ],
+   [
+    "Requires OAuth Authentication",
+    "Requires OAuth authentication",
+    "label",
+    "",
+    "",
+    "Requires OAuth Authentication",
+    "src/components/MCP/MCPServerDialog.tsx"
+   ],
+   {
+    "o": "Auto-Discover",
+    "n": "Discover OAuth settings",
+    "k": "button",
+    "m": "Auto-Discover",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "t": "A button is a verb and an object (C2); \"Auto-Discover\" named neither. The error rows say \"look up the OAuth settings\" (A-07.75)."
+   },
+   [
+    "Auto-Register Client",
+    "Auto-register client",
+    "button",
+    "",
+    "",
+    "Auto-Register Client",
+    "src/components/MCP/MCPServerDialog.tsx"
+   ],
+   {
+    "o": "Client Secret",
+    "n": "Client secret",
+    "k": "label",
+    "m": "label=\"Client Secret\"",
+    "f": "src/components/MCP/MCPServerDialog.tsx"
+   },
+   [
+    "Optional custom redirect URI",
+    "Leave empty to use the default redirect URI.",
+    "helper",
+    "",
+    "Says what happens, not just that the field is optional.",
+    "Optional custom redirect URI",
+    "src/components/MCP/MCPServerDialog.tsx"
+   ],
+   [
+    "Comma-separated scopes, e.g., repo, user, read:org",
+    "Separate scopes with commas, for example: repo, user, read:org.",
+    "helper",
+    "",
+    "",
+    "Comma-separated scopes",
+    "src/components/MCP/MCPServerDialog.tsx"
+   ],
+   [
+    "Configure OAuth 2.1 settings for user authentication with this MCP server. Client secrets are stored securely and will not be displayed after saving.",
+    "Set up OAuth 2.1 so users can sign in to this MCP server. Client secrets are hidden after you save.",
+    "helper",
+    "",
+    "Says only what the screen does (C16).",
+    "Configure OAuth 2.1 settings for user authentication",
+    "src/components/MCP/MCPServerDialog.tsx"
+   ],
+   {
+    "k": "label",
+    "o": "Server is Active or Inactive",
+    "n": "MCP server is active",
+    "m": "Server is {formData.isActive",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "t": "When the switch is on (the next row is the off form; both sit on `MCPServerDialog.tsx:791`, which draws \"Server is Active\" or \"Server is Inactive\" from the switch). A value that alternates is one row per value, each saying when it shows (C4). On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "ax": "the name is a template that draws either state, \"Server is \" and then \"Active\" or \"Inactive\", on this line"
+   },
+   [
+    "Inactive servers will not be available for use",
+    "Inactive MCP servers can't be used.",
+    "helper",
+    "",
+    "On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "Inactive servers will not be available for use",
+    "src/components/MCP/MCPServerDialog.tsx"
+   ],
+   [
+    "Assign to Class (optional)",
+    "Assign to class (optional)",
+    "label",
+    "",
+    "",
+    "Assign to Class (optional)",
+    "src/components/MCP/MCPServerDialog.tsx"
+   ],
+   {
+    "k": "error",
+    "o": "Name is required",
+    "what": "MCP server name is required.",
+    "c": "input",
+    "fix": "Enter a name.",
+    "m": "Name is required",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "t": "On the MCP pages the record is \"MCP server\" in full (§ Terminology)."
+   },
+   {
+    "k": "error",
+    "o": "URL is required",
+    "what": "MCP server URL is required.",
+    "c": "input",
+    "fix": "Enter the URL.",
+    "m": "url = \"URL is required\"",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "t": "On the MCP pages the record is \"MCP server\" in full (§ Terminology)."
+   },
+   {
+    "k": "error",
+    "o": "URL must start with http:// or https://",
+    "what": "The MCP server URL isn't valid.",
+    "c": "input",
+    "why": "It must start with http:// or https://.",
+    "fix": "Correct it and try again.",
+    "m": "URL must start with http:// or https://",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "t": "The test action shows the same sentence at :251 as \"Server URL must start with http:// or https://\"; one New serves both lines. On the MCP pages the record is \"MCP server\" in full (§ Terminology)."
+   },
+   {
+    "k": "error",
+    "o": "Please enter a Server URL first",
+    "what": "Can't look up OAuth settings without an MCP server URL.",
+    "c": "input",
+    "fix": "Enter the URL first.",
+    "m": "Please enter a Server URL first",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "t": "On the MCP pages the record is \"MCP server\" in full (§ Terminology)."
+   },
+   {
+    "k": "error",
+    "o": "Discovery failed. Please enter configuration manually.",
+    "what": "Couldn't look up the OAuth settings.",
+    "c": "unknown",
+    "fix": "Enter them manually.",
+    "m": "Discovery failed. Please enter configuration manually.",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "v": "mcp",
+    "t": "The cause line names Kiwi's server, so it cannot be read as the MCP server (§ Errors, the MCP pages)."
+   },
+   {
+    "k": "error",
+    "o": "No registration endpoint available",
+    "what": "Can't register the client automatically.",
+    "c": "input",
+    "why": "This MCP server doesn't offer automatic registration.",
+    "fix": "Enter the client ID and secret manually.",
+    "m": "No registration endpoint available",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "t": "On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "nosafe": "an action inside the open dialog that submits nothing, and the fix names the fields to fill (MCPServerDialog.tsx:303-357)"
+   },
+   {
+    "k": "error",
+    "o": "Save the server first, then register OAuth client",
+    "what": "Can't register the client yet.",
+    "c": "input",
+    "why": "The MCP server isn't saved.",
+    "fix": "Save it first, then register the client.",
+    "m": "Save the server first, then register OAuth client",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "t": "On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "nosafe": "an action inside the open dialog that submits nothing, and the fix names the fields to fill (MCPServerDialog.tsx:303-357)"
+   },
+   {
+    "k": "error",
+    "o": "Registration request failed. Please enter credentials manually.",
+    "what": "Couldn't register the client.",
+    "c": "unknown",
+    "fix": "Enter the client ID and secret manually.",
+    "m": "Registration request failed. Please enter credentials manually.",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "v": "mcp",
+    "t": "The cause line names Kiwi's server, so it cannot be read as the MCP server (§ Errors, the MCP pages).",
+    "nosafe": "an action inside the open dialog that submits nothing, and the fix names the fields to fill (MCPServerDialog.tsx:303-357)"
+   },
+   [
+    "Client registered successfully. Secret stored securely on server.",
+    "Client registered. Kiwi won't show the secret again.",
+    "status",
+    "",
+    "Says only what the screen does (C16).",
+    "Client registered successfully. Secret stored securely on server.",
+    "src/components/MCP/MCPServerDialog.tsx"
+   ],
+   [
+    "Connection Test Result",
+    "Connection test result",
+    "heading",
+    "",
+    "",
+    "Connection Test Result",
+    "src/components/MCP/MCPTestResultDialog.tsx"
+   ],
+   [
+    "Testing connection to MCP server...",
+    "Testing the connection…",
+    "status",
+    "",
+    "",
+    "Testing connection to MCP server...",
+    "src/components/MCP/MCPTestResultDialog.tsx"
+   ],
+   {
+    "o": "Connection Successful",
+    "n": "Connected",
+    "k": "heading",
+    "m": "Connection Successful",
+    "f": "src/components/MCP/MCPTestResultDialog.tsx",
+    "t": "The Success tone is one past-tense line: \"Connected\", not \"Connection successful\" (its failure sibling, A-07.59, names the state and is followed by the cause and the fix).",
+    "r": "C13"
+   },
+   {
+    "o": "Connection Failed",
+    "n": "Connection failed",
+    "k": "heading",
+    "m": "Connection Failed",
+    "f": "src/components/MCP/MCPTestResultDialog.tsx",
+    "x": [
+     "not-an-error"
+    ],
+    "t": "The outcome heading of the test-result dialog; its cause and next step are the error row below it (A-07.60)."
+   },
+   {
+    "k": "error",
+    "o": "Unknown error occurred",
+    "what": "The test didn't finish.",
+    "c": "unknown",
+    "fix": "Check the MCP server URL, then test again.",
+    "m": "Unknown error occurred",
+    "f": "src/components/MCP/MCPTestResultDialog.tsx",
+    "why": "The MCP server didn't respond as expected.",
+    "t": "The test result had no message (`MCPTestResultDialog.tsx:107`): the connection test reached no usable answer from the MCP server, so the line names it and the fix points at its URL. Kiwi's own server answered, which is why this is not the cause line of the failed request. On the MCP pages the record is \"MCP server\" in full (§ Terminology)."
+   },
+   [
+    "Available Tools",
+    "Available tools",
+    "heading",
+    "",
+    "",
+    "Available Tools",
+    "src/components/MCP/MCPTestResultDialog.tsx"
+   ],
+   [
+    "Input Schema",
+    "Input schema",
+    "label",
+    "",
+    "",
+    "Input Schema",
+    "src/components/MCP/MCPTestResultDialog.tsx"
+   ],
+   [
+    "No tools were returned by the MCP server.",
+    "The MCP server returned no tools.",
+    "empty",
+    "",
+    "On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "No tools were returned by the MCP server.",
+    "src/components/MCP/MCPTestResultDialog.tsx"
+   ],
+   [
+    "Error Details",
+    "Error details",
+    "heading",
+    "",
+    "",
+    "Error Details",
+    "src/components/MCP/MCPTestResultDialog.tsx"
+   ],
+   {
+    "o": "No test results available",
+    "n": "No test result yet",
+    "k": "empty",
+    "m": "No test results available",
+    "f": "src/components/MCP/MCPTestResultDialog.tsx",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23).",
+    "r": "C12,C5"
+   },
+   [
+    "Discovered {fields} via {source}",
+    "Found {fields} from {source}",
+    "status",
+    "",
+    "\"Discovered\" and \"via\" are developer vocabulary; a result with a source needs its full stop.",
+    "Discovered ${discoveredFields.join",
+    "src/components/MCP/MCPServerDialog.tsx"
+   ],
+   [
+    "Registration Endpoint",
+    "registration endpoint",
+    "label",
+    "",
+    "A name used inside the sentence above, so lowercase.",
+    "Registration Endpoint",
+    "src/components/MCP/MCPServerDialog.tsx",
+    "",
+    [
+     "lowercase letter (registration)"
+    ]
+   ],
+   {
+    "k": "status",
+    "o": "Deleting...",
+    "n": "Deleting…",
+    "m": "\"Deleting...\"",
+    "f": "src/components/MCP/DeleteConfirmDialog.tsx",
+    "r": "C5",
+    "t": "The busy label of the button, when the dialog deletes a server; the unassign form of the same line is A-22.49 (both sit on DeleteConfirmDialog.tsx:46). The ellipsis character (C5, C13)."
+   },
+   {
+    "k": "status",
+    "o": "Discovering...",
+    "n": "Discovering…",
+    "m": "\"Discovering...\"",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "r": "C5",
+    "t": "The busy label of the button: the ellipsis character (C5, C13)."
+   },
+   {
+    "k": "status",
+    "o": "Registering...",
+    "n": "Registering…",
+    "m": "\"Registering...\"",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "r": "C5",
+    "t": "The busy label of the button: the ellipsis character (C5, C13)."
+   },
+   {
+    "k": "status",
+    "o": "Saving...",
+    "n": "Saving…",
+    "m": "\"Saving...\"",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "r": "C5",
+    "t": "The busy label of the button: the ellipsis character (C5, C13)."
+   },
+   {
+    "k": "error",
+    "o": "Registration failed",
+    "what": "Couldn't register the client.",
+    "c": "unknown",
+    "fix": "Enter the client ID and secret manually.",
+    "m": "result.error || \"Registration failed\"",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "t": "The generic form, for a result with no message (A-07.73 is the branch that quotes it). The registration is made with the MCP server's own endpoint, so the line names the MCP server. On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "why": "The MCP server didn't respond as expected.",
+    "nosafe": "an action inside the open dialog that submits nothing, and the fix names the fields to fill (MCPServerDialog.tsx:303-357)"
+   },
+   {
+    "k": "error",
+    "o": "{result.error}",
+    "what": "Couldn't register the client.",
+    "c": "server",
+    "why": "The MCP server said: \"{message}\".",
+    "fix": "Enter the client ID and secret manually.",
+    "m": "result.error || \"Registration failed\"",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "br": "srv",
+    "t": "The MCP server's own error string for a failed registration (`error_description` or `error` from its response, or Kiwi's note of the status it returned: `mcp.service.ts:446-475`), quoted after Kiwi's sentence (C10). `{result.error}` is the old text; `{message}` is its quoted form. On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "r": "C9,C10",
+    "nosafe": "an action inside the open dialog that submits nothing, and the fix names the fields to fill (MCPServerDialog.tsx:303-357)"
+   },
+   {
+    "k": "error",
+    "o": "No OAuth metadata found",
+    "what": "Couldn't look up the OAuth settings.",
+    "c": "missing",
+    "why": "Kiwi couldn't find them at this MCP server's address.",
+    "fix": "Enter them manually.",
+    "m": "result.error || \"No OAuth metadata found\"",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "t": "The generic form, for a discovery result with no message (the next row is the branch that quotes it). On the MCP pages the record is \"MCP server\" in full (§ Terminology). The cause is not guessed: the backend asks the server's own address for RFC 8414 metadata, then for OpenID Connect metadata, and reports one generic failure for all of them (`mcp.service.ts:280-333` and `:343-405`: no answer, a refusal, unreadable metadata, a mismatched issuer or no endpoint in it), so the line says only that Kiwi found no usable settings there (`MCPServerDialog.tsx:290`)."
+   },
+   {
+    "k": "error",
+    "o": "{result.error}",
+    "what": "Couldn't look up the OAuth settings.",
+    "c": "server",
+    "why": "Kiwi's server said: \"{message}\".",
+    "fix": "Enter them manually.",
+    "m": "result.error || \"No OAuth metadata found\"",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "br": "srv",
+    "t": "Kiwi's server's own note for a failed discovery (\"Could not discover OAuth metadata from the provided URL\", `mcp.service.ts:332`), quoted after Kiwi's sentence (C10); it is Kiwi's text about the MCP server's address, so Kiwi's server is the one that said it. `{result.error}` is the old text; `{message}` is its quoted form.",
+    "r": "C9,C10"
+   },
+   {
+    "k": "cbutton",
+    "o": "Create",
+    "n": "Create MCP server",
+    "m": "isEditMode ? \"Update\" : \"Create\"",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "r": "C11",
+    "t": "The server dialog's confirming button repeats the verb and the object, like the page button \"Create server\" that opens it (C11). On the MCP pages the record is \"MCP server\" in full (§ Terminology)."
+   },
+   {
+    "k": "cbutton",
+    "o": "Update",
+    "n": "Update MCP server",
+    "m": "isEditMode ? \"Update\" : \"Create\"",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "r": "C11",
+    "t": "The same dialog in edit mode (C11). On the MCP pages the record is \"MCP server\" in full (§ Terminology)."
+   },
+   {
+    "k": "error",
+    "o": "Authorization URL is required",
+    "what": "Authorization URL is required.",
+    "c": "input",
+    "fix": "Enter the URL.",
+    "m": "Authorization URL is required",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "r": "C9",
+    "t": "The same form as A-07.47: what is missing, then what to do."
+   },
+   {
+    "k": "error",
+    "o": "Token URL is required",
+    "what": "Token URL is required.",
+    "c": "input",
+    "fix": "Enter the URL.",
+    "m": "Token URL is required",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "r": "C9",
+    "t": "The same form as A-07.47: what is missing, then what to do."
+   },
+   {
+    "k": "error",
+    "o": "Client ID is required",
+    "what": "Client ID is required.",
+    "c": "input",
+    "fix": "Enter the client ID.",
+    "m": "Client ID is required",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "r": "C9",
+    "t": "The same form as A-07.47: what is missing, then what to do."
+   },
+   {
+    "k": "error",
+    "o": "Client Secret is required",
+    "what": "Client secret is required.",
+    "c": "input",
+    "fix": "Enter the secret.",
+    "m": "Client Secret is required",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "r": "C9",
+    "t": "The same form as A-07.47: what is missing, then what to do."
+   },
+   {
+    "k": "placeholder",
+    "o": "Optional description of what this server provides",
+    "n": "e.g. Looks up papers in a research database",
+    "m": "Optional description of what this server provides",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "r": "C14",
+    "t": "A placeholder is an example, not an instruction; \"optional\" moves to the label."
+   },
+   {
+    "k": "label",
+    "o": "Description",
+    "n": "Description (optional)",
+    "m": "label=\"Description\"",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "r": "C14",
+    "t": "An optional field says so in its label."
+   },
+   {
+    "k": "helper",
+    "o": "Discovers OAuth config from well-known endpoints (RFC 8414 / OpenID Connect)",
+    "n": "Looks up the OAuth settings from the MCP server's address.",
+    "m": "Discovers OAuth config from well-known endpoints",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "r": "C6,C16",
+    "t": "No developer text (C16): \"config\" is \"settings\" (C6), and the standards' names are not needed to use the button. On the MCP pages the record is \"MCP server\" in full (§ Terminology)."
+   },
+   {
+    "k": "confirm",
+    "o": "This action cannot be undone.",
+    "n": "This can't be undone.",
+    "m": "This action cannot be undone.",
+    "f": "src/pages/admin/MCPServerManagement.tsx",
+    "r": "C11",
+    "t": "The permanence sentence, last in the delete dialog's body (C11): the server, its class assignments and their tool settings are deleted and nothing restores them (`mcp.service.ts:165`)."
+   },
+   {
+    "k": "label",
+    "o": "Server URL",
+    "n": "MCP server URL",
+    "m": "label=\"Server URL\"",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "r": "C6",
+    "t": "The field's label on the MCP server dialog (`MCPServerDialog.tsx:550`): \"MCP server\" in full, like the rows around it On the MCP pages the record is \"MCP server\" in full (§ Terminology). The test queries it by regular expression (`/Server URL/i`), which still matches."
+   },
+   {
+    "k": "label",
+    "o": "Server is Active or Inactive",
+    "n": "MCP server is inactive",
+    "m": "Server is {formData.isActive",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "r": "C4,C1",
+    "t": "When the switch is off (the previous row is the on form; both sit on `MCPServerDialog.tsx:791`). Sentence case: the word after \"is\" is the state, not a title. \"MCP server\" in full on the MCP pages (§ Terminology).",
+    "ax": "the name is a template that draws either state, \"Server is \" and then \"Active\" or \"Inactive\", on this line"
+   },
+   {
+    "k": "helper",
+    "o": "Automatically register this app with the MCP server to get client credentials",
+    "n": "Registers Kiwi with the MCP server and gets a client ID and secret.",
+    "m": "Automatically register this app with the MCP server",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "r": "C6,C8",
+    "t": "The tooltip of the Auto-register client button when the MCP server is saved (`MCPServerDialog.tsx:680`): the page's own words (\"the client\", \"client ID and secret\", A-07.52 to A-07.54) and Kiwi by name, not \"this app\" (C8). The next row is the form before the server is saved. On the MCP pages the record is \"MCP server\" in full (§ Terminology)."
+   },
+   {
+    "k": "helper",
+    "o": "Save the server first, then edit to auto-register",
+    "n": "Save the MCP server first, then edit it to register the client.",
+    "m": "Save the server first, then edit to auto-register",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "r": "C6,C14",
+    "t": "The same tooltip before the MCP server is saved (`MCPServerDialog.tsx:683`), the disabled button's reason: a sentence, with the same words as A-07.53's fix On the MCP pages the record is \"MCP server\" in full (§ Terminology)."
+   },
+   {
+    "k": "helper",
+    "o": "Stored securely on server (auto-registered)",
+    "n": "Registered automatically. Kiwi won't show the secret again.",
+    "m": "Stored securely on server (auto-registered)",
+    "f": "src/components/MCP/MCPServerDialog.tsx",
+    "r": "C16,C14",
+    "t": "The Client secret field's helper once the client has been registered (`MCPServerDialog.tsx:751`). It says only what the screen does (C16), as A-07.55 does. On the MCP pages the record is \"MCP server\" in full (§ Terminology)."
+   },
+   {
+    "k": "empty",
+    "o": "The server connection is working, but no tools are available.",
+    "n": "The connection works, but no tools are available.",
+    "m": "The server connection is working, but no tools are available.",
+    "f": "src/components/MCP/MCPTestResultDialog.tsx",
+    "r": "C6,C12",
+    "t": "The second sentence of the test result's empty line (`MCPTestResultDialog.tsx:201`; the first is A-07.63): \"the server connection\" is \"the connection\", and the MCP server is not named twice. On the MCP pages the record is \"MCP server\" in full (§ Terminology)."
+   }
+  ]
+ },
+ {
+  "id": "A-08",
+  "name": "App registry",
+  "route": "/admin/kiwi-apps",
+  "file": "src/pages/admin/KiwiAppsAdmin.tsx",
+  "kept": [
+   "Refresh",
+   "Approved",
+   "Pending",
+   "Rejected",
+   "Created",
+   "Base URL",
+   "Description (optional)",
+   "Base URL (optional)",
+   "Status",
+   "Registration secret's helper (\"Minimum 32 characters. Share this with the app developer.\")",
+   "Labels of the detail rows (already worded without the old term for the identifier)"
+  ],
+  "note": "\"Slug\" is developer vocabulary, so the page says \"identifier\" (C6). \"Whitelist\" becomes \"allowlist\" everywhere (TD-38). The unregister confirmation is a native `confirm()`: copy only.",
+  "rows": [
+   [
+    "Kiwi Apps Management",
+    "App registry",
+    "heading",
+    "TD-21",
+    "The title equals the sidebar label (C7).",
+    "Kiwi Apps Management"
+   ],
+   [
+    "Manage the app whitelist and registered Kiwi Apps. Apps must be whitelisted before they can self-register.",
+    "Manage the allowlist and the registered Kiwi apps. An app must be on the allowlist before it can register itself.",
+    "helper",
+    "TD-38",
+    "",
+    "Manage the app whitelist and registered Kiwi Apps."
+   ],
+   [
+    "Whitelist",
+    "Allowlist",
+    "label",
+    "TD-38",
+    "The current convention (TD-38).",
+    "label=\"Whitelist\""
+   ],
+   [
+    "Registered Apps",
+    "Registered apps",
+    "label",
+    "",
+    "",
+    "Registered Apps"
+   ],
+   [
+    "Add to Whitelist",
+    "Add to allowlist",
+    "button",
+    "TD-38",
+    "",
+    "Add to Whitelist"
+   ],
+   [
+    "No Apps Whitelisted",
+    "No apps on the allowlist",
+    "heading",
+    "TD-38",
+    "",
+    "No Apps Whitelisted"
+   ],
+   [
+    "Add an app slug to the whitelist to allow it to self-register.",
+    "Add an app identifier to the allowlist so the app can register itself.",
+    "empty",
+    "TD-38",
+    "",
+    "Add an app slug to the whitelist to allow it to self-register."
+   ],
+   [
+    "Add First Whitelist Entry",
+    "Add first entry",
+    "button",
+    "TD-38",
+    "",
+    "Add First Whitelist Entry"
+   ],
+   [
+    "No Apps Registered",
+    "No apps registered",
+    "heading",
+    "",
+    "",
+    "No Apps Registered"
+   ],
+   [
+    "Apps will appear here once they self-register. Make sure the app is whitelisted first.",
+    "Apps appear here after they register themselves. Add the app to the allowlist first.",
+    "empty",
+    "TD-38",
+    "",
+    "Apps will appear here once they self-register."
+   ],
+   [
+    "Slug",
+    "Identifier",
+    "label",
+    "TD-39",
+    "\"Slug\" is developer vocabulary.",
+    "Slug",
+    "",
+    ""
+   ],
+   [
+    "Last Seen",
+    "Last seen",
+    "label",
+    "",
+    "",
+    "Last Seen"
+   ],
+   [
+    "UI Slug",
+    "UI identifier",
+    "label",
+    "",
+    "",
+    "UI Slug"
+   ],
+   [
+    "Allowed Roles",
+    "Allowed roles",
+    "label",
+    "",
+    "",
+    "Allowed Roles"
+   ],
+   [
+    "App Scopes",
+    "App scopes",
+    "heading",
+    "",
+    "",
+    "App Scopes"
+   ],
+   [
+    "Maximum Allowed Scopes (from whitelist)",
+    "Maximum allowed scopes (from the allowlist)",
+    "label",
+    "SF-39",
+    "One name for the maximum scopes on this page and in the dialogs.",
+    "Maximum Allowed Scopes (from whitelist)"
+   ],
+   [
+    "Prompt Scopes (from registered prompts)",
+    "Prompt scopes (from registered prompts)",
+    "label",
+    "",
+    "",
+    "Prompt Scopes (from registered prompts)"
+   ],
+   [
+    "LLM Prompts",
+    "LLM prompts",
+    "heading",
+    "",
+    "",
+    "LLM Prompts"
+   ],
+   {
+    "o": "System Prompt",
+    "n": "System prompt",
+    "k": "label",
+    "t": "A registered app's prompt keeps \"prompt\", and its text keeps \"system prompt\": the SDK's word (`kiwi-app-sdk/README.md:111`: `contextualChat` \"runs an admin-approved prompt\"), the MCP tools' (`kiwi_app_list_prompts`) and the API's `systemPrompt` field, which the apps' developers use. \"Instructions\" is the tutor's and the experiment form's word (C6).",
+    "m": "System Prompt",
+    "r": "C1,C6",
+    "x": [
+     "terminology: instructions"
+    ]
+   },
+   {
+    "o": "Approve prompts to allow the app to use them for LLM requests. Review the system prompt before approving.",
+    "n": "Approve a prompt to let the app use it for LLM requests. Read its system prompt before you approve.",
+    "k": "helper",
+    "m": "Approve prompts to allow the app to use them for LLM requests.",
+    "t": "A registered app's prompt keeps \"prompt\", and its text keeps \"system prompt\": the SDK's word (`kiwi-app-sdk/README.md:111`: `contextualChat` \"runs an admin-approved prompt\"), the MCP tools' (`kiwi_app_list_prompts`) and the API's `systemPrompt` field, which the apps' developers use. \"Instructions\" is the tutor's and the experiment form's word (C6).",
+    "r": "C14,C6",
+    "x": [
+     "terminology: instructions"
+    ]
+   },
+   [
+    "Loading UIs...",
+    "Loading UIs…",
+    "status",
+    "",
+    "",
+    "Loading UIs..."
+   ],
+   [
+    "Loading scopes...",
+    "Loading scopes…",
+    "status",
+    "",
+    "",
+    "Loading scopes..."
+   ],
+   [
+    "Loading prompts...",
+    "Loading prompts…",
+    "status",
+    "",
+    "",
+    "Loading prompts..."
+   ],
+   {
+    "o": "Approved by {name} on {date: browser locale}",
+    "n": "Approved by {name} on {date: D MMM YYYY}",
+    "k": "format",
+    "refs": "TD-24",
+    "t": "The approval date in the one date format (C3): `{date}` is `formatDate(approvedAt)`, `D MMM YYYY`, for example 17 Oct 2026.",
+    "m": "toLocaleDateString()",
+    "r": "C3"
+   },
+   [
+    "new Date(date).toLocaleString()",
+    "17 Oct 2026, 14:05",
+    "format",
+    "TD-24",
+    "",
+    "toLocaleString()",
+    "",
+    "C3"
+   ],
+   [
+    "Add to Whitelist",
+    "Add to allowlist",
+    "heading",
+    "TD-38",
+    "The dialog title.",
+    "Add to Whitelist",
+    "",
+    ""
+   ],
+   [
+    "App Slug",
+    "App identifier",
+    "label",
+    "",
+    "",
+    "App Slug"
+   ],
+   [
+    "Lowercase identifier for the app",
+    "A short lowercase name, for example \"codegen\". It appears in the app's web address.",
+    "helper",
+    "",
+    "Says what the identifier is for.",
+    "Lowercase identifier for the app"
+   ],
+   [
+    "Registration Secret",
+    "Registration secret",
+    "label",
+    "",
+    "",
+    "Registration Secret"
+   ],
+   [
+    "Maximum Allowed Scopes",
+    "Maximum allowed scopes",
+    "label",
+    "SF-39",
+    "",
+    "Maximum Allowed Scopes"
+   ],
+   [
+    "Save Your Registration Secret",
+    "Save the registration secret",
+    "heading",
+    "",
+    "",
+    "Save Your Registration Secret"
+   ],
+   [
+    "I've Copied the Secret",
+    "I've copied the secret",
+    "cbutton",
+    "",
+    "The acknowledgement is the person's own statement, so the first person stays.",
+    "I've Copied the Secret",
+    "",
+    "",
+    "no we"
+   ],
+   [
+    "App added to whitelist successfully",
+    "App added to the allowlist",
+    "status",
+    "TD-38",
+    "",
+    "App added to whitelist successfully"
+   ],
+   [
+    "Whitelist entry updated",
+    "Allowlist entry updated",
+    "status",
+    "TD-38",
+    "",
+    "Whitelist entry updated"
+   ],
+   [
+    "Edit Whitelist Entry",
+    "Edit allowlist entry",
+    "heading",
+    "TD-38",
+    "",
+    "Edit Whitelist Entry"
+   ],
+   [
+    "Remove from Whitelist",
+    "Remove from allowlist?",
+    "heading",
+    "TD-38",
+    "",
+    "Remove from Whitelist"
+   ],
+   [
+    "Are you sure you want to remove \"{slug}\" from the whitelist? This will prevent the app from re-registering and invalidate its registration secret.",
+    "\"{slug}\" is removed from the allowlist. The app can't register, and its registration secret stops working. The old secret can't be restored. Add the app to the allowlist again to get a new one.",
+    "confirm",
+    "TD-38",
+    "Consequence first, then what cannot come back and the way on (C11). The entry is deleted outright (`kiwi-app.service.ts:134`, the delete at `:143`), so the old secret cannot be shown or restored, and adding the app again takes a new secret. The sentence does not say \"this can't be undone\" and then say it can: the entry can be added again, the old secret cannot come back.",
+    "Are you sure you want to remove"
+   ],
+   [
+    "Remove",
+    "Remove entry",
+    "cbutton",
+    "SF-50",
+    "The confirm button repeats what is removed.",
+    "Remove\n"
+   ],
+   [
+    "Removed from whitelist",
+    "Removed from the allowlist",
+    "status",
+    "TD-38",
+    "",
+    "Removed from whitelist"
+   ],
+   [
+    "Are you sure you want to unregister the app \"{slug}\"?",
+    "Unregister \"{slug}\"? The app is removed from every class that uses it, along with its screens, approved prompts and class settings. This can't be undone.",
+    "confirm",
+    "SF-50",
+    "Native confirm, copy only: the consequence and permanence instead of \"Are you sure\" (C11). The app is deleted outright (`kiwi-app.service.ts:419`), and its screens, its prompts and every class's enablement of it are deleted with it (`schema.prisma:986`, `:1010`, `:1031`). Its allowlist entry stays, so the app can register again, but nothing it had comes back.",
+    "Are you sure you want to unregister the app"
+   ],
+   {
+    "k": "error",
+    "o": "Failed to load whitelist",
+    "what": "Couldn't load the allowlist.",
+    "c": "unknown",
+    "fix": "Select Refresh.",
+    "m": "Failed to load whitelist"
+   },
+   {
+    "k": "error",
+    "o": "Failed to load registered apps",
+    "what": "Couldn't load registered apps.",
+    "c": "unknown",
+    "fix": "Select Refresh.",
+    "m": "Failed to load registered apps"
+   },
+   {
+    "k": "error",
+    "o": "Failed to load UIs for {slug}",
+    "what": "Couldn't load the UIs for {slug}.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to load UIs for"
+   },
+   {
+    "k": "error",
+    "o": "Failed to approve prompt",
+    "what": "Couldn't approve the prompt.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to approve prompt"
+   },
+   {
+    "k": "error",
+    "o": "Failed to revoke prompt",
+    "what": "Couldn't revoke the prompt.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to revoke prompt"
+   },
+   {
+    "k": "error",
+    "o": "Failed to copy secret",
+    "what": "Couldn't copy the secret.",
+    "c": "denied",
+    "why": "The browser didn't allow it.",
+    "fix": "Select the text and copy it yourself.",
+    "m": "Failed to copy secret",
+    "t": "States only what is known: the browser refused the copy. Why it refused (an insecure page, a permission, a policy) is not something the page can tell, so the cause is not guessed (a guess presented as a fact, § Errors). The fix is the one thing that always works."
+   },
+   {
+    "k": "error",
+    "o": "Failed to save whitelist entry",
+    "what": "Couldn't save the allowlist entry.",
+    "c": "unknown",
+    "fix": "Check the details and try again.",
+    "m": "Failed to save whitelist entry",
+    "safe": "the dialogs close only after the call returns (KiwiAppsAdmin.tsx:415, KiwiAppsAdmin.tsx:435) and the catch only shows the message (KiwiAppsAdmin.tsx:440-443)"
+   },
+   {
+    "k": "error",
+    "o": "Failed to remove from whitelist",
+    "what": "Couldn't remove the entry from the allowlist.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to remove from whitelist"
+   },
+   {
+    "k": "error",
+    "o": "Failed to unregister app",
+    "what": "Couldn't unregister the app.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to unregister app"
+   },
+   {
+    "k": "status",
+    "o": "Saving...",
+    "n": "Saving…",
+    "m": "\"Saving...\"",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C5",
+    "t": "The busy label of the button: the ellipsis character (C5, C13)."
+   },
+   {
+    "k": "status",
+    "o": "Removing...",
+    "n": "Removing…",
+    "m": "\"Removing...\"",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C5",
+    "t": "The busy label of the Remove button was left with three full stops (KiwiAppsAdmin.tsx:1634): the ellipsis character (C5, C13)."
+   },
+   {
+    "k": "tooltip",
+    "o": "Edit",
+    "n": "Edit entry",
+    "m": "<Tooltip title=\"Edit\">",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C15",
+    "t": "The allowlist row's edit control names its object, like its sibling \"Remove entry\" (C15)."
+   },
+   {
+    "k": "cbutton",
+    "o": "Revoke",
+    "n": "Revoke prompt",
+    "m": "Revoke </Button>",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C11",
+    "t": "A prompt row's button names its object (C2, C11)."
+   },
+   {
+    "k": "cbutton",
+    "o": "Approve",
+    "n": "Approve prompt",
+    "m": "Approve </Button>",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C11",
+    "t": "The same: \"Approve\" alone says nothing about what is approved (C2, C11)."
+   },
+   {
+    "k": "empty",
+    "o": "No UIs registered for this app.",
+    "n": "No UIs registered for this app",
+    "m": "No UIs registered for this app.",
+    "r": "C12,C5",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23)."
+   },
+   {
+    "k": "empty",
+    "o": "No scopes defined for this app.",
+    "n": "No scopes defined for this app",
+    "m": "No scopes defined for this app.",
+    "r": "C12,C5",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23)."
+   },
+   {
+    "k": "empty",
+    "o": "No prompts registered for this app.",
+    "n": "No prompts registered for this app",
+    "m": "No prompts registered for this app.",
+    "r": "C12,C5",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23)."
+   },
+   {
+    "k": "cbutton",
+    "o": "Add",
+    "n": "Add to allowlist",
+    "m": ": \"Add\"}",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C11",
+    "t": "The Add dialog's confirming button repeats its title and the page button, \"Add to allowlist\" (C11)."
+   },
+   {
+    "k": "cbutton",
+    "o": "Save",
+    "n": "Save entry",
+    "m": ": \"Save\"}",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C11",
+    "t": "The Edit dialog (\"Edit allowlist entry\") confirms with the verb and the object (C11)."
+   },
+   {
+    "k": "status",
+    "o": "Secret copied to clipboard",
+    "n": "Secret copied",
+    "r": "C13",
+    "t": "The same toast as the webhook's secret (A-09.47): one toast for one action.",
+    "m": "Secret copied to clipboard"
+   },
+   {
+    "k": "tooltip",
+    "o": "Unregister",
+    "n": "Unregister app",
+    "m": "title=\"Unregister\"",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C15",
+    "t": "An icon button in a table row names its object."
+   },
+   {
+    "k": "placeholder",
+    "o": "e.g., codegen",
+    "n": "e.g. codegen",
+    "m": "e.g., codegen",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C14",
+    "t": "\"e.g.\" without the comma, as in the guide's own examples."
+   },
+   {
+    "k": "placeholder",
+    "o": "e.g., https://codegen.example.com",
+    "n": "e.g. https://codegen.example.com",
+    "m": "e.g., https://codegen.example.com",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C14",
+    "t": "\"e.g.\" without the comma."
+   },
+   {
+    "k": "placeholder",
+    "o": "e.g., Code generation service",
+    "n": "e.g. Code generation service",
+    "m": "e.g., Code generation service",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C14",
+    "t": "\"e.g.\" without the comma."
+   },
+   {
+    "k": "helper",
+    "o": "Expected base URL of the app",
+    "n": "The address the app is served from.",
+    "m": "Expected base URL of the app",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C14,C16",
+    "t": "The label says \"Base URL (optional)\"; the helper says what the address is, makes no claim about what Kiwi does with it (C16), and ends with its full stop."
+   },
+   {
+    "k": "placeholder",
+    "o": "Add scope (e.g., read:data)",
+    "n": "e.g. read:data",
+    "m": "Add scope (e.g., read:data)",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C14",
+    "t": "An example, not an instruction; the button says what is added."
+   },
+   {
+    "k": "aria",
+    "o": "",
+    "n": "Scope",
+    "m": "placeholder=\"Add scope (e.g., read:data)\"",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C14,C15",
+    "t": "The field has no visible label, only a placeholder; its accessible name is \"Scope\", and the section's own text above names the list."
+   },
+   {
+    "k": "button",
+    "o": "Add",
+    "n": "Add scope",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C2",
+    "t": "The placeholder no longer says what is added, so the button names its object.",
+    "ln": [
+     1379,
+     1565
+    ]
+   },
+   {
+    "k": "label",
+    "o": "{maxTokens} tokens, temp: {temperature}",
+    "n": "{maxTokens: count token}, temperature {temperature}",
+    "m": "${prompt.maxTokens} tokens",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C4,C8",
+    "t": "A registered prompt's limits in its row; the count picks its noun (1 token) and \"temp\" is spelled out."
+   },
+   {
+    "k": "label",
+    "lk": "placement",
+    "m": "label={ui.placement}",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C6",
+    "t": "The screens table drew the placement id as it is."
+   },
+   {
+    "k": "label",
+    "lk": "role",
+    "only": [
+     "student",
+     "ta",
+     "instructor",
+     "admin"
+    ],
+    "m": "label={role}",
+    "ln": 967,
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C6",
+    "t": "The roles an app screen allows, one chip each, drew the raw ids."
+   },
+   {
+    "k": "label",
+    "lk": "category",
+    "m": "label={app.category}",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C6",
+    "t": "The category chip drew the app's lowercase word."
+   },
+   {
+    "k": "format",
+    "o": "-",
+    "n": "—",
+    "m": "\"-\"}",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "x": [
+     "em dash"
+    ],
+    "r": "C5,C6",
+    "t": "An app with no base URL (`:686`) or no description (`:693`) shows a hyphen; the one glyph for an empty value is the em dash (DS.53), so the same meaning reads the same on every page (C6)."
+   },
+   {
+    "k": "aria",
+    "o": "",
+    "n": "No value",
+    "m": "\"-\"}",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C5",
+    "t": "The empty-value glyph takes the accessible name \"No value\" (DS.54)."
+   },
+   {
+    "k": "format",
+    "o": "-",
+    "n": "—",
+    "m": "'-'}",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "x": [
+     "em dash"
+    ],
+    "r": "C5,C6",
+    "t": "An app UI with no name (`:935`) and a prompt with no token limit or temperature (`:1181`) show a hyphen; the one glyph for an empty value is the em dash (DS.53), so the same meaning reads the same on every page (C6)."
+   },
+   {
+    "k": "aria",
+    "o": "",
+    "n": "No value",
+    "m": "'-'}",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C5",
+    "t": "The empty-value glyph takes the accessible name \"No value\" (DS.54)."
+   },
+   {
+    "k": "error",
+    "o": "Slug is required",
+    "what": "Couldn't save the allowlist entry.",
+    "c": "input",
+    "why": "The identifier is empty.",
+    "fix": "Enter an identifier and try again.",
+    "safe": "the check returns before anything is sent, and the dialog stays open with its fields (KiwiAppsAdmin.tsx:387-390)",
+    "m": "Slug is required",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "r": "C6",
+    "t": "Identifier, not slug (C6). A validation toast, so it states the rule broken and the correction (C9)."
+   },
+   {
+    "k": "tooltip",
+    "o": "Approved by {name} on unknown",
+    "n": "Approved by {name}",
+    "m": "'unknown'}",
+    "f": "src/pages/admin/KiwiAppsAdmin.tsx",
+    "ln": 1186,
+    "r": "C16",
+    "t": "The approval chip's tooltip when no approval time is on record (`approvedAt` is empty): the sentence ends at the name, because \"on unknown\" reads as a date called unknown (C16: only what is known). A-08.24 is the reading with a date."
+   }
+  ]
+ },
+ {
+  "id": "A-09",
+  "name": "Webhooks",
+  "route": "/admin/webhooks",
+  "file": "src/pages/admin/WebhookManagement.tsx",
+  "kept": [
+   "Total webhooks",
+   "Active",
+   "Inactive",
+   "Webhook ID",
+   "URL",
+   "Secret",
+   "Events",
+   "Stats",
+   "Actions",
+   "Created:",
+   "Delivery ID",
+   "Event",
+   "Timestamp",
+   "Attempts",
+   "Close",
+   "Cancel",
+   "No deliveries yet"
+  ],
+  "note": "The developer-facing create warning and the two backend-configuration errors (SF-12) are replaced by a sentence that says who can fix it. Webhook approvals is the button that leads to A-10.",
+  "rows": [
+   [
+    "Webhook Management",
+    "Webhooks",
+    "heading",
+    "TD-21",
+    "The title equals the sidebar label (C7).",
+    "Webhook Management"
+   ],
+   [
+    "Event Approvals",
+    "Webhook approvals",
+    "button",
+    "TD-21",
+    "The button, the sidebar entry and A-10's title are one name.",
+    "Event Approvals"
+   ],
+   [
+    "Create Webhook",
+    "Create webhook",
+    "button",
+    "",
+    "",
+    "Create Webhook"
+   ],
+   {
+    "k": "label",
+    "refs": "SF-26",
+    "t": "A raw lowercase status word in a chip (SF-26): the chip's active branch. The inactive branch is the last row of this page (A-09.87): one lookup value per row.",
+    "m": "webhook.isActive ? \"active\"",
+    "lk": "activity",
+    "r": "C6",
+    "only": [
+     "active"
+    ]
+   },
+   [
+    "Create New Webhook",
+    "Create webhook",
+    "heading",
+    "",
+    "",
+    "Create New Webhook"
+   ],
+   [
+    "Note: Webhook creation may fail due to a backend configuration issue. The webhook service needs to be updated to properly associate webhooks with authenticated users.",
+    "",
+    "remove",
+    "SF-12",
+    "Developer-facing text in a user dialog: removed; the failure cases have their own messages (C16).",
+    "Webhook creation may fail due to a backend configuration issue"
+   ],
+   [
+    "Edit Webhook",
+    "Edit webhook",
+    "heading",
+    "",
+    "",
+    "Edit Webhook"
+   ],
+   {
+    "k": "heading",
+    "o": "Confirm Delete",
+    "n": "Deactivate this webhook?",
+    "m": "Confirm Delete",
+    "t": "A confirmation title that asks the question (C11). The action is not a delete: the backend `webhooks/webhooks.service.ts:173-177` only sets `isActive: false`, `findAll` still returns the webhook (`webhooks/webhooks.service.ts:73-98`), the Inactive tab lists it and the Edit dialog's Status select turns it on again (`WebhookManagement.tsx:724-738`), so the title says deactivate (C16)."
+   },
+   {
+    "k": "confirm",
+    "o": "Are you sure you want to delete this webhook? This action cannot be undone.",
+    "n": "The webhook stops receiving events and moves to the Inactive tab. You can turn it on again there: select Edit webhook and set Status to Active.",
+    "m": "Are you sure you want to delete this webhook?",
+    "t": "Consequence first, then the way back (C11), checked on the page: the webhook leaves the Active tab and the Inactive tab lists it (`WebhookManagement.tsx:540-543`); the row's Edit webhook control opens the dialog whose Status select (`WebhookManagement.tsx:724-738`) sets it active again. Inactive, Status and Active are the screen's own names for the tab, the field and its value (C1). The backend `webhooks/webhooks.service.ts:173-177` only sets `isActive: false`, `findAll` still returns the webhook (`webhooks/webhooks.service.ts:73-98`), the Inactive tab lists it and the Edit dialog's Status select turns it on again (`WebhookManagement.tsx:724-738`), so \"This can't be undone\" would say what the page does not do (C16).",
+    "x": [
+     "capital mid-sentence: Inactive",
+     "capital mid-sentence: Status",
+     "capital mid-sentence: Active"
+    ]
+   },
+   {
+    "k": "cbutton",
+    "o": "Delete",
+    "n": "Deactivate webhook",
+    "m": "Delete\n",
+    "ln": 771,
+    "t": "The confirming button repeats the verb and the object (C11); the row's own control is A-09.73. The old row's other two anchors are not this button: `WebhookManagement.tsx:1454` is A-09.73's tooltip, and `WebhookManagement.tsx:1374` is the API token's own \"Delete token\" tooltip, a real delete, which stays."
+   },
+   [
+    "Test Webhook",
+    "Test webhook",
+    "heading",
+    "",
+    "",
+    "Test Webhook"
+   ],
+   [
+    "Click the button below to send a test event to this webhook.",
+    "Send a test event to this webhook.",
+    "body",
+    "",
+    "No \"click\", no \"below\".",
+    "Click the button below to send a test event to this webhook."
+   ],
+   [
+    "Send Test Event",
+    "Send test event",
+    "button",
+    "",
+    "",
+    "Send Test Event"
+   ],
+   [
+    "Test event sent successfully. {n} webhooks triggered.",
+    "Test event sent. {n: count webhook} triggered.",
+    "status",
+    "",
+    "The helper writes the noun: \"1 webhook triggered\" (C4).",
+    "Test event sent successfully.",
+    "",
+    "C4"
+   ],
+   [
+    "Regenerate API Token",
+    "Regenerate API token?",
+    "heading",
+    "",
+    "",
+    "Regenerate API Token"
+   ],
+   [
+    "Important: This will invalidate the current token",
+    "Regenerating invalidates the current token.",
+    "body",
+    "",
+    "Consequence first, without the label \"Important\".",
+    "This will invalidate the current token"
+   ],
+   [
+    "Current Token Information:",
+    "Current token",
+    "label",
+    "",
+    "",
+    "Current Token Information:"
+   ],
+   [
+    "New Token Name",
+    "New token name",
+    "label",
+    "",
+    "",
+    "New Token Name"
+   ],
+   [
+    "New token created! Copy it now:",
+    "New token created. Copy it now:",
+    "status",
+    "",
+    "No exclamation mark.",
+    "New token created! Copy it now:"
+   ],
+   [
+    "⚠️ This token will not be shown again after closing this dialog!",
+    "This token won't be shown again after you close this dialog.",
+    "status",
+    "",
+    "No emoji and no exclamation mark; the consequence stays.",
+    "This token will not be shown again after closing this dialog!"
+   ],
+   [
+    "Regenerate Token",
+    "Regenerate token",
+    "cbutton",
+    "",
+    "",
+    "Regenerate Token"
+   ],
+   [
+    "Create API Token",
+    "Create API token",
+    "heading",
+    "",
+    "",
+    "Create API Token"
+   ],
+   [
+    "Token Name",
+    "Token name",
+    "label",
+    "",
+    "",
+    "Token Name"
+   ],
+   [
+    "Token created successfully! Copy it now:",
+    "Token created. Copy it now:",
+    "status",
+    "",
+    "",
+    "Token created successfully! Copy it now:"
+   ],
+   [
+    "Create Token",
+    "Create token",
+    "button",
+    "",
+    "",
+    "Create Token"
+   ],
+   [
+    "Webhook Delivery History",
+    "Webhook delivery history",
+    "heading",
+    "",
+    "",
+    "Webhook Delivery History"
+   ],
+   [
+    "Delivery History",
+    "View delivery history",
+    "tooltip",
+    "",
+    "An icon control is a verb phrase (C15), not the bare name of what it opens.",
+    "Delivery History"
+   ],
+   [
+    "Response Code",
+    "Response code",
+    "label",
+    "",
+    "",
+    "Response Code"
+   ],
+   {
+    "o": "No delivery history available",
+    "n": "No deliveries yet",
+    "k": "empty",
+    "m": "No delivery history available",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23).",
+    "r": "C12,C5"
+   },
+   [
+    "No webhooks found",
+    "No webhooks yet",
+    "heading",
+    "",
+    "",
+    "No webhooks found"
+   ],
+   {
+    "o": "",
+    "n": "No active webhooks",
+    "k": "empty",
+    "t": "When the Active tab is empty. The All tab has its own row (\"No webhooks yet\") and so has Inactive; the tabs showed \"No webhooks found\" even when another tab had some. A one-clause line that reports a state takes no full stop (C5, DS.23).",
+    "m": "No webhooks found",
+    "r": "C12,C5"
+   },
+   [
+    "Create Your First Webhook",
+    "Create first webhook",
+    "button",
+    "",
+    "",
+    "Create Your First Webhook"
+   ],
+   [
+    "API Token",
+    "API token",
+    "label",
+    "",
+    "",
+    "API Token"
+   ],
+   [
+    "New Token Created - Copy Now!",
+    "New token created. Copy it now.",
+    "status",
+    "",
+    "No exclamation mark.",
+    "New Token Created - Copy Now!"
+   ],
+   [
+    "⚠️ This token will not be shown again!",
+    "This token won't be shown again",
+    "status",
+    "",
+    "",
+    "This token will not be shown again!"
+   ],
+   [
+    "Are you sure you want to delete this API token? This action cannot be undone.",
+    "Delete this API token? Anything using it stops working, and this can't be undone.",
+    "confirm",
+    "",
+    "Native confirm, copy only: the consequence first.",
+    "Are you sure you want to delete this API token?"
+   ],
+   [
+    "Last Used:",
+    "Last used:",
+    "label",
+    "",
+    "The caption of a value that follows it on the same line, so it keeps its colon (C5: a name takes none, a caption that introduces a value or a list does).",
+    "Last Used:",
+    "",
+    "",
+    [
+     "takes no colon"
+    ]
+   ],
+   [
+    "new Date(webhook.apiToken.lastUsedAt).toLocaleDateString()",
+    "17 Oct 2026",
+    "format",
+    "TD-24",
+    "One date format (C3).",
+    "toLocaleDateString()",
+    "",
+    "C3"
+   ],
+   [
+    "new Date(delivery.createdAt).toLocaleString()",
+    "17 Oct 2026, 14:05",
+    "format",
+    "TD-24",
+    "",
+    "toLocaleString()",
+    "",
+    "C3"
+   ],
+   [
+    "Webhook created successfully",
+    "Webhook created",
+    "status",
+    "",
+    "",
+    "Webhook created successfully"
+   ],
+   [
+    "Webhook updated successfully",
+    "Webhook updated",
+    "status",
+    "",
+    "",
+    "Webhook updated successfully"
+   ],
+   {
+    "k": "status",
+    "o": "Webhook deleted successfully",
+    "n": "Webhook deactivated",
+    "m": "Webhook deleted successfully",
+    "t": "The action only sets the webhook inactive (A-09.09), so the toast says deactivated (C16)."
+   },
+   [
+    "API token created successfully. Copy it now - it won't be shown again!",
+    "API token created. Copy it now: it won't be shown again.",
+    "status",
+    "",
+    "No exclamation mark.",
+    "API token created successfully."
+   ],
+   [
+    "API token deleted successfully",
+    "API token deleted",
+    "status",
+    "",
+    "",
+    "API token deleted successfully"
+   ],
+   [
+    "API token regenerated successfully. Copy the new token now!",
+    "API token regenerated. Copy the new token now: it won't be shown again.",
+    "status",
+    "",
+    "",
+    "API token regenerated successfully."
+   ],
+   [
+    "Webhook URL copied to clipboard",
+    "URL copied",
+    "status",
+    "",
+    "",
+    "Webhook URL copied to clipboard"
+   ],
+   [
+    "Secret copied to clipboard",
+    "Secret copied",
+    "status",
+    "",
+    "",
+    "Secret copied to clipboard"
+   ],
+   [
+    "API token copied to clipboard",
+    "API token copied",
+    "status",
+    "",
+    "",
+    "API token copied to clipboard"
+   ],
+   [
+    "Token copied to clipboard",
+    "Token copied",
+    "status",
+    "",
+    "",
+    "Token copied to clipboard"
+   ],
+   [
+    "API token name copied to clipboard (full token not available)",
+    "Token name copied. The full token isn't available.",
+    "status",
+    "",
+    "",
+    "API token name copied to clipboard"
+   ],
+   [
+    "API token not available",
+    "The token isn't available. It's only shown when it's created.",
+    "status",
+    "",
+    "",
+    "API token not available"
+   ],
+   [
+    "Secret not available (only shown on creation)",
+    "The secret isn't available. It's only shown when the webhook is created.",
+    "status",
+    "",
+    "",
+    "Secret not available (only shown on creation)"
+   ],
+   {
+    "k": "error",
+    "o": "Failed to fetch webhooks",
+    "what": "Couldn't load webhooks.",
+    "c": "unknown",
+    "fix": "Select Refresh.",
+    "m": "Failed to fetch webhooks"
+   },
+   {
+    "k": "error",
+    "o": "Failed to create webhook",
+    "what": "Couldn't create the webhook.",
+    "c": "unknown",
+    "fix": "Check the URL and events, then try again.",
+    "m": "Failed to create webhook\"",
+    "safe": "the dialog closes and the events reset only after the call succeeds (WebhookManagement.tsx:173-174) and the catch only shows the message (WebhookManagement.tsx:176-202)"
+   },
+   {
+    "k": "error",
+    "o": "Failed to create webhook: {message}",
+    "what": "Couldn't create the webhook.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Check the URL and events, then try again.",
+    "m": "Failed to create webhook: ${error.response.data.message}",
+    "br": "srv",
+    "t": "The branch that shows the response body's message, quoted after Kiwi's sentence (C10).",
+    "safe": "the dialog closes and the events reset only after the call succeeds (WebhookManagement.tsx:173-174) and the catch only shows the message (WebhookManagement.tsx:176-202)"
+   },
+   {
+    "k": "error",
+    "o": "Backend configuration error: The webhook service is not properly configured to associate webhooks with users. Please contact the administrator.",
+    "what": "Couldn't create the webhook.",
+    "c": "server",
+    "why": "The server isn't set up to link webhooks to users.",
+    "fix": "Ask whoever maintains this Kiwi deployment to fix it.",
+    "refs": "SF-12",
+    "m": "Backend configuration error:",
+    "safe": "the dialog closes and the events reset only after the call succeeds (WebhookManagement.tsx:173-174) and the catch only shows the message (WebhookManagement.tsx:176-202)"
+   },
+   {
+    "k": "error",
+    "o": "Backend error: The webhook service requires user authentication configuration. This is a known issue that needs to be fixed in the backend service.",
+    "what": "Couldn't create the webhook.",
+    "c": "server",
+    "why": "The server needs user authentication set up for webhooks.",
+    "fix": "Ask whoever maintains this Kiwi deployment to fix it.",
+    "refs": "SF-12",
+    "m": "Backend error:",
+    "safe": "the dialog closes and the events reset only after the call succeeds (WebhookManagement.tsx:173-174) and the catch only shows the message (WebhookManagement.tsx:176-202)"
+   },
+   {
+    "k": "error",
+    "o": "Failed to update webhook",
+    "what": "Couldn't update the webhook.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to update webhook",
+    "safe": "the dialog closes only after the call succeeds (WebhookManagement.tsx:224-225) and the catch only shows the message (WebhookManagement.tsx:227-234)"
+   },
+   {
+    "k": "error",
+    "o": "Failed to delete webhook",
+    "what": "Couldn't deactivate the webhook.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to delete webhook"
+   },
+   {
+    "k": "error",
+    "o": "Failed to send test event: {error}",
+    "what": "Couldn't send the test event.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to send test event:",
+    "br": "dev",
+    "t": "`String(error)` of a failed call reads \"ResponseError: Response returned an error code\": the library's text, never quoted (C16). `{error}` is dropped with the library's text.",
+    "r": "C9,C16",
+    "nosafe": "a button on a saved webhook; nothing was typed (WebhookManagement.tsx:296-307)"
+   },
+   {
+    "k": "error",
+    "o": "Failed to create API token",
+    "what": "Couldn't create the API token.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to create API token\"",
+    "safe": "the dialog closes only when the person closes it (WebhookManagement.tsx:954) and the catch only shows the message (WebhookManagement.tsx:392-405)"
+   },
+   {
+    "k": "error",
+    "o": "Failed to delete API token",
+    "what": "Couldn't delete the API token.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to delete API token"
+   },
+   {
+    "k": "error",
+    "o": "Failed to regenerate API token",
+    "what": "Couldn't regenerate the API token.",
+    "c": "partial",
+    "why": "The server didn't respond as expected, and the old token may already be deleted.",
+    "fix": "Check the webhook, and create a new token if it has none.",
+    "m": "Failed to regenerate API token",
+    "t": "The token is deleted and then created in two calls, so a failure between them leaves the webhook with none.",
+    "r": "C9"
+   },
+   {
+    "k": "error",
+    "o": "Failed to create webhook: {error.message}",
+    "what": "Couldn't create the webhook.",
+    "c": "unknown",
+    "fix": "Check the URL and events, then try again.",
+    "m": "Failed to create webhook: ${error.message}",
+    "br": "dev",
+    "t": "`error.message` of a failed call is the library's text (\"Response returned an error code\"): never quoted (C16), so this branch shows the same sentence as A-09.54. `{error.message}` is dropped with it.",
+    "r": "C9,C16",
+    "safe": "the dialog closes and the events reset only after the call succeeds (WebhookManagement.tsx:173-174) and the catch only shows the message (WebhookManagement.tsx:176-202)"
+   },
+   {
+    "k": "error",
+    "o": "Failed to create API token: {message}",
+    "what": "Couldn't create the API token.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Try again.",
+    "m": "Failed to create API token: ${error.response.data.message}",
+    "br": "srv",
+    "t": "The token error has two branches. A-09.61 is the generic one (the server's body had no message); this is the one that quotes it (C10). Never \"didn't respond as expected\" when the server answered. Read the body with `await error.response.json()`: `error.response.data` is not set by the generated client.",
+    "safe": "the dialog closes only when the person closes it (WebhookManagement.tsx:954) and the catch only shows the message (WebhookManagement.tsx:392-405)"
+   },
+   {
+    "k": "helper",
+    "o": "Webhook secrets are used for HMAC signature validation to verify that webhook payloads are authentic",
+    "n": "The secret is shown once, when the webhook is created. Copy it then.",
+    "m": "Webhook secrets are used for HMAC signature validation",
+    "t": "C16: the tooltip says only what the page does: it shows the secret once (A-09.52 says the same)."
+   },
+   {
+    "k": "status",
+    "o": "Regenerating...",
+    "n": "Regenerating…",
+    "m": "'Regenerating...'",
+    "r": "C5",
+    "t": "The busy label of the button: the ellipsis character (C5, C13)."
+   },
+   {
+    "k": "status",
+    "o": "Creating...",
+    "n": "Creating…",
+    "m": "'Creating...'",
+    "r": "C5",
+    "t": "The busy label of the button: the ellipsis character (C5, C13)."
+   },
+   {
+    "k": "cbutton",
+    "o": "Create",
+    "n": "Create webhook",
+    "m": "Create </Button>",
+    "f": "src/pages/admin/WebhookManagement.tsx",
+    "r": "C11",
+    "t": "The dialog's confirming button repeats the verb and the object (C11)."
+   },
+   {
+    "k": "cbutton",
+    "o": "Update",
+    "n": "Update webhook",
+    "m": "Update </Button>",
+    "f": "src/pages/admin/WebhookManagement.tsx",
+    "r": "C11",
+    "t": "The edit dialog's confirming button (C11)."
+   },
+   {
+    "k": "tooltip",
+    "o": "Test",
+    "n": "Test webhook",
+    "m": "<Tooltip title=\"Test\">",
+    "f": "src/pages/admin/WebhookManagement.tsx",
+    "r": "C15",
+    "t": "A row repeats the control, so its name says which object it acts on (C15)."
+   },
+   {
+    "k": "tooltip",
+    "o": "Edit",
+    "n": "Edit webhook",
+    "m": "<Tooltip title=\"Edit\">",
+    "f": "src/pages/admin/WebhookManagement.tsx",
+    "r": "C15",
+    "t": "The same (C15)."
+   },
+   {
+    "k": "tooltip",
+    "o": "Delete",
+    "n": "Deactivate webhook",
+    "m": "<Tooltip title=\"Delete\">",
+    "f": "src/pages/admin/WebhookManagement.tsx",
+    "r": "C15",
+    "t": "The row's control for the same action (C15); the dialog it opens is A-09.08 to A-09.10. The icon is a trash can today, which says delete: Phase 6 and 7 draw it as a power or pause glyph."
+   },
+   {
+    "k": "label",
+    "o": "Events (comma-separated, * for all)",
+    "n": "Events",
+    "m": "label=\"Events (comma-separated, * for all)\"",
+    "f": "src/pages/admin/WebhookManagement.tsx",
+    "r": "C14",
+    "t": "The helper carries the format; a helper never repeats the label (C14)."
+   },
+   {
+    "k": "helper",
+    "o": "Enter event names separated by commas, or * for all events",
+    "n": "Separate event names with commas. Enter * for all events.",
+    "m": "Enter event names separated by commas, or * for all events",
+    "f": "src/pages/admin/WebhookManagement.tsx",
+    "r": "C14,C5",
+    "t": "Two short sentences, each with its full stop."
+   },
+   {
+    "k": "helper",
+    "o": "You can keep the same name or choose a new one",
+    "n": "Keep the current name or choose a new one.",
+    "m": "You can keep the same name or choose a new one",
+    "f": "src/pages/admin/WebhookManagement.tsx",
+    "r": "C5",
+    "t": "A helper is a sentence and ends with a full stop."
+   },
+   {
+    "k": "helper",
+    "o": "A descriptive name to identify this token",
+    "n": "A name that tells you what the token is for.",
+    "m": "A descriptive name to identify this token",
+    "f": "src/pages/admin/WebhookManagement.tsx",
+    "r": "C14,C5",
+    "t": "The label says \"Token name\"; the helper says what makes a good one."
+   },
+   {
+    "k": "confirm",
+    "o": "• The current API token will immediately stop working • Any systems using the current token will lose access • The new token will only be shown once • You'll need to update all webhook consumers with the new token",
+    "n": "The current token stops working at once and can't be restored, so any system that uses it loses access. The new token is shown only once. Update every webhook consumer with it.",
+    "m": "The current API token will immediately stop working",
+    "f": "src/pages/admin/WebhookManagement.tsx",
+    "r": "C11,C5",
+    "t": "Four typed bullets of unpunctuated sentences become the confirmation's body: the consequence, then permanence (the old token is deleted before the new one is created, A-09.63), then the way out (C11)."
+   },
+   {
+    "k": "status",
+    "o": "Test event sent. {n} webhooks triggered.",
+    "n": "Test event sent. {n: count webhook} triggered.",
+    "m": "Test event sent. {testResponse.webhooksTriggered}",
+    "f": "src/pages/admin/WebhookManagement.tsx",
+    "r": "C4",
+    "t": "The inline result in the test dialog; the count picks its noun (1 webhook triggered)."
+   },
+   {
+    "k": "label",
+    "lk": "delivery-status",
+    "m": "label={delivery.status}",
+    "f": "src/pages/admin/WebhookManagement.tsx",
+    "r": "C6",
+    "t": "The delivery history's Status column drew the raw word."
+   },
+   {
+    "k": "heading",
+    "lk": "webhook",
+    "o": "Testing webhook: {id}",
+    "n": "Testing {url}",
+    "m": "Testing webhook:",
+    "f": "src/pages/admin/WebhookManagement.tsx",
+    "r": "C6",
+    "t": "The test dialog named the webhook by its UUID; `{id}` becomes `{url}`, the address the admin entered. The table's own ID column keeps the id."
+   },
+   {
+    "k": "empty",
+    "o": "",
+    "n": "No inactive webhooks",
+    "m": "No webhooks found",
+    "f": "src/pages/admin/WebhookManagement.tsx",
+    "r": "C12,C5",
+    "t": "When the Inactive tab is empty (the Active tab's row is A-09.31)."
+   },
+   {
+    "k": "empty",
+    "o": "",
+    "n": "No webhooks yet",
+    "m": "No webhooks found",
+    "f": "src/pages/admin/WebhookManagement.tsx",
+    "r": "C12,C5",
+    "t": "When no webhook exists at all (the All tab); the \"Create the first webhook\" button below it is the first step (C12)."
+   },
+   {
+    "k": "label",
+    "o": "Event Type: {event}",
+    "n": "Event type: {event}",
+    "m": "Event Type:",
+    "f": "src/pages/admin/WebhookManagement.tsx",
+    "r": "C1",
+    "t": "The line in the test dialog's result; the approvals table's column header is A-10.08."
+   },
+   {
+    "k": "format",
+    "o": "-",
+    "n": "—",
+    "m": "'-'}",
+    "f": "src/pages/admin/WebhookManagement.tsx",
+    "x": [
+     "em dash"
+    ],
+    "r": "C5,C6",
+    "t": "A delivery with no response status shows a hyphen (`:1132`); the one glyph for an empty value is the em dash (DS.53), so the same meaning reads the same on every page (C6)."
+   },
+   {
+    "k": "aria",
+    "o": "",
+    "n": "No value",
+    "m": "'-'}",
+    "f": "src/pages/admin/WebhookManagement.tsx",
+    "r": "C5",
+    "t": "The empty-value glyph takes the accessible name \"No value\" (DS.54)."
+   },
+   {
+    "k": "label",
+    "refs": "SF-26",
+    "t": "A raw lowercase status word in a chip (SF-26): the chip's inactive branch. The active branch is A-09.04: one lookup value per row.",
+    "m": "webhook.isActive ? \"active\" : \"inactive\"",
+    "lk": "activity",
+    "only": [
+     "inactive"
+    ],
+    "r": "C6"
+   }
+  ]
+ },
+ {
+  "id": "A-10",
+  "name": "Webhook approvals",
+  "route": "/admin/webhooks/approvals",
+  "file": "src/pages/admin/WebhookEventApprovals.tsx",
+  "kept": [
+   "Pending approvals",
+   "Audit history",
+   "Selected",
+   "Auto-refresh",
+   "Refresh pending webhook events",
+   "Event ID",
+   "Reason",
+   "Details",
+   "Action",
+   "Cancel"
+  ],
+  "rows": [
+   [
+    "Webhook Event Approvals",
+    "Webhook approvals",
+    "heading",
+    "TD-21",
+    "The title equals the sidebar label (C7).",
+    "Webhook Event Approvals"
+   ],
+   [
+    "Approve Selected",
+    "Approve selected events",
+    "button",
+    "",
+    "A button is a verb and an object (C2): \"Approve selected\" names no object. The bulk dialog it opens repeats the object (A-10.44, A-10.47).",
+    "Approve Selected"
+   ],
+   [
+    "Reject Selected",
+    "Reject selected events",
+    "button",
+    "",
+    "A button is a verb and an object (C2): \"Reject selected\" names no object. The bulk dialog it opens repeats the object (A-10.45, A-10.48).",
+    "Reject Selected"
+   ],
+   [
+    "Clear Selection",
+    "Clear selection",
+    "button",
+    "",
+    "",
+    "Clear Selection"
+   ],
+   [
+    "{n} event(s) selected",
+    "{n: count event} selected",
+    "label",
+    "",
+    "The helper writes the noun: \"1 event selected\" (C4).",
+    "event(s) selected",
+    "",
+    "C4"
+   ],
+   [
+    "Pending Approvals",
+    "Pending approvals",
+    "label",
+    "",
+    "",
+    "Pending Approvals"
+   ],
+   [
+    "Audit History",
+    "Audit history",
+    "label",
+    "",
+    "",
+    "Audit History"
+   ],
+   [
+    "Event Type",
+    "Event type",
+    "label",
+    "",
+    "",
+    "Event Type"
+   ],
+   {
+    "o": "Payload Preview",
+    "n": "Data preview",
+    "k": "label",
+    "m": "Payload Preview",
+    "t": "\"Payload\" is developer vocabulary (C16, C6): the page says \"data\" here, in the details heading and in the preview message."
+   },
+   [
+    "Created At",
+    "Created",
+    "label",
+    "",
+    "",
+    "Created At"
+   ],
+   [
+    "Performed By",
+    "Performed by",
+    "label",
+    "",
+    "",
+    "Performed By"
+   ],
+   [
+    "Event Details",
+    "Event details",
+    "heading",
+    "",
+    "",
+    "Event Details"
+   ],
+   [
+    "Audit Details",
+    "Audit details",
+    "heading",
+    "",
+    "",
+    "Audit Details"
+   ],
+   [
+    "Event Information",
+    "Event information",
+    "heading",
+    "",
+    "",
+    "Event Information"
+   ],
+   {
+    "o": "Event Payload",
+    "n": "Event data",
+    "k": "heading",
+    "m": "Event Payload",
+    "t": "The same word as the column header: data, not payload (C6)."
+   },
+   [
+    "Audit Information",
+    "Audit information",
+    "heading",
+    "",
+    "",
+    "Audit Information"
+   ],
+   {
+    "o": "Confirm Approval",
+    "n": "Approve this event?",
+    "k": "heading",
+    "t": "A confirmation title that asks the question (C11). The single-event title; the bulk dialog has its own (A-10.44). When one event is selected (A-10.44 is the bulk dialog; both sit on WebhookEventApprovals.tsx:1147).",
+    "m": "Confirm Approval"
+   },
+   {
+    "o": "Confirm Rejection",
+    "n": "Reject this event?",
+    "k": "heading",
+    "m": "Confirm Rejection",
+    "t": "The single-event title; the bulk dialog has its own (A-10.45). When one event is selected (A-10.45 is the bulk dialog; both sit on WebhookEventApprovals.tsx:1199)."
+   },
+   {
+    "o": "Are you sure you want to approve this webhook event?",
+    "n": "Approving runs this event's action now, if it has one. You can't undo an approval.",
+    "k": "confirm",
+    "t": "Consequence first, then permanence (C11); the title names the object (A-10.17). Approving sets the status and then runs the action (`webhooks/webhook-event.service.ts:175`); an event of a type other than `user.enroll` has no action today (A-10.27), hence \"if it has one\". Only a pending event can be approved or rejected (`:178`) and nothing sets an event back to pending, so an approval is final.",
+    "m": "Are you sure you want to approve this webhook event?"
+   },
+   {
+    "o": "Are you sure you want to approve {n} selected event(s)? This will execute the associated actions for each event.",
+    "n": "Approving runs each selected event's action now, if it has one. You can't undo an approval.",
+    "k": "confirm",
+    "m": "Are you sure you want to approve",
+    "t": "The subject is named: each selected event, then permanence (C11). An approval is final (`webhooks/webhook-event.service.ts:178`, the same reasoning as A-10.19). The count is in the title (A-10.44); the single form is A-10.19. `{n}` is in the title (A-10.44), not here.",
+    "r": "C11,C4"
+   },
+   {
+    "o": "This will execute the user enrollment action associated with this event.",
+    "n": "Approving an enrollment event adds the person it names to the class, now or at their first sign-in, and emails them unless they're already enrolled.",
+    "k": "confirm",
+    "m": "This will execute the user enrollment action associated with this event.",
+    "t": "What approving a `user.enroll` event does (`webhook-event.service.ts`, `approveEvent` and `executeUserEnrollment`): the person is enrolled, or enrolled at their first sign-in when they have no account yet (`:317`-`:343`), and is emailed unless already enrolled (`:209`). The sentence names its subject, the enrollment event, so it does not point back at the line before it (A-10.19); one event names one person, so it is singular. It is the info alert under the main body, shown only for one event of that type (`WebhookEventApprovals.tsx:1160`); the way back is the next sentence of the same alert, A-10.55."
+   },
+   {
+    "o": "Are you sure you want to reject this webhook event? The event will be marked as rejected and no action will be executed.",
+    "n": "This event's action won't run, and the event is marked as rejected. You can't undo a rejection.",
+    "k": "confirm",
+    "m": "Are you sure you want to reject this webhook event?",
+    "t": "A rejected event is final: only a pending event can be approved or rejected (`webhooks/webhook-event.service.ts:178`, `:247`) and nothing sets an event back to pending, so permanence is stated plainly (C11)."
+   },
+   {
+    "o": "Approve",
+    "n": "Approve event",
+    "k": "cbutton",
+    "m": "Approve\n",
+    "t": "When one event is selected (A-10.47 is the bulk button)."
+   },
+   {
+    "o": "Reject",
+    "n": "Reject event",
+    "k": "cbutton",
+    "m": "Reject\n",
+    "t": "When one event is selected (A-10.48 is the bulk button)."
+   },
+   [
+    "Approving...",
+    "Approving…",
+    "status",
+    "",
+    "",
+    "Approving..."
+   ],
+   [
+    "Rejecting...",
+    "Rejecting…",
+    "status",
+    "",
+    "",
+    "Rejecting..."
+   ],
+   [
+    "Note: Currently only user.enroll events will execute actions. Other events are for testing purposes.",
+    "Only user.enroll events run an action today. Other events are for testing.",
+    "helper",
+    "",
+    "",
+    "Currently only"
+   ],
+   [
+    "",
+    "Refreshes the pending list every 5 seconds.",
+    "helper",
+    "",
+    "The interval was not stated on screen.",
+    "Auto-refresh"
+   ],
+   [
+    "No pending webhook events",
+    "No pending events",
+    "heading",
+    "",
+    "",
+    "No pending webhook events"
+   ],
+   [
+    "All webhook events have been processed",
+    "Every event has been approved or rejected.",
+    "empty",
+    "",
+    "",
+    "All webhook events have been processed"
+   ],
+   [
+    "No audit history available",
+    "No audit history yet",
+    "heading",
+    "",
+    "",
+    "No audit history available"
+   ],
+   [
+    "Approved and rejected events will appear here",
+    "Approved and rejected events appear here.",
+    "empty",
+    "",
+    "",
+    "Approved and rejected events will appear here"
+   ],
+   {
+    "k": "error",
+    "o": "Invalid payload",
+    "what": "Can't preview this event.",
+    "c": "unknown",
+    "why": "Its data isn't in a form this view can display.",
+    "fix": "Ask whoever maintains this Kiwi deployment for the raw record.",
+    "m": "Invalid payload",
+    "t": "Says why and what to do (C9), without the developer word \"payload\" (C16). A one-line table cell: it truncates with an ellipsis and carries the full text as its tooltip (the truncated-cell rule, `§ Tables`)."
+   },
+   [
+    "Event approved and executed successfully",
+    "Event approved and its action ran",
+    "status",
+    "",
+    "",
+    "Event approved and executed successfully"
+   ],
+   [
+    "Event rejected successfully",
+    "Event rejected",
+    "status",
+    "",
+    "",
+    "Event rejected successfully"
+   ],
+   {
+    "o": "Bulk approval completed: {n} approved, {m} failed",
+    "n": "Approved {n: count event}",
+    "k": "status",
+    "t": "When every selected event was approved ({m} is 0); if any failed, A-10.37 shows instead (both sit on WebhookEventApprovals.tsx:384). The helper writes the noun: \"Approved 1 event\" (C4).",
+    "m": "Bulk approval completed:",
+    "r": "C4"
+   },
+   {
+    "k": "error",
+    "o": "Bulk approval completed: {n} approved, {m} failed",
+    "what": "Approved {n} of {total: count event}.",
+    "c": "partial",
+    "m": "Bulk approval completed:",
+    "t": "When at least one selected event failed ({m} is 1 or more); A-10.36 is the all-approved form of the same line. The loop only counts failures (the reason is console-only), so the why is the closed cause scoped to the rest. The noun follows the total and is written by the helper (C4).",
+    "r": "C9,C4"
+   },
+   {
+    "o": "Bulk rejection completed: {n} rejected, {m} failed",
+    "n": "Rejected {n: count event}",
+    "k": "status",
+    "m": "Bulk rejection completed:",
+    "r": "C4",
+    "t": "When every selected event was rejected ({m} is 0); if any failed, A-10.39 shows instead (both sit on WebhookEventApprovals.tsx:416). The helper writes the noun: \"Rejected 1 event\" (C4)."
+   },
+   {
+    "k": "error",
+    "o": "Bulk rejection completed: {n} rejected, {m} failed",
+    "what": "Rejected {n} of {total: count event}.",
+    "c": "partial",
+    "m": "Bulk rejection completed:",
+    "t": "When at least one selected event failed ({m} is 1 or more); A-10.38 is the all-rejected form of the same line. The loop only counts failures, so the why is the closed cause scoped to the rest. The noun follows the total and is written by the helper (C4).",
+    "r": "C9,C4"
+   },
+   {
+    "k": "error",
+    "o": "Failed to fetch pending webhook events",
+    "what": "Couldn't load pending events.",
+    "c": "unknown",
+    "fix": "Select Refresh.",
+    "m": "Failed to fetch pending webhook events"
+   },
+   {
+    "k": "error",
+    "o": "Failed to approve event",
+    "what": "Couldn't approve the event.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to approve event"
+   },
+   {
+    "k": "error",
+    "o": "Failed to reject event",
+    "what": "Couldn't reject the event.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to reject event"
+   },
+   [
+    "new Date(event.createdAt).toLocaleString()",
+    "17 Oct 2026, 14:05",
+    "format",
+    "TD-24",
+    "One date and time format in the viewer's time zone (C3).",
+    "toLocaleString()",
+    "",
+    "C3"
+   ],
+   {
+    "k": "heading",
+    "o": "Confirm Approval",
+    "n": "Approve {n: count event}?",
+    "m": "Confirm Approval",
+    "t": "The bulk dialog's title: the dialog title is one string for the single and the bulk dialog today, so it is derived from the mode (C11). The helper writes the noun: \"Approve 1 event?\" (C4). When several events are selected (A-10.17 is the single-event dialog; both sit on WebhookEventApprovals.tsx:1147)."
+   },
+   {
+    "k": "heading",
+    "o": "Confirm Rejection",
+    "n": "Reject {n: count event}?",
+    "m": "Confirm Rejection",
+    "t": "The bulk dialog's title. The helper writes the noun: \"Reject 1 event?\" (C4). When several events are selected (A-10.18 is the single-event dialog; both sit on WebhookEventApprovals.tsx:1199).",
+    "r": "C11,C4"
+   },
+   {
+    "k": "confirm",
+    "o": "Are you sure you want to reject {n} selected event(s)? The events will be marked as rejected and no actions will be executed.",
+    "n": "The actions of the selected events won't run, and the events are marked as rejected. You can't undo a rejection.",
+    "m": "reject {selectedEvents.size} selected event(s)",
+    "t": "The subject is named and permanence is stated (C11, C4). The count is in the title (A-10.45); the single form is A-10.22. `{n}` is in the title (A-10.45), not here."
+   },
+   {
+    "k": "cbutton",
+    "o": "Approve",
+    "n": "Approve {n: count event}",
+    "m": ": \"Approve\"}",
+    "t": "The bulk dialog's confirming button repeats the verb and the object (C11). The helper writes the noun: \"Approve 1 event\" (C4). When several events are selected (A-10.23 is the single-event button)."
+   },
+   {
+    "k": "cbutton",
+    "o": "Reject",
+    "n": "Reject {n: count event}",
+    "m": ": \"Reject\"}",
+    "t": "The bulk dialog's confirming button (C11). The helper writes the noun: \"Reject 1 event\" (C4). When several events are selected (A-10.24 is the single-event button)."
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't approve the event.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Try again.",
+    "m": "data?.message || \"Failed to approve event\"",
+    "br": "srv",
+    "t": "The branch that shows the response body's own message. The code reads `error.response.data.message`, which the generated client never sets (its `response` is a fetch Response), so today only the fallback shows; read the body with `await error.response.json()` to show this one."
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't reject the event.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Try again.",
+    "m": "data?.message || \"Failed to reject event\"",
+    "br": "srv",
+    "t": "The same branch for a rejection (see A-10.49)."
+   },
+   {
+    "k": "format",
+    "o": "...",
+    "n": "…",
+    "m": "substring(0, 100) + \"...\"",
+    "r": "C5",
+    "t": "The marker that ends a truncated preview is the ellipsis character, not three full stops."
+   },
+   {
+    "k": "label",
+    "lk": "audit-action",
+    "m": "label={audit.action}",
+    "f": "src/pages/admin/WebhookEventApprovals.tsx",
+    "r": "C6",
+    "t": "The audit history's Action column and the audit details drew the raw word."
+   },
+   {
+    "k": "label",
+    "lk": "event-status",
+    "m": "label={selectedEvent.status}",
+    "f": "src/pages/admin/WebhookEventApprovals.tsx",
+    "r": "C6",
+    "t": "The status chip in the event details drew the raw word."
+   },
+   {
+    "k": "label",
+    "lk": "audit-action",
+    "m": "label={selectedAudit.action}",
+    "f": "src/pages/admin/WebhookEventApprovals.tsx",
+    "r": "C6",
+    "t": "The audit details' action chip drew the raw word (the table column is A-10.52)."
+   },
+   {
+    "k": "confirm",
+    "o": "",
+    "n": "To take them off the class later, remove them on the class's Enroll students page.",
+    "m": "This will execute the user enrollment action associated with this event.",
+    "t": "The way back, because the approval cannot be undone (A-10.19) but the enrollment can be removed afterwards on the class's Enroll students page (\"Remove selected\", `ClassEnroll.tsx:121`, `:128`; A-16.08), so the way out is named (C11). The second sentence of the info alert that A-10.21 starts, shown with it, for one event of that type only."
+   },
+   {
+    "k": "format",
+    "o": "-",
+    "n": "—",
+    "m": "'-'}",
+    "f": "src/pages/admin/WebhookEventApprovals.tsx",
+    "x": [
+     "em dash"
+    ],
+    "r": "C5,C6",
+    "t": "An audit entry with no reason shows a hyphen (`:892`); the one glyph for an empty value is the em dash (DS.53), so the same meaning reads the same on every page (C6)."
+   },
+   {
+    "k": "aria",
+    "o": "",
+    "n": "No value",
+    "m": "'-'}",
+    "f": "src/pages/admin/WebhookEventApprovals.tsx",
+    "r": "C5",
+    "t": "The empty-value glyph takes the accessible name \"No value\" (DS.54)."
+   }
+  ]
+ },
+ {
+  "id": "A-11",
+  "name": "Users",
+  "route": "/admin/user-management",
+  "file": "src/pages/admin/UserManagement.tsx",
+  "kept": [
+   "Add users",
+   "Assign instructor",
+   "Export CSV",
+   "Search",
+   "Clear filters",
+   "All access",
+   "Enabled",
+   "Disabled",
+   "All roles",
+   "User",
+   "Instructor",
+   "Admin",
+   "All statuses",
+   "Registered",
+   "Pending signup",
+   "Access",
+   "Role",
+   "Reset password",
+   "Managed by OAuth",
+   "Password accounts",
+   "Grant product access",
+   "Email addresses",
+   "Class",
+   "Instructor assignments",
+   "Permissions",
+   "Current assignments",
+   "Loading assignments…",
+   "Loading classes…",
+   "Adding users…",
+   "Registering users…",
+   "Cancel",
+   "Close",
+   "Grant access",
+   "Create accounts",
+   "Update permissions",
+   "Try clearing or changing the current filters."
+  ],
+  "note": "The sidebar entry, the page title and \"Users\" are one name; the table's \"Account\" column holds the email, so it says \"Email\". The generated passwords are shown only here and in the exported file (SF-24), which the new line says. \"whitelist_{date}.csv\" becomes \"allowlist_{date}.csv\"; the date inside a file name stays ISO.",
+  "rows": [
+   [
+    "User management",
+    "Users",
+    "heading",
+    "TD-21",
+    "The title equals the sidebar label (C7).",
+    "title=\"User management\""
+   ],
+   [
+    "Control account access, system roles, registrations, and instructor assignments from one workspace.",
+    "Manage who can sign in, what role they have, and which classes each instructor teaches.",
+    "helper",
+    "",
+    "Plain words for the same four jobs.",
+    "Control account access, system roles, registrations"
+   ],
+   {
+    "k": "label",
+    "o": "Account",
+    "n": "Email",
+    "m": "Account\n",
+    "t": "The column holds the email address. The anchor is the column header; `UserManagement.tsx:1413` is the filter bar's own accessible name, \"Account filters\".",
+    "ln": 1556
+   },
+   [
+    "Account status",
+    "Status",
+    "label",
+    "",
+    "",
+    "Account status"
+   ],
+   [
+    "Account action",
+    "Action",
+    "label",
+    "",
+    "",
+    "Account action"
+   ],
+   [
+    "Awaiting Registration",
+    "Awaiting registration",
+    "label",
+    "SF-26",
+    "",
+    "Awaiting Registration"
+   ],
+   [
+    "Whitelist access",
+    "Allowlist access",
+    "label",
+    "TD-38",
+    "",
+    "Whitelist access"
+   ],
+   [
+    "Enter one address per line. Existing whitelist entries are ignored.",
+    "Enter one address per line. Addresses already on the allowlist are skipped.",
+    "helper",
+    "TD-38",
+    "",
+    "Existing whitelist entries are ignored."
+   ],
+   [
+    "",
+    "These passwords are shown only here and in the exported file.",
+    "helper",
+    "SF-24",
+    "The sentence says where the passwords appear: in the results table and the narrow-screen cards, and in the exported file. Checked against the page (C16). The reset-password toast shows a different, new password and is another row.",
+    "Registration results ("
+   ],
+   [
+    "",
+    "No rows to export.",
+    "helper",
+    "",
+    "The reason Export CSV is disabled when no rows match (the disabled-reason pattern).",
+    "Export CSV"
+   ],
+   [
+    "Manage Materials",
+    "Manage materials",
+    "label",
+    "",
+    "",
+    "Manage Materials"
+   ],
+   [
+    "View Analytics",
+    "View analytics",
+    "label",
+    "",
+    "",
+    "View Analytics"
+   ],
+   {
+    "o": "Successfully {enabled or disabled} {email}",
+    "n": "Access enabled for {email}",
+    "k": "status",
+    "t": "When access is switched on. Names what changed, not that it succeeded; the switch-off form is the next row of this line (UserManagement.tsx:474).",
+    "m": "Successfully ${newStatus"
+   },
+   {
+    "o": "Role changed to {newRole} for {email}",
+    "n": "Role for {email} changed to {Role}",
+    "k": "status",
+    "refs": "SF-26",
+    "t": "The role is shown by its name (\"Admin\"), not the raw lowercase word. `{newRole}` is shown as `{Role}`, the role's name.",
+    "m": "Role changed to"
+   },
+   [
+    "Password reset for {email}: {newPassword}",
+    "Password reset for {email}. New password: {newPassword}. Copy it now; it isn't shown again.",
+    "status",
+    "SF-24",
+    "The password appears once, so the line says so.",
+    "Password reset for"
+   ],
+   {
+    "o": "Added {n} users to whitelist.",
+    "n": "Added {n: count user} to the allowlist",
+    "k": "status",
+    "refs": "TD-38",
+    "t": "When every address was added ({m} is 0): the source's template drops its \" {m} failed.\" part then, so this row's Old is the text without it and A-11.47's is the text with it (both sit on UserManagement.tsx:702). The helper writes the noun: \"Added 1 user to the allowlist\" (C4).",
+    "m": "Added ${successCount} users to whitelist.",
+    "r": "C4"
+   },
+   {
+    "o": "Registration completed: {n} successful, {m} failed",
+    "n": "Created {n: count account}",
+    "k": "status",
+    "t": "When every account was created ({m} is 0); if any failed, A-11.48 shows instead (both sit on UserManagement.tsx:221). The helper writes the noun: \"Created 1 account\" (C4).",
+    "m": "Registration completed:",
+    "r": "C4"
+   },
+   {
+    "o": "Successfully assigned {email} to class {classId}",
+    "n": "{email} assigned to {className}",
+    "k": "status",
+    "t": "The raw class id is replaced by the class name. `{classId}` becomes `{className}`.",
+    "m": "Successfully assigned"
+   },
+   [
+    "No registration results to export",
+    "No results to export yet",
+    "status",
+    "",
+    "",
+    "No registration results to export"
+   ],
+   [
+    "No accounts found",
+    "No users match these filters",
+    "heading",
+    "",
+    "",
+    "No accounts found"
+   ],
+   [
+    "Add an email to the whitelist to get started.",
+    "Add an email address to the allowlist to get started.",
+    "empty",
+    "TD-38",
+    "",
+    "Add an email to the whitelist to get started."
+   ],
+   [
+    "Loading accounts…",
+    "Loading users…",
+    "status",
+    "",
+    "",
+    "Loading accounts…"
+   ],
+   [
+    "All emails are already in the whitelist",
+    "Every address is already on the allowlist.",
+    "helper",
+    "TD-38",
+    "",
+    "All emails are already in the whitelist"
+   ],
+   {
+    "o": "whitelist_{date}.csv",
+    "n": "allowlist_{YYYY-MM-DD}.csv",
+    "k": "label",
+    "refs": "TD-38",
+    "t": "The file name follows the allowlist term; the date inside stays ISO. `{date}` is written `{YYYY-MM-DD}`.",
+    "m": "whitelist_"
+   },
+   {
+    "k": "error",
+    "o": "Please select a class",
+    "what": "No class is selected.",
+    "c": "input",
+    "fix": "Choose a class first.",
+    "m": "Please select a class"
+   },
+   {
+    "k": "error",
+    "o": "Please enter at least one email address",
+    "what": "No email addresses entered.",
+    "c": "input",
+    "fix": "Enter at least one, one per line.",
+    "m": "Please enter at least one email address"
+   },
+   {
+    "k": "error",
+    "o": "Cannot register SSO-domain emails: {emails}. SSO users should use OAuth login.",
+    "what": "Can't create password accounts for {emails}.",
+    "c": "input",
+    "why": "Accounts on that domain sign in with Google.",
+    "fix": "Add them with \"Allowlist access\" instead.",
+    "m": "Cannot register SSO-domain emails:",
+    "nosafe": "a check made before the batch, and the valid addresses are registered anyway (UserManagement.tsx:163-171), so the box then holds a list that is partly done"
+   },
+   {
+    "k": "error",
+    "o": "Please select both a class and an instructor",
+    "what": "A class and an instructor are both required.",
+    "c": "input",
+    "fix": "Choose both.",
+    "m": "Please select both a class and an instructor"
+   },
+   {
+    "k": "error",
+    "o": "Failed to fetch users or whitelist",
+    "what": "Couldn't load users.",
+    "c": "unknown",
+    "fix": "Reload the page to try again.",
+    "m": "Failed to fetch users or whitelist"
+   },
+   {
+    "k": "error",
+    "o": "Failed to load classes",
+    "what": "Couldn't load classes.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to load classes"
+   },
+   {
+    "k": "error",
+    "o": "Failed to update status",
+    "what": "Couldn't change access for this user.",
+    "c": "unknown",
+    "fix": "The switch is back to its previous setting. Try again.",
+    "m": "Failed to update status",
+    "nosafe": "an inline switch; nothing was typed and the page puts it back (UserManagement.tsx:478-510)"
+   },
+   {
+    "k": "error",
+    "o": "Failed to change role for {email}: {message}",
+    "what": "Couldn't change the role for {email}.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "The role is back to its previous value. Try again.",
+    "m": "Failed to change role for",
+    "br": "srv",
+    "t": "`{message}` is the body's message; a status line or the library's text is never quoted (A-11.45, A-11.46).",
+    "nosafe": "an inline select; nothing was typed and the page puts the old role back (UserManagement.tsx:537-565)"
+   },
+   {
+    "k": "error",
+    "o": "Failed to reset password for {email}: {message}",
+    "what": "Couldn't reset the password for {email}.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Try again.",
+    "m": "Failed to reset password for",
+    "br": "srv",
+    "t": "`{message}` is the body's message; a status line or the library's text is never quoted (A-11.45, A-11.46)."
+   },
+   {
+    "k": "error",
+    "o": "Failed to add user to whitelist",
+    "what": "Couldn't add the user to the allowlist.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to add user to whitelist",
+    "nosafe": "the page clears the box after the run, whether or not an address failed (UserManagement.tsx:701), and the failed ones stay in the list as red rows"
+   },
+   {
+    "k": "error",
+    "o": "Failed to update instructor permissions",
+    "what": "Couldn't update the permissions.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to update instructor permissions",
+    "safe": "the catch only sets the message, and the class, instructor and permission choices stay (UserManagement.tsx:806-820)"
+   },
+   {
+    "k": "error",
+    "o": "Failed to assign instructor to class",
+    "what": "Couldn't assign the instructor.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to assign instructor to class",
+    "safe": "the choices are cleared only after the call succeeds (UserManagement.tsx:865-866) and the catch only sets the message (UserManagement.tsx:868-882)"
+   },
+   {
+    "k": "error",
+    "o": "Failed to change user role",
+    "what": "Couldn't change the role.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to change user role",
+    "t": "The fallback text the role-change message quotes when the server sends none.",
+    "nosafe": "an inline select; nothing was typed and the page puts the old role back (UserManagement.tsx:537-565)"
+   },
+   {
+    "k": "error",
+    "o": "Registration failed",
+    "what": "Couldn't create this account.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "let errorMessage = 'Registration failed'",
+    "t": "The fallback shown in the result's cell of the registration table when the response has no message.",
+    "nosafe": "a batch: the box keeps the whole list, the addresses that worked included, and the results table lists each one (UserManagement.tsx:176-216), so the sentence would invite a repeat of the ones that worked"
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't create this account.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Try again.",
+    "m": "let errorMessage = 'Registration failed'",
+    "br": "srv",
+    "t": "The body's message, shown in the same cell (C10).",
+    "nosafe": "a batch: the box keeps the whole list, the addresses that worked included, and the results table lists each one (UserManagement.tsx:176-216), so the sentence would invite a repeat of the ones that worked"
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't change access for this user.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "The switch is back to its previous setting. Try again.",
+    "m": "'Failed to update status'",
+    "br": "srv",
+    "t": "The body's message, shown instead of the fallback (C10).",
+    "nosafe": "an inline switch; nothing was typed and the page puts it back (UserManagement.tsx:478-510)"
+   },
+   {
+    "k": "error",
+    "o": "Password reset failed",
+    "what": "Couldn't reset the password for {email}.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "let errorMessage = 'Password reset failed'",
+    "t": "The fallback the snackbar quoted when the response had no message (A-11.33 is the branch that quotes one)."
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't add the user to the allowlist.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Try again.",
+    "m": "'Failed to add user to whitelist'",
+    "br": "srv",
+    "t": "The body's message, shown in the entry's error cell (C10).",
+    "nosafe": "the page clears the box after the run, whether or not an address failed (UserManagement.tsx:701), and the failed ones stay in the list as red rows"
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't update the permissions.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Try again.",
+    "m": "'Failed to update instructor permissions'",
+    "br": "srv",
+    "t": "The body's message, shown instead of the fallback (C10).",
+    "safe": "the catch only sets the message, and the class, instructor and permission choices stay (UserManagement.tsx:806-820)"
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't assign the instructor.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Try again.",
+    "m": "'Failed to assign instructor to class'",
+    "br": "srv",
+    "t": "The body's message, shown instead of the fallback (C10).",
+    "safe": "the choices are cleared only after the call succeeds (UserManagement.tsx:865-866) and the catch only sets the message (UserManagement.tsx:868-882)"
+   },
+   {
+    "k": "error",
+    "o": "HTTP {status}: {statusText}",
+    "m": "HTTP ${error.response.status}: ${error.response.statusText}",
+    "br": "http",
+    "r": "C9",
+    "t": "The status-line branch of the register handler (UserManagement.tsx:206, :209), when the body is not JSON: the whole message, composed: what happened (the handler's own sentence), the cause line with the status as a support reference, then the action. Its other branches are A-11.38 and A-11.39. `{statusText}` is dropped: the status text stands in for words, and the status code stays as the support reference (C9).",
+    "what": "Couldn't create this account.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "fix": "Try again.",
+    "f": "src/pages/admin/UserManagement.tsx",
+    "ln": [
+     206,
+     209
+    ],
+    "nosafe": "a batch: the box keeps the whole list, the addresses that worked included, and the results table lists each one (UserManagement.tsx:176-216), so the sentence would invite a repeat of the ones that worked"
+   },
+   {
+    "k": "remove",
+    "o": "{error.message}",
+    "n": "(removed)",
+    "m": "else if (error.message) { errorMessage = error.message; }",
+    "br": "dev",
+    "t": "When there is no response (a network failure), `error.message` is the library's text (\"The request failed and the interceptors did not return an alternative response\"): never shown (C16); the handler's generic row is the whole message."
+   },
+   {
+    "k": "error",
+    "o": "Added {n} users to whitelist. {m} failed.",
+    "what": "Added {n} of {total: count user} to the allowlist.",
+    "c": "partial",
+    "why": "The server returned an error for the other {m}.",
+    "fix": "Each of those rows says why. Fix them, then try again.",
+    "m": "users to whitelist.",
+    "t": "When at least one address failed ({m} is 1 or more), in place of A-11.16 (the same source line). Each failed entry keeps the server's own message in its row (A-11.42), so the line points there. The noun follows the total and is written by the helper (C4).",
+    "r": "C9,C4"
+   },
+   {
+    "k": "error",
+    "o": "Registration completed: {n} successful, {m} failed",
+    "what": "Created {n} of {total: count account}.",
+    "c": "partial",
+    "why": "The server returned an error for the other {m}.",
+    "fix": "The Error column says why for each one. Fix those rows, then try again.",
+    "m": "Registration completed:",
+    "t": "When at least one account failed ({m} is 1 or more), in place of A-11.17 (the same source line). Each failed row keeps the server's message in the Error column (A-11.38, A-11.39). The noun follows the total and is written by the helper (C4).",
+    "r": "C9,C4"
+   },
+   {
+    "k": "empty",
+    "o": "No instructors assigned to this class yet.",
+    "n": "No instructors assigned to this class yet",
+    "m": "No instructors assigned to this class yet.",
+    "r": "C12,C5",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23)."
+   },
+   {
+    "k": "label",
+    "lk": "registration-result",
+    "m": "label={result.status}",
+    "f": "src/pages/admin/UserManagement.tsx",
+    "r": "C6",
+    "t": "The results table's Status column (and the stacked list's chip) drew the raw word."
+   },
+   {
+    "k": "label",
+    "lk": "class",
+    "o": "{classId}",
+    "n": "{className}",
+    "m": "{result.classId}",
+    "f": "src/pages/admin/UserManagement.tsx",
+    "r": "C6",
+    "t": "The results table's Class column drew the class's UUID. `{classId}` becomes `{className}`.",
+    "ln": [
+     1119,
+     1159
+    ]
+   },
+   {
+    "k": "error",
+    "o": "HTTP {status}: {statusText}",
+    "what": "Couldn't change access for this user.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "fix": "The switch is back to its previous setting. Try again.",
+    "m": "HTTP ${error.response.status}: ${error.response.statusText}",
+    "f": "src/pages/admin/UserManagement.tsx",
+    "ln": [
+     490
+    ],
+    "br": "http",
+    "r": "C9",
+    "t": "The status-line branch of the access switch handler (UserManagement.tsx:490), when the body is not JSON: the whole message, composed: what happened (the handler's own sentence), the cause line with the status as a support reference, then the action. Its other branches are A-11.31 and A-11.40. `{statusText}` is dropped: the status text stands in for words, and the status code stays as the support reference (C9).",
+    "nosafe": "an inline switch; nothing was typed and the page puts it back (UserManagement.tsx:478-510)"
+   },
+   {
+    "k": "error",
+    "o": "HTTP {status}: {statusText}",
+    "what": "Couldn't change the role for {email}.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "fix": "The role is back to its previous value. Try again.",
+    "m": "HTTP ${error.response.status}: ${error.response.statusText}",
+    "f": "src/pages/admin/UserManagement.tsx",
+    "ln": [
+     556,
+     558
+    ],
+    "br": "http",
+    "r": "C9",
+    "t": "The status-line branch of the role change handler (UserManagement.tsx:556, :558), when the body is not JSON: the whole message, composed: what happened (the handler's own sentence), the cause line with the status as a support reference, then the action. Its other branches are A-11.32 and A-11.37. `{statusText}` is dropped: the status text stands in for words, and the status code stays as the support reference (C9).",
+    "nosafe": "an inline select; nothing was typed and the page puts the old role back (UserManagement.tsx:537-565)"
+   },
+   {
+    "k": "error",
+    "o": "HTTP {status}: {statusText}",
+    "what": "Couldn't reset the password for {email}.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "fix": "Try again.",
+    "m": "HTTP ${error.response.status}: ${error.response.statusText}",
+    "f": "src/pages/admin/UserManagement.tsx",
+    "ln": [
+     587,
+     589
+    ],
+    "br": "http",
+    "r": "C9",
+    "t": "The status-line branch of the password reset handler (UserManagement.tsx:587, :589), when the body is not JSON: the whole message, composed: what happened (the handler's own sentence), the cause line with the status as a support reference, then the action. Its other branches are A-11.33 and A-11.41. `{statusText}` is dropped: the status text stands in for words, and the status code stays as the support reference (C9)."
+   },
+   {
+    "k": "error",
+    "o": "HTTP {status}: {statusText}",
+    "what": "Couldn't add the user to the allowlist.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "fix": "Try again.",
+    "m": "HTTP ${error.response.status}: ${error.response.statusText}",
+    "f": "src/pages/admin/UserManagement.tsx",
+    "ln": [
+     687
+    ],
+    "br": "http",
+    "r": "C9",
+    "t": "The status-line branch of the allowlist handler (UserManagement.tsx:687), when the body is not JSON: the whole message, composed: what happened (the handler's own sentence), the cause line with the status as a support reference, then the action. Its other branches are A-11.34 and A-11.42. `{statusText}` is dropped: the status text stands in for words, and the status code stays as the support reference (C9).",
+    "nosafe": "the page clears the box after the run, whether or not an address failed (UserManagement.tsx:701), and the failed ones stay in the list as red rows"
+   },
+   {
+    "k": "error",
+    "o": "HTTP {status}: {statusText}",
+    "what": "Couldn't update the permissions.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "fix": "Try again.",
+    "m": "HTTP ${error.response.status}: ${error.response.statusText}",
+    "f": "src/pages/admin/UserManagement.tsx",
+    "ln": [
+     813
+    ],
+    "br": "http",
+    "r": "C9",
+    "t": "The status-line branch of the instructor permissions handler (UserManagement.tsx:813), when the body is not JSON: the whole message, composed: what happened (the handler's own sentence), the cause line with the status as a support reference, then the action. Its other branches are A-11.35 and A-11.43. `{statusText}` is dropped: the status text stands in for words, and the status code stays as the support reference (C9).",
+    "safe": "the catch only sets the message, and the class, instructor and permission choices stay (UserManagement.tsx:806-820)"
+   },
+   {
+    "k": "error",
+    "o": "HTTP {status}: {statusText}",
+    "what": "Couldn't assign the instructor.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "fix": "Try again.",
+    "m": "HTTP ${error.response.status}: ${error.response.statusText}",
+    "f": "src/pages/admin/UserManagement.tsx",
+    "ln": [
+     875
+    ],
+    "br": "http",
+    "r": "C9",
+    "t": "The status-line branch of the instructor assignment handler (UserManagement.tsx:875), when the body is not JSON: the whole message, composed: what happened (the handler's own sentence), the cause line with the status as a support reference, then the action. Its other branches are A-11.36 and A-11.44. `{statusText}` is dropped: the status text stands in for words, and the status code stays as the support reference (C9).",
+    "safe": "the choices are cleared only after the call succeeds (UserManagement.tsx:865-866) and the catch only sets the message (UserManagement.tsx:868-882)"
+   },
+   {
+    "k": "status",
+    "o": "Successfully {enabled or disabled} {email}",
+    "n": "Access disabled for {email}",
+    "m": "Successfully ${newStatus",
+    "f": "src/pages/admin/UserManagement.tsx",
+    "r": "C13",
+    "t": "When access is switched off (the row for switching on is A-11.13; both sit on UserManagement.tsx:474)."
+   },
+   {
+    "k": "button",
+    "o": "Edit",
+    "n": "Edit permissions",
+    "f": "src/pages/admin/UserManagement.tsx",
+    "r": "C2",
+    "t": "The button sits beside an instructor's permission chips and opens the permissions form.",
+    "ln": 1315
+   },
+   {
+    "k": "button",
+    "o": "Clear",
+    "n": "Clear results",
+    "f": "src/pages/admin/UserManagement.tsx",
+    "r": "C2",
+    "t": "It clears the registration results table above it.",
+    "ln": 1100
+   },
+   {
+    "k": "label",
+    "lk": "role",
+    "only": [
+     "user",
+     "instructor",
+     "admin"
+    ],
+    "m": "roleFilter.charAt(0).toUpperCase()",
+    "f": "src/pages/admin/UserManagement.tsx",
+    "r": "C6",
+    "t": "The role filter's chip made its words by capitalising the raw id (\"Role: Admin\"); the role lookup names the values, so a role added later is not drawn in lowercase."
+   }
+  ]
+ },
+ {
+  "id": "A-12",
+  "name": "Admin app view (host frame)",
+  "route": "/admin/app/:appSlug",
+  "file": "src/pages/admin/AdminAppPage.tsx",
+  "kept": [
+   "Retry loading {appName}"
+  ],
+  "note": "Only the host frame's words are in scope; the embedded app's own text is not (G5). \"Exercise Manager\" and \"Codegen\" were hard-coded although the host renders any app, so the revised panel takes the app's name.",
+  "rows": [
+   [
+    "Loading admin panel...",
+    "Loading admin panel…",
+    "status",
+    "",
+    "",
+    "Loading admin panel..."
+   ],
+   {
+    "k": "error",
+    "o": "Missing app slug",
+    "what": "Couldn't open this app.",
+    "c": "missing",
+    "why": "The link has no app in it.",
+    "fix": "Open it from the sidebar.",
+    "m": "Missing app slug"
+   },
+   {
+    "k": "error",
+    "o": "App \"{appSlug}\" does not have an admin panel",
+    "what": "Couldn't open {appSlug}.",
+    "c": "missing",
+    "why": "It has no admin panel.",
+    "fix": "Choose another app from the sidebar.",
+    "m": "does not have an admin panel"
+   },
+   {
+    "k": "error",
+    "o": "Failed to load app admin panel",
+    "what": "Couldn't open this app's admin panel.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to load app admin panel"
+   },
+   {
+    "k": "error",
+    "o": "Admin panel not found",
+    "what": "Couldn't open this app.",
+    "c": "missing",
+    "why": "Its admin panel wasn't found.",
+    "fix": "Choose another app from the sidebar.",
+    "m": "Admin panel not found"
+   },
+   {
+    "k": "error",
+    "o": "Failed to load {appName}",
+    "what": "Couldn't load {appName}.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to load ${appName}",
+    "f": "src/pages/admin/AdminAppView.tsx"
+   },
+   [
+    "Exercise Manager is not enabled for this class",
+    "{appName} isn't turned on for this class",
+    "heading",
+    "",
+    "The app's name is a slot, not a hard-coded product.",
+    "is not enabled for this class",
+    "src/pages/admin/AdminAppView.tsx"
+   ],
+   [
+    "Enable the Codegen app in this class before opening its exercise management tools.",
+    "Turn on {appName} for this class before you open it.",
+    "body",
+    "",
+    "",
+    "Enable the Codegen app in this class",
+    "src/pages/admin/AdminAppView.tsx"
+   ],
+   [
+    "Manage Class Apps",
+    "Manage class apps",
+    "button",
+    "",
+    "",
+    "Manage Class Apps",
+    "src/pages/admin/AdminAppView.tsx"
+   ],
+   [
+    "Ask an administrator to enable Codegen for this class.",
+    "Ask an administrator or an instructor of this class to turn on {appName}.",
+    "body",
+    "",
+    "Follows the access model on `fix/access-control` (LC-7: a class's assigned instructors see and can open Class Apps), and the class-app routes admit whoever can manage the class (`kiwi-app/kiwi-app.controller.ts:383-388`). The old line sent every non-admin to an administrator, which followed today's menu, where Class Apps is hidden from instructors, and said that only an administrator could (C16). Today the host frame draws the Manage class apps button (A-12.09) for admins alone (`AdminAppView.tsx:468-485`); the hand-off draws it for an assigned instructor too, and this line stays for a reader who is neither. Ships with or after the merge.",
+    "Ask an administrator to enable Codegen for this class.",
+    "src/pages/admin/AdminAppView.tsx",
+    "C8, C16"
+   ],
+   [
+    "Loading {appName}...",
+    "Loading {appName}…",
+    "status",
+    "",
+    "",
+    "Loading {appName}...",
+    "src/pages/admin/AdminAppView.tsx"
+   ]
+  ]
+ }
+]

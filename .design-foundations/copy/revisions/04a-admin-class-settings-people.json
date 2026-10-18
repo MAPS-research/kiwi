@@ -1,0 +1,1749 @@
+[
+ {
+  "id": "A-13",
+  "name": "Class settings (Edit class)",
+  "route": "/admin/class/:classID",
+  "file": "src/pages/admin/ClassEdit.tsx",
+  "kept": [
+   "Basic information",
+   "Description",
+   "Replace image",
+   "Upload image",
+   "Class-specific instructions",
+   "Add class-specific instructions",
+   "Instructions",
+   "Class preview",
+   "Cancel",
+   "PNG, JPG, JPEG, or WebP. The preview updates after upload."
+  ],
+  "note": "The tour calls this the most composed admin page. Its words were already close to the guide; what changes is vocabulary (instructor, cover image), the exclamation mark and the three failure messages.",
+  "rows": [
+   [
+    "Edit Class",
+    "Edit class",
+    "heading",
+    "TD-21",
+    "The title equals the sidebar label (C7); two places.",
+    "Edit Class"
+   ],
+   [
+    "Loading class data...",
+    "Loading class details…",
+    "status",
+    "",
+    "",
+    "Loading class data..."
+   ],
+   [
+    "Class Name",
+    "Class name",
+    "label",
+    "",
+    "",
+    "Class Name"
+   ],
+   [
+    "Professor Name",
+    "Instructor name",
+    "label",
+    "",
+    "",
+    "Professor Name"
+   ],
+   [
+    "Professor Email",
+    "Instructor email",
+    "label",
+    "",
+    "",
+    "Professor Email"
+   ],
+   [
+    "Course image",
+    "Cover image",
+    "heading",
+    "",
+    "",
+    "Course image"
+   ],
+   [
+    "Save Changes",
+    "Save changes",
+    "button",
+    "",
+    "",
+    "Save Changes"
+   ],
+   [
+    "Saving...",
+    "Saving…",
+    "status",
+    "",
+    "",
+    "Saving..."
+   ],
+   [
+    "Class metadata updated successfully!",
+    "Class saved",
+    "status",
+    "SF-47",
+    "No exclamation mark; \"metadata\" is developer vocabulary.",
+    "Class metadata updated successfully!"
+   ],
+   {
+    "k": "error",
+    "o": "Failed to load class data. Please try again.",
+    "what": "Couldn't load the class.",
+    "c": "unknown",
+    "fix": "Reload the page to try again.",
+    "m": "Failed to load class data. Please try again."
+   },
+   {
+    "k": "error",
+    "o": "Failed to upload image. Please try again.",
+    "what": "Couldn't upload the cover image.",
+    "c": "unknown",
+    "fix": "Try again, or choose a different image.",
+    "m": "Failed to upload image. Please try again.",
+    "safe": "the catch only sets the message (ClassEdit.tsx:121-124)"
+   },
+   {
+    "k": "error",
+    "o": "Failed to update class metadata. Please try again.",
+    "what": "Couldn't save the class.",
+    "c": "unknown",
+    "fix": "Check the details and try again.",
+    "m": "Failed to update class metadata. Please try again.",
+    "safe": "the page leaves only after a save (ClassEdit.tsx:169) and the catch only sets the message (ClassEdit.tsx:171-174)"
+   },
+   {
+    "k": "body",
+    "o": "Update course details, imagery, and assistant behavior.",
+    "n": "Update the class details, cover image and instructions for Kiwi.",
+    "f": "src/pages/admin/ClassEdit.tsx",
+    "r": "C6",
+    "t": "Class, not course; cover image, not imagery; the instructions are Kiwi's (terminology). The header shows it above the form and above the loading line."
+   }
+  ]
+ },
+ {
+  "id": "A-14",
+  "name": "Materials",
+  "route": "/admin/class/:classID/manage-materials",
+  "file": "src/pages/admin/Materials.tsx",
+  "kept": [
+   "Materials",
+   "New materials",
+   "Choose PDFs",
+   "Create {n: count material}",
+   "Lectures",
+   "Recitations",
+   "All materials",
+   "Needs attention",
+   "Missing answer key",
+   "Newest first",
+   "Oldest first",
+   "By title",
+   "Collapse all",
+   "No student copy",
+   "No answer key",
+   "Student copy, Answer key, Reference",
+   "Replace this file?",
+   "Delete this material?",
+   "Delete this file?",
+   "the staged-row warning about an answer key that matches nothing (the one that matches a material is A-14.27)"
+  ],
+  "note": "This page was already written in the guide's register (consequence-first dialogs, plain warnings); what changes is the date format, the lowercase status words, the em dashes, the partial-upload message and five failure messages. TD-26: \"LECTURES 1\" is the string \"Lectures\" drawn in capitals by CSS (`overline`), so no string changes; the type tokens remove the capitals (`§ Type`). The filter option \"Processing failed\" stays, because it names the category the filter lists, like \"Missing answer key\"; the chip on those rows reads \"Not processed\", and a failed file shows its own message with the control to retry by name (A-14.29, A-14.30). \"Create {n: count material}\" is the page's two forms, \"Create 1 material\" and \"Create 2 materials\", as the source writes them.",
+  "rows": [
+   [
+    "Search titles and file names",
+    "Search materials",
+    "placeholder",
+    "TD-25",
+    "Short enough not to truncate at 960 px (TD-25).",
+    "Search titles and file names"
+   ],
+   [
+    "Uploaded. Processing continues on the server — you can leave this page.",
+    "Uploaded. Processing continues on the server, so you can leave this page.",
+    "status",
+    "",
+    "No em dash; says why leaving is fine.",
+    "Uploaded. Processing continues on the server"
+   ],
+   {
+    "k": "error",
+    "o": "",
+    "what": "Uploaded {n} of {total: count file}.",
+    "c": "partial",
+    "why": "The server didn't accept the other {m}.",
+    "fix": "Each red row says why. Try those again.",
+    "m": "Uploaded. Processing continues on the server",
+    "t": "When at least one file failed, in place of A-14.02 (the same source line: the success toast showed even when rows failed). Each failed row keeps its own message (A-14.06). The noun follows the total and is written by the helper (C4).",
+    "r": "C9,C4"
+   },
+   {
+    "k": "error",
+    "o": "Only PDF files are accepted.",
+    "what": "That file isn't a PDF.",
+    "c": "input",
+    "why": "Only PDF files are accepted.",
+    "fix": "Choose a PDF instead.",
+    "m": "Only PDF files are accepted."
+   },
+   {
+    "k": "error",
+    "o": "Could not load materials.",
+    "what": "Couldn't load materials.",
+    "c": "unknown",
+    "fix": "Reload the page to try again.",
+    "m": "Could not load materials."
+   },
+   {
+    "k": "error",
+    "o": "Upload failed.",
+    "what": "Couldn't upload the file.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Upload failed.",
+    "br": "dev",
+    "t": "`error.message` of a call made through the generated client is the library's text (\"Response returned an error code\", `services/runtime.ts:140`): never shown (C16), so this sentence is the whole message. The shared `fail()` helper has the same `error?.message ?? fallback` shape (A-14.15).",
+    "r": "C9,C16",
+    "nosafe": "one string for three places: the two staged ones keep the file in the list, the third, a file chosen for an existing material, keeps nothing (Materials.tsx:252-257, Materials.tsx:283-288, Materials.tsx:336-338)"
+   },
+   {
+    "k": "error",
+    "o": "Could not queue reprocessing.",
+    "what": "Couldn't start processing again.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Could not queue reprocessing."
+   },
+   {
+    "k": "error",
+    "o": "Delete failed.",
+    "what": "Couldn't delete this item.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Delete failed."
+   },
+   {
+    "k": "error",
+    "o": "Could not save the material.",
+    "what": "Couldn't save the material.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Could not save the material.",
+    "nosafe": "an inline field: the typed value stays in the box with no sign that it was not saved (MaterialRow.tsx:190-198), so the sentence would promise a form the page does not have"
+   },
+   {
+    "o": "Delete",
+    "n": "Delete material",
+    "k": "cbutton",
+    "t": "When the dialog is for a material (the next row is a file). The confirm button repeats the verb and the object.",
+    "m": "Delete </Button> </DialogActions>"
+   },
+   [
+    "processing",
+    "Processing",
+    "label",
+    "SF-48",
+    "A lowercase status word in a chip beside Title Case chips.",
+    "label=\"processing\"",
+    "src/pages/admin/MaterialRow.tsx"
+   ],
+   [
+    "document.processingStatus.toLowerCase()",
+    "Pending, Processing, Ready, Not processed",
+    "format",
+    "SF-48",
+    "The slot's status chip printed the raw lowercase word or a raw stage name. A file the server could not process reads \"Not processed\", the same word as the material row's chip (A-14.28); its message and the way to retry are in A-14.29 and A-14.30.",
+    "processingStatus.toLowerCase()",
+    "src/pages/admin/MaterialSlots.tsx",
+    "C6"
+   ],
+   [
+    "Run the pipeline again",
+    "Process this file again",
+    "tooltip",
+    "",
+    "\"Pipeline\" is internal vocabulary.",
+    "Run the pipeline again",
+    "src/pages/admin/MaterialSlots.tsx"
+   ],
+   {
+    "o": "Not uploaded — students cannot see this material at all.",
+    "n": "Not uploaded. Students can't see this material yet.",
+    "k": "empty",
+    "t": "No em dash; says what the empty slot means for students. It states a state and its consequence for the student; nothing failed to be done.",
+    "m": "Not uploaded — students cannot see this material at all.",
+    "f": "src/pages/admin/MaterialSlots.tsx",
+    "x": [
+     "not-an-error"
+    ]
+   },
+   [
+    "Not uploaded — the tutor only has the questions.",
+    "Not uploaded. Kiwi has only the questions.",
+    "empty",
+    "",
+    "",
+    "Not uploaded — the tutor only has the questions.",
+    "src/pages/admin/MaterialSlots.tsx"
+   ],
+   [
+    "new Date(value).toLocaleDateString(undefined, { month: \"short\", day: \"numeric\" })",
+    "31 Dec 2026",
+    "format",
+    "TD-24",
+    "The list's date was the browser locale with no year (\"12月31日\" under zh-CN); one format with the year (C3).",
+    "toLocaleDateString(undefined",
+    "src/pages/admin/MaterialRow.tsx",
+    "C3"
+   ],
+   {
+    "k": "remove",
+    "o": "{error.message}",
+    "n": "(removed)",
+    "m": "error?.message ?? fallback",
+    "br": "dev",
+    "t": "`fail(error, fallback)` shows `error.message` first, the library's text (\"Response returned an error code\"): never shown (C16); each call site's own sentence (A-14.05, A-14.07, A-14.08, A-14.09) is the whole message."
+   },
+   {
+    "k": "format",
+    "o": "type=\"date\"",
+    "n": "DateTimeField (date): 17 Oct 2026",
+    "m": "type=\"date\"",
+    "f": [
+     "src/pages/admin/MaterialRow.tsx",
+     "src/pages/admin/Materials.tsx"
+    ],
+    "dt": "date",
+    "r": "C3",
+    "refs": "TD-24",
+    "t": "A native date input draws the browser's locale (month first under en-US, \"2026/10/14\" or \"12月31日\" elsewhere) and cannot be reformatted; the DateTimeField shows and reads one format whatever the browser (C3, `§ Dates, times and numbers › The date control`). The Available from field of a material and of a staged upload row."
+   },
+   {
+    "k": "empty",
+    "o": "No materials yet.",
+    "n": "No materials yet",
+    "m": "No materials yet.",
+    "r": "C12,C5",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23)."
+   },
+   {
+    "k": "empty",
+    "o": "Nothing matches these filters.",
+    "n": "Nothing matches these filters",
+    "m": "Nothing matches these filters.",
+    "r": "C12,C5",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23)."
+   },
+   {
+    "k": "tooltip",
+    "o": "Annotate",
+    "n": "Annotate file",
+    "m": "title=\"Annotate\"",
+    "f": "src/pages/admin/MaterialSlots.tsx",
+    "r": "C15",
+    "t": "An icon button in a repeated row names its object."
+   },
+   {
+    "k": "cbutton",
+    "o": "Delete",
+    "n": "Delete file",
+    "m": "Delete </Button> </DialogActions>",
+    "f": "src/pages/admin/Materials.tsx",
+    "r": "C11",
+    "t": "When the dialog is for a file (A-14.10 is the material). The confirm button repeats the verb and the object."
+   },
+   {
+    "k": "button",
+    "o": "Separate",
+    "n": "Detach file",
+    "f": "src/pages/admin/Materials.tsx",
+    "r": "C2",
+    "t": "It makes an attached file a material of its own; \"Attach it there instead\" is its counterpart.",
+    "ln": 559
+   },
+   {
+    "k": "confirm",
+    "o": "“{fileName}” is swapped for the file you pick next. Comments, summaries and existing citations stay with it — they point at the document, not the file.",
+    "n": "\"{fileName}\" is replaced by the file you choose next, and the old file is deleted. Kiwi builds its search index again from the new file. Comments, summaries and existing citations stay, because they point at the document, not the file. You can't undo this.",
+    "m": "is swapped for the file you pick next",
+    "f": "src/pages/admin/Materials.tsx",
+    "r": "C11,C5",
+    "t": "The first paragraph of the Replace dialog (its second paragraph, about page numbers, is kept). The old file is deleted from storage once the new one is saved (`document/document.service.ts:285`, `replaceDocumentFile`), so the swap cannot be undone: consequence, then permanence (C11). Comments, summaries and citations point at the document, which stays (`document.controller.ts:356`). The em dash becomes a clause and the curly quotes straight ones (C5)."
+   },
+   {
+    "k": "confirm",
+    "o": "“{title}” and its files stop appearing for students. Chat history that referenced it is kept.",
+    "n": "\"{title}\" and its files are removed from this list, and students stop seeing them. Chat history that referenced it is kept. You can't undo this.",
+    "m": "and its files stop appearing for students",
+    "f": "src/pages/admin/Materials.tsx",
+    "r": "C11,C5",
+    "t": "When the dialog is for a material (the next row is a file). Deleting a material archives it (`material.service.ts:73`): it leaves the staff list too (`listForStaff` skips archived materials, `:96`) and no screen restores it, so the body says it is removed from the list and cannot be undone, and keeps the sentence that chat history is kept. The curly quotes become straight (C5). The claim that chat history is kept is the source's own, and it holds: `MaterialService.delete` only sets the material's lifecycle to ARCHIVED (`material.service.ts:73-84`), and the tables that hold chat history, `UserInteraction` and `Conversation` (`schema.prisma:108` and `:161`), have no relation to a material or a document, so nothing cascades to them."
+   },
+   {
+    "k": "confirm",
+    "o": "“{fileName}” is removed permanently, along with its annotations and everything the tutor learned from it.",
+    "n": "\"{fileName}\" is deleted, along with its comments, its summaries, the search index Kiwi built from it and the stored file. Chats that cited it keep their answers. You can't undo this.",
+    "m": "is removed permanently, along with its annotations",
+    "f": "src/pages/admin/Materials.tsx",
+    "r": "C11,C16",
+    "t": "When the dialog is for a file (the previous row is a material). The delete removes exactly these, in one transaction and then the stored file: the document's comments, summaries and embeddings (the search index) and its row (`common/database/document.service.ts:73-80`), then the file in storage (`document/document.service.ts:1094-1120`). Chats keep their answers: an interaction holds only a `pdfId` string, no foreign key (`prisma/schema.prisma:121`), and the delete touches no interaction. \"Annotations\" and \"everything the tutor learned\" said less than the code does (C16), and \"permanently\" becomes \"You can't undo this\", the sentence A-14.24 and A-14.25 use (C11, C8)."
+   },
+   {
+    "k": "body",
+    "o": "Looks like the answer key for “{title}”. As a new material, students would see the answers.",
+    "n": "Looks like the answer key for \"{title}\". As a new material, students would see the answers.",
+    "m": "Looks like the answer key for",
+    "f": "src/pages/admin/Materials.tsx",
+    "r": "C5",
+    "t": "When a staged file looks like the answer key of another material (the unmatched case is the line above it). Only the curly quotes change (C5)."
+   },
+   {
+    "k": "label",
+    "o": "Processing failed",
+    "n": "Not processed",
+    "m": "Processing failed",
+    "f": "src/pages/admin/materialsListing.ts",
+    "ln": [
+     18
+    ],
+    "r": "C6",
+    "t": "The chip on a material row when one of its files failed (`ISSUE_LABELS`, `materialsListing.ts:18`). A chip names a state; \"Processing failed\" said that something could not be done and gave no cause and no way out (C9). The state is now \"Not processed\", the word the guide uses for a failure that needs no blame (\"Not run\", \"Not delivered\"), and the failed file carries its own message with the control to retry (A-14.29, A-14.30). The filter option of the same name keeps its words: it names the category the filter lists (this page's note says why)."
+   },
+   {
+    "k": "error",
+    "o": "{processingError}",
+    "what": "Couldn't process this file.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Select \"Process this file again\".",
+    "m": "title={document.processingError}",
+    "f": "src/pages/admin/MaterialSlots.tsx",
+    "br": "srv",
+    "r": "C9,C10",
+    "t": "When the failed file has a message from the pipeline (`processingError`, `MaterialSlots.tsx:59`): a caption under the file's name in error colour, and the status chip's tooltip, which holds the raw text today. `{processingError}` is the old text; `{message}` is its quoted form (C10). The control to retry is the icon button named \"Process this file again\" (A-14.13), spelled as the screen spells it, in quotes because the name is a phrase (as S-09.04 does). The next row is the form with no message."
+   },
+   {
+    "k": "error",
+    "o": "",
+    "what": "Couldn't process this file.",
+    "c": "server",
+    "fix": "Select \"Process this file again\".",
+    "m": "document.processingError ? (",
+    "f": "src/pages/admin/MaterialSlots.tsx",
+    "r": "C9",
+    "t": "When the failed file has no message (`processingError` is empty, `MaterialSlots.tsx:58`): nothing is shown today beyond the chip. The server reported the failure itself, so the cause is `server` (\"The server returned an error.\"), not `unknown`. Same place as the previous row, which quotes the message."
+   },
+   {
+    "k": "helper",
+    "o": "The same pages with the answers. The tutor reads this; students never see it.",
+    "n": "The same pages with the answers. Kiwi reads this. Students never see it.",
+    "m": "The same pages with the answers. The tutor reads this",
+    "f": "src/pages/admin/materialsStaging.ts",
+    "r": "C8,C5",
+    "t": "The answer key slot's hover help (`ROLE_HINTS`, `materialsStaging.ts:123`). Kiwi is the name for the tutor in the third person (C8): the same page says \"Kiwi has only the questions\" (A-14.15). The semicolon becomes two short sentences."
+   },
+   {
+    "k": "helper",
+    "o": "Extra material for the tutor. Not shown to students.",
+    "n": "Extra material for Kiwi. Students don't see it.",
+    "m": "Extra material for the tutor",
+    "f": "src/pages/admin/materialsStaging.ts",
+    "r": "C8",
+    "t": "The reference slot's hover help (`ROLE_HINTS`, `materialsStaging.ts:124`): Kiwi, not \"the tutor\" (C8), and a contraction in the same quiet voice."
+   },
+   {
+    "k": "helper",
+    "o": "What students see.",
+    "n": "This is what students see.",
+    "m": "What students see.",
+    "f": "src/pages/admin/materialsStaging.ts",
+    "r": "C5",
+    "t": "The student copy slot's hover help (`ROLE_HINTS`, `materialsStaging.ts:121`): a fragment with a full stop is neither a name nor a sentence (C5). It becomes a sentence, like the two hover helps beside it (A-14.31, A-14.32)."
+   },
+   {
+    "k": "label",
+    "o": "Processing failed",
+    "n": "Processing failed",
+    "m": "Processing failed",
+    "f": "src/pages/admin/materialsListing.ts",
+    "ln": [
+     73
+    ],
+    "keep": true,
+    "x": [
+     "not-an-error"
+    ],
+    "t": "The filter option keeps its name (`FILTER_LABELS`, `materialsListing.ts:73`): it names the category of materials the filter lists, like \"Missing answer key\", and asks nothing of the reader. The chip on those rows is A-14.28 and the failed file's message is A-14.29 and A-14.30."
+   }
+  ]
+ },
+ {
+  "id": "A-15",
+  "name": "Class flags",
+  "route": "/admin/class/:classID/feature-flags",
+  "file": "src/pages/admin/ClassSpecificFeatureFlags.tsx",
+  "kept": [
+   "Assigned flags",
+   "Features currently available to this class.",
+   "Add class flag",
+   "Expiration (optional)",
+   "Active, Expired, No expiration"
+  ],
+  "rows": [
+   [
+    "Feature Flags",
+    "Class flags",
+    "heading",
+    "TD-21",
+    "The title equals the sidebar label, and tells this page from System flags (C7).",
+    "Feature Flags"
+   ],
+   {
+    "o": "Control staged feature access for {className or classID}.",
+    "n": "Control staged feature access for {className}.",
+    "k": "helper",
+    "t": "The raw class id showed until the name loaded; the line waits for the name.",
+    "m": "Control staged feature access for",
+    "r": "C6",
+    "lk": "class"
+   },
+   {
+    "o": "{classId}",
+    "n": "{className}",
+    "k": "label",
+    "t": "The Target chip showed the raw class id. `{classId}` becomes `{className}`.",
+    "m": "<Chip label={classes[0]}",
+    "f": "src/components/FeatureFlags/AddClassFeature.tsx",
+    "lk": "class",
+    "r": "C6"
+   },
+   {
+    "k": "label",
+    "t": "The Feature column of the class's flags drew the id as it is; the Feature flags lookup names all three (A-06.04).",
+    "m": "feature.featureName",
+    "f": "src/components/FeatureFlags/ListClassFeatures.tsx",
+    "lk": "feature",
+    "r": "C6",
+    "ln": [
+     124
+    ]
+   },
+   {
+    "k": "error",
+    "o": "No class ID was provided.",
+    "what": "Couldn't open class flags.",
+    "c": "missing",
+    "why": "The link has no class.",
+    "fix": "Choose a class from the class switcher.",
+    "m": "No class ID was provided."
+   },
+   [
+    "new Date(feature.validUntil).toLocaleString()",
+    "17 Oct 2026, 14:05",
+    "format",
+    "TD-24",
+    "One date and time format in the viewer's time zone (C3).",
+    "toLocaleString()",
+    "src/components/FeatureFlags/ListClassFeatures.tsx",
+    "C3"
+   ],
+   {
+    "k": "error",
+    "o": "",
+    "what": "Couldn't load the class flags.",
+    "c": "unknown",
+    "fix": "Reload the page to try again.",
+    "m": "Error fetching class features:",
+    "t": "A failed list load was console-only and the table read as empty."
+   },
+   {
+    "k": "format",
+    "o": "type=\"datetime-local\"",
+    "n": "DateTimeField (date and time): 17 Oct 2026, 14:05",
+    "m": "type=\"datetime-local\"",
+    "f": "src/components/FeatureFlags/AddClassFeature.tsx",
+    "dt": "datetime",
+    "r": "C3",
+    "refs": "TD-24",
+    "t": "A native date-time input draws the browser's locale and a 12-hour clock where the locale uses one, and cannot be reformatted; the DateTimeField shows and reads one format, in the viewer's time zone, captioned \"Local ({timeZone})\" (C3). The Expiration field of the class access form (the same component as on A-06)."
+   },
+   {
+    "k": "empty",
+    "o": "No feature flags are assigned to this class.",
+    "n": "No feature flags are assigned to this class",
+    "m": "No feature flags are assigned to this class.",
+    "r": "C12,C5",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23).",
+    "f": "src/components/FeatureFlags/ListClassFeatures.tsx"
+   },
+   {
+    "k": "label",
+    "lk": "feature",
+    "m": "Object.values(AddFeatureRequestFeatureNameEnum)",
+    "f": "src/components/FeatureFlags/AddClassFeature.tsx",
+    "r": "C6",
+    "t": "The class form's select also draws on this page; the lookup is the same as A-06.04."
+   },
+   {
+    "k": "label",
+    "lk": "class",
+    "o": "{classId}",
+    "n": "{className}",
+    "m": "classes.map((classId)",
+    "f": "src/components/FeatureFlags/ListClassFeatures.tsx",
+    "r": "C6",
+    "t": "The class select's options drew UUIDs. `{classId}` becomes `{className}`."
+   }
+  ]
+ },
+ {
+  "id": "A-16",
+  "name": "Enroll students",
+  "route": "/admin/class/:classID/enroll-students",
+  "file": "src/pages/admin/ClassEnroll.tsx",
+  "kept": [
+   "Add students, review pending enrollments, and manage the class roster.",
+   "Managing enrollment for class: {name}",
+   "Email, Role, Status",
+   "Admin, Student (role chips)",
+   "Active, Pending (status chips)",
+   "Sending to",
+   "Recipients:",
+   "Cancel"
+  ],
+  "note": "\"Enroll students\" is the page, the sidebar label and the button (C7, TD-33). The roster mixes roles, so the mixed group is \"users\". The remove action is a toolbar button; its disabled reason and the invalid-address state are the two undrawn states of the mock review, written here as copy.",
+  "rows": [
+   [
+    "Enroll Students",
+    "Enroll students",
+    "heading",
+    "TD-21",
+    "",
+    "Enroll Students"
+   ],
+   [
+    "Email Addresses (one per line) *",
+    "Email addresses",
+    "label",
+    "TD-32",
+    "The label drops the typed asterisk and the instruction; the helper carries the instruction (C14).",
+    "Email Addresses (one per line) *"
+   ],
+   [
+    "Enter email addresses, one per line",
+    "One address per line. Anyone without an account is added as pending.",
+    "helper",
+    "TD-32",
+    "The helper repeated the label; it now says what happens to an address with no account (the backend records it as a pending enrollment, `class/class.service.ts:197-199`).",
+    "Enter email addresses, one per line"
+   ],
+   [
+    "ENROLL USERS",
+    "Enroll students",
+    "button",
+    "TD-33",
+    "Capitals typed into the string; the button names the page's job.",
+    "ENROLL USERS"
+   ],
+   [
+    "Enrolled Users",
+    "Class roster",
+    "heading",
+    "",
+    "",
+    "Enrolled Users"
+   ],
+   [
+    "Total: {n} users ({a} active, {p} pending)",
+    "Roster: {n: count user} ({a} active, {p} pending)",
+    "label",
+    "",
+    "The helper writes the noun: \"Roster: 1 user (1 active, 0 pending)\" (C4).",
+    "Total:",
+    "",
+    "C4"
+   ],
+   [
+    "Email Selected ({n})",
+    "Email selected ({n})",
+    "button",
+    "TD-34",
+    "",
+    "Email Selected ("
+   ],
+   [
+    "Remove Selected ({n})",
+    "Remove selected ({n})",
+    "button",
+    "TD-34",
+    "",
+    "Remove Selected ("
+   ],
+   [
+    "",
+    "Select users to remove.",
+    "helper",
+    "TD-34",
+    "The reason Remove is disabled while nothing is selected (the disabled-reason pattern).",
+    "Remove Selected ("
+   ],
+   [
+    "Search users...",
+    "Search by email",
+    "placeholder",
+    "",
+    "",
+    "Search users..."
+   ],
+   [
+    "Professor",
+    "Instructor",
+    "label",
+    "",
+    "The role chip's word.",
+    "Professor"
+   ],
+   [
+    "No users enrolled yet",
+    "The roster is empty. Enter email addresses above to enroll students.",
+    "empty",
+    "",
+    "Says what is empty and the first step.",
+    "No users enrolled yet"
+   ],
+   {
+    "o": "No users found matching your search",
+    "n": "No one on the roster matches \"{query}\"",
+    "k": "empty",
+    "t": "Names what was searched. A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23).",
+    "m": "No users found matching your search",
+    "r": "C12,C5"
+   },
+   [
+    "Users enrolled successfully!",
+    "Added to the roster",
+    "status",
+    "",
+    "No exclamation mark; the response carries no counts, so none is claimed.",
+    "Users enrolled successfully!"
+   ],
+   [
+    "Selected users removed successfully!",
+    "{n: count user} removed from the roster",
+    "status",
+    "",
+    "A destructive success names the count (Phase 3's toast rule); the helper writes the noun: \"1 user removed from the roster\" (C4).",
+    "Selected users removed successfully!"
+   ],
+   [
+    "Emails sent successfully!",
+    "Emails sent",
+    "status",
+    "",
+    "",
+    "Emails sent successfully!"
+   ],
+   {
+    "k": "error",
+    "o": "Please enter at least one email address",
+    "what": "No email addresses entered.",
+    "c": "input",
+    "fix": "Enter at least one, one per line.",
+    "m": "Please enter at least one email address"
+   },
+   {
+    "k": "error",
+    "o": "",
+    "what": "That entry doesn't look like an email address: {list}.",
+    "c": "input",
+    "fix": "Correct it, then enroll.",
+    "refs": "TD-32",
+    "m": "Please enter at least one email address",
+    "t": "The invalid-entry state the mock review found undrawn: the page sent whatever was typed. When one entry is wrong; A-16.55 is the form for several, because the verb and the pronoun change with the count and one helper cannot write them (D6)."
+   },
+   {
+    "k": "error",
+    "o": "Failed to remove users. Please try again.",
+    "what": "Couldn't remove everyone you selected.",
+    "c": "partial",
+    "why": "The server didn't respond as expected, and some may already be removed.",
+    "fix": "Refresh the roster, then try again.",
+    "m": "Failed to remove users. Please try again.",
+    "t": "Active and pending members are removed in two calls, so a failure on the second leaves the first applied.",
+    "r": "C9"
+   },
+   {
+    "k": "error",
+    "o": "Unexpected error occurred. Please try again.",
+    "what": "Couldn't enroll the addresses.",
+    "c": "unknown",
+    "fix": "Check the addresses and try again.",
+    "m": "Unexpected error occurred. Please try again.",
+    "safe": "the list is cleared only after the call succeeds (ClassEnroll.tsx:167) and the catch only sets the message (ClassEnroll.tsx:172-182)"
+   },
+   {
+    "k": "error",
+    "o": "ConflictException",
+    "what": "Couldn't enroll some addresses.",
+    "c": "conflict",
+    "why": "Some are already on the roster.",
+    "fix": "Remove them from the list and try again.",
+    "m": "ConflictException",
+    "t": "The middleware throws `ConflictException: {body}` for a 409 and the page shows that `error.message` (the library's text with a developer prefix): never shown (C16), so this sentence replaces it.",
+    "br": "dev",
+    "r": "C9,C16",
+    "safe": "the list is cleared only after the call succeeds (ClassEnroll.tsx:167) and the catch only sets the message (ClassEnroll.tsx:172-182)"
+   },
+   {
+    "k": "error",
+    "o": "Failed to load users",
+    "what": "Couldn't load the roster.",
+    "c": "unknown",
+    "fix": "Reload the page to try again.",
+    "m": "Failed to load users"
+   },
+   {
+    "k": "error",
+    "o": "Error: Class ID not found",
+    "what": "Couldn't open enrollment.",
+    "c": "missing",
+    "why": "The link has no class.",
+    "fix": "Choose a class from the class switcher.",
+    "m": "Error: Class ID not found"
+   },
+   [
+    "Send Email to Selected Users",
+    "Email selected users",
+    "heading",
+    "",
+    "",
+    "Send Email to Selected Users",
+    "src/components/Email/EmailSelectedUsersDialog.tsx"
+   ],
+   [
+    "Welcome Email Template:",
+    "Welcome email",
+    "label",
+    "",
+    "",
+    "Welcome Email Template:",
+    "src/components/Email/EmailSelectedUsersDialog.tsx"
+   ],
+   [
+    "Pending users will receive the standard welcome email with access instructions. No custom message needed.",
+    "Pending users get the standard welcome email with sign-in instructions. You don't need to write a message.",
+    "body",
+    "",
+    "",
+    "Pending users will receive the standard welcome email",
+    "src/components/Email/EmailSelectedUsersDialog.tsx"
+   ],
+   [
+    "Mixed Selection:",
+    "Mixed selection",
+    "label",
+    "",
+    "",
+    "Mixed Selection:",
+    "src/components/Email/EmailSelectedUsersDialog.tsx"
+   ],
+   [
+    "Pending users will receive welcome emails, while active users will receive the class announcement below.",
+    "Pending users get the welcome email. Active users get the announcement below.",
+    "body",
+    "",
+    "",
+    "Pending users will receive welcome emails",
+    "src/components/Email/EmailSelectedUsersDialog.tsx"
+   ],
+   [
+    "Class Name (for subject line)",
+    "Class name (for the subject line)",
+    "label",
+    "",
+    "",
+    "Class Name (for subject line)",
+    "src/components/Email/EmailSelectedUsersDialog.tsx"
+   ],
+   {
+    "o": "Email subject will be: \"Class Announcement: {name}\"",
+    "n": "The subject will be \"Class announcement: {name}\".",
+    "k": "helper",
+    "refs": "SF-23",
+    "t": "Matches the subject the template produces.",
+    "m": "Email subject will be:",
+    "f": "src/components/Email/EmailSelectedUsersDialog.tsx",
+    "lk": "class"
+   },
+   [
+    "Announcement Message",
+    "Announcement message",
+    "label",
+    "",
+    "",
+    "Announcement Message",
+    "src/components/Email/EmailSelectedUsersDialog.tsx"
+   ],
+   [
+    "This message will be sent using the class announcement template",
+    "Sent with the class announcement template.",
+    "helper",
+    "",
+    "",
+    "This message will be sent using the class announcement template",
+    "src/components/Email/EmailSelectedUsersDialog.tsx"
+   ],
+   [
+    "Email Preview",
+    "Email preview",
+    "heading",
+    "",
+    "",
+    "Email Preview",
+    "src/components/Email/EmailSelectedUsersDialog.tsx"
+   ],
+   [
+    "HTML Preview",
+    "HTML preview",
+    "label",
+    "",
+    "",
+    "HTML Preview",
+    "src/components/Email/EmailSelectedUsersDialog.tsx"
+   ],
+   [
+    "Plain Text",
+    "Plain text",
+    "label",
+    "",
+    "",
+    "Plain Text",
+    "src/components/Email/EmailSelectedUsersDialog.tsx"
+   ],
+   [
+    "Welcome Email Preview",
+    "Welcome email preview",
+    "label",
+    "",
+    "The preview frame's title.",
+    "Welcome Email Preview",
+    "src/components/Email/EmailSelectedUsersDialog.tsx"
+   ],
+   [
+    "Announcement Email Preview",
+    "Announcement email preview",
+    "label",
+    "",
+    "",
+    "Announcement Email Preview",
+    "src/components/Email/EmailSelectedUsersDialog.tsx"
+   ],
+   [
+    "Preview will be generated...",
+    "The preview appears here.",
+    "empty",
+    "",
+    "",
+    "Preview will be generated...",
+    "src/components/Email/EmailSelectedUsersDialog.tsx"
+   ],
+   [
+    "Preview will be generated as you fill in the form...",
+    "The preview appears as you fill in the form.",
+    "empty",
+    "",
+    "",
+    "Preview will be generated as you fill in the form...",
+    "src/components/Email/EmailSelectedUsersDialog.tsx"
+   ],
+   [
+    "Send Email",
+    "Send email",
+    "button",
+    "",
+    "",
+    "Send Email",
+    "src/components/Email/EmailSelectedUsersDialog.tsx"
+   ],
+   [
+    "Access granted for Kiwi",
+    "You can now sign in to Kiwi",
+    "label",
+    "TD-37",
+    "The welcome email's subject (see the EM rows).",
+    "Access granted for Kiwi",
+    "src/components/Email/EmailSelectedUsersDialog.tsx"
+   ],
+   [
+    "This will use the standard welcome email template.",
+    "This uses the standard welcome email.",
+    "body",
+    "",
+    "",
+    "This will use the standard welcome email template.",
+    "src/components/Email/EmailSelectedUsersDialog.tsx"
+   ],
+   {
+    "o": "You have been added to {class}. You can now access all class materials and discussions. If you have any questions, please contact your instructor.",
+    "n": "You've been added to {class} on Kiwi. It's already in your classes at {url}.",
+    "k": "body",
+    "t": "One source with the enrollment email (EM.21, EM.24): the preview and the mail say the same words. {url} is the app's address; the support line (EM.25) follows when a support address is set. Kiwi has no discussions and the sentence made a claim the page cannot back (C16).",
+    "m": "You can now access all class materials and discussions.",
+    "f": "src/components/Email/EmailSelectedUsersDialog.tsx"
+   },
+   {
+    "o": "Class Enrollment Notification",
+    "n": "You've been added to {class} on Kiwi",
+    "k": "label",
+    "t": "The mail's own subject (`You've been added to {{className}} on Kiwi`, `email.templates.ts`): the same words in the preview.",
+    "m": "Class Enrollment Notification",
+    "f": "src/components/Email/EmailSelectedUsersDialog.tsx"
+   },
+   {
+    "o": "You have been enrolled in {class}.",
+    "n": "You've been added to {class} on Kiwi.",
+    "k": "body",
+    "m": "You have been enrolled in",
+    "f": "src/components/Email/EmailSelectedUsersDialog.tsx",
+    "t": "The first sentence of the enrollment email (EM.21), so the mixed-selection preview and the mail agree."
+   },
+   {
+    "k": "error",
+    "o": "Failed to send emails to: {types} users",
+    "what": "Couldn't send emails to {types} users.",
+    "c": "unknown",
+    "fix": "Check the email audit before you send again.",
+    "m": "Failed to send emails to:",
+    "f": "src/components/Email/EmailSelectedUsersDialog.tsx",
+    "safe": "the dialog closes only when every send worked (EmailSelectedUsersDialog.tsx:175-178), and the message stays"
+   },
+   {
+    "k": "status",
+    "o": "Sending...",
+    "n": "Sending…",
+    "m": "'Sending...'",
+    "f": "src/components/Email/EmailSelectedUsersDialog.tsx",
+    "r": "C5",
+    "t": "The busy label of the button: the ellipsis character (C5, C13)."
+   },
+   {
+    "k": "error",
+    "o": "Failed to send emails",
+    "what": "Couldn't send the emails.",
+    "c": "unknown",
+    "fix": "Check the email audit before you send again.",
+    "m": "err.message || 'Failed to send emails'",
+    "br": "dev",
+    "t": "`error.message` of a call made through the generated client is the library's text (\"Response returned an error code\", `services/runtime.ts:140`): never shown (C16), so this sentence is the whole message.",
+    "f": "src/components/Email/EmailSelectedUsersDialog.tsx",
+    "r": "C9,C16",
+    "safe": "the dialog closes only when every send worked (EmailSelectedUsersDialog.tsx:175) and the catch only sets the message (EmailSelectedUsersDialog.tsx:180-183)"
+   },
+   {
+    "k": "body",
+    "o": "Sending to {n} selected user(s):",
+    "n": "Sending to {n: count selected user}:",
+    "m": "selected user(s):",
+    "f": "src/components/Email/EmailSelectedUsersDialog.tsx",
+    "r": "C4",
+    "t": "The dialog's summary line: a real plural, no \"(s)\"; the helper writes the noun phrase: \"Sending to 1 selected user:\" (C4)."
+   },
+   {
+    "k": "label",
+    "lk": "class",
+    "o": "{className or classID}",
+    "n": "{className}",
+    "m": "Managing enrollment for class:",
+    "f": "src/pages/admin/ClassEnroll.tsx",
+    "r": "C6",
+    "t": "The line fell back to the class id while the name loaded; it waits for the name, and an unnamed class reads \"Untitled class\" (SR-1.11)."
+   },
+   {
+    "k": "label",
+    "lk": "account-status",
+    "only": [
+     "active",
+     "pending"
+    ],
+    "m": "label={user.status}",
+    "f": "src/components/Email/EmailSelectedUsersDialog.tsx",
+    "r": "C6",
+    "t": "The recipient's status chip drew the raw word."
+   },
+   {
+    "k": "label",
+    "lk": "role",
+    "only": [
+     "admin",
+     "student",
+     "professor"
+    ],
+    "m": "label={user.role}",
+    "f": "src/components/Email/EmailSelectedUsersDialog.tsx",
+    "r": "C6",
+    "t": "The recipient's role chip drew the raw word, \"professor\" included."
+   },
+   {
+    "k": "label",
+    "o": "Welcome Email (for {n} pending users):",
+    "n": "Welcome email (for {n: count pending user}):",
+    "m": "Welcome Email (for",
+    "f": "src/components/Email/EmailSelectedUsersDialog.tsx",
+    "r": "C1,C4",
+    "t": "The first preview's label when the selection is mixed (`EmailSelectedUsersDialog.tsx:325`): sentence case, and the count picks its noun, 1 pending user (C4). The next row is the second preview's label. It introduces the list under it, so it keeps its colon (C5).",
+    "x": [
+     "takes no colon"
+    ]
+   },
+   {
+    "k": "label",
+    "o": "Class Announcement (for {n} active users):",
+    "n": "Class announcement (for {n: count active user}):",
+    "m": "Class Announcement (for",
+    "f": "src/components/Email/EmailSelectedUsersDialog.tsx",
+    "r": "C1,C4",
+    "t": "The second preview's label when the selection is mixed (`EmailSelectedUsersDialog.tsx:360`): sentence case, and the count picks its noun, 1 active user (C4). The previous row is the first preview's label. It introduces the list under it, so it keeps its colon (C5).",
+    "x": [
+     "takes no colon"
+    ]
+   },
+   {
+    "k": "error",
+    "o": "",
+    "what": "{n: count entry} don't look like email addresses: {list}.",
+    "c": "input",
+    "fix": "Correct them, then enroll.",
+    "refs": "TD-32",
+    "m": "Please enter at least one email address",
+    "t": "When several entries are wrong (n is 2 or more); A-16.18 is the form for one. The helper writes the noun."
+   }
+  ]
+ },
+ {
+  "id": "A-17",
+  "name": "Class email",
+  "route": "/admin/class/:classID/send-emails",
+  "file": "src/pages/admin/ClassEmail.tsx",
+  "kept": [
+   "Send an email or announcement to students in {className}.",
+   "Subject",
+   "Message",
+   "Recipients: {n} selected",
+   "Class: {className}",
+   "From: {professorName}"
+  ],
+  "rows": [
+   [
+    "Send Emails",
+    "Class email",
+    "heading",
+    "TD-21",
+    "The title equals the sidebar label (C7).",
+    "Send Emails"
+   ],
+   [
+    "No students enrolled in this class yet.",
+    "No students are enrolled in this class yet. Enroll students first.",
+    "empty",
+    "",
+    "Says the first step.",
+    "No students enrolled in this class yet."
+   ],
+   {
+    "o": "Send an email to {n} students in this class",
+    "n": "Send an email to {n: count student} in this class",
+    "k": "format",
+    "t": "A real singular (C4): the count picks its noun, \"1 student\" or \"{n} students\".",
+    "m": "Send an email to",
+    "r": "C4"
+   },
+   [
+    "Custom Email",
+    "Custom email",
+    "label",
+    "",
+    "",
+    "Custom Email"
+   ],
+   [
+    "Announcement Format",
+    "Announcement",
+    "label",
+    "",
+    "The tab is the announcement, not its format.",
+    "Announcement Format"
+   ],
+   {
+    "o": "Email sent successfully to {n} recipients",
+    "n": "Email sent to {n: count recipient}",
+    "k": "status",
+    "m": "Email sent successfully to",
+    "r": "C4",
+    "t": "The helper writes the noun: \"Email sent to 1 recipient\" (C4)."
+   },
+   {
+    "o": "Announcement sent successfully to {n} recipients",
+    "n": "Announcement sent to {n: count recipient}",
+    "k": "status",
+    "m": "Announcement sent successfully to",
+    "r": "C4",
+    "t": "The helper writes the noun: \"Announcement sent to 1 recipient\" (C4)."
+   },
+   {
+    "k": "error",
+    "o": "Failed to load class information",
+    "what": "Couldn't load the class.",
+    "c": "unknown",
+    "fix": "Reload the page to try again.",
+    "m": "Failed to load class information"
+   },
+   {
+    "k": "error",
+    "o": "Failed to send announcement",
+    "what": "Couldn't send the announcement.",
+    "c": "unknown",
+    "fix": "Check the email audit before you send it again.",
+    "m": "Failed to send announcement",
+    "br": "dev",
+    "t": "`error.message` of a call made through the generated client is the library's text (\"Response returned an error code\", `services/runtime.ts:140`): never shown (C16), so this sentence is the whole message.",
+    "r": "C9,C16",
+    "nosafe": "the handler shows the message and returns, so the composer clears the message and subject as if the send had worked (ClassEmail.tsx:187-193, ClassEmail.tsx:236-242, AnnouncementComposer.tsx:43-47); the sentence waits for a flow change that keeps the draft (§ Hand-offs)"
+   },
+   [
+    "This will send a formatted announcement email with the class name and your name as the professor.",
+    "This sends an announcement email with the class name and your name as the sender.",
+    "helper",
+    "",
+    "",
+    "This will send a formatted announcement email",
+    "src/components/Email/AnnouncementComposer.tsx"
+   ],
+   [
+    "Class Details",
+    "Class details",
+    "heading",
+    "",
+    "",
+    "Class Details",
+    "src/components/Email/AnnouncementComposer.tsx"
+   ],
+   [
+    "Subject Override (Optional)",
+    "Subject (optional)",
+    "label",
+    "",
+    "The field overrides a default subject; the label says what it is.",
+    "Subject Override (Optional)",
+    "src/components/Email/AnnouncementComposer.tsx"
+   ],
+   [
+    "Leave empty to use default subject format",
+    "e.g. Midterm review moved to Thursday",
+    "placeholder",
+    "",
+    "",
+    "Leave empty to use default subject format",
+    "src/components/Email/AnnouncementComposer.tsx"
+   ],
+   [
+    "Default: [Class Name] Announcement from [Professor Name]",
+    "If empty, the subject is \"Class announcement: {class name}\".",
+    "helper",
+    "SF-23",
+    "The helper described a subject the template does not produce.",
+    "Default: [Class Name] Announcement from [Professor Name]",
+    "src/components/Email/AnnouncementComposer.tsx"
+   ],
+   [
+    "Announcement Message",
+    "Announcement message",
+    "label",
+    "",
+    "",
+    "Announcement Message",
+    "src/components/Email/AnnouncementComposer.tsx"
+   ],
+   [
+    "Type your announcement message here...",
+    "e.g. The midterm review moves to Thursday at 14:00",
+    "placeholder",
+    "",
+    "",
+    "Type your announcement message here...",
+    "src/components/Email/AnnouncementComposer.tsx"
+   ],
+   [
+    "Send Announcement",
+    "Send announcement",
+    "button",
+    "",
+    "",
+    "Send Announcement",
+    "src/components/Email/AnnouncementComposer.tsx"
+   ],
+   {
+    "k": "error",
+    "o": "Please enter a message",
+    "what": "The announcement has no message.",
+    "c": "input",
+    "fix": "Write one, then send.",
+    "m": "Please enter a message",
+    "f": "src/components/Email/AnnouncementComposer.tsx"
+   },
+   {
+    "k": "error",
+    "o": "Failed to send announcement",
+    "what": "Couldn't send the announcement.",
+    "c": "unknown",
+    "fix": "Check the email audit before you send it again.",
+    "m": "Failed to send announcement",
+    "f": "src/components/Email/AnnouncementComposer.tsx",
+    "br": "dev",
+    "t": "`error.message` of a call made through the generated client is the library's text (\"Response returned an error code\", `services/runtime.ts:140`): never shown (C16), so this sentence is the whole message.",
+    "r": "C9,C16",
+    "nosafe": "the composer's own catch runs only when its caller throws, and ClassEmail never does (ClassEmail.tsx:187-193, AnnouncementComposer.tsx:43-50); the sentence waits for the flow change that keeps the draft (§ Hand-offs)"
+   },
+   {
+    "k": "label",
+    "o": "Professor",
+    "n": "Instructor",
+    "m": "|| 'Professor'",
+    "r": "C6",
+    "t": "The sender's name when the account has no username, printed in the email as \"From: Instructor\": instructor, not professor (C6)."
+   },
+   {
+    "k": "status",
+    "o": "Sending...",
+    "n": "Sending…",
+    "m": "'Sending...'",
+    "f": "src/components/Email/AnnouncementComposer.tsx",
+    "r": "C5",
+    "t": "The busy label of the button: the ellipsis character (C5, C13)."
+   },
+   {
+    "k": "error",
+    "o": "Message is required",
+    "what": "The announcement has no message.",
+    "c": "input",
+    "fix": "Write one, then send.",
+    "m": "Message is required",
+    "f": "src/components/Email/AnnouncementComposer.tsx",
+    "r": "C9",
+    "t": "The field's own error, in the same words as the send button's (A-17.18)."
+   }
+  ]
+ },
+ {
+  "id": "A-18",
+  "name": "Class analytics",
+  "route": "/admin/class/:classID/professor-analytics",
+  "file": "src/components/ClassAnalytics/ClassAnalytics.tsx",
+  "kept": [
+   "Review class activity and engagement.",
+   "Overview",
+   "Questions",
+   "Active students",
+   "Topics",
+   "Active lectures",
+   "Student intent",
+   "Student chats",
+   "By student",
+   "By page",
+   "Intent analysis will appear here once processing finishes.",
+   "Open analytics from a class page to see its data.",
+   "Topics will appear here once analysis finishes.",
+   "Last activity"
+  ],
+  "note": "Chart and KPI encoding (a baseline or trend on each tile, one accent, units, text summaries) is Phase 6. Here: case, vocabulary, formats, the generating note and the failure messages.",
+  "rows": [
+   [
+    "Class Analytics",
+    "Class analytics",
+    "heading",
+    "TD-21",
+    "",
+    "Class Analytics"
+   ],
+   {
+    "o": "Topics updated {date: browser locale}",
+    "n": "Topics updated {date: D MMM YYYY, HH:mm}",
+    "k": "format",
+    "refs": "TD-24",
+    "t": "One date and time format in the viewer's time zone (C3): `{date}` is `formatDateTime(updatedAt)`, for example 17 Oct 2026, 14:05.",
+    "m": "Topics updated",
+    "r": "C3"
+   },
+   [
+    "scopedQuestionCount.toLocaleString()",
+    "1,234",
+    "format",
+    "TD-24",
+    "Counts use one fixed grouping (C4).",
+    "toLocaleString()",
+    "",
+    "C4"
+   ],
+   [
+    "new Date(scopeLecture.lastActivity).toLocaleDateString()",
+    "17 Oct 2026",
+    "format",
+    "TD-24",
+    "",
+    "toLocaleDateString()",
+    "",
+    "C3"
+   ],
+   {
+    "k": "error",
+    "o": "Could not load analytics",
+    "what": "Couldn't load class analytics.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Could not load analytics",
+    "t": "Shown with the raw error; the text button \"Try again\" is the action."
+   },
+   {
+    "o": "Analyzing student questions… this usually takes under a minute.",
+    "n": "Analyzing student questions…",
+    "k": "status",
+    "refs": "TD-29",
+    "t": "The duration claim (\"this usually takes under a minute\") has no measurement behind it, so it is cut (C16); the state is neutral, not a warning.",
+    "m": "Analyzing student questions…",
+    "f": "src/components/ClassAnalytics/TopicsPanel.tsx"
+   },
+   [
+    "No topics yet — they appear once students start asking questions.",
+    "No topics yet. They appear after students start asking questions.",
+    "empty",
+    "",
+    "No em dash.",
+    "No topics yet — they appear once students start asking questions.",
+    "src/components/ClassAnalytics/TopicsPanel.tsx"
+   ],
+   {
+    "k": "error",
+    "o": "Topic analysis failed: {error}. Use the refresh button to retry.",
+    "what": "Couldn't analyze topics.",
+    "c": "server",
+    "why": "The server said: \"{error}\".",
+    "fix": "Use the refresh button to try again.",
+    "m": "Topic analysis failed:",
+    "f": "src/components/ClassAnalytics/TopicsPanel.tsx",
+    "br": "srv",
+    "t": "`{error}` is the topic job's own error string."
+   },
+   {
+    "o": "Updated {date: browser locale}",
+    "n": "Updated {date: D MMM YYYY, HH:mm}",
+    "k": "format",
+    "refs": "TD-24",
+    "m": "Updated {new Date(topics.updatedAt)",
+    "f": "src/components/ClassAnalytics/TopicsPanel.tsx",
+    "r": "C3",
+    "t": "The same: `{date}` is `formatDateTime(topics.updatedAt)` (C3)."
+   },
+   {
+    "o": "{n} new questions pending",
+    "n": "{n: count new question} pending",
+    "k": "format",
+    "t": "One helper writes the noun phrase by the count, so the string no longer holds both forms (C4, D6): \"1 new question pending\", \"3 new questions pending\".",
+    "m": "new questions pending",
+    "r": "C4"
+   },
+   {
+    "k": "error",
+    "o": "Could not load the answer",
+    "what": "Couldn't load the answer.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Could not load the answer",
+    "f": "src/components/ClassAnalytics/ChatDetailDialog.tsx"
+   },
+   {
+    "k": "error",
+    "o": "Could not load questions",
+    "what": "Couldn't load the questions.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Could not load questions",
+    "f": "src/components/ClassAnalytics/QuestionListDialog.tsx"
+   },
+   {
+    "k": "error",
+    "o": "Could not load this PDF. Try again.",
+    "what": "Couldn't load this PDF.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Could not load this PDF. Try again.",
+    "f": "src/components/ClassAnalytics/PdfPageDialog.tsx"
+   },
+   {
+    "k": "error",
+    "o": "Couldn't load this PDF.",
+    "what": "Couldn't load this PDF.",
+    "c": "net",
+    "why": "Your connection may be slow or unstable.",
+    "fix": "Check it, then select Retry.",
+    "m": "Couldn't load this PDF.",
+    "f": "src/components/PDFViewer/PDFViewer.tsx",
+    "t": "The shared viewer's error, as on S-09 and A-24."
+   },
+   [
+    "new Date(chat.timestamp).toLocaleString()",
+    "17 Oct 2026, 14:05",
+    "format",
+    "TD-24",
+    "",
+    "toLocaleString()",
+    "src/components/ClassAnalytics/ChatDetailDialog.tsx",
+    "C3"
+   ],
+   {
+    "o": "last active {date: browser locale}",
+    "n": "last active {date: D MMM YYYY}",
+    "k": "format",
+    "refs": "TD-24",
+    "t": "One date format in the chat list (C3): `{date}` is `formatDate(lastActive)`, for example 17 Oct 2026.",
+    "m": "toLocaleDateString()",
+    "f": "src/components/ClassAnalytics/ChatBrowser.tsx",
+    "r": "C3"
+   },
+   [
+    "new Date(q.timestamp).toLocaleString()",
+    "17 Oct 2026, 14:05",
+    "format",
+    "TD-24",
+    "One date and time format (C3).",
+    "toLocaleString()",
+    "src/components/ClassAnalytics/QuestionListDialog.tsx",
+    "C3"
+   ],
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't load class analytics.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Try again.",
+    "m": "e.message || \"Could not load analytics\"",
+    "f": "src/components/ClassAnalytics/ClassAnalytics.tsx",
+    "br": "srv",
+    "t": "When the response body has a message: the helper `classAnalyticsApi.ts` throws an Error whose message is the body's text (`:149`). A response whose body has none carries only the status's reason phrase, which is not the server's words, so the helper keeps it out of `message` and sets `status`; that form is A-18.33 (§ Errors 2 and 3)."
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't load the answer.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Try again.",
+    "m": "e.message || \"Could not load the answer\"",
+    "f": "src/components/ClassAnalytics/ChatDetailDialog.tsx",
+    "br": "srv",
+    "t": "When the response body has a message: the helper `classAnalyticsApi.ts` throws an Error whose message is the body's text (`:149`). A response whose body has none carries only the status's reason phrase, which is not the server's words, so the helper keeps it out of `message` and sets `status`; that form is A-18.34 (§ Errors 2 and 3)."
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't load the questions.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Try again.",
+    "m": "e.message || \"Could not load questions\"",
+    "f": "src/components/ClassAnalytics/QuestionListDialog.tsx",
+    "br": "srv",
+    "t": "When the response body has a message: the helper `classAnalyticsApi.ts` throws an Error whose message is the body's text (`:149`). A response whose body has none carries only the status's reason phrase, which is not the server's words, so the helper keeps it out of `message` and sets `status`; that form is A-18.35 (§ Errors 2 and 3)."
+   },
+   {
+    "k": "empty",
+    "o": "No questions here.",
+    "n": "No questions here",
+    "m": "No questions here.",
+    "r": "C12,C5",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23).",
+    "f": [
+     "src/components/ClassAnalytics/ChatDetailDialog.tsx",
+     "src/components/ClassAnalytics/QuestionListDialog.tsx"
+    ]
+   },
+   {
+    "k": "empty",
+    "o": "No stored answer for this question.",
+    "n": "No stored answer for this question",
+    "m": "No stored answer for this question.",
+    "r": "C12,C5",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23).",
+    "f": "src/components/ClassAnalytics/ChatDetailDialog.tsx"
+   },
+   {
+    "k": "empty",
+    "o": "No analyzed questions yet.",
+    "n": "No analyzed questions yet",
+    "m": "No analyzed questions yet.",
+    "r": "C12,C5",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23).",
+    "f": "src/components/ClassAnalytics/IntentsPanel.tsx"
+   },
+   {
+    "k": "label",
+    "o": "AI answer · {engine}",
+    "n": "AI answer · {engine: display name}",
+    "m": "AI answer",
+    "f": "src/components/ClassAnalytics/ChatDetailDialog.tsx",
+    "refs": "SF-30",
+    "r": "C6",
+    "t": "The answer's model is shown by its display name from the one table (`DESIGN.md § Terminology › Model names`), never the raw id. The line is drawn in capitals by CSS today (`:331`); the type tokens draw it as written.",
+    "uses": "engine"
+   },
+   {
+    "k": "body",
+    "o": "What students are trying to get from the AI — and the topics inside each intent",
+    "n": "What students are trying to get from the AI, and the topics inside each intent.",
+    "m": "What students are trying to get from the AI",
+    "f": "src/components/ClassAnalytics/IntentsPanel.tsx",
+    "r": "C5",
+    "t": "No em dash; the sentence takes its full stop."
+   },
+   {
+    "k": "tooltip",
+    "o": "Re-analyze all questions",
+    "n": "Analyze topics again",
+    "f": "src/components/ClassAnalytics/TopicsPanel.tsx",
+    "r": "C15",
+    "t": "The tooltip and the accessible name said two things for one control (TopicsPanel.tsx:77 and :83); one name, a verb phrase."
+   },
+   {
+    "k": "aria",
+    "o": "Re-analyze topics",
+    "n": "Analyze topics again",
+    "f": "src/components/ClassAnalytics/TopicsPanel.tsx",
+    "r": "C15",
+    "t": "The same words as the tooltip."
+   },
+   {
+    "k": "button",
+    "o": "Try again",
+    "n": "Retry",
+    "f": "src/components/ClassAnalytics/ClassAnalytics.tsx",
+    "r": "C6",
+    "t": "One name for the retry action: Retry, as on every other page."
+   },
+   {
+    "k": "status",
+    "o": "{n} questions from {m} students",
+    "n": "{n: count question} from {m: count student}",
+    "m": "questions from",
+    "f": "src/components/ClassAnalytics/ClassAnalytics.tsx",
+    "r": "C4",
+    "t": "The student count already picks its singular in the source and the question count does not (1 questions from 1 student)."
+   },
+   {
+    "k": "status",
+    "o": "{n} topics · {m} questions analyzed",
+    "n": "{n: count topic} · {m: count question} analyzed",
+    "m": "questions analyzed",
+    "f": "src/components/ClassAnalytics/TopicsPanel.tsx",
+    "r": "C4",
+    "t": "Both counts pick their noun (1 topic · 1 question analyzed)."
+   },
+   {
+    "k": "empty",
+    "o": "No chats yet.",
+    "n": "No chats yet",
+    "m": "No chats yet",
+    "f": "src/components/ClassAnalytics/ChatBrowser.tsx",
+    "r": "C5",
+    "t": "When the class has no chats and the view is not scoped to a lecture (the next row is the scoped form; both sit on ChatBrowser.tsx:142). A one-clause line that reports a state takes no full stop (C5). There is nothing for the instructor to do: chats appear as students ask."
+   },
+   {
+    "k": "empty",
+    "o": "No chats yet for this lecture.",
+    "n": "No chats yet for this lecture",
+    "m": "No chats yet",
+    "f": "src/components/ClassAnalytics/ChatBrowser.tsx",
+    "r": "C5",
+    "t": "When the view is scoped to one lecture (the previous row is the unscoped form; both sit on ChatBrowser.tsx:142). No full stop, like it (C5)."
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't load class analytics.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "m": "e.message || \"Could not load analytics\"",
+    "br": "http",
+    "r": "C9",
+    "t": "When the response has no body message (the previous form is A-18.18): the reason phrase (\"Internal Server Error\") is not quoted; the status code stands in for words as a support reference, the cause line of § Errors 3. `{message}` is the old text and is dropped; `{status}` replaces it.",
+    "f": "src/components/ClassAnalytics/ClassAnalytics.tsx"
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't load the answer.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "m": "e.message || \"Could not load the answer\"",
+    "br": "http",
+    "r": "C9",
+    "t": "When the response has no body message (the previous form is A-18.19): the reason phrase (\"Internal Server Error\") is not quoted; the status code stands in for words as a support reference, the cause line of § Errors 3. `{message}` is the old text and is dropped; `{status}` replaces it.",
+    "f": "src/components/ClassAnalytics/ChatDetailDialog.tsx"
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't load the questions.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "m": "e.message || \"Could not load questions\"",
+    "br": "http",
+    "r": "C9",
+    "t": "When the response has no body message (the previous form is A-18.20): the reason phrase (\"Internal Server Error\") is not quoted; the status code stands in for words as a support reference, the cause line of § Errors 3. `{message}` is the old text and is dropped; `{status}` replaces it.",
+    "f": "src/components/ClassAnalytics/QuestionListDialog.tsx"
+   },
+   {
+    "k": "aria",
+    "o": "",
+    "n": "No value",
+    "m": "\"—\"",
+    "f": "src/components/ClassAnalytics/ClassAnalytics.tsx",
+    "r": "C5",
+    "t": "The empty-value glyph for a topic with no last activity (`:458`) stays an em dash (C5, DS.53) and takes the accessible name \"No value\" (DS.54)."
+   },
+   {
+    "k": "helper",
+    "o": "Open a {student or page} to read the full conversation",
+    "n": "Open a student to read their chats.",
+    "m": "to read the full conversation",
+    "f": "src/components/ClassAnalytics/ChatBrowser.tsx",
+    "r": "C6",
+    "t": "When the list is by student: chat, not conversation (C6), and the dialog a click opens shows that student's chats."
+   },
+   {
+    "k": "helper",
+    "o": "Open a {student or page} to read the full conversation",
+    "n": "Open a page to read the chats about it.",
+    "m": "to read the full conversation",
+    "f": "src/components/ClassAnalytics/ChatBrowser.tsx",
+    "r": "C6",
+    "t": "When the list is by page: the same hint for the other mode, and the dialog shows the chats that mention that page."
+   },
+   {
+    "k": "status",
+    "o": "{n} questions from {m} students in this lecture",
+    "n": "{n: count question} from {m: count student} in this lecture",
+    "m": "questions from",
+    "f": "src/components/ClassAnalytics/ClassAnalytics.tsx",
+    "r": "C4",
+    "t": "The same subtitle when the analytics are scoped to one lecture (`scopeLecture` is set, `ClassAnalytics.tsx:517`): the suffix stays, with the counts written by the helper as in A-18.29, which is the reading without it. A caption that reports counts takes no full stop (C5), and this one reads 7 words once the slots are filled; the lint counts a slot's own words, so the exemption is written.",
+    "x": [
+     "a longer message needs end punctuation"
+    ]
+   }
+  ]
+ }
+]

@@ -1,0 +1,1912 @@
+[
+ {
+  "id": "A-01",
+  "name": "Classes",
+  "route": "/admin/classes",
+  "file": "src/pages/admin/Classes.tsx",
+  "kept": [
+   "View and open your assigned classes.",
+   "Retry (the error bar's action)"
+  ],
+  "note": "The header button's label is the shared constant (SR-1). The empty state has three forms: an administrator with no classes, an instructor with none assigned, and a search with no matches; the mascot sits above the heading (Companion).",
+  "rows": [
+   [
+    "All Classes",
+    "Classes",
+    "heading",
+    "TD-21",
+    "The title equals the sidebar label (C7).",
+    "All Classes"
+   ],
+   [
+    "My Classes",
+    "Your classes",
+    "heading",
+    "TD-21",
+    "Second person, like the student's \"Your classes\" (S-01.01): the interface says you to the reader (C8). The title equals the sidebar label, SR-3.01 (C7).",
+    "My Classes"
+   ],
+   [
+    "Create classes and manage existing course spaces.",
+    "Create classes, and open any class to manage it.",
+    "helper",
+    "",
+    "\"Course spaces\" is a third word for a class (C6).",
+    "Create classes and manage existing course spaces."
+   ],
+   {
+    "k": "button",
+    "o": "Create New Class",
+    "n": "Create class",
+    "m": "CREATE_NEW_CLASS_LABEL",
+    "t": "The shared label (see SR-1).",
+    "ax": "the text is the constant CREATE_NEW_CLASS_LABEL, defined at classCopy.ts:1; the anchors are its import and its use"
+   },
+   [
+    "Search classes or professors...",
+    "Search by class or instructor",
+    "placeholder",
+    "",
+    "Terminology, and no ASCII ellipsis on a placeholder.",
+    "Search classes or professors..."
+   ],
+   [
+    "Search your classes...",
+    "Search your classes",
+    "placeholder",
+    "",
+    "",
+    "Search your classes..."
+   ],
+   [
+    "Showing {n} of {m} classes",
+    "{n} of {m: count class}",
+    "label",
+    "",
+    "The noun follows the total: `{m: count class}` reads \"1 of 1 class\" and \"2 of 3 classes\" (C4).",
+    "Showing",
+    "",
+    "C4"
+   ],
+   [
+    "Error Loading Classes:",
+    null,
+    "remove",
+    "",
+    "The message now begins with what happened, so the label's prefix goes.",
+    "Error Loading Classes:"
+   ],
+   {
+    "k": "error",
+    "o": "Failed to load classes. Please try again.",
+    "what": "Couldn't load classes.",
+    "c": "unknown",
+    "fix": "Select Retry.",
+    "m": "Failed to load classes. Please try again.",
+    "t": "Shown in the error bar beside a Retry action."
+   },
+   [
+    "No classes found",
+    "No classes yet",
+    "heading",
+    "",
+    "First-use heading for an administrator. The no-results form is the next row.",
+    "No classes found"
+   ],
+   [
+    "",
+    "No classes match \"{search}\"",
+    "new",
+    "",
+    "No-results heading: names what was searched (NN/g empty-state types).",
+    "No classes found"
+   ],
+   [
+    "Get started by creating your first class",
+    "Create the first class to get started.",
+    "empty",
+    "",
+    "A sentence with the action first.",
+    "Get started by creating your first class"
+   ],
+   [
+    "Try adjusting your search or creating a new class",
+    "Check the spelling, or search for another name. You can also create a class.",
+    "empty",
+    "",
+    "Says what to try, in order.",
+    "Try adjusting your search or creating a new class"
+   ],
+   [
+    "You have not been assigned to any classes yet",
+    "An administrator assigns classes to instructors. Yours will appear here.",
+    "empty",
+    "",
+    "Says who acts and what happens next, because an instructor has no button here (the no-action variant).",
+    "You have not been assigned to any classes yet"
+   ],
+   [
+    "Try adjusting your search terms",
+    "Check the spelling, or search for another name.",
+    "empty",
+    "",
+    "",
+    "Try adjusting your search terms"
+   ],
+   [
+    "Create First Class",
+    "Create first class",
+    "button",
+    "SF-56",
+    "",
+    "Create First Class"
+   ],
+   [
+    "No classes assigned",
+    "No classes assigned to you yet",
+    "heading",
+    "",
+    "One string for one state: the sidebar's empty line for an instructor with no assigned classes (SR-1.10) reads the same as this heading. A one-clause state line takes no full stop (C5); the sentence under it is A-01.14.",
+    "No classes assigned",
+    "",
+    "C12,C5"
+   ]
+  ]
+ },
+ {
+  "id": "A-02",
+  "name": "New class",
+  "route": "/admin/new-class",
+  "file": "src/pages/admin/AddNewClass.tsx",
+  "kept": [
+   "Basic information",
+   "Description",
+   "Replace image",
+   "Upload image",
+   "Class preview",
+   "This is how the class will appear in the list.",
+   "Cancel",
+   "Creating…"
+  ],
+  "note": "The dialog title and the submit label are the shared \"Create class\" (SR-1). When the server gives no message the quoted part is left out.",
+  "rows": [
+   {
+    "k": "heading",
+    "o": "Create New Class",
+    "n": "Create class",
+    "m": "CREATE_NEW_CLASS_LABEL",
+    "t": "The shared label.",
+    "ax": "the text is the constant CREATE_NEW_CLASS_LABEL, defined at classCopy.ts:1; the anchors are its import and its uses"
+   },
+   [
+    "Close create new class dialog",
+    "Close dialog",
+    "aria",
+    "",
+    "",
+    "Close create new class dialog"
+   ],
+   [
+    "Class Name",
+    "Class name",
+    "label",
+    "TD-21",
+    "",
+    "Class Name"
+   ],
+   [
+    "Professor Name",
+    "Instructor name",
+    "label",
+    "",
+    "The class card says \"instructor\"; the form said \"professor\".",
+    "Professor Name"
+   ],
+   [
+    "Professor Email",
+    "Instructor email",
+    "label",
+    "",
+    "",
+    "Professor Email"
+   ],
+   [
+    "Course image",
+    "Cover image",
+    "heading",
+    "",
+    "The picture on the class card is its cover (C6).",
+    "Course image"
+   ],
+   {
+    "k": "error",
+    "o": "The course image could not be uploaded. {message}",
+    "what": "Couldn't upload the cover image.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Try again, or choose a different image.",
+    "m": "The course image could not be uploaded.",
+    "t": "`{message}` is the response body's message, read with `await error.response.json()`; `getErrorMessage` returns the library's `error.message` today (A-02.10), which is never shown.",
+    "br": "srv",
+    "safe": "the upload's catch only sets the message and the dialog stays open (AddNewClass.tsx:110-115)"
+   },
+   {
+    "k": "error",
+    "o": "The class could not be created. {message}",
+    "what": "Couldn't create the class.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Check the details and try again.",
+    "m": "The class could not be created.",
+    "t": "`{message}` is the response body's message (see A-02.07).",
+    "br": "srv",
+    "safe": "the dialog closes only after the class is saved (AddNewClass.tsx:138) and the catch only sets the message (AddNewClass.tsx:139-144)"
+   },
+   {
+    "o": "Please try again.",
+    "n": "(removed)",
+    "k": "remove",
+    "t": "The helper's one fallback sentence would end both messages with the same words; each message now has its own generic form (A-02.11, A-02.12), so this one goes.",
+    "m": "Please try again."
+   },
+   {
+    "k": "remove",
+    "o": "{error.message}",
+    "n": "(removed)",
+    "m": "return error.message",
+    "br": "dev",
+    "t": "`getErrorMessage` returns the library's `error.message` (\"Response returned an error code\"): never shown (C16). When the body has no message, A-02.11 and A-02.12 are the whole message."
+   },
+   {
+    "k": "error",
+    "o": "Please try again.",
+    "what": "Couldn't upload the cover image.",
+    "c": "unknown",
+    "fix": "Try again, or choose a different image.",
+    "m": "The course image could not be uploaded.",
+    "t": "The generic form, for a body with no message (A-02.07 is the branch that quotes it).",
+    "safe": "the upload's catch only sets the message and the dialog stays open (AddNewClass.tsx:110-115)",
+    "ax": "the old text is the fallback that getErrorMessage returns (AddNewClass.tsx:39); the anchor is the sentence it ends"
+   },
+   {
+    "k": "error",
+    "o": "Please try again.",
+    "what": "Couldn't create the class.",
+    "c": "unknown",
+    "fix": "Check the details and try again.",
+    "m": "The class could not be created.",
+    "t": "The generic form, for a body with no message (A-02.08 is the branch that quotes it).",
+    "safe": "the dialog closes only after the class is saved (AddNewClass.tsx:138) and the catch only sets the message (AddNewClass.tsx:139-144)",
+    "ax": "the old text is the fallback that getErrorMessage returns (AddNewClass.tsx:39); the anchor is the sentence it ends"
+   }
+  ]
+ },
+ {
+  "id": "A-03",
+  "name": "System analytics",
+  "route": "/admin/analytics",
+  "file": "src/pages/admin/Analytics.tsx",
+  "kept": [
+   "Usage and engagement across Kiwi.",
+   "Active users",
+   "Sessions",
+   "Interactions",
+   "Average session",
+   "Activity over time",
+   "Product usage",
+   "Top token users",
+   "Choose analytics date range",
+   "Refresh analytics",
+   "Updated {time}",
+   "Session ID",
+   "Sort by",
+   "Previous month, Next month, Start, End, Apply"
+  ],
+  "note": "Chart units, axis names and the text summary of each chart are Phase 6; this phase fixes case, vocabulary and the date and count formats below. That includes the period button's range label (A-03.43, A-03.44) and the calendar popover's month header, day names and weekday names (A-03.45 to A-03.48): the page spec above records them as they are today, and these rows revise them. The seven chart category names are labels, so they take sentence case here.",
+  "rows": [
+   [
+    "System Analytics",
+    "System analytics",
+    "heading",
+    "TD-21",
+    "",
+    "System Analytics"
+   ],
+   [
+    "summary.uniqueUsers.toLocaleString()",
+    "1,234",
+    "format",
+    "TD-24",
+    "Counts use one fixed grouping, whatever the browser locale (C4).",
+    "toLocaleString()",
+    "",
+    "C4"
+   ],
+   [
+    "Hourly Active Users",
+    "Hourly active users",
+    "heading",
+    "",
+    "",
+    "Hourly Active Users",
+    "src/components/Analytics/StandaloneUserActivity.tsx"
+   ],
+   [
+    "Daily Active Users",
+    "Daily active users",
+    "heading",
+    "TD-36",
+    "",
+    "Daily Active Users",
+    "src/components/Analytics/StandaloneUserActivity.tsx"
+   ],
+   [
+    "Hourly Sessions",
+    "Hourly sessions",
+    "heading",
+    "",
+    "",
+    "Hourly Sessions",
+    "src/components/Analytics/StandaloneDailySessions.tsx"
+   ],
+   [
+    "Daily Sessions",
+    "Daily sessions",
+    "heading",
+    "",
+    "",
+    "Daily Sessions",
+    "src/components/Analytics/StandaloneDailySessions.tsx"
+   ],
+   [
+    "Top Actions",
+    "Top actions",
+    "heading",
+    "",
+    "",
+    "Top Actions",
+    "src/components/Analytics/StandaloneTopActions.tsx"
+   ],
+   [
+    "Chat Action",
+    "Chat action",
+    "label",
+    "",
+    "",
+    "Chat Action",
+    "src/components/Analytics/StandaloneTopActions.tsx"
+   ],
+   [
+    "PDF Action",
+    "PDF action",
+    "label",
+    "",
+    "",
+    "PDF Action",
+    "src/components/Analytics/StandaloneTopActions.tsx"
+   ],
+   [
+    "Run Code",
+    "Run code",
+    "label",
+    "",
+    "",
+    "Run Code",
+    "src/components/Analytics/StandaloneTopActions.tsx"
+   ],
+   [
+    "Export Code and Output",
+    "Export code and output",
+    "label",
+    "",
+    "",
+    "Export Code and Output",
+    "src/components/Analytics/StandaloneTopActions.tsx"
+   ],
+   [
+    "Other Code Actions",
+    "Other code actions",
+    "label",
+    "",
+    "",
+    "Other Code Actions",
+    "src/components/Analytics/StandaloneTopActions.tsx"
+   ],
+   [
+    "Other Actions",
+    "Other actions",
+    "label",
+    "",
+    "",
+    "Other Actions",
+    "src/components/Analytics/StandaloneTopActions.tsx"
+   ],
+   [
+    "Chat Interactions (Total)",
+    "Chat interactions (total)",
+    "label",
+    "",
+    "",
+    "Chat Interactions (Total)",
+    "src/components/Analytics/StandaloneTopActions.tsx"
+   ],
+   [
+    "PDF Interactions (Total)",
+    "PDF interactions (total)",
+    "label",
+    "",
+    "",
+    "PDF Interactions (Total)",
+    "src/components/Analytics/StandaloneTopActions.tsx"
+   ],
+   [
+    "IDE Code Execution",
+    "Code runs",
+    "label",
+    "",
+    "\"IDE\" is jargon for a student's scratchpad; the name says what is counted.",
+    "IDE Code Execution",
+    "src/components/Analytics/StandaloneTopActions.tsx"
+   ],
+   [
+    "Export Code and Output to Chat",
+    "Code and output sent to chat",
+    "label",
+    "",
+    "",
+    "Export Code and Output to Chat",
+    "src/components/Analytics/StandaloneTopActions.tsx"
+   ],
+   [
+    "Other Code Interactions",
+    "Other code interactions",
+    "label",
+    "",
+    "",
+    "Other Code Interactions",
+    "src/components/Analytics/StandaloneTopActions.tsx"
+   ],
+   [
+    "Other Interactions",
+    "Other interactions",
+    "label",
+    "",
+    "",
+    "Other Interactions",
+    "src/components/Analytics/StandaloneTopActions.tsx"
+   ],
+   [
+    "User Duration",
+    "User duration",
+    "heading",
+    "",
+    "",
+    "User Duration",
+    "src/components/Analytics/StandaloneUserDuration.tsx"
+   ],
+   {
+    "o": "No duration data for this range",
+    "n": "No activity in this date range",
+    "k": "empty",
+    "t": "Says what is missing and where. A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23).",
+    "m": "No duration data for this range",
+    "f": "src/components/Analytics/StandaloneUserDuration.tsx",
+    "r": "C12,C5"
+   },
+   [
+    "item.duration.toLocaleString() min",
+    "1,234 min",
+    "format",
+    "TD-24",
+    "",
+    "toLocaleString()",
+    "src/components/Analytics/StandaloneUserDuration.tsx",
+    "C4"
+   ],
+   [
+    "User Engine Choice",
+    "Model choice",
+    "heading",
+    "",
+    "\"Engine\" and \"model\" name one thing; the chat select says model (C6).",
+    "User Engine Choice",
+    "src/components/Analytics/StandaloneUserEngine.tsx"
+   ],
+   {
+    "o": "OpenAI",
+    "n": "ChatGPT",
+    "k": "label",
+    "refs": "SF-44",
+    "t": "The label the chat's model select uses. The empty chart repeats the name in its zero baseline, so both lines change.",
+    "m": "'OpenAI'",
+    "f": "src/components/Analytics/StandaloneUserEngine.tsx"
+   },
+   {
+    "o": "QWEN",
+    "n": "Qwen",
+    "k": "label",
+    "refs": "SF-44",
+    "t": "Capitals typed into the string. The empty chart repeats the name in its zero baseline, so both lines change.",
+    "m": "'QWEN'",
+    "f": "src/components/Analytics/StandaloneUserEngine.tsx"
+   },
+   {
+    "o": "No model usage for this range",
+    "n": "No model use in this date range",
+    "k": "empty",
+    "m": "No model usage for this range",
+    "f": "src/components/Analytics/StandaloneUserEngine.tsx",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23).",
+    "r": "C12,C5"
+   },
+   [
+    "totalUsage.toLocaleString()",
+    "1,234",
+    "format",
+    "TD-24",
+    "",
+    "toLocaleString()",
+    "src/components/Analytics/StandaloneUserEngine.tsx",
+    "C4"
+   ],
+   {
+    "o": "No token usage data available.",
+    "n": "No token usage recorded yet",
+    "k": "empty",
+    "m": "No token usage data available.",
+    "f": "src/components/Analytics/StandaloneTopTokenUsers.tsx",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23).",
+    "r": "C12,C5"
+   },
+   [
+    "Token Usage Detail",
+    "Token usage detail",
+    "heading",
+    "",
+    "",
+    "Token Usage Detail",
+    "src/components/Analytics/StandaloneTopTokenUsers.tsx"
+   ],
+   {
+    "o": "No session details.",
+    "n": "No sessions for this user",
+    "k": "empty",
+    "m": "No session details.",
+    "f": "src/components/Analytics/StandaloneTopTokenUsers.tsx",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23).",
+    "r": "C12,C5"
+   },
+   [
+    "new Date(session.sessionStartTime).toLocaleString()",
+    "17 Oct 2026, 14:05",
+    "format",
+    "TD-24",
+    "One date and time format in the viewer's time zone (C3).",
+    "toLocaleString()",
+    "src/components/Analytics/StandaloneTopTokenUsers.tsx",
+    "C3"
+   ],
+   [
+    "date.toLocaleString(undefined, { timeZone })",
+    "17 Oct 2026, 14:05",
+    "format",
+    "TD-24",
+    "The range control's \"Updated\" time.",
+    "toLocaleString(",
+    "src/components/Analytics/AnalyticsDateRangeControl.tsx",
+    "C3"
+   ],
+   [
+    "Last 24 Hours",
+    "Last 24 hours",
+    "label",
+    "",
+    "",
+    "Last 24 Hours",
+    "src/components/Analytics/analyticsDateRangePresets.ts"
+   ],
+   [
+    "Last 7 Days",
+    "Last 7 days",
+    "label",
+    "",
+    "",
+    "Last 7 Days",
+    "src/components/Analytics/analyticsDateRangePresets.ts"
+   ],
+   [
+    "Last 3 Months",
+    "Last 3 months",
+    "label",
+    "",
+    "",
+    "Last 3 Months",
+    "src/components/Analytics/analyticsDateRangePresets.ts"
+   ],
+   [
+    "",
+    "Choose an end time that is after the start time.",
+    "helper",
+    "",
+    "The reason Apply is disabled while the range is invalid (the disabled-reason pattern).",
+    "apply: \"Apply\"",
+    "src/components/DateTimeRangePicker/DateTimeRangePicker.tsx"
+   ],
+   {
+    "k": "error",
+    "o": "",
+    "what": "Couldn't load analytics.",
+    "c": "unknown",
+    "fix": "Select Refresh analytics.",
+    "m": "Failed to load analytics data:",
+    "refs": "SF-46",
+    "t": "A failed load was console-only and the page looked empty (TD-36's sibling); the error alert now says what failed."
+   },
+   [
+    "Last 30 Days",
+    "Last 30 days",
+    "label",
+    "",
+    "",
+    "Last 30 Days",
+    "src/components/Analytics/analyticsDateRangePresets.ts"
+   ],
+   [
+    "Last 6 Months",
+    "Last 6 months",
+    "label",
+    "",
+    "",
+    "Last 6 Months",
+    "src/components/Analytics/analyticsDateRangePresets.ts"
+   ],
+   [
+    "Last 12 Months",
+    "Last 12 months",
+    "label",
+    "",
+    "",
+    "Last 12 Months",
+    "src/components/Analytics/analyticsDateRangePresets.ts"
+   ],
+   {
+    "k": "format",
+    "o": "type=\"date\"",
+    "n": "DateTimeField (date): 17 Oct 2026",
+    "m": "type=\"date\"",
+    "f": "src/components/DateTimeRangePicker/DateTimeRangePicker.tsx",
+    "dt": "date",
+    "r": "C3",
+    "refs": "TD-24",
+    "t": "A native date input draws the browser's locale (month first under en-US, \"2026/10/14\" or \"12月31日\" elsewhere) and cannot be reformatted; the DateTimeField shows and reads one format whatever the browser (C3, `§ Dates, times and numbers › The date control`). Inside the range picker's popover the calendar is the popover's own month grid, so the two date fields are the typed part only (the text-only variant, no second popover); min and max keep disabling days outside the range."
+   },
+   {
+    "k": "format",
+    "o": "type=\"time\"",
+    "n": "DateTimeField (time): 14:05",
+    "m": "type=\"time\"",
+    "f": "src/components/DateTimeRangePicker/DateTimeRangePicker.tsx",
+    "dt": "time",
+    "r": "C3",
+    "refs": "TD-24",
+    "t": "A native time input follows the browser's 12- or 24-hour habit; the DateTimeField reads and shows HH:mm on the 24-hour clock (C3). The start and end time fields of the range picker (text-only variant)."
+   },
+   {
+    "k": "format",
+    "o": "format(appliedStart, \"MMM d\") – format(appliedEnd, \"MMM d\")",
+    "n": "1 Oct – 7 Oct 2026",
+    "m": "format(appliedStart, \"MMM d\"",
+    "f": "src/components/Analytics/AnalyticsDateRangeControl.tsx",
+    "r": "C3",
+    "refs": "TD-24",
+    "t": "The custom range label is built by date-fns with the month first and no year (\"Oct 1 – Oct 7\"). One format: `D MMM – D MMM YYYY`, an en dash, the year once at the end and twice when the years differ (\"28 Dec 2025 – 3 Jan 2026\"). A preset shows its own label (\"Last 7 days\")."
+   },
+   {
+    "k": "format",
+    "o": "Oct 1 – Oct 7",
+    "n": "1 Oct – 7 Oct 2026",
+    "m": "{rangeLabel}",
+    "f": "src/components/Analytics/AnalyticsDateRangeControl.tsx",
+    "r": "C3",
+    "refs": "TD-24",
+    "t": "Where the label is shown: the period button's text (`:169`) and, inside \"Select analytics period: {range}\", its accessible name (`:145`). Both read the format above."
+   },
+   {
+    "k": "format",
+    "o": "format(visibleMonth, \"MMMM yyyy\", { locale })",
+    "n": "October 2026",
+    "m": "\"MMMM yyyy\"",
+    "f": "src/components/DateTimeRangePicker/DateTimeRangePicker.tsx",
+    "r": "C3",
+    "refs": "TD-24",
+    "t": "The popover's month title and the grid's accessible name (`:304`, `:328`) are built by date-fns from the `locale` prop. They read the fixed English table instead: `MMMM YYYY`, the full month name and the year. In English the text is the same; what changes is that no locale can alter it."
+   },
+   {
+    "k": "format",
+    "o": "format(day, \"MMMM d, yyyy\", { locale })",
+    "n": "17 October 2026",
+    "m": "\"MMMM d, yyyy\"",
+    "f": "src/components/DateTimeRangePicker/DateTimeRangePicker.tsx",
+    "r": "C3",
+    "refs": "TD-24",
+    "t": "Each day button's accessible name (`:383`): day first like every date here, with the full month name from the fixed table: `D MMMM YYYY`."
+   },
+   {
+    "k": "format",
+    "o": "format(date, \"EEEEE\", { locale })",
+    "n": "S",
+    "m": "\"EEEEE\"",
+    "f": "src/components/DateTimeRangePicker/DateTimeRangePicker.tsx",
+    "r": "C3",
+    "refs": "TD-24",
+    "t": "The weekday headings (`:343`) are the first letter of the weekday's name in the fixed table: S, M, T, W, T, F, S."
+   },
+   {
+    "k": "format",
+    "o": "format(date, \"EEEE\", { locale })",
+    "n": "Sunday",
+    "m": "\"EEEE\"",
+    "f": "src/components/DateTimeRangePicker/DateTimeRangePicker.tsx",
+    "r": "C3",
+    "refs": "TD-24",
+    "t": "Their accessible names (`:335`) are the full names from the same table, Sunday to Saturday. The popover no longer reads `locale`; the week starts where `weekStartsOn` says (Sunday today)."
+   },
+   {
+    "k": "status",
+    "o": "Duration: {hours} hours",
+    "n": "Duration: {hours: count hour}",
+    "m": "} hours`",
+    "f": "src/components/Analytics/StandaloneUserDuration.tsx",
+    "r": "C4",
+    "t": "`{durationInHours}` is `{hours}`; exactly 1 reads \"1 hour\", a fraction takes the plural (1.5 hours)."
+   },
+   {
+    "k": "label",
+    "o": "{n} sessions",
+    "n": "{n: count session}",
+    "m": "} sessions",
+    "f": "src/components/Analytics/StandaloneTopTokenUsers.tsx",
+    "r": "C4",
+    "t": "Analytics sessions (one run of a user's activity); 1 session."
+   },
+   {
+    "k": "label",
+    "o": "{n} tokens",
+    "n": "{n: count token}",
+    "m": "} tokens",
+    "f": "src/components/Analytics/StandaloneTopTokenUsers.tsx",
+    "r": "C4",
+    "t": "Model tokens, the unit of usage on this page; 1 token."
+   },
+   {
+    "k": "label",
+    "o": "{n} interactions",
+    "n": "{n: count interaction}",
+    "m": "} interactions",
+    "f": "src/components/Analytics/StandaloneTopTokenUsers.tsx",
+    "r": "C4",
+    "t": "1 interaction."
+   },
+   {
+    "k": "status",
+    "o": "Usage: {usage} requests",
+    "n": "Usage: {usage: count request}",
+    "m": "} requests`",
+    "f": "src/components/Analytics/StandaloneUserEngine.tsx",
+    "r": "C4",
+    "t": "`{data.usage}` is `{usage}`; 1 request."
+   },
+   {
+    "k": "aria",
+    "o": "",
+    "n": "No value",
+    "m": "'—'",
+    "f": "src/components/Analytics/StandaloneTopTokenUsers.tsx",
+    "r": "C5",
+    "t": "The empty-value glyph stays an em dash, because a lone dash that stands for \"no value\" is a glyph, not punctuation (C5, DS.53), and takes the accessible name \"No value\" (DS.54). Three places: a user's session count (`:305`), and a session's end time in the expanded row (`:426`) and in the sessions table (`:484`)."
+   }
+  ]
+ },
+ {
+  "id": "A-04",
+  "name": "System email",
+  "route": "/admin/email",
+  "file": "src/pages/admin/AdminEmail.tsx",
+  "kept": [
+   "Send emails to users and classes, or use an email template.",
+   "Subject",
+   "Message",
+   "All users activated line (reworded below)",
+   "No users in this filter",
+   "No pending users"
+  ],
+  "note": "The words inside the three emails are the EM rows and `DESIGN.md § Voice and tone › Email templates`; they are specified once and ship in both the browser preview and the backend templates.",
+  "rows": [
+   [
+    "Email Management",
+    "System email",
+    "heading",
+    "TD-21",
+    "The title equals the sidebar label (C7).",
+    "Email Management"
+   ],
+   [
+    "Custom Email",
+    "Custom email",
+    "label",
+    "",
+    "",
+    "Custom Email"
+   ],
+   [
+    "Templated Email",
+    "Templated email",
+    "label",
+    "",
+    "",
+    "Templated Email"
+   ],
+   [
+    "Email Lists",
+    "Email lists",
+    "label",
+    "",
+    "",
+    "Email Lists"
+   ],
+   [
+    "Filter Recipients",
+    "Filter recipients",
+    "label",
+    "",
+    "",
+    "Filter Recipients",
+    "src/components/Email/RecipientSelector.tsx"
+   ],
+   [
+    "All Users ({n})",
+    "All users ({n})",
+    "label",
+    "",
+    "",
+    "All Users (",
+    "src/components/Email/RecipientSelector.tsx"
+   ],
+   [
+    "All Students ({n})",
+    "All students ({n})",
+    "label",
+    "",
+    "",
+    "All Students (",
+    "src/components/Email/RecipientSelector.tsx"
+   ],
+   [
+    "All Professors ({n})",
+    "All instructors ({n})",
+    "label",
+    "",
+    "",
+    "All Professors (",
+    "src/components/Email/RecipientSelector.tsx"
+   ],
+   [
+    "Pending Students ({n})",
+    "Pending students ({n})",
+    "label",
+    "",
+    "",
+    "Pending Students (",
+    "src/components/Email/RecipientSelector.tsx"
+   ],
+   [
+    "Pending Professors ({n})",
+    "Pending instructors ({n})",
+    "label",
+    "",
+    "",
+    "Pending Professors (",
+    "src/components/Email/RecipientSelector.tsx"
+   ],
+   [
+    "Search by email...",
+    "Search by email",
+    "placeholder",
+    "",
+    "",
+    "Search by email...",
+    "src/components/Email/RecipientSelector.tsx"
+   ],
+   [
+    "Select All",
+    "Select all recipients",
+    "button",
+    "",
+    "A button is a verb and an object (C2): \"Select all\" names no object, so the row names it.",
+    "Select All",
+    "src/components/Email/RecipientSelector.tsx"
+   ],
+   [
+    "Clear All",
+    "Clear selection",
+    "button",
+    "",
+    "A button is a verb and an object (C2): \"Clear all\" names no object; the same words as the approvals toolbar's \"Clear selection\" (A-10.04), one name for one action (C6).",
+    "Clear All",
+    "src/components/Email/RecipientSelector.tsx"
+   ],
+   {
+    "k": "label",
+    "refs": "SF-22",
+    "t": "A raw lowercase status word in a chip (SF-22).",
+    "m": "label=\"pending\"",
+    "f": "src/components/Email/RecipientSelector.tsx",
+    "lk": "account-status",
+    "only": [
+     "pending"
+    ],
+    "r": "C6"
+   },
+   {
+    "o": "No users found matching your search",
+    "n": "No users match \"{query}\"",
+    "k": "empty",
+    "t": "No-results form: names the search. A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23).",
+    "m": "No users found matching your search",
+    "f": "src/components/Email/RecipientSelector.tsx",
+    "r": "C12,C5"
+   },
+   {
+    "o": "No users in this filter",
+    "n": "No users in this filter",
+    "k": "empty",
+    "m": "No users in this filter",
+    "f": "src/components/Email/RecipientSelector.tsx",
+    "t": "Already right: a one-clause state line with no full stop (C5). The row stays so that later ids do not move.",
+    "keep": true
+   },
+   [
+    "Total recipients selected: {n}",
+    "{n: count recipient} selected in total",
+    "status",
+    "",
+    "A count of selections is not a success, so it should not read like one; the helper writes the noun: \"1 recipient selected in total\" (C4).",
+    "Total recipients selected:",
+    "src/components/Email/RecipientSelector.tsx",
+    "C4"
+   ],
+   [
+    "Compose your message...",
+    "e.g. The lab moves to room 301 on Friday",
+    "placeholder",
+    "",
+    "A placeholder is an example, not a second label (C14).",
+    "Compose your message...",
+    "src/components/Email/EmailComposer.tsx"
+   ],
+   [
+    "Send Email",
+    "Send email",
+    "button",
+    "",
+    "",
+    "Send Email",
+    "src/components/Email/EmailComposer.tsx"
+   ],
+   [
+    "",
+    "Enter a subject and a message to send.",
+    "helper",
+    "",
+    "The reason Send is disabled until both fields hold text (the disabled-reason pattern).",
+    "disabled=",
+    "src/components/Email/EmailComposer.tsx"
+   ],
+   {
+    "k": "error",
+    "o": "Please enter a subject",
+    "what": "The email has no subject.",
+    "c": "input",
+    "fix": "Add one, then send.",
+    "m": "Please enter a subject",
+    "f": "src/components/Email/EmailComposer.tsx"
+   },
+   {
+    "k": "error",
+    "o": "Please enter a message",
+    "what": "The email has no message.",
+    "c": "input",
+    "fix": "Write one, then send.",
+    "m": "Please enter a message",
+    "f": "src/components/Email/EmailComposer.tsx"
+   },
+   {
+    "k": "error",
+    "o": "Please select at least one recipient",
+    "what": "No recipients are selected.",
+    "c": "input",
+    "fix": "Choose at least one, then send.",
+    "m": "Please select at least one recipient",
+    "f": "src/components/Email/EmailComposer.tsx"
+   },
+   {
+    "k": "error",
+    "o": "No recipients selected",
+    "what": "No recipients are selected.",
+    "c": "input",
+    "fix": "Choose at least one, then send.",
+    "m": "No recipients selected"
+   },
+   {
+    "k": "error",
+    "o": "Failed to send email",
+    "what": "Couldn't send the email.",
+    "c": "unknown",
+    "fix": "Check the email audit before you send it again.",
+    "m": "Failed to send email",
+    "f": "src/components/Email/EmailComposer.tsx",
+    "t": "The audit may show it went out; the fix prevents a duplicate send. `error.message` of a call made through the generated client is the library's text (\"Response returned an error code\", `services/runtime.ts:140`): never shown (C16), so this sentence is the whole message.",
+    "br": "dev",
+    "r": "C9,C16",
+    "safe": "the catch only sets the message (EmailComposer.tsx:79-82) and both pages' send handlers rethrow (AdminEmail.tsx:209, ClassEmail.tsx:125)"
+   },
+   {
+    "k": "error",
+    "o": "Failed to send templated email",
+    "what": "Couldn't send the templated email.",
+    "c": "unknown",
+    "fix": "Check the email audit before you send it again.",
+    "m": "Failed to send templated email",
+    "br": "dev",
+    "t": "`error.message` of a call made through the generated client is the library's text (\"Response returned an error code\", `services/runtime.ts:140`): never shown (C16), so this sentence is the whole message.",
+    "r": "C9,C16",
+    "safe": "the form is reset only after the call succeeds (AdminEmail.tsx:241-242) and the catch only shows the message (AdminEmail.tsx:243-249)"
+   },
+   {
+    "k": "error",
+    "o": "Failed to load email data",
+    "what": "Couldn't load users and classes.",
+    "c": "unknown",
+    "fix": "Reload the page to try again.",
+    "m": "Failed to load email data"
+   },
+   {
+    "o": "Email sent successfully to {n} recipients",
+    "n": "Email sent to {n: count recipient}",
+    "k": "status",
+    "t": "\"Successfully\" adds nothing (Yifrah: specific outcome); the helper writes the noun: \"Email sent to 1 recipient\" (C4).",
+    "m": "Email sent successfully to",
+    "r": "C4"
+   },
+   {
+    "o": "Templated email sent successfully to {n} recipients",
+    "n": "Templated email sent to {n: count recipient}",
+    "k": "status",
+    "m": "Templated email sent successfully to",
+    "r": "C4",
+    "t": "The helper writes the noun: \"Templated email sent to 1 recipient\" (C4)."
+   },
+   [
+    "Email Template",
+    "Email template",
+    "label",
+    "",
+    "",
+    "Email Template"
+   ],
+   [
+    "Class Announcement",
+    "Class announcement",
+    "label",
+    "",
+    "",
+    "Class Announcement"
+   ],
+   [
+    "Admin Notification",
+    "Admin notification",
+    "label",
+    "",
+    "",
+    "Admin Notification"
+   ],
+   [
+    "Welcome Email",
+    "Welcome email",
+    "label",
+    "",
+    "",
+    "Welcome Email"
+   ],
+   [
+    "Send Templated Email",
+    "Send templated email",
+    "button",
+    "",
+    "",
+    "Send Templated Email"
+   ],
+   [
+    "Email Lists Overview",
+    "Email lists overview",
+    "heading",
+    "",
+    "",
+    "Email Lists Overview"
+   ],
+   {
+    "o": "... and {n} more users",
+    "n": "… and {n: count more user}",
+    "k": "label",
+    "t": "The ellipsis character. The helper writes the noun phrase: \"… and 1 more user\" (C4).",
+    "m": "more users",
+    "r": "C5"
+   },
+   [
+    "Showing first 50 users only",
+    "Showing the first 50 users",
+    "status",
+    "",
+    "",
+    "Showing first 50 users only"
+   ],
+   {
+    "o": "No pending users",
+    "n": "No pending users",
+    "k": "empty",
+    "m": "No pending users",
+    "t": "Already right: a one-clause state line with no full stop (C5). The row stays so that later ids do not move.",
+    "keep": true
+   },
+   [
+    "All users have been activated",
+    "All users are active.",
+    "empty",
+    "",
+    "Terminology: active (the status chip's word).",
+    "All users have been activated"
+   ],
+   [
+    "... and {n} more pending users",
+    "… and {n: count more pending user}",
+    "label",
+    "",
+    "Shown only when more than 50 users are pending (`AdminEmail.tsx:451`), so n starts at 1: the old text read \"1 more pending users\". The helper takes the plural on the last word of the phrase (C4).",
+    "more pending users",
+    "",
+    "C5, C4"
+   ],
+   [
+    "Showing first 50 pending users only",
+    "Showing the first 50 pending users",
+    "status",
+    "",
+    "",
+    "Showing first 50 pending users only"
+   ],
+   {
+    "o": "... and {n} more students",
+    "n": "… and {n: count more student}",
+    "k": "label",
+    "m": "more students",
+    "r": "C5",
+    "t": "The helper writes the noun phrase: \"… and 1 more student\" (C4)."
+   },
+   [
+    "Class Name",
+    "Class name",
+    "label",
+    "",
+    "",
+    "Class Name",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   [
+    "Enter the name of the class for this announcement",
+    "Shown in the subject and the email header.",
+    "helper",
+    "TD-32",
+    "The helper repeated its label (TD-32's pattern); it now adds what the field does.",
+    "Enter the name of the class for this announcement",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   [
+    "Professor Name",
+    "Instructor name (optional)",
+    "label",
+    "",
+    "Terminology, and the optional mark moves into the label (C14).",
+    "Professor Name",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   [
+    "Optional: Your name will be shown in the email",
+    "Shown as \"From\" in the email.",
+    "helper",
+    "",
+    "",
+    "Optional: Your name will be shown in the email",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   [
+    "Announcement Message",
+    "Announcement message",
+    "label",
+    "",
+    "",
+    "Announcement Message",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   [
+    "Enter your announcement message",
+    "Recipients read this under the class name.",
+    "helper",
+    "TD-32",
+    "",
+    "Enter your announcement message",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   [
+    "Dear students, I wanted to inform you about...",
+    "e.g. The midterm review moves to Thursday at 14:00",
+    "placeholder",
+    "",
+    "An example instead of the start of a sentence in the first person.",
+    "Dear students, I wanted to inform you about...",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   [
+    "Notification Title",
+    "Notification title",
+    "label",
+    "",
+    "",
+    "Notification Title",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   [
+    "Enter a title for this notification",
+    "Shown as the heading of the email.",
+    "helper",
+    "TD-32",
+    "",
+    "Enter a title for this notification",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   [
+    "Notification Message",
+    "Notification message",
+    "label",
+    "",
+    "",
+    "Notification Message",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   [
+    "Enter the notification message",
+    "Shown in a highlighted box under the title.",
+    "helper",
+    "TD-32",
+    "",
+    "Enter the notification message",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   [
+    "This is to inform all users that...",
+    "e.g. Kiwi will be unavailable on Saturday from 02:00 to 04:00",
+    "placeholder",
+    "",
+    "",
+    "This is to inform all users that...",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   [
+    "Frontend URL (Optional)",
+    "Sign-in link (optional)",
+    "label",
+    "",
+    "\"Frontend URL\" is developer vocabulary; the field sets where the email's link points.",
+    "Frontend URL (Optional)",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   [
+    "Optional: Custom URL for the Kiwi platform (defaults to this site)",
+    "Where the email's sign-in link points. Leave empty to use this site.",
+    "helper",
+    "TD-37",
+    "No \"platform\"; says what the field does and the default.",
+    "Optional: Custom URL for the Kiwi platform",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   [
+    "Send announcements to class members with a professional email template",
+    "Announce something to the students of a class.",
+    "helper",
+    "",
+    "Says what the template is for, not how it looks.",
+    "Send announcements to class members",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   [
+    "Send important notifications to users from the platform administration",
+    "Send an important notice to the selected users.",
+    "helper",
+    "TD-37",
+    "",
+    "Send important notifications to users",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   [
+    "Send a welcome email to new users who have been granted access to the Kiwi platform",
+    "Tell new users they can sign in to Kiwi.",
+    "helper",
+    "TD-37",
+    "",
+    "Send a welcome email to new users",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   [
+    "Email Preview",
+    "Email preview",
+    "heading",
+    "",
+    "",
+    "Email Preview",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   [
+    "HTML Preview",
+    "HTML preview",
+    "label",
+    "",
+    "",
+    "HTML Preview",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   [
+    "Plain Text",
+    "Plain text",
+    "label",
+    "",
+    "",
+    "Plain Text",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   [
+    "Preview will appear as you fill in the form fields...",
+    "The preview appears as you fill in the form.",
+    "empty",
+    "",
+    "",
+    "Preview will appear as you fill in the form fields...",
+    "src/components/Email/TemplatedEmailForm.tsx"
+   ],
+   {
+    "k": "status",
+    "o": "Sending...",
+    "n": "Sending…",
+    "m": "'Sending...'",
+    "f": "src/components/Email/EmailComposer.tsx",
+    "r": "C5",
+    "t": "The busy label of the button: the ellipsis character (C5, C13)."
+   },
+   {
+    "k": "status",
+    "o": "{n} of {m} recipients selected",
+    "n": "{n} of {m: count recipient} selected",
+    "m": "recipients selected",
+    "f": "src/components/Email/RecipientSelector.tsx",
+    "r": "C4",
+    "t": "The noun follows the total (1 of 1 recipient selected)."
+   },
+   {
+    "k": "label",
+    "o": "{className} ({n} students)",
+    "n": "{className} ({n: count student})",
+    "m": "} students)",
+    "f": "src/pages/admin/AdminEmail.tsx",
+    "r": "C4",
+    "t": "`{cls.className}` is `{className}` and `{cls.classRoster.length}` is `{n}`; the count picks its noun (1 student)."
+   },
+   {
+    "k": "label",
+    "lk": "account-status",
+    "only": [
+     "active",
+     "pending"
+    ],
+    "m": "label={user.status}",
+    "f": "src/pages/admin/AdminEmail.tsx",
+    "r": "C6",
+    "t": "The user list's status chip."
+   },
+   {
+    "k": "label",
+    "lk": "account-status",
+    "only": [
+     "pending"
+    ],
+    "m": "label=\"pending\"",
+    "f": "src/pages/admin/AdminEmail.tsx",
+    "r": "C6",
+    "t": "The chip on a pending recipient (the same word as A-04.14, at the second list)."
+   },
+   {
+    "k": "label",
+    "lk": "role",
+    "m": "{user.role}",
+    "ln": [
+     376,
+     430
+    ],
+    "f": "src/pages/admin/AdminEmail.tsx",
+    "r": "C6",
+    "t": "The line under each recipient's email drew the raw role.",
+    "only": [
+     "admin",
+     "student",
+     "professor"
+    ]
+   },
+   {
+    "k": "label",
+    "lk": "role",
+    "m": "user.role",
+    "f": "src/components/Email/RecipientSelector.tsx",
+    "r": "C6",
+    "t": "The line under each recipient drew the raw role, before \"Pending in {n} classes\".",
+    "only": [
+     "admin",
+     "student",
+     "professor"
+    ]
+   },
+   {
+    "k": "label",
+    "o": "All Pending Users ({n})",
+    "n": "All pending users ({n})",
+    "m": "All Pending Users",
+    "f": "src/components/Email/RecipientSelector.tsx",
+    "r": "C1",
+    "t": "The pending users' entry in the filter list; its siblings are A-04.06 to A-04.10."
+   },
+   {
+    "k": "label",
+    "o": "All Users ({n})",
+    "n": "All users ({n})",
+    "m": "All Users (",
+    "f": "src/pages/admin/AdminEmail.tsx",
+    "r": "C1",
+    "t": "The first accordion of the Email lists tab; the filter list's entry with the same words is A-04.06 (another file)."
+   },
+   {
+    "k": "label",
+    "o": "Pending Users ({n})",
+    "n": "Pending users ({n})",
+    "m": "Pending Users (",
+    "f": "src/pages/admin/AdminEmail.tsx",
+    "r": "C1",
+    "t": "The second accordion of the Email lists tab."
+   }
+  ]
+ },
+ {
+  "id": "A-05",
+  "name": "Email audit",
+  "route": "/admin/email-audit",
+  "file": "src/pages/admin/EmailAudit.tsx",
+  "kept": [
+   "Review email recipients, delivery status, and sending history.",
+   "Refresh",
+   "Statistics",
+   "Filters",
+   "Search by recipient email",
+   "Status",
+   "All",
+   "Sent",
+   "Failed",
+   "Direct",
+   "Template",
+   "Welcome",
+   "Apply",
+   "Timestamp, From, Recipients, Subject, Type, Status, Actions"
+  ],
+  "rows": [
+   [
+    "Email Audit",
+    "Email audit",
+    "heading",
+    "TD-21",
+    "",
+    "Email Audit"
+   ],
+   [
+    "Email Logs",
+    "Email logs",
+    "label",
+    "",
+    "",
+    "Email Logs"
+   ],
+   [
+    "Test Mode",
+    "Test mode",
+    "label",
+    "",
+    "",
+    "Test Mode"
+   ],
+   [
+    "Email Type",
+    "Email type",
+    "label",
+    "",
+    "",
+    "Email Type"
+   ],
+   [
+    "Class Announcement",
+    "Class announcement",
+    "label",
+    "",
+    "",
+    "Class Announcement"
+   ],
+   [
+    "Admin Notification",
+    "Admin notification",
+    "label",
+    "",
+    "",
+    "Admin Notification"
+   ],
+   [
+    "Start Date",
+    "Start date",
+    "label",
+    "",
+    "",
+    "Start Date"
+   ],
+   [
+    "End Date",
+    "End date",
+    "label",
+    "",
+    "",
+    "End Date"
+   ],
+   [
+    "test_mode",
+    "Test mode",
+    "label",
+    "SF-22",
+    "A raw lowercase status word in a chip next to Title Case filter options.",
+    "case 'test_mode'"
+   ],
+   [
+    "new Date(dateString).toLocaleString()",
+    "17 Oct 2026, 14:05",
+    "format",
+    "TD-24",
+    "One date and time format in the viewer's time zone (C3).",
+    "toLocaleString()",
+    "",
+    "C3"
+   ],
+   [
+    "View Details",
+    "View email details",
+    "tooltip",
+    "SF-21",
+    "An icon in every row of the table names its object (C15): the row is an email, so \"details\" alone does not say of what.",
+    "View Details"
+   ],
+   [
+    "View details feature coming soon",
+    "Details aren't available yet",
+    "status",
+    "SF-21",
+    "A placeholder action must not report success; it now says it is not available (C16).",
+    "View details feature coming soon"
+   ],
+   [
+    "No email logs found",
+    "No email logs to show",
+    "heading",
+    "",
+    "",
+    "No email logs found"
+   ],
+   [
+    "Try adjusting your filters or check back later",
+    "Change the filters, or check back after an email is sent.",
+    "empty",
+    "",
+    "",
+    "Try adjusting your filters or check back later"
+   ],
+   [
+    "Total Sent",
+    "Total sent",
+    "label",
+    "",
+    "",
+    "Total Sent"
+   ],
+   {
+    "o": "Total Failed",
+    "n": "Total failed",
+    "k": "label",
+    "m": "Total Failed",
+    "x": [
+     "not-an-error"
+    ],
+    "t": "A KPI label for the count of failed emails: a name, not a message."
+   },
+   [
+    "Total Emails",
+    "Total emails",
+    "label",
+    "",
+    "",
+    "Total Emails"
+   ],
+   [
+    "Email Type Breakdown",
+    "Email types",
+    "heading",
+    "",
+    "",
+    "Email Type Breakdown"
+   ],
+   {
+    "o": "No email type data available",
+    "n": "No emails to break down by type yet",
+    "k": "empty",
+    "m": "No email type data available",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23).",
+    "r": "C12,C5"
+   },
+   {
+    "o": "No statistics available",
+    "n": "No statistics yet",
+    "k": "empty",
+    "m": "No statistics available",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23).",
+    "r": "C12,C5"
+   },
+   {
+    "k": "error",
+    "o": "Failed to load email logs",
+    "what": "Couldn't load email logs.",
+    "c": "unknown",
+    "fix": "Select Refresh.",
+    "m": "Failed to load email logs\""
+   },
+   {
+    "k": "error",
+    "o": "Failed to load email statistics",
+    "what": "Couldn't load email statistics.",
+    "c": "unknown",
+    "fix": "Select Refresh.",
+    "m": "Failed to load email statistics"
+   },
+   {
+    "k": "format",
+    "o": "type=\"datetime-local\"",
+    "n": "DateTimeField (date and time): 17 Oct 2026, 14:05",
+    "m": "type=\"datetime-local\"",
+    "f": "src/pages/admin/EmailAudit.tsx",
+    "dt": "datetime",
+    "r": "C3",
+    "refs": "TD-24",
+    "t": "A native date-time input draws the browser's locale and a 12-hour clock where the locale uses one, and cannot be reformatted; the DateTimeField shows and reads one format, in the viewer's time zone, captioned \"Local ({timeZone})\" (C3). The Start date and End date filters."
+   }
+  ]
+ },
+ {
+  "id": "A-06",
+  "name": "System flags",
+  "route": "/admin/feature-flags",
+  "file": "src/pages/admin/SystemWideFeatureFlags.tsx",
+  "kept": [
+   "Control staged feature access for classes and individual users.",
+   "Choose the narrowest scope possible and add an expiration for temporary access.",
+   "Class access",
+   "User access",
+   "Expiration (optional)",
+   "Leave empty to keep the flag active indefinitely.",
+   "Add class flag",
+   "Add user flag",
+   "Class feature flag added.",
+   "User feature flag added.",
+   "Edit expiration",
+   "Keep active without an expiration",
+   "Save changes",
+   "No expiration"
+  ],
+  "note": "SF-43: one word for one thing. A grant is a flag, so \"assignment\" goes.",
+  "rows": [
+   [
+    "Feature Flags",
+    "System flags",
+    "heading",
+    "TD-21",
+    "The title equals the sidebar label, and tells this page from Class flags (C7).",
+    "Feature Flags"
+   ],
+   [
+    "Add an assignment",
+    "Add a flag",
+    "heading",
+    "SF-43",
+    "",
+    "Add an assignment"
+   ],
+   [
+    "Active assignments",
+    "All flags",
+    "heading",
+    "SF-43",
+    "The list also holds expired flags, so \"active\" was untrue.",
+    "Active assignments",
+    "src/components/FeatureFlags/ListAllFeatures.tsx"
+   ],
+   {
+    "k": "label",
+    "t": "The select lists the flag by its words, from the Feature flags lookup (`§ Terminology`). QwenModel, TokenLimit and RLanguageClass are all drawn; before, only RLanguageClass had a row.",
+    "m": "Object.values(AddFeatureRequestFeatureNameEnum)",
+    "f": "src/components/FeatureFlags/AddClassFeature.tsx",
+    "lk": "feature",
+    "r": "C6"
+   },
+   {
+    "o": "{classId}",
+    "n": "{className}",
+    "k": "label",
+    "t": "The Class select listed raw class IDs. `{classId}` becomes `{className}`.",
+    "m": "classes.map((id)",
+    "f": "src/components/FeatureFlags/AddClassFeature.tsx",
+    "lk": "class",
+    "r": "C6"
+   },
+   {
+    "k": "error",
+    "o": "Unable to add the class feature flag.",
+    "what": "Couldn't add the class flag.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Unable to add the class feature flag.",
+    "f": "src/components/FeatureFlags/AddClassFeature.tsx",
+    "br": "dev",
+    "t": "`error.message` of a call made through the generated client is the library's text (\"Response returned an error code\", `services/runtime.ts:140`): never shown (C16), so this sentence is the whole message.",
+    "r": "C9,C16",
+    "safe": "the fields are cleared only after the call succeeds (AddClassFeature.tsx:65-66) and the catch only sets the message (AddClassFeature.tsx:68-73)"
+   },
+   {
+    "k": "error",
+    "o": "Unable to add the user feature flag.",
+    "what": "Couldn't add the user flag.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Unable to add the user feature flag.",
+    "f": "src/components/FeatureFlags/AddUserFeature.tsx",
+    "br": "dev",
+    "t": "`error.message` of a call made through the generated client is the library's text (\"Response returned an error code\", `services/runtime.ts:140`): never shown (C16), so this sentence is the whole message.",
+    "r": "C9,C16",
+    "safe": "the fields are cleared only after the call succeeds (AddUserFeature.tsx:49-51) and the catch only sets the message (AddUserFeature.tsx:54-59)"
+   },
+   {
+    "k": "error",
+    "o": "Unable to load feature flags.",
+    "what": "Couldn't load feature flags.",
+    "c": "unknown",
+    "fix": "Select Refresh.",
+    "m": "Unable to load feature flags.",
+    "f": "src/components/FeatureFlags/ListAllFeatures.tsx",
+    "br": "dev",
+    "t": "`error.message` of a call made through the generated client is the library's text (\"Response returned an error code\", `services/runtime.ts:140`): never shown (C16), so this sentence is the whole message.",
+    "r": "C9,C16"
+   },
+   {
+    "k": "error",
+    "o": "Unable to update the feature flag.",
+    "what": "Couldn't update the flag.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Unable to update the feature flag.",
+    "f": "src/components/FeatureFlags/ListAllFeatures.tsx",
+    "br": "dev",
+    "t": "`error.message` of a call made through the generated client is the library's text (\"Response returned an error code\", `services/runtime.ts:140`): never shown (C16), so this sentence is the whole message.",
+    "r": "C9,C16",
+    "safe": "the dialog closes only after the save (ListAllFeatures.tsx:104-105) and the catch only sets the message (ListAllFeatures.tsx:106-108)"
+   },
+   [
+    "new Date(row.validUntil).toLocaleString()",
+    "17 Oct 2026, 14:05",
+    "format",
+    "TD-24",
+    "One date and time format in the viewer's time zone (C3).",
+    "toLocaleString()",
+    "src/components/FeatureFlags/ListAllFeatures.tsx",
+    "C3"
+   ],
+   {
+    "k": "format",
+    "o": "type=\"datetime-local\"",
+    "n": "DateTimeField (date and time): 17 Oct 2026, 14:05",
+    "m": "type=\"datetime-local\"",
+    "f": [
+     "src/components/FeatureFlags/AddUserFeature.tsx",
+     "src/components/FeatureFlags/AddClassFeature.tsx",
+     "src/components/FeatureFlags/ListAllFeatures.tsx"
+    ],
+    "dt": "datetime",
+    "r": "C3",
+    "refs": "TD-24",
+    "t": "A native date-time input draws the browser's locale and a 12-hour clock where the locale uses one, and cannot be reformatted; the DateTimeField shows and reads one format, in the viewer's time zone, captioned \"Local ({timeZone})\" (C3). The Expiration fields of the two add forms and of the Edit expiration dialog; the caption names the zone, so an expiry is not read in the wrong one."
+   },
+   {
+    "k": "label",
+    "lk": "feature",
+    "m": "Object.values(AddFeatureRequestFeatureNameEnum)",
+    "f": "src/components/FeatureFlags/AddUserFeature.tsx",
+    "r": "C6",
+    "t": "The user form's select draws the same three ids raw; the same lookup names them."
+   },
+   {
+    "k": "label",
+    "lk": "feature",
+    "m": "row.featureName",
+    "ln": 121,
+    "f": "src/components/FeatureFlags/ListAllFeatures.tsx",
+    "r": "C6",
+    "t": "The Feature column of the table drew the id as it is."
+   },
+   {
+    "k": "body",
+    "o": "Update how long {featureName} remains available for {targetId}.",
+    "n": "Update how long the \"{feature}\" flag stays on for {target}.",
+    "uses": [
+     "feature",
+     "class",
+     "user"
+    ],
+    "m": "remains available for",
+    "f": "src/components/FeatureFlags/ListAllFeatures.tsx",
+    "r": "C6",
+    "t": "The sentence drew a raw flag id and a raw UUID. `{featureName}` becomes `{feature}`, the flag's words (the Feature flags lookup), and `{targetId}` becomes `{target}`, the class's name or the user's email address (the Ids shown by name table). The flag's label sits in quotes so a label that is not a noun (\"No usage limit\") still reads."
+   },
+   {
+    "k": "label",
+    "lk": "class",
+    "o": "{targetId}",
+    "n": "{className}",
+    "m": "field: \"targetId\"",
+    "f": "src/components/FeatureFlags/ListAllFeatures.tsx",
+    "r": "C6",
+    "t": "When the row is a class flag. The Target column drew the class's UUID; it draws the class's name. `{targetId}` becomes `{className}`."
+   },
+   {
+    "k": "label",
+    "lk": "user",
+    "o": "{targetId}",
+    "n": "{email}",
+    "m": "field: \"targetId\"",
+    "f": "src/components/FeatureFlags/ListAllFeatures.tsx",
+    "r": "C6",
+    "t": "When the row is a user flag. The Target column drew the user's UUID; it draws the user's email address. `{targetId}` becomes `{email}`."
+   },
+   {
+    "k": "button",
+    "o": "Edit",
+    "n": "Edit expiration",
+    "f": "src/components/FeatureFlags/ListAllFeatures.tsx",
+    "r": "C2",
+    "t": "The button opens the \"Edit expiration\" dialog; a row's button names what it edits.",
+    "ln": 173
+   }
+  ]
+ }
+]

@@ -1,0 +1,448 @@
+[
+ {
+  "id": "DS",
+  "name": "Shared strings (the design system's placeholders, final)",
+  "route": "(design system)",
+  "rows": [
+   {
+    "o": "Display settings",
+    "n": "Display settings",
+    "k": "tooltip",
+    "keep": true,
+    "w": "The top bar's Display button: its name and tooltip",
+    "at": "DESIGN.md § The Display menu",
+    "t": "Already a verb-free noun phrase naming the menu's contents; kept."
+   },
+   {
+    "o": "Theme",
+    "n": "Theme",
+    "k": "label",
+    "keep": true,
+    "w": "Display menu: the first group's label",
+    "at": "DESIGN.md § The Display menu"
+   },
+   {
+    "o": "System",
+    "n": "Match device",
+    "k": "label",
+    "w": "Display menu: the first Theme item (the others are Light and Dark)",
+    "at": "DESIGN.md § The Display menu",
+    "t": "\"System\" also means the admin scope; this says what the choice does."
+   },
+   {
+    "o": "Kiwi animation",
+    "n": "Kiwi animation",
+    "k": "label",
+    "keep": true,
+    "w": "Display menu: the switch's label, the same in both positions",
+    "at": "DESIGN.md § The Display menu"
+   },
+   {
+    "o": "Your device asks for reduced motion",
+    "n": "Your device is set to reduce motion, so Kiwi stays still.",
+    "k": "helper",
+    "w": "Display menu: the inert Kiwi animation switch's reason",
+    "at": "DESIGN.md § The Display menu",
+    "t": "States the reason and its effect (the disabled-reason pattern)."
+   },
+   {
+    "o": "Not saved on this device",
+    "n": "Your browser won't save this setting, so it resets when you reload the page.",
+    "k": "helper",
+    "w": "Display menu: the caption when local storage is unavailable",
+    "at": "DESIGN.md § The Display menu",
+    "t": "What happened, why, and what it means. When storage is blocked the choice lives in memory, so it lasts until the page is reloaded; \"for the session\" in `§ The Display menu` means this. The caption does not say \"until you close this tab\": a reload also clears it."
+   },
+   {
+    "o": "Kiwi is answering; Stop interrupts",
+    "n": "Kiwi is answering. Select Stop to interrupt.",
+    "k": "helper",
+    "w": "Chat composer: the reason the field is disabled while an answer streams",
+    "at": "DESIGN.md § The tutor-message surface"
+   },
+   {
+    "o": "",
+    "n": "Stop answering",
+    "k": "aria",
+    "w": "Chat composer: the Stop control's accessible name (its visible label is \"Stop\")",
+    "at": "DESIGN.md § The tutor-message surface"
+   },
+   {
+    "o": "Not available yet",
+    "n": "Regenerating answers isn't available yet.",
+    "k": "helper",
+    "w": "Feedback toolbar: Regenerate's reason (a toggletip)",
+    "at": "DESIGN.md § The tutor-message surface",
+    "t": "A reason specific to its control, never a page label."
+   },
+   {
+    "o": "Not available yet",
+    "n": "Sharing answers isn't available yet.",
+    "k": "helper",
+    "w": "Feedback toolbar: Share's reason (a toggletip)",
+    "at": "DESIGN.md § The tutor-message surface"
+   },
+   {
+    "o": "In context",
+    "n": "Shared with Kiwi",
+    "k": "label",
+    "w": "PDF toolbar: the chip on the page Kiwi has in context",
+    "at": "DESIGN.md § The PDF viewer",
+    "t": "\"In context\" is a developer phrase; the chat does receive that page's text."
+   },
+   {
+    "o": "Copy",
+    "n": "Copy code",
+    "k": "aria",
+    "w": "A code block's Copy button: its accessible name (the visible label stays \"Copy\", then \"Copied\")",
+    "at": "DESIGN.md § The tutor-message surface",
+    "f": "src/components/CopyButton/CopyButton.tsx",
+    "m": "Copy",
+    "ln": [
+     11
+    ],
+    "t": "The button is `CopyButton.tsx`, which draws the visible label \"Copy\", then \"Copied\"; only its accessible name changes. `CopyButton.test.tsx:38` queries the visible text (`getByText('Copy')`) and keeps passing; a query by role and name would use \"Copy code\"."
+   },
+   {
+    "o": "You're on the first page",
+    "n": "This is the first page.",
+    "k": "helper",
+    "w": "Table footer: Previous's reason on page 1",
+    "at": "DESIGN.md § DataGrid (MUI X) mapping"
+   },
+   {
+    "o": "",
+    "n": "This is the last page.",
+    "k": "helper",
+    "w": "Table footer: Next's reason on the last page",
+    "at": "DESIGN.md § DataGrid (MUI X) mapping"
+   },
+   {
+    "o": "Professors are removed by an admin",
+    "n": "Only an administrator can remove instructors.",
+    "k": "helper",
+    "w": "Table: the reason a row cannot be removed",
+    "at": "DESIGN.md § Tables",
+    "t": "Terminology (instructor) and a complete sentence."
+   },
+   {
+    "o": "Couldn't load students",
+    "k": "error",
+    "what": "Couldn't load students.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "w": "Table and DataGrid: the error alert in the body slot (a pattern; each page's own message is in its route's rows)",
+    "at": "DESIGN.md § Tables"
+   },
+   {
+    "o": "Unavailable",
+    "n": "Unavailable",
+    "k": "status",
+    "keep": true,
+    "w": "KPI tile: the value slot in the error state, beside Retry",
+    "at": "DESIGN.md § KPI tiles"
+   },
+   {
+    "o": "Retry",
+    "n": "Retry",
+    "k": "button",
+    "keep": true,
+    "w": "Text action in an alert, a toast or an error frame: one verb",
+    "at": "DESIGN.md § Components"
+   },
+   {
+    "o": "Dismiss",
+    "n": "Dismiss",
+    "k": "button",
+    "keep": true,
+    "w": "Text action in an alert, a toast or the banner: one verb",
+    "at": "DESIGN.md § Components"
+   },
+   {
+    "o": "Undo",
+    "n": "Undo",
+    "k": "button",
+    "keep": true,
+    "w": "Text action in a toast after a reversible removal: one verb",
+    "at": "DESIGN.md § Components"
+   },
+   {
+    "o": "Saving…",
+    "n": "Saving…",
+    "k": "status",
+    "keep": true,
+    "w": "A busy control's label: an -ing verb and the ellipsis character (Creating…, Sending… follow the same form)",
+    "at": "DESIGN.md § Buttons"
+   },
+   {
+    "o": "Copied",
+    "n": "Copied",
+    "k": "status",
+    "keep": true,
+    "w": "A copy button's two-second success label",
+    "at": "DESIGN.md § Buttons"
+   },
+   {
+    "o": "",
+    "n": "No {things} yet",
+    "k": "heading",
+    "w": "Empty-state frame, first use: the heading (a pattern)",
+    "at": "DESIGN.md § The empty-state frame"
+   },
+   {
+    "o": "",
+    "n": "Create first {thing}",
+    "k": "button",
+    "w": "Empty-state frame, first use, for a role that can act: its one primary button",
+    "at": "DESIGN.md § The empty-state frame"
+   },
+   {
+    "o": "",
+    "n": "{Who acts} adds {things}. They will appear here.",
+    "k": "empty",
+    "w": "Empty-state frame, no-action variant: the copy says who acts and when (never a disabled button)",
+    "at": "DESIGN.md § The empty-state frame"
+   },
+   {
+    "o": "",
+    "n": "No {things} match \"{query}\"",
+    "k": "heading",
+    "w": "Empty-state frame, no results: the heading, naming the search",
+    "at": "DESIGN.md § The empty-state frame"
+   },
+   {
+    "o": "",
+    "n": "Check the spelling, or search for another name.",
+    "k": "empty",
+    "w": "Empty-state frame, no results: the copy",
+    "at": "DESIGN.md § The empty-state frame"
+   },
+   {
+    "o": "",
+    "n": "Couldn't load {things}",
+    "k": "heading",
+    "w": "Empty-state frame, load error: the heading, above the cause line and Retry",
+    "at": "DESIGN.md § The empty-state frame",
+    "x": [
+     "not-an-error"
+    ],
+    "t": "The error form of the empty-state frame: this heading is followed by the cause line and Retry (C12)."
+   },
+   {
+    "o": "",
+    "n": "Your account doesn't have access to this page",
+    "k": "heading",
+    "w": "Reserved for the Stage 2 fix of B4: the no-permission state's heading (the state does not exist on this branch). The access-control branch (`fix/access-control`) adds it as `auth/NoPermission.tsx`, reading \"You don't have permission to view this page\"; on merge these two strings replace that wording, and a refused permission uses them (not S-05.06)",
+    "at": "JOURNEY D-8, B4"
+   },
+   {
+    "o": "",
+    "n": "Ask an administrator if you need it.",
+    "k": "empty",
+    "w": "Reserved for the Stage 2 fix of B4: the no-permission state's copy; with the heading above it replaces the wording `fix/access-control` adds",
+    "at": "JOURNEY D-8, B4"
+   },
+   {
+    "o": "",
+    "n": "{Verb} {object}?",
+    "k": "heading",
+    "w": "Confirmation dialog: the title, a question that names the object (a pattern)",
+    "at": "DESIGN.md § Dialogs"
+   },
+   {
+    "o": "",
+    "n": "{What happens to it}. {Whether it can be undone.}",
+    "k": "confirm",
+    "w": "Confirmation dialog: the body, consequence first, then permanence (a pattern)",
+    "at": "DESIGN.md § Dialogs"
+   },
+   {
+    "o": "You do not have permission to perform this action.",
+    "k": "error",
+    "what": "That action isn't allowed.",
+    "c": "denied",
+    "why": "Your account doesn't have access to it.",
+    "fix": "Ask an administrator for access.",
+    "m": "You do not have permission to perform this action.",
+    "f": "src/utils/middleware.ts",
+    "w": "Native alert from the shared request middleware on any 403 (SF-11): copy only. It applies until the access-control merge (branch `fix/access-control`): that branch removes this alert (a 403 no longer signs out or alerts), and a refused permission then shows the page's own `denied` error or the no-permission state (DS.29, DS.30)",
+    "refs": "SF-11",
+    "t": "A native alert shown on every 403; the words say what and who to ask."
+   },
+   {
+    "o": "The requested resource was not found.",
+    "k": "error",
+    "what": "Couldn't find that.",
+    "c": "missing",
+    "why": "It may have been deleted or moved.",
+    "fix": "Go back and try again.",
+    "m": "The requested resource was not found.",
+    "f": "src/utils/middleware.ts",
+    "w": "Native alert from the shared request middleware on any 404 (SF-11): copy only",
+    "refs": "SF-11",
+    "t": "\"Resource\" is developer vocabulary."
+   },
+   {
+    "o": "Enter at least one email first",
+    "n": "Enter an email address first.",
+    "k": "helper",
+    "w": "Enroll students and email buttons: the reason a button is disabled while the field is empty (the disabled-reason pattern)",
+    "at": "DESIGN.md § Buttons"
+   },
+   {
+    "o": "Add a system prompt in Class settings before you create an experiment",
+    "n": "Add class instructions in Edit class before you create an experiment.",
+    "k": "helper",
+    "w": "Empty-state frame, disabled call to action: the reason pattern. Phase 3's example; the as-is page has no such precondition, so this ships only if one is added",
+    "at": "DESIGN.md § The empty-state frame"
+   },
+   {
+    "o": "Analysing student questions…",
+    "n": "Analyzing student questions…",
+    "k": "status",
+    "w": "The neutral in-progress alert (A-18), with American spelling (C18)",
+    "at": "DESIGN.md § Alerts"
+   },
+   {
+    "o": "Only admins can change this",
+    "n": "Only an administrator can change this.",
+    "k": "helper",
+    "w": "A read-only control that only administrators can change: its reason (a pattern)",
+    "at": "DESIGN.md § Components"
+   },
+   {
+    "o": "Set by your institution",
+    "n": "Set by your institution.",
+    "k": "helper",
+    "w": "A read-only value from branding config: its reason (a pattern)",
+    "at": "DESIGN.md § Components"
+   },
+   {
+    "o": "Smallest zoom",
+    "n": "This is the smallest zoom.",
+    "k": "helper",
+    "w": "PDF toolbar: Zoom out's reason at the minimum",
+    "at": "DESIGN.md § The PDF viewer"
+   },
+   {
+    "o": "Previous, Next, zoom and fullscreen are unavailable while the document loads",
+    "n": "These controls are unavailable while the document loads.",
+    "k": "helper",
+    "w": "PDF toolbar: the reason for every inert control while the document loads",
+    "at": "DESIGN.md § The PDF viewer"
+   },
+   {
+    "n": "Choose date",
+    "k": "aria",
+    "w": "DateTimeField: the calendar button's accessible name and tooltip in date mode (the field's own label stays visible and persistent)",
+    "at": "DESIGN.md § Dates, times and numbers",
+    "o": ""
+   },
+   {
+    "n": "Choose date and time",
+    "k": "aria",
+    "w": "DateTimeField: the calendar button's accessible name and tooltip in date and time mode (the field's own label stays visible and persistent)",
+    "at": "DESIGN.md § Dates, times and numbers",
+    "o": ""
+   },
+   {
+    "n": "Choose time",
+    "k": "aria",
+    "w": "DateTimeField: the calendar button's accessible name and tooltip in time mode (the field's own label stays visible and persistent)",
+    "at": "DESIGN.md § Dates, times and numbers",
+    "o": ""
+   },
+   {
+    "k": "error",
+    "what": "That isn't a date Kiwi can read.",
+    "c": "input",
+    "fix": "Enter a date like 17 Oct 2026, or choose one in the calendar.",
+    "w": "DateTimeField, date mode: the field's error when the typed text is not a date (a pattern: what is wrong first, then the correction)",
+    "at": "DESIGN.md § Dates, times and numbers",
+    "o": ""
+   },
+   {
+    "k": "error",
+    "what": "That isn't a date and time Kiwi can read.",
+    "c": "input",
+    "fix": "Enter a date and time like 17 Oct 2026, 14:05, or choose them in the calendar.",
+    "w": "DateTimeField, date and time mode: the same error",
+    "at": "DESIGN.md § Dates, times and numbers",
+    "o": ""
+   },
+   {
+    "k": "error",
+    "what": "That isn't a time Kiwi can read.",
+    "c": "input",
+    "fix": "Enter a time like 14:05, on the 24-hour clock.",
+    "w": "DateTimeField, time mode: the same error",
+    "at": "DESIGN.md § Dates, times and numbers",
+    "o": ""
+   },
+   {
+    "k": "error",
+    "what": "That date is before {min}.",
+    "c": "input",
+    "fix": "Enter a date on or after {min}, or choose one in the calendar.",
+    "w": "DateTimeField: the error for a value before `min` (the range picker's start date cannot pass its end date)",
+    "at": "DESIGN.md § Dates, times and numbers",
+    "o": ""
+   },
+   {
+    "k": "error",
+    "what": "That date is after {max}.",
+    "c": "input",
+    "fix": "Enter a date on or before {max}, or choose one in the calendar.",
+    "w": "DateTimeField: the error for a value after `max`",
+    "at": "DESIGN.md § Dates, times and numbers",
+    "o": ""
+   },
+   {
+    "o": "Local ({timeZone})",
+    "n": "Local ({timeZone})",
+    "k": "helper",
+    "keep": true,
+    "w": "DateTimeField, date-and-time and time modes: the zone caption under the field, the range picker's own string (`DateTimeRangePicker.tsx:91`), kept for every field that shows a time",
+    "at": "DESIGN.md § Dates, times and numbers"
+   },
+   {
+    "o": "",
+    "n": "Show full message",
+    "k": "button",
+    "w": "Clamped server text (C10) on a touch screen: the visible control, after the text, that lifts the three-line clamp (`aria-expanded`)",
+    "at": "DESIGN.md § Errors (Raw backend text)",
+    "r": "C2",
+    "t": "Hover does not exist on a touch screen, so the full text must not wait behind it. The control shows only on a coarse pointer; the full text stays the accessible description on every pointer."
+   },
+   {
+    "o": "",
+    "n": "Hide full message",
+    "k": "button",
+    "w": "The same control once the message is open",
+    "at": "DESIGN.md § Errors (Raw backend text)",
+    "r": "C2"
+   },
+   {
+    "o": "",
+    "n": "—",
+    "k": "format",
+    "w": "An empty value: the one glyph for \"no value\" in a table cell, a field or a count (a pattern; a glyph here, not punctuation, C5)",
+    "at": "DESIGN.md § Microcopy rules (C5)",
+    "x": [
+     "em dash"
+    ],
+    "r": "C5",
+    "t": "One glyph for one meaning (C6): a hyphen, an en dash and an em dash all stood for \"no value\" on different pages."
+   },
+   {
+    "o": "",
+    "n": "No value",
+    "k": "aria",
+    "w": "An empty value's accessible name: the glyph is hidden from assistive technology and \"No value\" is read in its place (a pattern)",
+    "at": "DESIGN.md § Microcopy rules (C5)",
+    "r": "C5",
+    "t": "A screen reader skips a lone dash or reads it as \"dash\"; the name says what it means."
+   }
+  ]
+ }
+]

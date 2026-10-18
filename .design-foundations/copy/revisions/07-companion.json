@@ -1,0 +1,156 @@
+[
+ {
+  "id": "CP",
+  "name": "Companion text twins (revised in place)",
+  "route": "(Companion)",
+  "rows": [
+   {
+    "o": "Text twin (draft)",
+    "n": "Text twin (final, Phase 5)",
+    "k": "format",
+    "at": "DESIGN.md § Companion › The nine states (column header)",
+    "t": "The twins are final once Phase 5 has revised them; only the column's own header changes.",
+    "r": "C13"
+   },
+   {
+    "o": "a reading step \"Reading ⟨source⟩…\"",
+    "n": "starts with Checking, Looking up, Reading or Searching and changes nothing on the page (\"Checking the page list\", \"Looking up your classes\", \"Reading this page\", \"Reading class analytics\", \"Searching your class materials\")",
+    "k": "format",
+    "at": "DESIGN.md § Companion › walk row",
+    "t": "A reading step's label says nothing on the page changes (the Phase 4 review's note).",
+    "r": "C13"
+   },
+   {
+    "o": "an acting step \"Doing ⟨action⟩…\"",
+    "n": "names what Kiwi does and ends \"for you\", because it operates the page on the student's behalf (\"Opening a page for you\", \"Opening class materials for you\", \"Clicking for you\", \"Filling in a field for you\")",
+    "k": "format",
+    "at": "DESIGN.md § Companion › walk row",
+    "t": "An acting step operates the page on the student's behalf, so its label says so.",
+    "r": "C13"
+   },
+   {
+    "o": "the composer reads \"Kiwi is answering; Stop interrupts\"",
+    "n": "the composer's reason reads \"Kiwi is answering. Select Stop to interrupt.\"",
+    "k": "format",
+    "at": "DESIGN.md § Companion › speaking row",
+    "t": "The disabled-reason sentence, with \"select\" for the control (DS.07).",
+    "r": "C13"
+   },
+   {
+    "o": "the pressed thumb (\"Thumbs up, pressed\", the filled glyph) and one polite live-region announcement \"Feedback saved.\"",
+    "n": "named \"Thumbs up\" or \"Thumbs down\", the state carried by aria-pressed and never typed into the name) and one polite live-region announcement, \"Feedback saved.\", the same words for either thumb",
+    "k": "format",
+    "at": "DESIGN.md § Companion › wave row",
+    "t": "Neutral by construction (review finding A-7): the text is the same for a like and a dislike and never mentions a clip, so the user's decision changes no word here. The thumb's name stays \"Thumbs up\" or \"Thumbs down\" and `aria-pressed=\"true\"` carries the state (C15), so a screen reader announces it as pressed without a typed \", pressed\" in the name.",
+    "r": "C13"
+   },
+   {
+    "o": "retryable → \"Something went wrong while answering. Try again.\" + Retry (secondary)",
+    "n": "retryable → \"Kiwi couldn't finish answering. {cause line} Try again.\" + Retry (secondary), the cause line being \"It couldn't reach the server.\" (the closed line without its \"Kiwi\", which the sentence before already says), \"The server returned an error ({status}).\" or \"The server didn't respond as expected.\"",
+    "k": "format",
+    "at": "DESIGN.md § Companion › error row",
+    "t": "What happened, a cause line from the closed set (C9), and the fix; the Retry button is the action. The first cause line reads \"It couldn't reach the server.\" here, because \"Kiwi couldn't finish answering. Kiwi couldn't reach the server.\" repeats the name (`§ Errors`).",
+    "r": "C9"
+   },
+   {
+    "o": "quota or permission → the diagnosis and no Retry",
+    "n": "quota → \"Kiwi can't answer right now. You've reached your usage limit. Ask your instructor or an administrator about it.\"",
+    "k": "format",
+    "at": "DESIGN.md § Companion › error row",
+    "t": "Says what happened, why, and who can change it; no Retry because trying again cannot help.",
+    "r": "C9"
+   },
+   {
+    "o": "",
+    "n": "permission → \"Kiwi can't answer right now. Your account can't use this feature. Ask an administrator for access.\"",
+    "k": "format",
+    "at": "DESIGN.md § Companion › error row",
+    "t": "",
+    "r": "C9"
+   },
+   {
+    "o": "backend text → the wrapped bubble",
+    "n": "backend text → \"Kiwi couldn't answer. The server said: \\\"{message}\\\". Try again.\" in a wrapped bubble",
+    "k": "format",
+    "at": "DESIGN.md § Companion › error row",
+    "t": "Raw server text follows Kiwi's own sentence, quoted and wrapped (C10).",
+    "r": "C10",
+    "x": [
+     "developer text"
+    ]
+   },
+   {
+    "o": "\"You're offline. Kiwi will try again when the connection returns.\"",
+    "n": "\"You're offline. Waiting for your connection.\"",
+    "k": "announce",
+    "at": "DESIGN.md § Companion › offline row",
+    "t": "A state, not a promise. The student chat re-sends after a transport error (`@microsoft/fetch-event-source` retries when `onerror` returns without throwing: `ChatCore.tsx:968-974`), but the compare lanes give up (`useChatLane.ts:241` throws), so the line claims no retry. The live-region status line, once after the hysteresis.",
+    "r": "C13"
+   },
+   {
+    "o": "\"Paused: no connection.\" (a Phase 5 draft)",
+    "n": "\"Paused while you're offline\"",
+    "k": "status",
+    "at": "DESIGN.md § Companion › offline row",
+    "t": "The pending row's static text (never the dots): a short state label, no period.",
+    "r": "C13"
+   },
+   {
+    "o": "",
+    "n": "Kiwi finished answering.",
+    "k": "announce",
+    "at": "DESIGN.md § Companion › hop row",
+    "r": "C13",
+    "t": "New copy: nothing in the source announces completion today. One polite live-region announcement, once per real completion, then the focus moves to the composer (C13)."
+   },
+   {
+    "o": "",
+    "n": "Feedback saved.",
+    "k": "announce",
+    "at": "DESIGN.md § Companion › wave row",
+    "r": "C13",
+    "t": "New copy: one polite live-region announcement, the same words for either thumb (A-7 stays open)."
+   },
+   {
+    "o": "",
+    "n": "\"Stopped while you're offline\"",
+    "k": "status",
+    "at": "DESIGN.md § Companion › offline row",
+    "r": "C13",
+    "t": "Compare mode: the pending row of a lane that lost its connection. A compare lane gives up when its stream fails (`useChatLane.ts:238-241`) and neither resumes nor re-sends, so \"Paused\" would promise what the lane does not do; the student chat does re-send (`ChatCore.tsx:968-974`) and keeps CP.11. A short state label, no period."
+   },
+   {
+    "o": "\"Thinking…\" with the text dots",
+    "n": "\"Thinking…\" (the word, then the cycling dots as its ellipsis) while Kiwi waits for the first step or token",
+    "k": "format",
+    "at": "DESIGN.md § Companion › walk row",
+    "r": "C13",
+    "t": "The wait before the first step. The word is the user's own wording and the one concession to the candour rule (`§ Voice`); the dots are its ellipsis, as in Phase 3's text dots (`[data-dots]`), and rest as \"…\" under reduced motion. The loader row is SR-6.69, and once a step runs its label names the step (`§ Step labels`)."
+   },
+   {
+    "o": "",
+    "n": "expired → \"Couldn't send your question. Your sign-in has expired. Your question isn't saved. Copy it, then reload the page to sign in again.\"",
+    "k": "format",
+    "at": "DESIGN.md § Companion › error row",
+    "r": "C9",
+    "t": "A fourth error subtype, with no Retry, because trying again with no sign-in cannot work: the same words as SR-6.13 (\"No token\"), which says what happens to the question and names the way out, a reload. The Phase 4 hand-off put \"No token\" under retryable; `§ Voice and tone › Errors` supersedes that mapping."
+   },
+   {
+    "o": "",
+    "n": "reads \"Running code\" or the tool's own name (\"Search papers\"), says \"Using ⟨tool⟩…\" on the tool pill, and never ends \"for you\", because it does not operate the page",
+    "k": "format",
+    "at": "DESIGN.md § Companion › walk row",
+    "r": "C13",
+    "t": "A third kind of step label. The Phase 4 draft listed \"running code\" with the acting steps (\"Doing ⟨action⟩…\"), but running code does not operate the page, so \"for you\" would say what is not true. The pill's \"Using ⟨tool⟩…\" is the same kind (SR-6.53)."
+   },
+   {
+    "o": "",
+    "n": "a step with no name reads \"Working…\"",
+    "k": "format",
+    "at": "DESIGN.md § Companion › walk row",
+    "r": "C13",
+    "t": "The fallback for a step Kiwi cannot name (SR-6.49): the word the chain's header shows, so it claims no process the product cannot show."
+   }
+  ]
+ }
+]
