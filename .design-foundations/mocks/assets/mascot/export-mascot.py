@@ -69,7 +69,7 @@ SAFE_RADIUS = 0.92 * CELL / 2         # framing.ts: the presented radius leaves 
 AVATAR_SLOT = 32                      # the geometry below is in CSS px of the 32 px avatar slot
 # drawing -> (atlas, cell, sizes exported, framing of its ink box, who shows it)
 DRAWINGS = {
-    "stand": ("full-hop-flight", 23, [128, 64], "shared", "the tutor avatar in every state it rests on (idle, error, offline; walk, speaking and the end of hop with motion off), and the welcome frame"),
+    "stand": ("full-hop-flight", 23, [128, 64], "shared", "the tutor avatar at rest, in every state, before an atlas has loaded and with motion off (once full-hop-flight has loaded the avatar rests on that atlas's cell 23, the same drawing), and the welcome frame"),
     "idle": ("portrait-blink", 0, [192, 128], "own", "the page placements' portrait: sign-in and register, the empty states, S-08 views B and C, the class-card fallback"),
     "error": ("portrait-nod-sleep", 8, [192, 128], "own", "the page-level error frame and S-08 view A"),
     "walk": ("full-walk", 0, [192, 128], "own", "not found"),
@@ -77,6 +77,23 @@ DRAWINGS = {
     "peek": ("stamp-peek", 23, [192, 128, 64], "own", "inspection: the composer peek fully out"),
     "retract": ("stamp-peek", 0, [192, 128, 64], "own", "inspection: the composer peek's beak tip"),
 }
+# who shows each drawing: the avatar (stand only), the page placements outside the chat panel, or the companion sheet's inspection rows.
+# inventory.json tags every still with it, because idle, error and walk are page drawings whose names are also avatar state names: the
+# avatar never draws them, whatever state it is in (it rests on stand in every state).
+PLACEMENT = {"stand": "avatar", "idle": "page", "error": "page", "walk": "page", "wave": "inspection", "peek": "inspection", "retract": "inspection"}
+STILLS_KEY = ("stem names the files (still-<stem>.png, stills/<stem>.<px>.webp). placement says who shows the drawing: avatar (stand, the tutor "
+              "avatar in every state it rests on, and the welcome frame), page (idle, error and walk: the page placements outside the chat panel, "
+              "never the avatar) or inspection (wave, peek and retract: the companion sheet). state repeats stem for the tools that key on it; it "
+              "names a file, and only stand is an avatar still.")
+# the avatar at rest (review Minor 1): the same drawing from either source, chosen when the avatar comes to rest and kept while it rests
+REST_SOURCE = {"drawing": "full-hop-flight 23 in the shared framing",
+               "fromAtlas": "full-hop-flight's cell 23, drawn exactly as the hop draws its cells (the same image, size and position), whenever "
+                            "that atlas has loaded and motion is on: the landing then changes no pixel",
+               "fromStill": "stills/stand.64.webp before any atlas has loaded (the first paint, a page with history) and with motion off",
+               "kept": "chosen when the avatar comes to rest and kept while it rests, so nothing changes when an atlas finishes loading or "
+                       "motion is switched off",
+               "why": "the browser resamples a separate still and an atlas cell differently, so the two sources differ by a fraction of a "
+                      "pixel at the edges (the companion sheet measures it: screenshots/companion-sheet.audit.json, landingRendered)"}
 # the stills the placements load: 64 px for the 32 px avatar at rest, 128 px for the 64 px slots (the welcome frame; the inline page
 # slots: idle, error on S-08 view A, walk on not-found below md), 192 px for the 96 px page slots
 SHIPPED_STILLS = {64: ["stand"], 128: ["stand", "idle", "error", "walk"], 192: ["idle", "walk", "error"]}
@@ -348,7 +365,7 @@ def main() -> int:
     peek_wall = {"column": wall, "fractionOfCanvas": round(wall / CELL, 4), "frameLeftPercent": round((CELL - wall) / CELL * 100, 2)}
 
     # 1. stills, one per drawing: the named cell of the lossless PNG twin, pixels unchanged; the sizes the placements load; the ink box
-    #    under the drawing's framing; the pixel extremes of every size (check-tokens.mjs § 20 reads them: `state` names the file stem)
+    #    under the drawing's framing; the pixel extremes of every size (check-tokens.mjs § 20 reads them: `stem` names the files)
     stills_out = []
     for name, (atlas, cell, sizes, kind, use) in DRAWINGS.items():
         with Image.open(os.path.join(frames_dir, atlas + ".png")) as im:
@@ -367,7 +384,8 @@ def main() -> int:
             ink = {"framing": kind, "canvasBox": [int(xs.min()), int(ys.min()), int(xs.max()) + 1, int(ys.max()) + 1],
                    "slotFractions": {"left": round(left + xs.min() / CELL * s, 4), "top": round(top + ys.min() / CELL * s, 4),
                                      "right": round(left + (xs.max() + 1) / CELL * s, 4), "bottom": round(top + (ys.max() + 1) / CELL * s, 4)}}
-        stills_out.append({"state": name, "drawing": name, "atlas": atlas, "cell": cell, "use": use, "file": f"still-{name}.png",
+        stills_out.append({"stem": name, "placement": PLACEMENT[name], "avatarStill": name == "stand", "state": name, "drawing": name,
+                           "atlas": atlas, "cell": cell, "use": use, "file": f"still-{name}.png",
                            "bytes": os.path.getsize(p), "sized": sized, "ink": ink, "pixels": extremes})
 
     # 2. playback atlases at the shipped and the inspection cell sizes, with pixel extremes of the shipped ones
@@ -424,7 +442,7 @@ def main() -> int:
 
     # 5. sums
     by = {(a["atlas"], a["cell"]): a["bytes"] for a in atlases_out}
-    sized = {s["state"]: s["sized"] for s in stills_out}
+    sized = {s["stem"]: s["sized"] for s in stills_out}
     first_atlases = by[("full-walk", 64)] + by[("full-hop-flight", 64)]
     first = first_atlases + sized["stand"][128] + sized["stand"][64]
     stills_bytes = sum(sized[st][n] for n, lst in SHIPPED_STILLS.items() for st in lst)
@@ -445,7 +463,7 @@ def main() -> int:
     lines.append("- **`launcher-glyph.svg`** is a one-colour (`currentColor`) glyph in a single path with no mask and no colour literal: the `Portrait()` body, bill and wing of `src/components/KiwiMascot/KiwiArtwork.tsx` at the same commit, scaled to 78 % and set bottom-left, all wound one way, the two eyes wound the other way so the nonzero rule leaves them unfilled, plus a filled speech bubble top-right (review F6 and A-13). It is the launcher's icon (Phase 3 icon policy: glyphs are `currentColor`), not mascot art.")
     lines.append(f"- **The peek's wall** (review A-3): the rightmost inked column over the 24 `stamp-peek` drawings is x = {peek_wall['column']} of 256 ({peek_wall['fractionOfCanvas'] * 100:.1f} %). The peek slot frames the drawing with that column on the slot's right edge (frame left {peek_wall['frameLeftPercent']} %, width 100 %), not with the union-circle framing, so the head emerges from the edge.")
     lines.append(f"- **The avatar's shared framing:** framing.ts's own rule (every alpha > 0 pixel corner; one union centre; scale = min(1, 0.92 × 128 / radius)), applied to {sh['over']}: union box {sh['unionBounds']}, centre ({sh['cx']}, {sh['cy']}), radius {sh['radius']:.4f}, scale {sh['scale']:.6f}; as CSS on the frame: left {sh['leftPercent']:.4f} %, top {sh['topPercent']:.4f} %, width and height {sh['sizePercent']:.4f} %. The rule reproduces framing.ts exactly for all eight atlases ({sum(fit_check.values())} of 8), so the shared values are the library's method, not a new one.")
-    lines.append(f"- **The figure at 32 px** (alpha ≥ 128, CSS px of the slot, shared framing): the standing still's box {g['stand']['box']} and centroid {g['stand']['centroid']}, the same drawing in every state the avatar rests on. The largest difference from it (any box edge / the centroid): " + "; ".join(f"{k} {v['boxEdge']} / {v['centroid']}" for k, v in g["handovers"].items()) + f". The flight lifts the centroid by up to {g['flightRise']} px, by design.\n")
+    lines.append(f"- **The figure at 32 px** (alpha ≥ 128, CSS px of the slot, shared framing): the standing still's box {g['stand']['box']} and centroid {g['stand']['centroid']}, the same drawing in every state the avatar rests on. The largest difference from it (any box edge / the centroid): " + "; ".join(f"{k} {v['boxEdge']} / {v['centroid']}" for k, v in g["handovers"].items()) + f". The flight lifts the centroid by up to {g['flightRise']} px, by design. The landing's 0.0 / 0.0 holds at the source, where the still is cut from that very cell. On screen the browser resamples a separate still and an atlas cell differently, so the avatar comes to rest on the atlas cell itself once `full-hop-flight` has loaded (the same image, size and position as the hop's last tick, so the landing changes no pixel) and draws `stills/stand.64.webp` only before then and with motion off; the source is chosen when the avatar comes to rest and kept while it rests (`inventory.json`, `avatar.restSource`; the render measurement: `screenshots/companion-sheet.audit.json`, `landingRendered`).\n")
     lines.append("## Runtime assets in the source (the port inventory), measured\n")
     lines.append("| Atlas | Source path | Bytes | Pixels | SHA-256 | Use since 2026-10-18 |")
     lines.append("|---|---|---:|---|---|---|")
@@ -454,12 +472,13 @@ def main() -> int:
     lines.append(f"| **Total** | | **{total_runtime:,}** | | | |\n")
     lines.append("Also in the source and **not ported**: `frames-v2/` (32 MB, superseded sources), `*.png` lossless twins (used here only to cut stills), `*.source.png`, the per-frame `<atlas>/frame-NNN.png` directories, the animated `kiwi-<state>.webp` previews (gallery downloads; no pause, reduced-motion or completion API), the v1 `kiwi-<state>.svg` rigs (superseded by the drawn frames), `KiwiLoader` (a walking journey whose end means nothing), `KiwiStamp` as the launcher (the peek moves to the composer edge, G9).\n")
     lines.append("## Stills exported (one per drawing a placement shows)\n")
-    lines.append("| Drawing | File | Atlas · cell | Shown by | Bytes (256 px PNG) | 192 px WebP | 128 px WebP | 64 px WebP | Ink box in the slot (left, top, right, bottom; fractions; framing) |")
+    lines.append("| Drawing (placement) | File | Atlas · cell | Shown by | Bytes (256 px PNG) | 192 px WebP | 128 px WebP | 64 px WebP | Ink box in the slot (left, top, right, bottom; fractions; framing) |")
     lines.append("|---|---|---|---|---:|---:|---:|---:|---|")
     for s in stills_out:
         f = s["ink"]["slotFractions"]; z = lambda n: f"{s['sized'][n]:,}" if n in s["sized"] else "—"
-        lines.append(f"| `{s['state']}` | `{s['file']}` | `{s['atlas']}` · {s['cell']} | {s['use']} | {s['bytes']:,} | {z(192)} | {z(128)} | {z(64)} | {f['left']:.3f}, {f['top']:.3f}, {f['right']:.3f}, {f['bottom']:.3f} ({s['ink']['framing']}) |")
+        lines.append(f"| `{s['stem']}` ({s['placement']}) | `{s['file']}` | `{s['atlas']}` · {s['cell']} | {s['use']} | {s['bytes']:,} | {z(192)} | {z(128)} | {z(64)} | {f['left']:.3f}, {f['top']:.3f}, {f['right']:.3f}, {f['bottom']:.3f} ({s['ink']['framing']}) |")
     lines.append("")
+    lines.append("**`still-idle.png`, `still-error.png` and `still-walk.png`, with their `stills/idle.*`, `stills/error.*` and `stills/walk.*` WebPs, are page-placement drawings, not avatar stills.** Their names are also avatar state names, but the tutor avatar never draws them: it rests on `stand` (`full-hop-flight` 23) in every state, idle, error and walk included. `inventory.json` tags every still with its `placement` (avatar, page or inspection) and `avatarStill`; its `state` key repeats the file stem for the tools that key on it.\n")
     lines.append("## Playback atlases exported (resampled, lossless WebP, 6 × 4 cells)\n")
     lines.append("| File | Cell | Bytes | Use |")
     lines.append("|---|---:|---:|---|")
@@ -484,7 +503,7 @@ def main() -> int:
             px = a["pixels"]; lines.append(f"| `{a['file']}` | {px['solidPixels']:,} | {px['forestPixels']:,} | `{px.get('forestLightest', '—')}` | `{px.get('forestDarkest', '—')}` | `{px.get('tanLightest', '—')}` |")
     for s in stills_out:
         for n in sorted(s["pixels"], reverse=True):
-            px = s["pixels"][n]; lines.append(f"| `stills/{s['state']}.{n}.webp` | {px['solidPixels']:,} | {px['forestPixels']:,} | `{px.get('forestLightest', '—')}` | `{px.get('forestDarkest', '—')}` | `{px.get('tanLightest', '—')}` |")
+            px = s["pixels"][n]; lines.append(f"| `stills/{s['stem']}.{n}.webp` | {px['solidPixels']:,} | {px['forestPixels']:,} | `{px.get('forestLightest', '—')}` | `{px.get('forestDarkest', '—')}` | `{px.get('tanLightest', '—')}` |")
     lines.append("\n## Every source file read\n")
     lines.append("| Path (repo-relative) | Bytes | SHA-256 |")
     lines.append("|---|---:|---|")
@@ -497,10 +516,10 @@ def main() -> int:
 
     # 7. the machine-readable twin
     with open(os.path.join(HERE, "inventory.json"), "w", encoding="utf-8") as f:
-        json.dump({"repo": REPO, "branch": BRANCH, "commit": commit, "amended": "2026-10-18", "runtime": runtime, "stills": stills_out, "atlases": atlases_out,
+        json.dump({"repo": REPO, "branch": BRANCH, "commit": commit, "amended": "2026-10-18", "runtime": runtime, "stillsKey": STILLS_KEY, "stills": stills_out, "atlases": atlases_out,
                    "glyphBytes": glyph_bytes, "glyph": glyph_meta, "peekWall": peek_wall,
                    "framing": {**{k: {"cx": v[0], "cy": v[1], "scale": v[2]} for k, v in FRAMING.items()}, "shared": {"cx": sh["cx"], "cy": sh["cy"], "scale": sh["scale"]}},
-                   "avatar": {"atlases": AVATAR_ATLASES, "states": AVATAR_MAP, "sharedFraming": sh, "framingRuleReproducesFramingTs": fit_check, "geometry32": geometry32},
+                   "avatar": {"atlases": AVATAR_ATLASES, "states": AVATAR_MAP, "restSource": REST_SOURCE, "sharedFraming": sh, "framingRuleReproducesFramingTs": fit_check, "geometry32": geometry32},
                    "beforeFirstAnswer": {"atlases64": first_atlases, "standStill128": sized["stand"][128], "standStill64": sized["stand"][64], "total": first, "withPeek96": first + by[("stamp-peek", 96)]},
                    "shipped": {"atlases64": atlases64, "peek96": by[("stamp-peek", 96)], "stillsBytes": stills_bytes, "stillsList": stills_list, "glyph": glyph_bytes, "total": shipped_total},
                    "was": WAS, "retired": [{"file": f, "why": w, "status": ("kept: " + k) if k else "deleted"} for f, w, k in RETIRED]}, f, indent=1)

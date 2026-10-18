@@ -391,7 +391,7 @@
    "files": 7
   },
   "handoffKeeps": {
-   "clauses": 138,
+   "clauses": 140,
    "keepClauses": 10,
    "sections": 4,
    "native": 9
@@ -461,7 +461,7 @@
   "amendment": {
    "id": "2026-10-18-full-body-avatar",
    "base": "14229be579ed26965fcd3f52174a2bda58c3945d",
-   "replaced": 25,
+   "replaced": 27,
    "inserted": 12,
    "appended": 12,
    "journeyInserted": 1,
@@ -1084,7 +1084,7 @@
    "id": "K9",
    "name": "no hand-off keeps a string the index revises: the native alert, confirm and prompt calls ship the index's New text, and only the browser's own OK and Cancel buttons stay until a flow change (C2 cannot reach them)",
    "ok": true,
-   "detail": "138 hand-off clauses read in 4 sections, 10 say something keeps its copy and none keeps a string a row revises; the 9 native calls all have rows (A-08.40 and A-09.36 are the two confirms)"
+   "detail": "140 hand-off clauses read in 4 sections, 10 say something keeps its copy and none keeps a string a row revises; the 9 native calls all have rows (A-08.40 and A-09.36 are the two confirms)"
   },
   {
    "id": "D12",
@@ -1210,7 +1210,7 @@
    "id": "L7",
    "name": "DESIGN.md: since the amendment's base (the user's decisions of 2026-10-18), exactly the recorded lock amendment changed: the replaced and inserted lines of ## Companion and the appended ## Lock amendments; every other line is the base's, the blocks this checker writes aside",
    "ok": true,
-   "detail": "25 lines replaced and 12 inserted in ## Companion, 12 appended (## Lock amendments), as recorded in lock-amendments.json (base 14229be); the generated blocks are this run's; its 11 planted defects (proofs.mjs LOCK, 1 a control) behave as planted"
+   "detail": "27 lines replaced and 12 inserted in ## Companion, 12 appended (## Lock amendments), as recorded in lock-amendments.json (base 14229be); the generated blocks are this run's; its 11 planted defects (proofs.mjs LOCK, 1 a control) behave as planted"
   }
  ]
 }

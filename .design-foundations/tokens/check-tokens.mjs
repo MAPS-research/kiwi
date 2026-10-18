@@ -428,7 +428,7 @@ let compN = 0, compBad = 0; const compRows = [];
 // pixel-sampled (review A-5): the export writes, for every shipped asset, the lightest forest-class pixel it contains (alpha ≥ 128, the
 // source's own mask rule); that pixel must still clear 3:1 on the dark backing and on the lowest light surface, so resampling can never
 // hide an outline that fails. Every still and every shipped atlas inventory.json lists (since the 2026-10-18 amendment: 17 stills, one per drawing at
-// the sizes it is exported, and the 4 shipped atlases).
+// the sizes it is exported, and the 4 shipped atlases). A still's files are named by its `stem` (its `state` key only repeats the stem).
 let pixN = 0, pixBad = 0; const pixRows = [];
 {
   const invFile = join(ROOT, ".design-foundations/mocks/assets/mascot/inventory.json");
@@ -436,7 +436,7 @@ let pixN = 0, pixBad = 0; const pixRows = [];
   else {
     const inv = JSON.parse(readFileSync(invFile, "utf8"));
     const darkBacking = String(resolve(tree, "companion.backing", D)); const lightLowest = String(resolve(tree, "semantic.color.surface-active", L));
-    const assets = [...inv.atlases.filter((a) => a.pixels).map((a) => [a.file, a.pixels]), ...inv.stills.flatMap((s) => Object.entries(s.pixels).map(([n, px]) => [`stills/${s.state}.${n}.webp`, px]))];
+    const assets = [...inv.atlases.filter((a) => a.pixels).map((a) => [a.file, a.pixels]), ...inv.stills.flatMap((s) => { if (!s.stem) fail(`companion pixels: a still in inventory.json has no stem (re-run export-mascot.py)`); return Object.entries(s.pixels).map(([n, px]) => [`stills/${s.stem}.${n}.webp`, px]); })];
     for (const [file, px] of assets) {
       pixN++;
       if (!px.forestLightest) { pixBad++; fail(`companion pixels ${file}: no forest-class pixel sampled`); continue; }

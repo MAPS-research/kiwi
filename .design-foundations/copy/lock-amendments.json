@@ -37,7 +37,17 @@
      {
       "starts": "**Framing.** Every slot draws its atlas cell wit",
       "was": "836633702318ffd0171af259cb7e30905a809256195cfa379b8e531293d512da",
-      "is": "77c13a95f1232e545e88090ecea682bb75c35d47b04c57882a6e33d68568c630"
+      "is": "ea52a86a38f4583dc94f18002ac1c18063ea2ae0e84f47ec3e59e23c4e99fe6a"
+     },
+     {
+      "starts": "| `peek` | The first keystroke of a **focus sess",
+      "was": "1805aa47cb7b6298ad0a2d802e36ee53c002ca4148e9da61e0c7f122ba034037",
+      "is": "3fe956861b641b502057190c5cf7d0e16ed91c6a0e11c139cf9b822ba183da09"
+     },
+     {
+      "starts": "| `retract` | The typing flag expired (1.5 s) or",
+      "was": "77fa3bced4d67517d4557c0bf126c423c1564caedb6b89ac37380f63f68ede10",
+      "is": "20b667d41076768f78694db7e229bc0c705b9022bba4cc6d04dcbde892d4808f"
      },
      {
       "starts": "| `walk` | Waiting for the first token, or a too",
@@ -77,7 +87,7 @@
      {
       "starts": "**Collisions (one clause each).** A tool or agen",
       "was": "da247f835c2a37d56d9d7b7cbc4101b99f50640bd5f3ae76953464b020b770e3",
-      "is": "4524198ca283040e865cdd4f817e456b44e9b02346bccbdbcb3ef5af637bfebb"
+      "is": "db8e8282d1a7f571e78c189e747176801a80ce625030acbfe5f276e22ac2be83"
      },
      {
       "starts": "Motion plays only when all three levels allow it",
@@ -117,7 +127,7 @@
      {
       "starts": "| every still slot (96 / 64 / the 32 px avatar a",
       "was": "82551893a36c117dfae03e603082c654df0286e69eeab36a543d38a3164eb150",
-      "is": "3da00eb55928dbf56a04f80c30272836e4d52ef3c0f0b834f36581fc0ffe06a2"
+      "is": "c84c09fc7a5be7d046bfdb55e86fa3dc99f78ac59c30c74c021c15d95de692c9"
      },
      {
       "starts": "**Loading order (lazy, per state, with one prefe",
@@ -140,7 +150,7 @@
       "after": "**Phase 4 (2026-10-17), appended under the lock;",
       "lines": [
        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-       "f40e14f469b985d535778f47c999e852e87f447abd48a4a9c33a124631597af9"
+       "576042b58a64d9051d3c434a171fcdd95ed3bfbb6f8da61d00ae306e66872091"
       ]
      },
      {
@@ -168,14 +178,14 @@
       "after": "### Evidence",
       "lines": [
        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-       "c42df6d8c3efbca7f18a8b138afb1dbfc0c71a135fc68321594c438343a7e623"
+       "49e30d9886482d94c231c125fd8194e919ebd58fdebb7ceb1f7df0d8ad558f41"
       ]
      },
      {
       "after": "- **Implementation plan:** port `src/components/",
       "lines": [
        "ba9c2f65b117fd0f89aa2d707140da32f7780e49a0ec3368c1dde30d91ad05f8",
-       "7c0ef4705d4a747d7dc381bd5d0cc6b5301a28f8065d3c510afdb5d03c7b9a7f"
+       "0e2e0fe659b4a8c1f1f8e31d6893f70744b256cdd92650ccb568eef7acacc9dd"
       ]
      }
     ],
@@ -193,7 +203,7 @@
       "1a3045f5f6b41a4c01eb3c046ce09041b4ba94d632366981704bd6b983b7474b",
       "2d25da297445775a745666eaf92cbd608ca0fae40384cb39e173d0a875e9ae8c",
       "f0a6b0bd9af762eca30e8e5607df2be0619599483af9d67d7ee04b45663eabef",
-      "2a503418bef722e20e66ca66b5056426ea2e9b44f1c492b1fc0bfafe951e5bb1"
+      "94ca6c6b511345fb61be950c05bfbd5c358f99bc8b8aa4226768af0eb373109e"
      ]
     }
    },

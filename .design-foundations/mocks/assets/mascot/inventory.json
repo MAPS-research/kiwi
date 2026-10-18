@@ -85,13 +85,17 @@
    "sha256": "61a6b5e434bf9aa892301ff609c261f2e5627a188b17561310c8edc861302d30"
   }
  ],
+ "stillsKey": "stem names the files (still-<stem>.png, stills/<stem>.<px>.webp). placement says who shows the drawing: avatar (stand, the tutor avatar in every state it rests on, and the welcome frame), page (idle, error and walk: the page placements outside the chat panel, never the avatar) or inspection (wave, peek and retract: the companion sheet). state repeats stem for the tools that key on it; it names a file, and only stand is an avatar still.",
  "stills": [
   {
+   "stem": "stand",
+   "placement": "avatar",
+   "avatarStill": true,
    "state": "stand",
    "drawing": "stand",
    "atlas": "full-hop-flight",
    "cell": 23,
-   "use": "the tutor avatar in every state it rests on (idle, error, offline; walk, speaking and the end of hop with motion off), and the welcome frame",
+   "use": "the tutor avatar at rest, in every state, before an atlas has loaded and with motion off (once full-hop-flight has loaded the avatar rests on that atlas's cell 23, the same drawing), and the welcome frame",
    "file": "still-stand.png",
    "bytes": 32165,
    "sized": {
@@ -133,6 +137,9 @@
    }
   },
   {
+   "stem": "idle",
+   "placement": "page",
+   "avatarStill": false,
    "state": "idle",
    "drawing": "idle",
    "atlas": "portrait-blink",
@@ -179,6 +186,9 @@
    }
   },
   {
+   "stem": "error",
+   "placement": "page",
+   "avatarStill": false,
    "state": "error",
    "drawing": "error",
    "atlas": "portrait-nod-sleep",
@@ -225,6 +235,9 @@
    }
   },
   {
+   "stem": "walk",
+   "placement": "page",
+   "avatarStill": false,
    "state": "walk",
    "drawing": "walk",
    "atlas": "full-walk",
@@ -271,6 +284,9 @@
    }
   },
   {
+   "stem": "wave",
+   "placement": "inspection",
+   "avatarStill": false,
    "state": "wave",
    "drawing": "wave",
    "atlas": "full-wave-bow",
@@ -326,6 +342,9 @@
    }
   },
   {
+   "stem": "peek",
+   "placement": "inspection",
+   "avatarStill": false,
    "state": "peek",
    "drawing": "peek",
    "atlas": "stamp-peek",
@@ -381,6 +400,9 @@
    }
   },
   {
+   "stem": "retract",
+   "placement": "inspection",
+   "avatarStill": false,
    "state": "retract",
    "drawing": "retract",
    "atlas": "stamp-peek",
@@ -637,6 +659,13 @@
     "clip": null,
     "still": "stand"
    }
+  },
+  "restSource": {
+   "drawing": "full-hop-flight 23 in the shared framing",
+   "fromAtlas": "full-hop-flight's cell 23, drawn exactly as the hop draws its cells (the same image, size and position), whenever that atlas has loaded and motion is on: the landing then changes no pixel",
+   "fromStill": "stills/stand.64.webp before any atlas has loaded (the first paint, a page with history) and with motion off",
+   "kept": "chosen when the avatar comes to rest and kept while it rests, so nothing changes when an atlas finishes loading or motion is switched off",
+   "why": "the browser resamples a separate still and an atlas cell differently, so the two sources differ by a fraction of a pixel at the edges (the companion sheet measures it: screenshots/companion-sheet.audit.json, landingRendered)"
   },
   "sharedFraming": {
    "unionBounds": [
