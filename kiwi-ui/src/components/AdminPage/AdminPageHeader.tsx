@@ -15,6 +15,12 @@ export interface AdminPageHeaderProps {
   actions?: ReactNode;
 }
 
+/**
+ * The page header of the admin frame (SR-4): the page title as the document's
+ * h1 in the page-title role (24/32, `variant="h2"`), a 4 px gap, the deck in
+ * 14/20 secondary at most 720 px wide, and 24 px below. Actions wrap beside the
+ * title from `md`, under it below.
+ */
 const AdminPageHeader = ({
   title,
   description,
@@ -29,47 +35,44 @@ const AdminPageHeader = ({
       flexDirection: { xs: "column", md: "row" },
       alignItems: { xs: "stretch", md: "flex-start" },
       justifyContent: "space-between",
-      gap: { xs: 2, md: 3 },
-      mb: { xs: 3, md: 4 },
+      gap: { xs: "var(--space-4)", md: "var(--space-5)" },
+      mb: "var(--space-5)",
     }}
   >
     <Stack
       direction="row"
-      spacing={{ xs: 1, sm: 1.5 }}
       sx={{
         alignItems: "flex-start",
+        gap: "var(--space-2)",
         minWidth: 0,
-        width: { xs: "100%", md: "auto" }
-      }}>
+        width: { xs: "100%", md: "auto" },
+      }}
+    >
       {back && (
         <IconButton
-          size="small"
           aria-label={`Back to ${back.label}`}
           onClick={back.onClick}
-          sx={{ mt: 0.25, flexShrink: 0 }}
+          sx={{
+            flexShrink: 0,
+            // Centre the button on the title's first line.
+            mt: "calc((var(--type-page-title-leading) - var(--icon-button-size)) / 2)",
+          }}
         >
-          <ArrowBackOutlinedIcon fontSize="small" />
+          <ArrowBackOutlinedIcon />
         </IconButton>
       )}
 
       <Box sx={{ minWidth: 0, flex: 1 }}>
         <Stack
           direction="row"
-          spacing={1.5}
           useFlexGap
           sx={{
             alignItems: "center",
-            flexWrap: "wrap"
-          }}>
-          <Typography
-            component="h1"
-            variant="h5"
-            sx={{
-              fontWeight: 600,
-              lineHeight: 1.3,
-              overflowWrap: "anywhere",
-            }}
-          >
+            flexWrap: "wrap",
+            gap: "var(--space-3)",
+          }}
+        >
+          <Typography component="h1" variant="h2" sx={{ overflowWrap: "anywhere" }}>
             {title}
           </Typography>
           {status}
@@ -80,10 +83,11 @@ const AdminPageHeader = ({
             variant="body2"
             sx={{
               color: "text.secondary",
-              mt: 0.5,
+              mt: "var(--space-1)",
               maxWidth: 720,
-              overflowWrap: "anywhere"
-            }}>
+              overflowWrap: "anywhere",
+            }}
+          >
             {description}
           </Typography>
         )}
@@ -96,7 +100,7 @@ const AdminPageHeader = ({
           display: "flex",
           alignItems: "center",
           justifyContent: { xs: "flex-start", md: "flex-end" },
-          gap: 1,
+          gap: "var(--space-inline)",
           flexWrap: "wrap",
           width: { xs: "100%", md: "auto" },
           flexShrink: { xs: 1, md: 0 },
