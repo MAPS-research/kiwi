@@ -3,6 +3,7 @@ import { renderToString } from "react-dom/server";
 import Check from "@mui/icons-material/Check";
 import ContentCopy from "@mui/icons-material/ContentCopy";
 import { Box, IconButton, Tooltip } from "@mui/material";
+import { visuallyHidden } from "../../theme/visuallyHidden.ts";
 import { toolbarButtonSx } from "../Chat/toolbarButton.ts";
 
 /** How long the copied state shows before the button reverts (an idempotent action's label swap). */
@@ -54,7 +55,7 @@ export default function CodeCopyButton({
       <Box
         component="span"
         role="status"
-        sx={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)", whiteSpace: "nowrap" }}
+        sx={visuallyHidden}
       >
         {copied ? "Copied" : ""}
       </Box>

@@ -36,6 +36,30 @@ describe('Feedback', () => {
     }
   });
 
+  it('is one tab stop, moved between its buttons with the arrow keys, Home and End', () => {
+    render(<Feedback {...defaultProps} />);
+    const button = (name: string) => screen.getByRole('button', { name });
+    const toolbar = screen.getByRole('toolbar', { name: 'Feedback' });
+
+    const tabStops = screen.getAllByRole('button').filter((b) => b.tabIndex === 0);
+    expect(tabStops).toEqual([button('Regenerate answer')]);
+
+    button('Regenerate answer').focus();
+    fireEvent.keyDown(toolbar, { key: 'ArrowRight' });
+    expect(button('Flag this answer')).toHaveFocus();
+    expect(button('Flag this answer')).toHaveAttribute('tabindex', '0');
+    expect(button('Regenerate answer')).toHaveAttribute('tabindex', '-1');
+
+    fireEvent.keyDown(toolbar, { key: 'End' });
+    expect(button('Share answer')).toHaveFocus();
+    fireEvent.keyDown(toolbar, { key: 'ArrowRight' });
+    expect(button('Regenerate answer')).toHaveFocus();
+    fireEvent.keyDown(toolbar, { key: 'ArrowLeft' });
+    expect(button('Share answer')).toHaveFocus();
+    fireEvent.keyDown(toolbar, { key: 'Home' });
+    expect(button('Regenerate answer')).toHaveFocus();
+  });
+
   it('keeps Regenerate and Share focusable and says why they are unavailable', () => {
     render(<Feedback {...defaultProps} />);
 

@@ -42,6 +42,7 @@ import apiClient, { basePath } from "../../utils/api.ts";
 import { Experiment, experimentApi } from "../../utils/experimentApi.ts";
 import { buildChatContext } from "./chatContext.ts";
 import { returnFocusToComposer } from "./composerFocus.ts";
+import { visuallyHidden } from "../../theme/visuallyHidden.ts";
 import ChatField from "./ChatField.tsx";
 import ExperimentCompare from "./ExperimentCompare.tsx";
 import { useChatLane } from "./useChatLane.ts";
@@ -76,15 +77,6 @@ const CHAT_NOTICES = new Set([
   "Retrying your question…",
   "Connection lost. Kiwi is reconnecting…",
 ]);
-
-const visuallyHidden = {
-  position: "absolute",
-  width: 1,
-  height: 1,
-  overflow: "hidden",
-  clip: "rect(0 0 0 0)",
-  whiteSpace: "nowrap",
-} as const;
 
 // Detect tool execution from bot response content
 const detectToolExecution = (
