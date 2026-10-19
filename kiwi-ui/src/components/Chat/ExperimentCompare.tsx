@@ -7,13 +7,94 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useDisplayPreferences } from "../../theme/displayPreferences.tsx";
 import type { Variant } from "../../utils/experimentApi.ts";
 import ChatMessages, { type StatusLineState } from "./ChatMessages.tsx";
+import type { ChatLane } from "./useChatLane.ts";
 
 /** The model names people see; the raw engine id never shows. */
 const ENGINE_NAMES: Record<string, string> = { openai: "ChatGPT", qwen: "Qwen" };
-import type { ChatLane } from "./useChatLane.ts";
+
+type Slot = "A" | "B";
+
+interface CompareLine extends StatusLineState {
+  /** When the column's first token arrived (`performance.now()`), or null while it waits. */
+  firstTokenAt: number | null;
+}
+
+/** The answer has text: the waiting placeholder has turned into the answer. */
+const hasFirstToken = (lane: ChatLane) => {
+  const last = lane.messages[lane.messages.length - 1];
+  return Boolean(last?.isAi && !last.typing && !last.error && last.content && last.content !== "...");
+};
+
+/**
+ * The two columns' status lines and their one mover (kiwi-ui/DESIGN.md,
+ * Companion, compare mode): only the line of the most recently started answer
+ * plays, the column whose first token arrived last; a tie, as when one send
+ * starts both, goes to column A. The other column's line shows the standing
+ * Kiwi and its words, and leaves with no flight when its answer completes.
+ * Stop and an error cut a column's line with no flight.
+ */
+export function useCompareLines(laneA: ChatLane, laneB: ChatLane) {
+  const [lines, setLines] = useState<Record<Slot, CompareLine | null>>({ A: null, B: null });
+  const busyRef = useRef<Record<Slot, boolean>>({ A: false, B: false });
+  const turnRef = useRef<Record<Slot, number>>({ A: 0, B: 0 });
+
+  // A send starts a column's line; the answer's end completes or cuts it. One
+  // clock reading per render, so one send that starts both columns is a tie.
+  useEffect(() => {
+    const now = performance.now();
+    for (const [slot, lane] of [["A", laneA], ["B", laneB]] as const) {
+      const was = busyRef.current[slot];
+      busyRef.current[slot] = lane.busy;
+      if (lane.busy && !was) {
+        turnRef.current[slot] += 1;
+        const line: CompareLine = {
+          turn: turnRef.current[slot],
+          startedAt: now,
+          answerNumber: lane.messages.filter((message) => !message.isAi).length,
+          complete: false,
+          firstTokenAt: null,
+        };
+        setLines((prev) => ({ ...prev, [slot]: line }));
+      } else if (!lane.busy && was) {
+        const last = lane.messages[lane.messages.length - 1];
+        const finished = !lane.stopped && !lane.error && Boolean(last?.isAi) && !last?.error;
+        setLines((prev) => {
+          const current = prev[slot];
+          return { ...prev, [slot]: finished && current ? { ...current, complete: true } : null };
+        });
+      }
+    }
+    // The busy flags drive this; the lanes' other fields are read as of the same render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [laneA.busy, laneB.busy]);
+
+  // The first token: the column that gets one last becomes the mover.
+  useEffect(() => {
+    const now = performance.now();
+    for (const [slot, lane] of [["A", laneA], ["B", laneB]] as const) {
+      if (!hasFirstToken(lane)) continue;
+      setLines((prev) => {
+        const current = prev[slot];
+        if (!current || current.complete || current.firstTokenAt !== null) return prev;
+        return { ...prev, [slot]: { ...current, firstTokenAt: now } };
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [laneA.messages, laneB.messages]);
+
+  const gone = useCallback((slot: Slot, turn: number) => {
+    setLines((prev) => (prev[slot]?.turn === turn ? { ...prev, [slot]: null } : prev));
+  }, []);
+
+  const startOf = (line: CompareLine | null) => (line ? line.firstTokenAt ?? line.startedAt : -Infinity);
+  const mover: Slot | null = lines.A || lines.B ? (startOf(lines.B) > startOf(lines.A) ? "B" : "A") : null;
+
+  return { lines, mover, gone };
+}
 
 /**
  * Below this container width the two lanes stack vertically. Measured on the
@@ -27,8 +108,13 @@ interface LaneColumnProps {
   lane: ChatLane;
   variant: Variant | null;
   /** "A" / "B" — anchors each column to its picker in the controls above. */
-  slot: string;
+  slot: Slot;
   importCode: (code: string) => void;
+  /** This column's status line, if its answer is on its way or just completed. */
+  statusLine: StatusLineState | null;
+  /** This column's line is the one mover, and every motion level allows Kiwi to move. */
+  motion: boolean;
+  onStatusLineGone: (turn: number) => void;
 }
 
 const LaneColumn: React.FC<LaneColumnProps> = ({
@@ -36,21 +122,15 @@ const LaneColumn: React.FC<LaneColumnProps> = ({
   variant,
   slot,
   importCode,
+  statusLine,
+  motion,
+  onStatusLineGone,
 }) => {
   const messageEndRef = useRef<HTMLDivElement>(null!);
-  // One mover: a lane's status line stands still (its words carry the state),
-  // so two answering columns never animate at once.
-  const statusLine: StatusLineState | null = lane.busy
-    ? {
-        turn: 1,
-        startedAt: 0,
-        answerNumber: lane.messages.filter((message) => !message.isAi).length,
-        complete: false,
-      }
-    : null;
 
   return (
     <Box
+      data-slot={slot}
       sx={{
         flex: 1,
         minWidth: 0,
@@ -122,7 +202,8 @@ const LaneColumn: React.FC<LaneColumnProps> = ({
           messageEndRef={messageEndRef}
           importCode={importCode}
           statusLine={statusLine}
-          motion={false}
+          motion={motion}
+          onStatusLineGone={onStatusLineGone}
         />
       </Box>
     </Box>
@@ -151,6 +232,8 @@ export const ExperimentCompare: React.FC<ExperimentCompareProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [sideBySide, setSideBySide] = useState(true);
+  const { motionAllowed } = useDisplayPreferences();
+  const { lines, mover, gone } = useCompareLines(laneA, laneB);
 
   useEffect(() => {
     const node = containerRef.current;
@@ -184,12 +267,18 @@ export const ExperimentCompare: React.FC<ExperimentCompareProps> = ({
           variant={variantA}
           slot="A"
           importCode={importCode}
+          statusLine={lines.A}
+          motion={motionAllowed && mover === "A"}
+          onStatusLineGone={(turn) => gone("A", turn)}
         />
         <LaneColumn
           lane={laneB}
           variant={variantB}
           slot="B"
           importCode={importCode}
+          statusLine={lines.B}
+          motion={motionAllowed && mover === "B"}
+          onStatusLineGone={(turn) => gone("B", turn)}
         />
       </Stack>
     </Box>

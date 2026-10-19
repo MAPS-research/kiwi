@@ -26,6 +26,8 @@ export interface ChatLane {
   send: (prompt: string) => void;
   /** Stops the answer in flight: what arrived stays, an answer with no text yet goes. */
   stop: () => void;
+  /** The last answer was stopped, not finished (until the next send or reset). */
+  stopped: boolean;
   reset: () => void;
 }
 
@@ -53,6 +55,7 @@ export const useChatLane = ({
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [stopped, setStopped] = useState(false);
 
   const conversationIdRef = useRef<string | null>(null);
   const loaderIdRef = useRef("");
@@ -86,6 +89,7 @@ export const useChatLane = ({
     setMessages([]);
     setBusy(false);
     setError(null);
+    setStopped(false);
   }, []);
 
   // Switching variant makes the existing transcript meaningless — it was
@@ -271,6 +275,7 @@ export const useChatLane = ({
       if (!enabled || !expId || !variant || !promptMessage.trim()) return;
 
       setError(null);
+      setStopped(false);
       setBusy(true);
 
       const loaderId = `loading-${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -314,6 +319,7 @@ export const useChatLane = ({
   const stop = useCallback(() => {
     abortRef.current?.abort();
     setBusy(false);
+    setStopped(true);
     applyMessages((prev) => {
       const last = prev[prev.length - 1];
       if (!last?.isAi || last.error || last.streaming === "stop") return prev;
@@ -323,5 +329,5 @@ export const useChatLane = ({
     });
   }, [applyMessages]);
 
-  return { variantKey: variantKey ?? "", messages, busy, error, send, stop, reset: clear };
+  return { variantKey: variantKey ?? "", messages, busy, error, send, stop, stopped, reset: clear };
 };
