@@ -533,7 +533,14 @@ export function createKiwiTheme({ dark = darkModeEnabled() }: { dark?: boolean }
           root: {
             marginLeft: 0,
             columnGap: "var(--checkbox-label-gap)",
-            "& .MuiFormControlLabel-label": { color: "var(--checkbox-label)" },
+            // A checkbox or radio label is the label role at 400 (DESIGN.md, Checkboxes and radios);
+            // a switch's is the label role at its own weight, 600 (the preview's .switch-row).
+            "& .MuiFormControlLabel-label": {
+              ...type("label"),
+              fontWeight: "var(--type-weight-regular)",
+              color: "var(--checkbox-label)",
+            },
+            "&:has(.MuiSwitch-root) .MuiFormControlLabel-label": { fontWeight: "var(--type-label-weight)" },
             "& .MuiFormControlLabel-label.Mui-disabled": { color: "var(--checkbox-disabled-label)" },
           },
         },

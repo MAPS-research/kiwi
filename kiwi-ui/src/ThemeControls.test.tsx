@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { IconButton, Switch } from "@mui/material";
+import { Checkbox, FormControlLabel, IconButton, Switch } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { createKiwiTheme } from "./Theme.ts";
 
@@ -30,6 +30,21 @@ describe("Kiwi theme controls", () => {
     expect(pressed).toContain("box-shadow:none");
     expect(pressed).toContain("background-image:linear-gradient(var(--icon-button-variant-selected-marker), var(--icon-button-variant-selected-marker))");
     expect(pressed).toContain("background-size:calc(100% - 2 * var(--icon-button-radius)) var(--icon-button-marker)");
+  });
+
+  it("sets control labels in the label role: 400 beside a checkbox, 600 beside a switch", () => {
+    const { container } = render(
+      <ThemeProvider theme={createKiwiTheme({ dark: false })}>
+        <FormControlLabel control={<Checkbox />} label="Remember me" />
+        <FormControlLabel control={<Switch />} label="Add class-specific instructions" />
+      </ThemeProvider>
+    );
+
+    const root = container.querySelector(".MuiFormControlLabel-root")!;
+    const label = rulesFor(root, ".MuiFormControlLabel-label");
+    expect(label).toContain("font-size:var(--type-label-size)");
+    expect(label).toContain("font-weight:var(--type-weight-regular)");
+    expect(rulesFor(root, ":has(.MuiSwitch-root) .MuiFormControlLabel-label")).toContain("font-weight:var(--type-label-weight)");
   });
 
   it("draws a small switch with the one 14 px thumb and 3 px inset", () => {
