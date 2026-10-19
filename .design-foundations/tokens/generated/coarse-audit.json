@@ -158,8 +158,8 @@
    ]
   },
   "button · compact": {
-   "n": 182,
-   "reach44": 182,
+   "n": 146,
+   "reach44": 146,
    "minHit": 44,
    "drawn": [
     "87x36",
@@ -168,6 +168,14 @@
     "94x36",
     "164x36",
     "154x36"
+   ]
+  },
+  "composer Send / Stop (inside the box) · compact": {
+   "n": 36,
+   "reach44": 36,
+   "minHit": 45,
+   "drawn": [
+    "32x32"
    ]
   },
   "tab · comfortable": {
@@ -354,8 +362,8 @@
    45
   ],
   [
-   "Send (Send)",
-   65,
+   "Send (Send message)",
+   45,
    45
   ],
   [
@@ -387,6 +395,15 @@
  "total": 2120,
  "reach44": 1778,
  "emuToolbarPitch": 44,
+ "frames": {
+  "exhibits": 120,
+  "frames": 52,
+  "rings": 56,
+  "doubled": 0,
+  "notHighlight": 0,
+  "highlight": null,
+  "fails": []
+ },
  "audit": {
   "browserPointerCoarse": true,
   "fineToolbarPitchUnderCoarse": 44,

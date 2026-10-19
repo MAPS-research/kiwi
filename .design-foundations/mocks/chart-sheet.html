@@ -22,18 +22,18 @@
  * because a custom property's var() references resolve where it is declared, not where it is used.
  * Hit areas and pitches that grow on touch are redeclared inside @media (pointer: coarse), per density block. */
 :root {
-  --neutral-1: #fbfbf7;
-  --neutral-2: #f6f7ee;
-  --neutral-3: #f0f2e5;
-  --neutral-4: #e8eddf;
-  --neutral-5: #e5e9dc;
-  --neutral-6: #e1e6d8;
-  --neutral-7: #d9ded0;
-  --neutral-8: #a9b29d;
-  --neutral-9: #929d87;
-  --neutral-10: #7b8872;
-  --neutral-11: #566652;
-  --neutral-12: #23442d;
+  --neutral-1: #fbfafa;
+  --neutral-2: #f7f6f4;
+  --neutral-3: #f2f0ee;
+  --neutral-4: #eceae8;
+  --neutral-5: #e9e6e4;
+  --neutral-6: #e5e3e1;
+  --neutral-7: #dddbd9;
+  --neutral-8: #b1adaa;
+  --neutral-9: #9b9894;
+  --neutral-10: #85837e;
+  --neutral-11: #6a5f49;
+  --neutral-12: #443c16;
   --accent-1: #f9fbf4;
   --accent-2: #f2f6ea;
   --accent-3: #eaf0df;
@@ -46,10 +46,10 @@
   --accent-10: #577d37;
   --accent-11: #23482e;
   --accent-12: #203327;
-  --paper-1: #fefefa;
-  --paper-2: #fdfcf6;
-  --paper-3: #f6f5ed;
-  --paper-4: #f0eee2;
+  --paper-1: #fefdfd;
+  --paper-2: #fdfbfb;
+  --paper-3: #f6f4f3;
+  --paper-4: #efedec;
   --code-green: #446a2c;
   --error-3: #ffebe9;
   --error-9: #e1524f;
@@ -172,7 +172,7 @@
   --logo-on-dark: #ffffff;
   --on-paper-page: #ffffff;
   --on-paper-pin: #203327;
-  --on-paper-chunk: #566652;
+  --on-paper-chunk: #6a5f49;
   --on-paper-wash: rgba(32, 51, 39, 0.122);
   --editor-bg: var(--surface);
   --editor-gutter: var(--surface-hover);
@@ -251,6 +251,8 @@
   --size-top-bar-button: 44px;
   --size-launcher: 56px;
   --size-avatar: 32px;
+  --size-composer-action: 32px;
+  --size-hit-composer-action: var(--size-composer-action);
   --size-switch-track-w: 36px;
   --size-switch-track-h: 20px;
   --size-switch-thumb: 14px;
@@ -404,7 +406,7 @@
   --button-primary-hover-border: var(--accent-solid-border);
   --button-primary-hover-text: var(--accent-on-solid);
   --button-primary-focus-fill: var(--accent-solid);
-  --button-primary-focus-border: var(--accent-solid-border);
+  --button-primary-focus-border: var(--focus-ring);
   --button-primary-focus-text: var(--accent-on-solid);
   --button-primary-focus-ring: var(--focus-ring);
   --button-primary-active-fill: var(--accent-solid-active);
@@ -431,7 +433,7 @@
   --button-secondary-hover-border: var(--border-interactive);
   --button-secondary-focus-fill: var(--surface);
   --button-secondary-focus-text: var(--accent-text);
-  --button-secondary-focus-border: var(--border-interactive);
+  --button-secondary-focus-border: var(--focus-ring);
   --button-secondary-focus-ring: var(--focus-ring);
   --button-secondary-active-fill: var(--accent-bg-subtle-active);
   --button-secondary-active-text: var(--accent-text);
@@ -480,7 +482,7 @@
   --button-destructive-hover-border: var(--destructive-text);
   --button-destructive-focus-fill: var(--surface);
   --button-destructive-focus-text: var(--destructive-text);
-  --button-destructive-focus-border: var(--destructive-text);
+  --button-destructive-focus-border: var(--focus-ring);
   --button-destructive-focus-ring: var(--focus-ring);
   --button-destructive-active-fill: var(--destructive-bg-subtle);
   --button-destructive-active-text: var(--destructive-text);
@@ -578,7 +580,7 @@
   --chip-filter-hover-border: var(--border-interactive);
   --chip-filter-focus-fill: var(--surface);
   --chip-filter-focus-text: var(--text);
-  --chip-filter-focus-border: var(--border-interactive);
+  --chip-filter-focus-border: var(--focus-ring);
   --chip-filter-focus-ring: var(--focus-ring);
   --chip-filter-active-fill: var(--surface-active);
   --chip-filter-active-text: var(--text);
@@ -628,7 +630,7 @@
   --switch-hover-border: var(--border-interactive);
   --switch-hover-thumb: var(--text);
   --switch-focus-track: var(--surface);
-  --switch-focus-border: var(--border-interactive);
+  --switch-focus-border: var(--focus-ring);
   --switch-focus-thumb: var(--border-interactive);
   --switch-focus-ring: var(--focus-ring);
   --switch-active-track: var(--surface-active);
@@ -671,7 +673,7 @@
   --field-hover-border: var(--text);
   --field-focus-fill: var(--surface);
   --field-focus-text: var(--text);
-  --field-focus-border: var(--border-interactive);
+  --field-focus-border: var(--focus-ring);
   --field-focus-ring: var(--focus-ring);
   --field-active-fill: var(--surface);
   --field-active-text: var(--text);
@@ -714,7 +716,7 @@
   --checkbox-hover-fill: var(--surface);
   --checkbox-hover-border: var(--text);
   --checkbox-focus-fill: var(--surface);
-  --checkbox-focus-border: var(--border-interactive);
+  --checkbox-focus-border: var(--focus-ring);
   --checkbox-focus-ring: var(--focus-ring);
   --checkbox-active-fill: var(--surface-active);
   --checkbox-active-border: var(--text);
@@ -810,7 +812,7 @@
   --panel-hover-border: var(--border);
   --panel-focus-fill: var(--surface);
   --panel-focus-text: var(--text);
-  --panel-focus-border: var(--border);
+  --panel-focus-border: var(--focus-ring);
   --panel-focus-ring: var(--focus-ring);
   --panel-active-fill: var(--surface);
   --panel-active-text: var(--text);
@@ -1051,6 +1053,7 @@
   --kpi-tile-hover-value: var(--text);
   --kpi-tile-hover-label: var(--text-secondary);
   --kpi-tile-focus-fill: var(--surface);
+  --kpi-tile-focus-border: var(--focus-ring);
   --kpi-tile-focus-value: var(--text);
   --kpi-tile-focus-label: var(--text-secondary);
   --kpi-tile-focus-ring: var(--focus-ring);
@@ -1156,7 +1159,7 @@
   --launcher-hover-border: var(--accent-solid-border);
   --launcher-hover-icon: var(--accent-on-solid);
   --launcher-focus-fill: var(--accent-solid);
-  --launcher-focus-border: var(--accent-solid-border);
+  --launcher-focus-border: var(--focus-ring);
   --launcher-focus-icon: var(--accent-on-solid);
   --launcher-focus-ring: var(--focus-ring);
   --launcher-active-fill: var(--accent-solid-active);
@@ -1188,6 +1191,10 @@
   --tutor-message-copy-button: var(--size-toolbar-button-sm);
   --tutor-message-copy-hit: var(--size-hit-toolbar);
   --tutor-message-citation-hit: var(--size-hit-text-action);
+  --tutor-message-composer-radius: var(--radius-sheet);
+  --tutor-message-composer-min-height: var(--size-target-min);
+  --tutor-message-composer-action: var(--size-composer-action);
+  --tutor-message-composer-action-hit: var(--size-hit-composer-action);
   --tutor-message-fill: var(--fill-none);
   --tutor-message-text: var(--text);
   --tutor-message-link: var(--link);
@@ -1212,7 +1219,7 @@
   --tutor-message-disabled-toolbar: var(--disabled-icon);
   --tutor-message-loading-fill: var(--fill-none);
   --tutor-message-loading-text: var(--in-progress-text);
-  --tutor-message-loading-stop: var(--accent-text);
+  --tutor-message-loading-stop: var(--text);
   --tutor-message-error-fill: var(--status-error-surface);
   --tutor-message-error-text: var(--status-error-text);
   --tutor-message-error-icon: var(--status-error-text);
@@ -1352,18 +1359,18 @@
 }
 
 [data-theme="light"] {
-  --neutral-1: #fbfbf7;
-  --neutral-2: #f6f7ee;
-  --neutral-3: #f0f2e5;
-  --neutral-4: #e8eddf;
-  --neutral-5: #e5e9dc;
-  --neutral-6: #e1e6d8;
-  --neutral-7: #d9ded0;
-  --neutral-8: #a9b29d;
-  --neutral-9: #929d87;
-  --neutral-10: #7b8872;
-  --neutral-11: #566652;
-  --neutral-12: #23442d;
+  --neutral-1: #fbfafa;
+  --neutral-2: #f7f6f4;
+  --neutral-3: #f2f0ee;
+  --neutral-4: #eceae8;
+  --neutral-5: #e9e6e4;
+  --neutral-6: #e5e3e1;
+  --neutral-7: #dddbd9;
+  --neutral-8: #b1adaa;
+  --neutral-9: #9b9894;
+  --neutral-10: #85837e;
+  --neutral-11: #6a5f49;
+  --neutral-12: #443c16;
   --accent-1: #f9fbf4;
   --accent-2: #f2f6ea;
   --accent-3: #eaf0df;
@@ -1376,10 +1383,10 @@
   --accent-10: #577d37;
   --accent-11: #23482e;
   --accent-12: #203327;
-  --paper-1: #fefefa;
-  --paper-2: #fdfcf6;
-  --paper-3: #f6f5ed;
-  --paper-4: #f0eee2;
+  --paper-1: #fefdfd;
+  --paper-2: #fdfbfb;
+  --paper-3: #f6f4f3;
+  --paper-4: #efedec;
   --code-green: #446a2c;
   --error-3: #ffebe9;
   --error-11: #974843;
@@ -1487,7 +1494,7 @@
   --button-primary-hover-border: var(--accent-solid-border);
   --button-primary-hover-text: var(--accent-on-solid);
   --button-primary-focus-fill: var(--accent-solid);
-  --button-primary-focus-border: var(--accent-solid-border);
+  --button-primary-focus-border: var(--focus-ring);
   --button-primary-focus-text: var(--accent-on-solid);
   --button-primary-focus-ring: var(--focus-ring);
   --button-primary-active-fill: var(--accent-solid-active);
@@ -1514,7 +1521,7 @@
   --button-secondary-hover-border: var(--border-interactive);
   --button-secondary-focus-fill: var(--surface);
   --button-secondary-focus-text: var(--accent-text);
-  --button-secondary-focus-border: var(--border-interactive);
+  --button-secondary-focus-border: var(--focus-ring);
   --button-secondary-focus-ring: var(--focus-ring);
   --button-secondary-active-fill: var(--accent-bg-subtle-active);
   --button-secondary-active-text: var(--accent-text);
@@ -1556,7 +1563,7 @@
   --button-destructive-hover-border: var(--destructive-text);
   --button-destructive-focus-fill: var(--surface);
   --button-destructive-focus-text: var(--destructive-text);
-  --button-destructive-focus-border: var(--destructive-text);
+  --button-destructive-focus-border: var(--focus-ring);
   --button-destructive-focus-ring: var(--focus-ring);
   --button-destructive-active-fill: var(--destructive-bg-subtle);
   --button-destructive-active-text: var(--destructive-text);
@@ -1633,7 +1640,7 @@
   --chip-filter-hover-border: var(--border-interactive);
   --chip-filter-focus-fill: var(--surface);
   --chip-filter-focus-text: var(--text);
-  --chip-filter-focus-border: var(--border-interactive);
+  --chip-filter-focus-border: var(--focus-ring);
   --chip-filter-focus-ring: var(--focus-ring);
   --chip-filter-active-fill: var(--surface-active);
   --chip-filter-active-text: var(--text);
@@ -1677,7 +1684,7 @@
   --switch-hover-border: var(--border-interactive);
   --switch-hover-thumb: var(--text);
   --switch-focus-track: var(--surface);
-  --switch-focus-border: var(--border-interactive);
+  --switch-focus-border: var(--focus-ring);
   --switch-focus-thumb: var(--border-interactive);
   --switch-focus-ring: var(--focus-ring);
   --switch-active-track: var(--surface-active);
@@ -1712,7 +1719,7 @@
   --field-hover-border: var(--text);
   --field-focus-fill: var(--surface);
   --field-focus-text: var(--text);
-  --field-focus-border: var(--border-interactive);
+  --field-focus-border: var(--focus-ring);
   --field-focus-ring: var(--focus-ring);
   --field-active-fill: var(--surface);
   --field-active-text: var(--text);
@@ -1749,7 +1756,7 @@
   --checkbox-hover-fill: var(--surface);
   --checkbox-hover-border: var(--text);
   --checkbox-focus-fill: var(--surface);
-  --checkbox-focus-border: var(--border-interactive);
+  --checkbox-focus-border: var(--focus-ring);
   --checkbox-focus-ring: var(--focus-ring);
   --checkbox-active-fill: var(--surface-active);
   --checkbox-active-border: var(--text);
@@ -1816,7 +1823,7 @@
   --panel-hover-border: var(--border);
   --panel-focus-fill: var(--surface);
   --panel-focus-text: var(--text);
-  --panel-focus-border: var(--border);
+  --panel-focus-border: var(--focus-ring);
   --panel-focus-ring: var(--focus-ring);
   --panel-active-fill: var(--surface);
   --panel-active-text: var(--text);
@@ -1997,6 +2004,7 @@
   --kpi-tile-hover-value: var(--text);
   --kpi-tile-hover-label: var(--text-secondary);
   --kpi-tile-focus-fill: var(--surface);
+  --kpi-tile-focus-border: var(--focus-ring);
   --kpi-tile-focus-value: var(--text);
   --kpi-tile-focus-label: var(--text-secondary);
   --kpi-tile-focus-ring: var(--focus-ring);
@@ -2073,7 +2081,7 @@
   --launcher-hover-border: var(--accent-solid-border);
   --launcher-hover-icon: var(--accent-on-solid);
   --launcher-focus-fill: var(--accent-solid);
-  --launcher-focus-border: var(--accent-solid-border);
+  --launcher-focus-border: var(--focus-ring);
   --launcher-focus-icon: var(--accent-on-solid);
   --launcher-focus-ring: var(--focus-ring);
   --launcher-active-fill: var(--accent-solid-active);
@@ -2109,7 +2117,7 @@
   --tutor-message-disabled-text: var(--text);
   --tutor-message-disabled-toolbar: var(--disabled-icon);
   --tutor-message-loading-text: var(--in-progress-text);
-  --tutor-message-loading-stop: var(--accent-text);
+  --tutor-message-loading-stop: var(--text);
   --tutor-message-error-fill: var(--status-error-surface);
   --tutor-message-error-text: var(--status-error-text);
   --tutor-message-error-icon: var(--status-error-text);
@@ -2204,18 +2212,18 @@
 }
 
 [data-theme="dark"] {
-  --neutral-1: #0e1510;
-  --neutral-2: #151d16;
-  --neutral-3: #1c261d;
-  --neutral-4: #222d23;
-  --neutral-5: #2a3529;
-  --neutral-6: #30382e;
-  --neutral-7: #3d4539;
-  --neutral-8: #5e6755;
-  --neutral-9: #6b7662;
-  --neutral-10: #79856e;
-  --neutral-11: #bdc9ad;
-  --neutral-12: #e4e8db;
+  --neutral-1: #131312;
+  --neutral-2: #1b1b19;
+  --neutral-3: #242321;
+  --neutral-4: #2a2a27;
+  --neutral-5: #33312f;
+  --neutral-6: #363533;
+  --neutral-7: #43423f;
+  --neutral-8: #656360;
+  --neutral-9: #74716d;
+  --neutral-10: #83807b;
+  --neutral-11: #d5c0a8;
+  --neutral-12: #efe4da;
   --accent-1: #111810;
   --accent-2: #1c2517;
   --accent-3: #27321f;
@@ -2228,10 +2236,10 @@
   --accent-10: #b1c698;
   --accent-11: #b9cf9b;
   --accent-12: #deeacd;
-  --paper-1: #0d150f;
-  --paper-2: #121b14;
-  --paper-3: #1a251c;
-  --paper-4: #212e23;
+  --paper-1: #131311;
+  --paper-2: #191816;
+  --paper-3: #22221f;
+  --paper-4: #2b2a27;
   --code-green: #b9cf9b;
   --error-3: #331a18;
   --error-11: #f49c95;
@@ -2339,7 +2347,7 @@
   --button-primary-hover-border: var(--accent-solid-border);
   --button-primary-hover-text: var(--accent-on-solid);
   --button-primary-focus-fill: var(--accent-solid);
-  --button-primary-focus-border: var(--accent-solid-border);
+  --button-primary-focus-border: var(--focus-ring);
   --button-primary-focus-text: var(--accent-on-solid);
   --button-primary-focus-ring: var(--focus-ring);
   --button-primary-active-fill: var(--accent-solid-active);
@@ -2366,7 +2374,7 @@
   --button-secondary-hover-border: var(--border-interactive);
   --button-secondary-focus-fill: var(--surface);
   --button-secondary-focus-text: var(--accent-text);
-  --button-secondary-focus-border: var(--border-interactive);
+  --button-secondary-focus-border: var(--focus-ring);
   --button-secondary-focus-ring: var(--focus-ring);
   --button-secondary-active-fill: var(--accent-bg-subtle-active);
   --button-secondary-active-text: var(--accent-text);
@@ -2408,7 +2416,7 @@
   --button-destructive-hover-border: var(--destructive-text);
   --button-destructive-focus-fill: var(--surface);
   --button-destructive-focus-text: var(--destructive-text);
-  --button-destructive-focus-border: var(--destructive-text);
+  --button-destructive-focus-border: var(--focus-ring);
   --button-destructive-focus-ring: var(--focus-ring);
   --button-destructive-active-fill: var(--destructive-bg-subtle);
   --button-destructive-active-text: var(--destructive-text);
@@ -2485,7 +2493,7 @@
   --chip-filter-hover-border: var(--border-interactive);
   --chip-filter-focus-fill: var(--surface);
   --chip-filter-focus-text: var(--text);
-  --chip-filter-focus-border: var(--border-interactive);
+  --chip-filter-focus-border: var(--focus-ring);
   --chip-filter-focus-ring: var(--focus-ring);
   --chip-filter-active-fill: var(--surface-active);
   --chip-filter-active-text: var(--text);
@@ -2529,7 +2537,7 @@
   --switch-hover-border: var(--border-interactive);
   --switch-hover-thumb: var(--text);
   --switch-focus-track: var(--surface);
-  --switch-focus-border: var(--border-interactive);
+  --switch-focus-border: var(--focus-ring);
   --switch-focus-thumb: var(--border-interactive);
   --switch-focus-ring: var(--focus-ring);
   --switch-active-track: var(--surface-active);
@@ -2564,7 +2572,7 @@
   --field-hover-border: var(--text);
   --field-focus-fill: var(--surface);
   --field-focus-text: var(--text);
-  --field-focus-border: var(--border-interactive);
+  --field-focus-border: var(--focus-ring);
   --field-focus-ring: var(--focus-ring);
   --field-active-fill: var(--surface);
   --field-active-text: var(--text);
@@ -2601,7 +2609,7 @@
   --checkbox-hover-fill: var(--surface);
   --checkbox-hover-border: var(--text);
   --checkbox-focus-fill: var(--surface);
-  --checkbox-focus-border: var(--border-interactive);
+  --checkbox-focus-border: var(--focus-ring);
   --checkbox-focus-ring: var(--focus-ring);
   --checkbox-active-fill: var(--surface-active);
   --checkbox-active-border: var(--text);
@@ -2668,7 +2676,7 @@
   --panel-hover-border: var(--border);
   --panel-focus-fill: var(--surface);
   --panel-focus-text: var(--text);
-  --panel-focus-border: var(--border);
+  --panel-focus-border: var(--focus-ring);
   --panel-focus-ring: var(--focus-ring);
   --panel-active-fill: var(--surface);
   --panel-active-text: var(--text);
@@ -2849,6 +2857,7 @@
   --kpi-tile-hover-value: var(--text);
   --kpi-tile-hover-label: var(--text-secondary);
   --kpi-tile-focus-fill: var(--surface);
+  --kpi-tile-focus-border: var(--focus-ring);
   --kpi-tile-focus-value: var(--text);
   --kpi-tile-focus-label: var(--text-secondary);
   --kpi-tile-focus-ring: var(--focus-ring);
@@ -2925,7 +2934,7 @@
   --launcher-hover-border: var(--accent-solid-border);
   --launcher-hover-icon: var(--accent-on-solid);
   --launcher-focus-fill: var(--accent-solid);
-  --launcher-focus-border: var(--accent-solid-border);
+  --launcher-focus-border: var(--focus-ring);
   --launcher-focus-icon: var(--accent-on-solid);
   --launcher-focus-ring: var(--focus-ring);
   --launcher-active-fill: var(--accent-solid-active);
@@ -2961,7 +2970,7 @@
   --tutor-message-disabled-text: var(--text);
   --tutor-message-disabled-toolbar: var(--disabled-icon);
   --tutor-message-loading-text: var(--in-progress-text);
-  --tutor-message-loading-stop: var(--accent-text);
+  --tutor-message-loading-stop: var(--text);
   --tutor-message-error-fill: var(--status-error-surface);
   --tutor-message-error-text: var(--status-error-text);
   --tutor-message-error-icon: var(--status-error-text);
@@ -3051,7 +3060,7 @@
   --chart-baseline: var(--border-strong);
   --chart-tick-text: var(--text-secondary);
   --chart-plot: var(--surface);
-  --companion-backing: #fdfcf6;
+  --companion-backing: #fdfbfb;
   color-scheme: dark;
 }
 
@@ -3258,6 +3267,7 @@
     --space-icon-row-gap: var(--space-2);
     --space-hit-row-gap: var(--space-2);
     --size-menu-item: var(--size-target-min);
+    --size-hit-composer-action: var(--size-target-min);
     --size-hit-icon: var(--size-target-min);
     --size-hit-toolbar: var(--size-target-min);
     --size-pitch-toolbar: var(--size-target-min);
@@ -3283,6 +3293,7 @@
     --tutor-message-toolbar-pitch: var(--size-pitch-toolbar);
     --tutor-message-copy-hit: var(--size-hit-toolbar);
     --tutor-message-citation-hit: var(--size-hit-text-action);
+    --tutor-message-composer-action-hit: var(--size-hit-composer-action);
     --pdf-toolbar-button-hit: var(--size-hit-icon);
     --pdf-toolbar-field-hit: var(--size-hit-control);
     --pdf-toolbar-pin-hit: var(--size-hit-pin);
@@ -3294,6 +3305,7 @@
     --space-icon-row-gap: var(--space-2);
     --space-hit-row-gap: var(--space-2);
     --size-menu-item: var(--size-target-min);
+    --size-hit-composer-action: var(--size-target-min);
     --size-hit-icon: var(--size-target-min);
     --size-hit-toolbar: var(--size-target-min);
     --size-pitch-toolbar: var(--size-target-min);
@@ -3319,6 +3331,7 @@
     --tutor-message-toolbar-pitch: var(--size-pitch-toolbar);
     --tutor-message-copy-hit: var(--size-hit-toolbar);
     --tutor-message-citation-hit: var(--size-hit-text-action);
+    --tutor-message-composer-action-hit: var(--size-hit-composer-action);
     --pdf-toolbar-button-hit: var(--size-hit-icon);
     --pdf-toolbar-field-hit: var(--size-hit-control);
     --pdf-toolbar-pin-hit: var(--size-hit-pin);
@@ -3330,6 +3343,7 @@
     --space-icon-row-gap: var(--space-2);
     --space-hit-row-gap: var(--space-2);
     --size-menu-item: var(--size-target-min);
+    --size-hit-composer-action: var(--size-target-min);
     --size-hit-icon: var(--size-target-min);
     --size-hit-toolbar: var(--size-target-min);
     --size-pitch-toolbar: var(--size-target-min);
@@ -3355,6 +3369,7 @@
     --tutor-message-toolbar-pitch: var(--size-pitch-toolbar);
     --tutor-message-copy-hit: var(--size-hit-toolbar);
     --tutor-message-citation-hit: var(--size-hit-text-action);
+    --tutor-message-composer-action-hit: var(--size-hit-composer-action);
     --pdf-toolbar-button-hit: var(--size-hit-icon);
     --pdf-toolbar-field-hit: var(--size-hit-control);
     --pdf-toolbar-pin-hit: var(--size-hit-pin);

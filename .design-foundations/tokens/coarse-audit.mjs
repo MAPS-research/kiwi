@@ -5,12 +5,14 @@
 // through the control's centre, of the area that really hit-tests to it (document.elementFromPoint at pixel centres);
 // a control "reaches 44" when both extents are at least 44 px. The S-02 drawer's file rows, the comment pins, the
 // admin tables' name-link cells and links in running prose are their own classes, so the stated exceptions can be told
-// from the controls that must pass. Writes generated/coarse-audit.json, which the DESIGN.md evidence quotes.
+// from the controls that must pass. Also (2026-10-19): every focus exhibit shows one frame, never a ring outside a border (tools/frame-probe.mjs),
+// and the run fails on two frames. Writes generated/coarse-audit.json, which the DESIGN.md evidence quotes.
 //   node coarse-audit.mjs        (needs Chrome or Chromium: $CHROME, $CHROME_PATH, or a usual install location)
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { withPage } from "./tools/cdp.mjs";
+import { frameProbe } from "./tools/frame-probe.mjs";
 import { TOKENS_DIR, REPO_ROOT } from "./tokens-lib.mjs";
 
 const SHEET = pathToFileURL(join(REPO_ROOT, ".design-foundations", "mocks", "component-sheet.html")).href;
@@ -21,7 +23,7 @@ const probe = `(() => {
   const vis = (el) => { const cs = getComputedStyle(el); return cs.display !== "none" && cs.visibility !== "hidden" && el.getClientRects().length > 0; };
   const CLASSES = [
     ["icon button", ".c-icon-button"], ["feedback toolbar button", ".c-chat .tb button"], ["filter chip", '.c-chip[data-v="filter"]'], ["switch", ".c-switch .track"], ["checkbox / radio", ".c-check .box"],
-    ["menu item", ".c-menu-item"], ["text action (alert, toast, banner)", ".c-alert .act, .c-toast .act"], ["citation", ".c-chat .meta .cite"], ["button", ".c-button"], ["tab", ".c-tab"], ["drawer file row (S-02)", ".pdf-rail .drawer .c-sidebar-item"], ["comment pin (on the paper)", ".c-pdf .pin"], ["sidebar row (admin)", ".c-sidebar-item"], ["table row", "tr.c-row"], ["table link cell (admin)", ".c-table td a"], ["inline prose link (WCAG 2.5.8 inline exception)", ".c-chat .ans p a"], ["launcher", ".c-launcher"], ["field", ".c-field .ctl"], ["page / search field", ".pfield"],
+    ["menu item", ".c-menu-item"], ["text action (alert, toast, banner)", ".c-alert .act, .c-toast .act"], ["citation", ".c-chat .meta .cite"], ["button", ".c-button"], ["composer Send / Stop (inside the box)", ".c-send, .c-stop"], ["tab", ".c-tab"], ["drawer file row (S-02)", ".pdf-rail .drawer .c-sidebar-item"], ["comment pin (on the paper)", ".c-pdf .pin"], ["sidebar row (admin)", ".c-sidebar-item"], ["table row", "tr.c-row"], ["table link cell (admin)", ".c-table td a"], ["inline prose link (WCAG 2.5.8 inline exception)", ".c-chat .ans p a"], ["launcher", ".c-launcher"], ["field", ".c-field .ctl"], ["page / search field", ".pfield"],
   ];
   const seen = new Set(); const groups = {}; const clipped = [];
   for (const [name, sel] of CLASSES) {
@@ -43,7 +45,7 @@ const probe = `(() => {
   // named student-route controls: compact tool chrome, the drawer's rows, the pins
   const named = [];
   const nameOf = (el) => el.getAttribute("aria-label") || el.textContent.trim().replace(/\\s+/g, " ").slice(0, 32);
-  for (const [label, sel, pick] of [["compact tab", '#c-coarse [data-density="compact"] .c-tab', 0], ["Find", "#c-coarse .pdf-search .c-button", 0], ["Next match", "#c-coarse .pdf-search .c-button", 1], ["Send", '#c-coarse .c-chat .composer .c-button', 0], ["search field", "#c-coarse .pdf-search .pfield", 0], ["drawer file row", "#c-pdf-toolbar .pdf-rail .drawer .c-sidebar-item", 1], ["comment pin", "#c-pdf-toolbar .c-pdf .pin.visible", 0], ["hidden comment pin", "#c-pdf-toolbar .c-pdf .pin.hidden", 0]]) {
+  for (const [label, sel, pick] of [["compact tab", '#c-coarse [data-density="compact"] .c-tab', 0], ["Find", "#c-coarse .pdf-search .c-button", 0], ["Next match", "#c-coarse .pdf-search .c-button", 1], ["Send", '#c-coarse .c-chat .composer .c-send', 0], ["search field", "#c-coarse .pdf-search .pfield", 0], ["drawer file row", "#c-pdf-toolbar .pdf-rail .drawer .c-sidebar-item", 1], ["comment pin", "#c-pdf-toolbar .c-pdf .pin.visible", 0], ["hidden comment pin", "#c-pdf-toolbar .c-pdf .pin.hidden", 0]]) {
     const els = [...main.querySelectorAll(sel)].filter((e) => vis(e) && !e.closest(".emu-coarse")); const el = els[pick]; if (!el) { named.push([label, 0, 0]); continue; }
     el.scrollIntoView({ block: "center" }); const r = el.getBoundingClientRect(); const cx = Math.floor(r.left + r.width / 2) + 0.5, cy = Math.floor(r.top + r.height / 2) + 0.5;
     const mine = (x, y) => { const hit = document.elementFromPoint(x, y); return !!hit && (hit === el || el.contains(hit)); };
@@ -62,7 +64,7 @@ const result = await withPage({ url: "about:blank", width: 1440, height: 900 }, 
   await send("Page.navigate", { url: SHEET });
   for (let i = 0; i < 400; i++) { if (await evaluate("!!document.documentElement.dataset.auditDone").catch(() => false)) break; await new Promise((r) => setTimeout(r, 200)); }
   const audit = JSON.parse(await evaluate("document.documentElement.dataset.audit"));
-  const res = await evaluate(probe);
+  const res = await evaluate(probe); res.frames = await evaluate(frameProbe(false));
   return { date: new Date().toISOString().slice(0, 10), sheet: ".design-foundations/mocks/component-sheet.html", ...res, audit: { browserPointerCoarse: audit.coarse.browserPointerCoarse, fineToolbarPitchUnderCoarse: audit.coarse.finePitch, fineToolbarHitUnderCoarse: audit.coarse.fineHit, scrollWidth: audit.scrollWidth, clientWidth: audit.clientWidth, cue: audit.cue, disabled: audit.disabled } };
 });
 writeFileSync(OUT, JSON.stringify(result, null, 1) + "\n");
@@ -72,4 +74,6 @@ for (const [k, g] of Object.entries(result.groups)) console.log(`  ${g.reach44}/
 console.log(`clipped (scrolled out of a clip, not targets): ${result.clipped} (${(result.clippedWhat || []).join("; ")})`);
 console.log("named student-route controls (hit extent w × h):", result.named.map(([k, w, h]) => `${k} ${w}×${h}`).join("; "));
 if (exceptions.length) console.log("not reaching 44:", exceptions.map(([k, g]) => `${k} ${g.reach44}/${g.n}`).join("; "));
+console.log(`one frame on focus: ${result.frames.exhibits} focus exhibits, ${result.frames.frames} bordered frames recoloured at 2 px, ${result.frames.rings} rings (borderless controls); ${result.frames.doubled} with two frames`);
 console.log("wrote", OUT.replace(REPO_ROOT + "/", ""));
+if (result.frames.doubled) { console.log("TWO FRAMES:", result.frames.fails.join("; ")); process.exit(1); }

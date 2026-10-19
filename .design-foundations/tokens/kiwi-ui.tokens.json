@@ -1753,29 +1753,29 @@
       "neutral": {
         "1": {
           "$type": "color",
-          "$value": "#fbfbf7",
+          "$value": "#fbfafa",
           "$extensions": {
             "mode": {
-              "dark": "#0e1510"
+              "dark": "#131312"
             },
             "org.kiwi": {
               "css": "--neutral-1",
               "source": {
                 "light": {
                   "oklch": [
-                    0.988,
-                    0.006,
-                    110
+                    0.987,
+                    0.0011,
+                    51.5
                   ],
-                  "why": "the lightest neutral, above the hover step"
+                  "why": "the re-tune's transform of #fbfbf7 (L kept, chroma × 0.20, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 },
                 "dark": {
                   "oklch": [
-                    0.185,
-                    0.014,
-                    152
+                    0.1865,
+                    0.0029,
+                    98.73
                   ],
-                  "why": "the darkest neutral, below the canvas"
+                  "why": "the re-tune's transform of #0e1510 (L kept, chroma × 0.20, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 }
               }
             }
@@ -1783,29 +1783,29 @@
         },
         "2": {
           "$type": "color",
-          "$value": "#f6f7ee",
+          "$value": "#f7f6f4",
           "$extensions": {
             "mode": {
-              "dark": "#151d16"
+              "dark": "#1b1b19"
             },
             "org.kiwi": {
               "css": "--neutral-2",
               "source": {
                 "light": {
                   "oklch": [
-                    0.972,
-                    0.011,
-                    112
+                    0.9729,
+                    0.0024,
+                    56.75
                   ],
-                  "why": "one step below neutral-1"
+                  "why": "the re-tune's transform of #f6f7ee (L kept, chroma × 0.20, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 },
                 "dark": {
                   "oklch": [
-                    0.22,
-                    0.018,
-                    150
+                    0.2201,
+                    0.0036,
+                    93.37
                   ],
-                  "why": "one step up"
+                  "why": "the re-tune's transform of #151d16 (L kept, chroma × 0.20, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 }
               }
             }
@@ -1813,24 +1813,24 @@
         },
         "3": {
           "$type": "color",
-          "$value": "#f0f2e5",
+          "$value": "#f2f0ee",
           "$extensions": {
             "mode": {
-              "dark": "#1c261d"
+              "dark": "#242321"
             },
             "org.kiwi": {
               "css": "--neutral-3",
               "source": {
                 "light": {
-                  "given": "kiwi-icon .km-frame-strip button (the hover row)"
+                  "given": "the user's palette tuner, saved 2026-10-19 (neutral and paper: chroma × 0.20, hue − 55°; text: chroma × 1.00, hue − 55°; OKLCH, L kept): the hover row #f2f0ee, the transform of #f0f2e5"
                 },
                 "dark": {
                   "oklch": [
-                    0.255,
-                    0.021,
-                    149
+                    0.2558,
+                    0.0044,
+                    92.59
                   ],
-                  "why": "one step up, beside the sheet"
+                  "why": "the re-tune's transform of #1c261d (L kept, chroma × 0.20, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 }
               }
             }
@@ -1838,24 +1838,24 @@
         },
         "4": {
           "$type": "color",
-          "$value": "#e8eddf",
+          "$value": "#eceae8",
           "$extensions": {
             "mode": {
-              "dark": "#222d23"
+              "dark": "#2a2a27"
             },
             "org.kiwi": {
               "css": "--neutral-4",
               "source": {
                 "light": {
-                  "given": "kiwi-icon .km-motion-controls (the pressed row)"
+                  "given": "the user's palette tuner, saved 2026-10-19 (neutral and paper: chroma × 0.20, hue − 55°; text: chroma × 1.00, hue − 55°; OKLCH, L kept): the pressed row #eceae8, the transform of #e8eddf"
                 },
                 "dark": {
                   "oklch": [
-                    0.285,
-                    0.024,
-                    147
+                    0.2833,
+                    0.0047,
+                    92.36
                   ],
-                  "why": "tonal hover, one step above the sheet"
+                  "why": "the re-tune's transform of #222d23 (L kept, chroma × 0.20, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 }
               }
             }
@@ -1863,29 +1863,29 @@
         },
         "5": {
           "$type": "color",
-          "$value": "#e5e9dc",
+          "$value": "#e9e6e4",
           "$extensions": {
             "mode": {
-              "dark": "#2a3529"
+              "dark": "#33312f"
             },
             "org.kiwi": {
               "css": "--neutral-5",
               "source": {
                 "light": {
                   "oklch": [
-                    0.928,
-                    0.019,
-                    122.8
+                    0.9274,
+                    0.0036,
+                    65.7
                   ],
-                  "why": "between the pressed row and the rule"
+                  "why": "the re-tune's transform of #e5e9dc (L kept, chroma × 0.20, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 },
                 "dark": {
                   "oklch": [
-                    0.315,
-                    0.026,
-                    144
+                    0.3147,
+                    0.0052,
+                    87.75
                   ],
-                  "why": "pressed rows, role chips"
+                  "why": "the re-tune's transform of #2a3529 (L kept, chroma × 0.20, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 }
               }
             }
@@ -1893,24 +1893,24 @@
         },
         "6": {
           "$type": "color",
-          "$value": "#e1e6d8",
+          "$value": "#e5e3e1",
           "$extensions": {
             "mode": {
-              "dark": "#30382e"
+              "dark": "#363533"
             },
             "org.kiwi": {
               "css": "--neutral-6",
               "source": {
                 "light": {
-                  "given": "kiwi-icon .km-stage-spec border-top (the rule)"
+                  "given": "the user's palette tuner, saved 2026-10-19 (neutral and paper: chroma × 0.20, hue − 55°; text: chroma × 1.00, hue − 55°; OKLCH, L kept): the subtle rule #e5e3e1, the transform of #e1e6d8"
                 },
                 "dark": {
                   "oklch": [
-                    0.33,
-                    0.022,
-                    140
+                    0.3298,
+                    0.0041,
+                    84.43
                   ],
-                  "why": "row dividers"
+                  "why": "the re-tune's transform of #30382e (L kept, chroma × 0.20, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 }
               }
             }
@@ -1918,24 +1918,24 @@
         },
         "7": {
           "$type": "color",
-          "$value": "#d9ded0",
+          "$value": "#dddbd9",
           "$extensions": {
             "mode": {
-              "dark": "#3d4539"
+              "dark": "#43423f"
             },
             "org.kiwi": {
               "css": "--neutral-7",
               "source": {
                 "light": {
-                  "given": "kiwi-icon --km-line (the hairline)"
+                  "given": "the user's palette tuner, saved 2026-10-19 (neutral and paper: chroma × 0.20, hue − 55°; text: chroma × 1.00, hue − 55°; OKLCH, L kept): the hairline #dddbd9, the transform of #d9ded0"
                 },
                 "dark": {
                   "oklch": [
-                    0.38,
-                    0.024,
-                    136
+                    0.3791,
+                    0.0045,
+                    80.13
                   ],
-                  "why": "panel edges"
+                  "why": "the re-tune's transform of #3d4539 (L kept, chroma × 0.20, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 }
               }
             }
@@ -1943,29 +1943,24 @@
         },
         "8": {
           "$type": "color",
-          "$value": "#a9b29d",
+          "$value": "#b1adaa",
           "$extensions": {
             "mode": {
-              "dark": "#5e6755"
+              "dark": "#656360"
             },
             "org.kiwi": {
               "css": "--neutral-8",
               "source": {
                 "light": {
-                  "oklch": [
-                    0.75,
-                    0.031,
-                    126
-                  ],
-                  "why": "the ruler, in the reference's line hue, at the lock's 2.0:1 on the canvas"
+                  "given": "the user's palette tuner, saved 2026-10-19 (neutral and paper: chroma × 0.20, hue − 55°; text: chroma × 1.00, hue − 55°; OKLCH, L kept): the ruler #b1adaa, the transform of #a9b29d"
                 },
                 "dark": {
                   "oklch": [
-                    0.5,
-                    0.03,
-                    130
+                    0.5006,
+                    0.006,
+                    74.15
                   ],
-                  "why": "the ruler at the lock's dark 2.8:1"
+                  "why": "the re-tune's transform of #5e6755 (L kept, chroma × 0.20, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 }
               }
             }
@@ -1973,29 +1968,29 @@
         },
         "9": {
           "$type": "color",
-          "$value": "#929d87",
+          "$value": "#9b9894",
           "$extensions": {
             "mode": {
-              "dark": "#6b7662"
+              "dark": "#74716d"
             },
             "org.kiwi": {
               "css": "--neutral-9",
               "source": {
                 "light": {
                   "oklch": [
-                    0.68,
-                    0.034,
-                    129.3
+                    0.6809,
+                    0.0068,
+                    74.03
                   ],
-                  "why": "between the ruler and the field edge"
+                  "why": "the re-tune's transform of #929d87 (L kept, chroma × 0.20, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 },
                 "dark": {
                   "oklch": [
-                    0.55,
-                    0.033,
-                    130
+                    0.5506,
+                    0.0066,
+                    76.02
                   ],
-                  "why": "between the ruler and the field edge"
+                  "why": "the re-tune's transform of #6b7662 (L kept, chroma × 0.20, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 }
               }
             }
@@ -2003,29 +1998,24 @@
         },
         "10": {
           "$type": "color",
-          "$value": "#7b8872",
+          "$value": "#85837e",
           "$extensions": {
             "mode": {
-              "dark": "#79856e"
+              "dark": "#83807b"
             },
             "org.kiwi": {
               "css": "--neutral-10",
               "source": {
                 "light": {
-                  "oklch": [
-                    0.61,
-                    0.036,
-                    132.5
-                  ],
-                  "why": "the field edge, in the line hue, at >= 3:1 (the reference's line is 1.25:1)"
+                  "given": "the user's palette tuner, saved 2026-10-19 (neutral and paper: chroma × 0.20, hue − 55°; text: chroma × 1.00, hue − 55°; OKLCH, L kept): the field edge #85837e, the transform of #7b8872"
                 },
                 "dark": {
                   "oklch": [
-                    0.6,
-                    0.036,
-                    130
+                    0.6002,
+                    0.0074,
+                    74.99
                   ],
-                  "why": "the field edge at >= 3:1 on the canvas, the sheet, the hover and pressed rows and the hover tint (L 0.56, the exploration's value, measured 2.78:1 on the pressed row in the component gate)"
+                  "why": "the re-tune's transform of #79856e (L kept, chroma × 0.20, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 }
               }
             }
@@ -2033,24 +2023,24 @@
         },
         "11": {
           "$type": "color",
-          "$value": "#566652",
+          "$value": "#6a5f49",
           "$extensions": {
             "mode": {
-              "dark": "#bdc9ad"
+              "dark": "#d5c0a8"
             },
             "org.kiwi": {
               "css": "--neutral-11",
               "source": {
                 "light": {
-                  "oklch": [
-                    0.49,
-                    0.037,
-                    139.4
-                  ],
-                  "why": "--km-muted darkened by 0.036 L so it clears 4.5:1 on every tint (the reference's is 4.33:1 on its selected fill)"
+                  "given": "the user's palette tuner, saved 2026-10-19 (neutral and paper: chroma × 0.20, hue − 55°; text: chroma × 1.00, hue − 55°; OKLCH, L kept): secondary text #6a5f49, the transform of #566652"
                 },
                 "dark": {
-                  "given": "kiwi-icon .km-loader-caption (secondary text on the forest band)"
+                  "oklch": [
+                    0.819,
+                    0.0405,
+                    71.22
+                  ],
+                  "why": "the re-tune's transform of #bdc9ad (L kept, chroma × 1.00, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 }
               }
             }
@@ -2058,24 +2048,24 @@
         },
         "12": {
           "$type": "color",
-          "$value": "#23442d",
+          "$value": "#443c16",
           "$extensions": {
             "mode": {
-              "dark": "#e4e8db"
+              "dark": "#efe4da"
             },
             "org.kiwi": {
               "css": "--neutral-12",
               "source": {
                 "light": {
-                  "given": "kiwi-icon --km-ink (body text)"
+                  "given": "the user's palette tuner, saved 2026-10-19 (neutral and paper: chroma × 0.20, hue − 55°; text: chroma × 1.00, hue − 55°; OKLCH, L kept): body text #443c16, the transform of #23442d"
                 },
                 "dark": {
                   "oklch": [
-                    0.925,
-                    0.018,
-                    122
+                    0.9244,
+                    0.0178,
+                    65.7
                   ],
-                  "why": "paper-tinted ink for long reading"
+                  "why": "the re-tune's transform of #e4e8db (L kept, chroma × 1.00, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 }
               }
             }
@@ -2404,29 +2394,29 @@
       "paper": {
         "1": {
           "$type": "color",
-          "$value": "#fefefa",
+          "$value": "#fefdfd",
           "$extensions": {
             "mode": {
-              "dark": "#0d150f"
+              "dark": "#131311"
             },
             "org.kiwi": {
               "css": "--paper-1",
               "source": {
                 "light": {
                   "oklch": [
-                    0.996,
-                    0.005,
-                    99
+                    0.9959,
+                    0.0011,
+                    51.49
                   ],
-                  "why": "the lightest value, above the sheet"
+                  "why": "the re-tune's transform of #fefefa (L kept, chroma × 0.20, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 },
                 "dark": {
                   "oklch": [
-                    0.185,
-                    0.016,
-                    152
+                    0.1853,
+                    0.0034,
+                    97.18
                   ],
-                  "why": "below the canvas"
+                  "why": "the re-tune's transform of #0d150f (L kept, chroma × 0.20, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 }
               }
             }
@@ -2434,24 +2424,24 @@
         },
         "2": {
           "$type": "color",
-          "$value": "#fdfcf6",
+          "$value": "#fdfbfb",
           "$extensions": {
             "mode": {
-              "dark": "#121b14"
+              "dark": "#191816"
             },
             "org.kiwi": {
               "css": "--paper-2",
               "source": {
                 "light": {
-                  "given": "kiwi-icon --km-paper (the sheet)"
+                  "given": "the user's palette tuner, saved 2026-10-19 (neutral and paper: chroma × 0.20, hue − 55°; text: chroma × 1.00, hue − 55°; OKLCH, L kept): the sheet #fdfbfb, the transform of #fdfcf6"
                 },
                 "dark": {
                   "oklch": [
-                    0.21,
-                    0.018,
-                    152
+                    0.2106,
+                    0.0038,
+                    96.28
                   ],
-                  "why": "a forest-black canvas, the night version of the reference's forest band, at the lock's dark lightness"
+                  "why": "the re-tune's transform of #121b14 (L kept, chroma × 0.20, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 }
               }
             }
@@ -2459,24 +2449,24 @@
         },
         "3": {
           "$type": "color",
-          "$value": "#f6f5ed",
+          "$value": "#f6f4f3",
           "$extensions": {
             "mode": {
-              "dark": "#1a251c"
+              "dark": "#22221f"
             },
             "org.kiwi": {
               "css": "--paper-3",
               "source": {
                 "light": {
-                  "given": "kiwi-icon --km-cream (the page)"
+                  "given": "the user's palette tuner, saved 2026-10-19 (neutral and paper: chroma × 0.20, hue − 55°; text: chroma × 1.00, hue − 55°; OKLCH, L kept): the canvas #f6f4f3, the transform of #f6f5ed"
                 },
                 "dark": {
                   "oklch": [
-                    0.25,
-                    0.022,
-                    150
+                    0.2508,
+                    0.0046,
+                    94.96
                   ],
-                  "why": "the sheet, one tonal step up"
+                  "why": "the re-tune's transform of #1a251c (L kept, chroma × 0.20, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 }
               }
             }
@@ -2484,29 +2474,29 @@
         },
         "4": {
           "$type": "color",
-          "$value": "#f0eee2",
+          "$value": "#efedec",
           "$extensions": {
             "mode": {
-              "dark": "#212e23"
+              "dark": "#2b2a27"
             },
             "org.kiwi": {
               "css": "--paper-4",
               "source": {
                 "light": {
                   "oklch": [
-                    0.948,
-                    0.016,
-                    102
+                    0.9474,
+                    0.0032,
+                    44
                   ],
-                  "why": "one step below the canvas"
+                  "why": "the re-tune's transform of #f0eee2 (L kept, chroma × 0.20, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 },
                 "dark": {
                   "oklch": [
-                    0.285,
-                    0.026,
-                    148
+                    0.2854,
+                    0.0053,
+                    94.06
                   ],
-                  "why": "one step above the sheet"
+                  "why": "the re-tune's transform of #212e23 (L kept, chroma × 0.20, hue − 55°; the user's palette tuner, saved 2026-10-1)"
                 }
               }
             }
@@ -3441,7 +3431,7 @@
       "focus-ring": {
         "$type": "color",
         "$value": "{global.color.accent.10}",
-        "$description": "2 px solid, 2 px offset, :focus-visible; never removed, never animated. accent-10: the reference's strong green in light, its toggle accent in dark.",
+        "$description": "One frame (the user's decision of 2026-10-19): a control with a border shows focus by recolouring that border to --focus-ring at 2 px, the extra pixel inward, so nothing shifts; a control with no border shows one 2 px ring, its only frame (2 px offset, or inset 2 px inside clipped rails, tab bars, rows and menus). Hover, selected, pressed and error recolour the frame too, never stack a second one. :focus-visible; never removed, never animated; forced colours: Highlight. accent-10: the reference's strong green in light, its toggle accent in dark.",
         "$extensions": {
           "mode": {
             "dark": "{global.color.accent.10}"
@@ -3707,7 +3697,7 @@
         },
         "chunk": {
           "$type": "color",
-          "$value": "#566652",
+          "$value": "#6a5f49",
           "$description": "Chunk boxes and the drag box (A-24): light --neutral-11 frozen (it followed the 2026-10-18 re-lock); 6.1:1 on the page.",
           "$extensions": {
             "org.kiwi": {
@@ -4258,6 +4248,21 @@
         "$type": "dimension",
         "$value": "32px",
         "$description": "The tutor avatar (G9); other mascot slots are companion.slot.* (Phase 4)"
+      },
+      "composer-action": {
+        "$type": "dimension",
+        "$value": "32px",
+        "$description": "The composer's round Send and Stop, drawn inside the box's border: 32 px"
+      },
+      "hit-composer-action": {
+        "$type": "dimension",
+        "$value": "{semantic.size.composer-action}",
+        "$description": "Hit area of the composer's Send and Stop: their drawn 32 px with a fine pointer, 44 with a coarse one (extended by a pseudo-element, never the drawn size)",
+        "$extensions": {
+          "mode": {
+            "coarse": "{semantic.size.target-min}"
+          }
+        }
       },
       "switch-track-w": {
         "$type": "dimension",
@@ -5049,14 +5054,14 @@
             }
           },
           "focus": {
-            "$description": ":focus-visible 2 px --focus-ring at 2 px offset.",
+            "$description": "Focus: the 1 px edge becomes --focus-ring at 2 px, one frame (the user's decision of 2026-10-19): the extra pixel is drawn inward (box-shadow: inset 0 0 0 1px), so nothing shifts; no outline and no offset ring outside it. :focus-visible only, never animated; under forced colours the frame is Highlight.",
             "fill": {
               "$type": "color",
               "$value": "{semantic.color.accent-solid}"
             },
             "border": {
               "$type": "color",
-              "$value": "{semantic.color.accent-solid-border}"
+              "$value": "{semantic.color.focus-ring}"
             },
             "text": {
               "$type": "color",
@@ -5394,7 +5399,7 @@
             },
             "border": {
               "$type": "color",
-              "$value": "{semantic.color.border-interactive}"
+              "$value": "{semantic.color.focus-ring}"
             },
             "ring": {
               "$type": "color",
@@ -5421,7 +5426,7 @@
                 }
               ]
             },
-            "$description": "Ring; the boundary does not change colour."
+            "$description": "Focus: the --border-interactive edge becomes --focus-ring at 2 px, one frame (the user's decision of 2026-10-19): the extra pixel is drawn inward (box-shadow: inset 0 0 0 1px), so nothing shifts; no outline and no offset ring outside it. :focus-visible only, never animated; under forced colours the frame is Highlight."
           },
           "active": {
             "$description": "Pressed: the tint steps to --accent-bg-subtle-active (the pressed tint, past the hover and selected tints) and the edge to the ink (--text), + scale 0.98; the ink edge keeps a pressed secondary apart from the resting Soft sage primary, whose fill is one step from the pressed tint.",
@@ -5696,7 +5701,7 @@
                 }
               ]
             },
-            "$description": "Ring on the transparent control."
+            "$description": "Ring: the control has no border, so one 2 px --focus-ring ring at 2 px offset is its only frame."
           },
           "active": {
             "$description": "Pressed: the tint steps to --accent-bg-subtle-active (the pressed tint, past the hover and selected tints) + scale 0.98.",
@@ -5960,7 +5965,7 @@
             "$description": "Tint hover: --destructive-bg-subtle; label and boundary unchanged."
           },
           "focus": {
-            "$description": "The standard --focus-ring: one focus signal system-wide.",
+            "$description": "Focus: the --destructive-text edge becomes --focus-ring at 2 px (the label stays --destructive-text), one frame (the user's decision of 2026-10-19): the extra pixel is drawn inward (box-shadow: inset 0 0 0 1px), so nothing shifts; no outline and no offset ring outside it. :focus-visible only, never animated; under forced colours the frame is Highlight.",
             "fill": {
               "$type": "color",
               "$value": "{semantic.color.surface}"
@@ -5971,7 +5976,7 @@
             },
             "border": {
               "$type": "color",
-              "$value": "{semantic.color.destructive.text}"
+              "$value": "{semantic.color.focus-ring}"
             },
             "ring": {
               "$type": "color",
@@ -6328,7 +6333,7 @@
               }
             ]
           },
-          "$description": "Ring."
+          "$description": "Ring: the control has no border, so one 2 px --focus-ring ring at 2 px offset is its only frame."
         },
         "active": {
           "$description": "Pressed: tonal + scale 0.98.",
@@ -6960,7 +6965,7 @@
             },
             "border": {
               "$type": "color",
-              "$value": "{semantic.color.border-interactive}"
+              "$value": "{semantic.color.focus-ring}"
             },
             "ring": {
               "$type": "color",
@@ -6987,7 +6992,7 @@
                 }
               ]
             },
-            "$description": "Ring."
+            "$description": "Focus: the chip's edge becomes --focus-ring at 2 px, a selected chip's too, one frame (the user's decision of 2026-10-19): the extra pixel is drawn inward (box-shadow: inset 0 0 0 1px), so nothing shifts; no outline and no offset ring outside it. :focus-visible only, never animated; under forced colours the frame is Highlight."
           },
           "active": {
             "$description": "Pressed.",
@@ -7424,14 +7429,14 @@
           }
         },
         "focus": {
-          "$description": "Ring around the track.",
+          "$description": "Focus: the track's edge becomes --focus-ring at 2 px, one frame (the user's decision of 2026-10-19): the extra pixel is drawn inward (box-shadow: inset 0 0 0 1px), so nothing shifts; no outline and no offset ring outside it. :focus-visible only, never animated; under forced colours the frame is Highlight.",
           "track": {
             "$type": "color",
             "$value": "{semantic.color.surface}"
           },
           "border": {
             "$type": "color",
-            "$value": "{semantic.color.border-interactive}"
+            "$value": "{semantic.color.focus-ring}"
           },
           "thumb": {
             "$type": "color",
@@ -7799,7 +7804,7 @@
           }
         },
         "focus": {
-          "$description": "The ring is the only focus signal; the boundary does not change colour.",
+          "$description": "Focus: the field's edge becomes --focus-ring at 2 px, one frame (the user's decision of 2026-10-19): the extra pixel is drawn inward (box-shadow: inset 0 0 0 1px), so nothing shifts; no outline and no offset ring outside it. :focus-visible only, never animated; under forced colours the frame is Highlight. A field in error keeps --status-error-text at 2 px when focused, so the error stays visible.",
           "fill": {
             "$type": "color",
             "$value": "{semantic.color.surface}"
@@ -7810,7 +7815,7 @@
           },
           "border": {
             "$type": "color",
-            "$value": "{semantic.color.border-interactive}"
+            "$value": "{semantic.color.focus-ring}"
           },
           "ring": {
             "$type": "color",
@@ -7922,7 +7927,7 @@
           }
         },
         "error": {
-          "$description": "aria-invalid; boundary --status-error-text; helper = cross icon + message, linked by aria-describedby.",
+          "$description": "aria-invalid; boundary --status-error-text; helper = cross icon + message, linked by aria-describedby. Focused in error, the edge stays --status-error-text at 2 px (one frame, the extra pixel inward), never --focus-ring.",
           "fill": {
             "$type": "color",
             "$value": "{semantic.color.surface}"
@@ -8243,14 +8248,14 @@
           }
         },
         "focus": {
-          "$description": "The ring around the box (2 px --focus-ring at 2 px offset); the boundary does not change.",
+          "$description": "Focus: the box's (or the radio's) edge becomes --focus-ring at 2 px, one frame (the user's decision of 2026-10-19): the extra pixel is drawn inward (box-shadow: inset 0 0 0 1px), so nothing shifts; no outline and no offset ring outside it. :focus-visible only, never animated; under forced colours the frame is Highlight.",
           "fill": {
             "$type": "color",
             "$value": "{semantic.color.surface}"
           },
           "border": {
             "$type": "color",
-            "$value": "{semantic.color.border-interactive}"
+            "$value": "{semantic.color.focus-ring}"
           },
           "ring": {
             "$type": "color",
@@ -9132,7 +9137,7 @@
           }
         },
         "focus": {
-          "$description": "Only a keyboard-scrollable overflow region (tabindex=0) shows the ring, inset −2 px.",
+          "$description": "Only a keyboard-scrollable overflow region (tabindex=0) takes focus: when the region is the panel itself, its hairline becomes the 2 px --focus-ring frame (one frame, the extra pixel inward); a region inside the panel with no edge of its own shows one 2 px ring inset by 2 px, its only frame.",
           "fill": {
             "$type": "color",
             "$value": "{semantic.color.surface}"
@@ -9143,7 +9148,7 @@
           },
           "border": {
             "$type": "color",
-            "$value": "{semantic.color.border}"
+            "$value": "{semantic.color.focus-ring}"
           },
           "ring": {
             "$type": "color",
@@ -9443,7 +9448,10 @@
                 "min": 3,
                 "kind": "non-text"
               }
-            ]
+            ],
+            "org.kiwi": {
+              "focusOn": "a control inside the dialog (the first focusable element, or the title for confirmations): the sheet's edge never changes, and the focused control draws its own one frame"
+            }
           }
         },
         "active": {
@@ -10268,7 +10276,10 @@
                 "min": 3,
                 "kind": "non-text"
               }
-            ]
+            ],
+            "org.kiwi": {
+              "focusOn": "the toast's action or Dismiss: the sheet's edge never changes, and the focused control draws its own one frame"
+            }
           }
         },
         "active": {
@@ -11139,10 +11150,14 @@
           }
         },
         "focus": {
-          "$description": "Ring when the tile is a link.",
+          "$description": "Focus, when the tile is a link: its hairline becomes --focus-ring at 2 px, one frame (the user's decision of 2026-10-19): the extra pixel is drawn inward (box-shadow: inset 0 0 0 1px), so nothing shifts; no outline and no offset ring outside it. :focus-visible only, never animated; under forced colours the frame is Highlight.",
           "fill": {
             "$type": "color",
             "$value": "{semantic.color.surface}"
+          },
+          "border": {
+            "$type": "color",
+            "$value": "{semantic.color.focus-ring}"
           },
           "value": {
             "$type": "color",
@@ -11472,7 +11487,7 @@
           }
         },
         "focus": {
-          "$description": "Ring on the CTA.",
+          "$description": "Focus is on the call to action, a primary button: its edge becomes the 2 px --focus-ring frame (one frame, the extra pixel inward).",
           "fill": {
             "$type": "color",
             "$value": "{semantic.color.fill-none}"
@@ -12083,14 +12098,14 @@
           }
         },
         "focus": {
-          "$description": "Ring 2 px at 2 px offset.",
+          "$description": "Focus: the disc's 1 px edge becomes --focus-ring at 2 px, one frame (the user's decision of 2026-10-19): the extra pixel is drawn inward (box-shadow: inset 0 0 0 1px), so nothing shifts; no outline and no offset ring outside it. :focus-visible only, never animated; under forced colours the frame is Highlight.",
           "fill": {
             "$type": "color",
             "$value": "{semantic.color.accent-solid}"
           },
           "border": {
             "$type": "color",
-            "$value": "{semantic.color.accent-solid-border}"
+            "$value": "{semantic.color.focus-ring}"
           },
           "icon": {
             "$type": "color",
@@ -12304,7 +12319,7 @@
       }
     },
     "tutor-message": {
-      "$description": "The tutor-message surface: a tutor row is a 32 px avatar slot (G9) + 12 px gap + the answer column, on the message region's ruler (text 68 px right of the rule). Answer text --type-body 16/24, CJK-dominant blocks 28, measure 68ch, blocks 12 px apart, messages 24 px apart. Links --link underlined. Code blocks: --type-code 14/24 on a transparent ground with a 2 px --editor-block-rule left rule and a Copy icon button (--tutor-message-copy-button 28 px with a 16 px glyph; hit area --tutor-message-copy-hit: 28 fine / 44 coarse); inline code on --editor-inline-bg; display math bare and centred with overflow scroll. Citations [Page N] are --link in --type-caption with a 44 px hit area on coarse pointers (--tutor-message-citation-hit). The feedback toolbar is a row of 28 px icon buttons (16 px glyphs, 44 px targets on coarse pointers) on one 28 px line; the two thumbs are toggles (aria-pressed) and the chosen one is drawn as a filled glyph in --selection-text, the other as an outline. The panel's chrome (header, session bar, model select, composer) is compact tool chrome on every route, student pages included (36 px icon buttons and a 36 px composer field and Send), while the message region is a comfortable reading surface (16/24); on coarse pointers the chrome's controls carry 44 px hit areas. While an answer streams the composer's Send becomes Stop (secondary) and the toolbar is hidden until the answer completes. Keyboard: the feedback toolbar is one tab stop with a roving tabindex (Left/Right between its five buttons, Enter or Space presses); citations are links; the Copy button is a tab stop inside its code block; Escape while the composer has focus stops a streaming answer.",
+      "$description": "The tutor-message surface: a tutor row is a 32 px avatar slot (G9) + 12 px gap + the answer column, on the message region's ruler (text 68 px right of the rule). Answer text --type-body 16/24, CJK-dominant blocks 28, measure 68ch, blocks 12 px apart, messages 24 px apart. Links --link underlined. Code blocks: --type-code 14/24 on a transparent ground with a 2 px --editor-block-rule left rule and a Copy icon button (--tutor-message-copy-button 28 px with a 16 px glyph; hit area --tutor-message-copy-hit: 28 fine / 44 coarse); inline code on --editor-inline-bg; display math bare and centred with overflow scroll. Citations [Page N] are --link in --type-caption with a 44 px hit area on coarse pointers (--tutor-message-citation-hit). The feedback toolbar is a row of 28 px icon buttons (16 px glyphs, 44 px targets on coarse pointers) on one 28 px line; the two thumbs are toggles (aria-pressed) and the chosen one is drawn as a filled glyph in --selection-text, the other as an outline. The panel's chrome (header, session bar, model select) is compact tool chrome on every route, student pages included (36 px icon buttons), while the message region is a comfortable reading surface (16/24); on coarse pointers the chrome's controls carry 44 px hit areas. The composer (the user's decision of 2026-10-19) is one text box with Send and Stop inside it: the box takes --tutor-message-composer-radius (the sheet radius, 8 px), at least --tutor-message-composer-min-height (44 px) and a 1 px --border-interactive edge, which becomes the 2 px --focus-ring frame while its text has focus; at its right end, inside the border, sits one 32 px round icon button (--tutor-message-composer-action; hit area --tutor-message-composer-action-hit, 32 with a fine pointer, 44 with a coarse one, the drawing never grows). Send is an up arrow in the primary style (--accent-solid fill, its 1 px --accent-solid-border edge, the arrow in --accent-on-solid), faded as the disabled primary while the box is empty; while Kiwi answers it becomes Stop, a --text ring around a filled --text square on the surface. The helper line under the box (\"Kiwi is answering. Select Stop to interrupt.\") stays, and the accessible names stay \"Send\" and \"Stop\". While an answer streams the toolbar is hidden until the answer completes. Keyboard: the feedback toolbar is one tab stop with a roving tabindex (Left/Right between its five buttons, Enter or Space presses); citations are links; the Copy button is a tab stop inside its code block; Escape while the composer has focus stops a streaming answer.",
       "avatar": {
         "$type": "dimension",
         "$value": "{semantic.size.avatar}"
@@ -12367,6 +12382,26 @@
         "$type": "dimension",
         "$value": "{semantic.size.hit-text-action}",
         "$description": "A citation's hit area: its line box with a fine pointer, 44 px on a coarse one"
+      },
+      "composer-radius": {
+        "$type": "dimension",
+        "$value": "{semantic.radius.sheet}",
+        "$description": "The composer box's corners: the sheet radius (8 px), since the box holds Send and Stop"
+      },
+      "composer-min-height": {
+        "$type": "dimension",
+        "$value": "{semantic.size.target-min}",
+        "$description": "The composer box's minimum height: 44 px; it grows with its text"
+      },
+      "composer-action": {
+        "$type": "dimension",
+        "$value": "{semantic.size.composer-action}",
+        "$description": "Send and Stop: 32 px round icon buttons inside the box, at its right end"
+      },
+      "composer-action-hit": {
+        "$type": "dimension",
+        "$value": "{semantic.size.hit-composer-action}",
+        "$description": "Their hit area: 32 with a fine pointer, 44 with a coarse one; the drawing does not grow"
       },
       "state": {
         "default": {
@@ -12464,7 +12499,7 @@
           }
         },
         "focus": {
-          "$description": "Ring on toolbar buttons, citations and the Copy button.",
+          "$description": "Toolbar buttons, citations and the Copy button have no border: each shows one 2 px --focus-ring ring, its only frame. While its text has focus, the composer box recolours its edge to the 2 px --focus-ring frame (one frame, the extra pixel inward); when Send or Stop has focus, that button's own frame shows instead and the box keeps its edge.",
           "fill": {
             "$type": "color",
             "$value": "{semantic.color.fill-none}"
@@ -12545,7 +12580,7 @@
           }
         },
         "loading": {
-          "$description": "Waiting: the text dots in --in-progress-text where the answer will start (\"Thinking…\" + dots, Phase 5 words) and the companion walks (Phase 4); the composer is disabled with its own stated reason (\"Kiwi is answering; Stop interrupts\", aria-describedby) and Send becomes Stop (secondary), which stays enabled. Streaming: text appears as it arrives, unanimated; Stop stays; the toolbar is hidden.",
+          "$description": "Waiting: the text dots in --in-progress-text where the answer will start (\"Thinking…\" + dots, Phase 5 words) and the companion walks (Phase 4); the composer is disabled with its own stated reason (\"Kiwi is answering; Stop interrupts\", aria-describedby) and Send, inside the composer box, becomes Stop (a --text ring around a filled --text square on the surface, the 2026-10-19 decision), which stays enabled. Streaming: text appears as it arrives, unanimated; Stop stays; the toolbar is hidden.",
           "fill": {
             "$type": "color",
             "$value": "{semantic.color.fill-none}"
@@ -12556,7 +12591,7 @@
           },
           "stop": {
             "$type": "color",
-            "$value": "{semantic.color.accent-text}"
+            "$value": "{semantic.color.text}"
           },
           "$extensions": {
             "org.kiwi.contrast": [
@@ -12672,7 +12707,7 @@
       }
     },
     "pdf-toolbar": {
-      "$description": "The PDF viewer (react-pdf): the toolbar and the surfaces around the paper, on S-02 (file name, previous / next, \"n / N\", zoom out, \"100 %\", zoom in, fullscreen), S-09 and A-24 (Search and Thumbnails as tertiary toggles whose pressed look is the tertiary pressed variant (aria-pressed), First, Previous, the page field \"3 / 12\", Next, Last, zoom, Fit width, Open / print, Fullscreen; the search panel; the thumbnail strip). The bar is tool chrome on both areas: 44 px, on --surface with a 1 px --border-subtle bottom rule, holding compact (36 px) icon buttons with --icon-default glyphs, the file name in --type-label, page and zoom labels in --type-caption tabular --text-secondary, 1 px × 18 px --border-subtle dividers, and the page field as a compact field (--border-interactive). The scroll area is the canvas (--background) with --space-panel padding; each page is paper on a 1 px --paper-frame hairline (no shadow: docked surfaces cast none), dimmed to 92 % in dark mode (--pdf-toolbar-paper-dim → --opacity-paper-dim) so the white paper does not glare; the page the chat has in context carries a 2 px --border-interactive outline and the bar shows the neutral \"In context\" chip, so the cue is not colour alone and no brand colour touches the paper's edge (TD-08). Marks drawn on the paper never follow the mode (G5): comment pins visible to students are --on-paper-pin discs with the 16 px speech-bubble glyph in --on-paper-page (the system's own SVG: an emoji ignores color, has no token and varies by platform); hidden-from-students pins (A-24) are --on-paper-page discs with a 2 px --on-paper-pin ring; chunk boxes are 1 px --on-paper-chunk, the selected chunk 2 px --on-paper-pin over the --on-paper-wash, the drag box dashed --on-paper-chunk. The search panel is a floating --surface sheet (1 px --border, --shadow-1) with a compact field, Find (secondary) and Next match (tertiary) and a status line; the thumbnail strip shows paper miniatures on hairline frames on the canvas, the current one outlined like the page, with --type-caption page numbers. The summary banner is an info alert (--status-info-surface, the i glyph and text in --status-info-text, Read as its action, an icon-button close) floating at the top of the viewer with --shadow-1; its re-show button is a neutral icon button with the neutral count badge. The student page's icon rail and \"Class Materials\" drawer are a panel with sidebar-item rows (the selected file: selection tint + check glyph) and two exclusive filter chips (Lecture / Recitation). Keyboard: the toolbar is one tab stop with a roving tabindex (Left/Right move between its buttons, Enter/Space press; the page field takes digits and Enter); Escape closes the search panel and returns focus to Search.",
+      "$description": "The PDF viewer (react-pdf): the toolbar and the surfaces around the paper, on S-02 (file name, previous / next, \"n / N\", zoom out, \"100 %\", zoom in, fullscreen), S-09 and A-24 (Search and Thumbnails as tertiary toggles whose pressed look is the tertiary pressed variant (aria-pressed), First, Previous, the page field \"3 / 12\", Next, Last, zoom, Fit width, Open / print, Fullscreen; the search panel; the thumbnail strip). The bar is tool chrome on both areas: 44 px, on --surface with a 1 px --border-subtle bottom rule, holding compact (36 px) icon buttons with --icon-default glyphs, the file name in --type-label, page and zoom labels in --type-caption tabular --text-secondary, 1 px × 18 px --border-subtle dividers, and the page field as a compact field (--border-interactive). The scroll area is the canvas (--background) with --space-panel padding; each page is paper on a 1 px --paper-frame hairline (no shadow: docked surfaces cast none), dimmed to 92 % in dark mode (--pdf-toolbar-paper-dim → --opacity-paper-dim) so the white paper does not glare; the page the chat has in context carries a 2 px --border-interactive frame on its own edge (one frame, the extra pixel inward) and the bar shows the neutral \"In context\" chip, so the cue is not colour alone and no brand colour touches the paper's edge (TD-08). Marks drawn on the paper never follow the mode (G5): comment pins visible to students are --on-paper-pin discs with the 16 px speech-bubble glyph in --on-paper-page (the system's own SVG: an emoji ignores color, has no token and varies by platform); hidden-from-students pins (A-24) are --on-paper-page discs with a 2 px --on-paper-pin ring; chunk boxes are 1 px --on-paper-chunk, the selected chunk 2 px --on-paper-pin over the --on-paper-wash, the drag box dashed --on-paper-chunk. The search panel is a floating --surface sheet (1 px --border, --shadow-1) with a compact field, Find (secondary) and Next match (tertiary) and a status line; the thumbnail strip shows paper miniatures on hairline frames on the canvas, the current one outlined like the page, with --type-caption page numbers. The summary banner is an info alert (--status-info-surface, the i glyph and text in --status-info-text, Read as its action, an icon-button close) floating at the top of the viewer with --shadow-1; its re-show button is a neutral icon button with the neutral count badge. The student page's icon rail and \"Class Materials\" drawer are a panel with sidebar-item rows (the selected file: selection tint + check glyph) and two exclusive filter chips (Lecture / Recitation). Keyboard: the toolbar is one tab stop with a roving tabindex (Left/Right move between its buttons, Enter/Space press; the page field takes digits and Enter); Escape closes the search panel and returns focus to Search.",
       "height": {
         "$type": "dimension",
         "$value": "{semantic.size.toolbar-bar}"
@@ -12725,7 +12760,7 @@
       "page-outline": {
         "$type": "dimension",
         "$value": "{semantic.size.marker}",
-        "$description": "the in-context outline"
+        "$description": "the in-context frame: the paper's edge at 2 px (1 px border + 1 px inward)"
       },
       "pin": {
         "$type": "dimension",
@@ -12783,7 +12818,7 @@
       },
       "variant": {
         "page-current": {
-          "$description": "The page the chat has in context: a 2 px --border-interactive outline (neutral, ≥ 3:1 on the canvas) plus the \"In context\" chip in the bar.",
+          "$description": "The page the chat has in context: the paper's own 1 px edge becomes a 2 px --border-interactive frame (the extra pixel inward: one frame, never a ring around the paper; the user's decision of 2026-10-19), neutral and ≥ 3:1 on the canvas, plus the \"In context\" chip in the bar.",
           "outline": {
             "$type": "color",
             "$value": "{semantic.color.border-interactive}"
@@ -12909,7 +12944,7 @@
           }
         },
         "thumbnails": {
-          "$description": "The thumbnail strip (A-24): paper miniatures on 1 px --paper-frame hairlines on the canvas, the current page outlined 2 px --border-interactive like the page in context, page numbers in --type-caption --text-secondary.",
+          "$description": "The thumbnail strip (A-24): paper miniatures on 1 px --paper-frame hairlines on the canvas, the current page's own edge a 2 px --border-interactive frame like the page in context (one frame, the extra pixel inward), page numbers in --type-caption --text-secondary.",
           "canvas": {
             "$type": "color",
             "$value": "{semantic.color.background}"
@@ -13178,7 +13213,7 @@
           }
         },
         "focus": {
-          "$description": "Ring on the focused button or the page field; the toolbar is one tab stop (roving tabindex).",
+          "$description": "A toolbar icon button has no border, so its focus is one 2 px --focus-ring ring, its only frame; the page field recolours its own edge to the 2 px --focus-ring frame. The toolbar is one tab stop (roving tabindex).",
           "fill": {
             "$type": "color",
             "$value": "{semantic.color.surface}"
@@ -13816,7 +13851,7 @@
       "$description": "The disc behind the drawn mascot (--radius-round at the slot size: the lock's dark-mode backing circle). Transparent in light, where the forest outline clears every light surface by 8.8:1 or more (check § 20). In dark the light sheet colour, frozen to light paper-2 (#fdfcf6 since the 2026-10-18 re-lock): the outline measures 10.3:1 on it and the disc 15-17:1 on the dark surfaces (check § 20). A light value cannot be referenced from the dark context in this resolver, so the dark value is a literal that § 15 holds to its source, like the on-paper marks. Drawn under the avatar, the peek, the empty, sign-in and not-found stills and the class-card fallback; never under the launcher glyph.",
       "$extensions": {
         "mode": {
-          "dark": "#fdfcf6"
+          "dark": "#fdfbfb"
         },
         "org.kiwi": {
           "css": "--companion-backing",

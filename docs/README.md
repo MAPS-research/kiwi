@@ -40,6 +40,9 @@ it locally.
 - [Backend development](development.md) — modules, migrations, seeding,
   feature flags, exploring the API.
 - [Frontend](../kiwi-ui/README.md) and its [testing notes](../kiwi-ui/TESTING.md).
+- [UI design system](../kiwi-ui/DESIGN.md) and the
+  [palette tuner](../.design-foundations/palette-tuner/README.md), for trying
+  colour changes live and sharing them.
 - [Kiwi Apps host internals](../kiwi-ui/KIWI-APPS.md)
 - [Kiwi Apps manual QA checklist](kiwi-apps-qa-checklist.md)
 

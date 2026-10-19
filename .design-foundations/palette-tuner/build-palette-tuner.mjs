@@ -1,0 +1,102 @@
+#!/usr/bin/env node
+// build-palette-tuner.mjs: fill the palette tuner with the committed light-mode tokens.
+//
+//   node .design-foundations/palette-tuner/build-palette-tuner.mjs               write palette-tuner.html
+//   node .design-foundations/palette-tuner/build-palette-tuner.mjs --check       exit 1 if palette-tuner.html is stale
+//   node .design-foundations/palette-tuner/build-palette-tuner.mjs --artifact <file>
+//                                                                                also write the page body only, for a claude.ai artifact
+//
+// It reads the light block (the first `:root`) of ../tokens/generated/kiwi-ui.tokens.css, resolves each role's var() chain to a hex value, and
+// injects the values into palette-tuner.template.html. Run it after every token change (build-tokens.mjs), so the tuner always starts from the
+// committed palette. Exit code 1 on a stale file or a missing role, 2 on a usage error.
+
+import { createHash } from "node:crypto";
+import { readFileSync, writeFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+
+const here = (p) => fileURLToPath(new URL(p, import.meta.url));
+const TEMPLATE = here("./palette-tuner.template.html");
+const OUTPUT = here("./palette-tuner.html");
+const TOKENS_CSS = here("../tokens/generated/kiwi-ui.tokens.css");
+const TOKENS_SOURCE = here("../tokens/kiwi-ui.tokens.json");
+
+// Tuner role -> the CSS custom property it reads.
+const ROLES = {
+  background: "background", surface: "surface", surfaceHover: "surface-hover", surfaceActive: "surface-active",
+  border: "border", borderSubtle: "border-subtle", borderStrong: "border-strong", borderInteractive: "border-interactive",
+  text: "text", textSecondary: "text-secondary",
+  accentSolid: "accent-solid", accentSolidHover: "accent-solid-hover", accentSolidActive: "accent-solid-active",
+  accentSolidBorder: "accent-solid-border", accentOnSolid: "accent-on-solid", accentText: "accent-text",
+  accentBgSubtle: "accent-bg-subtle", accentBgSubtleActive: "accent-bg-subtle-active", selectionBg: "selection-bg",
+  focusRing: "focus-ring", disabledSolid: "disabled-solid", disabledSolidBorder: "disabled-solid-border",
+  accentMid: "accent-9", accentDeep: "accent-12", codeString: "code-green",
+};
+// Functional colours the specimen shows but the tuner does not change.
+const FIXED = {
+  errorText: "error-11", successText: "success-11", successBg: "success-3", warningText: "warning-11", warningBg: "warning-3",
+  infoText: "info-11", infoBg: "info-3",
+};
+
+function usage(message) {
+  console.error(`build-palette-tuner: ${message}\nUsage: node build-palette-tuner.mjs [--check] [--artifact <file>]`);
+  process.exit(2);
+}
+
+const args = process.argv.slice(2);
+const check = args.includes("--check");
+const artifactAt = args.indexOf("--artifact");
+const artifactPath = artifactAt >= 0 ? args[artifactAt + 1] : null;
+if (artifactAt >= 0 && !artifactPath) usage("--artifact needs a file path");
+for (const a of args) if (a.startsWith("--") && a !== "--check" && a !== "--artifact") usage(`unknown option ${a}`);
+
+const css = readFileSync(TOKENS_CSS, "utf8");
+const root = css.match(/:root\s*\{([^}]*)\}/);
+if (!root) { console.error("build-palette-tuner: no :root block in the generated token CSS"); process.exit(1); }
+const props = new Map();
+for (const m of root[1].matchAll(/--([a-z0-9-]+)\s*:\s*([^;]+);/g)) props.set(m[1], m[2].trim());
+
+function resolve(name) {
+  let value = props.get(name);
+  for (let depth = 0; value && value.startsWith("var(") && depth < 12; depth++) {
+    const inner = value.match(/^var\(\s*--([a-z0-9-]+)/);
+    if (!inner) break;
+    value = props.get(inner[1]);
+  }
+  if (!value || !/^#[0-9a-f]{6}$/i.test(value)) {
+    console.error(`build-palette-tuner: --${name} does not resolve to a #rrggbb value in the light block (got ${value ?? "nothing"})`);
+    process.exit(1);
+  }
+  return value.toLowerCase();
+}
+const pickAll = (map) => Object.fromEntries(Object.entries(map).map(([role, name]) => [role, resolve(name)]));
+const base = pickAll(ROLES);
+const fixed = pickAll(FIXED);
+const sha = createHash("sha256").update(readFileSync(TOKENS_SOURCE)).digest("hex").slice(0, 12);
+const source = `kiwi-ui.tokens.json sha256 ${sha}`;
+
+const template = readFileSync(TEMPLATE, "utf8");
+const fill = (text, key, value) => {
+  const pattern = new RegExp(`/\\*@@${key}@@\\*/[\\s\\S]*?/\\*@@END@@\\*/`);
+  if (!pattern.test(text)) { console.error(`build-palette-tuner: the template has no ${key} slot`); process.exit(1); }
+  return text.replace(pattern, () => `/*@@${key}@@*/${JSON.stringify(value)}/*@@END@@*/`);
+};
+const body = [["BASE", base], ["FIXED", fixed], ["SOURCE", source]].reduce((t, [k, v]) => fill(t, k, v), template);
+const [head, content] = body.split("<!--@@HEAD-END@@-->");
+if (content === undefined) { console.error("build-palette-tuner: the template has no HEAD-END marker"); process.exit(1); }
+
+const banner = "<!-- GENERATED by .design-foundations/palette-tuner/build-palette-tuner.mjs from palette-tuner.template.html and the generated token CSS. Do not edit. -->";
+const page = `<!doctype html>\n${banner}\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n${head.trim()}\n</head>\n<body>\n${content.trim()}\n</body>\n</html>\n`;
+
+if (check) {
+  let current = "";
+  try { current = readFileSync(OUTPUT, "utf8"); } catch { current = ""; }
+  if (current !== page) { console.error(`build-palette-tuner: palette-tuner.html is stale (${source}); run the script to rebuild it`); process.exit(1); }
+  console.log(`build-palette-tuner: palette-tuner.html is current (${source})`);
+  process.exit(0);
+}
+writeFileSync(OUTPUT, page);
+console.log(`build-palette-tuner: wrote palette-tuner.html (${source}; ${Object.keys(base).length} roles, ${Object.keys(fixed).length} fixed)`);
+if (artifactPath) {
+  writeFileSync(artifactPath, `${head.trim()}\n${content.trim()}\n`);
+  console.log(`build-palette-tuner: wrote the artifact body to ${artifactPath}`);
+}

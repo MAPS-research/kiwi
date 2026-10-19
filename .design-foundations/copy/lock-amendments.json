@@ -2240,6 +2240,1369 @@
      }
     ]
    }
+  },
+  {
+   "id": "2026-10-19-palette-retune",
+   "base": "2521f47151fcd2078b27aea7553f5852182ebb9b",
+   "decided": "2026-10-19",
+   "decision": "Palette re-tune: the neutral and paper ramps the user saved in the palette tuner (chroma × 0.20, hue − 55°; the text steps chroma × 1.00, hue − 55°), dark derived with the same transform; with the composer's Send and Stop inside the box and one frame on focus (plan Decision Log, \"Palette re-tune\" and the same day's rows)",
+   "design": {
+    "kind": "patch",
+    "blocks": [
+     "evidence",
+     "coverage",
+     "evidence-p6"
+    ],
+    "hunks": [
+     {
+      "at": 2,
+      "starts": "**Date:** 2026-10-16 · **Status:** locked (2026-",
+      "removed": [
+       "ef0c865d943533a60b19cbce203389acde2b5b3169e841ed60b167a103e9e403"
+      ],
+      "added": [
+       "02ff9298d7d1e181fed5e81c82f2d6618f537171226e3a2027704552c3581805"
+      ]
+     },
+     {
+      "at": 15,
+      "starts": "A quiet academic shell with one living companion",
+      "removed": [
+       "ba99e560eeb084644ad7ace64b23211de72fe0462176fbf3d876a8849dd9b8a1"
+      ],
+      "added": [
+       "ec68b8921f6e929e161d98ac9b9a823f742659971ec080807d78541bb7500f1f"
+      ]
+     },
+     {
+      "at": 27,
+      "starts": "- Both modes: `--border-strong` is `#a9b29d` on ",
+      "removed": [
+       "903b7f6664f73fc7aebcea2487c57559268acee4a1845c3d58d909cf461ebb61",
+       "0dcefedac45fa5edf04b9900c9c38cc7a13a729ac61470e2404294f4b7502c15"
+      ],
+      "added": [
+       "45c6f7f46d7cd3c51c0cc6b3023968954f829a932fa2f0ea2cdf597d921879fb",
+       "491509929022c611c8d4e83e43ce9da21c330fd3ed0ddb76c5bd033f51fb0067"
+      ]
+     },
+     {
+      "at": 69,
+      "starts": "Since the re-lock of 2026-10-18 (`§ Lock amendme",
+      "removed": [
+       "30a680e1ca7dd6f50b74e4fa91e9e3c3138fd3bf8cf31543d3e569bfb645f163"
+      ],
+      "added": [
+       "6e39321661bce56864dc40457194a9a5e9b8ab59ef78bef7f57091c2ab742e61"
+      ]
+     },
+     {
+      "at": 73,
+      "starts": "| Given | the reference's own value for the same",
+      "removed": [
+       "15359066d9662349887d26c2d8c92be7ac6d9b5b6e8db8793ebbab69f080e105",
+       "9fb55b7b4a58f0baf1a59c3f37b420d9d436d2413ee0e929cb308a7a55bc3459"
+      ],
+      "added": [
+       "68ff470c156549f627254dd2ea2bac036555a2e042ad0224336e889ad6b75d46",
+       "05880caa7d09cfec7a027afb5280cfbeed23b7d3b5690185b2872d8e7d3db049"
+      ]
+     },
+     {
+      "at": 85,
+      "starts": "| `--background` | `paper-3` | `paper-2` | the c",
+      "removed": [
+       "7686b3b103104aa05e69b125ddc65075a06472a7b73eafdd93fec85a167c8582"
+      ],
+      "added": [
+       "1278d1240e14c0ba14bd3b64eb3a1a2ccef4c30802f2c22b0f16c1419d6b025b"
+      ]
+     },
+     {
+      "at": 107,
+      "starts": "/* Kiwi UI — Ruled Folio · re-locked 2026-10-18 ",
+      "removed": [
+       "aa5cae259406b40a13ecbb40e6b30873072ce1f714ec1d73998195013887dc84"
+      ],
+      "added": [
+       "e7e3763387799d2a5ddfb6bdd6437429eaf8bd3fb01b7abb3ad5080677e906a7"
+      ]
+     },
+     {
+      "at": 109,
+      "starts": "  /* neutral · grey-green · given 3, 4, 6, 7, 12",
+      "removed": [
+       "b2701c64d6a138d2ff3f70174c3933e66d6c5ca74cbf2bfe629d4ad439c6cf94",
+       "bc59dcd85a14a39ef9b9f4e6c0122cb289eb0deb3a44806138423c701dec1a48",
+       "30e4a02419aedee9b27f73430390313dda23acdad6cdf9723fd32fd43a6c0584",
+       "6b1cd16f15f81c3592ec1f80739b1e2aecab52107e92a518b8d0e4c8c6d51329"
+      ],
+      "added": [
+       "e94c0ac121eb6c0c15b670a59efd49d4d6f2f36ffbad7f77ad3da2b6d60846c0",
+       "87111b01a1536e19a9d97bff3730217fc73baa6bd447d8412e5d28da9fc93f1a",
+       "4ef9fbb992de4a5f61474de6e60a3db401b66ef07c992b8a18366ec5742bccd2",
+       "8e481440a293232815eb701709952e5a1d3d09f8b797c77c1825bf0c092c5af3"
+      ]
+     },
+     {
+      "at": 117,
+      "starts": "  /* paper · the canvas ramp · given 2 (the shee",
+      "removed": [
+       "417eb335735b24cab6e877044db556dc36520bc3468fb3aae6ecd3dbb69754bc",
+       "610223971da91725f5c21352dd83bbbdc3b285333f43bc48a4a61a9a1ee075bd"
+      ],
+      "added": [
+       "0c531dd44f9eeb6dddf40962f477ca1532fad41323428a335450601bfae6f252",
+       "0cd0de148650f9cda9389feae7ec02e2d47f9c5c2f8cad4f422c4d56989851a6"
+      ]
+     },
+     {
+      "at": 127,
+      "starts": "  --background: var(--paper-3);             /* t",
+      "removed": [
+       "be480bebb6211fd14f7cdbb4143a2cf260b2ed269700713fe637263db10bd84e"
+      ],
+      "added": [
+       "76367f2e7dc03a240fe490e117a86e3ab46bdd69f510fbc656bafc90528f41c9"
+      ]
+     },
+     {
+      "at": 153,
+      "starts": "  /* neutral · derived from the reference's fore",
+      "removed": [
+       "3151ae254368c3af46c604348ff9fcc3399e5e79ee98e81be7b179dcf6c8654a",
+       "d3b8e63fb95ac27acd4f1763f414cb052067bb58fd66f31f418039ae8bbee553",
+       "4c21eb890772d7842f0e15ab765168ba4c190e05ab7f6d4a57c8dcd5f4ed3e8d",
+       "3af9447c5a54cd152b7d7a3cd58d1f1212ae860e996628ed2a3dc11c9d6eaaeb"
+      ],
+      "added": [
+       "090fc0a5a0fb361190cfe0562a0b80edfb4f5c9019ec358b02656a51c63817ad",
+       "290817fd37edbc4cc4417f7175796b1483626b1a5f3ae5c5959e9a67752355af",
+       "cb0fffaa4070ec43fed82cfeb15aa73185ca61b207177032d0c6f73c393a446a",
+       "502eb23f4b4ecf0f060f8d055b2811181911a70e365b4b940968000cd467748b"
+      ]
+     },
+     {
+      "at": 161,
+      "starts": "  /* paper · derived: the forest-black canvas an",
+      "removed": [
+       "fe52a7761f0955b7d13b46fe0d4605d5d583485e8a5b3d57979a9094e2809a31",
+       "b1e68751cad5b4c3e091781dbde04e41ca2d17878063392be77ed27699f04273"
+      ],
+      "added": [
+       "5bb21aa83c3fffda1b472d15887c1fd6ce83ce8153ace2cf22952f875385421c",
+       "234229efda3294ee97b0f0c2b039b70ad42a5966504ee9ac5ea0cae02982d9c8"
+      ]
+     },
+     {
+      "at": 171,
+      "starts": "  --background: var(--paper-2);             /* t",
+      "removed": [
+       "8a87d1a4d464c6a0e45835ec0a2f0d33443a7c16a9d82fffbdb498f66f15bb3e"
+      ],
+      "added": [
+       "1852f34f6313f075d3535a4f1eccea86e2ba6dddffb263aca884b9e252c7b558"
+      ]
+     },
+     {
+      "at": 202,
+      "starts": "| Canvas (page) | `--background` = paper-3 `#f6f",
+      "removed": [
+       "046026fd099c6529334b4af852ff6c3e90bb376b0a06cb2a4303141dfa2a071f",
+       "ac04a46809f2f3d5f012c827d3744df3cac6cd4fb73fd8697509f9fe35b739c4"
+      ],
+      "added": [
+       "83378d70383cff1dbcfe29dadd31564ab5c405d3c620194d6279da842b136bbb",
+       "d194e54d02bf4892164d3ed3f31a9af555dd78a22d9c102d0721ec564f87211b"
+      ]
+     },
+     {
+      "at": 205,
+      "starts": "| Body text / secondary | `--text` / `--text-sec",
+      "removed": [
+       "cc7b6d1d03ad7c3a35dc2f628ed22f142ab4877848a6e0de5d9ee13421098f6f"
+      ],
+      "added": [
+       "de397ddb41aab48d890ff1cf1cd82407c045845bf0adc0e5c3f4cba4a8858216"
+      ]
+     },
+     {
+      "at": 210,
+      "starts": "| Interactive boundary (inputs, unchecked boxes,",
+      "removed": [
+       "a41fb216ef4e6f93fbf1a6acaa8a6b1cc6764e8832eecda69edae4da4686dc0b"
+      ],
+      "added": [
+       "b2daebcd60ca9876f2d8fc3a29d73e2fc4c23f66c57addb32fbd642dc30b721e"
+      ]
+     },
+     {
+      "at": 212,
+      "starts": "| Focus | `--focus-ring`: 2 px solid, 2 px offse",
+      "removed": [
+       "684b7825194f8afa286faba474cd5710a39c1258982a541521849e9f5a7d99dd"
+      ],
+      "added": [
+       "0af90ecd609ac2e9f631151c8acb9364702b59fae90db460b7fc5b3be3e920ff"
+      ]
+     },
+     {
+      "at": 224,
+      "starts": "**Explicit pairs on the locked roles** (WCAG 2.x",
+      "removed": [
+       "2a5a1f2f8129885a2a425b068059f0f76ea79cbbfcc9072b2072477177bf348e"
+      ],
+      "added": [
+       "78b541391bc7bd74b43ac55ed4af375f29837a7d154ce530fb2aa4d1740598f2"
+      ]
+     },
+     {
+      "at": 228,
+      "starts": "| light | text on background | `neutral-12` #234",
+      "removed": [
+       "d080b7d7a6c378ec8f3b83314825eac51c4cd8f18d6d117ec7590f29cf2f6a90",
+       "d72a060422da4fc3f74fc2006b8a63f9710a37944e864ccb3e433fb0ad16cbf6",
+       "fa9e182d37f60779b25ef8dd9367cd4ac5591652638c1dc84fc6094ed3007664",
+       "474c563accaa462919863666a69c2a767216cada16f49791e4ec55ce865aff34",
+       "47d8495913937a24663828ad781fc7fba4058c4b02b32fcec8337ff52bb29e14",
+       "820743229d12caa46625e8227a5c9f4e062e1843115fccfe414b68e334fc7962",
+       "5d3727df6cfa8649ec80dee9c502c42616b161c3f156f1c6aa368e71917fa140",
+       "aa2733ea66b9201ab191800b9ad460cb8573f2808ed45a13e080d917d498e7d1",
+       "7d466af33118826b5914ce97a10f8fc2077d829f23e3cb9db3dd07755c43a304",
+       "672e9ea823d6ff1e48db28e916896e2a7b1f3f2ed4e690bc7bc52c15166264b9",
+       "fe19beb48de10f46dec8de343f6be8ddce66d3ab1e84c494499967e1b45534ce",
+       "4793632ee80a5e3a5d51156a3f3baae2655f8648405999a9c652130056ccb455",
+       "c7008c66825e2caab6a1779ece9a107da96056ac5c60d580b33ce78bf674a429"
+      ],
+      "added": [
+       "7ec25731e93da7ce06f0418b7977d177935aee4bfbaf36703f5620be2075a0e6",
+       "8e77fdc9c9d63d3226713b768d4b5bff3e83bd6cefea98a9a15f6b9c609cf3fd",
+       "613ef97101a5d622bf94745ca074e05555a94ecb0cac2f460531f1be4d057ea0",
+       "7e5b0d442df9af146d054d214e0ea89e1c58b75f58a63224ac843fc04f81c8de",
+       "25f3ecbff7959d8084832228bd7320586ab70e2d3d8ed6e33b29e947951d8000",
+       "259ee315b979ad772c3472d8a45dc4ff6d659ea40794c76f80c59b5458fec0b7",
+       "8bf6363d11bad719892c4711e67ffb30eef29de12ed6d95f3b84a074706ef641",
+       "54d1da0e81c44d67c3c3bd947f133e7e12c57e09dca91f4c78453af09d6111cf",
+       "8dd42bc2580ce953d5b0be2a7939fc543c7c4a4967683a18f4f059a6dae68a3d",
+       "d1ad132665484416add41eefab12d77191390722e04c6f7248b3a80f67fefc4a",
+       "0f674c2a0e2e354edb92f2e543b5a532b1ea4d73325f920208b1dd9202f0e7b2",
+       "a349f403aed14b8f07fd1cdc85b72c0f2e583bca8626c2f75a7cb86555bd56f0",
+       "ba00c6cafcfff23ccf3a44946570e25d9955da8b52555e88ab332eb73eec1628"
+      ]
+     },
+     {
+      "at": 247,
+      "starts": "| light | accent-solid-border (the filled contro",
+      "removed": [
+       "30533c0618f07e3fb513a667a8f2e9a7f647969f11a3a1c39cc765564b7facc7",
+       "157964e565ab2d9249ca5d9c4e06672d74db8e91126a19b0fa8edc3746dbe4be",
+       "e6c5d60faf3eb8afed5d79cca41545e0c85df5285e62d1729b2993f8b7bac3eb",
+       "6421453ee98c15c7ef6ec28e36477b1053f76fc98785bc0108955d8aa4d25dc2",
+       "132e9069c62ca5bb0a3fa821244465adc24d5374f26a06f27d9f58d5fc90a006",
+       "b059a0ad60f7e938974aaefc2e8e64aba782957742e47d005431824f439c514b",
+       "33d0a917df547c141051832d99266585383761a0c0899fac4a30f5a12670fef2",
+       "f63fb2e90e80259ff1d6aad25eb8e6ba8c22a870495f67ac6a46fe08a6250bf7",
+       "212ceb5e9de76ecfdf4ec82a74d9dadfc233a13ca5b0cbd386aa1ddf3bf5185d",
+       "ecbab2ec47a0cc2584e24f08b7ef528be7c51675dbed06f87d3c94a43027d01f"
+      ],
+      "added": [
+       "6f283e8d4c032bd95b3ebfb0ab22f925c152ff21baf406303d50f09f79877ddd",
+       "1af7c83b722607a1a7654bc614fc9f3a377b4fa9d1e14cf228c0fa8b1f8f809b",
+       "50c464db428e9d59b3f8fdbe0e162a4787c9ee1246d6815b4e46099c0c5c1deb",
+       "3fd69c96c974bf08333b77482decacd5f35f35b025e8fd8844c4a3b7ffe15538",
+       "67047b02c005f4f308949289af883724685c60a191a817c8b8d56640ece99b2b",
+       "0d39441bad85f4e77c0aaf5f7c9ecc34dfafe97e397da737ac26836861bbafbe",
+       "744c4cb0cc37eedf0cb77d3cf9ee56bf757c7cdecf8a84df7837d5da63f49de4",
+       "0505625668955eb1e9bfde3b343a07d3b6eba58d8153675a27e544efcd69cfdf",
+       "8618f7b02896792347453ad51a84f8bbd92fb27a28235691174cd2a2e584ce35",
+       "632ac2887a1546536ef3c13cf22166bd164ad861faa57478e8fb61178271adf2"
+      ]
+     },
+     {
+      "at": 258,
+      "starts": "| light | selection-marker vs surface (non-text)",
+      "removed": [
+       "cdb53acfa9bbf80a8a114b7b0f45536b7366062cd0595c412fc3caeb24f8e536",
+       "3ae15a8d1fe8ac33290bdc6bed4a2c023d9f1311e349139d4919261e200447b0"
+      ],
+      "added": [
+       "9161b996d44129c5da22d953d57443bcb9c4b8c8e9ff8e357fee9d1e8f1d77d2",
+       "c39e399a3bec0c142256640e0d4324d0db5b274cc386b574987ccbecdf90bd7b"
+      ]
+     },
+     {
+      "at": 261,
+      "starts": "| light | error-11 on neutral-2 | `error-11` #97",
+      "removed": [
+       "ba1eaf3522c6ac9680ea375e8e098cb40e0675a32de3846060c622084507ded0"
+      ],
+      "added": [
+       "d3fd29f7bf7995c05633244abe5682c3125221549f5ff855044c582c8c1c580b"
+      ]
+     },
+     {
+      "at": 263,
+      "starts": "| light | error-11 on background | `error-11` #9",
+      "removed": [
+       "ea77ebd65602f8d004a678cd4731dcf8e0a94f9f513be3a491ad3d627f6d4899",
+       "5dfed9e538e5b49d6e42f27005598bc8bf199523fa7005e35024ab63548838e0",
+       "70b3cfd18a00aea75b82bb77ca4c62eb6e85364b140a7f9aac78506c7b216121"
+      ],
+      "added": [
+       "56b04dc84918726ae072b7fb398a8dee6f043010d8b116d72fddb1518ee06311",
+       "dee2ae389ca87f857516cde8f2a1403181b3d631c89de78958033910bcff0a2e",
+       "1fe03a1116280637009008de5e7b60c2e8d1113b4fad27b6501f9e9f1342f6d5"
+      ]
+     },
+     {
+      "at": 267,
+      "starts": "| light | success-11 on background | `success-11",
+      "removed": [
+       "86e593580c90902655c26ee397e3142423c9d2a11284bbc27879f4b88a19ff53",
+       "3b0a1ba18e913de01b423ef12d438f047adab646d3d087d5d4449f2926f81ac0",
+       "8ef72a531797397e569f02507391667b2d64c936c3429cdc0ee0e03d174c2eee"
+      ],
+      "added": [
+       "861596fd0a9a007522314805e641340b74b786f9a969333a5aa60254fb86eae0",
+       "31d0dcbd7d6caaefc99c801020d485782a97a90a5f907ce68c9d7d8a23623485",
+       "bd580bb0a60319e126052cc80d8b617236f25ed8f04062dbaf571d960871389a"
+      ]
+     },
+     {
+      "at": 271,
+      "starts": "| light | warning-11 on background | `warning-11",
+      "removed": [
+       "7c5ddcb0a5a65ee0516f2e7c0b0c85fab6a58c985bb3f0c0e54087948e8fb462",
+       "917f9ecbabb4858e1a5188418cb5048f622c388e96373c6caa09e8bb5d69e570",
+       "c6d975ba3f9abafa6cbc98989c6082a5067a534d0565f9a05b298677c7e1326b"
+      ],
+      "added": [
+       "e82597466e104f046be24c522b0eb7f3a538a593d4bab079110753e8fa3a555e",
+       "362c3a55d3bfd7a9aaab3009d55caf95ac92f47ee7dd051f475b20b4aa4448f6",
+       "18789c9e11786a0192a2b4562525b4bf85e06f2078690367c094473b4d455c75"
+      ]
+     },
+     {
+      "at": 275,
+      "starts": "| light | info-11 on background | `info-11` #3d6",
+      "removed": [
+       "902d3834c13e526fbef0232d4dfe27d496e045a6ff65498551aed536ecdd0e7a",
+       "5e9b42b6c559b757c219d5d298f01ffa2af6a69cf50e64a0b5803b34388758cb",
+       "229415ce8b7df54fe21297b2bea05dea7b2396b516d0d14dcc0e683ca3b404b1",
+       "737c55ec3eddb570ae69a90a219ec28771259159e382cc38129267e31f8bf601",
+       "a9f188583b0bb29b8e5ad02810f4ec21ce09dc27936c070f5eca9a041a878d64",
+       "230cfb5558e0d3f335339e4b7497f58736cedab8adf58d81bfdd3c41b1e0eb4a",
+       "145cd18ac501ea17263f60f464185090b43c52a97e4859ada6491b6bf6b84be3",
+       "a223d3eaee0b2bdd207e2df36421eae9ed61c2e05383ad32093177bc006746af",
+       "cffbe64aaf1c7895b732651cf21fc9d75344b4b076a65837a237f0cae5a55857",
+       "b9aad8d490635a33da53e96e4b7e7f2f0067fdc4aa119c8d7927d965dd574bb2",
+       "3ef2ebe01b7024e0fdad5b0c52fb31cb73e95794bbe2671da618252400dfdb43",
+       "2b3375aecf10bedabc50819af29f583e366060206de990af3032c4107c58efea",
+       "3333cd791a5d0b58a9d5d620261f9b84dd37dab754b7f54d987fe22bb27bbbc8",
+       "c3a22799686e03347f703035ff43becba6d50f7bf69738eb41a2efa1a15d1204",
+       "c6db1ab6cae37e37976ba5868a8d42d37b72cb9d01dd1c611bcf3a3c21d82d72"
+      ],
+      "added": [
+       "d648df3fee14421245abf40c21ce770c2ee0f4e627a19733843416c8d2fba876",
+       "1bd828526b7c528c3d3acd6a47b8b5566b4962ba8a948d5253a58e6ef3b81c46",
+       "b5c3d3c099535f51631ddd08e247185813479453d3d131313caba284a409566a",
+       "a76b4c9701cbd3f166e2066b935c06c72a276c3eab192521b5f2b77bc1308fd3",
+       "3e6a18554deee4b755543cea2e582581ce9624fb00a1640a5a6185f2f1cede7a",
+       "9cb7f4bcb16397e2bcc6e5657b0d813e0c2a9a4336ca853ec0111de30d9b0d91",
+       "4704547588f2c83f00d3f44ac32b6f62bc1bb7944e12d97c8e4353c54e1a9798",
+       "45014b3adaaf8dd8b9ba97e4ef2992bb981be7541034a708a704f4689f757995",
+       "3ccd0eb35cc47a40f9a7fe8bd5ebd2490cd3a4957ef9c1ec1b027ef7c4d8b547",
+       "8ffca62e40b9cee90e439ff90ef94901ba8379f25ad625d218d2e8fdf35cfc8d",
+       "cc51aca83f5904eaaf4b2b70fa42ed2fbc6c4f15abed1a782725e3f5f78c40b3",
+       "c0d07d232b143deb07ebf966f75ac40d46a9b45bb3f26f1b2d91f2e3b812347a",
+       "2b4323febef870bbcef656651e66d3afc56633f72ec30342cd0390d69a1c01bf",
+       "98701792752e5b51eb10244ecc94a2a5fa488f58a0c88b2d8e2f2c193fd06052",
+       "939e3b590aca0746ba3c350d2f61359ded4c7faad8ca5c62df477c0a2e04acaa"
+      ]
+     },
+     {
+      "at": 293,
+      "starts": "| dark | accent-on-solid on accent-solid (button",
+      "removed": [
+       "a6892ed080bd2be3a642db3d4c80cebd4e2d87d05176d63232f2d70578eb1958",
+       "edbef85eef38bcc1052cdc7263f3408154459fefcae7e8911ea003b670cb4de3",
+       "060d7813498201d7b492914fa644082c440a96c7f25d5f8295f365c511d954c9",
+       "328043f77c7decb99745a9f77c08855b050eaddd1dfcbd76c33fc0fbd0ce479e",
+       "3b23879082fe7fe8374402d3d9fa5fbc49430ea5791a997135c41cd8ef12c3e9",
+       "e9e2db93a7db2e217f794939327b57db0c7d2aa02ae16097948c75b623cc44e0",
+       "19868ab572c44d7daafd7f826b2b5f2733b5b2c9eaf1bbb2a2fe34e7230d0ecb",
+       "8d228b5b7cd38566f5e541205e5ed938f2870a1f813e0c7e86d0421923b62c45",
+       "b91a51662bbe381f1a20e38a7b307e972e0b10d10191489c7cd5f3c3e5cc9d18",
+       "6cb1ac08edea8efd3fe6a8a0a30e956eaa38c5bcbc87cd59088d635d7da97293",
+       "f7c9b2de0ede0e72887d8b44ebe1634f029975b68ab9ad6205ca622057f876cb",
+       "163d3ab1273bc711405eab8677a797c3c1a7810c8c0f22770a00431589a53cea",
+       "f537115594864f5172ae9d2bbf866b2cafaabf64f727ec3bed32121761971195"
+      ],
+      "added": [
+       "8e532da5f6c4de540fad26bd9c6cb56f28c1ef7df089fd419ec5b996debf0f40",
+       "be1758898e001ef065aa343db1959e36a90e68374f9cc8cb16667287c22bbe75",
+       "aab01afbe302e6c4d718db0133e2beaa133156c7b01da9b4679768381f3a9e02",
+       "cee0d0f59d3e6228eb17385b69e97ff9a4ab32837a170a5da8d3e4e03fe62f03",
+       "083c17f020010b592fdf2a8c4408ac3bf7ff892381fd33b6ee09ddbcd5eaaded",
+       "5b03fdacdd7cd5208460ccc457aa97a31aba765c28d05b201a20c2db2f03b3c4",
+       "ee173a4cb3d1a35f0410d629511d376d04156b56dabf678712eee754b6304e78",
+       "acb01c97735eb9cffdafc46dcb8d82e15b6ad5f3f41afdd2e5b8f63fd97f4bf8",
+       "dedce5427dc8f3cfa50fc19a500dda61669b7b379ad2f434267d8d11cc1da9ca",
+       "f77a1bc76fd07821329d70b4b62c365ce7d684726a1c5e406448d2c6da6481d4",
+       "eb2a6a90d8f950d12ba21ce5b4d625bf9a16431c2623cccc5add83712ef5e0f8",
+       "6c8925ebe44aea6efaa34bc19e4ded6304ba7d13c905d4fd9f90b4d2c2d90250",
+       "c1e8e34cf08ae87eaf5c84aae2570505c28b7e519d7cf52ca197c8ea0893bbc7"
+      ]
+     },
+     {
+      "at": 307,
+      "starts": "| dark | selection-marker vs surface (non-text) ",
+      "removed": [
+       "776a2841f249ea698454ad31c3021cd0479c58ba63f92a3d642dc65cb4e2b50c",
+       "cc4a44741724b7842053b2f33cd5e7678e994d6e21bde1a50cb9fa884c571ecc"
+      ],
+      "added": [
+       "60f9f3c272545a89d39008d374514589d97887dabb9b7b384c0d1e933fc413ec",
+       "fb9531006f188a3a3a6255e390b2c698914ea906412c22263b21c5b0982d2cbc"
+      ]
+     },
+     {
+      "at": 310,
+      "starts": "| dark | error-11 on neutral-2 | `error-11` #f49",
+      "removed": [
+       "d482fdaa7433b3cb5fde5c67e312dfaa1c1c6ea46c9f220acb553869fdde0db1"
+      ],
+      "added": [
+       "ffb090185e0245bc0021a07a2dcf0aa87969c1627daee10ff4701b737aa3f088"
+      ]
+     },
+     {
+      "at": 312,
+      "starts": "| dark | error-11 on background | `error-11` #f4",
+      "removed": [
+       "6371370501c269c338f40e8bc4c6bc051eececae24834613ad82f92e18f5922b",
+       "960627c0c52ad75875229b94ceb36e2bc5fa999a591e3c17938a0d9158b1f9fd",
+       "e0db33e4c421595cb2abc73891974facf09b32cea80847247370dd1023eb26a4"
+      ],
+      "added": [
+       "b85d3001b916052df8167f02ed4e224e56bfd2226bdf441699beae729c9c1592",
+       "dede4a925f18f1e72285ebf3103df39cddc5016e202b275872e8b5460b9b35bc",
+       "31af428e07adc20f6a5156e4a9fb476fe5986abc19465dbe8e69e2e07110ae5e"
+      ]
+     },
+     {
+      "at": 316,
+      "starts": "| dark | success-11 on background | `success-11`",
+      "removed": [
+       "40478224269b7f12fc1c034004a8447ae599e0ba3de98d002f21bf2702dabb6a",
+       "790d486ca29ec910eb05e33768ee8e103beba0dbc8d96774bb19a03d842d631c",
+       "caf54cfebfeb37d39a4c7ef830212805a1fccc20ac4bbc85f7796485e36914ad"
+      ],
+      "added": [
+       "05018eb0f1f8f7eadfd07cabf17dd808dfe677fc75919379bb8c9aa1892e6668",
+       "fe06a1684ac21fd2fea5744d96043c5c303cb229d91becb4f3ac3fb64c730d54",
+       "def26ba5fc0e612fb6ef0f0a1e4e7d9806967f5ca200a2eb72c5307797ca5703"
+      ]
+     },
+     {
+      "at": 320,
+      "starts": "| dark | warning-11 on background | `warning-11`",
+      "removed": [
+       "307c433c5921f365b835ac51012849571678f92d4ffaf4460346005a135785c4",
+       "d3a5c915a8a836d4257d8ff29f2f217409e8ad410c7466f4796359f6c68e489f",
+       "8aeef18de0d64bdae6bec18068ea88707c8d428910920a2d4f1a34c878d37068"
+      ],
+      "added": [
+       "0bfaea90b82ab4694d4542742ea93cf8bb6275c9f2c09439313f6dc4628d22f6",
+       "c68c4b8d05cc9e8a8d703dd866abccb8853689c0bdfa34c906f6b229b70e5d50",
+       "75b7608046bf5454977e0ddba7c53632e98cb3a918fcfa6890108e4400176fad"
+      ]
+     },
+     {
+      "at": 324,
+      "starts": "| dark | info-11 on background | `info-11` #90be",
+      "removed": [
+       "67b2d9c733a48187c4842868e185caf9292ce686895e0ff17aa48586a767a131",
+       "bef916e844fb8cdd314575dcc5b70bd9a112da7f1aef8d5b8a82ddda3be3c310"
+      ],
+      "added": [
+       "7652acd7c2788f90df7b7e373af1fc1d92687864a2b9d9dd7c8d9981c44b4023",
+       "434e8b3b30d6b848d7a8633f84362987dc142723644b17a49995fd5a61d164e8"
+      ]
+     },
+     {
+      "at": 327,
+      "starts": "**Informational (measured, and the reason for a ",
+      "removed": [
+       "d11bcc87c18732c9c5d235b55ee8f94583e42a07f58af9331ec839f3699acec8"
+      ],
+      "added": [
+       "798bc97c2bac8b91ca0cbd673396901fc774b4265807060eeeb8363cc5594ce4"
+      ]
+     },
+     {
+      "at": 344,
+      "starts": "- **Radius** (re-locked 2026-10-18, the user's 6",
+      "removed": [
+       "a47a703452bc54fbaede91a8c5eca122175c7ec29ed8e0360e2f796a21a67910"
+      ],
+      "added": [
+       "68e29e26b23e06487f3df7f8050845ef83d2901d096b12e29ed86229b323b8d7"
+      ]
+     },
+     {
+      "at": 346,
+      "starts": "- **Controls are not cards.** A control's `--bor",
+      "removed": [
+       "cb69faaa08c0d89a3ad04c34f824556f2f5134bf8eb2e065000524f2925a5a20"
+      ],
+      "added": [
+       "954e0ee7db606d7643bcf041acbec2f947658359c3f078b80c7ae646090beac8"
+      ]
+     },
+     {
+      "at": 352,
+      "starts": "- **No pure black, no pure white.** The darkest ",
+      "removed": [
+       "57f1393665877fb52d41bdff373cb6e0f0d11a4c42bd755d5d40bd4379a4689b"
+      ],
+      "added": [
+       "621ebf9f5708e77071d0fc49f4be8b320f195e0d92e9cc9b74b9f22b4f48f8dd"
+      ]
+     },
+     {
+      "at": 372,
+      "starts": "- **The dark + acid-green cluster.** The dark ca",
+      "removed": [
+       "3b1ef38546465e4ba28e8f9d6bf7aa53b245222d20489b777c422c852e3d2a1b"
+      ],
+      "added": [
+       "53897372afceec7aad91e53152ca27662287ddcad98809f4cec2d9d75235154a"
+      ]
+     },
+     {
+      "at": 377,
+      "starts": "- **Pure black and pure white** as UI colours (`",
+      "removed": [
+       "c337519df3b6d6a1f8478b3b0b15e0a30c3bf0d40faa44e9f4f9fd8beb1a495c"
+      ],
+      "added": [
+       "5e52c6eb92501864ff29fcb06d9cccc8947287c5bd940f22db5bfe112668d45d"
+      ]
+     },
+     {
+      "at": 389,
+      "starts": "- **Dark canvas tint:** answered by the 2026-10-",
+      "removed": [
+       "cdab90962a172242f4c9031509125d763628e46070decc352a53a7a657837683"
+      ],
+      "added": [
+       "b40dc8d1408af35d684a08249d3abbaa4e09fac72416cbabb7122141b43cb03a"
+      ]
+     },
+     {
+      "at": 408,
+      "starts": "| The reference emitter | `.design-foundations/t",
+      "removed": [
+       "1d678c2c0e9b37fccf86d23da6f432aa7e5ddbde2b582f9e7808d0e8bd974c04",
+       "68868853747aab977f00b5c7b1d4420741cbf0bbbe43d3d97a1f2f57bbb992d3"
+      ],
+      "added": [
+       "97632d3088b0dab25dad91e4fd672ef886a125d56dc99e92afa77b3483d0e00e",
+       "2bdbe567dbf46fbc2e16191bd12959e6ad8d79222738702f13e5f26e13347400"
+      ]
+     },
+     {
+      "at": 414,
+      "starts": "Three tiers in one DTCG file (W3C Design Tokens ",
+      "removed": [
+       "474abbcfd827f36b3154603fd2c9ec475fac6dbbc631428495952cff231042ed"
+      ],
+      "added": [
+       "d9a3d8761fd5cf1143709eee991e6623521eda22bf6a04f01165fbd9884ec67b"
+      ]
+     },
+     {
+      "at": 418,
+      "starts": "- **Tier 3, `component.*`:** one group per liste",
+      "removed": [
+       "fb01a42f42b496df7f2d3a93ba559fc44467bc516e7b5eacdcffb23b9dbdb033"
+      ],
+      "added": [
+       "4f5ba89714dbf5ee584c38b42aa829a4646f92c2ea8ed06c4dc5115117e65229"
+      ]
+     },
+     {
+      "at": 447,
+      "starts": "| `--focus-ring` | `accent-10` | `accent-10` | 2",
+      "removed": [
+       "fc65edc5050440fa9fa596b94ab43cd78fb3c9e0873d45f086c3f552f2549258"
+      ],
+      "added": [
+       "ff6991878d36580737a1ccab4c4f9ad215052bb24a479576aca49e8a966ad0bd"
+      ]
+     },
+     {
+      "at": 466,
+      "starts": "| `semantic.color.on-paper.{page, pin, chunk, wa",
+      "removed": [
+       "ee145e275652dab72e3c6e503bde96de112ad5f0289aa987f6ec800c3e65080a"
+      ],
+      "added": [
+       "85667dbe16224d7aee2f35c454fc3db77ae1e191dddaebc3629f4f2da3f67fbf"
+      ]
+     },
+     {
+      "at": 475,
+      "starts": "| `semantic.size.*` (56) | the density deltas be",
+      "removed": [
+       "b43dbf0ede4fb534be8397257b7de9de6b7e3cf776b73f2e0ef35cb4cf377593"
+      ],
+      "added": [
+       "5fdc6fa6acfc44222f4ee5fb2ce5b75e9fb0a99f10d8b44ea7a98effd342046a"
+      ]
+     },
+     {
+      "at": 517,
+      "starts": "- the chat panel's chrome (header, session bar, ",
+      "removed": [
+       "88644bd9bdc12398e54c4e6f89cdf82717c8472dc6cd5912d396e2c1c0fa8dc0"
+      ],
+      "added": [
+       "16d8b214b0aba57172c2935ab90e3b3cefa92a9d39bd08d52ae3f4079a443ade"
+      ]
+     },
+     {
+      "at": 530,
+      "starts": "| `--size-hit-control` (44 / 36 → 44) | `--butto",
+      "removed": [
+       "f019fd9adefe727fcc0e0a377969a19a20ca0d941eda0382447690f1cae89f32"
+      ],
+      "added": [
+       "c96cc1e028825e465e8b7a4e65fbe010ff7b5eb47cbced2e746ea0d8343e94cc"
+      ]
+     },
+     {
+      "at": 570,
+      "starts": "- **Focus** is `:focus-visible`, `--border-width",
+      "removed": [
+       "3952cbf119edf6c2aa1fb9b6860a4951a459e919a95674b457fbf67602f06178",
+       "813df44e33ca8a36e6af30a03547e94115901724802e625ae87507bd3fbde327",
+       "40d0ec1d6491af9ca9e0ff7e61258497abd93c8228749b7b373f063788bd27c0"
+      ],
+      "added": [
+       "347a85f799e3b5abe7bf7ae8806041729b887d6de48dca713bda185a347e4a57",
+       "5e96c510f5e389c986e4383fe4ccefc57b04132d278a60ceafd6406525b8d4ab",
+       "b42e5db1024183ed5c806b787c16331bf2b82dad77d5b929f9dcb51dd9d6f7c9"
+      ]
+     },
+     {
+      "at": 597,
+      "starts": "  | the in-context page and thumbnail (`aria-cur",
+      "removed": [
+       "df726e5f4583f71adff6448025d254e25f0c83fba497b75da661d09b193c5da1"
+      ],
+      "added": [
+       "a90db8aa37c95b798a7c44d4a84bef41bb61a2775a0b7ae88e204d7bfdd9e885"
+      ]
+     },
+     {
+      "at": 616,
+      "starts": "| focus | :focus-visible 2 px --focus-ring at 2 ",
+      "removed": [
+       "d4847f531b4b1404d8a567d8cf9db8de5c9b9a0ebcef2f7ae77fc26c2940e782"
+      ],
+      "added": [
+       "8dbde2e97f63e8b4d3e766c9bdfa9631ec58eb32f67b734feb03f6b200f637de"
+      ]
+     },
+     {
+      "at": 629,
+      "starts": "| focus | Ring; the boundary does not change col",
+      "removed": [
+       "0f5bb702b88fb3798ce13bf16b5e7c8177774cde1c72d8d29a383b844565d294"
+      ],
+      "added": [
+       "a920173c0c760e1e7731c166a24c4783d95d325aa25d081042465593561c151d"
+      ]
+     },
+     {
+      "at": 642,
+      "starts": "| focus | Ring on the transparent control. | fil",
+      "removed": [
+       "36a52a8f51681cca2fcdee8890ede0b8a565334545da7558893c25cc72d1f55a"
+      ],
+      "added": [
+       "703b8a68e9181276a941314eaf7b8a2ee89fb2fc9a96ced52e6822934960bd05"
+      ]
+     },
+     {
+      "at": 659,
+      "starts": "| focus | The standard --focus-ring: one focus s",
+      "removed": [
+       "59fbfdbdd6d76653edcd25d8ebeebd24b311548a5a70721f46cad4d3badecdda"
+      ],
+      "added": [
+       "6e79c88a0333657dfa6f9afd17601d0fcfbdea9bc37dcb518feb4d0dbbeb239c"
+      ]
+     },
+     {
+      "at": 666,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "c063be629fe2f3f290ad888b136ca1ff012e5164983aaefd0bda09b6effa3450"
+      ],
+      "added": [
+       "910811e83b69e959465f1a3626ffaf5b618f5f37980d64b0157e1ef8af821ac5"
+      ]
+     },
+     {
+      "at": 684,
+      "starts": "| focus | Ring. | fill → fill-none, icon → icon.",
+      "removed": [
+       "e01d75643487e4d36c04c0110f82b2066f25a29c972b6e82c7c8129e1d84cd73"
+      ],
+      "added": [
+       "82ccdf0e195ae1f68e03b574651bb48aa3ad9e1c4028da1620c8fce58f80ef74"
+      ]
+     },
+     {
+      "at": 730,
+      "starts": "| focus | Ring. | fill → surface, text → text, b",
+      "removed": [
+       "ee05b5c7416216645fdf80cfbc44ff1e5252ef5f3f184479cfe0646c9f76dce4"
+      ],
+      "added": [
+       "0dcc40aaf89e7edb2c263e13efe8ec585ad731b10cfac3ed7ce8e884e7e497a0"
+      ]
+     },
+     {
+      "at": 750,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "0a3f8fa1900711edf910857381350e96fab5fe578017838e4e76c242f83930a4"
+      ],
+      "added": [
+       "ca0fb5bc3d3760cd5bb56137b8e3c452e8891e9f91189d506506e17b5dace239"
+      ]
+     },
+     {
+      "at": 768,
+      "starts": "| focus | Ring around the track. | track → surfa",
+      "removed": [
+       "e1929b66c897582a490e868a6861ef2e8756e358351e8a2522f62bfa1a4fde4e"
+      ],
+      "added": [
+       "7e49997c31bd6db83d882177d29d2af02be922742829e88e23e130b558cde110"
+      ]
+     },
+     {
+      "at": 775,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "ed23e02bc28a8b6f653759ac572441c74027e4f16e1f4e09628464daed6e0979"
+      ],
+      "added": [
+       "78d8ff80fd8e583388a3b4bfdb5b4cf464dcb5e0a43ff1023fa66b04d8272820"
+      ]
+     },
+     {
+      "at": 793,
+      "starts": "| focus | The ring is the only focus signal; the",
+      "removed": [
+       "c163ac64e22152caf3c553e0c3b1f79f8a766731bdd8575c2a73e20ff98655bf"
+      ],
+      "added": [
+       "87a06efeea037c4fece7a67004bdc864fcca8294736bd4f8dfdd67c1b6027fac"
+      ]
+     },
+     {
+      "at": 797,
+      "starts": "| error | aria-invalid; boundary --status-error-",
+      "removed": [
+       "0703c55022a4ebe702de5d36f6036812a98d9552e1797b200bccfb5662b9c69b"
+      ],
+      "added": [
+       "36a9c220c0776a09c425415eb44dd6af2803b8c1c5d9d98b5f58588cd423d6c9"
+      ]
+     },
+     {
+      "at": 800,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "c5fb436e8e65dae2128d2ccb4dd35f1f30a6e1bbeaa7707f28ad292983774612"
+      ],
+      "added": [
+       "f456c5924b9bea3828f2b9ae217b30acd3350e21afaf022f13dd6d953a02e93f"
+      ]
+     },
+     {
+      "at": 820,
+      "starts": "| focus | The ring around the box (2 px --focus-",
+      "removed": [
+       "1877f88f976bd9498b2cc201ec1fd72d8f4591192095a769f1a5e42b2abecf40"
+      ],
+      "added": [
+       "c731892d7bde6c7634d77b7d639d3a21dc4bd2b2198b9763e8521c13290ccf32"
+      ]
+     },
+     {
+      "at": 827,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "2e769ab09a0b2b5dfbd507c6be4f4a261149823585e33543d7b34ccd35e6c00d"
+      ],
+      "added": [
+       "fadb5c05d81dbb41bc92bf72d9fd90600a195b6839c55c6a1f2c912de65a20a3"
+      ]
+     },
+     {
+      "at": 852,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "a8f409a3b849d7e74152f13184807574b48a7d28ba7edf8a9501b45a7e7a2a61"
+      ],
+      "added": [
+       "ffffd50892f1b8404ce29c7002c9549d8e695eaf2fabd440b1cb48ab6d9efd86"
+      ]
+     },
+     {
+      "at": 891,
+      "starts": "| focus | Only a keyboard-scrollable overflow re",
+      "removed": [
+       "10e0d217495dbbc8a36fbca066c3bd365e3afbf67b436a45625dbf732636b4fd"
+      ],
+      "added": [
+       "0b0dd210ef202ee5ef2b62696881b9fe4d0a928fbae61c8319edf298d38389ef"
+      ]
+     },
+     {
+      "at": 898,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "0c3df563b3799af393002be2d5db33ac69f569ca8e8eecd0682c04d0dfff90a0"
+      ],
+      "added": [
+       "6dd2dbd9143c039d863f1721dda31f9fb44712ba4f770d97a38b9fa4381553d4"
+      ]
+     },
+     {
+      "at": 919,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "32d35869ac53610e80fac89c9744c29a5b92dae2daf32d872313816b815f145c"
+      ],
+      "added": [
+       "f2c318939a6a461b0244f8b2cf92c39beb919d0bf870b03440f7463d4eb87674"
+      ]
+     },
+     {
+      "at": 948,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "84f3f73533574ae32626da725036d3a09696c89e24425e79561b4fe50a1475fc"
+      ],
+      "added": [
+       "10bdd078f081f50a7598932280fb4ae6a121e68b1a54d4311a547e085a59c82b"
+      ]
+     },
+     {
+      "at": 969,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "3f8dcdeede297043a20349d9e5b7e7edb0b4f424f01a5fc384a937f923a79541"
+      ],
+      "added": [
+       "c953c308476a1abf12a604b90c8b5d7139778ca910b51294585eea57b35cf320"
+      ]
+     },
+     {
+      "at": 1016,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "661703fa65b87d11d1bbd09c3589a6e96eaf5c8aba005ab2e76ce84ed26aa9f9"
+      ],
+      "added": [
+       "0023a9b9abe75e2c4ff09b947e4d4031f41b4808dac12c2c7a259561e4699131"
+      ]
+     },
+     {
+      "at": 1030,
+      "starts": "| focus | Ring when the tile is a link. | fill →",
+      "removed": [
+       "d5edfef1948c8bc8297951aa2d9a3a9ba67dcecad6c744daddb796973ac60a74"
+      ],
+      "added": [
+       "35fa6b7c8aa60ab97e7740ab9034030b97d33d6db8cdab3a5c410888c1ab4223"
+      ]
+     },
+     {
+      "at": 1037,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "d41863f708480b4a13d5c5eec087d5acc2a1644a9acda1090a383815106c1357"
+      ],
+      "added": [
+       "6f0804c80e35ddc2727a2d16ba00615e97a917139b18203fd0aaf97aa7702fe7"
+      ]
+     },
+     {
+      "at": 1055,
+      "starts": "| focus | Ring on the CTA. | fill → fill-none, t",
+      "removed": [
+       "2ccb76952b525fe6f745a901a34582f94eb1f2a3c78352e171f71b88639bfa5a"
+      ],
+      "added": [
+       "33f1ad01f3bcb53f3f465ab9ac426d7093e850b3ebb30ae7138ca57f3568d4ac"
+      ]
+     },
+     {
+      "at": 1062,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "c1dd8acad690fb1cce90480bc0aed89bce1dfdc329433efde74a2749dfca97fe"
+      ],
+      "added": [
+       "e3f383dba1a1b02da4c539a15d02173bb97b3342ed6d7c32fef998afa5fa7356"
+      ]
+     },
+     {
+      "at": 1083,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "44227a9861a8000dabe00764b95fd83eed0b923dc1831ee9ec6a70721323f948"
+      ],
+      "added": [
+       "b0ce310115d51c339b2611bec93df9f93f1d80ca6aabf248c4a5c912391c98b5"
+      ]
+     },
+     {
+      "at": 1101,
+      "starts": "| focus | Ring 2 px at 2 px offset. | fill → acc",
+      "removed": [
+       "78a90983f23bad6c5fb3a2618023cdcb066a1fa04b424cd4b427fc90f5c292cc"
+      ],
+      "added": [
+       "75d483e2521ed62a1da7c2b369661c14d756bd6594547999ee3b284456fdb626"
+      ]
+     },
+     {
+      "at": 1108,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "8300e1230e1c02f1e21666991aa2c296cbda95a9525e9174795e90b46acd1340"
+      ],
+      "added": [
+       "9666041602838130b05aa17e9f850591af9c9bed292e63eef4afc8cc0673871d"
+      ]
+     },
+     {
+      "at": 1112,
+      "starts": "The tutor-message surface: a tutor row is a 32 p",
+      "removed": [
+       "d5b52ed6419c7ae593badbb04ffee5f17b92279ba4b5de16d341cac9688176ee"
+      ],
+      "added": [
+       "17a584ae8ffa0f027d9530bf33d245bfbcf35d99d125aae737ac079cc50d8ba8"
+      ]
+     },
+     {
+      "at": 1114,
+      "starts": "Geometry and tokens of the component (not per st",
+      "removed": [
+       "08f0492a457a066ab1c07c2b0ac2e5c3a1fd33d63390cd2cd0e716bb38ec9269"
+      ],
+      "added": [
+       "f6810806e5653677a900b70e3e0a73e3083eb6bb614cd37ef119866b09b8db8b"
+      ]
+     },
+     {
+      "at": 1122,
+      "starts": "| focus | Ring on toolbar buttons, citations and",
+      "removed": [
+       "bf3ef5b43c510242facc36a09f78d6e119fa9ae851c51f3c2d184fd393dc575f"
+      ],
+      "added": [
+       "55fa4bf5a9438f8820ed46d7ae867bcd24d49f6ec0b9d58fb7ab56301c5d98ae"
+      ]
+     },
+     {
+      "at": 1125,
+      "starts": "| loading | Waiting: the text dots in --in-progr",
+      "removed": [
+       "3e3b2660f025892948906dbc1485fbff6e8922987246ab8d7c30b4bda7a7e78d"
+      ],
+      "added": [
+       "efda09e749e60d910f1c7bc7084d00370c250825ca70fb401eb672b0e8829ebe"
+      ]
+     },
+     {
+      "at": 1133,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "fef93e295ddb86cfc0c41bb1fec00cb6b3dd59cae7c29ebba975226fc518b2d1"
+      ],
+      "added": [
+       "7a275a0f867b1cb8bdb65fecffc8dd40c0215d7bea7539cfccfa1c1fa484a04d"
+      ]
+     },
+     {
+      "at": 1137,
+      "starts": "The PDF viewer (react-pdf): the toolbar and the ",
+      "removed": [
+       "b5ec28fedfa6b08815b2a6d94eac0d65bf67fa421fb8120f021f272d25f983a9"
+      ],
+      "added": [
+       "b10af4e442a98f74aabfcae957ec7606d4d388f2b82914f3ded6c20ceeeb1bc1"
+      ]
+     },
+     {
+      "at": 1139,
+      "starts": "Geometry and tokens of the component (not per st",
+      "removed": [
+       "e6d20c19bf261dae3c5670260252e1cafb90a25faa709b07b65031fc9e2a0311"
+      ],
+      "added": [
+       "e91f7992876b1ae4e88d1e797b32557450c2448fc2922355277cfec8d7938bf8"
+      ]
+     },
+     {
+      "at": 1143,
+      "starts": "- **page-current**: The page the chat has in con",
+      "removed": [
+       "eab540077e86267e76b2246965264347deaeaa3204fccb1834ca7c19e61ff26f"
+      ],
+      "added": [
+       "6d968072390c9747ebf6ba9d28a3c04bfc605a0cd59a1f76eb9518c2a8817757"
+      ]
+     },
+     {
+      "at": 1147,
+      "starts": "- **thumbnails**: The thumbnail strip (A-24): pa",
+      "removed": [
+       "4b0e416d08d6bf598f7b8e4c24e685eb6051738dfa404f192a9b72bcef5b1a93"
+      ],
+      "added": [
+       "91f5421fe6805222eb763506916ab0fc4992d8d3358a6cad85135d09d76299be"
+      ]
+     },
+     {
+      "at": 1158,
+      "starts": "| focus | Ring on the focused button or the page",
+      "removed": [
+       "9cf2c9cd2bedd549999504f874a7a54f2848f24369f8241150677b9eb36066c0"
+      ],
+      "added": [
+       "c172eaa1be415409b8984b70e1c3ef9ba3adb41a567597c28fb511910b7e4649"
+      ]
+     },
+     {
+      "at": 1165,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "2ee3664542863ceab2cdbfdec91c31579058da44a40febba0613dd573e70737b"
+      ],
+      "added": [
+       "64a7076fec5364936576a28631c75a6f3462d4dc28adf5853982b0ac131a0f92"
+      ]
+     },
+     {
+      "at": 1229,
+      "starts": "Every syntax colour is a text pair on the editor",
+      "removed": [
+       "def360243ae7e1f443a777f98e5908e1d833b8826d39b6529855bd48f369b252"
+      ],
+      "added": [
+       "c5d7a1386eb089ebb74154c7528941b8ba3a243fc88f8b722c766bbf0f81fd09"
+      ]
+     },
+     {
+      "at": 1275,
+      "starts": "| `MuiCssBaseline` | imports the token CSS; `fon",
+      "removed": [
+       "8c62e54585ebc3fc709e54f1a4fe81a2542fb7c991c6c0f63a5aa1062fd9e744",
+       "957efa2a07f19670287f7eb5956bf8fb0ecffbdbcc627538d31f02921a5f09bc"
+      ],
+      "added": [
+       "b8370f9116ca9cd639eb2b3167db8a4afd3f18732773d5ccfffdd6da24e878a6",
+       "a8b321592abbb16e28d3b0c0fe8c0094495b63b2f9d9dcba496063b17bc26bc6"
+      ]
+     },
+     {
+      "at": 1278,
+      "starts": "| `MuiOutlinedInput`, `MuiInputLabel`, `MuiFormH",
+      "removed": [
+       "360f3909248185ac81c098ca167c81444dbc506aed2d43a3d055a2033ab00be0",
+       "3d6942001a05547e92a5f2b4fc7a6305f3382b708f9acd3654ea75b6cbb77f12",
+       "29d018629faf9ba43280569bb68ae976584a0f7634e1d048b6b5cfb67289298c",
+       "7923fe09b5078b36cc32c875439ced73bfb2c6d94898a4b5ef2d8253f412a985"
+      ],
+      "added": [
+       "c94fd6c6360b070d3406b488ae820141823a5c58bb8e8fe1056b975c0610b90a",
+       "85a2ff7bf12218c8a385dfbd38f696ac3ede8c1be157ccbe84a70264093fbc34",
+       "0f1a717b3e7b29cd748b33ebb401c1fd141e18c1baa17feba1fad3116c50d1e3",
+       "9af3f3bea1611c8a8e8d09ecd0db398b612b2803dfc801f3d2ff4482924b27d3"
+      ]
+     },
+     {
+      "at": 1290,
+      "starts": "| `MuiFab` (the launcher) | `--size-launcher`, `",
+      "removed": [
+       "82104a706b46986fc8c0dc599b0f09ba609664f01b062e35ad0a2044c7ab358f"
+      ],
+      "added": [
+       "9c584574d9b10952fd808eca27c656e3e26c74125ac084607a895ebe9b8fa81d"
+      ]
+     },
+     {
+      "at": 1299,
+      "starts": "- Focus is one frame (the 2026-10-19 decision): ",
+      "removed": [],
+      "added": [
+       "7e2572d832d66ea8a694c9708a274f1a2ecccfeb9b9e6734738231308d7146a9"
+      ]
+     },
+     {
+      "at": 1312,
+      "starts": "| `--kiwi-gray-50` … `--kiwi-gray-900` (10) | th",
+      "removed": [
+       "3dbc4d93f4f2188489da6bb07795299fea755a86a8914d77d25b7d42ed245332"
+      ],
+      "added": [
+       "5aaff1928d741201d4600cc865ca36860d7e3c4a0cdded71296008420b446aa6"
+      ]
+     },
+     {
+      "at": 1345,
+      "starts": "- one frame on focus (§ 24: a control with a bor",
+      "removed": [],
+      "added": [
+       "dff321c80ed826fd9fe378a0c14958c3c147fe9b0f78fce7b60b029a5594f510"
+      ]
+     },
+     {
+      "at": 1355,
+      "starts": "- every cue survives `(forced-colors: active)` e",
+      "removed": [
+       "d42718204941f6a33d9ef686e799f1b0c438b591bc36657b2186a3301045dccd"
+      ],
+      "added": [
+       "ecfdad397d9150da375b27a3a7c4818132d29c24716954fa61609b27db3d83fd",
+       "17a0f7894d53339c87ee868045d9b797eea64229c616bf1c75bd2d5f4fa15edb"
+      ]
+     },
+     {
+      "at": 1380,
+      "starts": "| Browser chrome: `index.html` `<meta name=\"them",
+      "removed": [
+       "ea200c8f694e2402a8fc7c71186800c0c56922c6c2bc781a54139d1b5eb1d0b8"
+      ],
+      "added": [
+       "f523960a937f1ab111250701235df1e9b5d2d175ad353d8eb3851cd252cea3bd"
+      ]
+     },
+     {
+      "at": 1388,
+      "starts": "| `#f5f5f5` page | `body` | `--background` | `#f",
+      "removed": [
+       "a56bfe5303b24042dfbe806afeec8ca86318847ed86365cf16d1655e914af899",
+       "c78b115f243ea99c7b9f5121c75457d0ccf12330e0fb6261c49d26a135f27e7a",
+       "8db37567aa8db75482835fe2c4e64d650dcc96e1cbbc2a2ecf60e7be4be419d0",
+       "6a4017b1eaec5c647cf51e7b2db1a2e8eaa0a61872d34c1070c36a65ceccf5b2",
+       "1a8606b5dd5dda9e48d9598db89fa48ca19f2a7ed1cc6e777c6cc97fc1de1114",
+       "93aff0a0da73f245a3b44f34598bfff649edeee7d6c4d91906f4d399fc8e8f67",
+       "91c561c02884a556eec78ac290de7b3b7c88247c78120be7a13ee8c2884ba685",
+       "2c3d60f823dd723e06b353a5a2b028a52cc8aa67ec9ab694f535a9dec4c8f94a",
+       "9b7fb26c2b56b078cba61de4b57233eaac6113e84805beb2f7fc13cf85f782ab"
+      ],
+      "added": [
+       "50b8b12921de2f97154c68388e487578a10429e0a3202604ac88c61311450b64",
+       "51ae7cd9ab961ae5b2cbf0dcea0bdc3b152ecdbbf463dc9de1b0900323e2c2c7",
+       "e2c5793439055dbb7995cfbdfc6c0f1bcfd7a55b7382be31d2c7f9234dfd2f24",
+       "44ab65e76ee61b00feadf13fb8c9a2e40fb6a98ef09caf8704de26597b4cce32",
+       "502822504983527dc0d21bcfd0e6c6468f4bb95a987b97d15ab758c93ce145f8",
+       "07427c3cd0fa4a6a5dd520056b13e05a0301eccec994bb184775dbecfeca75ae",
+       "b52f41b1ea1d1df94bc6a0b464e7e6e43b43fcff867f725e7c8462c1072fb96a",
+       "8b4e8f1d9899cbf026f51145df141f006770538c1da5e32199e3b573217f6ca7",
+       "33127e3ea5612cd8010b2f45ae1c9e493b5cfe30ae92b5d5c6f2f675e2255ba8"
+      ]
+     },
+     {
+      "at": 1398,
+      "starts": "| `#5C3B6E` title | `adminNotification` `h3` | `",
+      "removed": [
+       "3143521711d4462399c184860fbcc0d8bf3ca9cb5ea4068e96a7cb627ffb721d"
+      ],
+      "added": [
+       "e03037fe89b7cb7df2d2c00cf5fd4f56efde43ac7b8abe15275a81a90be8b79b"
+      ]
+     },
+     {
+      "at": 1424,
+      "starts": "| The globals' sources | 83 global colour values",
+      "removed": [
+       "73559207c51ad3b5d0447ef74d7c5db9a815af117b4812219c9d35bb1b310cbd"
+      ],
+      "added": [
+       "c9c5df295f8079350d05a373aef7eb62679d122755d1c47c9d43a86c29b0d0dc"
+      ]
+     },
+     {
+      "at": 1427,
+      "starts": "| Per-state contrast | **446 required assertions",
+      "removed": [
+       "3d264923d17d86006d5aeafeb09c3b4a94ae85858bd585f21dd12c314e996035",
+       "2f0e32077e14cf86967dc479e73d50e692301416d0dc30bf4fd8c85c35115989",
+       "73dd4cbbdd437568ef96c6e221e83cf60440cf8cb467d368e57cc4537b70782e",
+       "c394f18a2a21cf37bf337267dbf9e30cda4b52f44670aa8a9559d5b467bfd57e",
+       "977c78c8008247fb28c4a4c4ce1089866e1251e95a4111b7d6797d57f9d532af"
+      ],
+      "added": [
+       "7e263f4b2a24e8ad658213557b9fa2c4997e704e95bd620c8d0999b5f57563d8",
+       "54f1ccf1d622082ece74e079e9fc4e2ef0e16e5b602fb9a5974d8d765c9d5592",
+       "b43a5d9ba7ad517006a623d798780a2e923105bc8012ae53c940350198afbaa1",
+       "0713ec64265f00485315def3bbf76ef19793c49f8b803dc27a917874cc3fc6de",
+       "e07b996cc73103aacb04833c5d5da655166375bfb2e665d7ae372afdb1302f3b"
+      ]
+     },
+     {
+      "at": 1435,
+      "starts": "| Real coarse emulation (the DevTools protocol) ",
+      "removed": [
+       "2fc90db1d8302877ac2c58f4a3ffe3ef099c6276cb5bb0c9d914e4bc793eb6ac",
+       "532069e4632984d125e9ef91c716a97d21200b41786a2fdd9b42b2b50315db09"
+      ],
+      "added": [
+       "aad777eeb0c2abbd98af5b9c67ebbfcab59a8f62cfb2cfc5a2dcdf1082280072",
+       "b75e0ffc60b7d2801ea863454149de8a0d731a18f0da970c25afc61695b8ea74"
+      ]
+     },
+     {
+      "at": 1505,
+      "starts": "| `companion.backing` | `--companion-backing` | ",
+      "removed": [
+       "44681d3d664f9aa64c297ed7447197a1c3c52648c14f287a74136c4dbdf176a4"
+      ],
+      "added": [
+       "4e40649c368686194d1ff45b143313ed9016a6d84fd4f2672efcfe7b8624b9b8"
+      ]
+     },
+     {
+      "at": 1579,
+      "starts": "| dark | `--companion-backing` (light paper-2, f",
+      "removed": [
+       "8d51efda5b7cd990bc38767cb678093046d0a9c38662584a69bb10a7cbf91cbc",
+       "6cc26a9444fe30cfc630d39db5393402ae97cf5638a3e3603555e790d7895e29",
+       "64de03e0bf6dcabd15cb801a41f82b62fd532aea75342a2ff377007f35e6836e",
+       "f795df1a9e99b995a8a831178a31540ea232a238b49793a0389c456266b44a94",
+       "81a67b0496b75fb281cc210fc3cc0d11692a4cbb860757a530cb1f64f21d74d6"
+      ],
+      "added": [
+       "95ca5a67ed2ebfef6f9165227b5203f709274815551108cb20b16c079d143690",
+       "79305d195372a5ffcf4f73d71e0216973cd1f3bdcf1c7b08b158ff88f8cd95fa",
+       "9875d1cc06e526b978a2ec126ec7fcd3e6bc3c55849e0a8231ff7feaf02a9f97",
+       "828d2118b80c1102275ba8ceff0305ce549beb69f2d53e2ec03029d60568c22e",
+       "8e1d905dbf1479be489bd23d4bed631b5bbf2dc8f3424b8eae3d9e045b656a91"
+      ]
+     },
+     {
+      "at": 1587,
+      "starts": "**Pixel-sampled (review A-5).** Once anti-aliase",
+      "removed": [
+       "f728c2beda8d17eed4f801169659d8d55d28b7646c96ff74c902ed3069fbde90"
+      ],
+      "added": [
+       "fe68d41484e4f8fab67869ae361594aba20f938ca6538b1951251bf2e4d4337e"
+      ]
+     },
+     {
+      "at": 1589,
+      "starts": "Informational: the backing disc against the dark",
+      "removed": [
+       "029bbea22a1dd159c3dcb0c425ed546433e7019547ffb90e5b88922c843e1303"
+      ],
+      "added": [
+       "5db96e7de99b0ea68c6c4284285c13a8ab67d9426ffea0558ca616ddf07260ae"
+      ]
+     },
+     {
+      "at": 1648,
+      "starts": "**Amendment (2026-10-18).** `export-mascot.py` r",
+      "removed": [
+       "30a6c8da7601fed954739113223af62123e4b99858947a4bd5cd2be1378ec928"
+      ],
+      "added": [
+       "ed196d19902a141583a2f792ce67c9fc1bcef4194da9eb7a7328d7aaabec5754"
+      ]
+     },
+     {
+      "at": 2213,
+      "starts": "**Contrast (DW-6.1).** Every series clears 3:1 o",
+      "removed": [
+       "0d283f3a0f5b46012bd98d57a4820e7305a9c91480885d126fddceedcb6d0017"
+      ],
+      "added": [
+       "c4b73739009337fd475e38eaffdd05e2753daa9cbfc1a1656557f09534081958"
+      ]
+     },
+     {
+      "at": 2377,
+      "starts": "### 2026-10-19 · Re-tune: warm near-grey neutral",
+      "removed": [],
+      "added": [
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "94c6915d2af2fc6a147903133e530d43894e405e147d7b6a29b7d9211ee6ef6c",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "6b990cf1adecf28f90996a8a11445b62051274d2b4935e018d786d950ada0215",
+       "bc16fc55808e5c070e43ab4ac532561474c811baf61e11845baf0a7b27f9c000",
+       "b4c36edbb44d0706c009e33a3a0f9090b38e64b229720aef0bf3190886c9f2eb",
+       "fa0b1903435879329671adfd2cdfe8f6aa45b24537c8d4348fa93964bfabea30",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "210515bb7955bc4bd598c0ab8f4291c205bfc85f8dea66d2e58c6166d0d86812",
+       "11bd5f873fa004793229f9931b6d90ec5eff770f738b716c6198d6daabd03235",
+       "801140fad5f14a39cd444ea60d3fa64282ad9747a1d6a72715a62d3e0ee8ad74",
+       "4bc4c5e5cf0045973d8752bcac2fc9641cc184c54ec845b312f0940399e100c1",
+       "77083107d2dfc7faac29815f944ef5880d21b133fd04f0c64fa93f0849802950",
+       "1c69e0baf5dffb00fe9a79357c74546bb5a79fff02ab3910830b3ff6d42a16f7",
+       "077b7445fd9dcc7a6bf1a71f9857709f35e822f798e2d12e07360959af0cd00d",
+       "3518ccf1c22cd74b7b99b4afef1a0aebea38ec36035917d94449a2164105c1bd",
+       "eff7a7f2be98c449b06aa598b78248b40c57b491d27a81744d5c09946f03a98c",
+       "1dc2e607156abc50a79f51da790f07e7a9378157acb9e65551c9072cec7f3a90",
+       "de4a16f483a31e97a54d81901b2d5eeb9ea4710a0af7fcfdcc9c61a670c9474c",
+       "3e0561738a4dec73f3681597c14a44c4b794968caee2a50438a8f761473762f8",
+       "59d60026f40148cf6221b6da285efc1b8bd7157777699b076cd041445b469d11",
+       "c4b387fc92c199f9e2786d5e6ddd62385923dd1feca4972c77129bc48bc8f1c7",
+       "c33529f77b5b0598c42c2cea8d95b9453e3a3bcdf4358945e7d043dad73c628b",
+       "aea918eaa05a15ac79da6f9966a2f52daae5ce92e4b163a644b3f2818dedf55b",
+       "78ea620904e8013b0e0d614f9b6469bc13c516ecc076a38996950cb058340fb1",
+       "d1c3aa812e7e61d1de41a7a0303b286c2bb33b8a38bc118e39bbb6d92c70e638",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "889fc1f20cd06693a181d92e7dfd6b3265a187783ff78d0b9f7bbb666e64f0be",
+       "9b41bcdc89acaafc756a5925dd77aba23122fa93a30d2409dfbd0bd4545e70ce",
+       "363d032a8998b056750ed38348f42762b6867b0cbac75c633efbed31aaaad204",
+       "620df96a7f0524199659c8062bb2da851eab95da9d40e6eeb86f68cd75f00fd4",
+       "14bd42d762ddacee54f9bb3ffd7a61f127412ac5246272ea236b0a075f19e26d",
+       "99c7450d204e60843f20ec30fdb2b36291be3ae173f376a30dbc6e81c29bec58",
+       "417c6c5360e43cab96059f04e8187baef9c42c3f93a6f1be030311cef7d83f7d",
+       "5a7c6779e95a23f68de91b10bc410fa38149a1d4ae51a04860fce3c550a76a3d"
+      ]
+     }
+    ]
+   },
+   "journey": {
+    "kind": "patch",
+    "blocks": [],
+    "hunks": [
+     {
+      "at": 424,
+      "starts": "- **Composer (2026-10-19, the user's decision; `",
+      "removed": [],
+      "added": [
+       "58623f40e5056e978e1e9fd55d7bd735e683446f41f8c6f760b0282a549834f3"
+      ]
+     }
+    ]
+   }
   }
  ]
 }

@@ -3,26 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kiwi UI — Ruled Folio swatch sheet (re-lock 2026-10-18)</title>
-  <!-- The re-lock of 2026-10-18 (kiwi-ui/DESIGN.md § Lock amendments): the swatch sheet the user re-confirms the lock on (§ Color tokens › Regeneration procedure, step 5). The colour token block is the locked block of kiwi-ui/DESIGN.md § Color tokens, its fence pasted verbatim, comments included; the type, space, radius and shadow custom properties in the block after it restate DESIGN.md's Type and Space, shape, depth sections for this demo (Phase 3's generation spec reads them from DESIGN.md, not from here). -->
+  <title>Kiwi UI — Ruled Folio swatch sheet (re-tune 2026-10-19)</title>
+  <!-- The re-lock of 2026-10-18 and the re-tune of 2026-10-19 (kiwi-ui/DESIGN.md § Lock amendments: the warm near-grey neutrals and olive-brown ink of the user's palette tuner, Send and Stop inside the composer, one frame on focus): the swatch sheet the user re-confirms the lock on (§ Color tokens › Regeneration procedure, step 5). The colour token block is the locked block of kiwi-ui/DESIGN.md § Color tokens, its fence pasted verbatim, comments included; the type, space, radius and shadow custom properties in the block after it restate DESIGN.md's Type and Space, shape, depth sections for this demo (Phase 3's generation spec reads them from DESIGN.md, not from here). -->
   <!-- Every UI colour is a var(); the only literal hexes are the mascot artwork's flat palette (G11) and the black/white probes the ramp labels use to pick a legible annotation ink. -->
   <!-- Fonts: Source Sans 3, self-hosted beside the mocks (assets/fonts/source-sans-3.css: the @fontsource-variable/source-sans-3 files production self-hosts, OFL), so the sheet renders with no network; the badge says if it fell back. font-synthesis: none everywhere, so no faux bold or italic is ever synthesised; CJK emphasis is upright weight 600. The sheet's own chrome uses the system face so it does not pose as the product. -->
   <!-- Signature move as locked (the rule alone since the user's 2026-10-18 decision: no ticks): the ruler is a 1 px rule on the message region's left edge (CSS background), and the text keeps its fixed gutter from it. Nothing on the header, session bar or composer. -->
   <link rel="stylesheet" href="assets/fonts/source-sans-3.css">
   <style>
     /* ===================== THE LOCKED BLOCK (kiwi-ui/DESIGN.md § Color tokens › The locked block: the fence, pasted verbatim) ===================== */
-/* Kiwi UI — Ruled Folio · re-locked 2026-10-18 (§ Lock amendments): the palette aligned to the user's kiwi-icon page; every value is given, derived or kept (the regeneration procedure above) */
+/* Kiwi UI — Ruled Folio · re-locked 2026-10-18 (§ Lock amendments): the palette aligned to the user's kiwi-icon page; the neutral and paper ramps re-tuned by the user on 2026-10-19; every value is given, derived or kept (the regeneration procedure above) */
 :root {
-  /* neutral · grey-green · given 3, 4, 6, 7, 12 (the reference's rows, rule, hairline and ink); derived 1, 2, 5, 8 (the ruler), 9, 10 (the field edge), 11 (secondary text) */
-  --neutral-1: #fbfbf7; --neutral-2: #f6f7ee; --neutral-3: #f0f2e5; --neutral-4: #e8eddf;
-  --neutral-5: #e5e9dc; --neutral-6: #e1e6d8; --neutral-7: #d9ded0; --neutral-8: #a9b29d;
-  --neutral-9: #929d87; --neutral-10: #7b8872; --neutral-11: #566652; --neutral-12: #23442d;
+  /* neutral · warm near-grey (the 2026-10-19 re-tune) · given by the user's tuner 3, 4 (the rows), 6, 7 (the rule, the hairline), 8 (the ruler), 10 (the field edge), 11, 12 (secondary text, the olive-brown ink); derived by its transform 1, 2, 5, 9 */
+  --neutral-1: #fbfafa; --neutral-2: #f7f6f4; --neutral-3: #f2f0ee; --neutral-4: #eceae8;
+  --neutral-5: #e9e6e4; --neutral-6: #e5e3e1; --neutral-7: #dddbd9; --neutral-8: #b1adaa;
+  --neutral-9: #9b9894; --neutral-10: #85837e; --neutral-11: #6a5f49; --neutral-12: #443c16;
   /* accent · sage · given 3, 4, 5 (the reference's hover, selected and pressed tints), 9 (the mascot's sage), 10 (the strong green), 11 (the forest); derived 1, 2 and 6, 7, 8 (the Soft sage primary); kept 12 (the on-paper pin) */
   --accent-1: #f9fbf4; --accent-2: #f2f6ea; --accent-3: #eaf0df; --accent-4: #e4ebd9;
   --accent-5: #dce5cc; --accent-6: #d0ddbd; --accent-7: #c7d6b1; --accent-8: #bfcea6;
   --accent-9: #92ae70; --accent-10: #577d37; --accent-11: #23482e; --accent-12: #203327;
-  /* paper · the canvas ramp · given 2 (the sheet), 3 (the page); derived 1, 4 */
-  --paper-1: #fefefa; --paper-2: #fdfcf6; --paper-3: #f6f5ed; --paper-4: #f0eee2;
+  /* paper · the canvas ramp · given by the user's tuner 2 (the sheet), 3 (the page); derived by its transform 1, 4 */
+  --paper-1: #fefdfd; --paper-2: #fdfbfb; --paper-3: #f6f4f3; --paper-4: #efedec;
   /* the code-string green · derived */
   --code-green: #446a2c;
   /* run C · seed 156 balanced · functional 3/9/11 (kept) */
@@ -31,7 +31,7 @@
   --warning-3: #f9f0dd; --warning-9: #dbb155; --warning-11: #76602f;
   --info-3: #e3f3ff;    --info-9: #5baee5;    --info-11: #3d6886;
   /* semantic aliases (the table above gives each alias's step in both modes) */
-  --background: var(--paper-3);             /* the cream canvas (the reference's page) */
+  --background: var(--paper-3);             /* the warm near-grey canvas (the re-tune) */
   --surface: var(--paper-2);                /* sheets are the lighter step */
   --surface-hover: var(--neutral-3);
   --surface-active: var(--neutral-4);
@@ -57,16 +57,16 @@
 }
 
 [data-theme="dark"] {
-  /* neutral · derived from the reference's forest band; given 11 (the band's caption text) */
-  --neutral-1: #0e1510; --neutral-2: #151d16; --neutral-3: #1c261d; --neutral-4: #222d23;
-  --neutral-5: #2a3529; --neutral-6: #30382e; --neutral-7: #3d4539; --neutral-8: #5e6755;
-  --neutral-9: #6b7662; --neutral-10: #79856e; --neutral-11: #bdc9ad; --neutral-12: #e4e8db;
+  /* neutral · the re-tune's transform of the 2026-10-18 dark ramp (chroma × 0.20, hue − 55°; × 1.00 on 11 and 12): a warm near-black ramp */
+  --neutral-1: #131312; --neutral-2: #1b1b19; --neutral-3: #242321; --neutral-4: #2a2a27;
+  --neutral-5: #33312f; --neutral-6: #363533; --neutral-7: #43423f; --neutral-8: #656360;
+  --neutral-9: #74716d; --neutral-10: #83807b; --neutral-11: #d5c0a8; --neutral-12: #efe4da;
   /* accent · derived; given 10 (the band's toggle accent), 11 (its slider accent) */
   --accent-1: #111810; --accent-2: #1c2517; --accent-3: #27321f; --accent-4: #2f3b22;
   --accent-5: #354225; --accent-6: #374525; --accent-7: #3f4d2d; --accent-8: #495934;
   --accent-9: #859b69; --accent-10: #b1c698; --accent-11: #b9cf9b; --accent-12: #deeacd;
-  /* paper · derived: the forest-black canvas and its sheet */
-  --paper-1: #0d150f; --paper-2: #121b14; --paper-3: #1a251c; --paper-4: #212e23;
+  /* paper · the re-tune's transform: the warm near-black canvas and its sheet */
+  --paper-1: #131311; --paper-2: #191816; --paper-3: #22221f; --paper-4: #2b2a27;
   /* the code-string green · given (equal to accent-11) */
   --code-green: #b9cf9b;
   /* run C · functional */
@@ -75,7 +75,7 @@
   --warning-3: #282113; --warning-9: #dbb155; --warning-11: #cdb482;
   --info-3: #17242d;    --info-9: #5baee5;    --info-11: #90bedf;
   /* semantic aliases */
-  --background: var(--paper-2);             /* the forest-black canvas, outside #0a0a0a–#1a1a1a flat near-black */
+  --background: var(--paper-2);             /* the warm near-black canvas (C 0.004, the re-tune; § Never's tint line relaxed, § Lock amendments) */
   --surface: var(--paper-3);                /* sheets are the lighter step */
   --surface-hover: var(--neutral-4);        /* one step above the paper-3 sheet */
   --surface-active: var(--neutral-5);
@@ -212,9 +212,12 @@
     .cite { color: var(--accent-text); text-decoration: underline; text-underline-offset: 2px; font-variant-numeric: tabular-nums; }
     .fb { display: inline-flex; gap: 6px; }
     .fb i { width: 16px; height: 16px; border: 1px solid var(--border-interactive); border-radius: var(--radius-small); display: inline-grid; place-items: center; font: 600 10px/1 var(--font-ui); color: var(--text-secondary); font-style: normal; }   /* toolbar buttons are small parts (--radius-small); sized to the 16 px line, one row; Phase 3 sets real targets */
-    .p-composer { display: flex; gap: 8px; padding: 12px 16px 16px 24px; border-top: 1px solid var(--border-subtle); align-items: stretch; }
-    .input { flex: 1; min-height: 40px; border: 1px solid var(--border-interactive); border-radius: var(--radius-control); padding: 9px 12px; color: var(--text-secondary); font-size: var(--text-sm); line-height: 20px; background: var(--surface); }
-    .send { background: var(--accent-solid); color: var(--accent-on-solid); border: 1px solid var(--accent-solid-border); border-radius: var(--radius-control); padding: 0 16px; font: 600 var(--text-sm) var(--font-ui); }   /* Soft sage: the 1 px edge is the control's boundary (the fill is a tint) */
+    .p-composer { padding: 12px 16px 16px 24px; border-top: 1px solid var(--border-subtle); }
+    .cbox { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 5px 0 12px; border: 1px solid var(--border-interactive); border-radius: var(--radius-sheet); background: var(--surface); }   /* the composer (2026-10-19): one box, the sheet radius, at least 44 px, Send inside it */
+    .cbox .ph { flex: 1; min-width: 0; color: var(--text-secondary); font-size: var(--text-sm); line-height: 20px; }
+    .csend { flex: none; width: 32px; height: 32px; padding: 0; border-radius: var(--radius-round); display: inline-grid; place-items: center; background: var(--accent-solid); color: var(--accent-on-solid); border: 1px solid var(--accent-solid-border); }   /* Send: the primary style, round (a circle meant to be one) */
+    .csend[aria-disabled="true"] { background: var(--disabled-solid); border-color: var(--disabled-solid-border); color: var(--disabled-label); }   /* faded while the box is empty: the disabled primary */
+    .csend svg { width: 16px; height: 16px; }
 
     /* buttons */
     .btn-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
@@ -228,7 +231,7 @@
     .btn-tertiary.hover { background: var(--accent-bg-subtle); }
     .btn-disabled { background: var(--surface); color: var(--disabled-label); border-color: var(--disabled-outline); }   /* faded (the 2026-10-18 decision): the sheet, a faint edge, a lower label */
     .btn-primary.btn-disabled { background: var(--disabled-solid); border-color: var(--disabled-solid-border); }   /* a disabled primary keeps a faint sage fill: never the disabled secondary */
-    .btn.focus { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+    .btn.focus { border-color: var(--focus-ring); box-shadow: inset 0 0 0 1px var(--focus-ring); }   /* one frame (2026-10-19): the control's own edge at 2 px, the extra pixel inward, never a ring around it */
     .btn .tag { font-weight: 400; }
     .btn-help { font: var(--text-xs)/16px var(--font-ui); color: var(--text-secondary); }
 
@@ -237,7 +240,7 @@
     .field label { display: block; font: 600 var(--text-sm)/20px var(--font-ui); margin-bottom: 6px; }
     .field .ctl { display: block; width: 100%; border: 1px solid var(--border-interactive); border-radius: var(--radius-control); background: var(--surface); color: var(--text); font: var(--text-base)/24px var(--font-ui); padding: 7px 12px; overflow-wrap: anywhere; }
     .field .ctl.placeholder { color: var(--text-secondary); }
-    .field .ctl.focus { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+    .field .ctl.focus { border-color: var(--focus-ring); box-shadow: inset 0 0 0 1px var(--focus-ring); }   /* one frame: the field's own edge */
     .field .ctl.error { border-color: var(--error-11); }
     .field .help { font: var(--text-xs)/16px var(--font-ui); color: var(--text-secondary); margin-top: 6px; }
     .field .help.err { color: var(--error-11); display: flex; gap: 6px; align-items: flex-start; }
@@ -338,7 +341,7 @@
               </div>
             </div>
           </div>
-          <footer class="p-composer"><div class="input">Ask Kiwi…</div><button class="send" type="button">Send</button></footer>
+          <footer class="p-composer"><div class="cbox"><span class="ph">Ask Kiwi…</span><button class="csend" type="button" aria-label="Send message" aria-disabled="true"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 13V3.6M3.8 7.6 8 3.4l4.2 4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></footer>
         </div>
       </div>
       <div>
@@ -389,9 +392,9 @@
   <header class="sheet">
     <p class="meta">Kiwi UI refresh · Stage 1 · the re-lock of 2026-10-18 (<code>kiwi-ui/DESIGN.md</code> § Lock amendments) · the pixel evidence for <code>kiwi-ui/DESIGN.md</code> § Color tokens, for the user's re-confirmation (DW-2.2)</p>
     <h1>Ruled Folio: swatch sheet</h1>
-    <p class="lede">The palette is aligned to the user's own kiwi-icon page, the UI they built around the same mascot: the cream canvas <span data-tok="--background"></span> and the paper sheet <span data-tok="--surface"></span>, grey-green hairlines <span data-tok="--border"></span>, the forest ink <span data-tok="--text"></span>, sage tints for hover, selection and press (<span data-tok="--accent-bg-subtle"></span> · <span data-tok="--selection-bg"></span> · <span data-tok="--accent-bg-subtle-active"></span>), and the strong green <span data-tok="--accent-solid-border"></span> for the focus ring, the selection marker and the primary's edge. The one filled control is <b>Soft sage</b>: the fill <span data-tok="--accent-solid"></span> (hover <span data-tok="--accent-solid-hover"></span>, pressed <span data-tok="--accent-solid-active"></span>) with the forest label <span data-tok="--accent-on-solid"></span> and a 1 px strong-green edge, which is the control's boundary because the fill is a tint. Every value is <b>given</b>, <b>derived</b> or <b>kept</b> (§ Color tokens › Regeneration procedure): 17 are the reference's own, byte for byte; 40 are OKLCH derivations that fill a step the reference has no value for or replace one that would miss its target (the field edge, the ruler, secondary text), and dark mode is derived throughout from the reference's forest band; 26 are kept from the 2026-10-16 lock (the functional ramps, light accent-12, the dark shadow ink). Corners: 6 px on controls and small parts, 8 px on sheets, no pills. Every number on this page is computed from the token values in the page itself.</p>
+    <p class="lede">The palette is aligned to the user's own kiwi-icon page, the UI they built around the same mascot: re-tuned by the user on 2026-10-19 to warm near-greys: the canvas <span data-tok="--background"></span> and the paper sheet <span data-tok="--surface"></span>, warm hairlines <span data-tok="--border"></span>, the olive-brown ink <span data-tok="--text"></span>, sage tints for hover, selection and press (<span data-tok="--accent-bg-subtle"></span> · <span data-tok="--selection-bg"></span> · <span data-tok="--accent-bg-subtle-active"></span>), and the strong green <span data-tok="--accent-solid-border"></span> for the focus ring, the selection marker and the primary's edge. The one filled control is <b>Soft sage</b>: the fill <span data-tok="--accent-solid"></span> (hover <span data-tok="--accent-solid-hover"></span>, pressed <span data-tok="--accent-solid-active"></span>) with the forest label <span data-tok="--accent-on-solid"></span> and a 1 px strong-green edge, which is the control's boundary because the fill is a tint. Every value is <b>given</b>, <b>derived</b> or <b>kept</b> (§ Color tokens › Regeneration procedure): 19 are given, byte for byte (the reference's accents and the ten neutral and paper roles the user saved in the tuner); 38 are OKLCH derivations (the reference's gaps, and the tuner's transform, chroma × 0.20 and hue − 55°, on every other neutral and paper step, light and dark); 26 are kept from the 2026-10-16 lock (the functional ramps, light accent-12, the dark shadow ink). Corners: 6 px on controls and small parts, 8 px on sheets, no pills. Every number on this page is computed from the token values in the page itself.</p>
     <p class="lede meta" id="font-report">Font: checking…</p>
-    <p class="confirm"><b>What to confirm by eye:</b> the light canvas reads as cream paper and the sheet one step lighter; the dark canvas reads as forest-black, green rather than neutral black, with the dark sheet one step up; the Soft sage Send and Save class read as the one button in each panel, by the pale sage fill and its 1 px strong-green edge in light and the deep sage fill and its sage edge in dark, with hover and pressed one step and two steps deeper; a selected row and a selected chip read by the sage tint and, on the row, the 2 px strong-green marker; the field edges and unselected chips stay visible on every ground; Latin and Chinese sit in one texture in Source Sans 3 with the system CJK fonts, and Chinese emphasis is upright and heavier, never slanted; the status colours read as status beside the sage accent; corners are 6 px on controls and 8 px on the panel and the specimen sheets; the ruler is the 1 px rule alone, with no ticks beside any line (the Latin block keeps its 24 px leading and the Chinese block its 28 px), and it stops at the message region.</p>
+    <p class="confirm"><b>What to confirm by eye:</b> the light canvas reads as warm near-grey paper and the sheet one step lighter, the ink an olive-brown; the dark canvas reads as a warm near-black, with the dark sheet one step up; nothing outside the sage controls reads green; the Soft sage Send and Save class read as the one button in each panel, by the pale sage fill and its 1 px strong-green edge in light and the deep sage fill and its sage edge in dark, with hover and pressed one step and two steps deeper; a selected row and a selected chip read by the sage tint and, on the row, the 2 px strong-green marker; the field edges and unselected chips stay visible on every ground; a focused control shows one frame (its own edge turns the strong green at 2 px, never a ring around it); the composer holds Send inside its box, faded while the box is empty; Latin and Chinese sit in one texture in Source Sans 3 with the system CJK fonts, and Chinese emphasis is upright and heavier, never slanted; the status colours read as status beside the sage accent; corners are 6 px on controls and 8 px on the panel and the specimen sheets; the ruler is the 1 px rule alone, with no ticks beside any line (the Latin block keeps its 24 px leading and the Chinese block its 28 px), and it stops at the message region.</p>
   </header>
 
   <section aria-labelledby="ramps-h">
@@ -546,7 +549,7 @@
       }
       for (const [target, scope] of [[document.getElementById('ramps-light'), light], [dark, dark]]) {
         target.appendChild(rampRow(scope, 'accent · sage', 'accent'));
-        target.appendChild(rampRow(scope, 'neutral · grey-green', 'neutral'));
+        target.appendChild(rampRow(scope, 'neutral · warm near-grey', 'neutral'));
         target.appendChild(rampRow(scope, 'paper · the canvas', 'paper', 4));
         target.appendChild(fnRow(scope));
       }
@@ -721,7 +724,7 @@
       // ---- the dark specimen's own pair, measured ----
       (function () {
         const sp = document.querySelector('.specimen[data-theme="dark"]'); const t = tok(sp, '--text'), s = tok(sp, '--surface'), t2 = tok(sp, '--text-secondary');
-        document.getElementById('dark-stack').textContent = `Dark text ${t} on the forest-black sheet ${s}, ${ratio(t, s).toFixed(2)}:1 · secondary ${t2}, ${ratio(t2, s).toFixed(2)}:1`;
+        document.getElementById('dark-stack').textContent = `Dark text ${t} on the warm near-black sheet ${s}, ${ratio(t, s).toFixed(2)}:1 · secondary ${t2}, ${ratio(t2, s).toFixed(2)}:1`;
       })();
 
       // ---- font and layout report ----

@@ -16,57 +16,57 @@
           "_note": "MUI contained hover uses primary.dark; text/outlined buttons and links are overridden to --accent-text"
         },
         "secondary": {
-          "main": "#7b8872",
-          "dark": "#23442d",
-          "light": "#566652",
-          "contrastText": "#fbfbf7",
+          "main": "#85837e",
+          "dark": "#443c16",
+          "light": "#6a5f49",
+          "contrastText": "#fbfafa",
           "_note": "neutral: the pink secondary is retired"
         },
         "error": {
           "main": "#974843",
           "light": "#ffebe9",
           "dark": "#974843",
-          "contrastText": "#fbfbf7",
+          "contrastText": "#fbfafa",
           "_dot": "#e1524f"
         },
         "success": {
           "main": "#337437",
           "light": "#e0f8e0",
           "dark": "#337437",
-          "contrastText": "#fbfbf7",
+          "contrastText": "#fbfafa",
           "_dot": "#5ad664"
         },
         "warning": {
           "main": "#76602f",
           "light": "#f9f0dd",
           "dark": "#76602f",
-          "contrastText": "#fbfbf7",
+          "contrastText": "#fbfafa",
           "_dot": "#dbb155"
         },
         "info": {
           "main": "#3d6886",
           "light": "#e3f3ff",
           "dark": "#3d6886",
-          "contrastText": "#fbfbf7",
+          "contrastText": "#fbfafa",
           "_dot": "#5baee5"
         },
         "text": {
-          "primary": "#23442d",
-          "secondary": "#566652",
-          "disabled": "#566652"
+          "primary": "#443c16",
+          "secondary": "#6a5f49",
+          "disabled": "#6a5f49"
         },
         "background": {
-          "default": "#f6f5ed",
-          "paper": "#fdfcf6"
+          "default": "#f6f4f3",
+          "paper": "#fdfbfb"
         },
-        "divider": "#e1e6d8",
+        "divider": "#e5e3e1",
         "action": {
-          "active": "#566652",
-          "hover": "#f0f2e5",
+          "active": "#6a5f49",
+          "hover": "#f2f0ee",
           "selected": "#e4ebd9",
           "focus": "transparent",
-          "disabled": "#566652",
-          "disabledBackground": "#e8eddf",
+          "disabled": "#6a5f49",
+          "disabledBackground": "#eceae8",
           "_note": "hover/selected are opaque tonal steps; focus is the outline ring, never a wash"
         },
         "common": {
@@ -75,20 +75,20 @@
           "_note": "read only by InstitutionLogo (G2); the raw-colour guard allows palette.common in that file alone"
         },
         "grey": {
-          "50": "#fbfbf7",
-          "100": "#f6f7ee",
-          "200": "#f0f2e5",
-          "300": "#e5e9dc",
-          "400": "#d9ded0",
-          "500": "#a9b29d",
-          "600": "#7b8872",
-          "700": "#566652",
-          "800": "#23442d",
-          "900": "#23442d",
-          "A100": "#f0f2e5",
-          "A200": "#e5e9dc",
-          "A400": "#a9b29d",
-          "A700": "#566652",
+          "50": "#fbfafa",
+          "100": "#f7f6f4",
+          "200": "#f2f0ee",
+          "300": "#e9e6e4",
+          "400": "#dddbd9",
+          "500": "#b1adaa",
+          "600": "#85837e",
+          "700": "#6a5f49",
+          "800": "#443c16",
+          "900": "#443c16",
+          "A100": "#f2f0ee",
+          "A200": "#e9e6e4",
+          "A400": "#b1adaa",
+          "A700": "#6a5f49",
           "_note": "MUI's grey scale overridden with the locked neutral ramp per mode (50 → neutral-1, 100 → 2, 200 → 3, 300 → 5, 400 → 7, 500 → 8, 600 → 10, 700 → 11, 800 → 12, 900 → 12; A100 → 3, A200 → 5, A400 → 8, A700 → 11), so a stray grey.NN or palette.grey[...] still flips with data-theme; a safety net, not a role: migrate by role (page canvas → background.default; sunken band or table head → action.hover; hairline → divider; wordmark fallback → the mascot); the guard flags every grey.NN and palette.grey access"
         },
         "chart": {
@@ -98,23 +98,23 @@
           "series4": "#0064ad",
           "series5": "#958b00",
           "other": "#77746d",
-          "grid": "#e1e6d8",
-          "baseline": "#a9b29d",
-          "tickText": "#566652",
-          "plot": "#fdfcf6",
+          "grid": "#e5e3e1",
+          "baseline": "#b1adaa",
+          "tickText": "#6a5f49",
+          "plot": "#fdfbfb",
           "_note": "series1–5 are --chart-1…5 (categorical, fixed order, marks only: never text, never a status surface); other is --chart-other (Other and Unknown); grid, baseline, tickText and plot are the chart chrome roles (references to semantic tokens); no track is registered (the topic bars have none since the Phase 6 follow-up; the progress bar's track is --in-progress-track). Replaces Phase 3's interim stand-ins; Theme.ts's ChartPalette gains `other` and the chrome keys, and Theme.test.ts expects these values (§ Chart tokens › Hand-offs)"
         },
         "_kiwi": {
           "focusRing": "#577d37",
-          "borderInteractive": "#7b8872",
-          "border": "#d9ded0",
-          "borderStrong": "#a9b29d",
+          "borderInteractive": "#85837e",
+          "border": "#dddbd9",
+          "borderStrong": "#b1adaa",
           "shadowInk": "#23482e",
           "backdrop": "rgba(35, 72, 46, 0.4)",
           "shadow1": "0px 1px 2px 0px rgba(35, 72, 46, 0.14)",
           "shadow2": "0px 1px 2px 0px rgba(35, 72, 46, 0.08), 0px 12px 32px -12px rgba(35, 72, 46, 0.26)",
           "link": "#23482e",
-          "inProgressBar": "#7b8872"
+          "inProgressBar": "#85837e"
         }
       }
     },
@@ -125,61 +125,61 @@
           "main": "#354225",
           "dark": "#3f4d2d",
           "light": "#b9cf9b",
-          "contrastText": "#e4e8db",
+          "contrastText": "#efe4da",
           "_note": "MUI contained hover uses primary.dark; text/outlined buttons and links are overridden to --accent-text"
         },
         "secondary": {
-          "main": "#79856e",
-          "dark": "#e4e8db",
-          "light": "#bdc9ad",
-          "contrastText": "#0e1510",
+          "main": "#83807b",
+          "dark": "#efe4da",
+          "light": "#d5c0a8",
+          "contrastText": "#131312",
           "_note": "neutral: the pink secondary is retired"
         },
         "error": {
           "main": "#f49c95",
           "light": "#331a18",
           "dark": "#f49c95",
-          "contrastText": "#0e1510",
+          "contrastText": "#131312",
           "_dot": "#e1524f"
         },
         "success": {
           "main": "#88cb8a",
           "light": "#152715",
           "dark": "#88cb8a",
-          "contrastText": "#0e1510",
+          "contrastText": "#131312",
           "_dot": "#5ad664"
         },
         "warning": {
           "main": "#cdb482",
           "light": "#282113",
           "dark": "#cdb482",
-          "contrastText": "#0e1510",
+          "contrastText": "#131312",
           "_dot": "#dbb155"
         },
         "info": {
           "main": "#90bedf",
           "light": "#17242d",
           "dark": "#90bedf",
-          "contrastText": "#0e1510",
+          "contrastText": "#131312",
           "_dot": "#5baee5"
         },
         "text": {
-          "primary": "#e4e8db",
-          "secondary": "#bdc9ad",
-          "disabled": "#bdc9ad"
+          "primary": "#efe4da",
+          "secondary": "#d5c0a8",
+          "disabled": "#d5c0a8"
         },
         "background": {
-          "default": "#121b14",
-          "paper": "#1a251c"
+          "default": "#191816",
+          "paper": "#22221f"
         },
-        "divider": "#30382e",
+        "divider": "#363533",
         "action": {
-          "active": "#bdc9ad",
-          "hover": "#222d23",
+          "active": "#d5c0a8",
+          "hover": "#2a2a27",
           "selected": "#2f3b22",
           "focus": "transparent",
-          "disabled": "#bdc9ad",
-          "disabledBackground": "#2a3529",
+          "disabled": "#d5c0a8",
+          "disabledBackground": "#33312f",
           "_note": "hover/selected are opaque tonal steps; focus is the outline ring, never a wash"
         },
         "common": {
@@ -188,20 +188,20 @@
           "_note": "read only by InstitutionLogo (G2); the raw-colour guard allows palette.common in that file alone"
         },
         "grey": {
-          "50": "#0e1510",
-          "100": "#151d16",
-          "200": "#1c261d",
-          "300": "#2a3529",
-          "400": "#3d4539",
-          "500": "#5e6755",
-          "600": "#79856e",
-          "700": "#bdc9ad",
-          "800": "#e4e8db",
-          "900": "#e4e8db",
-          "A100": "#1c261d",
-          "A200": "#2a3529",
-          "A400": "#5e6755",
-          "A700": "#bdc9ad",
+          "50": "#131312",
+          "100": "#1b1b19",
+          "200": "#242321",
+          "300": "#33312f",
+          "400": "#43423f",
+          "500": "#656360",
+          "600": "#83807b",
+          "700": "#d5c0a8",
+          "800": "#efe4da",
+          "900": "#efe4da",
+          "A100": "#242321",
+          "A200": "#33312f",
+          "A400": "#656360",
+          "A700": "#d5c0a8",
           "_note": "MUI's grey scale overridden with the locked neutral ramp per mode (50 → neutral-1, 100 → 2, 200 → 3, 300 → 5, 400 → 7, 500 → 8, 600 → 10, 700 → 11, 800 → 12, 900 → 12; A100 → 3, A200 → 5, A400 → 8, A700 → 11), so a stray grey.NN or palette.grey[...] still flips with data-theme; a safety net, not a role: migrate by role (page canvas → background.default; sunken band or table head → action.hover; hairline → divider; wordmark fallback → the mascot); the guard flags every grey.NN and palette.grey access"
         },
         "chart": {
@@ -211,23 +211,23 @@
           "series4": "#3e7ab4",
           "series5": "#a99d15",
           "other": "#8d8b83",
-          "grid": "#30382e",
-          "baseline": "#5e6755",
-          "tickText": "#bdc9ad",
-          "plot": "#1a251c",
+          "grid": "#363533",
+          "baseline": "#656360",
+          "tickText": "#d5c0a8",
+          "plot": "#22221f",
           "_note": "series1–5 are --chart-1…5 (categorical, fixed order, marks only: never text, never a status surface); other is --chart-other (Other and Unknown); grid, baseline, tickText and plot are the chart chrome roles (references to semantic tokens); no track is registered (the topic bars have none since the Phase 6 follow-up; the progress bar's track is --in-progress-track). Replaces Phase 3's interim stand-ins; Theme.ts's ChartPalette gains `other` and the chrome keys, and Theme.test.ts expects these values (§ Chart tokens › Hand-offs)"
         },
         "_kiwi": {
           "focusRing": "#b1c698",
-          "borderInteractive": "#79856e",
-          "border": "#3d4539",
-          "borderStrong": "#5e6755",
+          "borderInteractive": "#83807b",
+          "border": "#43423f",
+          "borderStrong": "#656360",
           "shadowInk": "#06100a",
           "backdrop": "rgba(6, 16, 10, 0.6)",
           "shadow1": "0px 1px 2px 0px rgba(6, 16, 10, 0.14)",
           "shadow2": "0px 1px 2px 0px rgba(6, 16, 10, 0.08), 0px 12px 32px -12px rgba(6, 16, 10, 0.26)",
           "link": "#b9cf9b",
-          "inProgressBar": "#79856e"
+          "inProgressBar": "#83807b"
         }
       }
     }
@@ -318,14 +318,14 @@
   "components": {
     "_illustrative": "prose, not code: each entry names the custom properties the real styleOverrides read; every number inside the prose is interpolated from the token source at build time (26 values), so the preview cannot state a width the tokens do not hold",
     "MuiCssBaseline": {
-      "styleOverrides": "@import the generated kiwi-ui.tokens.css; html { font-synthesis: none } ; :focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px } ; [aria-disabled='true'], [aria-disabled='true'] * { cursor: not-allowed } ; @media (forced-colors: active) { [aria-disabled='true'] { color: GrayText; border-color: GrayText } } (a disabled control never renders like an enabled one in high-contrast mode) ; after the locked reduced-motion block: @media (prefers-reduced-motion: reduce) { [data-dots]::after { animation: none; content: \"…\" } } (the text dots rest as a static ellipsis, never a frozen frame)"
+      "styleOverrides": "@import the generated kiwi-ui.tokens.css; html { font-synthesis: none } ; :focus-visible on a control with no border (text buttons, icon buttons, links, tabs, list items, rows) { outline: 2px solid var(--focus-ring); outline-offset: 2px (-2px inside clipped rails, tab bars, rows and menus) }, its only frame; a control with a border never takes it: its own border becomes the frame (one frame, the 2026-10-19 decision: borderColor var(--focus-ring) + boxShadow inset 0 0 0 1px var(--focus-ring), so nothing shifts) ; @media (forced-colors: active) { :focus-visible { outline-color: Highlight; border-color: Highlight } } ; [aria-disabled='true'], [aria-disabled='true'] * { cursor: not-allowed } ; @media (forced-colors: active) { [aria-disabled='true'] { color: GrayText; border-color: GrayText } } (a disabled control never renders like an enabled one in high-contrast mode) ; after the locked reduced-motion block: @media (prefers-reduced-motion: reduce) { [data-dots]::after { animation: none; content: \"…\" } } (the text dots rest as a static ellipsis, never a frozen frame)"
     },
     "MuiButton": {
       "defaultProps": {
         "disableElevation": true
       },
       "styleOverrides": {
-        "root": "minHeight var(--size-control); padding 0 var(--space-inset-x); borderRadius var(--radius-control); font --type-button; whiteSpace nowrap; &:active { transform: scale(var(--button-press-scale)) } ; variant text/outlined color var(--accent-text); outlined borderColor var(--border-interactive), background var(--surface), &:hover background var(--accent-bg-subtle), &:active background var(--accent-bg-subtle-active) borderColor var(--button-secondary-active-border) (the ink edge); contained background var(--accent-solid) color var(--accent-on-solid) border 1px solid var(--button-primary-border) (the --accent-solid-border edge is the boundary: the Soft sage fill is a tint), &:hover background var(--accent-solid-hover), &:active background var(--accent-solid-active); &[aria-disabled='true'] (never the disabled prop) the faded state of its variant (the 2026-10-18 decision; not gated, WCAG exempts inactive controls): contained background var(--button-primary-disabled-fill) borderColor var(--button-primary-disabled-border) (a faint sage fill and edge), outlined background var(--button-secondary-disabled-fill) borderColor var(--button-secondary-disabled-border) (the sheet and the faint outline), text weight var(--type-weight-regular), each with color var(--button-{variant}-disabled-text) (a lower-luminance label); color=error outlined → the destructive variant (border/text var(--destructive-text), hover var(--destructive-bg-subtle)); contained error is not used"
+        "root": "minHeight var(--size-control); padding 0 var(--space-inset-x); borderRadius var(--radius-control); font --type-button; whiteSpace nowrap; &:active { transform: scale(var(--button-press-scale)) } ; contained and outlined &.Mui-focusVisible { outline none; borderColor var(--focus-ring); boxShadow inset 0 0 0 1px var(--focus-ring) } (one frame: the border becomes the 2 px focus frame); text &.Mui-focusVisible the CssBaseline ring (it has no border) ; variant text/outlined color var(--accent-text); outlined borderColor var(--border-interactive), background var(--surface), &:hover background var(--accent-bg-subtle), &:active background var(--accent-bg-subtle-active) borderColor var(--button-secondary-active-border) (the ink edge); contained background var(--accent-solid) color var(--accent-on-solid) border 1px solid var(--button-primary-border) (the --accent-solid-border edge is the boundary: the Soft sage fill is a tint), &:hover background var(--accent-solid-hover), &:active background var(--accent-solid-active); &[aria-disabled='true'] (never the disabled prop) the faded state of its variant (the 2026-10-18 decision; not gated, WCAG exempts inactive controls): contained background var(--button-primary-disabled-fill) borderColor var(--button-primary-disabled-border) (a faint sage fill and edge), outlined background var(--button-secondary-disabled-fill) borderColor var(--button-secondary-disabled-border) (the sheet and the faint outline), text weight var(--type-weight-regular), each with color var(--button-{variant}-disabled-text) (a lower-luminance label); color=error outlined → the destructive variant (border/text var(--destructive-text), hover var(--destructive-bg-subtle)); contained error is not used"
       }
     },
     "MuiIconButton": {
@@ -338,7 +338,7 @@
         "notched": false
       },
       "styleOverrides": {
-        "root": "minHeight var(--size-control); borderRadius var(--radius-control); background var(--surface); .MuiOutlinedInput-notchedOutline borderColor var(--border-interactive); &:hover notchedOutline borderColor var(--text); &.Mui-focused notchedOutline borderColor var(--border-interactive) (unchanged) + outline 2px var(--focus-ring) offset 2px; &.Mui-error notchedOutline borderColor var(--status-error-text); &[aria-disabled='true'] background var(--disabled-surface); .MuiSelect-select paddingRight var(--field-select-padding-right)"
+        "root": "minHeight var(--size-control); borderRadius var(--radius-control); background var(--surface); .MuiOutlinedInput-notchedOutline borderColor var(--border-interactive); &:hover notchedOutline borderColor var(--text); &.Mui-focused notchedOutline borderColor var(--focus-ring) borderWidth 2px (one frame: the edge becomes the focus frame, no outline; MUI draws the notched outline inside the box, so nothing shifts), &.Mui-focused.Mui-error notchedOutline borderColor var(--status-error-text) (the error stays visible at 2 px); &.Mui-error notchedOutline borderColor var(--status-error-text); &[aria-disabled='true'] background var(--disabled-surface); .MuiSelect-select paddingRight var(--field-select-padding-right)"
       }
     },
     "MuiInputLabel": {
@@ -356,7 +356,7 @@
     },
     "MuiCheckbox": {
       "styleOverrides": {
-        "root": "box var(--checkbox-size), corners var(--checkbox-radius) (6px); unchecked border 1px var(--border-interactive) (var(--checkbox-border-width)); &.Mui-checked fill var(--selection-bg) border/glyph var(--selection-text); hit area var(--checkbox-hit) through the centred ::before"
+        "root": "box var(--checkbox-size), corners var(--checkbox-radius) (6px); unchecked border 1px var(--border-interactive) (var(--checkbox-border-width)); &.Mui-focusVisible the box's border var(--focus-ring) + boxShadow inset 0 0 0 1px var(--focus-ring) (one frame, no ring around the box); &.Mui-checked fill var(--selection-bg) border/glyph var(--selection-text); hit area var(--checkbox-hit) through the centred ::before"
       }
     },
     "MuiRadio": {
@@ -366,12 +366,12 @@
     },
     "MuiSwitch": {
       "styleOverrides": {
-        "root": "track var(--switch-track-width)×var(--switch-track-height), fill var(--switch-track) border 1px var(--switch-border), thumb var(--switch-thumb) fill var(--switch-thumb); &.Mui-checked track var(--switch-variant-on-track) border/thumb var(--switch-variant-on-border); thumb travel var(--motion-micro) var(--motion-ease-toggle); track corners var(--switch-radius) (6px, --radius-control: a rounded rectangle, never a pill) and thumb corners var(--switch-thumb-radius) (6px, --radius-small: a rounded square on the 14 px thumb, never a circle); 50 % is for dot-like marks and convention-bound circles only, the plan's Decision Log"
+        "root": "track var(--switch-track-width)×var(--switch-track-height), fill var(--switch-track) border 1px var(--switch-border), thumb var(--switch-thumb) fill var(--switch-thumb); &.Mui-checked track var(--switch-variant-on-track) border/thumb var(--switch-variant-on-border); thumb travel var(--motion-micro) var(--motion-ease-toggle); &.Mui-focusVisible the track's border var(--focus-ring) + boxShadow inset 0 0 0 1px var(--focus-ring) (one frame); track corners var(--switch-radius) (6px, --radius-control: a rounded rectangle, never a pill) and thumb corners var(--switch-thumb-radius) (6px, --radius-small: a rounded square on the 14 px thumb, never a circle); 50 % is for dot-like marks and convention-bound circles only, the plan's Decision Log"
       }
     },
     "MuiChip": {
       "styleOverrides": {
-        "root": "height var(--size-chip); borderRadius var(--radius-control); status: background var(--chip-status-variant-{k}-fill) color var(--chip-status-variant-{k}-text) + icon; filter (clickable): border var(--border-interactive) background var(--surface) color var(--text), [aria-pressed=true] background var(--selection-bg) color/border var(--selection-text) weight 600; role: background var(--surface-active) color var(--text) no border"
+        "root": "height var(--size-chip); borderRadius var(--radius-control); status: background var(--chip-status-variant-{k}-fill) color var(--chip-status-variant-{k}-text) + icon; filter (clickable): border var(--border-interactive) background var(--surface) color var(--text), &.Mui-focusVisible border var(--focus-ring) + boxShadow inset 0 0 0 1px var(--focus-ring) (one frame), [aria-pressed=true] background var(--selection-bg) color/border var(--selection-text) weight 600; role: background var(--surface-active) color var(--text) no border"
       }
     },
     "MuiTabs": {
@@ -475,7 +475,7 @@
     },
     "MuiFab": {
       "styleOverrides": {
-        "root": "the launcher: width/height var(--size-launcher); background var(--accent-solid); color var(--accent-on-solid); border 1px solid var(--launcher-border) (the --accent-solid-border edge); boxShadow var(--shadow-2); &:hover background var(--accent-solid-hover) boxShadow unchanged; &:active background var(--accent-solid-active)"
+        "root": "the launcher: width/height var(--size-launcher); background var(--accent-solid); color var(--accent-on-solid); border 1px solid var(--launcher-border) (the --accent-solid-border edge); boxShadow var(--shadow-2); &:hover background var(--accent-solid-hover) boxShadow unchanged; &:active background var(--accent-solid-active); &.Mui-focusVisible borderColor var(--focus-ring) + boxShadow inset 0 0 0 1px var(--focus-ring), var(--shadow-2) (one frame: the edge becomes the 2 px focus frame)"
       }
     },
     "MuiLink": {

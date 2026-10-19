@@ -32,6 +32,10 @@
 //  23. Public states (re-lock review, fix round 1): every stateful rule of the public CSS that paints a button, a field, a chip or a step resolves, in
 //      both colour modes, to the hex of the component spec's part for that state, through the public map; the emitted (light-only) literal equals the
 //      light hex; and two planted defects (the re-lock's regression: the secondary's hover on --kiwi-bg-selected) must be caught.
+//  24. One frame on focus (the user's decision of 2026-10-19): a control that has a border shows focus on that border, never a second ring: its focus
+//      state's border and ring are --focus-ring in both modes, and the 2 px focused frame clears 3:1 against the control's fill (every variant's
+//      fill too) and against the surfaces it sits on, in both modes; in the public CSS, every :focus-visible rule of a bordered class recolours the
+//      border and draws no visible outline outside it.
 // Writes ./generated/check-summary.json with every count the DESIGN.md evidence quotes, so the evidence paragraph is generated, not typed.
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { execSync } from "node:child_process";
@@ -526,8 +530,9 @@ const PUBLIC_STATES = [
   [".kiwi-btn-primary", "border-color", "component.button.primary.state.default.border"],
   ['.kiwi-btn-primary:hover:not(:disabled):not([aria-disabled="true"])', "background-color", "component.button.primary.state.hover.fill"],
   ['.kiwi-btn-primary:active:not(:disabled):not([aria-disabled="true"])', "background-color", "component.button.primary.state.active.fill"],
-  [".kiwi-btn:focus-visible", "outline", "component.button.primary.state.focus.ring"],
-  [".kiwi-btn:focus-visible", "outline", "component.button.secondary.state.focus.ring"],
+  [".kiwi-btn:focus-visible", "border-color", "component.button.primary.state.focus.border"],
+  [".kiwi-btn:focus-visible", "border-color", "component.button.secondary.state.focus.border"],
+  [".kiwi-btn:focus-visible", "box-shadow", "component.button.primary.state.focus.ring"],
   ['.kiwi-btn-primary[aria-disabled="true"], .kiwi-btn-primary:disabled', "background-color", "component.button.primary.state.disabled.fill"],
   ['.kiwi-btn-primary[aria-disabled="true"], .kiwi-btn-primary:disabled', "border-color", "component.button.primary.state.disabled.border"],
   ['.kiwi-btn[aria-disabled="true"], .kiwi-btn:disabled', "color", "component.button.primary.state.disabled.text"],
@@ -544,7 +549,9 @@ const PUBLIC_STATES = [
   [".kiwi-input", "color", "component.field.state.default.text"],
   [".kiwi-input", "border-color", "component.field.state.default.border"],
   [".kiwi-input:hover", "border-color", "component.field.state.hover.border"],
-  [".kiwi-input:focus-visible", "outline", "component.field.state.focus.ring"],
+  [".kiwi-input:focus-visible", "border-color", "component.field.state.focus.border"],
+  [".kiwi-input:focus-visible", "box-shadow", "component.field.state.focus.ring"],
+  ['.kiwi-input[aria-invalid="true"]:focus-visible', "border-color", "component.field.state.error.border"],
   ['.kiwi-input[aria-invalid="true"]', "border-color", "component.field.state.error.border"],
   ['.kiwi-input[aria-disabled="true"], .kiwi-input:disabled', "background-color", "component.field.state.disabled.fill"],
   ['.kiwi-input[aria-disabled="true"], .kiwi-input:disabled', "color", "component.field.state.disabled.text"],
@@ -563,7 +570,7 @@ const PUBLIC_STATES = [
   ['.kiwi-step-indicator[aria-invalid="true"]', "background-color", "semantic.color.status.error.surface"],
   ['.kiwi-step-indicator[aria-invalid="true"]', "color", "semantic.color.status.error.text"],
 ];
-const PROP_NAMES = { "background-color": ["background-color", "background"], "border-color": ["border-color", "border"], color: ["color"], outline: ["outline", "outline-color"] };
+const PROP_NAMES = { "background-color": ["background-color", "background"], "border-color": ["border-color", "border"], color: ["color"], outline: ["outline", "outline-color"], "box-shadow": ["box-shadow"] };
 function publicStates(css, map) {
   const rows = [], bad = [], link = { sameRole: 0, sharedRole: 0, valueOnly: 0 };
   const rootStart = css.indexOf(":root {"), root = rootStart >= 0 ? css.slice(rootStart, css.indexOf("\n}", rootStart)) : "";
@@ -611,6 +618,52 @@ log(`\n## 23. Public states against the component spec\n\n${PUBLIC_STATES.length
 log("| Rule | Property | Public name → role | Spec part | Light (public / spec) | Dark (public / spec) | |\n|---|---|---|---|---|---|---|");
 for (const r of pubStates.rows) log(`| ${r.map((x) => String(x).replace(/\|/g, "\\|")).join(" | ")} |`);
 
+// ---------- 24. one frame on focus (the user's decision of 2026-10-19) ----------
+// A control that has a border shows focus by recolouring that border to --focus-ring at 2 px (the extra pixel inward), never by a second ring outside
+// it. Held from the source: every component whose focus state draws a border is a bordered control; its focus border and ring are --focus-ring in both
+// modes, so the frame is recoloured, not stacked; and the 2 px frame clears 3:1 against the control's fill (a transparent control's fill is the surface
+// behind it), against every variant fill of the control (selected, checked, on: they can be focused too) and against the canvas and the sheet. The
+// borderless controls keep their ring (their only frame) and its existing assertions. In the public CSS, every :focus-visible rule of a bordered class
+// sets the border to the focus colour and draws no visible outline outside the border box.
+let frameN = 0, frameBad = 0; const frameRows = [];
+{
+  const ffail = (s) => { fail(`one frame: ${s}`); frameBad++; };
+  const FRp = "semantic.color.focus-ring", grounds = ["semantic.color.surface", "semantic.color.background"];
+  const hex = (p, ctx) => String(resolve(tree, p, ctx)).toLowerCase();
+  walkGroups(tree, (p, g) => {
+    if (!p.startsWith("component.") || !g.state || !g.state.focus || !g.state.focus.border) return;
+    const f = g.state.focus, base = `${p}.state.focus`;
+    if (f.$extensions?.["org.kiwi"]?.focusOn) { frameRows.push([p.replace("component.", ""), "both", "focus is on a control inside", f.$extensions["org.kiwi"].focusOn.split(":")[0], "", "n/a (the sheet's edge never changes)"]); return; }
+    const fills = [["focus fill", f.fill ? `${base}.fill` : null], ...Object.entries(g.variant || {}).filter(([k, v]) => !k.startsWith("$") && v && v.fill).map(([k]) => [`variant ${k} fill`, `${p}.variant.${k}.fill`])];
+    for (const [mode, ctx] of [["light", L], ["dark", D]]) {
+      const ring = hex(FRp, ctx);
+      frameN++; if (hex(`${base}.border`, ctx) !== ring) ffail(`${base}.border is ${hex(`${base}.border`, ctx)} in ${mode}, not the focus ring ${ring}: the frame must be recoloured, not stacked`);
+      if (f.ring) { frameN++; if (hex(`${base}.ring`, ctx) !== ring) ffail(`${base}.ring is not the focus ring in ${mode}`); }
+      const against = [...fills.filter(([, fp]) => fp).map(([lab, fp]) => [lab, fp]), ...grounds.map((gp) => [gp.replace("semantic.color.", ""), gp])];
+      for (const [lab, gp] of against) {
+        const v = String(resolve(tree, gp, ctx)); if (!isHex(v) || /^#[0-9a-f]{6}00$/i.test(v)) continue; // a transparent fill shows the ground behind it, held by the grounds
+        const r = contrast(ring, v); frameN++;
+        if (r < 3) ffail(`${p}: the focused frame ${ring} is ${r.toFixed(2)}:1 against ${lab} ${v} in ${mode}`);
+        frameRows.push([p.replace("component.", ""), mode, lab, v, r.toFixed(2), r >= 3 ? "PASS" : "FAIL"]);
+      }
+    }
+  });
+  // the public CSS: a bordered class recolours its border on focus and draws no outline outside it
+  for (const head of [".kiwi-btn:focus-visible", ".kiwi-input:focus-visible"]) {
+    const at = pubCss.indexOf("\n" + head + " {"); frameN++;
+    if (at < 0) { ffail(`${head}: no rule in the public CSS`); continue; }
+    const body = pubCss.slice(at, pubCss.indexOf("}", at));
+    const decl = (n) => (body.match(new RegExp(`(?:^|[;{\\s])${n}\\s*:\\s*([^;]+)`)) || [])[1]?.trim();
+    const outline = decl("outline") || "", offset = parseFloat(decl("outline-offset") || "0"), width = parseFloat((outline.match(/([0-9.]+)px/) || [])[1] || "0");
+    const visibleOutside = outline && !/\bnone\b/.test(outline) && !/transparent/.test(outline) && width > 0 && offset > -width;
+    if (visibleOutside) ffail(`${head} draws a visible outline outside the border ("outline: ${outline}; outline-offset: ${offset}px")`);
+    if (!/var\(--kiwi-border-focus\)/.test(decl("border-color") || "")) ffail(`${head} does not recolour the border to --kiwi-border-focus`);
+  }
+}
+log(`\n## 24. One frame on focus\n\n${frameN} assertions, ${frameBad} failures: every control that has a border shows focus on that border (its focus border and ring are --focus-ring in both modes), the 2 px frame clears 3:1 against the control's fill, its variant fills and the canvas and the sheet, and the public CSS recolours the border of .kiwi-btn and .kiwi-input on focus with no visible outline outside it.\n`);
+log("| Control | Mode | Against | Value | Ratio | |\n|---|---|---|---|---|---|");
+for (const r of frameRows) log(`| ${r.join(" | ")} |`);
+
 // ---------- report ----------
 // the run's identity is derived: the clock, the source's version and content hash, and the commit (null when uncommitted or outside git)
 const today = new Date().toISOString().slice(0, 10);
@@ -621,7 +674,7 @@ writeFileSync(join(here, "generated/contrast-report.md"), summary + out.join("\n
 // the machine-readable summary the DESIGN.md evidence paragraph is assembled from
 let descN = 0, tokenN = 0; walk(tree, (p, tk) => { if (!/^(global|semantic|component)\./.test(p)) return; tokenN++; if (tk.$description) descN++; });
 let groupN = 0, groupDescN = 0; walkGroups(tree, (p, g) => { if (!/^(semantic|component)\./.test(p)) return; groupN++; if (g.$description) groupDescN++; });
-writeFileSync(join(here, "generated/check-summary.json"), JSON.stringify({ date: today, source: { version: meta.version, sha256: srcSha, commit }, result: failures.length ? "FAIL" : "PASS", failures: failures.length, components: COMPONENTS.length, aliasOk, aliasBad, stateGroups: stateGroups.length, stateSpecs: stateGroups.length * 8, contrast: { pass, fail: failN, informational: exempt }, tier: { refs: compRefs, violations: tierBad.length }, literals: { marked: compLiterals.length, unmarked: compLiteralUnmarked.length, outsideGlobal: literalBad.length, banned: bannedReal.length }, public: { pinned: pinned.length, unmapped: unmapped.length, notEmitted: notEmitted.length, counts, classes: { pinned: v1Classes.length, missing: missingClasses.length, emitted: genClasses.size }, keyframes: { pinned: v1Keyframes.length, missing: missingKeyframes.length, emitted: genKeyframes.size }, deprecatedClasses: classDeprecated, deprecationViolations: depBad + classDepBad }, cues: { variants: TOGGLES.length, assertions: cueN, failures: cueBad }, frozen: { n: frozenN, drifted: frozenBad }, chart: { series: chartN, failures: chartBad, measured: chartMeasured }, editorSelection: { assertions: selN, failures: selBad }, motionGuard: { moving: motionAnimated, guarded: motionGuarded }, muiGrey: { keys: greyN, mismatches: greyBad }, companionBacking: { assertions: compN, failures: compBad, pixelAssets: pixN, pixelFailures: pixBad }, provenance: { values: provN, given: provKinds.given, derived: provKinds.oklch, kept: provKinds.kept, failures: provBad }, scrim: { assertions: scrimN, failures: scrimBad }, publicStates: { rules: PUBLIC_STATES.length, failures: pubStates.bad.length, sameRole: pubStates.link.sameRole, sharedRole: pubStates.link.sharedRole, valueOnly: pubStates.link.valueOnly, plantsCaught: pubPlants.filter((p) => p.caught).length, plants: pubPlants.length }, densityDeltas: deltas.length, descriptions: { tokens: tokenN, described: descN, groups: groupN, groupsDescribed: groupDescN } }, null, 1) + "\n");
+writeFileSync(join(here, "generated/check-summary.json"), JSON.stringify({ date: today, source: { version: meta.version, sha256: srcSha, commit }, result: failures.length ? "FAIL" : "PASS", failures: failures.length, components: COMPONENTS.length, aliasOk, aliasBad, stateGroups: stateGroups.length, stateSpecs: stateGroups.length * 8, contrast: { pass, fail: failN, informational: exempt }, tier: { refs: compRefs, violations: tierBad.length }, literals: { marked: compLiterals.length, unmarked: compLiteralUnmarked.length, outsideGlobal: literalBad.length, banned: bannedReal.length }, public: { pinned: pinned.length, unmapped: unmapped.length, notEmitted: notEmitted.length, counts, classes: { pinned: v1Classes.length, missing: missingClasses.length, emitted: genClasses.size }, keyframes: { pinned: v1Keyframes.length, missing: missingKeyframes.length, emitted: genKeyframes.size }, deprecatedClasses: classDeprecated, deprecationViolations: depBad + classDepBad }, cues: { variants: TOGGLES.length, assertions: cueN, failures: cueBad }, frozen: { n: frozenN, drifted: frozenBad }, chart: { series: chartN, failures: chartBad, measured: chartMeasured }, editorSelection: { assertions: selN, failures: selBad }, motionGuard: { moving: motionAnimated, guarded: motionGuarded }, muiGrey: { keys: greyN, mismatches: greyBad }, companionBacking: { assertions: compN, failures: compBad, pixelAssets: pixN, pixelFailures: pixBad }, provenance: { values: provN, given: provKinds.given, derived: provKinds.oklch, kept: provKinds.kept, failures: provBad }, scrim: { assertions: scrimN, failures: scrimBad }, oneFrame: { assertions: frameN, failures: frameBad }, publicStates: { rules: PUBLIC_STATES.length, failures: pubStates.bad.length, sameRole: pubStates.link.sameRole, sharedRole: pubStates.link.sharedRole, valueOnly: pubStates.link.valueOnly, plantsCaught: pubPlants.filter((p) => p.caught).length, plants: pubPlants.length }, densityDeltas: deltas.length, descriptions: { tokens: tokenN, described: descN, groups: groupN, groupsDescribed: groupDescN } }, null, 1) + "\n");
 console.log(summary.trim());
-console.log(`alias equalities ${aliasOk}/${aliasOk + aliasBad} · state groups ${stateGroups.length} · contrast required ${pass} pass / ${failN} fail, ${exempt} informational · literals outside global ${literalBad.length} · banned ${bannedReal.length} · public unmapped ${unmapped.length} · v1 classes missing ${missingClasses.length}/${v1Classes.length}, keyframes missing ${missingKeyframes.length}/${v1Keyframes.length} · tier violations ${tierBad.length} · component literals ${compLiterals.length} marked / ${compLiteralUnmarked.length} unmarked · deprecation violations ${depBad + classDepBad} (${counts.deprecated} names, ${classDeprecated} classes/keyframes) · density deltas ${deltas.length} · cues ${cueN} assertions / ${cueBad} failures · frozen literals ${frozenN} / ${frozenBad} drifted · chart ${chartN} series values / ${chartBad} failures · editor selection ${selN} assertions / ${selBad} failures · public motion guard ${motionGuarded}/${motionAnimated} · MUI grey ${greyN - greyBad}/${greyN} · companion backing ${compN - compBad}/${compN} pairs, ${pixN - pixBad}/${pixN} assets pixel-sampled · provenance ${provN - provBad}/${provN} (${provKinds.given} given, ${provKinds.oklch} derived, ${provKinds.kept} kept) · dialog scrim ${scrimN - scrimBad}/${scrimN} · public states ${PUBLIC_STATES.length - pubStates.bad.length}/${PUBLIC_STATES.length} (planted defects caught ${pubPlants.filter((p) => p.caught).length}/${pubPlants.length})`);
+console.log(`alias equalities ${aliasOk}/${aliasOk + aliasBad} · state groups ${stateGroups.length} · contrast required ${pass} pass / ${failN} fail, ${exempt} informational · literals outside global ${literalBad.length} · banned ${bannedReal.length} · public unmapped ${unmapped.length} · v1 classes missing ${missingClasses.length}/${v1Classes.length}, keyframes missing ${missingKeyframes.length}/${v1Keyframes.length} · tier violations ${tierBad.length} · component literals ${compLiterals.length} marked / ${compLiteralUnmarked.length} unmarked · deprecation violations ${depBad + classDepBad} (${counts.deprecated} names, ${classDeprecated} classes/keyframes) · density deltas ${deltas.length} · cues ${cueN} assertions / ${cueBad} failures · frozen literals ${frozenN} / ${frozenBad} drifted · chart ${chartN} series values / ${chartBad} failures · editor selection ${selN} assertions / ${selBad} failures · public motion guard ${motionGuarded}/${motionAnimated} · MUI grey ${greyN - greyBad}/${greyN} · companion backing ${compN - compBad}/${compN} pairs, ${pixN - pixBad}/${pixN} assets pixel-sampled · provenance ${provN - provBad}/${provN} (${provKinds.given} given, ${provKinds.oklch} derived, ${provKinds.kept} kept) · dialog scrim ${scrimN - scrimBad}/${scrimN} · public states ${PUBLIC_STATES.length - pubStates.bad.length}/${PUBLIC_STATES.length} (planted defects caught ${pubPlants.filter((p) => p.caught).length}/${pubPlants.length}) · one frame ${frameN - frameBad}/${frameN}`);
 process.exit(failures.length ? 1 : 0);
