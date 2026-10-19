@@ -12,7 +12,7 @@ import {
 import { ChatOutlined, CodeOutlined } from "@mui/icons-material";
 import { SessionActivity } from "./interface.tsx";
 import { AnalyticsChartTooltip } from "./AnalyticsChartTooltip.tsx";
-import { useAnalyticsChartAnimation } from "./chartAnimation.ts";
+import { CHART_SLICE_GAP, useChartTokens } from "./chartTokens.ts";
 
 interface DurationData {
   activity: string;
@@ -57,12 +57,12 @@ const generateRealDurationData = (
     {
       activity: "Chat",
       color: colors.chat,
-      icon: <ChatOutlined fontSize="small" />,
+      icon: <ChatOutlined fontSize="small" sx={{ color: "var(--icon-default)" }} />,
     },
     {
       activity: "IDE",
       color: colors.ide,
-      icon: <CodeOutlined fontSize="small" />,
+      icon: <CodeOutlined fontSize="small" sx={{ color: "var(--icon-default)" }} />,
     },
   ];
 
@@ -94,8 +94,8 @@ export const StandaloneUserDuration: React.FC<StandaloneUserDurationProps> = ({
   loading = false,
 }) => {
   const theme = useTheme();
-  const chartAnimation = useAnalyticsChartAnimation();
-  const chartColors = theme.palette.chart;
+  // Categories take the fixed slot order: Chat slot 1, IDE slot 2.
+  const chartColors = useChartTokens();
 
   // Generate chart data from real data only
   const chartData = useMemo(() => {
@@ -119,7 +119,6 @@ export const StandaloneUserDuration: React.FC<StandaloneUserDurationProps> = ({
         <AnalyticsChartTooltip
           title={`${data.activity}: ${data.percentage}%`}
           value={`Duration: ${durationInHours} hours`}
-          valueColor={data.color}
         />
       );
     }
@@ -136,11 +135,6 @@ export const StandaloneUserDuration: React.FC<StandaloneUserDurationProps> = ({
         width: "100%",
         height: "100%",
         minHeight: 340,
-        backgroundColor: "background.paper",
-        boxShadow: "none",
-        borderRadius: 2,
-        border: "1px solid",
-        borderColor: "divider",
       }}
     >
       <CardContent
@@ -203,25 +197,24 @@ export const StandaloneUserDuration: React.FC<StandaloneUserDurationProps> = ({
               </Box>
             ) : hasData ? (
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
+                <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }} accessibilityLayer={false}>
+                  {/* Square slices; a 2 px gap in the plot colour separates them. */}
                   <Pie
-                    {...chartAnimation}
+                    isAnimationActive={false}
                     data={chartData}
                     cx="50%"
                     cy="50%"
                     innerRadius={44}
                     outerRadius={66}
-                    paddingAngle={3}
-                    cornerRadius={4}
-                    stroke={theme.palette.background.paper}
-                    strokeWidth={3}
+                    stroke={chartColors.plot}
+                    strokeWidth={CHART_SLICE_GAP}
                     dataKey="duration"
                   >
                     {chartData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip content={<CustomTooltip />} offset={12} />
+                  <Tooltip content={<CustomTooltip />} offset={12} isAnimationActive={false} />
                   <text
                     x="50%"
                     y="47%"
@@ -238,7 +231,7 @@ export const StandaloneUserDuration: React.FC<StandaloneUserDurationProps> = ({
                     y="57%"
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    fill={theme.palette.text.secondary}
+                    fill={chartColors.tickText}
                     fontSize="12"
                   >
                     hours
@@ -285,13 +278,14 @@ export const StandaloneUserDuration: React.FC<StandaloneUserDurationProps> = ({
                         sx={{
                           width: 10,
                           height: 10,
-                          borderRadius: "50%",
+                          // A legend key is square, like the marks it keys.
+                          borderRadius: 0,
                           backgroundColor: item.color,
                           flexShrink: 0,
                         }}
                       />
                       {item.icon}
-                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                      <Typography variant="body2">
                         {item.activity}
                       </Typography>
                       <Typography variant="body2" sx={{
