@@ -1,5 +1,5 @@
 {
- "note": "The lock amendments of kiwi-ui/DESIGN.md and kiwi-ui/JOURNEY.md, recorded line for line (the SHA-256 of each line's text): what each one replaces and with what, what it inserts and where, what it appends, and its base, the commit before it. check-copy.mjs L7 and L8 read it (section 8b); L1 and L4 read DESIGN.md at the base. Written with the amendment, never typed.",
+ "note": "The lock amendments of kiwi-ui/DESIGN.md and kiwi-ui/JOURNEY.md, in the order they were made, each with its base (the commit before it) and its record, written with the amendment, never typed (record-amendment.mjs writes a new one, or rewrites the newest after more edits). check-copy.mjs L7 and L8 hold them as a chain (section 8b): each amendment from its base to the next one's base, the newest to the working tree; L1, L2, L4 and L5 read the two files at the first amendment's base. Two kinds of record, each line as the SHA-256 of its text. The first kind is scoped to one section (`design.section`): what the amendment replaces there and with what, what it inserts there, what it appends at the end of the file, and the lines it inserts in JOURNEY.md after an anchor. The second kind, a patch (`kind: \"patch\"`, for an amendment that edits many sections), holds each file position-exact as the hunks of a line diff from the base: `at` is where a hunk starts in the base (1-based, with every block the checker writes that `blocks` names collapsed to one line, so a rewritten block shifts no position), `removed` and `added` are the lines it takes out and puts in, and `starts` is the first 48 characters of its first line that is not blank, for a reader; no hunk means the file is unchanged.",
  "amendments": [
   {
    "id": "2026-10-18-full-body-avatar",
@@ -213,6 +213,2029 @@
       "after": "- **Companion (Phase 4):** (1) **Tutor avatar**,",
       "lines": [
        "9e0dd8747689a4df43dbe24b79600a30004334a26c267b5e4c6c731dc979334b"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "2026-10-18-relock-visual-layer",
+   "base": "05a85e03f6d20e3c9ecf9f1ce8ec1523ec6e905e",
+   "decided": "2026-10-18",
+   "decision": "Re-lock of the visual layer: the palette aligned to the user's kiwi-icon page, the Soft sage primary, the Paper dialog, radius 6 / 8 px; the user re-confirmed the lock with these values (plan Decision Log, the 2026-10-18 rows from the rounded-corner request to the re-lock); on the re-lock's review the user faded the disabled buttons and removed the ruler's ticks everywhere (plan Decision Log, \"Disabled buttons\" and \"Ruler ticks removed\")",
+   "design": {
+    "kind": "patch",
+    "blocks": [
+     "evidence",
+     "coverage",
+     "evidence-p6"
+    ],
+    "hunks": [
+     {
+      "at": 2,
+      "starts": "**Date:** 2026-10-16 · **Status:** locked (2026-",
+      "removed": [
+       "ebf483ded670a1abd3d825027d5abdb3a733d2155373037d089373ccc44f0a49"
+      ],
+      "added": [
+       "ef0c865d943533a60b19cbce203389acde2b5b3169e841ed60b167a103e9e403"
+      ]
+     },
+     {
+      "at": 15,
+      "starts": "A quiet academic shell with one living companion",
+      "removed": [
+       "c341d19657bd0e2ef4e39699d4986e42673f82a09a4a5864fd5da30983a42f8d"
+      ],
+      "added": [
+       "ba99e560eeb084644ad7ace64b23211de72fe0462176fbf3d876a8849dd9b8a1"
+      ]
+     },
+     {
+      "at": 21,
+      "starts": "**A visible baseline ruler runs down one edge, a",
+      "removed": [
+       "bec08415bc4c51a211ce476994113a560e2838d0580326aaa566824b8f539a9e"
+      ],
+      "added": [
+       "21a433a0030a8fe06a680a4188bb8f1e5ac2302b59d80e384519fa7934375ad2"
+      ]
+     },
+     {
+      "at": 25,
+      "starts": "- The ticks: 6 px wide, 1 px tall, one per line ",
+      "removed": [
+       "ba9e10b3f5e3d7296ca2aa590f0f996942c9c46a8c236a7c923fc618d11e6a82",
+       "b13fc5c5ff48b6147e93b8f71de5c91b13d9fd32bd45fcc5c381a60f7ac4bfe9",
+       "7d016dfcecd3432672ec5e58c72c33f5279f71b5fa6e83b03a1d51b1f9d9a832",
+       "10f531764bda02677361587cc0f07b8651e2298ffe8d47f2fe804820ec034595",
+       "f266763e4ab56dacb20225668f7fac3c6ab53e4723b2548173d48190ee0ce6e6",
+       "f8663c67d9fd229d30da9b1cdc193f28898230eab7583f870ef49fc41932fbbc"
+      ],
+      "added": [
+       "d23c3c7529e37a46c2d07e8b13417dc879805f3d613574614550d4abe4f82a89",
+       "cc74c461f8fd8429631cacb1b229f29cbcdf14d6b927faddf3ae2b594e6aad91",
+       "903b7f6664f73fc7aebcea2487c57559268acee4a1845c3d58d909cf461ebb61",
+       "0dcefedac45fa5edf04b9900c9c38cc7a13a729ac61470e2404294f4b7502c15"
+      ]
+     },
+     {
+      "at": 61,
+      "starts": "- **Leading:** Latin body 1.5 (24 px on 16); hea",
+      "removed": [
+       "02d00a3a55b5fb007761fa9e9bd3d7cf8b78d4f67ab7795a4528688fbccee504"
+      ],
+      "added": [
+       "5283f8996bf9a1e9611f841e67ed927c68583eb24bfe5f70d9a96ad7cde4b7d8"
+      ]
+     },
+     {
+      "at": 69,
+      "starts": "### Regeneration procedure (three runs, one spli",
+      "removed": [
+       "87e81e567ab28b324612bb517c558b9219915b360ee2e2724b72d4aacffc45c0"
+      ],
+      "added": [
+       "efe801d7d1a2641f6fa8d7e956f2fedf323d9085c71fb3eb5be36442df52e735"
+      ]
+     },
+     {
+      "at": 71,
+      "starts": "\"Re-run `palette.mjs`\" means all three runs, the",
+      "removed": [
+       "2df2beb561045ed039aa6596f2d1f6efdac2c175612b31e50d0cc3a44b4c7551"
+      ],
+      "added": [
+       "30a680e1ca7dd6f50b74e4fa91e9e3c3138fd3bf8cf31543d3e569bfb645f163"
+      ]
+     },
+     {
+      "at": 73,
+      "starts": "| Run | Command | Supplies to the block |",
+      "removed": [
+       "231d09c9ec62620fedcfa333eb05e966dd6f78f1a5493c2d9cee9682a2044cc8"
+      ],
+      "added": [
+       "56335fe8e82a0b40c4689a012889450a4a0f4509358b5ecc3ad751272236b958"
+      ]
+     },
+     {
+      "at": 75,
+      "starts": "| A | `node palette.mjs --seed 156 --chroma mute",
+      "removed": [
+       "bdfa8d6804079d2b8a3b16135d31938fbded380f26c0e613f527c75780c94981",
+       "638dac2f8a36fe5d93171522504a172a313d7d725fd5caf7b2ceaf05e3777bd8",
+       "bccca8b7d30b429eeb8ff9e160e92f7fae7bb93bfc8a03e85f2b9b44e78c27d5"
+      ],
+      "added": [
+       "15359066d9662349887d26c2d8c92be7ac6d9b5b6e8db8793ebbab69f080e105",
+       "9fb55b7b4a58f0baf1a59c3f37b420d9d436d2413ee0e929cb308a7a55bc3459",
+       "7199ee8872f01b9342a1a0900af4027cb86d88292e4ab0034dddb0efc3d160bc"
+      ]
+     },
+     {
+      "at": 79,
+      "starts": "Why three: `palette.mjs` tints its neutral ramp ",
+      "removed": [
+       "981bb99bd75772499c04e94f06b9f56345cef2dde7312dcc03f5b09d632b6d2b"
+      ],
+      "added": [
+       "f6e2ab276fe501cdfb10998a550259181b2274792964efad0a5148312f7dc0f9"
+      ]
+     },
+     {
+      "at": 81,
+      "starts": "**Splice rule:** copy the named ramps verbatim f",
+      "removed": [
+       "e5f43feb8e6865b0de94046cf8a81aec345b8b7be477be2aa2cc89a2040c81fe"
+      ],
+      "added": [
+       "2f7ff45a92fc8b1b00bfa692d302a7cb123c0436360dc701176d6fe8e2dae18f"
+      ]
+     },
+     {
+      "at": 83,
+      "starts": "**Alias overrides (per mode).** `palette.mjs` em",
+      "removed": [
+       "19a5bfae2c22dbd447f7c98d46653b16711c9385dd18cc054a4a0609ac58c0bf"
+      ],
+      "added": [
+       "42d5c6d44db5b7a3b1dbb19a0eefa03c2b0fa4d761a3d481734acf98cee51f1c"
+      ]
+     },
+     {
+      "at": 85,
+      "starts": "| Alias | palette.mjs default | Light (locked) |",
+      "removed": [
+       "1f7dcb5336c1be2d29f80caff35071f32968724add22e709f97836cd6c900e35"
+      ],
+      "added": [
+       "839407e371c49a71bf155a3861875b79270cdc3a87360567bc94408fa4297ac9"
+      ]
+     },
+     {
+      "at": 87,
+      "starts": "| `--background` | `neutral-1` | `var(--paper-3)",
+      "removed": [
+       "7707a43bd4b76f0036c5fcda661146a77a644b2079b67ec9b85d26bbf25d741d",
+       "58159ba91659e95a4010c5a6e21cdbdd7f10bdb6273d2869b3c8c42523a78a81",
+       "c1fe2fa03e84c250cfcda901966ba3d5b1c2cd3d8bca7acd44e4e489915664c6",
+       "5013adaef91007ff11759170be2fba39fd608baa11c1d31a548e83b8124dc966",
+       "61e57b0899067a6310503b02658c36789d24473354b8a2d59f305a0ce351b2f1",
+       "e0fa52abccbf53ceeaaf20e3f415af5e3ad26a002ba1dbad3d4e3c4ce01d56dd",
+       "8e50c43622518568a77d55e205cbb3dd08fbe20c347002c209182ea2d80b7289"
+      ],
+      "added": [
+       "7686b3b103104aa05e69b125ddc65075a06472a7b73eafdd93fec85a167c8582",
+       "953909117bbf60663c533b1bbf643343b91e22fd96e3cc785128c3c78b88d3a6",
+       "de7a74ee2549dd71ac4f037d2787f4efe01f8797b3b0469ff5edd7c7afc5b5bc",
+       "d6df4c385c49ec1d13e5a636b0706fa94f7e7458c7ae9eb19db0d09b6ab3a9dc",
+       "15a104587e80bc120aa9c75a8f6a44da079d29d5acff708b2e88c9ed06b41cd8",
+       "7a5c083022d1b592719a76fa570e93b14bf7858de80384247a96b498b9986a39",
+       "04dc6ce9bb756ad718d2d69cd564284e41847a58016b78b6ab08ed892eef7e34",
+       "0ea38a4e2109dc946858e0b6d89490e3461d57542977f97ff98ac33f5d467a9c",
+       "ea84edee90d021a95dc8b8ef2c2ad070b89c53ff794423f2b88d160de0471f8d",
+       "f543643ada862748bda70a1b8a110684feb2a144734a4e5bd124a40372689325",
+       "01229c6ee9e51e7705ea904cd5d4f99be2fece51ef0b08b0cd040947a01dc066",
+       "819532797fde31a12df7fe73ef87444a5900864bed1463767b17514100f1b432",
+       "4a34c94d824fc1bacfaa867269ec7341df190e0932b048c7182206834fcf0c84",
+       "4111e15398a73dce841883b4aed5e9185fdd7ba75e8e8f245533fc200f1f2d99",
+       "74d2bbb9d675cd9b4e8c747c533bd55e4629b3fc20a1cd8be6e1138948128f4f",
+       "a0e497ef063806fbb4786b06f1698e762e9a51c56a65f6984f4e071807fac2d4"
+      ]
+     },
+     {
+      "at": 95,
+      "starts": "Kept byte-equal in both modes: `--border-subtle`",
+      "removed": [
+       "377c4b3c2dfe19eb73a9722976526542e4d0902cd3dfb4ffa7b22e670fefa0ff"
+      ],
+      "added": [
+       "7b1d3c5f3beb11f2da326c07bdca0db7f7b1deef99e6609ad5d972383be8b2b0"
+      ]
+     },
+     {
+      "at": 97,
+      "starts": "**Ramp order.** Step 9 of every ramp is the hue'",
+      "removed": [
+       "a41f8b81be02d2a34eb81ff1690deff7fceee0e71cb2ce9dd6067b28b2e8bdbf",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      ],
+      "added": []
+     },
+     {
+      "at": 102,
+      "starts": "/* Kiwi UI — Ruled Folio · generated by design-f",
+      "removed": [
+       "8eac353b24d27f1966f52d767465e400a93c0ff48d714c94e85704636643425c"
+      ],
+      "added": [
+       "aa5cae259406b40a13ecbb40e6b30873072ce1f714ec1d73998195013887dc84"
+      ]
+     },
+     {
+      "at": 104,
+      "starts": "  /* run B · seed 95 muted · neutral ramp (cream",
+      "removed": [
+       "ac7be10ab42742013f8972f5e2149ed08ab0a12e3fd20e1aad73616cca2f3c93",
+       "0dba23c183a26ca78d7b227a4faf4285034d43704914f0976467ce94c634e431",
+       "6a4a0f505b954aab81c8abf2b06441de5da3d05d8496cd84893d04afe4d3e3e5",
+       "708631fcd6cdf6de826fb1ec1f13a340418dbf01e3e543ff8e6c6b5dc382aee8",
+       "aee7bc9c3951c7a443a68197b5c9b86ef7b1b64556672c1021f2d0a4f83039f0",
+       "b957002981adb98964a13e3834bcc4544cb308ffd988fbfac8d288324b751ac6",
+       "d900aaee64ca186f806f1b53b3087083945593d59abeeb3b6e562a8940299ceb",
+       "960de355265f0781cf9468d8450cd4caf61765a862995b199dc3b1c69174b4a9",
+       "6958ab4519ab8d20ec7d374fc07bf8558626dc4a99b8adf4564872397c9d1f7f",
+       "5e4661d115b81a06bab2ae53df21bab341af568888c6c38a9c45734747e1cf38",
+       "47adbaef8197f33cf61037db7d82335ce4987b9e5e07a84811ca29a74891f84f"
+      ],
+      "added": [
+       "b2701c64d6a138d2ff3f70174c3933e66d6c5ca74cbf2bfe629d4ad439c6cf94",
+       "bc59dcd85a14a39ef9b9f4e6c0122cb289eb0deb3a44806138423c701dec1a48",
+       "30e4a02419aedee9b27f73430390313dda23acdad6cdf9723fd32fd43a6c0584",
+       "6b1cd16f15f81c3592ec1f80739b1e2aecab52107e92a518b8d0e4c8c6d51329",
+       "0807e24b8d293dc9b140f536253b3d3aa125358513ee813b2ee3f7f181200770",
+       "b3ae91a29994262622f13dab0a0fde1d8ff964b53d89e853d1b860da970e2580",
+       "b45b88c51b8bdbfa681b78e24a31a6c2a8fb14092ab065124ed44bc2345ca008",
+       "31208f0a7019facd88a809a61e713cda6b94d363ad7039b9c2274a8541a5e4bb",
+       "417eb335735b24cab6e877044db556dc36520bc3468fb3aae6ecd3dbb69754bc",
+       "610223971da91725f5c21352dd83bbbdc3b285333f43bc48a4a61a9a1ee075bd",
+       "442d267db5dd903e7e7d80a66d430b6ff72bb6ef2c4abe1957cd397855aca669",
+       "43d224694391ec6537e8ccefc7468104e985e1744a74b37a2f2adfefef059f1a",
+       "8e0d529c0d1987741757d94869963ce31f61c496d4e349f75aba3c1a08f3b070"
+      ]
+     },
+     {
+      "at": 119,
+      "starts": "  /* semantic aliases (palette.mjs set; per-mode",
+      "removed": [
+       "357ee399c079a0a8f4918180054c980ddf71673c23acbfe152c635556339ef8f",
+       "cd4934ba541d78bb4b973829f25ee51482b5ca0556880b16a4770c503a4daa15",
+       "b33caad5893abe54c3618e6b9c73d6bb6495ac64e986e01860c556a18d746dfa"
+      ],
+      "added": [
+       "d939520168f61d0eb093c0d9028f25773ecceba30cc9b8082e3b8eec7ea0d3a1",
+       "be480bebb6211fd14f7cdbb4143a2cf260b2ed269700713fe637263db10bd84e",
+       "5a9054bbe61c9882b66e5ae7c5c2982db2682dac32d4f1174d05101dcf2692c7"
+      ]
+     },
+     {
+      "at": 126,
+      "starts": "  --border-strong: var(--neutral-8);",
+      "removed": [
+       "492498ad9d296687d9c43454890d81d4e554294a76113b62c50cc41bd1a8b777"
+      ],
+      "added": [
+       "ac357a350e15b6f39ecbb2e7a6992fd1f739a7a5077298deefb07435b5b05059"
+      ]
+     },
+     {
+      "at": 129,
+      "starts": "  --accent-bg-subtle: var(--accent-3);",
+      "removed": [
+       "fff8c7c0911418f441818acea7b1e258758bda32bdc5e1f92fb7e8d16a98166a",
+       "4ea4dc66cc610121ed6996bbd6b1fd11f159e4cd5f51f36af7fffd6ecf8401f5",
+       "cc145707af1f09106dc90b70154b85b804aff87103cbca0db84f737c6f05fb2a",
+       "55b280f9de040d525d8d43419f67ce8f34eecb8340cb04ffdd02cd293a68c828"
+      ],
+      "added": [
+       "d427de846cba59276735b78d2202ca8ea3d39757c329ed7be804d183984f4846",
+       "65272653eb77428e445d622d1168869b03c323a83a3da9904815d68c45c0db48",
+       "9ba91def3afb53ebd0a1353ea563d42797dc4ce313d1f627f32479124dd90df5",
+       "086325526954633d958350b9f556142ba0810a0555e50cf9f62b676147aac785",
+       "a0ddc62e0f00b1967c5b109377bac5020015bf11a69682c75c4388a085e2e876",
+       "ce002210ec36c1a87d99ca1cc0de42738e2d9228cf5812a290d17be0753f3d67",
+       "7003097f54ad6c50436a0aa962dfb2511e265feb65e7adeb065ab9deb8c8a898",
+       "19ddf4fe6f16b1f448dae3d1178d1e20b69bbb79891e754720596ec6da42db8c"
+      ]
+     },
+     {
+      "at": 134,
+      "starts": "  --selection-marker: var(--accent-10);",
+      "removed": [],
+      "added": [
+       "7b3275c5e883060130c5175c42f735e5d632088c9f3ecfa4fb80f876c3538c5b"
+      ]
+     },
+     {
+      "at": 135,
+      "starts": "  --border-interactive: var(--neutral-11);",
+      "removed": [
+       "232fd79f2059d2240ab40555db9071b0b6fef68cb604a59893c2cbe38043427f",
+       "4d2a34e2c94de2d74811b60349174bb6b8f91427f9241a07c1211db05a7adcc7",
+       "22221eda66dbbfc28540d909c016517bdb3d32d67ecea728d7a75c842e4d7ee8"
+      ],
+      "added": [
+       "f9df193da6734b04fc56ddb245107bf9cdfa5a4d326828279de3400ed02c7112",
+       "9c51de3a73123e650a567f1c69d143978f837a81d5c589a796a4fce19250daa1",
+       "3ee8ee3229e42923a5c6cc98d7d7c58667dd979f3fdfee56bc9d667070b53ef0"
+      ]
+     },
+     {
+      "at": 141,
+      "starts": "  /* run B · neutral ramp */",
+      "removed": [
+       "e67c94f80b3dfa4d13126b5808dfccf8f8c2892426d366938f8f4d138fbeb722",
+       "db4b6aac3dbf6f1d08210cbfac146815cde9d42b3bf76a12fc02f53c942f47a5",
+       "bf0b02636bd6cf48cdf2f32dd54dfa93bd144f3a99a7ea5d8fa0732e3be2dc01",
+       "627c8b286b577b30b2b54cc6e402f961ec17cc4a67bb7f305d9c1a6f05f0fb03",
+       "0b5b8bedd0b2bfdc0e989ac9b9763dba2983992464a0c8ce66a942f62c41d521",
+       "1ed4498ad7244562b1b7ef15c0505a7e33c94a459484682762c89aacf05b3624",
+       "0bcaeb47d769d8220e6be9aca0eed915db282686cd39331ae1d35c0eda9cda92",
+       "7090795b76c30261669823ecddeb04b71f36b682273df66390e2e2deca8cb92a",
+       "3021f8300c371af176fa146d73dbd74cba49b9d516a9ce8779567b47c7c49c0b",
+       "644063771766452d9fa0e34793ed395f4f8bc2c515a3682e14196269ad29daf5"
+      ],
+      "added": [
+       "3151ae254368c3af46c604348ff9fcc3399e5e79ee98e81be7b179dcf6c8654a",
+       "d3b8e63fb95ac27acd4f1763f414cb052067bb58fd66f31f418039ae8bbee553",
+       "4c21eb890772d7842f0e15ab765168ba4c190e05ab7f6d4a57c8dcd5f4ed3e8d",
+       "3af9447c5a54cd152b7d7a3cd58d1f1212ae860e996628ed2a3dc11c9d6eaaeb",
+       "5bb46f9859c08bc5915f6e231321a3a4ddb1baab691f1a89c84689b5c0ae9c6f",
+       "65e3fe9e9c37854f8713d61273c7bbd2b46a55d09deed998e30a0e6b9c3ffab0",
+       "13e0c5a0b723ab1bbe3bef6e948241dcccaacc9a67324f3f9c721a6a030afd82",
+       "8332121ae1b32be31561e7513ab66a242758084e7ba743c7f54d8ba1d086677a",
+       "fe52a7761f0955b7d13b46fe0d4605d5d583485e8a5b3d57979a9094e2809a31",
+       "b1e68751cad5b4c3e091781dbde04e41ca2d17878063392be77ed27699f04273",
+       "ce336f5b4f7b6a129845a6fa5ab97fedf08eee5c459eea1c908d61115eac5672",
+       "cdaefad8944febd0e9762522f4749343b7b956ad01efaa9aab9acaf39d4a69ac"
+      ]
+     },
+     {
+      "at": 157,
+      "starts": "  --background: var(--paper-2);            /* ov",
+      "removed": [
+       "57311fe78b596b20fa0e1c5409397ade71d90124ba7e71fb2971c3654cbcd30a",
+       "ae3f1e4acd0d8c68ce98a82f7a3ae53575d43b3cde8680db21acd9acdea1dc32",
+       "19bdf9835bb415e569b1e4df7774e09fce53222d19cf4803395a9b8bfec7d73b",
+       "2ca94fdbee8b1a4200f807adcb7b100e1b6ac21bb19be4345fef1b8abe3fad7c"
+      ],
+      "added": [
+       "8a87d1a4d464c6a0e45835ec0a2f0d33443a7c16a9d82fffbdb498f66f15bb3e",
+       "cc245ac8a315269bbfbea870b5ea5a5c963927b71e41a813ba3f50cb8d96a258",
+       "8d88a28f32a6619da3fcb8f4a5340cd5b28ecd6d0f75101b8ba4fe448a6ab952",
+       "68e48b5d683a47ce48a583d16057573c42bd1ddcc88a32592617e4b1d7cfeb66"
+      ]
+     },
+     {
+      "at": 167,
+      "starts": "  --accent-solid: var(--accent-9);         /* sa",
+      "removed": [
+       "19b8bc65716e09059540b247a842123f81e8d5ebb039e2cdca6600c18e5cbafa",
+       "5731d381e2e6c2e507be691410000d0a49725eeaa6111b8b29088f73b36e6b8b",
+       "ffcaa4b51840bb542758c54ae01bc31b989e6be0bf5f8c3f11447bed853f415e"
+      ],
+      "added": [
+       "1f76cf43040c3aa0fb19601df3a9cc38a037d8969e50ad6689cf38643c014ae2",
+       "bf7315657941be358f54d8690d248eef45e3a36c798bf15edb94dc7b5351ab80",
+       "e5c72bf8d9087f66c7a5db0de2de887eaefd2e7ecc16d751ef93b786eca32a03",
+       "a0ddc62e0f00b1967c5b109377bac5020015bf11a69682c75c4388a085e2e876",
+       "ce002210ec36c1a87d99ca1cc0de42738e2d9228cf5812a290d17be0753f3d67",
+       "5b72b3ab2bc88704774884914682b7553ebf6308efadf7288deb791a7d945337",
+       "94c9edabb0bd0cbb9be1b356ebb3ccb51829fab2da9be10301a8a50106f362fc"
+      ]
+     },
+     {
+      "at": 171,
+      "starts": "  --selection-marker: var(--accent-10);",
+      "removed": [],
+      "added": [
+       "7b3275c5e883060130c5175c42f735e5d632088c9f3ecfa4fb80f876c3538c5b"
+      ]
+     },
+     {
+      "at": 172,
+      "starts": "  --border-interactive: var(--neutral-11);",
+      "removed": [
+       "232fd79f2059d2240ab40555db9071b0b6fef68cb604a59893c2cbe38043427f",
+       "d39aa91273bd46f50dd02bad65243158be461f215adde0046ebd518ecacb30ee",
+       "c6155b59d740ee97ed9b24deb0cc66a09050021aa622c464e51bc93259aa6d32"
+      ],
+      "added": [
+       "d7b1b8f9e41a4653430c79b0c8841a1902d25a0da103cc2a099d015ac3b92edf",
+       "9c51de3a73123e650a567f1c69d143978f837a81d5c589a796a4fce19250daa1",
+       "9c96a6ea7ccf82cd1dfbb3eda468e3820b826f5e97b518d90e0cd26860fdecd2"
+      ]
+     },
+     {
+      "at": 183,
+      "starts": "| Canvas (page) | `--background` = paper-3 `#f4f",
+      "removed": [
+       "5e4b149638fd8fb894bae7192d3c5f3b08059c6e580665974014ad5d5f7bc518",
+       "6e1380df72c9ed78f1826c0d1a76c47bec4683398c86e1a64c33643ae72c6879"
+      ],
+      "added": [
+       "046026fd099c6529334b4af852ff6c3e90bb376b0a06cb2a4303141dfa2a071f",
+       "ac04a46809f2f3d5f012c827d3744df3cac6cd4fb73fd8697509f9fe35b739c4"
+      ]
+     },
+     {
+      "at": 186,
+      "starts": "| Body text / secondary | `--text` / `--text-sec",
+      "removed": [
+       "21928d65ed5362df5765c06bcbfadf78e0989082e5e0cfa8e0da5d68c93709da"
+      ],
+      "added": [
+       "cc7b6d1d03ad7c3a35dc2f628ed22f142ab4877848a6e0de5d9ee13421098f6f"
+      ]
+     },
+     {
+      "at": 188,
+      "starts": "| The one filled control per region | `--accent-",
+      "removed": [
+       "f078a75912ae05c6482fdc14c0af5d046340f5e47ae50327504739f1ad45e3f2",
+       "70d2afdaa04ed10bbb0435fad826d488a40481b9b59fdb2ec33773ea108e46eb",
+       "9dcb41d62ab29ab7a938cb95229e9696221509e85c4c47d0a6273deec544bc1d",
+       "2ca5a2c551b34ab8407884a2f510bd3118243ff663d2c1507cb705b9d0c818d1",
+       "c47bb7fec188d6c11d2cded9b7ff6363ddf5586eb5e1f907d925b5e1e4874d03"
+      ],
+      "added": [
+       "6bc39715cee985c0ec8023572e58d9f3d6c93805a38a40445f7fc05433e25cc5",
+       "37d9e0c507cea8109563fbece7ba5af8073b19bcf10ea4c29f0f6ec3d32a2a6b",
+       "30f0b2410c11bf0799f99b62f1d79aca25f5c05633f855336a3b6a8eafa5b554",
+       "a41fb216ef4e6f93fbf1a6acaa8a6b1cc6764e8832eecda69edae4da4686dc0b",
+       "cc46594b787cfeba56756e94b78c46d6a6b33e98589670f6bc67ebd86c4df5bc"
+      ]
+     },
+     {
+      "at": 195,
+      "starts": "| Shadows | `--shadow-ink` mixes (`§ Space, shap",
+      "removed": [
+       "584b8b904740c07942d50f9b5eb15416d98af270741636fa78bc4d0c8a22053a"
+      ],
+      "added": [
+       "c74d0aa4c90dffa0d7a094e450fd28e104980d18b6a11eb2a5550933e56e9b25"
+      ]
+     },
+     {
+      "at": 199,
+      "starts": "`--accent-9` is not a fill in light mode. If a s",
+      "removed": [
+       "3fee49b00a3a59912ca1b9b9e2169a8ec936bb96de3fa7931479c44dbd0ea58f"
+      ],
+      "added": [
+       "2813f6c1c0edf0ce1870e2fcc106c5a015f4a1a155f2a4e55439f3e8a553c09c"
+      ]
+     },
+     {
+      "at": 203,
+      "starts": "**palette.mjs reports (verbatim).** Run A (seed ",
+      "removed": [
+       "e2687d15da1fff63c3bd0dd71c8c9303f29e88364b7a73a1051767318e58f827"
+      ],
+      "added": [
+       "3310dc71260341264f542220eec9fdf5af970d7630e49481052baf506e632821"
+      ]
+     },
+     {
+      "at": 205,
+      "starts": "**Explicit pairs on the locked roles** (WCAG 2.x",
+      "removed": [
+       "db3c83576ad0310c76594024bb25ea28e25e2168337887b576cfd5d8f7dd0709"
+      ],
+      "added": [
+       "2a5a1f2f8129885a2a425b068059f0f76ea79cbbfcc9072b2072477177bf348e"
+      ]
+     },
+     {
+      "at": 209,
+      "starts": "| light | text on background | `neutral-12` #2f2",
+      "removed": [
+       "2b12496d56b91f13588ab5318d55fdadc98099a24d3916c72a6c14b1f8cfa4b6",
+       "5913c465f67e232ed75ad47a4014ff3d9340ba6967907b1a3b08ca26fd6eb3d2",
+       "6364f34240af91bb5d26ffaa797d456ff38021635ade5649aa89a43d1e81b727",
+       "d48b492e308dd8829f8348adb2a69e28db161c85d6c016e11094b36d011b5086",
+       "b4ad567bf3a722130b114a07e5e91a4b167abfc16c06ee3e400e76c5423a8582",
+       "9f57d7ea8483c98a2b7e7b646e5b90dc0914a5dfa1c6d67c7db045b4ca837be1",
+       "19aa6b381dc1b9874e07246e814a3277b32682e0237c7689ef734cb3949c8a10",
+       "3e6670b94c30c890fac6a54b9d7171df0d60466ebdf0409d04cf3bbbbcc9f707",
+       "9958ec869f9f84aa058930a6c600c17b99ef0ca95e94a440605a7d919aa13497",
+       "5cbd25d167f30a12927853d2d80cedf27ce6c9f55ea5c275d6c910473992b65f",
+       "103540e58e7a84a7097344a0aa9ea45700194d3631b725aaa7e9521f2af61cd4",
+       "5f62248c8c23ba5265cfb156171282967520998f62824613264f3ba8859ae660",
+       "53d9c030f77b7c997caf550fb846130b9fc12d011936509dc2c19a9f8c03a4f3",
+       "b4ba69b3b182b09c434e50a3ddcd487564354cc30c27a011694dab46d64d7aab",
+       "735ee2b41802dea1c9839e44bd1dbd35e3bfd29670c9766511dbf1832e5eb7e1",
+       "1e55121d9cfd180be8f9db6662c393bfa6df35addcbd0d4147be77b8dd21be4d",
+       "dee9ed6f7f18d29626fd96b78bfc6b3201f3076ea5a3857acaefd82eb46e8dfb",
+       "c4c91f5ca5c06719dc66d9ca90f17d5335c553beaacdef089e3489ca57b66ed5",
+       "ab4cf0be26424f3fa26c16c4db1910bac203c9058edcfac501dbbe06ec596065",
+       "c06452c6d71e804cc70155fcf75784993bc73e1468f9eb48df2612872a56cf3d",
+       "3e015b3ceae88dfeb07c0fbfad2295f4bb4343109558df310b7e321bb018cb0d",
+       "3558134be28e044e1e7ac3ec1c499b02e101f312e7710597fd65ab94c7f28ea7",
+       "39f3c6995acd6bdb0560e187086937ce523f8a7a71f12add8e7ac08311ff838d"
+      ],
+      "added": [
+       "d080b7d7a6c378ec8f3b83314825eac51c4cd8f18d6d117ec7590f29cf2f6a90",
+       "d72a060422da4fc3f74fc2006b8a63f9710a37944e864ccb3e433fb0ad16cbf6",
+       "fa9e182d37f60779b25ef8dd9367cd4ac5591652638c1dc84fc6094ed3007664",
+       "474c563accaa462919863666a69c2a767216cada16f49791e4ec55ce865aff34",
+       "47d8495913937a24663828ad781fc7fba4058c4b02b32fcec8337ff52bb29e14",
+       "820743229d12caa46625e8227a5c9f4e062e1843115fccfe414b68e334fc7962",
+       "5d3727df6cfa8649ec80dee9c502c42616b161c3f156f1c6aa368e71917fa140",
+       "aa2733ea66b9201ab191800b9ad460cb8573f2808ed45a13e080d917d498e7d1",
+       "7d466af33118826b5914ce97a10f8fc2077d829f23e3cb9db3dd07755c43a304",
+       "672e9ea823d6ff1e48db28e916896e2a7b1f3f2ed4e690bc7bc52c15166264b9",
+       "fe19beb48de10f46dec8de343f6be8ddce66d3ab1e84c494499967e1b45534ce",
+       "4793632ee80a5e3a5d51156a3f3baae2655f8648405999a9c652130056ccb455",
+       "c7008c66825e2caab6a1779ece9a107da96056ac5c60d580b33ce78bf674a429",
+       "060d42356e097998f2370ee75e4ac7fa8b48dfac96deb38ef817cebd042c922b",
+       "ee52d4236e12ded0aa90536625c2e5b944efc81aaaf8bc6cdd08a2446cd6e3e8",
+       "0747da0eda59eeeb6fcc18374cc3b79fd4b96cd474c01f76d60f5ded71bcb985",
+       "19b4b560cdfca31f9f274cb6a534247d51d624e52451029ed9fe16c745ef5425",
+       "769546a0be900c919ff169a632b0a54b67b701979bf60748aa66a32358d2eed9",
+       "5b050e8b4675bf1eca024fdedef10da7ff870abbc12aa5fd7564dd8abf25c4fe",
+       "30533c0618f07e3fb513a667a8f2e9a7f647969f11a3a1c39cc765564b7facc7",
+       "157964e565ab2d9249ca5d9c4e06672d74db8e91126a19b0fa8edc3746dbe4be",
+       "e6c5d60faf3eb8afed5d79cca41545e0c85df5285e62d1729b2993f8b7bac3eb",
+       "6421453ee98c15c7ef6ec28e36477b1053f76fc98785bc0108955d8aa4d25dc2",
+       "132e9069c62ca5bb0a3fa821244465adc24d5374f26a06f27d9f58d5fc90a006",
+       "b059a0ad60f7e938974aaefc2e8e64aba782957742e47d005431824f439c514b",
+       "33d0a917df547c141051832d99266585383761a0c0899fac4a30f5a12670fef2",
+       "f63fb2e90e80259ff1d6aad25eb8e6ba8c22a870495f67ac6a46fe08a6250bf7",
+       "212ceb5e9de76ecfdf4ec82a74d9dadfc233a13ca5b0cbd386aa1ddf3bf5185d",
+       "ecbab2ec47a0cc2584e24f08b7ef528be7c51675dbed06f87d3c94a43027d01f",
+       "100104d34f685992459ed9fc8b8ff2ce5aed6639a7ebd461a698e426850da72c",
+       "cdb53acfa9bbf80a8a114b7b0f45536b7366062cd0595c412fc3caeb24f8e536",
+       "3ae15a8d1fe8ac33290bdc6bed4a2c023d9f1311e349139d4919261e200447b0",
+       "17deb72633e8e8d1f841aa2faea17b9c609681bebbea59c87bd81376cbb1796a",
+       "ba1eaf3522c6ac9680ea375e8e098cb40e0675a32de3846060c622084507ded0"
+      ]
+     },
+     {
+      "at": 233,
+      "starts": "| light | error-11 on background | `error-11` #9",
+      "removed": [
+       "ff34fe9060dc06dcd6e02925686b930762c67dff0e9169702709be9f38248ffe",
+       "979a8f8e31ada9dbcfd10fc2b3d7a83156deb16f837e545959c4dff1961cc49b",
+       "77cf48042eb26cd6eceb0540dbb46a0ec482c295b1d86174fff50514465a5b03"
+      ],
+      "added": [
+       "ea77ebd65602f8d004a678cd4731dcf8e0a94f9f513be3a491ad3d627f6d4899",
+       "5dfed9e538e5b49d6e42f27005598bc8bf199523fa7005e35024ab63548838e0",
+       "70b3cfd18a00aea75b82bb77ca4c62eb6e85364b140a7f9aac78506c7b216121"
+      ]
+     },
+     {
+      "at": 237,
+      "starts": "| light | success-11 on background | `success-11",
+      "removed": [
+       "da344287808b51ead64b19670922cf30efb54076da167cad4e4bd0ecccf5f285",
+       "16652641b658f215e303e25b9bde2608f9d3fb584a57bae08b4a9ec82de77e95",
+       "d24dbea238b30fb680530ccb401e403773bd1e47240a192131881fa1168ea81c"
+      ],
+      "added": [
+       "86e593580c90902655c26ee397e3142423c9d2a11284bbc27879f4b88a19ff53",
+       "3b0a1ba18e913de01b423ef12d438f047adab646d3d087d5d4449f2926f81ac0",
+       "8ef72a531797397e569f02507391667b2d64c936c3429cdc0ee0e03d174c2eee"
+      ]
+     },
+     {
+      "at": 241,
+      "starts": "| light | warning-11 on background | `warning-11",
+      "removed": [
+       "cc5f917824d41059d41a770d8f32af95b665a31431dd8b449b4fc87bc43dbb6c",
+       "2605e7e6c10ea8da345ee9597fc1b3b9b8bab648fcf136e71013f1d3721a0925",
+       "d0c4fc6f22a4a3c443a26a82560f0da7de5bf5ecb44ca47d7d945d2d7ca11996"
+      ],
+      "added": [
+       "7c5ddcb0a5a65ee0516f2e7c0b0c85fab6a58c985bb3f0c0e54087948e8fb462",
+       "917f9ecbabb4858e1a5188418cb5048f622c388e96373c6caa09e8bb5d69e570",
+       "c6d975ba3f9abafa6cbc98989c6082a5067a534d0565f9a05b298677c7e1326b"
+      ]
+     },
+     {
+      "at": 245,
+      "starts": "| light | info-11 on background | `info-11` #3d6",
+      "removed": [
+       "555aa61e5eab43ed35e2689e4a26c5d6d8a022f485ca5fcdd2c243033abb53e7",
+       "dd077273b18dcf81c542346929643b7630bb4ca4f1c27858a9ccb34b50dca9c4",
+       "fe5e092187a9e8fac26bd1e0328f211922c108842f9c4fc699805eb16da344de",
+       "ca306a7a52826499e5183fbead54b997ec000bad1c221add5c892e4b0b55dcf8",
+       "ac5444367274ed406efb6a8b43f21007981583f6a8eb9a499167bee6913636e4",
+       "6d959d77c1520b40ebbe1971c7039d66cb2d9fff041c6618b3abf40fd30cf5d2",
+       "5b0b5de6ee63ccd06dbd8c8b9f633bbe686d16ec4226d910f1dcb74f6eec941e",
+       "74602e78c75fd379cc1aa54d4e7c2ae367814522401ea7265776a7b7acf2b8a2",
+       "a042bf39eb6418928e4791dfd81cbb9b101999b809ad0c52e4a2020de21d3f8b",
+       "0e77cf297a5d385187cfe83c7ed504d46ec0da95410389d2b8ceedbe2a54eee2",
+       "e9f915b33be737a36078732c9756dd9aca797d5a32699d5eb7c1de163774ffc0",
+       "0d162ec1570856fd024b3deeb67d4d245ca1cfc0f2570edd2fb313955d651f12",
+       "e8dc9b12f4906e92159bd47a2b1a2b333130aeb673620f739b9bc57a1e88cf66",
+       "d25e43884136089463010601a4444b69e0048870ed4060a70550aaa6b26a1671",
+       "78e8fd7a737606d0b65b89be76934eacec5ab791e9ea45fbff690c6a98d84a92",
+       "cb1d72d8fd3a736ea73bfff0f08093899f2a6b2e651fb77c03018943ccf55398",
+       "510fef9688f802ce024fb2d2255d3e6e7f5a7c7a3b6b8322c8af3cf0db5570fd",
+       "7fc1a1744ab7c2eeeadb3b952563b8cbbec2f6b3d77899ff98130116802e27c8",
+       "f80c11b987f0ff370afda3152192064f1798a1fb8891753ffbab022fcec7ad94",
+       "c97512a632b53fc61d67b7085e0dee7291980ebd50f57388ad84dd8db4cc7e88",
+       "b6ac32f96502a53a1f11e133306f09eebd0232e32150589e4ec06fbfe409ebf5",
+       "9213b584102be3fc3c8a52fb11fc8dc74b7c93fe97f9c324b241089a17d7be65",
+       "ab82c538f046420102d0660017f75d9d14748615ce8f8ad16d22044945b29a89",
+       "20c4a5a6bed7a317cebee4f50ea98aa824ff5119cfcc7d5db203d49f5da852db",
+       "f234bd02949700138acae7f9bfe879a762983ce11c5718bd17648d6f0c104382"
+      ],
+      "added": [
+       "902d3834c13e526fbef0232d4dfe27d496e045a6ff65498551aed536ecdd0e7a",
+       "5e9b42b6c559b757c219d5d298f01ffa2af6a69cf50e64a0b5803b34388758cb",
+       "229415ce8b7df54fe21297b2bea05dea7b2396b516d0d14dcc0e683ca3b404b1",
+       "737c55ec3eddb570ae69a90a219ec28771259159e382cc38129267e31f8bf601",
+       "a9f188583b0bb29b8e5ad02810f4ec21ce09dc27936c070f5eca9a041a878d64",
+       "230cfb5558e0d3f335339e4b7497f58736cedab8adf58d81bfdd3c41b1e0eb4a",
+       "145cd18ac501ea17263f60f464185090b43c52a97e4859ada6491b6bf6b84be3",
+       "a223d3eaee0b2bdd207e2df36421eae9ed61c2e05383ad32093177bc006746af",
+       "cffbe64aaf1c7895b732651cf21fc9d75344b4b076a65837a237f0cae5a55857",
+       "b9aad8d490635a33da53e96e4b7e7f2f0067fdc4aa119c8d7927d965dd574bb2",
+       "3ef2ebe01b7024e0fdad5b0c52fb31cb73e95794bbe2671da618252400dfdb43",
+       "2b3375aecf10bedabc50819af29f583e366060206de990af3032c4107c58efea",
+       "3333cd791a5d0b58a9d5d620261f9b84dd37dab754b7f54d987fe22bb27bbbc8",
+       "c3a22799686e03347f703035ff43becba6d50f7bf69738eb41a2efa1a15d1204",
+       "c6db1ab6cae37e37976ba5868a8d42d37b72cb9d01dd1c611bcf3a3c21d82d72",
+       "4047961285fb2a82f8afa34b4fb998a60abd887f1fc79a5d9f1ca7a6a1cbadad",
+       "9ca7588dd2332a2f701c24861985608643bbdd52d42de3e434bb88db3f5d2652",
+       "c8236c6c6623773b51ac6f07ffb6dfaf22878e01afba40951149033db7011ef3",
+       "a6892ed080bd2be3a642db3d4c80cebd4e2d87d05176d63232f2d70578eb1958",
+       "edbef85eef38bcc1052cdc7263f3408154459fefcae7e8911ea003b670cb4de3",
+       "060d7813498201d7b492914fa644082c440a96c7f25d5f8295f365c511d954c9",
+       "328043f77c7decb99745a9f77c08855b050eaddd1dfcbd76c33fc0fbd0ce479e",
+       "3b23879082fe7fe8374402d3d9fa5fbc49430ea5791a997135c41cd8ef12c3e9",
+       "e9e2db93a7db2e217f794939327b57db0c7d2aa02ae16097948c75b623cc44e0",
+       "19868ab572c44d7daafd7f826b2b5f2733b5b2c9eaf1bbb2a2fe34e7230d0ecb",
+       "8d228b5b7cd38566f5e541205e5ed938f2870a1f813e0c7e86d0421923b62c45",
+       "b91a51662bbe381f1a20e38a7b307e972e0b10d10191489c7cd5f3c3e5cc9d18",
+       "6cb1ac08edea8efd3fe6a8a0a30e956eaa38c5bcbc87cd59088d635d7da97293",
+       "f7c9b2de0ede0e72887d8b44ebe1634f029975b68ab9ad6205ca622057f876cb",
+       "163d3ab1273bc711405eab8677a797c3c1a7810c8c0f22770a00431589a53cea",
+       "f537115594864f5172ae9d2bbf866b2cafaabf64f727ec3bed32121761971195",
+       "0fc35b24c11e4e25e9c87a4234789c2188106a0ab943d993b1a3f1c2dec96f92",
+       "776a2841f249ea698454ad31c3021cd0479c58ba63f92a3d642dc65cb4e2b50c",
+       "cc4a44741724b7842053b2f33cd5e7678e994d6e21bde1a50cb9fa884c571ecc",
+       "1d6ec1b1aaea6c98bb9d212aff84c0ea420bcf809c8983a1a869d77e58141df2",
+       "d482fdaa7433b3cb5fde5c67e312dfaa1c1c6ea46c9f220acb553869fdde0db1"
+      ]
+     },
+     {
+      "at": 271,
+      "starts": "| dark | error-11 on background | `error-11` #f4",
+      "removed": [
+       "0f069f557239f20ab2a0322ff3f1f12e795b8522ee735317f40efcfa3fc1bafc",
+       "a27c3da316080ca950cda5b30e37b3d734db61950eede42d6e28f41cdf465328",
+       "0916e9b9e3ca20c5ce8a66924336552b5a077a15674795a027ec9bd7c82145ec"
+      ],
+      "added": [
+       "6371370501c269c338f40e8bc4c6bc051eececae24834613ad82f92e18f5922b",
+       "960627c0c52ad75875229b94ceb36e2bc5fa999a591e3c17938a0d9158b1f9fd",
+       "e0db33e4c421595cb2abc73891974facf09b32cea80847247370dd1023eb26a4"
+      ]
+     },
+     {
+      "at": 275,
+      "starts": "| dark | success-11 on background | `success-11`",
+      "removed": [
+       "1f69c831b5058ddfd1ec7f2c54862379e16dbcb368b6241c95d1cf09db35529f",
+       "891cd7ce1331955db73be8dcfa178648a7d33d90eee42608ab9c9a21c57d0840",
+       "335266db52e4b6daca00c9741ba47a8796830fe05de5de0f53ef7cf409858bd0"
+      ],
+      "added": [
+       "40478224269b7f12fc1c034004a8447ae599e0ba3de98d002f21bf2702dabb6a",
+       "790d486ca29ec910eb05e33768ee8e103beba0dbc8d96774bb19a03d842d631c",
+       "caf54cfebfeb37d39a4c7ef830212805a1fccc20ac4bbc85f7796485e36914ad"
+      ]
+     },
+     {
+      "at": 279,
+      "starts": "| dark | warning-11 on background | `warning-11`",
+      "removed": [
+       "0e41529c791145f959487ae7b359c7a13ac847b431218464d8148042d2d24c61",
+       "8b39ddb33da00bdbd19fee9840241cc0d3a4729dab8e2d5e9e7737dbf84e0219",
+       "a0dde8317e657ea7ad5b50e407ce986d4c90b15a9cf36971bdd8f2d8da57b1d5"
+      ],
+      "added": [
+       "307c433c5921f365b835ac51012849571678f92d4ffaf4460346005a135785c4",
+       "d3a5c915a8a836d4257d8ff29f2f217409e8ad410c7466f4796359f6c68e489f",
+       "8aeef18de0d64bdae6bec18068ea88707c8d428910920a2d4f1a34c878d37068"
+      ]
+     },
+     {
+      "at": 283,
+      "starts": "| dark | info-11 on background | `info-11` #90be",
+      "removed": [
+       "200811433a1dfa6738ae63152b90b8d6e2dbd6bb105db65fff72e70087cf9bb0",
+       "cdff991e789b463f8007dfd6c085e57e5095b54cf9b2d5d34207fd6ebca70470"
+      ],
+      "added": [
+       "67b2d9c733a48187c4842868e185caf9292ce686895e0ff17aa48586a767a131",
+       "bef916e844fb8cdd314575dcc5b70bd9a112da7f1aef8d5b8a82ddda3be3c310"
+      ]
+     },
+     {
+      "at": 286,
+      "starts": "**Informational (measured, and the reason for a ",
+      "removed": [
+       "4d10a355bfe03b1f2604d1ae1ee46024ad823177a042bac3aaca1bd0c35acaca"
+      ],
+      "added": [
+       "d11bcc87c18732c9c5d235b55ee8f94583e42a07f58af9331ec839f3699acec8"
+      ]
+     },
+     {
+      "at": 290,
+      "starts": "`--success-9 #5ad664` is OKLCH L 0.781 **C 0.190",
+      "removed": [
+       "cb1f550814a55fa776214be4715a8687ee1130bc15e303da276091c701f5ae97"
+      ],
+      "added": [
+       "b1a74ccfef1b2452209b508b2c7ee0c767b7124dc667f1e18bbffc126c8b9855"
+      ]
+     },
+     {
+      "at": 302,
+      "starts": "- **Spacing scale** (4 px base): `--space-1: 4px",
+      "removed": [
+       "a83ee225ceadfade371116332584479cc10648e254bbc831ab4b60ab3b0a112b",
+       "7ec06c7002bffde9759dce5ccc12f9031305854dbe2913243b23f76deea04771",
+       "02159a48e63b35a02fc712e09445513a1107bad13aaa3b963faa401204e0401b"
+      ],
+      "added": [
+       "b62a78238947799d921f82010d78446f9680d803dfc3291a6d19fb60dccbdd4c",
+       "a47a703452bc54fbaede91a8c5eca122175c7ec29ed8e0360e2f796a21a67910",
+       "d145680f82429dce630045008dcf0f0df304ebbd97f0a650498c5cfd3ab70206"
+      ]
+     },
+     {
+      "at": 306,
+      "starts": "- **Gradient syntax:** hard-stop `linear-gradien",
+      "removed": [
+       "a4122f507bfca921c907fe2f851956bf468da8f27e890355330be16aeb7b0639"
+      ],
+      "added": [
+       "a1729340c6eaa1481d285ea36e49682e161ec93e024bc6c07262cd035cd0de28"
+      ]
+     },
+     {
+      "at": 310,
+      "starts": "  Both are declared in the `:root` block and aga",
+      "removed": [
+       "6de7bf1eeaae78f45ff27a4b6086b6d433ddf25dd14ca63e89d57a57ecc55af2",
+       "85db9d85c014a95f016d7369ce2e70b8941d1d2fe2989471317c420e0f0f7e38"
+      ],
+      "added": [
+       "9e3a2ab1053ffd2faa6df22040571e0b9dd8f1d07d2a0768d70329971393bba5",
+       "57f1393665877fb52d41bdff373cb6e0f0d11a4c42bd755d5d40bd4379a4689b"
+      ]
+     },
+     {
+      "at": 313,
+      "starts": "- **Backdrops:** dialog and modal backdrops are ",
+      "removed": [
+       "69c2bda7fa4fd9efb258eb98933cc24315171235937d8708ab87a4ca377678f8",
+       "8d4a68eda6fcd79eaa64e38d66dff56c2f96d9ba8173e9b42bc3571ba5683e53"
+      ],
+      "added": [
+       "aeb2b91fbed44c2814abfdd547633672a6a6459c4548ce6f22ceca21286e8283",
+       "fa8733c57f4f0da42344ad0c8d9f41f5e644a6b784c3e79a6ca6c27afa9fda07"
+      ]
+     },
+     {
+      "at": 331,
+      "starts": "- **The dark + acid-green cluster.** The dark ca",
+      "removed": [
+       "c8aa207f5652ff6505631304ffc9ff0d93de74cbc454fa54444c6ece34bf57d0",
+       "4a752765c6cd3647b5f492b682d50db21bf9fc616ed62bda14ed34589207b32d"
+      ],
+      "added": [
+       "3b1ef38546465e4ba28e8f9d6bf7aa53b245222d20489b777c422c852e3d2a1b",
+       "5c4c265810f3e1deb1f2bd3f31dbb5b4ad91636bae2ee2a0eddfcf737f2cc214"
+      ]
+     },
+     {
+      "at": 336,
+      "starts": "- **Pure black and pure white** as UI colours (`",
+      "removed": [
+       "a055e864b1aa5a40c9acb321d3ac293f97118f5fc6d068251b8cb4bb686e8d09"
+      ],
+      "added": [
+       "c337519df3b6d6a1f8478b3b0b15e0a30c3bf0d40faa44e9f4f9fd8beb1a495c"
+      ]
+     },
+     {
+      "at": 338,
+      "starts": "- **Faux typography.** No faux bold or italic (`",
+      "removed": [
+       "9a23a3302629466cdd80e180fa2457dfb45ff80a320f4e2b3289cf73f6f93c21"
+      ],
+      "added": [
+       "3b8b3533d80080a89e13e3491bafb08ecd303fbd1cd43e00d29d7891dc41af3d"
+      ]
+     },
+     {
+      "at": 346,
+      "starts": "- **The ruler at 390 px:** the column padding dr",
+      "removed": [
+       "5bd87129d57e9756afa4ec616c77eff66d4477d331d4b39b76f55c50e2fb7251",
+       "3e9fdb35b2d9c5adb4f9a14af772e5f35765ed43b96a583c5aaf58b006cd8d4c",
+       "c7cd22c8bd0643abb697de65f9b5e3b2b5378904385b627318799666155a7c8d"
+      ],
+      "added": [
+       "c1a103d337a5dc74c783a4d7f425f5bd091678438fc5806c499d58ff071a0eae",
+       "23a79c2a970edd405d5f39596148bc7c534595623a8cda71196a49b7e9d11c8a",
+       "cdab90962a172242f4c9031509125d763628e46070decc352a53a7a657837683"
+      ]
+     },
+     {
+      "at": 360,
+      "starts": "**Phase 3 (2026-10-16), appended under the lock;",
+      "removed": [
+       "82aaa58d753774e66c414a13a0cebf5d8ad5ca295561db28d95804accc7bbc2c"
+      ],
+      "added": [
+       "6bd94d1cbb9b76c48eb681ff183d75fdc42c54bfb923de33eba1dd04d1072637"
+      ]
+     },
+     {
+      "at": 367,
+      "starts": "| The reference emitter | `.design-foundations/t",
+      "removed": [
+       "acd78bd1828424d20d5dcf4cf2c6b578af9283e844bcc1713685b8e2d56310fb",
+       "031d1b12011900a30ac6a19f5251aa183165a07aabf93422b0f79d7f58936c43"
+      ],
+      "added": [
+       "1d678c2c0e9b37fccf86d23da6f432aa7e5ddbde2b582f9e7808d0e8bd974c04",
+       "68868853747aab977f00b5c7b1d4420741cbf0bbbe43d3d97a1f2f57bbb992d3"
+      ]
+     },
+     {
+      "at": 373,
+      "starts": "Three tiers in one DTCG file (W3C Design Tokens ",
+      "removed": [
+       "22473aeca165383150a59266c8ca3564313fae108b73a67cfcbac4a9301f73ad"
+      ],
+      "added": [
+       "474abbcfd827f36b3154603fd2c9ec475fac6dbbc631428495952cff231042ed"
+      ]
+     },
+     {
+      "at": 375,
+      "starts": "- **Tier 1, `global.*`:** the locked block, verb",
+      "removed": [
+       "16a938e2cabc4e3cac1c88aeaf4ab6c0b0465d77385813a60faa62801b9a31a9",
+       "d08767d74907fabcbc4a94f44517be746e54c230ec2b3cf908cd561f123f8863",
+       "2a82572477e5a8c6d25486ab5a97d771acb2797a86325d67b1bfff94e7c3d66a"
+      ],
+      "added": [
+       "f8b99f4e7e68f35fbfa71702c63a6e41acf8dbd12081c89692d28d9beb0a76a9",
+       "3b651c7d5d0ef72f8cc64f872187d9888aead5151819ee40f688b95c8168e3b8",
+       "fb01a42f42b496df7f2d3a93ba559fc44467bc516e7b5eacdcffb23b9dbdb033"
+      ]
+     },
+     {
+      "at": 380,
+      "starts": "**CSS names (the generation spec's naming rule).",
+      "removed": [
+       "850995dbe7a7959a65d3869bca91619dd79e6d569b4f3fced1bc87f230567488"
+      ],
+      "added": [
+       "604c034e52bce9c00a4b8227f74ada1dbd2c9e018874f705e8e6303cc7b1ca32"
+      ]
+     },
+     {
+      "at": 395,
+      "starts": "| `--accent-bg-subtle` | `accent-3` | `accent-3`",
+      "removed": [
+       "af496babfbc7b3477f4177846f8e9bc7b20ec06af51d3d697a1878dfacfae4d9",
+       "014c0e36ec787aebffba3ba5fdde4a374f0b3ecd8d41b7169af0e67e52ebcf92",
+       "5badef4dd6df0b639697776529e5a38f5a9be02c9a46fe6b19249306e0d1b3f7",
+       "789a9ff6e405d9a56a00342d5e61c233385f2b167b4bcf2225472d61f88bbd35"
+      ],
+      "added": [
+       "25c3e7d0268042641e165a2cf0dd328fca192c8e0e94624622add8008153fb33",
+       "acc3999f43253cf704032d21bbcbe0bb14ee1e67521679a0874137fdb69f6d02",
+       "77e1978db53cc45e9eb76d90d7fa6196246708e9729c95aa17fb46a8fa35b7ad",
+       "bced5539b72a2f15905391e8f98e7b1b9f4c3f82f4bd9042dec167a7ded3deeb",
+       "0dd8a2778f8ab9309d8173024addaceb3a51d6dce77e88b4a1f5033e82a1abd9",
+       "fd322377c235714a0956a572ac6656b0b0e5444fbc196a11fe82e46d977c1305",
+       "18ed75116f98bd848c2c923ac1b49fe8373ee767feac42b15179fd7210cf27f3",
+       "37fe8c29465073ea05c8f55227f8dc1d2b353bec26a28c6d9c19f39fb789de2b"
+      ]
+     },
+     {
+      "at": 400,
+      "starts": "| `--border-interactive` | `neutral-11` | `neutr",
+      "removed": [
+       "7997c71f6bed96192d1e02e3cadb5206083b42a369754c3224ceb233a58aacf7",
+       "81d4568db9d343af49e68da71981336629167f23228b157c97d009b919b53ae5",
+       "730f3e23baf9334d7bbd13df8d6a3646a2faa97c46d4a6a4be5bd2ab78940139"
+      ],
+      "added": [
+       "ca105b7a2b1cb7ef30223c593b127cce23958f5daf37acc90a97a26074aaf540",
+       "54800060c1777ac737eccdc3adf90ad328028fe7f743ebd77b663fc893b97818",
+       "fc65edc5050440fa9fa596b94ab43cd78fb3c9e0873d45f086c3f552f2549258",
+       "84b48e0d5bc647e5a14021e213bd1dafac81d63b423a0643a74d0178d6b29e15"
+      ]
+     },
+     {
+      "at": 404,
+      "starts": "`check-tokens.mjs` resolves every declaration of",
+      "removed": [
+       "0b5da4ed34c00e8a0c7f6a231409f41e346d3d2f8395dd78b6bf461eb2e4f628"
+      ],
+      "added": [
+       "569676b8604a1b89e5df76b49581f3153c20c88df7284f5d31a6cbaa6a542364"
+      ]
+     },
+     {
+      "at": 411,
+      "starts": "| `semantic.color.accent-solid-active` | `green-",
+      "removed": [
+       "dbdccd895237bc7ce6ec854bc8b05f09bab94c30a46c06a63e56c7b9d82890dd",
+       "9a7e3363466682112582ce400908785aa06597e98cf5f1c5f23aee4628ea8b02",
+       "375891c36886bd89c5b3da48d37fb4b5b86f6064dc25188607c4396b7cefe897"
+      ],
+      "added": [
+       "50cacec3c67ebed58ad6d8c4d42c2fbec5354ed31ee9825da4cdf481b70ab8e1"
+      ]
+     },
+     {
+      "at": 422,
+      "starts": "| `semantic.color.on-paper.{page, pin, chunk, wa",
+      "removed": [
+       "2634c8e3a538d0f8de75e9841b06b3bfdc356b5c7a934bced99b45edcb58dc09"
+      ],
+      "added": [
+       "ee145e275652dab72e3c6e503bde96de112ad5f0289aa987f6ec800c3e65080a"
+      ]
+     },
+     {
+      "at": 425,
+      "starts": "| `semantic.editor.*` (12) | `bg` = `surface`, `",
+      "removed": [
+       "0a735ded0bcb388ef0d201aea2ec0b345e55f47a152a1ed5bf4e4feea4fb178c",
+       "04b1decf8526f9221870e28881da794c8dad9694169f1275c255dcd66579ae0b"
+      ],
+      "added": [
+       "d60c6082b066fd39965b812f2849b369ceec2a73e2928994afe0b6afdb3b21b4",
+       "cfea0902c143ffd9ec54cf182fc7c856a31fea84b26f6e261db93b614b951b9a"
+      ]
+     },
+     {
+      "at": 482,
+      "starts": "| `--size-hit-toolbar` (28 → 44), `--size-pitch-",
+      "removed": [
+       "eefefb1be136ab310e63cea65516b7793e9b7550994de1c652212fbae6efc52e"
+      ],
+      "added": [
+       "e3bc7fad1a7f0f00c9365762a16d6ed94d8e544f523ae5ab965cdf26207d208a"
+      ]
+     },
+     {
+      "at": 526,
+      "starts": "- **Focus** is `:focus-visible`, `--border-width",
+      "removed": [
+       "ff40c4ebe6c2fad8ba8d4250f26b6a390ba734d69f1b4f5f102d6448e97fd990",
+       "949508308418f9e21adc1bcf27bad742405da38f3ab64d1650497913460825ec",
+       "b01f06bb334387fd100f321ebc1104e14c5802c797f78c0d3ed5529ce6e66fc9"
+      ],
+      "added": [
+       "3952cbf119edf6c2aa1fb9b6860a4951a459e919a95674b457fbf67602f06178",
+       "813df44e33ca8a36e6af30a03547e94115901724802e625ae87507bd3fbde327",
+       "40d0ec1d6491af9ca9e0ff7e61258497abd93c8228749b7b373f063788bd27c0"
+      ]
+     },
+     {
+      "at": 556,
+      "starts": "- **One filled primary per view region** (a page",
+      "removed": [
+       "fde8ab06525549e6a4b6332085c13c8aff9324e66b754b6506e89ffd7c12224a"
+      ],
+      "added": [
+       "ef83eedf963a4527f07a6eea0e76e10bbb8f8e36f8d295c828185d111d8897d9"
+      ]
+     },
+     {
+      "at": 562,
+      "starts": "Buttons. One filled primary per view region (a p",
+      "removed": [
+       "a4a681c548fb95802e52754fc727f105c0ee51e5cf45a3240437ca1c27e2df09"
+      ],
+      "added": [
+       "47666c9fe7e0282d4c3bd7629e977726d7c79e311c313ac9551b110cf49e7944"
+      ]
+     },
+     {
+      "at": 570,
+      "starts": "| default | Filled. | fill → accent-solid, text ",
+      "removed": [
+       "366c9807c551fd4f57ec42a388ee5a8562a6f777b5a6952b5dd7840603b89186",
+       "2902203fd1ebbfe44c4d207f7b985ace7e4f1a9ab8a9492ad174d4a72ac986b4",
+       "fc3faf3d5e08c24bf8e789e10be37f9515e86867a3eb300ca5606035d144e760",
+       "c35180b26d30f670428518dbb53c31fc7d0e7ca924908ba4fb4ed702e4436730",
+       "1c138bb214bff419456567aef1895140a6f9d13a673abbe083f2a8e45cc32f41",
+       "e7bdbb0b44dc401599ce89cc673fdf10d6dc439421c4afce2e4c27aee6f1d81b",
+       "907f228b9ed11a3a539a79574e9eb8943c9ee9fd75aab3443b74ad5535abd618",
+       "9d6360f59b1a4fe5c38fd7603b5cea6af697fcc47ca8016b1a7451d2df80e8c3"
+      ],
+      "added": [
+       "d11b8c372df77915f67accd459f11d9d7e3696eac4018c5b590f15daac3dd732",
+       "e2a1a7b0ae7117e48f879fa6e82f4157f928dbc09b27829f100ed097d6dd6d56",
+       "d4847f531b4b1404d8a567d8cf9db8de5c9b9a0ebcef2f7ae77fc26c2940e782",
+       "b901ba982c4f9e045847e030f35afe11ae7a2be08b7a35745f7751645ab56396",
+       "e02100ed56122a21787755a16a7a30df80ff93ba44808af9735136ae1a505d53",
+       "62b0024f0da531cb039d3c4ff6df5f716731b78a76c46465f2d72fd48af754ad",
+       "6891bf494fa305c9751e7b4c385dc1f393f3c3c7a00a801700fd922c636a8f50",
+       "d3e8e47f51a196fb8aa9e13fd5ef02f6eb5ba93fe5636226b2618db15d5defa7"
+      ]
+     },
+     {
+      "at": 586,
+      "starts": "| active | Pressed: the tint steps to --accent-b",
+      "removed": [
+       "0e1c65b3a2c6740de6694ece9384f9152fa4e1b452c5e5c5e4c8b68394c7c0c6",
+       "1c138bb214bff419456567aef1895140a6f9d13a673abbe083f2a8e45cc32f41"
+      ],
+      "added": [
+       "8ad189187ce861e5ac4b05f88e8ff5bf5fcccc3d2662ce84dba486ed79e66f6b",
+       "68851ca7f349139705b8a06dd26e6fc80e615b4f4c53d38940af3abed6c1ec51"
+      ]
+     },
+     {
+      "at": 599,
+      "starts": "| active | Pressed: the tint steps to --accent-b",
+      "removed": [
+       "eedc23873acc8c67c01f71cf6cffba0a091b3eede8d3c2772b8eeb3c6b078ded",
+       "02225d7ce5052d563d2739f36e267f07949b7dc526137f297d3d072927dc783b"
+      ],
+      "added": [
+       "4922a7ee73f032f24352fcdb0166ab8d15e8911e0678b4d9d5c5d35ebf5036d2",
+       "7a975e13da7a276e9a2c9d70f87f7904c8f53c3b893db8da0da70915561d88fe"
+      ]
+     },
+     {
+      "at": 617,
+      "starts": "| disabled | Disabled: --disabled-surface fill, ",
+      "removed": [
+       "36c64b0f135bf9dca7865f19fa2c5f42df0088b26ca9046eda8bd37e358e8662"
+      ],
+      "added": [
+       "06012c6278e29b249102316c1d50be91fbe1a81516a6a3fa4d09291de0b2fcff"
+      ]
+     },
+     {
+      "at": 622,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "ab6e872076669c604f4c494b37cd2cadaa3495b03c7aced71244869629598ab9"
+      ],
+      "added": [
+       "c063be629fe2f3f290ad888b136ca1ff012e5164983aaefd0bda09b6effa3450"
+      ]
+     },
+     {
+      "at": 647,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "ccd516d164f6d118bebd6c9dbd009297b403352a3b518005eb8ebe70d405617d"
+      ],
+      "added": [
+       "0ae53f264e6c56572aacb4132be4996a924cadfdd1f36749488b098b22216087"
+      ]
+     },
+     {
+      "at": 702,
+      "starts": "| loading | A skeleton pill of the same size whi",
+      "removed": [
+       "90bec1f885bf38fab313829b729fcbfcc835f46f9e8ae794c2fbf9e89f65977f"
+      ],
+      "added": [
+       "b17a37418113095be668821a90a85afaef8ceaf11b4acc2fefeffe816a7a49df"
+      ]
+     },
+     {
+      "at": 706,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "5a8e29aed369d7d7b5c90f8d0b400ced06e989f162ea09b8e1ce6ed6a44db2c3"
+      ],
+      "added": [
+       "0a3f8fa1900711edf910857381350e96fab5fe578017838e4e76c242f83930a4"
+      ]
+     },
+     {
+      "at": 710,
+      "starts": "Switch: a selection control (D4, TD-22). Off = -",
+      "removed": [
+       "a9fe19f71f66fac7b1562be74d1629711eb74e90f26bf866976da0d54d5b245e"
+      ],
+      "added": [
+       "e4ea9ce1ad84305db5b98a93d76e95b200f2dcaaebe216b1d6d810f4c04c6265"
+      ]
+     },
+     {
+      "at": 712,
+      "starts": "Geometry and tokens of the component (not per st",
+      "removed": [
+       "33125aeb12ac2569228932722f5ced55dc76928592f9d6d6bd27a54d053a0b81"
+      ],
+      "added": [
+       "20b3eb441823b4107114951c0c5764e243479639a415417f5e51fe4df5738c7b"
+      ]
+     },
+     {
+      "at": 731,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "5ffb08e824d919387707b26e6f6e68c4fc7b7a870948554efbfba8f885840cf1"
+      ],
+      "added": [
+       "ed23e02bc28a8b6f653759ac572441c74027e4f16e1f4e09628464daed6e0979"
+      ]
+     },
+     {
+      "at": 756,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "099fb6d04eabfd41a70f2ab84d1ff5ea8d9ffbc1b3c24e7911909682f47a4c0d"
+      ],
+      "added": [
+       "c5fb436e8e65dae2128d2ccb4dd35f1f30a6e1bbeaa7707f28ad292983774612"
+      ]
+     },
+     {
+      "at": 762,
+      "starts": "Geometry and tokens of the component (not per st",
+      "removed": [
+       "994c5bcdc926bfd325d6847ee93de0fa778fa4fdb4a650b70ff3985312377a9b"
+      ],
+      "added": [
+       "3d0cd43f26ba9e1630770943811b989c77de0b4fb74d00101e3150ca01524345"
+      ]
+     },
+     {
+      "at": 783,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "a7983b388ab2870961cce913557e94d12894e65400310413e685130be6253db2"
+      ],
+      "added": [
+       "2e769ab09a0b2b5dfbd507c6be4f4a261149823585e33543d7b34ccd35e6c00d"
+      ]
+     },
+     {
+      "at": 808,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "206dbba5b176367054df1ef9c4c83f679d063588db77eec19341ef99a1ee0888"
+      ],
+      "added": [
+       "a8f409a3b849d7e74152f13184807574b48a7d28ba7edf8a9501b45a7e7a2a61"
+      ]
+     },
+     {
+      "at": 814,
+      "starts": "Geometry and tokens of the component (not per st",
+      "removed": [
+       "a2ec101c831781229bd2cb51f20ed03cb568d6be8800763ba613f1a8f629713b"
+      ],
+      "added": [
+       "672342f632d219f29d8ecb7a26751ff448bbdda267351e47986102a07581d23e"
+      ]
+     },
+     {
+      "at": 833,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "870fc7ddd152e9ba718f4fddd5a6b9584e8007acda7c0804669eab01819240d4"
+      ],
+      "added": [
+       "30a623fdb051a487b358ea617bd3d342beedcefcf0f033fea1ab18309f6a9b9f"
+      ]
+     },
+     {
+      "at": 854,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "6999ad90fa45587c94d3c20810393987135a40ac24c8e4768ad271df0505a597"
+      ],
+      "added": [
+       "0c3df563b3799af393002be2d5db33ac69f569ca8e8eecd0682c04d0dfff90a0"
+      ]
+     },
+     {
+      "at": 858,
+      "starts": "Dialogs: a --surface sheet with --shadow-2, 1 px",
+      "removed": [
+       "d0549bb2493a1ce1773f3864dacb906d7e34b4daa1bbc841ccfe3c1f056562ed"
+      ],
+      "added": [
+       "ff586e725bba30997c4855a748605c2c6f7a8f99ae5aa671727a02d21e4bfedb"
+      ]
+     },
+     {
+      "at": 866,
+      "starts": "| default | Open. | fill → surface, text → text,",
+      "removed": [
+       "5abd92cfc9debdc7f2d835ab7a8fa1455162a470565ebd903f17b775f484abac",
+       "8397fe8b16fb036e3408d23d6f593ae7b113e78f2242f9ecf72b589abab979a2",
+       "fc7285e7514fda98bfffd71fc4e8666f6c4a6c6d9fdfd668d0158403629059e5",
+       "3261a4095dfd88a535489bfdfabc3c22515297ca9e6e56b5aa941a0773f88d2f",
+       "b25bd95ee82b866bc2015d3b96d814f4d0de29d8736778001ee51b6ae9a4492d",
+       "31f5ab3d8691802a93c9ba66cc82e2d74f4b7b9f62ce9315b4f02d4ea750e230",
+       "c256fa3083af296d07a6477c65b974b5ee0624059e2f0c0f6d5e13a22ba6d77a",
+       "0cbe34a5a99d8032c78ffc4f8cc701413b81abc26b78ab523780c422e4cee69f"
+      ],
+      "added": [
+       "276f5adf3173b6955a7194d3ef8eaeb822124881b598e19ee60b9bbef1ed17ae",
+       "192de4fc6303f057fe7d19d849e03b5c2c2a8a20019d5c5b4086e4ce7b15025a",
+       "239ab48a2aec9b9e6e114e82ae40fa89ce2b739fffa27aaec1178b37e7b62c46",
+       "3fe7cf3b446ce31b151f39e66efc7c59d892ae0582ec71fd91ce274a0cff0287",
+       "9df543da6422893fa4e56a29123beffef46056f58fb3637a419b9ee727d7bafd",
+       "cca5c38098bf3708cee23f1644ba8046e62843bf6d3dd4d24fb70ebe12930241",
+       "7f9ee084776cb2a66cd18fb59f20d32b51df1c9cecae15fe2531f72bad8c2ab8",
+       "0405190bf2f214f9b573d5ae7b718cf4ae0aa59a1cc337e96861ce6fbaa891db"
+      ]
+     },
+     {
+      "at": 875,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "a608a22de2b888064082e455e20a5f3955cc70febbc326a3bcfe90b853e34f14"
+      ],
+      "added": [
+       "32d35869ac53610e80fac89c9744c29a5b92dae2daf32d872313816b815f145c"
+      ]
+     },
+     {
+      "at": 904,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "273bf4126d16b6011e666e6c4b7bc1069b73aad6285bb6945f5793f4936076df"
+      ],
+      "added": [
+       "84f3f73533574ae32626da725036d3a09696c89e24425e79561b4fe50a1475fc"
+      ]
+     },
+     {
+      "at": 910,
+      "starts": "Geometry and tokens of the component (not per st",
+      "removed": [
+       "2fd6ecda9749af388c9f8de2a0a94a848f4283761c8c2e3f4dc9f0f83627208c"
+      ],
+      "added": [
+       "4d121fb85c255eeb8cb283dd4933b3bca71bf39a0075f0ba6744c8e9306f4c5a"
+      ]
+     },
+     {
+      "at": 925,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "1ee0c9c99bea9dad49ca02a69a6f513fd54e16e29ed00b648c79ddd05023d5d2"
+      ],
+      "added": [
+       "3f8dcdeede297043a20349d9e5b7e7edb0b4f424f01a5fc384a937f923a79541"
+      ]
+     },
+     {
+      "at": 951,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "a9099910f739a8f3415ea445aa5e0e30e816ed224fcf057b3ad9a6a425f3537e"
+      ],
+      "added": [
+       "0ae53f264e6c56572aacb4132be4996a924cadfdd1f36749488b098b22216087"
+      ]
+     },
+     {
+      "at": 972,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "4741a26c3b0bc7fc40f022af30e550945cba9f75bd31be73f9c57e64a1923633"
+      ],
+      "added": [
+       "661703fa65b87d11d1bbd09c3589a6e96eaf5c8aba005ab2e76ce84ed26aa9f9"
+      ]
+     },
+     {
+      "at": 993,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "1c77c704dc3d1cc25f88ebaeaa00e7a0ea41a29e9add019fd78e358c29cf8346"
+      ],
+      "added": [
+       "d41863f708480b4a13d5c5eec087d5acc2a1644a9acda1090a383815106c1357"
+      ]
+     },
+     {
+      "at": 1013,
+      "starts": "| disabled | The CTA disabled with its reason in",
+      "removed": [
+       "97f37de437cff41ad1d65848ee622fbb5ef0c7597ee06e1120494f53e62d05d1"
+      ],
+      "added": [
+       "b663baa333d4128faa30132d7d86f05eb99a32417399597a71a2dcc800c56e3f"
+      ]
+     },
+     {
+      "at": 1018,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "c7a0d44263024c0ec1e145970c655dbdb64f935a51056672429c252c7894a808"
+      ],
+      "added": [
+       "c1dd8acad690fb1cce90480bc0aed89bce1dfdc329433efde74a2749dfca97fe"
+      ]
+     },
+     {
+      "at": 1024,
+      "starts": "Geometry and tokens of the component (not per st",
+      "removed": [
+       "89cba44a40ef9f899891588e1ba2f9e0e1d818573d62caf9fc23157716ff448c"
+      ],
+      "added": [
+       "f0d80cd1319dba75c8d2da19c5eb43a9cff87483b231fe7b957226cf1546511f"
+      ]
+     },
+     {
+      "at": 1039,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "7c31ff23e9cd886a9ff222b3247326a31a85d7a65bb567796c1df1cf2b3dd120"
+      ],
+      "added": [
+       "44227a9861a8000dabe00764b95fd83eed0b923dc1831ee9ec6a70721323f948"
+      ]
+     },
+     {
+      "at": 1043,
+      "starts": "The floating chat launcher (locked: 56 px, --acc",
+      "removed": [
+       "fe3ca522ac3dadd50aba30e6a9dbacef585cd6957b9efea8533e2d6ad03d26dc"
+      ],
+      "added": [
+       "76f4ca55587962580811e4fb98fe7a29826240d1c0c028383209d9921b73bc0f"
+      ]
+     },
+     {
+      "at": 1045,
+      "starts": "Geometry and tokens of the component (not per st",
+      "removed": [
+       "88781f278ecab2389ab8eac35961c121e170566facc1b4eddc3939c9d8d30adc"
+      ],
+      "added": [
+       "418960f45d202f52e66d6cfdb28596ae70501a35dbf6f85d9c63399aee6019ee"
+      ]
+     },
+     {
+      "at": 1055,
+      "starts": "| default | Resting: --accent-solid fill, --acce",
+      "removed": [
+       "0ce7f197381fa368f8731cc116419d11d0c04e0d1fd3096fb4ee999e68e405a9",
+       "c1a018ba68049b26a4bd956212899f7acccea41c3130c5e99066e3c1e244d938",
+       "152c0f0151648e08dd758cfeb505fc34e53aad30e206cd1089badaefbf972831",
+       "869657ce83297b252cbc5bbacb7c31ddf2922ba41adb449d5bc601e00063ed9c"
+      ],
+      "added": [
+       "d9fc9e4b3ccf4664cdd93c72201cd8efcdaa75d23363384f9d6c216091527ced",
+       "6027b8c603fe49cde2690ca40974a1ae2470a45fde9167a54a32e84d56904c1a",
+       "78a90983f23bad6c5fb3a2618023cdcb066a1fa04b424cd4b427fc90f5c292cc",
+       "24ea85a1cfc8ae5f2783b6cd05602656065860c5d520049f1f2b0dbd22ef61aa"
+      ]
+     },
+     {
+      "at": 1060,
+      "starts": "| loading | Unchanged: progress lives in the pan",
+      "removed": [
+       "d26c3d132acbcc79721cbf9d220b4f4bf2959044dbc39bd2702935b07c6b3a60",
+       "c747afc78f312ef46f08d481c9f92d76f5450569cdb4bb4cef2aee6fcc562404",
+       "18d35a58098385c45d9ef289fd2c94993290961526580c05f202b5fa1bbbffc6"
+      ],
+      "added": [
+       "d6e518c56e7e810c3df72676e941b3c2fda2117b22d6cdb358309777cae678f0",
+       "90d76e3361a9fa72d5522d2e6df7ca12a634aa59ccc40f6774a8fa0f9882133c",
+       "3352ed801465bff1d29069b0d25db6c1219663e48e8d52e2ceee9a16e673bffb"
+      ]
+     },
+     {
+      "at": 1064,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "273ec0cafcc710d07c033d2a665d52a2f48abcbdabfcda2ce77adbfba2a1efa9"
+      ],
+      "added": [
+       "8300e1230e1c02f1e21666991aa2c296cbda95a9525e9174795e90b46acd1340"
+      ]
+     },
+     {
+      "at": 1068,
+      "starts": "The tutor-message surface: a tutor row is a 32 p",
+      "removed": [
+       "f6d0f3b89f0f0f92017c1c0978f922898f7b813a475afba7e8e563d566010281"
+      ],
+      "added": [
+       "d5b52ed6419c7ae593badbb04ffee5f17b92279ba4b5de16d341cac9688176ee"
+      ]
+     },
+     {
+      "at": 1070,
+      "starts": "Geometry and tokens of the component (not per st",
+      "removed": [
+       "957ed08f1fbeb0cc7b05d1d582bf9ab35df503344dbd067b358f9babf4931ef7"
+      ],
+      "added": [
+       "08f0492a457a066ab1c07c2b0ac2e5c3a1fd33d63390cd2cd0e716bb38ec9269"
+      ]
+     },
+     {
+      "at": 1089,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "98e7e0f3adf8a8f96585e164ee153f9a8ebf2fff28cb8426b69399853742aa02"
+      ],
+      "added": [
+       "fef93e295ddb86cfc0c41bb1fec00cb6b3dd59cae7c29ebba975226fc518b2d1"
+      ]
+     },
+     {
+      "at": 1121,
+      "starts": "Contrast (both modes, from `check-tokens.mjs`): ",
+      "removed": [
+       "4cd0d585d021e41cba96cee7b483cd128eeb0dfa72bf43a7def299b888c52398"
+      ],
+      "added": [
+       "2ee3664542863ceab2cdbfdec91c31579058da44a40febba0613dd573e70737b"
+      ]
+     },
+     {
+      "at": 1185,
+      "starts": "Every syntax colour is a text pair on the editor",
+      "removed": [
+       "ebe7c7a0bd8f95df56b0f5ce9ffda55a033c428fd5629798f48e60759cb2560b"
+      ],
+      "added": [
+       "def360243ae7e1f443a777f98e5908e1d833b8826d39b6529855bd48f369b252"
+      ]
+     },
+     {
+      "at": 1213,
+      "starts": "**(1) Internal CSS, `kiwi-ui.tokens.css`.** `:ro",
+      "removed": [
+       "5d028fd3bf47d8379db5c558e8527a3489eda98c6c039fcea8f0fa0df4e56676"
+      ],
+      "added": [
+       "a09564f20626bf32fb37b99796ad44019a82842b4f20c1014bd19b7e5c7605e0"
+      ]
+     },
+     {
+      "at": 1229,
+      "starts": "| `shape.borderRadius` | 2 |",
+      "removed": [
+       "71f0a40186208a67b6f54ecfdebb78366a61250e2026082a01ad49dd787b979e"
+      ],
+      "added": [
+       "c779ef52c21046cb753d0ac4f31f02213694c698e4a57599fff060e0ba68813b"
+      ]
+     },
+     {
+      "at": 1231,
+      "starts": "| `MuiCssBaseline` | imports the token CSS; `fon",
+      "removed": [
+       "a7cbf471fb625ee85f0eeb49b1cc1ba0735d358a5308fa123b6ad9ed185ec19d",
+       "7b329afc7cc13366ed4a524bcbc4168807bc101c4d4328f123ef13945ee696a7"
+      ],
+      "added": [
+       "8c62e54585ebc3fc709e54f1a4fe81a2542fb7c991c6c0f63a5aa1062fd9e744",
+       "957efa2a07f19670287f7eb5956bf8fb0ecffbdbcc627538d31f02921a5f09bc"
+      ]
+     },
+     {
+      "at": 1235,
+      "starts": "| `MuiCheckbox`, `MuiRadio` | the checkbox compo",
+      "removed": [
+       "9e61a8ef1cc468b9f587746e73e3300454dd0c28552f15cce68b9980308d89cc",
+       "6d38118b03708c12a43c3b143e165ea34f872f9e8d8805b0a13336f230d2d7cf"
+      ],
+      "added": [
+       "3d6942001a05547e92a5f2b4fc7a6305f3382b708f9acd3654ea75b6cbb77f12",
+       "29d018629faf9ba43280569bb68ae976584a0f7634e1d048b6b5cfb67289298c"
+      ]
+     },
+     {
+      "at": 1239,
+      "starts": "| `MuiListItemButton` (sidebar) | `minHeight var",
+      "removed": [
+       "42686fc079f8beda6bc0cefe63298af0f5d2d661494eabd285fd44a5496dc7f3"
+      ],
+      "added": [
+       "a745f323360362d0649770224c7645f0097546ce4c26da089928f61e1213b7ca"
+      ]
+     },
+     {
+      "at": 1241,
+      "starts": "| `MuiDialog` | paper 1 px `--border`, `--radius",
+      "removed": [
+       "637ac1eb25dadeef2bbbdf58f4e18a970004f605ebdc15a1dc1a780145853d19",
+       "b0b6af48be58a58a3cf087a01ee2bd5e37d0a03b209baadac0994f3e7df9b2bf"
+      ],
+      "added": [
+       "3e176a40544e408b6eeb7482d86b042a8db387b9a9871a1409df06fbb44aa33b",
+       "88c8c688dc96ee2bc7ac13d7d3dc07c64d73e8ac849fda10aa71f774440acbec"
+      ]
+     },
+     {
+      "at": 1246,
+      "starts": "| `MuiFab` (the launcher) | `--size-launcher`, `",
+      "removed": [
+       "ace40b28bb4cf5a10f3f2192bf13e4bb4d11bee37755506b2f5dfd56c36a1141"
+      ],
+      "added": [
+       "82104a706b46986fc8c0dc599b0f09ba609664f01b062e35ad0a2044c7ab358f"
+      ]
+     },
+     {
+      "at": 1252,
+      "starts": "- The names are re-pointed to the semantic tier,",
+      "removed": [
+       "fc6ea476904f3623198b3dad8bf5bb92cc28d1f09ece9a7977ce85791f12d815"
+      ],
+      "added": [
+       "bba3ccd58497697034c27e496ad5185810bf9f5a899738d0de6c558df74d6eb8"
+      ]
+     },
+     {
+      "at": 1255,
+      "starts": "- The app's disabled mechanism: `.kiwi-btn[aria-",
+      "removed": [
+       "8db4dbee95471e27d528e2ff43768a6e7dd847e2ab0d818fab823a25d03911f7"
+      ],
+      "added": [
+       "f4fcd1783d71aee6b291c492b5c8347c967842b1628969d7b497148b33c35b2f"
+      ]
+     },
+     {
+      "at": 1274,
+      "starts": "| `--kiwi-radius-md`, `-lg`, `-xl`, `-2xl` | `--",
+      "removed": [
+       "6965fa76722af0dc260eeb5eb2c1289dbe0926770f3c290a8a3d33d1dd9d7cf6"
+      ],
+      "added": [
+       "efb68d7ae545458981b773a3b14fbfa4e21a2f1b948879774ef6ce4d1e287a38",
+       "e1828f0492c25e9ed412265fcc806be253b8d4aa6fba6dfa526702edfcc6b20d"
+      ]
+     },
+     {
+      "at": 1284,
+      "starts": "Kept and restyled classes: `.kiwi-step-connector",
+      "removed": [
+       "c7c273b4d0895d69672232827a8b68255dabed9cc09a6e0c3193c6aa71f2a85d"
+      ],
+      "added": [
+       "26722a0c3ba490a4525c3dc58cfb844b27b945cd94e1a287ba2b985ecf2e1d4b"
+      ]
+     },
+     {
+      "at": 1295,
+      "starts": "- the global sources (§ 21: every value given, d",
+      "removed": [],
+      "added": [
+       "36eedaabfd2025469d02bb34379236ead7c37c07815386ce5a3a32e397725055"
+      ]
+     },
+     {
+      "at": 1298,
+      "starts": "- the dialog against its scrim (§ 22: the backdr",
+      "removed": [],
+      "added": [
+       "53b20d5efee7daaaa70b4c8a7a259186f0eaba66b8c06c309b76bee18a05ddc1",
+       "3b0edc43fdcc44c6a547a82b92ab1fbfacaaf9a485227e35591b206d92539d2e"
+      ]
+     },
+     {
+      "at": 1307,
+      "starts": "- every cue survives `(forced-colors: active)` e",
+      "removed": [
+       "fe7e47ec6b7cc455f2be44b55003b5fd0eb8a3802ec9d72149f3548a6b7dec13"
+      ],
+      "added": [
+       "d42718204941f6a33d9ef686e799f1b0c438b591bc36657b2186a3301045dccd",
+       "f900b1e5a9b37d37fa0250481a4aa98f3898335f1ac46ff89cd09ec2bb5670a8"
+      ]
+     },
+     {
+      "at": 1321,
+      "starts": "**Inside the source** the literal policy is tier",
+      "removed": [
+       "1fa202cc508153f4bba1276f5fcd8fd9ac416b885abe41b8ec0e20b7b214ed3b"
+      ],
+      "added": [
+       "c7976e2f3d1b3dceeab4a4ca0a213572d16e5c29d6a7308f5364a1001dbacce0"
+      ]
+     },
+     {
+      "at": 1331,
+      "starts": "| Browser chrome: `index.html` `<meta name=\"them",
+      "removed": [
+       "ce76287274b3638a6adcbbd0e331a7af1b1f362c11f8bff29abac2987623cd9a"
+      ],
+      "added": [
+       "ea200c8f694e2402a8fc7c71186800c0c56922c6c2bc781a54139d1b5eb1d0b8"
+      ]
+     },
+     {
+      "at": 1339,
+      "starts": "| `#f5f5f5` page | `body` | `--background` | `#f",
+      "removed": [
+       "cf5027b217600a90e99cb2de875939a83b0c7af94d4dd63e99558b42df42a96c",
+       "d3d75efb16db7dbcaeebd9ccce356ea2c2cf85bc8e9e7e22e97ead37dfdc35a8",
+       "c18cae5832b24dcc701125eb9d58465ee19ee6e6e8b0e80dc3dc34a07003f059",
+       "e9a63dbd229cee6f3ffc53e3db83b8e9a1b23b14feccfd5159d2a9b6a6d0c973",
+       "ccfa765f0119e918509c75619d9724c26b5ec3738916a33232c8b02f3b85e20a",
+       "aad9bca831f29a1292120c18681478180b5d50893608908ec10813552d05a18b",
+       "6374fbefb27748520b04966d286004bd3893fdae9652969f7dd98b0d3c3a99ee",
+       "e05eebdd81fcbbff9efa6bfd7683a7f8227aa7b93181bb92596f63b7bca71633",
+       "601857f83426bfdc4a078e0e3e942652a22f41df661c95425f01ae6764c722eb",
+       "2748694ac180d3970751b7b4e130f150b228dc311e14a59e16cf1ea721dba33f",
+       "1305dfc408a626c21017b1b80429d85c88a9a34c26422a4a13ad7a8c8726039f"
+      ],
+      "added": [
+       "a56bfe5303b24042dfbe806afeec8ca86318847ed86365cf16d1655e914af899",
+       "c78b115f243ea99c7b9f5121c75457d0ccf12330e0fb6261c49d26a135f27e7a",
+       "8db37567aa8db75482835fe2c4e64d650dcc96e1cbbc2a2ecf60e7be4be419d0",
+       "6a4017b1eaec5c647cf51e7b2db1a2e8eaa0a61872d34c1070c36a65ceccf5b2",
+       "1a8606b5dd5dda9e48d9598db89fa48ca19f2a7ed1cc6e777c6cc97fc1de1114",
+       "93aff0a0da73f245a3b44f34598bfff649edeee7d6c4d91906f4d399fc8e8f67",
+       "91c561c02884a556eec78ac290de7b3b7c88247c78120be7a13ee8c2884ba685",
+       "2c3d60f823dd723e06b353a5a2b028a52cc8aa67ec9ab694f535a9dec4c8f94a",
+       "9b7fb26c2b56b078cba61de4b57233eaac6113e84805beb2f7fc13cf85f782ab",
+       "baee0d7f5f9d72a293ab23a416a3fdcb02ddb8df88c6f53a0c909a8459addd10",
+       "3143521711d4462399c184860fbcc0d8bf3ca9cb5ea4068e96a7cb627ffb721d"
+      ]
+     },
+     {
+      "at": 1353,
+      "starts": "| `#5C3B6E` button | `welcome .btn` | `--accent-",
+      "removed": [
+       "b94445f3555f792e7bf1ae1e9936791cf15d4d4ffac59c3ea542d2ef85b9b375",
+       "5d29c99fda85befa70cb7a7d6bb70eda8f25247a644e0c98dcdc90a04b3f7943",
+       "b34320863c929318ab627dbc4018280db21eaea03c4b9d086a156fa7111a49fc"
+      ],
+      "added": [
+       "aba7f86346cfdd3f63ef696fa123feaf4b2365ae482b5438c5379fb07bd5c49e",
+       "d31011110ad8c0aeff70a13627471306d2b739bad52bc38f5de5b4a99faab832",
+       "e8e58aaed3700bab1acbb0ae00434c0a61b24e2fd1b7589600e35e9155ecc2e3"
+      ]
+     },
+     {
+      "at": 1357,
+      "starts": "| radius 8 / 5 px; `line-height: 1.6` | `.contai",
+      "removed": [
+       "66ddcdc70a16956a600bdea79c29184b6e46be636255b139ad9420fa315a9591"
+      ],
+      "added": [
+       "f1b9ca158ca7a489aeb93710fa41998e36218b2bcba85b7473b8f696f7957e51"
+      ]
+     },
+     {
+      "at": 1364,
+      "starts": "- **Contribution path.** A change lands by pull ",
+      "removed": [
+       "1f8d1b06ab909ea3d6b5b3d15d65a9ff3d2f690fc7456ab8aa2780e4a882f4ec"
+      ],
+      "added": [
+       "e55b9c3f02000e826f942c6b55dca6871ff478eee39e80c54d61d3ec62258ab1"
+      ]
+     },
+     {
+      "at": 1371,
+      "starts": "The live sources are `generated/check-summary.js",
+      "removed": [
+       "fcba6f03b41fb01d262cbfa978f89b4bc8e74065fa93bc173ced9fbccff815da"
+      ],
+      "added": [
+       "af5fc9cc5b5d7557c7a35e3cef16301375f1373ac328077bde020991b632d572"
+      ]
+     },
+     {
+      "at": 1373,
+      "starts": "| Check | Result (2026-10-17) | Source |",
+      "removed": [
+       "9945a61c1d26581c59fdc85f25319b75470a6001af29edfc89855694c196c297"
+      ],
+      "added": [
+       "1caa925e481bd3f730300b3ba4fcd760e76dace538e7ad6eeef2bf225ac9da52"
+      ]
+     },
+     {
+      "at": 1375,
+      "starts": "| Contrast via `palette.mjs` | runs A (seed 156 ",
+      "removed": [
+       "00a558a4a1ccefae59ff5ed9f07e9a0a19a84988636963e3648061313d1201b3",
+       "9f51af207e80270d97272c4a806f7f29346de181fccbc1720f534ace158f01d3"
+      ],
+      "added": [
+       "73559207c51ad3b5d0447ef74d7c5db9a815af117b4812219c9d35bb1b310cbd",
+       "7925bb9ae9c372fd34aefea68b026da3920397fba1e135acc09af6d69b72b751"
+      ]
+     },
+     {
+      "at": 1378,
+      "starts": "| Per-state contrast | **422 required assertions",
+      "removed": [
+       "c18b393184e582ff04f55f420b87c108d3e7d7f62fa1acccc841231a1dd0027d",
+       "a298780cdda889cacf4ca38560b445047e5468eb311a48fe13d3a0e883591b86",
+       "d317773a453419b5acd09afa8d47c33e52e291f35259afe34e159786a0705f82",
+       "ebdc6a335bbeed0dcece10f8383237cc6e278bba2d496c2efe240d925b1362b7",
+       "e3317df3ef2841d798db8cd981cf9d0c5375edb303b11d055c8ce6f736d2108f",
+       "8dcaf6885482fc8fe18ada1495d825cd6ef283936314542297ec1a5961581a5c",
+       "8977c17542557dde926e349a6497f5b232187c287ceadc13e4dc5cc4b54770fa",
+       "20ef6fca36714d18565d3aa66ca8026152bd7e421188d2ef915064b1909599bf"
+      ],
+      "added": [
+       "3d264923d17d86006d5aeafeb09c3b4a94ae85858bd585f21dd12c314e996035",
+       "2f0e32077e14cf86967dc479e73d50e692301416d0dc30bf4fd8c85c35115989",
+       "73dd4cbbdd437568ef96c6e221e83cf60440cf8cb467d368e57cc4537b70782e",
+       "c394f18a2a21cf37bf337267dbf9e30cda4b52f44670aa8a9559d5b467bfd57e",
+       "977c78c8008247fb28c4a4c4ce1089866e1251e95a4111b7d6797d57f9d532af",
+       "6b2f5ee3e47ef684e67ac3de8cab1cb81ad86810015fae92c58b6ef2e3da98bc",
+       "f35c9097d5b3384d3946a7540fb01ec59310c48bfa9ef3e48013c38e18731e53",
+       "3518f164f8123903d0fa3b710b915ebf8eb1463399551e115ced6d54e8b61f91"
+      ]
+     },
+     {
+      "at": 1387,
+      "starts": "| Real forced-colours emulation | 240 selected, ",
+      "removed": [
+       "9d1e10ea0f627b630a5610ef29830b575397cdb32fbc6a5d561856c784183ad8"
+      ],
+      "added": [
+       "532069e4632984d125e9ef91c716a97d21200b41786a2fdd9b42b2b50315db09"
+      ]
+     },
+     {
+      "at": 1404,
+      "starts": "  - the sign-in aside drops its photo dependency",
+      "removed": [
+       "700759adb9644641103bb31278d4aaf4b763ab05d361db9723d9f554defd2a2b"
+      ],
+      "added": [
+       "d93310ed810969c998fdfb4611af72113613309030921043720d95f6982e01a4"
+      ]
+     },
+     {
+      "at": 1418,
+      "starts": "| The sign-in hero and its glass card: retired w",
+      "removed": [
+       "b4a8c850905f98fbd3adea661ee36df140b6b958241905c5fdfdbdc6fec2a869"
+      ],
+      "added": [
+       "8f07314c51a604f47b436b310f86f968639764edcf2cafba9d617b2b982d7c9c"
+      ]
+     },
+     {
+      "at": 1456,
+      "starts": "| `companion.backing` | `--companion-backing` | ",
+      "removed": [
+       "cd43773eb502b254cb6bcaefc183549b06db435a2b8d61a9d9190a703a4306f7"
+      ],
+      "added": [
+       "44681d3d664f9aa64c297ed7447197a1c3c52648c14f287a74136c4dbdf176a4"
+      ]
+     },
+     {
+      "at": 1460,
+      "starts": "**Framing.** The tutor avatar draws every state ",
+      "removed": [
+       "ea52a86a38f4583dc94f18002ac1c18063ea2ae0e84f47ec3e59e23c4e99fe6a"
+      ],
+      "added": [
+       "bd914d0345e911ee680953d6e334f776608e3dcc13e1b2d8b6362cdffd3cdbd7"
+      ]
+     },
+     {
+      "at": 1526,
+      "starts": "The forest outline `#234631` (artwork) must clea",
+      "removed": [
+       "8a7cb2238f8162544f0340a22e42143a86efe2bd87888a98eb82a5c48233e4b5"
+      ],
+      "added": [
+       "c6a051a7d1a667f3800e362131b7be961d42f7c81ab2e2047041635eb3c9f5dd"
+      ]
+     },
+     {
+      "at": 1530,
+      "starts": "| dark | `--companion-backing` (light paper-2, f",
+      "removed": [
+       "dad3e29c2ade71940d371eac29e66131b5bb2af596180eb74b313cc3f5cf3491",
+       "75cfc7b3829f97d5ad40ff2a7db59540114e2bab9bb3b292b50d574dc776cf78",
+       "6e77c43ebcf7422208df92f8f402d18108a532f17ee4a8a2841ceadf534f8e39",
+       "53f36648c2c847be83e94e50893f708594071c9b1ac62fec4eb04ba0bbc27e3b",
+       "605183043e1cab72c5a6fe323939d874887cccb9692ff1a87b0424419fdb6bae",
+       "bbfb602901767e87629c61e1d7f5bfdd671dd35def0b6311aecd28334155f172"
+      ],
+      "added": [
+       "8d51efda5b7cd990bc38767cb678093046d0a9c38662584a69bb10a7cbf91cbc",
+       "6cc26a9444fe30cfc630d39db5393402ae97cf5638a3e3603555e790d7895e29",
+       "64de03e0bf6dcabd15cb801a41f82b62fd532aea75342a2ff377007f35e6836e",
+       "f795df1a9e99b995a8a831178a31540ea232a238b49793a0389c456266b44a94",
+       "81a67b0496b75fb281cc210fc3cc0d11692a4cbb860757a530cb1f64f21d74d6",
+       "caf6ac43a2c6a6ef213ff293ece1f114ea3884e4e6cc940f3558e57982b61930"
+      ]
+     },
+     {
+      "at": 1538,
+      "starts": "**Pixel-sampled (review A-5).** Once anti-aliase",
+      "removed": [
+       "4ebaded5abdca68387e1bf245a850aeceed23d213debf7872d6063d2abb54dfd"
+      ],
+      "added": [
+       "f728c2beda8d17eed4f801169659d8d55d28b7646c96ff74c902ed3069fbde90"
+      ]
+     },
+     {
+      "at": 1540,
+      "starts": "Informational: the backing disc against the dark",
+      "removed": [
+       "5568b0824b5b7b7292bea4abb5f5eb385db3e1337e91a7fdc4b0b03f42aa8e76"
+      ],
+      "added": [
+       "029bbea22a1dd159c3dcb0c425ed546433e7019547ffb90e5b88922c843e1303"
+      ]
+     },
+     {
+      "at": 1599,
+      "starts": "**Amendment (2026-10-18).** `export-mascot.py` r",
+      "removed": [
+       "49e30d9886482d94c231c125fd8194e919ebd58fdebb7ceb1f7df0d8ad558f41"
+      ],
+      "added": [
+       "30a6c8da7601fed954739113223af62123e4b99858947a4bd5cd2be1378ec928"
+      ]
+     },
+     {
+      "at": 2158,
+      "starts": "| `chart.other` | `--chart-other` | `#77746d` | ",
+      "removed": [
+       "c23f6ab60766311a5faaca854642fc5b1977f727782005a49c4bd42bf5ca4a36"
+      ],
+      "added": [
+       "2669c73b1c74ff24ab9f452f0283c4d474779dae2ff0f4fc3a57454ddd0524c2"
+      ]
+     },
+     {
+      "at": 2164,
+      "starts": "**Contrast (DW-6.1).** Every series clears 3:1 o",
+      "removed": [
+       "fba10f305461a7b6548a642441461dc8ef2a33ad7d375b85dfd5011d5bba123b"
+      ],
+      "added": [
+       "0d283f3a0f5b46012bd98d57a4820e7305a9c91480885d126fddceedcb6d0017"
+      ]
+     },
+     {
+      "at": 2170,
+      "starts": "`node .design-foundations/tokens/derive-chart.mj",
+      "removed": [
+       "038a09ee6dd181e0fcfda6d55aee0dd4a77efeffff01d03e0d0ccffce767bfbc"
+      ],
+      "added": [
+       "773784cfeff0f208ccabc0a298f42d230e506361bbd0ca71be6d1fa88e5a02ad"
+      ]
+     },
+     {
+      "at": 2177,
+      "starts": "- **One accent per view:** `--chart-1` is the ac",
+      "removed": [
+       "3d697f063ab85289cb6bfcd856b64ebc0581018b581af0a370590169174cb1bd"
+      ],
+      "added": [
+       "9e6e567a2db8e8b8847a646d4c50f44447f396295c940fe7fbe071a33fc95a8a"
+      ]
+     },
+     {
+      "at": 2181,
+      "starts": "- **No sequential or diverging ramp is registere",
+      "removed": [
+       "7ba4902c044eec01ca8d9dd795fc48370d1fe4cc4bf69f62804f47eb5f36bedd"
+      ],
+      "added": [
+       "65a2f660252bbf9ac0428c2a17cebfba3b76dc3dd107a8f953ba4685b513d91b"
+      ]
+     },
+     {
+      "at": 2190,
+      "starts": "- **Bars grow from zero:** `domain={[0, 'auto']}",
+      "removed": [
+       "2d4b95258dfd3ee0ef297b8c70cb6c8c345c8435fc1697be6ba0897e5e04d4c5"
+      ],
+      "added": [
+       "959cf019a2c5ec48095e821125dbff6a02af3846c9cd9dbd5ac704ccac423552"
+      ]
+     },
+     {
+      "at": 2236,
+      "starts": "- **Tokens and contrast:** `node .design-foundat",
+      "removed": [
+       "e24e4e51daade215877e0e60d45363c0872306051a33a31353e12473c91def33"
+      ],
+      "added": [
+       "0819fbbad43da2d53a1161cb51d0b0c275435a431685315c5be6bec0fb1dd485"
+      ]
+     },
+     {
+      "at": 2261,
+      "starts": "Appended, never edited into the sections above. ",
+      "removed": [
+       "17c3706f8c10f21f83578f65e8abd932219771d2f576e157f142c5fb0332539e"
+      ],
+      "added": [
+       "902dfa9939d4847fbe86a172d38141f13e66ca8eba338de328669e568a9a1db4"
+      ]
+     },
+     {
+      "at": 2270,
+      "starts": "### 2026-10-18 · Re-lock: the palette aligned to",
+      "removed": [],
+      "added": [
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "be01259931068f346b329ff49926de0493a5174a669f1878cfbb83b5b4fa4e36",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "9035f8db983dafdc7e0c17a83b77ebe32c13f0f7bee005cd287acea176b3f00f",
+       "17d61f4b10096714dcfc602e19687de888addecb8571bd5646c910a1a9a1aa6d",
+       "9d495f1941483e5d9a25e021814352c57815e4530059c04fdf6c52ace706556b",
+       "fa0b1903435879329671adfd2cdfe8f6aa45b24537c8d4348fa93964bfabea30",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "210515bb7955bc4bd598c0ab8f4291c205bfc85f8dea66d2e58c6166d0d86812",
+       "11bd5f873fa004793229f9931b6d90ec5eff770f738b716c6198d6daabd03235",
+       "4b8cc9da72af5b16897b6ed952fac1ecb008a302f08babb4942cd197645b0d10",
+       "229eb7ae0674578e174605bfd87abfd5abb65e5db0c58345346a2c668f5d3883",
+       "d1b4fe4e69c3cdc65ea0b7a22da8b3e2ac60d3398cb0ddfc4706b1904fb378d0",
+       "9910569514bafae4ff16962cc89f350f04d3248a03139802095753217ba772f6",
+       "afd0ec6e66ed9e84ff13329abacb8a53389505e960c06f822cd345f5284e1a44",
+       "6124332450ef832ce6ccc9fec1d515fa2473a63733a808287a259bc8fa5d0a17",
+       "8acf4e336d386d9cc23d4662ea65b67476f31c1d1fa92ccfc193761f35b4d278",
+       "c11c3819026b4229b8075f0e1c9363cd767d7fca00b1991b332488d2b14cde96",
+       "5ca1af6a7191616612de2c1d345067d841200384732ac0210fe034f006735332",
+       "cecc38fe739c0eb179dcab02e04dbd2e612bf98afe9af5020106b229f64981c7",
+       "ed4011408e66792851ade2c99630598c51779ef0581c207f2af463de058d5ca2",
+       "888108d4dc6d07d5d9649f601dbda71f9200cef7b9469137518f02bc0effaaae",
+       "1081c28b00adc1e8979181987fb46e1ced914b107df9c18164b9295aaa10dab0",
+       "12811ae75975a559f9c6f5517892039b53ea40e6871f2dd9fe1c5ee4bacc1c32",
+       "1b9370aaaf819a3067a86f66c0c6efb1ab11aa8a633ee00710c67cdabf76c808",
+       "2f320e0cc01580fdf83b593e74e467039ffa3d71f6007880cbc5251f5b517873",
+       "e8730df8758f48d25bbb4e80add7a5b198a026ee8ac09f8dc04ad698572f3f2f",
+       "c6a7440a1ffaddb1272e83aa16f6350f9232881c03dd4caf0c7d3121c3ec9ec3",
+       "c635bee1e6ce1af85eaa8d1e5a9275e1a52f1f1ed3b2cd3e1a49e915658eee53",
+       "b9d80dfa635017dea270a9d218072a0bb6305aaf08128925c3e9aceebae5145d",
+       "a7bc2a3d9b4c57c7e94f856670a548c6ca87131f5924257b0aca663cec83bcbe",
+       "aa4527acbe4028854b83cdfd2ec84c7bc50ed9ab03997a4cd27100ce16a8322c",
+       "dbc9808ae7ff6d3d63080d5af3db9fb87fa1a14336055822a9b8526b5c27b419",
+       "11440f27d46602bb27ebb6a77cb59090079f7655b9c74f0deb6a7bef9383b959",
+       "9ebe63c9ba47159d71ab257cc6c362cf40d8b438023da5da603a01fb43ca2d71",
+       "4ee157706fc2c1f5dd00fc6a69f3f71760b111ccf8db7f349116cd3c0f951243",
+       "279f6c07aa1c60f67f71aac63679fc358703c88a1b0d576c40af9fd852c56a8b",
+       "7824db44c4974b2653c3ae9be77a15ffcac3f227da8af1fd31b990b5a4738704",
+       "a9340304423218bb0b6e5e3e99fd23ec6451d1818617a50441bc6e748221bb04",
+       "f29024f2decf4f24e1b929c99427f585fade05c0fe857c596ac76c3654c5f33a",
+       "e64b9e374b8b3246924726aefc35987f0608245b263989022ceedddf7175a43f",
+       "974234020acdf1a2f5653ed60a873985a939e58e4d51565eab1570bbeccc44f1",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "5945fdbd85fe21c11b0e43b87b20838b0d101d4c3ebd148ebbeed0fcf914dd05",
+       "52350426ffe1944b49366627c61bfabc67bd2c13378ff3159356418294487988",
+       "ba9701dafc08eee431f7de174f86e5a82ac30e5b905402d278d1645e70f6af58",
+       "2cc35d2e5647328304ea573181e692a8c9539ebd0ed8e9945c932388ef1c73d7",
+       "13aad4ee5947c40a901ad728e955470997e826bbb567939fdf6124488bc2310d",
+       "2ab00fb6c0a8b7be089412bdf404545907d25e388d90c5c89de0900a693d4120",
+       "d0af9c530a447f1533b075f150fca3c11928d7973e9f08030f2a0c23c58af553",
+       "dacac3d246a29df9cc72202c919480d274c4e5791d7480fdb8ef662c41eebd91",
+       "dc8228035af86dfb9810dc00cb7dfa483c418d048566e7cd4f271f644bdf48f6",
+       "483b15375a3bc4016844103aeeef9878faf1078a0a3088c7f595b0691a9b2e8d",
+       "cd56a473440d9f50b90acd007bcbcba6ca2330c424c59449b830235863ccc057",
+       "dd7df34bf121ef85352c51e1d227c656a11ed9130376b546e8123913e6886e67",
+       "c7451a7153da05b1b541e842dc13d979a6a474fc512df45d672d606bfeff6d96",
+       "0a09605da7091873c855ac51d3f8659965db379a76440669a7eb1de357f85a82",
+       "66dacb3748e998f8caa63226157bb5678303b8ab827aedabdad6306f947a7fa0"
+      ]
+     }
+    ]
+   },
+   "journey": {
+    "kind": "patch",
+    "blocks": [],
+    "hunks": [
+     {
+      "at": 1076,
+      "starts": "- **Data surfaces (Phase 6):** the chart and tab",
+      "removed": [
+       "80b256f87ffb13bc80cb7f75931b36acec76cf7b424254b401218f223e5e88e9"
+      ],
+      "added": [
+       "9464c373cff6c4b78170ae3880f54e9ecfc23fc4c211550f06c210ecfacaab19"
+      ]
+     },
+     {
+      "at": 2321,
+      "starts": "- **Data surfaces (Phase 6):** the chart and til",
+      "removed": [
+       "bcf64def74c1cf5ae99879d0780cbe0a8937d3fd5581285df422a942b6b1a5c1"
+      ],
+      "added": [
+       "ce48a23d96b409540e05c331fad28d9a2d97b25fca596fa5d33cddb1e461476d"
       ]
      }
     ]

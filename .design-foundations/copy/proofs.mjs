@@ -2,10 +2,11 @@
 //
 //   UNIT   a string run through one lint function, in this process: the lint must hit it (or, for a negative control, must not).
 //   E2E    one defect planted into a throwaway copy of the data, the guide or the source; check-copy.mjs runs on the copy and the named check must fail.
-//   LOCK   one defect planted into a small made-up DESIGN.md or JOURNEY.md, run through the lock amendments' check (amendmentHits, L7 and L8) in this process.
+//   LOCK   one defect planted into a small made-up DESIGN.md or JOURNEY.md, run through the lock amendments' check (amendmentHits, patchHits and the chain,
+//          chainHits: L7 and L8) in this process.
 //
 // A proof that is not caught is a lint with a hole, so prove-checks.mjs exits 1 and writes the miss into generated/proof-summary.json.
-import { lintString, lintSource, bareCountHits, agreeCountHits, enDashHits, scopedTermHits, sentencePartOf, AUDIT, amendmentHits, sha256hex, generatedBlocks } from "./copy-lib.mjs";
+import { lintString, lintSource, bareCountHits, agreeCountHits, enDashHits, scopedTermHits, sentencePartOf, AUDIT, amendmentHits, sha256hex, generatedBlocks, WRITTEN_BLOCKS, chainHits, patchRecord } from "./copy-lib.mjs";
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 // UNIT: [id, rule, how, where, text, expect]
@@ -527,7 +528,8 @@ export const E2E = E;
 // plants one defect into the made-up working texts and names the part that must report it (`design` or `journey`) with what it must say; the
 // control plants nothing (the exact amendment, with the checker's Evidence block regenerated) and both parts must stay quiet. LOCK-1 to LOCK-4 are the four tests run against the real amendment
 // of 2026-10-18 before it was applied: a line outside `## Companion` changed, a twin's word changed in an amended row, an amended paragraph edited,
-// the JOURNEY.md line removed.
+// the JOURNEY.md line removed. LOCK-0 to LOCK-10 hold the first record kind (amendmentHits) on AMD; LOCK-11 to LOCK-25 the second kind (patchHits) and
+// the chain (chainHits) on PATCH and CHAIN, below.
 // ------------------------------------------------------------------------------------------------------------------------------------
 const AMD = (() => {
   const base = ["# Design", "", "## Direction", "", "It is still while the student reads.", "", "## Companion", "", "Intro.", "",
@@ -564,8 +566,88 @@ lock("LOCK-7", "design", /left ## Companion are not the recorded ones/, "a recor
 lock("LOCK-8", "journey", /other than the recorded insertion differs/, "another JOURNEY.md line changed", (t) => ({ ...t, journey: t.journey.replace("the next bullet.", "a changed bullet.") }));
 lock("LOCK-9", "design", /arrived in ## Companion are not the recorded ones/, "an unrecorded line added inside ## Companion", dEdit("Intro.\n", "Intro.\nAn extra line.\n"));
 lock("LOCK-10", "design", /generated block copy:evidence is not what the checker writes/, "a hand edit inside the checker's generated Evidence block", dEdit("| K2 | 48 lines |", "| K2 | 50 lines |"));
+// The second record kind (copy-lib.mjs patchHits) and the chain (chainHits), held through chainHits as check-copy.mjs L7 and L8 hold lock-amendments.json.
+// PATCH is one made-up amendment of the second kind, a patch over many sections like the re-lock of the visual layer: the status line, a token in the css
+// fence, two lines of the design system replaced by three, a twin row of ## Companion, a line inserted in ## Direction, an entry appended at the end;
+// JOURNEY.md gains a line. Its record is built by hand from those edits (each position counted on the base with the Evidence block as one line), not by
+// the recorder; LOCK-21 asks the recorder's diff (patchRecord) for the same record. CHAIN is two amendments in turn, like lock-amendments.json: AMD's
+// (the first kind), then a patch from AMD's working texts; the Evidence block reads 44 lines at the first base, 48 at the second and 52 in the working
+// text (this run's). texts[i] are the texts at amendment i's base, the last entry the working texts; a proof plants into one of them.
+const hunkOf = (at, removed, added) => ({ at, starts: [...([...removed, ...added].find((l) => l.trim() !== "") ?? "")].slice(0, 48).join(""), removed: removed.map(sha256hex), added: added.map(sha256hex) });
+const evidence = (...rows) => ["<!-- copy:evidence:start -->", ...rows, "<!-- copy:evidence:end -->"];
+const PATCH = () => {
+  const head = ["# Design", "", "**Status:** locked 2026-10-16.", "", "## Direction", "", "Calm, one accent.", "", "## Color tokens", "", "```css", "--accent: #2e7d32;", "--surface: #ffffff;", "```", "",
+    "## Design system", "", "Buttons are pill-shaped.", "Dialogs have a 28 px radius.", "", "## Companion", "", "| `walk` | runs | `full-walk` | \"Thinking…\" |", "", "## Voice and tone", "", "Words.", ""];
+  const tail = ["", "## Lock amendments", "", "### 2026-10-18 · The avatar", "", "- **Relaxes:** stillness.", ""];
+  const base = [...head, ...evidence("| K2 | 44 lines |"), ...tail];
+  const ed = { status: "**Status:** locked 2026-10-16; the visual layer re-locked 2026-10-18.", corners: "Corners are 8 px.", accent: "--accent: #1b5e20;",
+    ds: ["Buttons have an 8 px radius.", "Dialogs have a 16 px radius.", "Icons sit 8 px from the label."], walk: "| `walk` | runs | `full-walk`, on the new surface | \"Thinking…\" |",
+    entry: ["", "### 2026-10-18 · Re-lock the visual layer", "", "- **Relaxes:** the palette and the corner radius."] };
+  // the checker rewrites its Evidence block (48 lines now): a generated change, not the amendment's
+  const work = [...head.slice(0, 2), ed.status, ...head.slice(3, 7), ed.corners, ...head.slice(7, 11), ed.accent, ...head.slice(12, 17), ...ed.ds, ...head.slice(19, 22), ed.walk, ...head.slice(23),
+    ...evidence("| K2 | 48 lines |"), ...tail.slice(0, -1), ...ed.entry, ""];
+  // the collapsed base: head (28 lines), the block as one line, tail (7 lines, the last the empty string after the final newline); the entry goes after
+  // the last line of text, before that empty string
+  const hunks = [hunkOf(3, [head[2]], [ed.status]), hunkOf(8, [], [ed.corners]), hunkOf(12, [head[11]], [ed.accent]), hunkOf(18, head.slice(17, 19), ed.ds), hunkOf(23, [head[22]], [ed.walk]), hunkOf(head.length + 1 + tail.length, [], ed.entry)];
+  const jBase = ["# Journey", "", "- **Companion (Phase 4):** the bullet.", "- **Copy (Phase 5):** the next bullet.", ""], jLine = "- **Visual layer (re-locked 2026-10-18):** the palette.";
+  const jWork = [...jBase.slice(0, 3), jLine, ...jBase.slice(3)], design = work.join("\n");
+  return {
+    amendments: [{ id: "made-up-relock", base: "c".repeat(40), design: { kind: "patch", blocks: [...WRITTEN_BLOCKS], hunks }, journey: { kind: "patch", blocks: [], hunks: [hunkOf(4, [], [jLine])] } }],
+    texts: [{ design: base.join("\n"), journey: jBase.join("\n") }, { design, journey: jWork.join("\n") }], written: generatedBlocks(design),
+  };
+};
+const CHAIN = () => {
+  const d1 = AMD.design.split("\n"), still = "It is still while the student reads.", idle = "| `idle` | rests | the standing still | none |";
+  const ed = { still: "It is still while the student reads; the palette is re-locked.", idle: "| `idle` | rests | the standing still, on the new surface | none |", entry: ["", "### 2026-10-18 · Re-lock the visual layer", "", "- **Relaxes:** the palette."] };
+  const work = [...d1.slice(0, -1).map((l) => (l === still ? ed.still : l === idle ? ed.idle : l === "| K2 | 48 lines |" ? "| K2 | 52 lines |" : l)), ...ed.entry, ""].join("\n");
+  // the second base collapsed (its 3-line Evidence block one line) has d1.length - 2 lines, the last the empty string after the final newline: the entry goes before it
+  const hunks = [hunkOf(d1.indexOf(still) + 1, [still], [ed.still]), hunkOf(d1.indexOf(idle) + 1, [idle], [ed.idle]), hunkOf(d1.length - 2, [], ed.entry)];
+  return {
+    amendments: [{ id: "made-up-1", base: "a".repeat(40), ...AMD.amendment }, { id: "made-up-2", base: "b".repeat(40), design: { kind: "patch", blocks: [...WRITTEN_BLOCKS], hunks }, journey: { kind: "patch", blocks: [], hunks: [] } }],
+    texts: [{ design: AMD.baseDesign, journey: AMD.baseJourney }, { design: AMD.design, journey: AMD.journey }, { design: work, journey: AMD.journey }], written: generatedBlocks(work),
+  };
+};
+const chain = (id, part, expect, name, fixture, plant) => L.push({ id, part, expect, name, fixture, plant });
+// a plant into texts[i] (a negative i counts from the working texts)
+const tEdit = (i, part, from, to) => (t) => {
+  const k = i < 0 ? t.texts.length + i : i;
+  if (!t.texts[k][part].includes(from)) throw new Error(`LOCK: "${from}" is not in the made-up ${part} text ${k}`);
+  return { ...t, texts: t.texts.map((x, j) => (j === k ? { ...x, [part]: x[part].replace(from, to) } : x)) };
+};
+// the recorder's record of a link (patchRecord, which record-amendment.mjs writes) must be the one built by hand
+const sameAsRecorder = (t, i) => {
+  const am = t.amendments[i], [b, w] = [t.texts[i], t.texts[i + 1]];
+  const rec = { design: patchRecord(b.design, w.design, am.design.blocks), journey: patchRecord(b.journey, w.journey, am.journey.blocks) };
+  for (const part of ["design", "journey"]) if (JSON.stringify(rec[part]) !== JSON.stringify(am[part])) throw new Error(`LOCK: the recorder's ${part} record of ${am.id} is not the one built by hand: ${JSON.stringify(rec[part].hunks.map((h) => [h.at, h.removed.length, h.added.length]))}`);
+  return { ...t, amendments: t.amendments.map((x, j) => (j === i ? { ...x, ...rec } : x)) };
+};
+chain("LOCK-11", null, null, "a patch over many sections, exactly as recorded, the Evidence block rewritten by the checker: both parts stay quiet", PATCH, (t) => t);
+chain("LOCK-12", "design", /line 37 of the working text: 1 line in place of the base's line 35, which no hunk changes/, "a line changed outside every hunk (after the collapsed block: the report gives the line a reader sees)", PATCH, tEdit(-1, "design", "### 2026-10-18 · The avatar", "### 2026-10-18 · The avatars"));
+chain("LOCK-13", "design", /line 13 of the working text: hunk 3 of 6 \(at the base's line 12, "--accent: #2e7d32;"\) is not applied/, "a recorded hunk reverted (the old token kept)", PATCH, tEdit(-1, "design", "--accent: #1b5e20;", "--accent: #2e7d32;"));
+chain("LOCK-14", "design", /line 20 of the working text: 1 line in place of line 2 of hunk 4 of 6/, "a line inside a hunk altered", PATCH, tEdit(-1, "design", "Dialogs have a 16 px radius.", "Dialogs have a 12 px radius."));
+chain("LOCK-15", "design", /line 44 of the working text: 1 line that the record does not have/, "an extra line appended at the end", PATCH, tEdit(-1, "design", "the corner radius.\n", "the corner radius.\n- **Allows:** more.\n"));
+chain("LOCK-16", "design", /hunk 2 of 6 \(after the base's line 7, "Corners are 8 px\."\) is not applied: its line is missing/, "a hunk's line moved to another position (the same lines in another order, which a count of lines cannot see)", PATCH, tEdit(-1, "design", "## Direction\n\nCalm, one accent.\nCorners are 8 px.\n", "Corners are 8 px.\n## Direction\n\nCalm, one accent.\n"));
+chain("LOCK-17", "design", /generated block copy:evidence is not what the checker writes/, "a hand edit inside the checker's generated Evidence block of the working text", PATCH, tEdit(-1, "design", "| K2 | 48 lines |", "| K2 | 50 lines |"));
+chain("LOCK-18", null, null, "the checker rewrites its Evidence block at another length (three rows for one): positions are taken with the block collapsed, so both parts stay quiet", PATCH, (t) => {
+  const u = tEdit(-1, "design", "| K2 | 48 lines |", "| K2 | 48 lines |\n| K3 | 12 lines |\n| K4 | 7 lines |")(t);
+  return { ...u, written: generatedBlocks(u.texts[u.texts.length - 1].design) };
+});
+chain("LOCK-19", "design", /hunk 3 of 6 \(at the base's line 12, "--accent: #2e7d32;"\) does not fit the base: the base's line 12 is not the line the hunk removes/, "the base is not the text the record was made from (the line a hunk removes differs there)", PATCH, tEdit(0, "design", "--accent: #2e7d32;", "--accent: #2e7d33;"));
+chain("LOCK-20", "journey", /line 5 of the working text: 1 line in place of the base's line 4, which no hunk changes/, "an unrecorded JOURNEY.md line beside the recorded one", PATCH, tEdit(-1, "journey", "the next bullet.", "a changed bullet."));
+chain("LOCK-21", null, null, "the recorder's diff (copy-lib.mjs patchRecord, which record-amendment.mjs writes) gives the record built by hand, hunk for hunk, and it holds", PATCH, (t) => sameAsRecorder(t, 0));
+chain("LOCK-22", null, null, "two amendments in turn (the first kind, then a patch the recorder's diff also gives), exactly as recorded; the second base's own Evidence block is not this run's, and only the working text's is asked to be: both parts stay quiet", CHAIN, (t) => sameAsRecorder(t, 1));
+chain("LOCK-23", "design", /^made-up-1 \(aaaaaaa to bbbbbbb\): a line from ## Voice and tone to the base's end differs from the base/, "a broken chain: a line changed at the second amendment's base and kept since, so the first amendment's record no longer holds at the second's base", CHAIN, (t) => tEdit(-1, "design", "Words.", "Other words.")(tEdit(1, "design", "Words.", "Other words.")(t)));
+chain("LOCK-24", "journey", /^made-up-2 \(bbbbbbb to the working text\): line 5 of the working text: 1 line in place of the base's line 5, which no hunk changes/, "an unrecorded JOURNEY.md line where the newest record says the file is unchanged", CHAIN, tEdit(-1, "journey", "the next bullet.", "a changed bullet."));
+chain("LOCK-25", "design", /line 45 of the working text: 1 line that the record does not have/, "an empty line added after the last one (every recorded line in place, one more after them: the lengths differ)", PATCH, (t) => ({ ...t, texts: t.texts.map((x, j) => (j === t.texts.length - 1 ? { ...x, design: `${x.design}\n` } : x)) }));
+{ const seen = new Set(); for (const c of L) { if (seen.has(c.id)) throw new Error(`duplicate proof id ${c.id}`); seen.add(c.id); } }
 export const LOCK = L;
 export function runLock(c) {
+  if (c.fixture) {
+    const t = c.plant(c.fixture());
+    const hits = chainHits({ amendments: t.amendments, texts: t.texts, written: t.written });
+    const all = [...hits.design, ...hits.journey];
+    return { ok: c.expect === null ? all.length === 0 : hits[c.part].some((h) => c.expect.test(h)), hits: all };
+  }
   const t = c.plant({ ...AMD });
   const hits = amendmentHits({ baseDesign: t.baseDesign, design: t.design, baseJourney: t.baseJourney, journey: t.journey, amendment: t.amendment, written: t.written });
   const all = [...hits.design, ...hits.journey];

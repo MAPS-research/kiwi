@@ -18,8 +18,11 @@ const tree = loadTokens(SRC);
 const meta = tree.$extensions["org.kiwi"];
 
 // ---------- 1. internal CSS ----------
-// Each emitted token becomes one or more declarations. A reference is emitted as var(--name) when its
-// target is itself emitted, so the output reads like the locked block; composites resolve to literals.
+// Each emitted token becomes one or more declarations. A reference is emitted as var(--name) of the nearest
+// emitted token along its reference chain (a pass-through role such as semantic.radius.control has no name of its
+// own, so --button-radius reads var(--radius-control)), so the output reads like the locked block and a component
+// follows its global; a chain that ends in a literal no name carries (the lock's green-black) emits the literal;
+// composites resolve to literals.
 const emitted = []; // { path, name, token }
 const byName = new Map();
 walk(tree, (path, token) => {
@@ -30,6 +33,8 @@ walk(tree, (path, token) => {
   emitted.push({ path, name, token });
 });
 const nameOf = (path) => cssNameFor(tree, path);
+// the nearest emitted name along a reference chain, in a context (null when the chain ends in a nameless literal)
+const chainName = (path, ctx) => { let p = path; for (let i = 0; i < 20 && p; i++) { const n = nameOf(p); if (n) return n; const t = getToken(tree, p); p = t ? refOf(rawValue(t, ctx)) : null; } return null; };
 // Shadows and the backdrop reference --shadow-ink; their alphas ($extensions["org.kiwi"].alpha, per layer or per mode)
 // are composed here into rgba(), so the ink is written once and the composites follow it.
 const terminal = (path, ctx) => { let p = path, t = getToken(tree, p); for (let i = 0; i < 20 && t && refOf(rawValue(t, ctx)); i++) { p = refOf(rawValue(t, ctx)); t = getToken(tree, p); } return t; };
@@ -46,7 +51,7 @@ function declsFor(entry, ctx) {
   if (token.$type === "color" && alphaOf(token, ctx) != null) return [[name, colorCss(path, ctx)]];
   const render = (v, type) => {
     const r = refOf(v);
-    if (r) { const n = nameOf(r); return n ? `var(${n})` : cssValue(type, resolve(tree, r, ctx)); }
+    if (r) { const n = chainName(r, ctx); return n ? `var(${n})` : cssValue(type, resolve(tree, r, ctx)); }
     if (typeof v === "string" && /\{[^{}]+\}/.test(v)) return cssValue(type, resolve(tree, path, ctx));
     return cssValue(type, v);
   };
@@ -154,7 +159,8 @@ const patterns = `
 .kiwi-bg-info { background-color: var(--kiwi-info-surface); color: var(--kiwi-info-text); }
 .kiwi-bg-subtle { background-color: var(--kiwi-bg-subtle); }
 .kiwi-rounded-none { border-radius: var(--kiwi-radius-none); }
-.kiwi-rounded-sm, .kiwi-rounded, .kiwi-rounded-md, .kiwi-rounded-lg, .kiwi-rounded-xl { border-radius: var(--kiwi-radius-sm); } /* one control radius */
+.kiwi-rounded-sm, .kiwi-rounded, .kiwi-rounded-md { border-radius: var(--kiwi-radius-sm); } /* the control radius */
+.kiwi-rounded-lg, .kiwi-rounded-xl { border-radius: var(--kiwi-radius-sheet); } /* the sheet radius: two sizes only */
 .kiwi-rounded-full { border-radius: var(--kiwi-radius-full); }
 .kiwi-shadow-none { box-shadow: var(--kiwi-shadow-none); }
 .kiwi-shadow-sm, .kiwi-shadow { box-shadow: var(--kiwi-shadow-sm); }
@@ -163,16 +169,17 @@ const patterns = `
 /* ============================================
  * COMPONENT PATTERNS (regenerated to the Ruled Folio rules)
  * ============================================ */
-.kiwi-card { background-color: var(--kiwi-bg-paper); border: var(--kiwi-border-width) solid var(--kiwi-border-default); border-radius: var(--kiwi-radius-sm); padding: var(--kiwi-space-4); box-shadow: none; } /* a sheet: one tonal step + a hairline; never a card inside a card */
+.kiwi-card { background-color: var(--kiwi-bg-paper); border: var(--kiwi-border-width) solid var(--kiwi-border-default); border-radius: var(--kiwi-radius-sheet); padding: var(--kiwi-space-4); box-shadow: none; } /* a sheet: one tonal step + a hairline; never a card inside a card */
 .kiwi-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--kiwi-space-2); min-height: var(--kiwi-size-control); padding: 0 var(--kiwi-space-4); font-family: var(--kiwi-font-family); font-size: var(--kiwi-font-size-sm); font-weight: var(--kiwi-font-weight-semibold); line-height: 1.43; white-space: nowrap; border-radius: var(--kiwi-radius-sm); border: var(--kiwi-border-width) solid transparent; cursor: pointer; }
 .kiwi-btn:focus-visible { outline: 2px solid var(--kiwi-border-focus); outline-offset: 2px; } /* never outline: none */
-.kiwi-btn[aria-disabled="true"], .kiwi-btn:disabled { background-color: var(--kiwi-disabled-surface); color: var(--kiwi-disabled-text); border-color: var(--kiwi-disabled-border); cursor: not-allowed; } /* aria-disabled="true" is the mechanism (the control stays focusable and keeps its aria-describedby reason); :disabled is kept as an alias */
-.kiwi-btn-primary { background-color: var(--kiwi-primary); color: var(--kiwi-primary-contrast); }
+.kiwi-btn[aria-disabled="true"], .kiwi-btn:disabled { background-color: var(--kiwi-bg-paper); color: var(--kiwi-disabled-label); border-color: var(--kiwi-disabled-outline); cursor: not-allowed; } /* faded (the 2026-10-18 decision): the sheet, a faint edge, a lower label; aria-disabled="true" is the mechanism (the control stays focusable and keeps its aria-describedby reason); :disabled is kept as an alias */
+.kiwi-btn-primary { background-color: var(--kiwi-primary); color: var(--kiwi-primary-contrast); border-color: var(--kiwi-primary-border); } /* the edge is the boundary: the fill is a tint */
 .kiwi-btn-primary:hover:not(:disabled):not([aria-disabled="true"]) { background-color: var(--kiwi-primary-hover); }
 .kiwi-btn-primary:active:not(:disabled):not([aria-disabled="true"]) { background-color: var(--kiwi-primary-active); transform: scale(0.98); } /* pressed: one fill step beyond hover plus the shared press scale */
+.kiwi-btn-primary[aria-disabled="true"], .kiwi-btn-primary:disabled { background-color: var(--kiwi-primary-disabled); border-color: var(--kiwi-primary-disabled-border); } /* a disabled primary keeps a faint sage fill, so it is never the disabled secondary */
 .kiwi-btn-secondary { background-color: var(--kiwi-bg-paper); color: var(--kiwi-link); border-color: var(--kiwi-border-interactive); }
-.kiwi-btn-secondary:hover:not(:disabled):not([aria-disabled="true"]) { background-color: var(--kiwi-bg-selected); }
-.kiwi-btn-secondary:active:not(:disabled):not([aria-disabled="true"]) { background-color: var(--kiwi-bg-pressed); transform: scale(0.98); }
+.kiwi-btn-secondary:hover:not(:disabled):not([aria-disabled="true"]) { background-color: var(--kiwi-bg-tint); } /* the hover tint (--accent-bg-subtle), one step below the selected fill */
+.kiwi-btn-secondary:active:not(:disabled):not([aria-disabled="true"]) { background-color: var(--kiwi-bg-pressed); border-color: var(--kiwi-text-primary); transform: scale(0.98); } /* pressed: the pressed tint and the ink edge, never the resting primary's look */
 .kiwi-input { width: 100%; min-height: var(--kiwi-size-control); padding: var(--kiwi-space-2) var(--kiwi-space-4); font-family: var(--kiwi-font-family); font-size: var(--kiwi-font-size-base); line-height: var(--kiwi-line-height-normal); color: var(--kiwi-text-primary); background-color: var(--kiwi-bg-paper); border: var(--kiwi-border-width) solid var(--kiwi-border-interactive); border-radius: var(--kiwi-radius-sm); }
 .kiwi-input:hover { border-color: var(--kiwi-text-primary); }
 .kiwi-input:focus-visible { outline: 2px solid var(--kiwi-border-focus); outline-offset: 2px; }
@@ -194,7 +201,7 @@ const patterns = `
 .kiwi-in-progress { display: inline-flex; align-items: center; gap: var(--kiwi-space-2); color: var(--kiwi-text-secondary); font-size: var(--kiwi-font-size-sm); } /* added in ${meta.version}: neutral in-progress text; progress is words + the text dots (G9), never a spinner */
 .kiwi-in-progress::after { content: "…"; display: inline-block; width: 1.2em; text-align: left; animation: kiwi-dots 1.5s steps(1, end) infinite; }
 @keyframes kiwi-dots { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75%, 100% { content: "..."; } }
-.kiwi-chip { display: inline-flex; align-items: center; gap: var(--kiwi-space-2); min-height: var(--kiwi-size-chip); padding: 0 var(--kiwi-space-2); font-size: var(--kiwi-font-size-xs); font-weight: var(--kiwi-font-weight-regular); border-radius: var(--kiwi-radius-sm); background-color: var(--kiwi-bg-subtle); color: var(--kiwi-text-primary); } /* a label chip */
+.kiwi-chip { display: inline-flex; align-items: center; gap: var(--kiwi-space-2); min-height: var(--kiwi-size-chip); padding: 0 var(--kiwi-space-2); font-size: var(--kiwi-font-size-xs); font-weight: var(--kiwi-font-weight-regular); border-radius: var(--kiwi-radius-sm); background-color: var(--kiwi-bg-active); color: var(--kiwi-text-primary); } /* a role or label chip: --surface-active with the ink, no border (not a control) */
 .kiwi-chip-primary { background-color: var(--kiwi-bg-selected); color: var(--kiwi-link); border: var(--kiwi-border-width) solid var(--kiwi-link); font-weight: var(--kiwi-font-weight-semibold); } /* a selected filter chip */
 .kiwi-chip-status { display: inline-flex; align-items: center; gap: var(--kiwi-space-2); min-height: var(--kiwi-size-chip); padding: 0 var(--kiwi-space-2); font-size: var(--kiwi-font-size-xs); font-weight: var(--kiwi-font-weight-semibold); border-radius: var(--kiwi-radius-sm); border: 0; } /* added in ${meta.version}: the one tinted chip, status surface + the -11 icon and label */
 .kiwi-chip-status-success { background-color: var(--kiwi-success-surface); color: var(--kiwi-success-text); }
@@ -258,10 +265,15 @@ const patterns = `
 .kiwi-progress-dot-error::before { background-color: var(--kiwi-error-text); }${depTag(".kiwi-progress-dot-error")}
 .kiwi-progress-dot-error { color: var(--kiwi-error-text); }
 @keyframes kiwi-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }${depTag("@keyframes kiwi-pulse")}
-.kiwi-progress-bar { height: 4px; background-color: var(--kiwi-bg-hover); border-radius: var(--kiwi-radius-sm); overflow: hidden; }${depTag(".kiwi-progress-bar")}
-.kiwi-progress-bar-fill { height: 100%; background-color: var(--kiwi-border-interactive); border-radius: var(--kiwi-radius-sm); transition: width var(--kiwi-transition-default); }${depTag(".kiwi-progress-bar-fill")}
+.kiwi-progress-bar { height: 4px; background-color: var(--kiwi-bg-hover); border-radius: var(--kiwi-radius-none); overflow: hidden; } /* square: the control radius would round a 4 px bar into a pill */${depTag(".kiwi-progress-bar")}
+.kiwi-progress-bar-fill { height: 100%; background-color: var(--kiwi-border-interactive); border-radius: var(--kiwi-radius-none); transition: width var(--kiwi-transition-default); }${depTag(".kiwi-progress-bar-fill")}
 .kiwi-progress-bar-indeterminate .kiwi-progress-bar-fill { width: 30%; animation: kiwi-progress-indeterminate 1.5s ease-in-out infinite; }${depTag(".kiwi-progress-bar-indeterminate")}
 @keyframes kiwi-progress-indeterminate { 0% { transform: translateX(-100%); } 100% { transform: translateX(400%); } }${depTag("@keyframes kiwi-progress-indeterminate")}
+
+/* Forced colours (Windows High Contrast): a disabled control's border and text are GrayText, so it never renders like an enabled one */
+@media (forced-colors: active) {
+  .kiwi-btn[aria-disabled="true"], .kiwi-btn:disabled, .kiwi-input[aria-disabled="true"], .kiwi-input:disabled { color: GrayText; border-color: GrayText; }
+}
 `;
 // Reduced motion: every selector of the file that declares a running animation or a transition is listed, and only those,
 // inside one @media (prefers-reduced-motion: reduce) block (a universal `* { … !important }` reset would leak into the host app).
@@ -311,7 +323,7 @@ const mui = {
   _note: "Preview of createKiwiTheme(): MUI 9 createTheme input with cssVariables.colorSchemeSelector = 'data-theme' so MUI and the token CSS switch on one attribute. Density is not a theme instance: styleOverrides read the density-aware custom properties (var(--size-control), var(--space-inset-x), …) which [data-density] re-resolves.",
   cssVariables: { colorSchemeSelector: "data-theme", cssVarPrefix: "mui" },
   colorSchemes: { light: { palette: palette(CONTEXTS.light) }, dark: { palette: palette(CONTEXTS.dark) } },
-  shape: { borderRadius: 2 },
+  shape: { borderRadius: parseFloat(resolve(tree, "global.radius.control", CONTEXTS.light)), _note: "theme.shape.borderRadius in px: --radius-control, read from the token (the styleOverrides name the var() radii per component)" },
   typography: {
     fontFamily: cssValue("fontFamily", resolve(tree, "global.font.ui", CONTEXTS.light)),
     display: typo("display"), h1: typo("display-lg"), h2: typo("page-title"), h3: typo("section-title"), h4: typo("deck"), h5: typo("group-title"), h6: typo("label"),
@@ -320,34 +332,34 @@ const mui = {
   },
   components: {
     _illustrative: "", // filled below, once every N() of this block has run
-    MuiCssBaseline: { styleOverrides: `@import the generated kiwi-ui.tokens.css; html { font-synthesis: none } ; :focus-visible { outline: ${N("semantic.border.focus")} solid var(--focus-ring); outline-offset: ${N("semantic.size.focus-offset")} } ; [aria-disabled='true'], [aria-disabled='true'] * { cursor: not-allowed } ; after the locked reduced-motion block: @media (prefers-reduced-motion: reduce) { [data-dots]::after { animation: none; content: "…" } } (the text dots rest as a static ellipsis, never a frozen frame)` },
-    MuiButton: { defaultProps: { disableElevation: true }, styleOverrides: { root: "minHeight var(--size-control); padding 0 var(--space-inset-x); borderRadius var(--radius-control); font --type-button; whiteSpace nowrap; &:active { transform: scale(var(--button-press-scale)) } ; variant text/outlined color var(--accent-text); outlined borderColor var(--border-interactive), background var(--surface), &:hover background var(--accent-bg-subtle); contained &:hover background var(--accent-solid-hover); &[aria-disabled='true'] (never the disabled prop) background var(--disabled-surface) color var(--disabled-text) borderColor var(--disabled-border); color=error outlined → the destructive variant (border/text var(--destructive-text), hover var(--destructive-bg-subtle)); contained error is not used" } },
+    MuiCssBaseline: { styleOverrides: `@import the generated kiwi-ui.tokens.css; html { font-synthesis: none } ; :focus-visible { outline: ${N("semantic.border.focus")} solid var(--focus-ring); outline-offset: ${N("semantic.size.focus-offset")} } ; [aria-disabled='true'], [aria-disabled='true'] * { cursor: not-allowed } ; @media (forced-colors: active) { [aria-disabled='true'] { color: GrayText; border-color: GrayText } } (a disabled control never renders like an enabled one in high-contrast mode) ; after the locked reduced-motion block: @media (prefers-reduced-motion: reduce) { [data-dots]::after { animation: none; content: "…" } } (the text dots rest as a static ellipsis, never a frozen frame)` },
+    MuiButton: { defaultProps: { disableElevation: true }, styleOverrides: { root: `minHeight var(--size-control); padding 0 var(--space-inset-x); borderRadius var(--radius-control); font --type-button; whiteSpace nowrap; &:active { transform: scale(var(--button-press-scale)) } ; variant text/outlined color var(--accent-text); outlined borderColor var(--border-interactive), background var(--surface), &:hover background var(--accent-bg-subtle), &:active background var(--accent-bg-subtle-active) borderColor var(--button-secondary-active-border) (the ink edge); contained background var(--accent-solid) color var(--accent-on-solid) border ${N("semantic.border.interactive")} solid var(--button-primary-border) (the --accent-solid-border edge is the boundary: the Soft sage fill is a tint), &:hover background var(--accent-solid-hover), &:active background var(--accent-solid-active); &[aria-disabled='true'] (never the disabled prop) the faded state of its variant (the 2026-10-18 decision; not gated, WCAG exempts inactive controls): contained background var(--button-primary-disabled-fill) borderColor var(--button-primary-disabled-border) (a faint sage fill and edge), outlined background var(--button-secondary-disabled-fill) borderColor var(--button-secondary-disabled-border) (the sheet and the faint outline), text weight var(--type-weight-regular), each with color var(--button-{variant}-disabled-text) (a lower-luminance label); color=error outlined → the destructive variant (border/text var(--destructive-text), hover var(--destructive-bg-subtle)); contained error is not used` } },
     MuiIconButton: { styleOverrides: { root: "width/height var(--size-control-icon); color var(--icon-default); &:hover background var(--surface-hover) color var(--icon-hover); &[aria-disabled='true'] color var(--disabled-icon); [aria-pressed=true] background var(--selection-bg) color var(--selection-text)" } },
     MuiOutlinedInput: { defaultProps: { notched: false }, styleOverrides: { root: `minHeight var(--size-control); borderRadius var(--radius-control); background var(--surface); .MuiOutlinedInput-notchedOutline borderColor var(--border-interactive); &:hover notchedOutline borderColor var(--text); &.Mui-focused notchedOutline borderColor var(--border-interactive) (unchanged) + outline ${N("semantic.border.focus")} var(--focus-ring) offset ${N("semantic.size.focus-offset")}; &.Mui-error notchedOutline borderColor var(--status-error-text); &[aria-disabled='true'] background var(--disabled-surface); .MuiSelect-select paddingRight var(--field-select-padding-right)` } },
     MuiInputLabel: { defaultProps: { disableAnimation: true }, styleOverrides: { root: "position static; transform none; font --type-label; marginBottom var(--field-label-gap)" } },
     MuiFormHelperText: { styleOverrides: { root: "font --type-caption; color var(--text-secondary); &.Mui-error color var(--status-error-text); icon + text" } },
-    MuiCheckbox: { styleOverrides: { root: `box var(--checkbox-size); unchecked border ${N("component.checkbox.border-width")} var(--border-interactive) (var(--checkbox-border-width)); &.Mui-checked fill var(--selection-bg) border/glyph var(--selection-text); hit area var(--checkbox-hit) through the centred ::before` } },
+    MuiCheckbox: { styleOverrides: { root: `box var(--checkbox-size), corners var(--checkbox-radius) (${N("component.checkbox.radius")}); unchecked border ${N("component.checkbox.border-width")} var(--border-interactive) (var(--checkbox-border-width)); &.Mui-checked fill var(--selection-bg) border/glyph var(--selection-text); hit area var(--checkbox-hit) through the centred ::before` } },
     MuiRadio: { styleOverrides: { root: "as MuiCheckbox" } },
-    MuiSwitch: { styleOverrides: { root: `track var(--switch-track-width)×var(--switch-track-height), fill var(--switch-track) border ${N("semantic.border.interactive")} var(--switch-border), thumb var(--switch-thumb) fill var(--switch-thumb); &.Mui-checked track var(--switch-variant-on-track) border/thumb var(--switch-variant-on-border); thumb travel var(--motion-micro) var(--motion-ease-toggle); track corners var(--switch-radius) and thumb corners var(--switch-thumb-radius), both ${N("component.switch.radius")} (--radius-control: a rectangle, no pill; 50 % is for dot-like marks and convention-bound circles only, the plan's Decision Log)` } },
+    MuiSwitch: { styleOverrides: { root: `track var(--switch-track-width)×var(--switch-track-height), fill var(--switch-track) border ${N("semantic.border.interactive")} var(--switch-border), thumb var(--switch-thumb) fill var(--switch-thumb); &.Mui-checked track var(--switch-variant-on-track) border/thumb var(--switch-variant-on-border); thumb travel var(--motion-micro) var(--motion-ease-toggle); track corners var(--switch-radius) (${N("component.switch.radius")}, --radius-control: a rounded rectangle, never a pill) and thumb corners var(--switch-thumb-radius) (${N("component.switch.thumb-radius")}, --radius-small: a rounded square on the 14 px thumb, never a circle); 50 % is for dot-like marks and convention-bound circles only, the plan's Decision Log` } },
     MuiChip: { styleOverrides: { root: `height var(--size-chip); borderRadius var(--radius-control); status: background var(--chip-status-variant-{k}-fill) color var(--chip-status-variant-{k}-text) + icon; filter (clickable): border var(--border-interactive) background var(--surface) color var(--text), [aria-pressed=true] background var(--selection-bg) color/border var(--selection-text) weight ${N("semantic.type-weight.emphasis")}; role: background var(--surface-active) color var(--text) no border` } },
     MuiTabs: { styleOverrides: { indicator: "height var(--size-marker); background var(--selection-marker)" } },
     MuiTab: { styleOverrides: { root: "minHeight var(--size-tab); font --type-label (600 for all tabs); color var(--text-secondary); &.Mui-selected color var(--selection-text); &:hover background var(--surface-hover) color var(--text); textTransform none; whiteSpace nowrap; &[aria-disabled='true'] color var(--disabled-text) weight var(--type-weight-regular) with the lock glyph var(--tabs-disabled-glyph) in var(--disabled-icon) before the label, cursor not-allowed, kept in the roving order" } },
-    MuiListItemButton: { styleOverrides: { root: `minHeight var(--size-nav-item); borderRadius var(--radius-control); &:hover background var(--surface-hover); &.Mui-selected background var(--selection-bg) color var(--selection-text) + ${N("semantic.size.marker")} inset marker var(--selection-marker) (var(--size-marker)); @media (forced-colors: active) &.Mui-selected outline ${N("semantic.size.marker")} solid Highlight, outline-offset -${N("semantic.size.marker")}` } },
+    MuiListItemButton: { styleOverrides: { root: `minHeight var(--size-nav-item); borderRadius var(--sidebar-item-radius) (${N("component.sidebar-item.radius")}); &:hover background var(--surface-hover); &.Mui-selected background var(--selection-bg) color var(--selection-text) + ${N("semantic.size.marker")} inset marker var(--selection-marker) (var(--size-marker)); @media (forced-colors: active) &.Mui-selected outline ${N("semantic.size.marker")} solid Highlight, outline-offset -${N("semantic.size.marker")}` } },
     MuiPaper: { defaultProps: { elevation: 0 }, styleOverrides: { root: "backgroundImage none; background var(--surface)", outlined: `border ${HAIR} var(--border); borderRadius var(--radius-sheet)` } },
     MuiCard: { defaultProps: { elevation: 0, variant: "outlined" }, styleOverrides: { root: `a panel: border ${HAIR} var(--border); borderRadius var(--radius-sheet); boxShadow none; never nested` } },
     MuiDialog: { styleOverrides: { paper: `border ${HAIR} var(--border); borderRadius var(--radius-sheet); boxShadow var(--shadow-2); maxWidth per --dialog-width-*`, root: "backdrop background var(--backdrop); no blur" } },
-    MuiMenu: { styleOverrides: { paper: `border ${HAIR} var(--border); boxShadow var(--shadow-1); borderRadius var(--radius-control); minWidth var(--display-menu-min-width)` } },
+    MuiMenu: { styleOverrides: { paper: `border ${HAIR} var(--border); boxShadow var(--shadow-1); borderRadius var(--display-menu-radius) (${N("component.display-menu.radius")}, the sheet radius: a menu is a floating sheet); minWidth var(--display-menu-min-width)` } },
     MuiMenuItem: { styleOverrides: { root: `minHeight var(--size-menu-item) (${N("semantic.size.target-min")} on pointer: coarse); font --type-popup-title; &:hover background var(--surface-hover); &.Mui-selected background var(--selection-bg) color var(--selection-text)` } },
     MuiTooltip: { styleOverrides: { tooltip: `background var(--surface); color var(--text); border ${HAIR} var(--border); boxShadow var(--toggletip-shadow); borderRadius var(--toggletip-radius); padding var(--toggletip-padding-y) var(--toggletip-padding-x); maxWidth var(--toggletip-max-width); font --type-caption; offset var(--toggletip-offset) from its control; as a toggletip (a disabled control's reason): opens on hover, focus and tap, Escape closes it without moving focus, the pointer can move onto it, it stays until dismissed (WCAG 1.4.13: dismissible, hoverable, persistent); aria-describedby links the text` } },
     MuiAlert: { styleOverrides: { root: "borderRadius var(--radius-control); border 0; standard{k}: background var(--status-{k}-surface) color var(--status-{k}-text), icon var(--status-{k}-text) shape icon (check/triangle/cross/i); action: the text-action pattern — color inherit, font-weight 600, text-decoration underline var(--alert-action-underline), &:hover var(--alert-action-underline-hover), &:focus-visible the ring, &:active var(--alert-action-underline-hover) + transform scale(var(--motion-press-scale)); the same rules style MuiSnackbarContent's action (var(--toast-action-underline*))" } },
-    MuiSnackbarContent: { styleOverrides: { root: `background var(--surface); color var(--text); border ${HAIR} var(--border); boxShadow var(--shadow-1); width min(100% - 2 * var(--toast-edge-offset), var(--toast-max-width)) (at most ${N("component.toast.max-width")}; the launcher's edge offset kept on narrow viewports)` } },
+    MuiSnackbarContent: { styleOverrides: { root: `background var(--surface); color var(--text); border ${HAIR} var(--border); borderRadius var(--toast-radius) (${N("component.toast.radius")}); boxShadow var(--shadow-1); width min(100% - 2 * var(--toast-edge-offset), var(--toast-max-width)) (at most ${N("component.toast.max-width")}; the launcher's edge offset kept on narrow viewports)` } },
     MuiTableCell: { styleOverrides: { root: `padding var(--space-cell-y) var(--space-cell-x); borderBottom ${HAIR} var(--border-subtle); font --type-body (compact ${BODY_COMPACT}); whiteSpace nowrap; textOverflow ellipsis`, head: `color var(--text-secondary); font --type-label; borderBottom ${HAIR} var(--border)` } },
     MuiTableRow: { styleOverrides: { root: `height var(--size-row); &:hover background var(--surface-hover); &.Mui-selected background var(--selection-bg) + ${N("semantic.size.marker")} inset marker (var(--size-marker)); @media (forced-colors: active) &.Mui-selected outline ${N("semantic.size.marker")} solid Highlight` } },
     MuiDataGrid: { defaultProps: { density: "compact (admin) via data-density" }, styleOverrides: { root: `--DataGrid rowHeight/headerHeight var(--size-row); columnHeaders color var(--text-secondary) font --type-label background transparent; cell borderColor var(--border-subtle); row:hover var(--surface-hover); row.Mui-selected var(--selection-bg); cell:focus-within outline ${N("semantic.border.focus")} solid var(--focus-ring) outline-offset -${N("semantic.size.focus-offset")}; loadingOverlay = skeleton rows; noRowsOverlay = the empty-state frame` } },
     MuiSkeleton: { styleOverrides: { root: `background var(--skeleton-base); wave highlight var(--skeleton-highlight), ${N("semantic.motion.shimmer")} (var(--motion-shimmer))` } },
     MuiLinearProgress: { styleOverrides: { root: "background var(--in-progress-track)", bar: "background var(--in-progress-bar)" } },
     MuiCircularProgress: { defaultProps: { _note: "avoided: progress is neutral text + dots; where a ring is unavoidable it is static and var(--in-progress-text)" } },
-    MuiFab: { styleOverrides: { root: "the launcher: width/height var(--size-launcher); background var(--accent-solid); color var(--accent-on-solid); boxShadow var(--shadow-2); &:hover background var(--accent-solid-hover) boxShadow unchanged" } },
+    MuiFab: { styleOverrides: { root: `the launcher: width/height var(--size-launcher); background var(--accent-solid); color var(--accent-on-solid); border ${N("semantic.border.interactive")} solid var(--launcher-border) (the --accent-solid-border edge); boxShadow var(--shadow-2); &:hover background var(--accent-solid-hover) boxShadow unchanged; &:active background var(--accent-solid-active)` } },
     MuiLink: { defaultProps: { underline: "always" }, styleOverrides: { root: "color var(--link); textUnderlineOffset clear of the descenders" } },
   },
 };

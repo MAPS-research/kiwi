@@ -4,15 +4,16 @@
 //   node check-copy.mjs --write    also write generated/check-summary.json and the Evidence table in DESIGN.md
 //
 // Phase 6 (Data surfaces) added Q1 to Q6 (its rows, linted and placed apart from Phase 5's) and the lock checks L4 to L6 against the commit before Phase 6; L1 to L3 are unchanged.
-// The lock amendment of 2026-10-18 (the user's decisions on the tutor avatar, plan Decision Log) added L7 and L8 and lock-amendments.json, its record line for line;
-// L1 and L4 keep their rules and read DESIGN.md at the amendment's base commit (section 8b).
+// The lock amendments (the user's decisions, plan Decision Log; the first of 2026-10-18 on the tutor avatar) added L7 and L8 and lock-amendments.json, each
+// amendment's record, written by record-amendment.mjs: L7 and L8 hold them as a chain, each from its base to the next one's; L1, L2, L4 and L5 keep their rules
+// and read the two files at the first amendment's base commit (section 8b).
 // Reads (never writes, except with --write): ./revisions/*.json, the source files they name, kiwi-ui/JOURNEY.md, kiwi-ui/DESIGN.md,
 // and `git diff` of those two files against the commit before Phase 5 (the lock check: HEAD holds Phase 5 since it was committed). No path in this file is machine-specific.
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import {
-  ROOT, UI, DESIGN_MD, JOURNEY_MD, OUT_DIR, HERE, RULES, CAUSES, CAUSES_MCP, MCP_GROUPS, UI_REFS, lintString, lintSource, normText, PROPER, agreeCountHits, loadTestInventory, rowObject, readSource, lineOfOffset, loadIdentifiers, SINGLE_VERB_OK, EXIT_WORDS, CAUSE_STEMS, bareCountHits, NOT_NOUN, TWO_WORD_OK, NON_OBJECT, namesObject, SAFE_LINE, WRITE_VERBS, EXEMPT_VERBS, citesIn, anchorVerdict, oldKeys, readingKey, isTextReading, SCOPED_TERMS, scopedTermHits, AUDIT, codeHash, manualPopulation, reconcileTests, reconcileText, amendmentHits, generatedBlocks,
+  ROOT, UI, DESIGN_MD, JOURNEY_MD, OUT_DIR, HERE, RULES, CAUSES, CAUSES_MCP, MCP_GROUPS, UI_REFS, lintString, lintSource, normText, PROPER, agreeCountHits, loadTestInventory, rowObject, readSource, lineOfOffset, loadIdentifiers, SINGLE_VERB_OK, EXIT_WORDS, CAUSE_STEMS, bareCountHits, NOT_NOUN, TWO_WORD_OK, NON_OBJECT, namesObject, SAFE_LINE, WRITE_VERBS, EXEMPT_VERBS, citesIn, anchorVerdict, oldKeys, readingKey, isTextReading, SCOPED_TERMS, scopedTermHits, AUDIT, codeHash, manualPopulation, reconcileTests, reconcileText, chainHits, generatedBlocks,
 } from "./copy-lib.mjs";
 import { resolveAll } from "./resolve.mjs";
 import { scanSources } from "./scan-ts.mjs";
@@ -2281,20 +2282,27 @@ const LOCK_BASE = "aed7b4291518fff1f54237ba6e49fafc267641c3";
 function git(...args) { try { return execFileSync("git", ["-C", ROOT, ...args], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }); } catch (e) { return null; } }
 const rel = (p) => path.relative(ROOT, p).split(path.sep).join("/");
 // ---------------------------------------------------------------- 8b. the lock amendments
-// The amendment of 2026-10-18 (the user's decisions, plan Decision Log: the tutor avatar keeps one small, full-body framing; Kiwi runs until the answer is
-// complete, then flies once) replaces lines of DESIGN.md's `## Companion`, inserts lines there, appends `## Lock amendments` at the end of the file and
-// inserts one line in JOURNEY.md. lock-amendments.json records it line for line (the SHA-256 of every line it replaces and of the line that replaces it,
-// of every line it inserts and of every line it appends) with its base, the commit before it. L1 and L4 keep their rules and read DESIGN.md as it was
-// at that base, so the Phase 5 and Phase 6 history they hold, and the numbers the Evidence tables print, are unchanged. L7 and L8 hold every change
-// since the base to exactly the record (copy-lib.mjs amendmentHits): outside `## Companion` DESIGN.md is the base, byte for byte, and ends with the
-// recorded `## Lock amendments`; inside it only the recorded lines left and arrived; JOURNEY.md is the base plus the recorded line. Nothing is loosened:
-// before, any change to `## Companion` failed L1 and L4; now any change that is not the record fails L7 or L8. L2 and L5 read JOURNEY.md at the base
-// the same way. The blocks this checker writes with --write (the Evidence tables, the coverage table) are its own output, not the amendment's: L7
-// reads both texts with the blocks this run generates and fails on a block that is not what the checker writes. Their logic is proved in process
-// (proofs.mjs LOCK, run by prove-checks.mjs), since a throwaway copy has no git. A later change to either file adds an entry and extends these checks.
-const AMENDS = JSON.parse(fs.readFileSync(path.join(HERE, "lock-amendments.json"), "utf8")).amendments;
-const AMEND_BASE = AMENDS[AMENDS.length - 1].base;
-const dDiff = git("diff", "-U0", LOCK_BASE, AMEND_BASE, "--", rel(DESIGN_MD)); // at the amendment's base (8b); L7 holds what changed since
+// The lock is amended only by the user's decision (plan Decision Log), and lock-amendments.json records each amendment, in the order they were made, with
+// its base (the commit before it) and its record, written from the base and the working tree by record-amendment.mjs, never typed. The first, of 2026-10-18
+// (the tutor avatar keeps one small, full-body framing; Kiwi runs until the answer is complete, then flies once), replaced lines of DESIGN.md's
+// `## Companion`, inserted lines there, appended `## Lock amendments` at the end of the file and inserted one line in JOURNEY.md; its record is the first
+// kind, scoped to that section (`design.section`: the SHA-256 of every line it replaces and of the line that replaces it, of every line it inserts and of
+// every line it appends), held by copy-lib.mjs amendmentHits: outside `## Companion` DESIGN.md is the base, byte for byte, and ends with the recorded
+// `## Lock amendments`; inside it only the recorded lines left and arrived; JOURNEY.md is the base plus the recorded line. A later amendment that edits
+// many sections is the second kind, a patch (`kind: "patch"`), held by copy-lib.mjs patchHits: each file is its base with exactly the recorded hunks
+// applied, line for line at their positions, the blocks this checker writes collapsed to one line first so a rewritten block shifts no position.
+// L1, L2, L4 and L5 keep their rules and read the two files at the FIRST amendment's base, so the Phase 5 and Phase 6 history they hold, and the numbers
+// the Evidence tables print, are unchanged. L7 (DESIGN.md) and L8 (JOURNEY.md) hold the chain (copy-lib.mjs chainHits): each amendment from its own
+// base to the next one's base, both read from git, and the newest to the working tree, each by its kind; and the bases follow one another in git (each an
+// ancestor of the next, the newest HEAD or an ancestor of it). Nothing is loosened: before the first amendment, any change to `## Companion` failed L1
+// and L4; now any change that is not in a record fails L7 or L8, in whichever link it falls. The blocks this checker writes with --write (the Evidence
+// tables, the coverage table) are its own output, not an amendment's: a link reads its texts with this run's blocks in place (the first kind) or with
+// the blocks collapsed (a patch), and only the working text must hold what this run writes. Their logic is proved in process (proofs.mjs LOCK, run by
+// prove-checks.mjs), since a throwaway copy has no git. A new amendment adds an entry: node .design-foundations/copy/record-amendment.mjs.
+const AMENDS = JSON.parse(fs.readFileSync(path.join(HERE, "lock-amendments.json"), "utf8")).amendments || [];
+// L1, L2, L4 and L5 read the two files at the first amendment's base (with no amendment recorded, they read the working tree, and L7 and L8 fail)
+const AT_FIRST = AMENDS.length ? [AMENDS[0].base] : [];
+const dDiff = git("diff", "-U0", LOCK_BASE, ...AT_FIRST, "--", rel(DESIGN_MD)); // at the first amendment's base (8b); L7 holds what changed since
 if (dDiff === null) check("L1", "DESIGN.md: only the Companion's text-twin cells changed, and the new section was appended", false, "git diff against the commit before Phase 5 (aed7b42) is unavailable: is that commit in this clone?");
 else {
   const headText = git("show", `${LOCK_BASE}:${rel(DESIGN_MD)}`) || "";
@@ -2335,10 +2343,10 @@ else {
     bad.push(`hunk at line ${oStart}: ${removed.length} removed, ${added.length} added`);
   }
   check("L1", "DESIGN.md: only the Companion's text-twin cells, principle 4, the drafts line, the state-table intro's one sentence, the hand-off's draft wording and the intro's one phrase changed, and the new section was appended", bad.length === 0 && appended > 0 && principleEdits === 1 && draftEdits === 1 && handoffEdits === 1 && introEdits === 1 && tableIntroEdits === 1, bad.length ? list(bad) : `${cellEdits} twin lines edited (last cell only), principle 4 (${principleEdits}), the drafts line (${draftEdits}), the state-table intro's one sentence (${tableIntroEdits}), the hand-off's two draft words (${handoffEdits}) and the intro's one phrase (${introEdits}) reworded, ${appended} lines appended`);
-  const appendedSince6 = (() => { const d6 = git("diff", "-U0", "bd45ade6238f3747ab98f3c15d6208d169411e54", AMEND_BASE, "--", rel(DESIGN_MD)); if (d6 === null) return 0; const t6 = git("show", `bd45ade6238f3747ab98f3c15d6208d169411e54:${rel(DESIGN_MD)}`) || ""; const n6 = t6.split("\n").length - (t6.endsWith("\n") ? 1 : 0); let n = 0; for (const h of d6.split(/^@@ /m).slice(1)) { const m = h.match(/^-(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@/); if (+m[1] >= n6 && (m[2] === undefined ? 1 : +m[2]) === 0) n += h.split("\n").slice(1).filter((l) => l.startsWith("+")).length; } return n; })();
+  const appendedSince6 = (() => { const d6 = git("diff", "-U0", "bd45ade6238f3747ab98f3c15d6208d169411e54", ...AT_FIRST, "--", rel(DESIGN_MD)); if (d6 === null) return 0; const t6 = git("show", `bd45ade6238f3747ab98f3c15d6208d169411e54:${rel(DESIGN_MD)}`) || ""; const n6 = t6.split("\n").length - (t6.endsWith("\n") ? 1 : 0); let n = 0; for (const h of d6.split(/^@@ /m).slice(1)) { const m = h.match(/^-(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@/); if (+m[1] >= n6 && (m[2] === undefined ? 1 : +m[2]) === 0) n += h.split("\n").slice(1).filter((l) => l.startsWith("+")).length; } return n; })();
   stats.designDiff = { twinLinesEdited: cellEdits, principleEdits, draftEdits, tableIntroEdits, handoffEdits, introEdits, linesAppended: appended - appendedSince6 }; // Phase 5's own append: what Phase 6 appended after it (L4) is taken off
 }
-const jDiff = git("diff", "-U0", LOCK_BASE, AMEND_BASE, "--", rel(JOURNEY_MD)); // at the amendment's base (8b); L8 holds what changed since
+const jDiff = git("diff", "-U0", LOCK_BASE, ...AT_FIRST, "--", rel(JOURNEY_MD)); // at the first amendment's base (8b); L8 holds what changed since
 if (jDiff === null) check("L2", "JOURNEY.md: insertions only, apart from the intro line and the SR-6 Companion bullet's draft strings", false, "git diff against the commit before Phase 5 (aed7b42) is unavailable: is that commit in this clone?");
 else {
   const dl = jDiff.split("\n");
@@ -2361,7 +2369,7 @@ check("L3", "nothing under kiwi-ui/src, kiwi-ui/public or kiwi/ differs from the
 // grow at its end (`## Chart tokens`, whose generated Phase 6 evidence block lives inside it, so no Phase 5 line is rewritten), JOURNEY.md may only gain lines (the data-surface
 // bullets, the Copy (Phase 6) bullets and the appended rows), and the three protected paths must not differ at all.
 const LOCK_BASE_6 = "bd45ade6238f3747ab98f3c15d6208d169411e54";
-const dDiff6 = git("diff", "-U0", LOCK_BASE_6, AMEND_BASE, "--", rel(DESIGN_MD)); // at the amendment's base (8b); L7 holds what changed since
+const dDiff6 = git("diff", "-U0", LOCK_BASE_6, ...AT_FIRST, "--", rel(DESIGN_MD)); // at the first amendment's base (8b); L7 holds what changed since
 if (dDiff6 === null) check("L4", "DESIGN.md: only appended since the commit before Phase 6", false, "git diff against the commit before Phase 6 (bd45ade) is unavailable: is that commit in this clone?");
 else {
   const headText6 = git("show", `${LOCK_BASE_6}:${rel(DESIGN_MD)}`) || "";
@@ -2377,7 +2385,7 @@ else {
   check("L4", "DESIGN.md: since the commit before Phase 6 (bd45ade) the file only grew at its end (## Chart tokens), and no earlier line changed", bad6.length === 0 && appended6 > 0, bad6.length ? list(bad6) : `${appended6} lines appended, nothing else`);
   stats.designDiff6 = { linesAppended: appended6 };
 }
-const jDiff6 = git("diff", "-U0", LOCK_BASE_6, AMEND_BASE, "--", rel(JOURNEY_MD)); // at the amendment's base (8b); L8 holds what changed since
+const jDiff6 = git("diff", "-U0", LOCK_BASE_6, ...AT_FIRST, "--", rel(JOURNEY_MD)); // at the first amendment's base (8b); L8 holds what changed since
 if (jDiff6 === null) check("L5", "JOURNEY.md: insertions only since the commit before Phase 6", false, "git diff against the commit before Phase 6 (bd45ade) is unavailable: is that commit in this clone?");
 else {
   const dl6 = jDiff6.split("\n");
@@ -2388,27 +2396,42 @@ else {
 }
 const protectedChanged6 = git("diff", "--name-only", LOCK_BASE_6, "--", "kiwi-ui/src", "kiwi-ui/public", "kiwi");
 check("L6", "nothing under kiwi-ui/src, kiwi-ui/public or kiwi/ differs from the commit before Phase 6 (committed, staged, unstaged or untracked)", protectedChanged6 !== null && protectedNew !== null && protectedChanged6.trim() === "" && protectedNew.trim() === "", `${protectedChanged6 || ""} ${protectedNew || ""}`.trim().slice(0, 200));
-// L7 and L8: since the amendment's base, DESIGN.md and JOURNEY.md differ by exactly the recorded lock amendment (8b), and the check that says so is proved:
-// the planted defects of proofs.mjs LOCK were run against this code (generated/proof-summary.json) and every one behaved as planted. L8 runs here; L7 runs
-// at the end, once the blocks this run writes into DESIGN.md are known.
+// L7 and L8: since the first amendment's base, DESIGN.md and JOURNEY.md differ by exactly the recorded lock amendments, link by link (8b), and the check
+// that says so is proved: the planted defects of proofs.mjs LOCK were run against this code (generated/proof-summary.json) and every one behaved as planted.
+// L8 runs here; L7 runs at the end, once the blocks this run writes into DESIGN.md are known.
+const shownAt = new Map();
+const showAt = (commit, p) => { const k = `${commit}:${rel(p)}`; if (!shownAt.has(k)) shownAt.set(k, git("show", k)); return shownAt.get(k); };
+// texts[i]: the two files at amendment i's base; the last entry: the working texts (link i reads texts[i] and texts[i + 1])
+const chainTexts = (workDesign) => [...AMENDS.map((a) => ({ design: showAt(a.base, DESIGN_MD), journey: showAt(a.base, JOURNEY_MD) })), { design: workDesign, journey }];
+// the chain is read in the order the amendments were made: each base is an ancestor of the next one's, and the newest is HEAD or an ancestor of it
+const chainOrder = AMENDS.length ? [] : ["lock-amendments.json records no amendment"];
+AMENDS.forEach((a, i) => {
+  const next = AMENDS[i + 1];
+  if (next && next.base === a.base) chainOrder.push(`${a.id} and ${next.id} have the same base (${String(a.base).slice(0, 7)})`);
+  else if (git("merge-base", "--is-ancestor", a.base, next ? next.base : "HEAD") === null) chainOrder.push(`${a.id}'s base (${String(a.base).slice(0, 7)}) is not an ancestor of ${next ? `${next.id}'s base (${String(next.base).slice(0, 7)})` : "HEAD"}: the amendments are not in the order they were made, or a base is not in this clone`);
+});
+// what each record holds, for the reports and the summary
+const countOf = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
+const recordTally = (rec) => rec && rec.kind === "patch"
+  ? { kind: "patch", hunks: (rec.hunks || []).length, removed: (rec.hunks || []).reduce((n, h) => n + (h.removed || []).length, 0), added: (rec.hunks || []).reduce((n, h) => n + (h.added || []).length, 0) }
+  : { kind: "section", replaced: (rec?.replaced || []).length, inserted: (rec?.inserted || []).reduce((n, x) => n + (x.lines || []).length, 0), appended: (rec?.appended?.lines || []).length };
+const patchText = (t) => (t.hunks ? `${countOf(t.hunks, "hunk")}, ${countOf(t.removed, "line")} removed and ${t.added} added` : "unchanged (no hunk)");
+const designText = (a) => { const t = recordTally(a.design); return t.kind === "patch" ? patchText(t) : `${t.replaced} lines replaced and ${t.inserted} inserted in ${a.design?.section || "## Companion"}, ${t.appended} appended (${a.design?.appended?.heading || "## Lock amendments"})`; };
+const journeyText = (a) => { const t = recordTally(a.journey); return t.kind === "patch" ? patchText(t) : (a.journey?.inserted || []).map((x) => `${countOf((x.lines || []).length, "line")} inserted after "${x.after}…"`).join(", ") || "unchanged"; };
 let amendL7 = null;
 {
-  const am = AMENDS[AMENDS.length - 1];
-  const baseD = git("show", `${AMEND_BASE}:${rel(DESIGN_MD)}`), baseJ = git("show", `${AMEND_BASE}:${rel(JOURNEY_MD)}`);
   let proofs = null; try { proofs = JSON.parse(fs.readFileSync(path.join(OUT_DIR, "proof-summary.json"), "utf8")); } catch {}
   const proved = !!(proofs && proofs.codeHash === codeHash() && proofs.lock && proofs.lock.total === LOCK.length && proofs.lock.ok === LOCK.length);
-  const provedNote = proved ? `; its ${LOCK.length} planted defects (proofs.mjs LOCK, ${LOCK.filter((c) => c.expect === null).length} a control) behave as planted` : "";
+  const controls = LOCK.filter((c) => c.expect === null).length;
+  const provedNote = proved ? `; its ${LOCK.length} planted defects (proofs.mjs LOCK, ${controls === 1 ? "1 a control" : `${controls} of them controls`}) behave as planted` : "";
   const unproved = proved ? [] : ["the lock proofs (proofs.mjs LOCK) were not run against this code, or one was missed: run node .design-foundations/copy/prove-checks.mjs"];
-  if (baseD === null || baseJ === null) {
-    check("L8", "JOURNEY.md: since the amendment's base, exactly the recorded insertion", false, `the base (${AMEND_BASE.slice(0, 7)}) cannot be read from git`);
-  } else {
-    const h = amendmentHits({ baseDesign: baseD, design, baseJourney: baseJ, journey, amendment: am });
-    const jn = [...h.journey, ...unproved];
-    const nIns = am.design.inserted.reduce((n, x) => n + x.lines.length, 0);
-    check("L8", "JOURNEY.md: since the amendment's base, exactly the recorded insertion after the SR-6 Companion bullet, nothing else", jn.length === 0, jn.length ? list(jn) : `${am.journey.inserted.reduce((n, x) => n + x.lines.length, 0)} line inserted after the SR-6 Companion (Phase 4) bullet, none removed or changed${provedNote}`);
-    stats.amendment = { id: am.id, base: AMEND_BASE, replaced: am.design.replaced.length, inserted: nIns, appended: am.design.appended.lines.length, journeyInserted: am.journey.inserted.reduce((n, x) => n + x.lines.length, 0), lockProofs: LOCK.length, proved };
-  }
-  amendL7 = { am, baseD, baseJ, unproved, provedNote };
+  const h = chainHits({ amendments: AMENDS, texts: chainTexts(design), parts: ["journey"] });
+  const jn = [...chainOrder, ...h.journey, ...unproved];
+  check("L8", "JOURNEY.md: since the first amendment's base, exactly the recorded lock amendments changed, each held from its own base to the next one's and the newest to the working text (the first kind: its lines inserted after their anchors; a patch: its hunks, line for line at their positions); nothing else", jn.length === 0,
+    jn.length ? list(jn) : `${AMENDS.map((a) => `${a.id} (base ${a.base.slice(0, 7)}): ${journeyText(a)}`).join("; ")}, as recorded in lock-amendments.json; nothing else changed${provedNote}`);
+  stats.amendments = AMENDS.map((a) => ({ id: a.id, base: a.base, design: recordTally(a.design), journey: a.journey?.kind === "patch" ? recordTally(a.journey) : { kind: "section", inserted: (a.journey?.inserted || []).reduce((n, x) => n + (x.lines || []).length, 0) } }));
+  stats.lockProofs = { total: LOCK.length, controls, proved };
+  amendL7 = { unproved, provedNote };
 }
 
 // ---------------------------------------------------------------- 9. paths
@@ -2647,17 +2670,14 @@ function generatedDesign() {
   return outDesign;
 }
 const outDesign = generatedDesign();
-// L7 (deferred from section 8): DESIGN.md since the amendment's base, with the blocks this run writes in place in both texts. With --write the text read is the
-// one about to be written; without it, a block that is not what the checker writes fails.
+// L7 (deferred from section 8): DESIGN.md since the first amendment's base, link by link, each link read with the blocks this run writes in place (the first
+// kind) or collapsed (a patch). With --write the working text read is the one about to be written; without it, a block that is not what the checker writes fails.
 {
-  if (!amendL7 || amendL7.baseD === null || amendL7.baseJ === null) check("L7", "DESIGN.md: since the amendment's base, exactly the recorded lock amendment changed", false, `the base (${AMEND_BASE.slice(0, 7)}) cannot be read from git: is that commit in this clone?`);
-  else {
-    const { am, baseD, baseJ, unproved, provedNote } = amendL7;
-    const h = amendmentHits({ baseDesign: baseD, design: WRITE ? outDesign : design, baseJourney: baseJ, journey, amendment: am, written: generatedBlocks(outDesign) });
-    const d = [...h.design, ...unproved];
-    const nIns = am.design.inserted.reduce((n, x) => n + x.lines.length, 0);
-    check("L7", "DESIGN.md: since the amendment's base (the user's decisions of 2026-10-18), exactly the recorded lock amendment changed: the replaced and inserted lines of ## Companion and the appended ## Lock amendments; every other line is the base's, the blocks this checker writes aside", d.length === 0, d.length ? list(d) : `${am.design.replaced.length} lines replaced and ${nIns} inserted in ## Companion, ${am.design.appended.lines.length} appended (## Lock amendments), as recorded in lock-amendments.json (base ${AMEND_BASE.slice(0, 7)}); the generated blocks are this run's${provedNote}`);
-  }
+  const { unproved, provedNote } = amendL7;
+  const h = chainHits({ amendments: AMENDS, texts: chainTexts(WRITE ? outDesign : design), written: generatedBlocks(outDesign), parts: ["design"] });
+  const d = [...chainOrder, ...h.design, ...unproved];
+  check("L7", "DESIGN.md: since the first amendment's base, exactly the recorded lock amendments changed, each held from its own base to the next one's and the newest to the working text (the first kind: its replaced and inserted lines of ## Companion and the appended ## Lock amendments; a patch: its hunks, line for line at their positions); every other line is the base's, the blocks this checker writes aside", d.length === 0,
+    d.length ? list(d) : `${AMENDS.map((a) => `${a.id} (base ${a.base.slice(0, 7)}): ${designText(a)}`).join("; ")}, as recorded in lock-amendments.json; the generated blocks are this run's${provedNote}`);
 }
 console.log(`\n${failed ? "FAILED" : "PASSED"}: ${report.length - failed} of ${report.length} checks passed`);
 if (WRITE) {

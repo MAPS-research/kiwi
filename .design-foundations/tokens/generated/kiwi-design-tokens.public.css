@@ -15,54 +15,54 @@
  */
 
 :root {
-  --kiwi-primary: #203327; /* forest in light */
-  --kiwi-primary-light: #486d56; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-primary-hover (hover of the filled control) */
-  --kiwi-primary-dark: #203327; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-primary (no darker step exists below the forest solid) */
-  --kiwi-primary-contrast: #fdfdfc;
-  --kiwi-secondary: #65635c; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-text-secondary (Kiwi has one accent hue; the pink secondary is retired) */
-  --kiwi-secondary-light: #65635c; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-text-secondary */
-  --kiwi-secondary-dark: #2f2e2a; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-text-primary */
-  --kiwi-secondary-contrast: #fdfdfc; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-primary-contrast */
+  --kiwi-primary: #d0ddbd; /* the Soft sage fill in light; draw it with its 1 px --kiwi-primary-border edge */
+  --kiwi-primary-light: #c7d6b1; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-primary-hover (hover of the filled control) */
+  --kiwi-primary-dark: #d0ddbd; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-primary (no darker step: the fill is a tint, its edge carries the boundary) */
+  --kiwi-primary-contrast: #23482e;
+  --kiwi-secondary: #566652; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-text-secondary (Kiwi has one accent hue; the pink secondary is retired) */
+  --kiwi-secondary-light: #566652; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-text-secondary */
+  --kiwi-secondary-dark: #23442d; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-text-primary */
+  --kiwi-secondary-contrast: #fbfbf7; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-primary-contrast */
   --kiwi-success: #337437; /* the -11 text/icon colour; passes AA as a fill with --kiwi-success-contrast and as text on light surfaces */
   --kiwi-success-light: #e0f8e0; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-success-surface (the -3 status surface) */
   --kiwi-success-dark: #337437; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-success-text */
-  --kiwi-success-contrast: #fdfdfc;
+  --kiwi-success-contrast: #fbfbf7;
   --kiwi-warning: #76602f; /* the -11 text/icon colour; passes AA as a fill with --kiwi-warning-contrast and as text on light surfaces */
   --kiwi-warning-light: #f9f0dd; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-warning-surface (the -3 status surface) */
   --kiwi-warning-dark: #76602f; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-warning-text */
-  --kiwi-warning-contrast: #fdfdfc;
+  --kiwi-warning-contrast: #fbfbf7;
   --kiwi-error: #974843; /* the -11 text/icon colour; passes AA as a fill with --kiwi-error-contrast and as text on light surfaces */
   --kiwi-error-light: #ffebe9; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-error-surface (the -3 status surface) */
   --kiwi-error-dark: #974843; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-error-text */
-  --kiwi-error-contrast: #fdfdfc;
+  --kiwi-error-contrast: #fbfbf7;
   --kiwi-info: #3d6886; /* the -11 text/icon colour; passes AA as a fill with --kiwi-info-contrast and as text on light surfaces */
   --kiwi-info-light: #e3f3ff; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-info-surface (the -3 status surface) */
   --kiwi-info-dark: #3d6886; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-info-text */
-  --kiwi-info-contrast: #fdfdfc;
-  --kiwi-gray-50: #fdfdfc; /* @deprecated since 2.0.0, removed in 4.0.0: use the role tokens (--kiwi-bg-*, --kiwi-text-*, --kiwi-border-*) (MD grey mapped to the nearest cream/tan neutral) */
-  --kiwi-gray-100: #f1f0ed; /* @deprecated since 2.0.0, removed in 4.0.0: use the role tokens (--kiwi-bg-*, --kiwi-text-*, --kiwi-border-*) (MD grey mapped to the nearest cream/tan neutral) */
-  --kiwi-gray-200: #e9e8e4; /* @deprecated since 2.0.0, removed in 4.0.0: use the role tokens (--kiwi-bg-*, --kiwi-text-*, --kiwi-border-*) (MD grey mapped to the nearest cream/tan neutral) */
-  --kiwi-gray-300: #d4d2cb; /* @deprecated since 2.0.0, removed in 4.0.0: use the role tokens (--kiwi-bg-*, --kiwi-text-*, --kiwi-border-*) (MD grey mapped to the nearest cream/tan neutral) */
-  --kiwi-gray-400: #adaba1; /* @deprecated since 2.0.0, removed in 4.0.0: use the role tokens (--kiwi-bg-*, --kiwi-text-*, --kiwi-border-*) (MD grey mapped to the nearest cream/tan neutral) */
-  --kiwi-gray-500: #adaba1; /* @deprecated since 2.0.0, removed in 4.0.0: use the role tokens (--kiwi-bg-*, --kiwi-text-*, --kiwi-border-*) (MD grey mapped to the nearest cream/tan neutral) */
-  --kiwi-gray-600: #65635c; /* @deprecated since 2.0.0, removed in 4.0.0: use the role tokens (--kiwi-bg-*, --kiwi-text-*, --kiwi-border-*) (MD grey mapped to the nearest cream/tan neutral) */
-  --kiwi-gray-700: #65635c; /* @deprecated since 2.0.0, removed in 4.0.0: use the role tokens (--kiwi-bg-*, --kiwi-text-*, --kiwi-border-*) (MD grey mapped to the nearest cream/tan neutral) */
-  --kiwi-gray-800: #2f2e2a; /* @deprecated since 2.0.0, removed in 4.0.0: use the role tokens (--kiwi-bg-*, --kiwi-text-*, --kiwi-border-*) (MD grey mapped to the nearest cream/tan neutral) */
-  --kiwi-gray-900: #2f2e2a; /* @deprecated since 2.0.0, removed in 4.0.0: use the role tokens (--kiwi-bg-*, --kiwi-text-*, --kiwi-border-*) (MD grey mapped to the nearest cream/tan neutral) */
-  --kiwi-bg-default: #f4f1e4; /* the cream canvas */
-  --kiwi-bg-paper: #faf9f3; /* the sheet */
-  --kiwi-bg-subtle: #f1f0ed;
-  --kiwi-bg-hover: #f1f0ed; /* now opaque; hover is tonal */
-  --kiwi-bg-selected: #e6f5eb;
-  --kiwi-bg-selected-hover: #e6f5eb; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-bg-selected (a selected row does not change on hover) */
-  --kiwi-text-primary: #2f2e2a;
-  --kiwi-text-secondary: #65635c;
-  --kiwi-text-disabled: #65635c; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-text-secondary (disabled labels are secondary text on the disabled surface) */
-  --kiwi-text-hint: #65635c; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-text-secondary */
-  --kiwi-border-light: #d4d2cb; /* decorative hairline */
-  --kiwi-border-default: #c6c3bb; /* decorative hairline; not a control boundary */
-  --kiwi-border-dark: #adaba1; /* decorative; use --kiwi-border-interactive for controls */
-  --kiwi-border-focus: #486d56;
+  --kiwi-info-contrast: #fbfbf7;
+  --kiwi-gray-50: #fbfbf7; /* @deprecated since 2.0.0, removed in 4.0.0: use the role tokens (--kiwi-bg-*, --kiwi-text-*, --kiwi-border-*) (MD grey mapped to the nearest cream/tan neutral) */
+  --kiwi-gray-100: #f0f2e5; /* @deprecated since 2.0.0, removed in 4.0.0: use the role tokens (--kiwi-bg-*, --kiwi-text-*, --kiwi-border-*) (MD grey mapped to the nearest cream/tan neutral) */
+  --kiwi-gray-200: #e8eddf; /* @deprecated since 2.0.0, removed in 4.0.0: use the role tokens (--kiwi-bg-*, --kiwi-text-*, --kiwi-border-*) (MD grey mapped to the nearest cream/tan neutral) */
+  --kiwi-gray-300: #e1e6d8; /* @deprecated since 2.0.0, removed in 4.0.0: use the role tokens (--kiwi-bg-*, --kiwi-text-*, --kiwi-border-*) (MD grey mapped to the nearest cream/tan neutral) */
+  --kiwi-gray-400: #a9b29d; /* @deprecated since 2.0.0, removed in 4.0.0: use the role tokens (--kiwi-bg-*, --kiwi-text-*, --kiwi-border-*) (MD grey mapped to the nearest cream/tan neutral) */
+  --kiwi-gray-500: #a9b29d; /* @deprecated since 2.0.0, removed in 4.0.0: use the role tokens (--kiwi-bg-*, --kiwi-text-*, --kiwi-border-*) (MD grey mapped to the nearest cream/tan neutral) */
+  --kiwi-gray-600: #566652; /* @deprecated since 2.0.0, removed in 4.0.0: use the role tokens (--kiwi-bg-*, --kiwi-text-*, --kiwi-border-*) (MD grey mapped to the nearest cream/tan neutral) */
+  --kiwi-gray-700: #566652; /* @deprecated since 2.0.0, removed in 4.0.0: use the role tokens (--kiwi-bg-*, --kiwi-text-*, --kiwi-border-*) (MD grey mapped to the nearest cream/tan neutral) */
+  --kiwi-gray-800: #23442d; /* @deprecated since 2.0.0, removed in 4.0.0: use the role tokens (--kiwi-bg-*, --kiwi-text-*, --kiwi-border-*) (MD grey mapped to the nearest cream/tan neutral) */
+  --kiwi-gray-900: #23442d; /* @deprecated since 2.0.0, removed in 4.0.0: use the role tokens (--kiwi-bg-*, --kiwi-text-*, --kiwi-border-*) (MD grey mapped to the nearest cream/tan neutral) */
+  --kiwi-bg-default: #f6f5ed; /* the cream canvas */
+  --kiwi-bg-paper: #fdfcf6; /* the sheet */
+  --kiwi-bg-subtle: #f0f2e5;
+  --kiwi-bg-hover: #f0f2e5; /* now opaque; hover is tonal */
+  --kiwi-bg-selected: #e4ebd9;
+  --kiwi-bg-selected-hover: #e4ebd9; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-bg-selected (a selected row does not change on hover) */
+  --kiwi-text-primary: #23442d;
+  --kiwi-text-secondary: #566652;
+  --kiwi-text-disabled: #566652; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-text-secondary (disabled labels are secondary text on the disabled surface) */
+  --kiwi-text-hint: #566652; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-text-secondary */
+  --kiwi-border-light: #e1e6d8; /* decorative hairline */
+  --kiwi-border-default: #d9ded0; /* decorative hairline; not a control boundary */
+  --kiwi-border-dark: #a9b29d; /* decorative; use --kiwi-border-interactive for controls */
+  --kiwi-border-focus: #577d37;
   --kiwi-font-family: "Source Sans 3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif; /* Source Sans 3 + the CJK stack; self-host @fontsource-variable/source-sans-3 */
   --kiwi-font-family-mono: ui-monospace, "SF Mono", "Menlo", "Consolas", "PingFang SC", "Microsoft YaHei", monospace;
   --kiwi-font-size-xs: 0.75rem;
@@ -97,22 +97,22 @@
   --kiwi-space-16: 4rem;
   --kiwi-space-20: 5rem; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-space-16 (80 px is off the scale) */
   --kiwi-radius-none: 0;
-  --kiwi-radius-sm: 2px; /* 2 px: the one control/sheet radius */
-  --kiwi-radius-default: 2px; /* 4 → 2 px */
-  --kiwi-radius-md: 2px; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-radius-sm (no more than two sizes of radius; both are 2 px) */
-  --kiwi-radius-lg: 2px; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-radius-sm (no more than two sizes of radius; both are 2 px) */
-  --kiwi-radius-xl: 2px; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-radius-sm (no more than two sizes of radius; both are 2 px) */
-  --kiwi-radius-2xl: 2px; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-radius-sm (no more than two sizes of radius; both are 2 px) */
+  --kiwi-radius-sm: 6px; /* 6 px: the control radius */
+  --kiwi-radius-default: 6px; /* 4 → 6 px: the control radius */
+  --kiwi-radius-md: 6px; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-radius-sm (two sizes of radius: 6 px for controls (this one's value in v1 too), 8 px for sheets) */
+  --kiwi-radius-lg: 8px; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-radius-sheet (two sizes of radius: 6 px for controls, 8 px for sheets (lg was 8 px in v1)) */
+  --kiwi-radius-xl: 8px; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-radius-sheet (two sizes of radius: 6 px for controls, 8 px for sheets (lg was 8 px in v1)) */
+  --kiwi-radius-2xl: 8px; /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-radius-sheet (two sizes of radius: 6 px for controls, 8 px for sheets (lg was 8 px in v1)) */
   --kiwi-radius-full: 50%; /* status dots and round controls only; no pills */
   --kiwi-border-width: 1px;
   --kiwi-border-width-2: 2px;
   --kiwi-shadow-none: none;
-  --kiwi-shadow-sm: 0px 1px 2px 0px rgba(32, 51, 39, 0.14);
-  --kiwi-shadow-default: 0px 1px 2px 0px rgba(32, 51, 39, 0.14);
-  --kiwi-shadow-md: 0px 1px 2px 0px rgba(32, 51, 39, 0.08), 0px 12px 32px -12px rgba(32, 51, 39, 0.26); /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-shadow-lg (two depths only) */
-  --kiwi-shadow-lg: 0px 1px 2px 0px rgba(32, 51, 39, 0.08), 0px 12px 32px -12px rgba(32, 51, 39, 0.26);
-  --kiwi-shadow-xl: 0px 1px 2px 0px rgba(32, 51, 39, 0.08), 0px 12px 32px -12px rgba(32, 51, 39, 0.26); /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-shadow-lg (two depths only) */
-  --kiwi-focus-ring: 0 0 0 2px #faf9f3, 0 0 0 4px #486d56; /* 0 0 0 2px --kiwi-bg-paper, 0 0 0 4px --kiwi-border-focus (a 2 px gap + 2 px ring); prefer outline: 2px solid var(--kiwi-border-focus); outline-offset: 2px */
+  --kiwi-shadow-sm: 0px 1px 2px 0px rgba(35, 72, 46, 0.14);
+  --kiwi-shadow-default: 0px 1px 2px 0px rgba(35, 72, 46, 0.14);
+  --kiwi-shadow-md: 0px 1px 2px 0px rgba(35, 72, 46, 0.08), 0px 12px 32px -12px rgba(35, 72, 46, 0.26); /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-shadow-lg (two depths only) */
+  --kiwi-shadow-lg: 0px 1px 2px 0px rgba(35, 72, 46, 0.08), 0px 12px 32px -12px rgba(35, 72, 46, 0.26);
+  --kiwi-shadow-xl: 0px 1px 2px 0px rgba(35, 72, 46, 0.08), 0px 12px 32px -12px rgba(35, 72, 46, 0.26); /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-shadow-lg (two depths only) */
+  --kiwi-focus-ring: 0 0 0 2px #fdfcf6, 0 0 0 4px #577d37; /* 0 0 0 2px --kiwi-bg-paper, 0 0 0 4px --kiwi-border-focus (a 2 px gap + 2 px ring); prefer outline: 2px solid var(--kiwi-border-focus); outline-offset: 2px */
   --kiwi-transition-fast: 150ms cubic-bezier(0.65, 0, 0.35, 1); /* 150ms cubic-bezier(.65,0,.35,1) */
   --kiwi-transition-default: 220ms cubic-bezier(0.16, 1, 0.3, 1); /* 220ms cubic-bezier(.16,1,.3,1) */
   --kiwi-transition-slow: 220ms cubic-bezier(0.16, 1, 0.3, 1); /* @deprecated since 2.0.0, removed in 4.0.0: use --kiwi-transition-default (orchestration is not part of the budget) */
@@ -123,44 +123,44 @@
   --kiwi-z-modal: 1050;
   --kiwi-z-popover: 1060;
   --kiwi-z-tooltip: 1070;
-  --kiwi-editor-bg: #faf9f3; /* code follows the mode (light here); no more VS Code dark */
-  --kiwi-editor-bg-light: #f1f0ed;
-  --kiwi-editor-fg: #2f2e2a;
-  --kiwi-editor-line-number: #65635c;
-  --kiwi-editor-line-number-active: #2f2e2a;
-  --kiwi-editor-selection: #d9eee0;
-  --kiwi-editor-cursor: #2f2e2a;
-  --kiwi-editor-line-highlight: #e9e8e4;
-  --kiwi-editor-gutter: #f1f0ed;
-  --kiwi-editor-gutter-border: #d4d2cb;
-  --kiwi-syntax-keyword: #2f2e2a; /* weight 600 in the class rule */
-  --kiwi-syntax-string: #486d56;
+  --kiwi-editor-bg: #fdfcf6; /* code follows the mode (light here); no more VS Code dark */
+  --kiwi-editor-bg-light: #f0f2e5;
+  --kiwi-editor-fg: #23442d;
+  --kiwi-editor-line-number: #566652;
+  --kiwi-editor-line-number-active: #23442d;
+  --kiwi-editor-selection: #dce5cc;
+  --kiwi-editor-cursor: #23442d;
+  --kiwi-editor-line-highlight: #e8eddf;
+  --kiwi-editor-gutter: #f0f2e5;
+  --kiwi-editor-gutter-border: #e1e6d8;
+  --kiwi-syntax-keyword: #23442d; /* weight 600 in the class rule */
+  --kiwi-syntax-string: #446a2c;
   --kiwi-syntax-number: #3d6886;
-  --kiwi-syntax-comment: #65635c;
-  --kiwi-syntax-function: #2f2e2a;
-  --kiwi-syntax-variable: #2f2e2a;
-  --kiwi-syntax-class: #2f2e2a; /* weight 600 in the class rule */
-  --kiwi-syntax-operator: #65635c;
-  --kiwi-syntax-punctuation: #65635c;
+  --kiwi-syntax-comment: #566652;
+  --kiwi-syntax-function: #23442d;
+  --kiwi-syntax-variable: #23442d;
+  --kiwi-syntax-class: #23442d; /* weight 600 in the class rule */
+  --kiwi-syntax-operator: #566652;
+  --kiwi-syntax-punctuation: #566652;
   --kiwi-syntax-constant: #3d6886;
-  --kiwi-syntax-builtin: #2f2e2a; /* weight 600 in the class rule */
-  --kiwi-syntax-decorator: #65635c; /* weight 600 in the class rule */
-  --kiwi-syntax-type: #2f2e2a; /* weight 600 in the class rule */
+  --kiwi-syntax-builtin: #23442d; /* weight 600 in the class rule */
+  --kiwi-syntax-decorator: #566652; /* weight 600 in the class rule */
+  --kiwi-syntax-type: #23442d; /* weight 600 in the class rule */
   --kiwi-syntax-error: #974843;
   --kiwi-syntax-warning: #76602f;
-  --kiwi-console-bg: #faf9f3;
-  --kiwi-console-bg-alt: #f1f0ed;
-  --kiwi-console-fg: #2f2e2a;
-  --kiwi-console-stdout: #2f2e2a;
+  --kiwi-console-bg: #fdfcf6;
+  --kiwi-console-bg-alt: #f0f2e5;
+  --kiwi-console-fg: #23442d;
+  --kiwi-console-stdout: #23442d;
   --kiwi-console-stderr: #974843;
   --kiwi-console-stdin: #3d6886;
-  --kiwi-console-prompt: #486d56;
-  --kiwi-console-border: #c6c3bb;
+  --kiwi-console-prompt: #23482e;
+  --kiwi-console-border: #d9ded0;
   --kiwi-step-size: 24px;
   --kiwi-step-connector-height: 2px;
-  --kiwi-primary-hover: #486d56; /* added in 2.0.0 */
-  --kiwi-border-interactive: #65635c; /* added in 2.0.0: the ≥3:1 boundary of every control identified by a border */
-  --kiwi-link: #486d56; /* added in 2.0.0: links and accent text; underline links in prose */
+  --kiwi-primary-hover: #c7d6b1; /* added in 2.0.0 */
+  --kiwi-border-interactive: #7b8872; /* added in 2.0.0: the ≥3:1 boundary of every control identified by a border */
+  --kiwi-link: #23482e; /* added in 2.0.0: links and accent text; underline links in prose */
   --kiwi-success-surface: #e0f8e0; /* added in 2.0.0 */
   --kiwi-success-text: #337437; /* added in 2.0.0 */
   --kiwi-warning-surface: #f9f0dd; /* added in 2.0.0 */
@@ -169,11 +169,19 @@
   --kiwi-error-text: #974843; /* added in 2.0.0 */
   --kiwi-info-surface: #e3f3ff; /* added in 2.0.0 */
   --kiwi-info-text: #3d6886; /* added in 2.0.0 */
-  --kiwi-primary-active: #06100a; /* added in 2.0.0: the pressed fill of the filled control (:active), one step beyond hover */
-  --kiwi-bg-pressed: #d9eee0; /* added in 2.0.0: the pressed tint of outlined and text controls (:active) */
-  --kiwi-disabled-surface: #e9e8e4; /* added in 2.0.0: the disabled trio: fill */
-  --kiwi-disabled-text: #65635c; /* added in 2.0.0: the disabled trio: label (secondary text on the disabled surface) */
-  --kiwi-disabled-border: #c6c3bb; /* added in 2.0.0: the disabled trio: boundary */
+  --kiwi-primary-active: #bfcea6; /* added in 2.0.0: the pressed fill of the filled control (:active), one step beyond hover */
+  --kiwi-bg-tint: #eaf0df; /* added in 2.0.0: the hover tint of outlined and text controls (:hover); a selected chip, row or step takes --kiwi-bg-selected, a pressed control --kiwi-bg-pressed */
+  --kiwi-bg-pressed: #dce5cc; /* added in 2.0.0: the pressed tint of outlined and text controls (:active) */
+  --kiwi-bg-active: #e8eddf; /* added in 2.0.0: the tonal active ground: a role or label chip (.kiwi-chip), a pressed row */
+  --kiwi-primary-border: #577d37; /* added in 2.0.0: the 1 px edge of the filled control: its boundary, since --kiwi-primary is a tint */
+  --kiwi-radius-sheet: 8px; /* added in 2.0.0: 8 px: panels, dialogs, cards, menus and toasts */
+  --kiwi-primary-disabled: #dce5cc; /* added in 2.0.0: a disabled primary's faint sage fill (the 2026-10-18 decision): never the disabled secondary */
+  --kiwi-primary-disabled-border: #92ae70; /* added in 2.0.0: a disabled primary's faint sage edge */
+  --kiwi-disabled-outline: #a9b29d; /* added in 2.0.0: a disabled button's faint edge */
+  --kiwi-disabled-label: #566652; /* added in 2.0.0: a disabled button's label, lower in luminance than the enabled label */
+  --kiwi-disabled-surface: #e8eddf; /* added in 2.0.0: the disabled trio: fill */
+  --kiwi-disabled-text: #566652; /* added in 2.0.0: the disabled trio: label (secondary text on the disabled surface) */
+  --kiwi-disabled-border: #d9ded0; /* added in 2.0.0: the disabled trio: boundary */
   --kiwi-size-control: 44px; /* added in 2.0.0: button and input height (comfortable: Kiwi Apps are student-facing) */
   --kiwi-size-chip: 32px; /* added in 2.0.0: chip height (comfortable); the hand-written 28 px becomes the token's 32 */
 }
@@ -196,7 +204,8 @@
 .kiwi-bg-info { background-color: var(--kiwi-info-surface); color: var(--kiwi-info-text); }
 .kiwi-bg-subtle { background-color: var(--kiwi-bg-subtle); }
 .kiwi-rounded-none { border-radius: var(--kiwi-radius-none); }
-.kiwi-rounded-sm, .kiwi-rounded, .kiwi-rounded-md, .kiwi-rounded-lg, .kiwi-rounded-xl { border-radius: var(--kiwi-radius-sm); } /* one control radius */
+.kiwi-rounded-sm, .kiwi-rounded, .kiwi-rounded-md { border-radius: var(--kiwi-radius-sm); } /* the control radius */
+.kiwi-rounded-lg, .kiwi-rounded-xl { border-radius: var(--kiwi-radius-sheet); } /* the sheet radius: two sizes only */
 .kiwi-rounded-full { border-radius: var(--kiwi-radius-full); }
 .kiwi-shadow-none { box-shadow: var(--kiwi-shadow-none); }
 .kiwi-shadow-sm, .kiwi-shadow { box-shadow: var(--kiwi-shadow-sm); }
@@ -205,16 +214,17 @@
 /* ============================================
  * COMPONENT PATTERNS (regenerated to the Ruled Folio rules)
  * ============================================ */
-.kiwi-card { background-color: var(--kiwi-bg-paper); border: var(--kiwi-border-width) solid var(--kiwi-border-default); border-radius: var(--kiwi-radius-sm); padding: var(--kiwi-space-4); box-shadow: none; } /* a sheet: one tonal step + a hairline; never a card inside a card */
+.kiwi-card { background-color: var(--kiwi-bg-paper); border: var(--kiwi-border-width) solid var(--kiwi-border-default); border-radius: var(--kiwi-radius-sheet); padding: var(--kiwi-space-4); box-shadow: none; } /* a sheet: one tonal step + a hairline; never a card inside a card */
 .kiwi-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--kiwi-space-2); min-height: var(--kiwi-size-control); padding: 0 var(--kiwi-space-4); font-family: var(--kiwi-font-family); font-size: var(--kiwi-font-size-sm); font-weight: var(--kiwi-font-weight-semibold); line-height: 1.43; white-space: nowrap; border-radius: var(--kiwi-radius-sm); border: var(--kiwi-border-width) solid transparent; cursor: pointer; }
 .kiwi-btn:focus-visible { outline: 2px solid var(--kiwi-border-focus); outline-offset: 2px; } /* never outline: none */
-.kiwi-btn[aria-disabled="true"], .kiwi-btn:disabled { background-color: var(--kiwi-disabled-surface); color: var(--kiwi-disabled-text); border-color: var(--kiwi-disabled-border); cursor: not-allowed; } /* aria-disabled="true" is the mechanism (the control stays focusable and keeps its aria-describedby reason); :disabled is kept as an alias */
-.kiwi-btn-primary { background-color: var(--kiwi-primary); color: var(--kiwi-primary-contrast); }
+.kiwi-btn[aria-disabled="true"], .kiwi-btn:disabled { background-color: var(--kiwi-bg-paper); color: var(--kiwi-disabled-label); border-color: var(--kiwi-disabled-outline); cursor: not-allowed; } /* faded (the 2026-10-18 decision): the sheet, a faint edge, a lower label; aria-disabled="true" is the mechanism (the control stays focusable and keeps its aria-describedby reason); :disabled is kept as an alias */
+.kiwi-btn-primary { background-color: var(--kiwi-primary); color: var(--kiwi-primary-contrast); border-color: var(--kiwi-primary-border); } /* the edge is the boundary: the fill is a tint */
 .kiwi-btn-primary:hover:not(:disabled):not([aria-disabled="true"]) { background-color: var(--kiwi-primary-hover); }
 .kiwi-btn-primary:active:not(:disabled):not([aria-disabled="true"]) { background-color: var(--kiwi-primary-active); transform: scale(0.98); } /* pressed: one fill step beyond hover plus the shared press scale */
+.kiwi-btn-primary[aria-disabled="true"], .kiwi-btn-primary:disabled { background-color: var(--kiwi-primary-disabled); border-color: var(--kiwi-primary-disabled-border); } /* a disabled primary keeps a faint sage fill, so it is never the disabled secondary */
 .kiwi-btn-secondary { background-color: var(--kiwi-bg-paper); color: var(--kiwi-link); border-color: var(--kiwi-border-interactive); }
-.kiwi-btn-secondary:hover:not(:disabled):not([aria-disabled="true"]) { background-color: var(--kiwi-bg-selected); }
-.kiwi-btn-secondary:active:not(:disabled):not([aria-disabled="true"]) { background-color: var(--kiwi-bg-pressed); transform: scale(0.98); }
+.kiwi-btn-secondary:hover:not(:disabled):not([aria-disabled="true"]) { background-color: var(--kiwi-bg-tint); } /* the hover tint (--accent-bg-subtle), one step below the selected fill */
+.kiwi-btn-secondary:active:not(:disabled):not([aria-disabled="true"]) { background-color: var(--kiwi-bg-pressed); border-color: var(--kiwi-text-primary); transform: scale(0.98); } /* pressed: the pressed tint and the ink edge, never the resting primary's look */
 .kiwi-input { width: 100%; min-height: var(--kiwi-size-control); padding: var(--kiwi-space-2) var(--kiwi-space-4); font-family: var(--kiwi-font-family); font-size: var(--kiwi-font-size-base); line-height: var(--kiwi-line-height-normal); color: var(--kiwi-text-primary); background-color: var(--kiwi-bg-paper); border: var(--kiwi-border-width) solid var(--kiwi-border-interactive); border-radius: var(--kiwi-radius-sm); }
 .kiwi-input:hover { border-color: var(--kiwi-text-primary); }
 .kiwi-input:focus-visible { outline: 2px solid var(--kiwi-border-focus); outline-offset: 2px; }
@@ -236,7 +246,7 @@
 .kiwi-in-progress { display: inline-flex; align-items: center; gap: var(--kiwi-space-2); color: var(--kiwi-text-secondary); font-size: var(--kiwi-font-size-sm); } /* added in 2.0.0: neutral in-progress text; progress is words + the text dots (G9), never a spinner */
 .kiwi-in-progress::after { content: "…"; display: inline-block; width: 1.2em; text-align: left; animation: kiwi-dots 1.5s steps(1, end) infinite; }
 @keyframes kiwi-dots { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75%, 100% { content: "..."; } }
-.kiwi-chip { display: inline-flex; align-items: center; gap: var(--kiwi-space-2); min-height: var(--kiwi-size-chip); padding: 0 var(--kiwi-space-2); font-size: var(--kiwi-font-size-xs); font-weight: var(--kiwi-font-weight-regular); border-radius: var(--kiwi-radius-sm); background-color: var(--kiwi-bg-subtle); color: var(--kiwi-text-primary); } /* a label chip */
+.kiwi-chip { display: inline-flex; align-items: center; gap: var(--kiwi-space-2); min-height: var(--kiwi-size-chip); padding: 0 var(--kiwi-space-2); font-size: var(--kiwi-font-size-xs); font-weight: var(--kiwi-font-weight-regular); border-radius: var(--kiwi-radius-sm); background-color: var(--kiwi-bg-active); color: var(--kiwi-text-primary); } /* a role or label chip: --surface-active with the ink, no border (not a control) */
 .kiwi-chip-primary { background-color: var(--kiwi-bg-selected); color: var(--kiwi-link); border: var(--kiwi-border-width) solid var(--kiwi-link); font-weight: var(--kiwi-font-weight-semibold); } /* a selected filter chip */
 .kiwi-chip-status { display: inline-flex; align-items: center; gap: var(--kiwi-space-2); min-height: var(--kiwi-size-chip); padding: 0 var(--kiwi-space-2); font-size: var(--kiwi-font-size-xs); font-weight: var(--kiwi-font-weight-semibold); border-radius: var(--kiwi-radius-sm); border: 0; } /* added in 2.0.0: the one tinted chip, status surface + the -11 icon and label */
 .kiwi-chip-status-success { background-color: var(--kiwi-success-surface); color: var(--kiwi-success-text); }
@@ -300,10 +310,15 @@
 .kiwi-progress-dot-error::before { background-color: var(--kiwi-error-text); } /* @deprecated since 2.0.0, removed in 4.0.0: use .kiwi-chip-status-error (a failed stage is an error status chip) */
 .kiwi-progress-dot-error { color: var(--kiwi-error-text); }
 @keyframes kiwi-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } } /* @deprecated since 2.0.0, removed in 4.0.0: use none: .kiwi-in-progress uses the text dots (kiwi-dots) (no pulsing in the motion budget) */
-.kiwi-progress-bar { height: 4px; background-color: var(--kiwi-bg-hover); border-radius: var(--kiwi-radius-sm); overflow: hidden; } /* restyled: the neutral determinate bar, --kiwi-border-interactive on --kiwi-bg-hover */
-.kiwi-progress-bar-fill { height: 100%; background-color: var(--kiwi-border-interactive); border-radius: var(--kiwi-radius-sm); transition: width var(--kiwi-transition-default); } /* restyled with the bar */
+.kiwi-progress-bar { height: 4px; background-color: var(--kiwi-bg-hover); border-radius: var(--kiwi-radius-none); overflow: hidden; } /* square: the control radius would round a 4 px bar into a pill */ /* restyled: the neutral determinate bar, --kiwi-border-interactive on --kiwi-bg-hover */
+.kiwi-progress-bar-fill { height: 100%; background-color: var(--kiwi-border-interactive); border-radius: var(--kiwi-radius-none); transition: width var(--kiwi-transition-default); } /* restyled with the bar */
 .kiwi-progress-bar-indeterminate .kiwi-progress-bar-fill { width: 30%; animation: kiwi-progress-indeterminate 1.5s ease-in-out infinite; } /* @deprecated since 2.0.0, removed in 4.0.0: use .kiwi-in-progress (an indeterminate sweep is outside the motion budget; a determinate .kiwi-progress-bar stays) */
 @keyframes kiwi-progress-indeterminate { 0% { transform: translateX(-100%); } 100% { transform: translateX(400%); } } /* @deprecated since 2.0.0, removed in 4.0.0: use none: .kiwi-in-progress (no sweeping gradient in the motion budget) */
+
+/* Forced colours (Windows High Contrast): a disabled control's border and text are GrayText, so it never renders like an enabled one */
+@media (forced-colors: active) {
+  .kiwi-btn[aria-disabled="true"], .kiwi-btn:disabled, .kiwi-input[aria-disabled="true"], .kiwi-input:disabled { color: GrayText; border-color: GrayText; }
+}
 
 /* ============================================
  * REDUCED MOTION (generated: the 3 animated and 1 transitioned selectors above, scoped; never a universal reset)

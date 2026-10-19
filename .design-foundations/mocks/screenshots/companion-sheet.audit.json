@@ -2,7 +2,7 @@
  "page": {
   "page": "companion-sheet",
   "round": "amendment 2026-10-18 (one full-body framing)",
-  "date": "2026-10-18",
+  "date": "2026-10-19",
   "motion": {
    "flag": true,
    "reduced": false,
@@ -597,28 +597,28 @@
     "pairs": [
      {
       "against": "--surface",
-      "value": "rgb(250, 249, 243)",
-      "ratio": 10
+      "value": "rgb(253, 252, 246)",
+      "ratio": 10.26
      },
      {
       "against": "--background",
-      "value": "rgb(244, 241, 228)",
-      "ratio": 9.31
+      "value": "rgb(246, 245, 237)",
+      "ratio": 9.64
      },
      {
       "against": "--surface-hover",
-      "value": "rgb(241, 240, 237)",
-      "ratio": 9.25
+      "value": "rgb(240, 242, 229)",
+      "ratio": 9.31
      },
      {
       "against": "--surface-active",
-      "value": "rgb(233, 232, 228)",
-      "ratio": 8.6
+      "value": "rgb(232, 237, 223)",
+      "ratio": 8.84
      },
      {
       "against": "--accent-bg-subtle",
-      "value": "rgb(230, 245, 235)",
-      "ratio": 9.35
+      "value": "rgb(234, 240, 223)",
+      "ratio": 9.05
      },
      {
       "against": "--status-error-surface",
@@ -626,55 +626,55 @@
       "ratio": 9.19
      }
     ],
-    "lowestRequired": 8.6
+    "lowestRequired": 8.84
    },
    {
     "theme": "dark",
-    "backing": "rgb(250, 249, 243)",
+    "backing": "rgb(253, 252, 246)",
     "pairs": [
      {
       "against": "--companion-backing",
-      "value": "rgb(250, 249, 243)",
-      "ratio": 10
+      "value": "rgb(253, 252, 246)",
+      "ratio": 10.26
      },
      {
       "against": "backing disc on --surface",
-      "value": "rgb(37, 34, 24)",
-      "ratio": 15.08,
+      "value": "rgb(26, 37, 28)",
+      "ratio": 15.42,
       "informational": true
      },
      {
       "against": "backing disc on --background",
-      "value": "rgb(27, 25, 21)",
-      "ratio": 16.64,
+      "value": "rgb(18, 27, 20)",
+      "ratio": 17.13,
       "informational": true
      },
      {
       "against": "backing disc on --surface-hover",
-      "value": "rgb(43, 42, 39)",
-      "ratio": 13.61,
+      "value": "rgb(34, 45, 35)",
+      "ratio": 13.92,
       "informational": true
      },
      {
       "against": "backing disc on --surface-active",
-      "value": "rgb(51, 50, 46)",
-      "ratio": 12.17,
+      "value": "rgb(42, 53, 41)",
+      "ratio": 12.46,
       "informational": true
      },
      {
       "against": "backing disc on --accent-bg-subtle",
-      "value": "rgb(26, 37, 30)",
-      "ratio": 15,
+      "value": "rgb(39, 50, 31)",
+      "ratio": 13.08,
       "informational": true
      },
      {
       "against": "backing disc on --status-error-surface",
       "value": "rgb(51, 26, 24)",
-      "ratio": 15.29,
+      "ratio": 15.7,
       "informational": true
      }
     ],
-    "lowestRequired": 10
+    "lowestRequired": 10.26
    }
   ],
   "backingRequiredPairs": 7,
@@ -714,6 +714,17 @@
   "fonts": {
    "sourceSans3": true
   },
+  "ruler": {
+   "regions": 26,
+   "ruleOk": 26,
+   "ticks": 0,
+   "byTheme": {
+    "light": 13,
+    "dark": 13
+   },
+   "fails": []
+  },
+  "rulerOk": true,
   "sequence": {
    "points": [
     {
@@ -994,7 +1005,7 @@
  "render": {
   "chrome": "Chrome/155.0.8059.85",
   "frozenAtMs": 5200,
-  "fullHeight": 17550,
+  "fullHeight": 17566,
   "reducedMotion": {
    "motion": {
     "flag": true,
@@ -1026,7 +1037,7 @@
   "fullPage": {
    "size": [
     1440,
-    17550
+    17566
    ],
    "segments": 5,
    "longestUniformRowRun": 69
@@ -1037,25 +1048,25 @@
    "file": "screenshots/companion-sequence.32.gif",
    "deviceScale": 1,
    "ticks": 264,
-   "frames": 124,
+   "frames": 125,
    "durationMs": 11000,
    "size": [
     896,
     703
    ],
-   "bytes": 430153
+   "bytes": 488559
   },
   {
    "file": "screenshots/companion-sequence.32@2x.gif",
    "deviceScale": 2,
    "ticks": 264,
-   "frames": 119,
+   "frames": 121,
    "durationMs": 11000,
    "size": [
     1688,
     660
    ],
-   "bytes": 633911
+   "bytes": 643608
   },
   {
    "file": "screenshots/companion-before-after.gif",
@@ -1067,91 +1078,91 @@
     820,
     180
    ],
-   "bytes": 714260
+   "bytes": 715874
   },
   {
    "file": "screenshots/companion-like.32.gif",
    "deviceScale": 1,
    "ticks": 144,
-   "frames": 23,
+   "frames": 17,
    "durationMs": 6000,
    "size": [
     896,
     555
    ],
-   "bytes": 118369
+   "bytes": 118542
   },
   {
    "file": "screenshots/companion-stop.32.gif",
    "deviceScale": 1,
    "ticks": 168,
-   "frames": 52,
+   "frames": 53,
    "durationMs": 7000,
    "size": [
     896,
     623
    ],
-   "bytes": 209850
+   "bytes": 211960
   },
   {
    "file": "screenshots/companion-error.32.gif",
    "deviceScale": 1,
    "ticks": 168,
-   "frames": 47,
+   "frames": 43,
    "durationMs": 7000,
    "size": [
     896,
     711
    ],
-   "bytes": 178977
+   "bytes": 181653
   },
   {
    "file": "screenshots/companion-offline.32.gif",
    "deviceScale": 1,
    "ticks": 192,
-   "frames": 51,
+   "frames": 43,
    "durationMs": 8000,
    "size": [
     896,
     613
    ],
-   "bytes": 151253
+   "bytes": 147264
   },
   {
    "file": "screenshots/companion-peek-send.32.gif",
    "deviceScale": 1,
    "ticks": 216,
-   "frames": 94,
+   "frames": 92,
    "durationMs": 9000,
    "size": [
     896,
     613
    ],
-   "bytes": 310397
+   "bytes": 312115
   },
   {
    "file": "screenshots/companion-walk.gif",
    "deviceScale": 1,
    "ticks": 48,
-   "frames": 25,
+   "frames": 24,
    "durationMs": 2000,
    "size": [
     646,
     176
    ],
-   "bytes": 119644
+   "bytes": 120207
   },
   {
    "file": "screenshots/companion-speaking.gif",
    "deviceScale": 1,
    "ticks": 48,
-   "frames": 25,
+   "frames": 24,
    "durationMs": 2000,
    "size": [
     646,
     176
    ],
-   "bytes": 119636
+   "bytes": 120236
   },
   {
    "file": "screenshots/companion-hop.gif",
@@ -1163,43 +1174,43 @@
     646,
     176
    ],
-   "bytes": 119803
+   "bytes": 120012
   },
   {
    "file": "screenshots/companion-wave.gif",
    "deviceScale": 1,
    "ticks": 111,
-   "frames": 20,
+   "frames": 18,
    "durationMs": 4625,
    "size": [
     646,
     176
    ],
-   "bytes": 91390
+   "bytes": 92457
   },
   {
    "file": "screenshots/companion-error.gif",
    "deviceScale": 1,
    "ticks": 96,
-   "frames": 27,
+   "frames": 25,
    "durationMs": 4000,
    "size": [
     646,
     176
    ],
-   "bytes": 124684
+   "bytes": 124904
   },
   {
    "file": "screenshots/companion-offline.gif",
    "deviceScale": 1,
    "ticks": 96,
-   "frames": 33,
+   "frames": 25,
    "durationMs": 4000,
    "size": [
     646,
     176
    ],
-   "bytes": 124414
+   "bytes": 124953
   },
   {
    "file": "screenshots/companion-idle.gif",
@@ -1211,7 +1222,7 @@
     646,
     176
    ],
-   "bytes": 8577
+   "bytes": 8657
   },
   {
    "file": "screenshots/companion-states.strip.gif",
@@ -1223,7 +1234,7 @@
     1376,
     193
    ],
-   "bytes": 943491
+   "bytes": 1009637
   }
  ],
  "geometryRendered": {
@@ -1245,8 +1256,8 @@
       15.5
      ],
      "centroid": [
-      12.93,
-      17.34
+      12.94,
+      17.33
      ],
      "vsStand": {
       "boxEdge": 0.0,
@@ -1272,8 +1283,8 @@
       15.5
      ],
      "centroid": [
-      13.74,
-      17.76
+      13.75,
+      17.74
      ],
      "vsStand": {
       "boxEdge": 1.0,
@@ -1281,7 +1292,7 @@
      },
      "vsRest": {
       "boxEdge": 1.0,
-      "centroid": 0.42
+      "centroid": 0.41
      }
     },
     {
@@ -1304,11 +1315,11 @@
      ],
      "vsStand": {
       "boxEdge": 1.0,
-      "centroid": 0.47
+      "centroid": 0.48
      },
      "vsRest": {
       "boxEdge": 1.0,
-      "centroid": 0.55
+      "centroid": 0.56
      }
     },
     {
@@ -1326,16 +1337,16 @@
       15.5
      ],
      "centroid": [
-      13.12,
-      17.44
+      13.15,
+      17.4
      ],
      "vsStand": {
       "boxEdge": 1.0,
-      "centroid": 0.19
+      "centroid": 0.21
      },
      "vsRest": {
       "boxEdge": 1.0,
-      "centroid": 0.81
+      "centroid": 0.79
      }
     },
     {
@@ -1353,16 +1364,16 @@
       17.0
      ],
      "centroid": [
-      13.52,
-      14.36
+      13.5,
+      14.39
      ],
      "vsStand": {
       "boxEdge": 3.5,
-      "centroid": 2.98
+      "centroid": 2.94
      },
      "vsRest": {
       "boxEdge": 3.5,
-      "centroid": 2.98
+      "centroid": 2.94
      }
     },
     {
@@ -1380,8 +1391,8 @@
       15.5
      ],
      "centroid": [
-      13.93,
-      17.34
+      13.94,
+      17.33
      ],
      "vsStand": {
       "boxEdge": 1.0,
@@ -1412,11 +1423,11 @@
      ],
      "vsStand": {
       "boxEdge": 1.5,
-      "centroid": 0.84
+      "centroid": 0.85
      },
      "vsRest": {
       "boxEdge": 2.0,
-      "centroid": 0.84
+      "centroid": 0.85
      }
     },
     {
@@ -1434,16 +1445,16 @@
       16.5
      ],
      "centroid": [
-      13.1,
+      13.12,
       17.12
      ],
      "vsStand": {
       "boxEdge": 2.0,
-      "centroid": 0.22
+      "centroid": 0.21
      },
      "vsRest": {
       "boxEdge": 2.5,
-      "centroid": 0.83
+      "centroid": 0.82
      }
     },
     {
@@ -1461,16 +1472,16 @@
       15.0
      ],
      "centroid": [
-      13.08,
-      18.02
+      13.07,
+      17.99
      ],
      "vsStand": {
       "boxEdge": 2.0,
-      "centroid": 0.68
+      "centroid": 0.66
      },
      "vsRest": {
       "boxEdge": 2.0,
-      "centroid": 0.85
+      "centroid": 0.87
      }
     },
     {
@@ -1515,16 +1526,16 @@
       15.5
      ],
      "centroid": [
-      13.76,
-      17.73
+      13.77,
+      17.72
      ],
      "vsStand": {
       "boxEdge": 1.0,
-      "centroid": 0.81
+      "centroid": 0.82
      },
      "vsRest": {
       "boxEdge": 1.0,
-      "centroid": 0.41
+      "centroid": 0.4
      }
     },
     {
@@ -1569,16 +1580,16 @@
       15.5
      ],
      "centroid": [
-      13.15,
-      17.4
+      13.14,
+      17.41
      ],
      "vsStand": {
       "boxEdge": 1.0,
-      "centroid": 0.2
+      "centroid": 0.19
      },
      "vsRest": {
       "boxEdge": 1.0,
-      "centroid": 0.8
+      "centroid": 0.81
      }
     },
     {
@@ -1651,15 +1662,15 @@
      ],
      "centroid": [
       13.3,
-      18.18
+      18.19
      ],
      "vsStand": {
       "boxEdge": 1.5,
-      "centroid": 0.86
+      "centroid": 0.87
      },
      "vsRest": {
       "boxEdge": 2.0,
-      "centroid": 0.86
+      "centroid": 0.87
      }
     },
     {
@@ -1734,11 +1745,11 @@
      ],
      "centroid": [
       13.2,
-      16.46
+      16.44
      ],
      "vsIdle": {
       "boxEdge": 0.5,
-      "centroid": 2.45
+      "centroid": 2.46
      }
     },
     {
@@ -1756,7 +1767,7 @@
       18.0
      ],
      "centroid": [
-      15.65,
+      15.66,
       17.21
      ],
      "vsIdle": {
@@ -1784,7 +1795,7 @@
      ],
      "vsIdle": {
       "boxEdge": 1.5,
-      "centroid": 0.7
+      "centroid": 0.71
      }
     },
     {
@@ -1807,7 +1818,7 @@
      ],
      "vsIdle": {
       "boxEdge": 2.5,
-      "centroid": 2.23
+      "centroid": 2.24
      }
     },
     {
@@ -1830,7 +1841,7 @@
      ],
      "vsIdle": {
       "boxEdge": 3.5,
-      "centroid": 3.69
+      "centroid": 3.7
      }
     },
     {
@@ -1872,11 +1883,11 @@
      ],
      "centroid": [
       14.83,
-      18.03
+      18.04
      ],
      "vsIdle": {
       "boxEdge": 1.5,
-      "centroid": 0.82
+      "centroid": 0.83
      }
     },
     {
@@ -1894,8 +1905,8 @@
       15.5
      ],
      "centroid": [
-      13.21,
-      17.83
+      13.18,
+      17.82
      ],
      "vsIdle": {
       "boxEdge": 1.0,
@@ -1917,8 +1928,8 @@
       15.5
      ],
      "centroid": [
-      13.46,
-      17.33
+      13.45,
+      17.32
      ],
      "vsIdle": {
       "boxEdge": 0.0,
@@ -1940,12 +1951,12 @@
       15.5
      ],
      "centroid": [
-      13.43,
+      13.42,
       17.76
      ],
      "vsIdle": {
       "boxEdge": 1.0,
-      "centroid": 0.43
+      "centroid": 0.44
      }
     },
     {
@@ -1963,12 +1974,12 @@
       15.5
      ],
      "centroid": [
-      13.43,
-      17.34
+      13.44,
+      17.33
      ],
      "vsIdle": {
       "boxEdge": 0.5,
-      "centroid": 0.03
+      "centroid": 0.01
      }
     },
     {
@@ -1986,12 +1997,12 @@
       16.5
      ],
      "centroid": [
-      13.1,
+      13.12,
       17.12
      ],
      "vsIdle": {
       "boxEdge": 2.5,
-      "centroid": 0.36
+      "centroid": 0.33
      }
     },
     {
@@ -2009,12 +2020,12 @@
       15.5
      ],
      "centroid": [
-      13.43,
-      17.34
+      13.44,
+      17.33
      ],
      "vsIdle": {
       "boxEdge": 0.5,
-      "centroid": 0.03
+      "centroid": 0.01
      }
     },
     {
@@ -2032,12 +2043,12 @@
       15.5
      ],
      "centroid": [
-      13.43,
-      17.34
+      13.44,
+      17.33
      ],
      "vsIdle": {
       "boxEdge": 0.5,
-      "centroid": 0.03
+      "centroid": 0.01
      }
     },
     {
@@ -2055,12 +2066,12 @@
       17.5
      ],
      "centroid": [
-      13.19,
-      16.45
+      13.2,
+      16.44
      ],
      "vsIdle": {
       "boxEdge": 0.5,
-      "centroid": 2.47
+      "centroid": 2.46
      }
     },
     {
@@ -2079,7 +2090,7 @@
      ],
      "centroid": [
       15.66,
-      17.21
+      17.2
      ],
      "vsIdle": {
       "boxEdge": 0.0,
@@ -2175,7 +2186,7 @@
      ],
      "vsIdle": {
       "boxEdge": 4.5,
-      "centroid": 2.27
+      "centroid": 2.28
      }
     },
     {
@@ -2193,12 +2204,12 @@
       17.0
      ],
      "centroid": [
-      14.84,
+      14.83,
       18.04
      ],
      "vsIdle": {
       "boxEdge": 1.5,
-      "centroid": 0.83
+      "centroid": 0.84
      }
     },
     {
@@ -2216,12 +2227,12 @@
       15.5
      ],
      "centroid": [
-      13.19,
-      17.81
+      13.21,
+      17.79
      ],
      "vsIdle": {
       "boxEdge": 1.0,
-      "centroid": 0.49
+      "centroid": 0.47
      }
     },
     {
@@ -2371,15 +2382,15 @@
    },
    "walk 12 vs stand (light)": {
     "boxEdge": 1.0,
-    "centroid": 0.47
+    "centroid": 0.48
    },
    "hop 0 vs stand (light)": {
     "boxEdge": 1.0,
-    "centroid": 0.19
+    "centroid": 0.21
    },
    "hop 11 vs stand (light)": {
     "boxEdge": 3.5,
-    "centroid": 2.98
+    "centroid": 2.94
    },
    "hop 23 vs stand (light)": {
     "boxEdge": 1.0,
@@ -2387,15 +2398,15 @@
    },
    "wave 0 vs stand (light)": {
     "boxEdge": 1.5,
-    "centroid": 0.84
+    "centroid": 0.85
    },
    "wave 8 vs stand (light)": {
     "boxEdge": 2.0,
-    "centroid": 0.22
+    "centroid": 0.21
    },
    "wave 14 vs stand (light)": {
     "boxEdge": 2.0,
-    "centroid": 0.68
+    "centroid": 0.66
    },
    "stand vs the rest after a clip, hop 23 from the atlas (light)": {
     "boxEdge": 1.0,
@@ -2403,35 +2414,35 @@
    },
    "walk 0 vs the rest after a clip, hop 23 from the atlas (light)": {
     "boxEdge": 1.0,
-    "centroid": 0.42
+    "centroid": 0.41
    },
    "walk 12 vs the rest after a clip, hop 23 from the atlas (light)": {
     "boxEdge": 1.0,
-    "centroid": 0.55
+    "centroid": 0.56
    },
    "hop 0 vs the rest after a clip, hop 23 from the atlas (light)": {
     "boxEdge": 1.0,
-    "centroid": 0.81
+    "centroid": 0.79
    },
    "hop 11 vs the rest after a clip, hop 23 from the atlas (light)": {
     "boxEdge": 3.5,
-    "centroid": 2.98
+    "centroid": 2.94
    },
    "wave 0 vs the rest after a clip, hop 23 from the atlas (light)": {
     "boxEdge": 2.0,
-    "centroid": 0.84
+    "centroid": 0.85
    },
    "wave 8 vs the rest after a clip, hop 23 from the atlas (light)": {
     "boxEdge": 2.5,
-    "centroid": 0.83
+    "centroid": 0.82
    },
    "wave 14 vs the rest after a clip, hop 23 from the atlas (light)": {
     "boxEdge": 2.0,
-    "centroid": 0.85
+    "centroid": 0.87
    },
    "walk 0 vs stand (dark)": {
     "boxEdge": 1.0,
-    "centroid": 0.81
+    "centroid": 0.82
    },
    "walk 12 vs stand (dark)": {
     "boxEdge": 1.0,
@@ -2439,7 +2450,7 @@
    },
    "hop 0 vs stand (dark)": {
     "boxEdge": 1.0,
-    "centroid": 0.2
+    "centroid": 0.19
    },
    "hop 11 vs stand (dark)": {
     "boxEdge": 3.5,
@@ -2451,7 +2462,7 @@
    },
    "wave 0 vs stand (dark)": {
     "boxEdge": 1.5,
-    "centroid": 0.86
+    "centroid": 0.87
    },
    "wave 8 vs stand (dark)": {
     "boxEdge": 2.0,
@@ -2467,7 +2478,7 @@
    },
    "walk 0 vs the rest after a clip, hop 23 from the atlas (dark)": {
     "boxEdge": 1.0,
-    "centroid": 0.41
+    "centroid": 0.4
    },
    "walk 12 vs the rest after a clip, hop 23 from the atlas (dark)": {
     "boxEdge": 1.0,
@@ -2475,7 +2486,7 @@
    },
    "hop 0 vs the rest after a clip, hop 23 from the atlas (dark)": {
     "boxEdge": 1.0,
-    "centroid": 0.8
+    "centroid": 0.81
    },
    "hop 11 vs the rest after a clip, hop 23 from the atlas (dark)": {
     "boxEdge": 3.5,
@@ -2483,7 +2494,7 @@
    },
    "wave 0 vs the rest after a clip, hop 23 from the atlas (dark)": {
     "boxEdge": 2.0,
-    "centroid": 0.86
+    "centroid": 0.87
    },
    "wave 8 vs the rest after a clip, hop 23 from the atlas (dark)": {
     "boxEdge": 2.5,
@@ -2504,7 +2515,7 @@
     ],
     "centroidX": [
      11.96,
-     15.65
+     15.66
     ],
     "centroidY": [
      14.3,
@@ -2512,7 +2523,7 @@
     ],
     "worstVsIdle": {
      "boxEdge": 4.5,
-     "centroid": 3.69
+     "centroid": 3.7
     }
    },
    "after: spread over the seven resting drawings (light)": {
@@ -2525,12 +2536,12 @@
      16.5
     ],
     "centroidX": [
-     13.1,
-     13.46
+     13.12,
+     13.45
     ],
     "centroidY": [
      17.12,
-     17.83
+     17.82
     ],
     "worstVsIdle": {
      "boxEdge": 2.5,
@@ -2574,11 +2585,11 @@
     ],
     "centroidY": [
      17.14,
-     17.81
+     17.79
     ],
     "worstVsIdle": {
      "boxEdge": 2.5,
-     "centroid": 0.49
+     "centroid": 0.47
     }
    }
   }
@@ -2831,12 +2842,12 @@
     "changedPixels": 176,
     "changedBeyondRasterNoise": 116,
     "of": 1296,
-    "maxChannelDiff": 197,
+    "maxChannelDiff": 199,
     "changedOffTheRim": 176,
     "changedOnTheRim": 0,
     "maxOnTheRim": 0,
     "boxEdgeCss": 1.0,
-    "centroidCss": 0.337
+    "centroidCss": 0.336
    },
    {
     "dpr": 1,
@@ -2846,72 +2857,72 @@
     "changedPixels": 176,
     "changedBeyondRasterNoise": 116,
     "of": 1296,
-    "maxChannelDiff": 197,
+    "maxChannelDiff": 199,
     "changedOffTheRim": 176,
     "changedOnTheRim": 0,
     "maxOnTheRim": 0,
     "boxEdgeCss": 1.0,
-    "centroidCss": 0.337
+    "centroidCss": 0.336
    },
    {
     "dpr": 2,
     "theme": "light",
     "from": "hop21: hop 21 (atlas)",
     "to": "hop22: hop 22 (atlas)",
-    "changedPixels": 719,
-    "changedBeyondRasterNoise": 433,
+    "changedPixels": 717,
+    "changedBeyondRasterNoise": 432,
     "of": 5184,
-    "maxChannelDiff": 196,
-    "changedOffTheRim": 719,
+    "maxChannelDiff": 199,
+    "changedOffTheRim": 717,
     "changedOnTheRim": 0,
     "maxOnTheRim": 0,
     "boxEdgeCss": 0.5,
-    "centroidCss": 0.446
+    "centroidCss": 0.45
    },
    {
     "dpr": 2,
     "theme": "dark",
     "from": "hop21: hop 21 (atlas)",
     "to": "hop22: hop 22 (atlas)",
-    "changedPixels": 719,
-    "changedBeyondRasterNoise": 433,
+    "changedPixels": 717,
+    "changedBeyondRasterNoise": 432,
     "of": 5184,
-    "maxChannelDiff": 196,
-    "changedOffTheRim": 719,
+    "maxChannelDiff": 199,
+    "changedOffTheRim": 717,
     "changedOnTheRim": 0,
     "maxOnTheRim": 0,
     "boxEdgeCss": 0.5,
-    "centroidCss": 0.446
+    "centroidCss": 0.45
    },
    {
     "dpr": 4,
     "theme": "light",
     "from": "hop21: hop 21 (atlas)",
     "to": "hop22: hop 22 (atlas)",
-    "changedPixels": 2857,
-    "changedBeyondRasterNoise": 1764,
+    "changedPixels": 2854,
+    "changedBeyondRasterNoise": 1771,
     "of": 20736,
-    "maxChannelDiff": 196,
-    "changedOffTheRim": 2857,
+    "maxChannelDiff": 198,
+    "changedOffTheRim": 2854,
     "changedOnTheRim": 0,
     "maxOnTheRim": 0,
     "boxEdgeCss": 0.5,
-    "centroidCss": 0.407
+    "centroidCss": 0.41
    },
    {
     "dpr": 4,
     "theme": "dark",
     "from": "hop21: hop 21 (atlas)",
     "to": "hop22: hop 22 (atlas)",
-    "changedPixels": 2857,
-    "changedBeyondRasterNoise": 1764,
+    "changedPixels": 2854,
+    "changedBeyondRasterNoise": 1771,
     "of": 20736,
-    "maxChannelDiff": 196,
-    "changedOffTheRim": 2857,
+    "maxChannelDiff": 198,
+    "changedOffTheRim": 2854,
     "changedOnTheRim": 0,
     "maxOnTheRim": 0,
     "boxEdgeCss": 0.5,
-    "centroidCss": 0.407
+    "centroidCss": 0.41
    }
   ],
   "stillVsAtlas": [
@@ -2923,12 +2934,12 @@
     "changedPixels": 176,
     "changedBeyondRasterNoise": 115,
     "of": 1296,
-    "maxChannelDiff": 175,
+    "maxChannelDiff": 177,
     "changedOffTheRim": 176,
     "changedOnTheRim": 0,
     "maxOnTheRim": 0,
     "boxEdgeCss": 1.0,
-    "centroidCss": 0.477
+    "centroidCss": 0.478
    },
    {
     "dpr": 1,
@@ -2938,23 +2949,23 @@
     "changedPixels": 176,
     "changedBeyondRasterNoise": 115,
     "of": 1296,
-    "maxChannelDiff": 175,
+    "maxChannelDiff": 177,
     "changedOffTheRim": 176,
     "changedOnTheRim": 0,
     "maxOnTheRim": 0,
     "boxEdgeCss": 1.0,
-    "centroidCss": 0.477
+    "centroidCss": 0.478
    },
    {
     "dpr": 2,
     "theme": "light",
     "from": "firstRest: stand 23 (atlas)",
     "to": "firstRest/still: stand 23 (still)",
-    "changedPixels": 657,
+    "changedPixels": 654,
     "changedBeyondRasterNoise": 395,
     "of": 5184,
-    "maxChannelDiff": 197,
-    "changedOffTheRim": 657,
+    "maxChannelDiff": 200,
+    "changedOffTheRim": 654,
     "changedOnTheRim": 0,
     "maxOnTheRim": 0,
     "boxEdgeCss": 1.0,
@@ -2965,11 +2976,11 @@
     "theme": "dark",
     "from": "firstRest: stand 23 (atlas)",
     "to": "firstRest/still: stand 23 (still)",
-    "changedPixels": 657,
+    "changedPixels": 654,
     "changedBeyondRasterNoise": 395,
     "of": 5184,
-    "maxChannelDiff": 197,
-    "changedOffTheRim": 657,
+    "maxChannelDiff": 200,
+    "changedOffTheRim": 654,
     "changedOnTheRim": 0,
     "maxOnTheRim": 0,
     "boxEdgeCss": 1.0,
@@ -2980,30 +2991,30 @@
     "theme": "light",
     "from": "firstRest: stand 23 (atlas)",
     "to": "firstRest/still: stand 23 (still)",
-    "changedPixels": 2643,
-    "changedBeyondRasterNoise": 1562,
+    "changedPixels": 2640,
+    "changedBeyondRasterNoise": 1568,
     "of": 20736,
-    "maxChannelDiff": 212,
-    "changedOffTheRim": 2643,
+    "maxChannelDiff": 215,
+    "changedOffTheRim": 2640,
     "changedOnTheRim": 0,
     "maxOnTheRim": 0,
     "boxEdgeCss": 1.0,
-    "centroidCss": 0.463
+    "centroidCss": 0.464
    },
    {
     "dpr": 4,
     "theme": "dark",
     "from": "firstRest: stand 23 (atlas)",
     "to": "firstRest/still: stand 23 (still)",
-    "changedPixels": 2643,
-    "changedBeyondRasterNoise": 1562,
+    "changedPixels": 2640,
+    "changedBeyondRasterNoise": 1568,
     "of": 20736,
-    "maxChannelDiff": 212,
-    "changedOffTheRim": 2643,
+    "maxChannelDiff": 215,
+    "changedOffTheRim": 2640,
     "changedOnTheRim": 0,
     "maxOnTheRim": 0,
     "boxEdgeCss": 1.0,
-    "centroidCss": 0.463
+    "centroidCss": 0.464
    }
   ],
   "summary": {
@@ -3042,15 +3053,15 @@
    ],
    "controlChangedPixels": [
     116,
-    1764
+    1771
    ],
    "stillVsAtlasChangedPixels": [
     115,
-    1562
+    1568
    ],
    "stillVsAtlasCentroidCss": [
-    0.463,
-    0.477
+    0.464,
+    0.478
    ],
    "stillVsAtlasBoxEdgeCss": 1.0,
    "stillVsAtlasSweepMax": {
@@ -3064,8 +3075,8 @@
    "1": {
     "offsets": 64,
     "centroid": [
-     0.042,
-     0.606
+     0.041,
+     0.605
     ],
     "boxEdge": [
      1.0,
@@ -3087,7 +3098,7 @@
     "offsets": 64,
     "centroid": [
      0.0,
-     0.578
+     0.579
     ],
     "boxEdge": [
      0.0,
@@ -3102,15 +3113,15 @@
    "walk0": [
     {
      "boxEdge": 1.0,
-     "centroid": 0.29,
-     "rise": -0.29,
+     "centroid": 0.31,
+     "rise": -0.31,
      "dpr": 1,
      "theme": "light"
     },
     {
      "boxEdge": 1.0,
-     "centroid": 0.29,
-     "rise": -0.29,
+     "centroid": 0.31,
+     "rise": -0.31,
      "dpr": 1,
      "theme": "dark"
     },
@@ -3174,15 +3185,15 @@
     },
     {
      "boxEdge": 0.75,
-     "centroid": 0.46,
-     "rise": -0.46,
+     "centroid": 0.47,
+     "rise": -0.47,
      "dpr": 4,
      "theme": "light"
     },
     {
      "boxEdge": 0.75,
-     "centroid": 0.46,
-     "rise": -0.46,
+     "centroid": 0.47,
+     "rise": -0.47,
      "dpr": 4,
      "theme": "dark"
     }
@@ -3234,15 +3245,15 @@
    "walk3": [
     {
      "boxEdge": 1.0,
-     "centroid": 0.26,
-     "rise": -0.26,
+     "centroid": 0.27,
+     "rise": -0.27,
      "dpr": 1,
      "theme": "light"
     },
     {
      "boxEdge": 1.0,
-     "centroid": 0.26,
-     "rise": -0.26,
+     "centroid": 0.27,
+     "rise": -0.27,
      "dpr": 1,
      "theme": "dark"
     },
@@ -3278,15 +3289,15 @@
    "walk4": [
     {
      "boxEdge": 1.0,
-     "centroid": 0.28,
-     "rise": -0.28,
+     "centroid": 0.27,
+     "rise": -0.27,
      "dpr": 1,
      "theme": "light"
     },
     {
      "boxEdge": 1.0,
-     "centroid": 0.28,
-     "rise": -0.28,
+     "centroid": 0.27,
+     "rise": -0.27,
      "dpr": 1,
      "theme": "dark"
     },
@@ -3306,15 +3317,15 @@
     },
     {
      "boxEdge": 1.0,
-     "centroid": 0.35,
-     "rise": -0.35,
+     "centroid": 0.36,
+     "rise": -0.36,
      "dpr": 4,
      "theme": "light"
     },
     {
      "boxEdge": 1.0,
-     "centroid": 0.35,
-     "rise": -0.35,
+     "centroid": 0.36,
+     "rise": -0.36,
      "dpr": 4,
      "theme": "dark"
     }
@@ -3322,15 +3333,15 @@
    "walk5": [
     {
      "boxEdge": 1.0,
-     "centroid": 0.31,
-     "rise": -0.31,
+     "centroid": 0.3,
+     "rise": -0.3,
      "dpr": 1,
      "theme": "light"
     },
     {
      "boxEdge": 1.0,
-     "centroid": 0.31,
-     "rise": -0.31,
+     "centroid": 0.3,
+     "rise": -0.3,
      "dpr": 1,
      "theme": "dark"
     },
@@ -3350,15 +3361,15 @@
     },
     {
      "boxEdge": 0.75,
-     "centroid": 0.33,
-     "rise": -0.33,
+     "centroid": 0.34,
+     "rise": -0.34,
      "dpr": 4,
      "theme": "light"
     },
     {
      "boxEdge": 0.75,
-     "centroid": 0.33,
-     "rise": -0.33,
+     "centroid": 0.34,
+     "rise": -0.34,
      "dpr": 4,
      "theme": "dark"
     }
@@ -3366,15 +3377,15 @@
    "walk6": [
     {
      "boxEdge": 1.0,
-     "centroid": 0.08,
-     "rise": -0.08,
+     "centroid": 0.09,
+     "rise": -0.09,
      "dpr": 1,
      "theme": "light"
     },
     {
      "boxEdge": 1.0,
-     "centroid": 0.08,
-     "rise": -0.08,
+     "centroid": 0.09,
+     "rise": -0.09,
      "dpr": 1,
      "theme": "dark"
     },
@@ -3600,15 +3611,15 @@
     },
     {
      "boxEdge": 1.0,
-     "centroid": 0.31,
-     "rise": -0.31,
+     "centroid": 0.3,
+     "rise": -0.3,
      "dpr": 2,
      "theme": "light"
     },
     {
      "boxEdge": 1.0,
-     "centroid": 0.31,
-     "rise": -0.31,
+     "centroid": 0.3,
+     "rise": -0.3,
      "dpr": 2,
      "theme": "dark"
     },
@@ -3687,14 +3698,14 @@
      "theme": "dark"
     },
     {
-     "boxEdge": 1.5,
+     "boxEdge": 1.0,
      "centroid": 0.46,
      "rise": -0.46,
      "dpr": 2,
      "theme": "light"
     },
     {
-     "boxEdge": 1.5,
+     "boxEdge": 1.0,
      "centroid": 0.46,
      "rise": -0.46,
      "dpr": 2,
@@ -3718,15 +3729,15 @@
    "walk14": [
     {
      "boxEdge": 1.0,
-     "centroid": 0.44,
-     "rise": -0.44,
+     "centroid": 0.45,
+     "rise": -0.45,
      "dpr": 1,
      "theme": "light"
     },
     {
      "boxEdge": 1.0,
-     "centroid": 0.44,
-     "rise": -0.44,
+     "centroid": 0.45,
+     "rise": -0.45,
      "dpr": 1,
      "theme": "dark"
     },
@@ -3790,15 +3801,15 @@
     },
     {
      "boxEdge": 1.25,
-     "centroid": 0.38,
-     "rise": -0.38,
+     "centroid": 0.39,
+     "rise": -0.39,
      "dpr": 4,
      "theme": "light"
     },
     {
      "boxEdge": 1.25,
-     "centroid": 0.38,
-     "rise": -0.38,
+     "centroid": 0.39,
+     "rise": -0.39,
      "dpr": 4,
      "theme": "dark"
     }
@@ -3983,14 +3994,14 @@
     {
      "boxEdge": 1.0,
      "centroid": 0.17,
-     "rise": -0.11,
+     "rise": -0.12,
      "dpr": 1,
      "theme": "light"
     },
     {
      "boxEdge": 1.0,
      "centroid": 0.17,
-     "rise": -0.11,
+     "rise": -0.12,
      "dpr": 1,
      "theme": "dark"
     },
@@ -4026,15 +4037,15 @@
    "walk21": [
     {
      "boxEdge": 1.0,
-     "centroid": 0.07,
-     "rise": -0.01,
+     "centroid": 0.06,
+     "rise": 0.0,
      "dpr": 1,
      "theme": "light"
     },
     {
      "boxEdge": 1.0,
-     "centroid": 0.07,
-     "rise": -0.01,
+     "centroid": 0.06,
+     "rise": 0.0,
      "dpr": 1,
      "theme": "dark"
     },
@@ -4070,15 +4081,15 @@
    "walk22": [
     {
      "boxEdge": 1.0,
-     "centroid": 0.15,
-     "rise": -0.15,
+     "centroid": 0.16,
+     "rise": -0.16,
      "dpr": 1,
      "theme": "light"
     },
     {
      "boxEdge": 1.0,
-     "centroid": 0.15,
-     "rise": -0.15,
+     "centroid": 0.16,
+     "rise": -0.16,
      "dpr": 1,
      "theme": "dark"
     },
@@ -4098,15 +4109,15 @@
     },
     {
      "boxEdge": 0.75,
-     "centroid": 0.23,
-     "rise": -0.23,
+     "centroid": 0.24,
+     "rise": -0.24,
      "dpr": 4,
      "theme": "light"
     },
     {
      "boxEdge": 0.75,
-     "centroid": 0.23,
-     "rise": -0.23,
+     "centroid": 0.24,
+     "rise": -0.24,
      "dpr": 4,
      "theme": "dark"
     }
@@ -4159,41 +4170,41 @@
     {
      "boxEdge": 1.0,
      "centroid": 0.27,
-     "rise": 0.11,
+     "rise": 0.12,
      "dpr": 1,
      "theme": "light"
     },
     {
      "boxEdge": 1.0,
      "centroid": 0.27,
-     "rise": 0.11,
+     "rise": 0.12,
      "dpr": 1,
      "theme": "dark"
     },
     {
      "boxEdge": 0.5,
      "centroid": 0.28,
-     "rise": -0.03,
+     "rise": -0.04,
      "dpr": 2,
      "theme": "light"
     },
     {
      "boxEdge": 0.5,
      "centroid": 0.28,
-     "rise": -0.03,
+     "rise": -0.04,
      "dpr": 2,
      "theme": "dark"
     },
     {
      "boxEdge": 0.5,
-     "centroid": 0.27,
+     "centroid": 0.28,
      "rise": -0.02,
      "dpr": 4,
      "theme": "light"
     },
     {
      "boxEdge": 0.5,
-     "centroid": 0.27,
+     "centroid": 0.28,
      "rise": -0.02,
      "dpr": 4,
      "theme": "dark"
@@ -4246,15 +4257,15 @@
    "hop2": [
     {
      "boxEdge": 1.0,
-     "centroid": 0.22,
-     "rise": -0.07,
+     "centroid": 0.21,
+     "rise": -0.06,
      "dpr": 1,
      "theme": "light"
     },
     {
      "boxEdge": 1.0,
-     "centroid": 0.22,
-     "rise": -0.07,
+     "centroid": 0.21,
+     "rise": -0.06,
      "dpr": 1,
      "theme": "dark"
     },
@@ -4275,14 +4286,14 @@
     {
      "boxEdge": 0.5,
      "centroid": 0.24,
-     "rise": -0.09,
+     "rise": -0.1,
      "dpr": 4,
      "theme": "light"
     },
     {
      "boxEdge": 0.5,
      "centroid": 0.24,
-     "rise": -0.09,
+     "rise": -0.1,
      "dpr": 4,
      "theme": "dark"
     }
@@ -4290,15 +4301,15 @@
    "hop3": [
     {
      "boxEdge": 1.0,
-     "centroid": 0.15,
-     "rise": -0.14,
+     "centroid": 0.16,
+     "rise": -0.15,
      "dpr": 1,
      "theme": "light"
     },
     {
      "boxEdge": 1.0,
-     "centroid": 0.15,
-     "rise": -0.14,
+     "centroid": 0.16,
+     "rise": -0.15,
      "dpr": 1,
      "theme": "dark"
     },
@@ -4318,15 +4329,15 @@
     },
     {
      "boxEdge": 0.75,
-     "centroid": 0.25,
-     "rise": -0.25,
+     "centroid": 0.26,
+     "rise": -0.26,
      "dpr": 4,
      "theme": "light"
     },
     {
      "boxEdge": 0.75,
-     "centroid": 0.25,
-     "rise": -0.25,
+     "centroid": 0.26,
+     "rise": -0.26,
      "dpr": 4,
      "theme": "dark"
     }
@@ -4334,15 +4345,15 @@
    "hop4": [
     {
      "boxEdge": 1.0,
-     "centroid": 0.49,
-     "rise": -0.49,
+     "centroid": 0.48,
+     "rise": -0.48,
      "dpr": 1,
      "theme": "light"
     },
     {
      "boxEdge": 1.0,
-     "centroid": 0.49,
-     "rise": -0.49,
+     "centroid": 0.48,
+     "rise": -0.48,
      "dpr": 1,
      "theme": "dark"
     },
@@ -4582,15 +4593,15 @@
     },
     {
      "boxEdge": 2.0,
-     "centroid": 1.7,
-     "rise": 1.7,
+     "centroid": 1.69,
+     "rise": 1.69,
      "dpr": 4,
      "theme": "light"
     },
     {
      "boxEdge": 2.0,
-     "centroid": 1.7,
-     "rise": 1.7,
+     "centroid": 1.69,
+     "rise": 1.69,
      "dpr": 4,
      "theme": "dark"
     }
@@ -4626,15 +4637,15 @@
     },
     {
      "boxEdge": 3.25,
-     "centroid": 2.48,
-     "rise": 2.48,
+     "centroid": 2.47,
+     "rise": 2.47,
      "dpr": 4,
      "theme": "light"
     },
     {
      "boxEdge": 3.25,
-     "centroid": 2.48,
-     "rise": 2.48,
+     "centroid": 2.47,
+     "rise": 2.47,
      "dpr": 4,
      "theme": "dark"
     }
@@ -4686,15 +4697,15 @@
    "hop12": [
     {
      "boxEdge": 3.0,
-     "centroid": 3.17,
-     "rise": 3.17,
+     "centroid": 3.18,
+     "rise": 3.18,
      "dpr": 1,
      "theme": "light"
     },
     {
      "boxEdge": 3.0,
-     "centroid": 3.17,
-     "rise": 3.17,
+     "centroid": 3.18,
+     "rise": 3.18,
      "dpr": 1,
      "theme": "dark"
     },
@@ -4934,15 +4945,15 @@
     },
     {
      "boxEdge": 1.25,
-     "centroid": 1.12,
-     "rise": 1.12,
+     "centroid": 1.11,
+     "rise": 1.11,
      "dpr": 4,
      "theme": "light"
     },
     {
      "boxEdge": 1.25,
-     "centroid": 1.12,
-     "rise": 1.12,
+     "centroid": 1.11,
+     "rise": 1.11,
      "dpr": 4,
      "theme": "dark"
     }
@@ -5082,43 +5093,43 @@
    "hop21": [
     {
      "boxEdge": 1.0,
-     "centroid": 0.37,
-     "rise": -0.37,
+     "centroid": 0.36,
+     "rise": -0.36,
      "dpr": 1,
      "theme": "light"
     },
     {
      "boxEdge": 1.0,
-     "centroid": 0.37,
-     "rise": -0.37,
+     "centroid": 0.36,
+     "rise": -0.36,
      "dpr": 1,
      "theme": "dark"
     },
     {
      "boxEdge": 1.0,
-     "centroid": 0.49,
-     "rise": -0.49,
+     "centroid": 0.5,
+     "rise": -0.5,
      "dpr": 2,
      "theme": "light"
     },
     {
      "boxEdge": 1.0,
-     "centroid": 0.49,
-     "rise": -0.49,
+     "centroid": 0.5,
+     "rise": -0.5,
      "dpr": 2,
      "theme": "dark"
     },
     {
      "boxEdge": 0.5,
-     "centroid": 0.45,
-     "rise": -0.45,
+     "centroid": 0.46,
+     "rise": -0.46,
      "dpr": 4,
      "theme": "light"
     },
     {
      "boxEdge": 0.5,
-     "centroid": 0.45,
-     "rise": -0.45,
+     "centroid": 0.46,
+     "rise": -0.46,
      "dpr": 4,
      "theme": "dark"
     }
@@ -5228,15 +5239,15 @@
     },
     {
      "boxEdge": 2.0,
-     "centroid": 0.78,
-     "rise": -0.78,
+     "centroid": 0.79,
+     "rise": -0.79,
      "dpr": 2,
      "theme": "light"
     },
     {
      "boxEdge": 2.0,
-     "centroid": 0.78,
-     "rise": -0.78,
+     "centroid": 0.79,
+     "rise": -0.79,
      "dpr": 2,
      "theme": "dark"
     },
@@ -5272,15 +5283,15 @@
     },
     {
      "boxEdge": 2.0,
-     "centroid": 0.59,
-     "rise": -0.59,
+     "centroid": 0.58,
+     "rise": -0.58,
      "dpr": 2,
      "theme": "light"
     },
     {
      "boxEdge": 2.0,
-     "centroid": 0.59,
-     "rise": -0.59,
+     "centroid": 0.58,
+     "rise": -0.58,
      "dpr": 2,
      "theme": "dark"
     },
@@ -5330,15 +5341,15 @@
     },
     {
      "boxEdge": 2.25,
-     "centroid": 0.55,
-     "rise": -0.55,
+     "centroid": 0.56,
+     "rise": -0.56,
      "dpr": 4,
      "theme": "light"
     },
     {
      "boxEdge": 2.25,
-     "centroid": 0.55,
-     "rise": -0.55,
+     "centroid": 0.56,
+     "rise": -0.56,
      "dpr": 4,
      "theme": "dark"
     }
@@ -5374,15 +5385,15 @@
     },
     {
      "boxEdge": 1.75,
-     "centroid": 0.6,
-     "rise": -0.6,
+     "centroid": 0.61,
+     "rise": -0.61,
      "dpr": 4,
      "theme": "light"
     },
     {
      "boxEdge": 1.75,
-     "centroid": 0.6,
-     "rise": -0.6,
+     "centroid": 0.61,
+     "rise": -0.61,
      "dpr": 4,
      "theme": "dark"
     }
@@ -5478,15 +5489,15 @@
    "wave6": [
     {
      "boxEdge": 3.0,
-     "centroid": 0.44,
-     "rise": -0.44,
+     "centroid": 0.43,
+     "rise": -0.43,
      "dpr": 1,
      "theme": "light"
     },
     {
      "boxEdge": 3.0,
-     "centroid": 0.44,
-     "rise": -0.44,
+     "centroid": 0.43,
+     "rise": -0.43,
      "dpr": 1,
      "theme": "dark"
     },
@@ -5550,15 +5561,15 @@
     },
     {
      "boxEdge": 2.0,
-     "centroid": 0.21,
-     "rise": -0.21,
+     "centroid": 0.22,
+     "rise": -0.22,
      "dpr": 4,
      "theme": "light"
     },
     {
      "boxEdge": 2.0,
-     "centroid": 0.21,
-     "rise": -0.21,
+     "centroid": 0.22,
+     "rise": -0.22,
      "dpr": 4,
      "theme": "dark"
     }
@@ -5654,15 +5665,15 @@
    "wave10": [
     {
      "boxEdge": 3.0,
-     "centroid": 0.62,
-     "rise": -0.62,
+     "centroid": 0.63,
+     "rise": -0.63,
      "dpr": 1,
      "theme": "light"
     },
     {
      "boxEdge": 3.0,
-     "centroid": 0.62,
-     "rise": -0.62,
+     "centroid": 0.63,
+     "rise": -0.63,
      "dpr": 1,
      "theme": "dark"
     },
@@ -5726,15 +5737,15 @@
     },
     {
      "boxEdge": 2.0,
-     "centroid": 0.74,
-     "rise": -0.74,
+     "centroid": 0.75,
+     "rise": -0.75,
      "dpr": 4,
      "theme": "light"
     },
     {
      "boxEdge": 2.0,
-     "centroid": 0.74,
-     "rise": -0.74,
+     "centroid": 0.75,
+     "rise": -0.75,
      "dpr": 4,
      "theme": "dark"
     }
@@ -5800,29 +5811,29 @@
     },
     {
      "boxEdge": 2.0,
-     "centroid": 0.71,
-     "rise": -0.71,
+     "centroid": 0.72,
+     "rise": -0.72,
      "dpr": 2,
      "theme": "light"
     },
     {
      "boxEdge": 2.0,
-     "centroid": 0.71,
-     "rise": -0.71,
+     "centroid": 0.72,
+     "rise": -0.72,
      "dpr": 2,
      "theme": "dark"
     },
     {
      "boxEdge": 2.0,
-     "centroid": 0.69,
-     "rise": -0.69,
+     "centroid": 0.7,
+     "rise": -0.7,
      "dpr": 4,
      "theme": "light"
     },
     {
      "boxEdge": 2.0,
-     "centroid": 0.69,
-     "rise": -0.69,
+     "centroid": 0.7,
+     "rise": -0.7,
      "dpr": 4,
      "theme": "dark"
     }
@@ -5830,15 +5841,15 @@
    "wave14": [
     {
      "boxEdge": 2.0,
-     "centroid": 0.39,
-     "rise": -0.39,
+     "centroid": 0.38,
+     "rise": -0.38,
      "dpr": 1,
      "theme": "light"
     },
     {
      "boxEdge": 2.0,
-     "centroid": 0.39,
-     "rise": -0.39,
+     "centroid": 0.38,
+     "rise": -0.38,
      "dpr": 1,
      "theme": "dark"
     },
@@ -5976,12 +5987,12 @@
    },
    "wave": {
     "boxEdge": 3.0,
-    "centroid": 0.78
+    "centroid": 0.79
    },
    "waveAll": {
     "drawings": 15,
     "boxEdge": 3.0,
-    "centroid": 0.78
+    "centroid": 0.79
    },
    "flightRise": [
     3.11,

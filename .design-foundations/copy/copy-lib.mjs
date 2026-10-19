@@ -1002,13 +1002,16 @@ export function reconcileText(c) {
 
 
 // ---------------------------------------------------------------------------------------------------------------
-// The lock amendments (check-copy.mjs § 8b, checks L7 and L8; lock-amendments.json). A pure function of the texts, so proofs.mjs can plant
-// defects in process: L7 and L8 read the base texts from git, which a throwaway copy does not have. Given DESIGN.md and JOURNEY.md as they were
-// at the amendment's base commit, the working texts and the recorded amendment, it returns what differs from the record:
+// The lock amendments (check-copy.mjs § 8b, checks L7 and L8; lock-amendments.json). Pure functions of the texts, so proofs.mjs can plant
+// defects in process: L7 and L8 read the base texts from git, which a throwaway copy does not have. Two kinds of record, and the chain:
+//   amendmentHits, the first kind (scoped to one section, `design.section`: the amendment of 2026-10-18 on the tutor avatar). Given DESIGN.md and
+//   JOURNEY.md at the amendment's base commit, the texts it led to and the record, it returns what differs from the record:
 //   DESIGN.md: every line before `## Companion`, and every line from `## Voice and tone` to the base's end, is the base's, byte for byte; inside
 //   `## Companion` the lines that left are exactly the recorded replaced lines and the lines that arrived exactly their replacements and the
 //   recorded insertions (as multisets of SHA-256, each as often as recorded); the file ends with the recorded `## Lock amendments`, line for line.
 //   JOURNEY.md: the working text is the base with exactly the recorded lines inserted after their anchor.
+//   patchHits, the second kind (`kind: "patch"`, for an amendment that edits lines in many sections): position-exact hunks (below).
+//   chainHits: every amendment in turn, each from its own base to the next one's, the newest to the working texts.
 // ---------------------------------------------------------------------------------------------------------------
 export const sha256hex = (t) => crypto.createHash("sha256").update(t, "utf8").digest("hex");
 // the blocks check-copy.mjs writes into DESIGN.md with --write: the Phase 5 Evidence table, the coverage table, the Phase 6 Evidence table
@@ -1021,10 +1024,12 @@ export function generatedBlocks(text) {
 const withBlocks = (text, blocks) => { let t = text; for (const [n, body] of Object.entries(blocks)) { const a = t.indexOf(`<!-- copy:${n}:start -->`), b = t.indexOf(`<!-- copy:${n}:end -->`); if (a >= 0 && b > a) t = t.slice(0, a) + body + t.slice(b); } return t; };
 // `written`: the blocks this run of the checker writes. They are the checker's output, not the amendment's: both texts are read with them in place, and a
 // block in the working text that is not what the checker writes (a hand edit, or a run without --write after the data changed) is reported.
-export function amendmentHits({ baseDesign, design, baseJourney, journey, amendment, written = {} }) {
+// `final`: the text is the working text (the newest link of the chain), so its blocks must be what this run writes; on an earlier link the text is the
+// next amendment's base commit, whose blocks were that commit's run: it is read with this run's blocks in place and nothing is asked of its own.
+export function amendmentHits({ baseDesign, design, baseJourney, journey, amendment, written = {}, final = true }) {
   const out = { design: [], journey: [] };
   const have = generatedBlocks(design);
-  for (const [n, body] of Object.entries(written)) if (n in have && have[n] !== body) out.design.push(`the generated block copy:${n} is not what the checker writes: run check-copy.mjs --write`);
+  if (final) for (const [n, body] of Object.entries(written)) if (n in have && have[n] !== body) out.design.push(`the generated block copy:${n} is not what the checker writes: run check-copy.mjs --write`);
   baseDesign = withBlocks(baseDesign, written); design = withBlocks(design, written);
   const tally = (arr) => arr.reduce((m, x) => m.set(x, (m.get(x) || 0) + 1), new Map());
   const minus = (a, b) => { const left = tally(b), r = []; for (const x of a) { const n = left.get(x) || 0; if (n) left.set(x, n - 1); else r.push(x); } return r; };
@@ -1054,5 +1059,162 @@ export function amendmentHits({ baseDesign, design, baseJourney, journey, amendm
     jw = [...jw.slice(0, k + 1), ...jw.slice(k + 1 + ins.lines.length)];
   }
   if (!out.journey.length && jw.join("\n") !== baseJourney) out.journey.push("a line other than the recorded insertion differs from the base");
+  return out;
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// The second kind, a patch (`design.kind: "patch"`, `journey.kind: "patch"`): an amendment that edits lines in many sections (the re-lock of the visual
+// layer touches the status line, the colour tokens, the design system and more) is recorded position-exact, as the hunks of a line diff from its base.
+// record-amendment.mjs writes it from the base and the working tree (patchRecord), so it is never typed; patchHits holds a text to it. Before a position
+// is taken, each block the checker writes (WRITTEN_BLOCKS, from its start marker line through its end marker line; the record names the ones it
+// collapsed) becomes one marker line in both texts, so a rewritten block of any length never shifts a recorded position. Then the target must be the
+// base with exactly the recorded hunks applied, compared line by line by SHA-256. A hunk is where it starts in the collapsed base (`at`, 1-based: its
+// first removed line, or the line its added lines go before), the SHA-256 of the lines it removes and of the lines it adds, and `starts`, the first 48
+// characters of its first line that is not blank (removed lines first), for a reader. A report names the target's line as a reader sees it (the
+// blocks not collapsed) and the hunk it concerns. An empty list of hunks means the file is unchanged.
+// ---------------------------------------------------------------------------------------------------------------
+// the text's lines with each named block collapsed to one marker line; at[i] is the line (0-based) of the text that collapsed line i stands for
+export function collapseBlocks(text, names = []) {
+  const src = text.split("\n"), lines = [], at = [];
+  for (let i = 0; i < src.length; i++) {
+    const m = /^<!-- copy:([A-Za-z0-9-]+):start -->$/.exec(src[i]);
+    const end = m && names.includes(m[1]) ? src.indexOf(`<!-- copy:${m[1]}:end -->`, i + 1) : -1;
+    lines.push(end > i ? `<!-- copy:${m[1]} (a block the checker writes, collapsed) -->` : src[i]); at.push(i);
+    if (end > i) i = end;
+  }
+  return { lines, at, count: src.length };
+}
+// A deterministic line diff: the common head and tail are trimmed, then Myers' greedy O(ND) search finds a shortest edit script (an insertion is tried
+// before a deletion on a tie, so the same texts give the same hunks). Returns the hunks that turn a into b, in order, each { a, b, removed, added }: where
+// it starts in a and in b (0-based) and the elements it takes out and puts in; elements are compared with ===. Past maxD edits it gives up (null).
+export function diffLines(a, b, maxD = Infinity) {
+  let pre = 0;
+  while (pre < a.length && pre < b.length && a[pre] === b[pre]) pre++;
+  let suf = 0;
+  while (suf < a.length - pre && suf < b.length - pre && a[a.length - 1 - suf] === b[b.length - 1 - suf]) suf++;
+  const A = a.slice(pre, a.length - suf), B = b.slice(pre, b.length - suf), N = A.length, M = B.length;
+  // trace[d][k + d]: the furthest x on diagonal k (x - y) after d edits
+  const trace = [];
+  for (let d = 0, done = false; !done; d++) {
+    if (d > maxD) return null;
+    const prev = trace[d - 1], v = new Int32Array(2 * d + 1);
+    for (let k = -d; k <= d; k += 2) {
+      let x = d === 0 ? 0 : k === -d || (k !== d && prev[k - 1 + d - 1] < prev[k + 1 + d - 1]) ? prev[k + 1 + d - 1] : prev[k - 1 + d - 1] + 1;
+      let y = x - k;
+      while (x < N && y < M && A[x] === B[y]) { x++; y++; }
+      v[k + d] = x;
+      if (x >= N && y >= M) { done = true; break; }
+    }
+    trace.push(v);
+  }
+  // walk back from (N, M): each round undoes the snake after its edit, then the edit (0 an equal pair, 1 a deletion, 2 an insertion)
+  const ops = [];
+  let x = N, y = M;
+  for (let d = trace.length - 1; d > 0; d--) {
+    const prev = trace[d - 1], k = x - y;
+    const down = k === -d || (k !== d && prev[k - 1 + d - 1] < prev[k + 1 + d - 1]);
+    const pk = down ? k + 1 : k - 1, px = prev[pk + d - 1], py = px - pk;
+    while (x > (down ? px : px + 1)) { ops.push(0); x--; y--; }
+    ops.push(down ? 2 : 1);
+    x = px; y = py;
+  }
+  while (x > 0) { ops.push(0); x--; y--; }
+  const hunks = [];
+  let i = 0, j = 0, h = null;
+  for (const op of ops.reverse()) {
+    if (op === 0) { h = null; i++; j++; continue; }
+    if (!h) hunks.push((h = { a: pre + i, b: pre + j, removed: [], added: [] }));
+    if (op === 1) h.removed.push(A[i++]); else h.added.push(B[j++]);
+  }
+  return hunks;
+}
+const firstWords = (ls) => [...(ls.find((l) => l.trim() !== "") ?? "")].slice(0, 48).join("");
+// the record of one file (record-amendment.mjs writes it; proofs.mjs LOCK asks it for the record built by hand): the hunks that turn the base into the
+// target, positions taken with the named blocks collapsed in both
+export function patchRecord(base, target, blocks = []) {
+  const B = collapseBlocks(base, blocks), T = collapseBlocks(target, blocks);
+  const hunks = diffLines(B.lines.map(sha256hex), T.lines.map(sha256hex)).map((h) => ({
+    at: h.a + 1, starts: firstWords([...B.lines.slice(h.a, h.a + h.removed.length), ...T.lines.slice(h.b, h.b + h.added.length)]), removed: h.removed, added: h.added,
+  }));
+  return { kind: "patch", blocks: [...blocks], hunks };
+}
+// holds `target` to `base` with exactly the recorded hunks applied; `written` (the newest link only) are the blocks this run writes, which the target's own
+// blocks must equal. `names` names the two texts in the reports ("the base", "the working text").
+export function patchHits({ base, target, record, written = null, names = {} }) {
+  const baseName = names.base || "the base", targetName = names.target || "the working text";
+  if (!record || record.kind !== "patch" || !Array.isArray(record.hunks)) return ["the record is not a patch (kind, blocks, hunks)"];
+  const out = [], hunks = record.hunks, blocks = record.blocks || [];
+  for (const n of blocks) if (!WRITTEN_BLOCKS.includes(n)) out.push(`the record collapses copy:${n}, which is not a block the checker writes`);
+  if (written) { const have = generatedBlocks(target); for (const [n, body] of Object.entries(written)) if (n in have && have[n] !== body) out.push(`the generated block copy:${n} is not what the checker writes: run check-copy.mjs --write`); }
+  const use = blocks.filter((n) => WRITTEN_BLOCKS.includes(n));
+  const B = collapseBlocks(base, use), T = collapseBlocks(target, use), bh = B.lines.map(sha256hex), th = T.lines.map(sha256hex);
+  const bAt = (i) => (i < B.at.length ? `${baseName}'s line ${B.at[i] + 1}` : `${baseName}'s end`);
+  const tAt = (j) => (j < T.at.length ? `line ${T.at[j] + 1} of ${targetName}` : `the end of ${targetName}`);
+  // a hunk that only adds is placed after the base's line before it (the last line of a collapsed block is its end marker)
+  const place = (k) => ((k.removed || []).length || k.at < 2 ? `at ${bAt(k.at - 1)}` : `after ${baseName}'s line ${k.at - 1 < B.at.length ? B.at[k.at - 1] : B.count}`);
+  const hunk = (h) => `hunk ${h + 1} of ${hunks.length} (${place(hunks[h])}${hunks[h].starts ? `, "${hunks[h].starts}"` : ""})`;
+  // the base with the hunks applied: each line remembers where it comes from, a base line (`from`) or line `line` of hunk `hunk`
+  const exp = [], misfit = [];
+  let pos = 0;
+  for (let h = 0; h < hunks.length; h++) {
+    const k = hunks[h], s = k.at - 1, rm = k.removed || [], ad = k.added || [];
+    if (!Number.isInteger(s) || s < pos || s + rm.length > bh.length) return [...out, `hunk ${h + 1} of ${hunks.length} (at ${k.at}) overlaps the hunk before it or reaches past ${baseName}'s end: the hunks are not in order`];
+    for (; pos < s; pos++) exp.push({ hash: bh[pos], from: pos });
+    const off = rm.findIndex((x, i) => x !== bh[s + i]);
+    if (off >= 0) misfit.push(`${hunk(h)} does not fit ${baseName}: ${bAt(s + off)} is not the line the hunk removes (the record was made from another text)`);
+    ad.forEach((x, j) => exp.push({ hash: x, hunk: h, line: j }));
+    pos = s + rm.length;
+  }
+  for (; pos < bh.length; pos++) exp.push({ hash: bh[pos], from: pos });
+  out.push(...misfit.slice(0, 3), ...(misfit.length > 3 ? [`… and ${misfit.length - 3} more hunks do not fit ${baseName}`] : []));
+  if (exp.length === th.length && exp.every((e, i) => e.hash === th[i])) return out;
+  // where the target differs from it, in order: each place names the target's line and what the record has there
+  const places = diffLines(exp.map((e) => e.hash), th, 2000);
+  if (!places) {
+    const i = exp.findIndex((e, k) => e.hash !== th[k]);
+    return [...out, `${tAt(i < 0 ? exp.length : i)} is the first line that differs from ${baseName} with the recorded hunks applied (too many differences to list)`];
+  }
+  const MAX = 6, plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
+  for (const p of places.slice(0, MAX)) {
+    const want = exp.slice(p.a, p.a + p.removed.length), n = p.added.length;
+    const hs = [...new Set(want.filter((e) => e.hunk !== undefined).map((e) => e.hunk))], fromBase = want.filter((e) => e.from !== undefined);
+    if (!want.length) { out.push(`${tAt(p.b)}: ${plural(n, "line")} that the record does not have (no hunk adds ${n === 1 ? "it" : "them"} here)`); continue; }
+    const k0 = hunks[hs[0]];
+    if (hs.length === 1 && !fromBase.length && want.length === (k0.added || []).length && p.added.join() === (k0.removed || []).join()) {
+      out.push(`${tAt(p.b)}: ${hunk(hs[0])} is not applied: ${(k0.removed || []).length ? "the base's lines it replaces are still there" : `its ${want.length === 1 ? "line is" : `${want.length} lines are`} missing`}`);
+      continue;
+    }
+    const what = [];
+    if (fromBase.length) what.push(fromBase.length === 1 ? bAt(fromBase[0].from) : `${bAt(fromBase[0].from)} to ${B.at[fromBase[fromBase.length - 1].from] + 1}`);
+    for (const h of hs) {
+      const ls = want.filter((e) => e.hunk === h);
+      what.push(ls.length === (hunks[h].added || []).length ? `the ${ls.length === 1 ? "line" : `${ls.length} lines`} of ${hunk(h)}` : `${ls.length === 1 ? `line ${ls[0].line + 1}` : `lines ${ls[0].line + 1} to ${ls[ls.length - 1].line + 1}`} of ${hunk(h)}`);
+    }
+    const desc = what.join(" and ") + (hs.length ? "" : ", which no hunk changes");
+    out.push(n ? `${tAt(p.b)}: ${plural(n, "line")} in place of ${desc}` : `${tAt(p.b)}: ${desc} ${want.length === 1 ? "is" : "are"} missing`);
+  }
+  if (places.length > MAX) out.push(`… and ${places.length - MAX} more places where ${targetName} differs from the record`);
+  return out;
+}
+// The chain (check-copy.mjs L7 and L8): amendment i is held from the texts at its own base (texts[i]) to the texts at the next one's base (texts[i + 1]),
+// the newest to the working texts (the last entry of texts), each by its kind: a patch by patchHits, the first kind by amendmentHits. Only the newest
+// link is held to the blocks this run writes (`written`); an earlier one reads its texts with them in place (or collapsed) and asks nothing of the
+// commit's own blocks. A text git could not read is null. Every report opens with the amendment's id and its link.
+export function chainHits({ amendments, texts, written = {}, parts = ["design", "journey"] }) {
+  const out = { design: [], journey: [] }, FILE = { design: "DESIGN.md", journey: "JOURNEY.md" }, c7 = (x) => String(x).slice(0, 7);
+  amendments.forEach((am, i) => {
+    const last = i === amendments.length - 1, from = texts[i] || {}, to = texts[i + 1] || {}, next = last ? null : c7(amendments[i + 1].base);
+    const tag = `${am.id} (${c7(am.base)} to ${last ? "the working text" : next})`;
+    let first = null; // the first kind holds both files in one call
+    for (const part of parts) {
+      const rec = am[part], add = (hs) => { for (const h of hs) out[part].push(`${tag}: ${h}`); };
+      if (from[part] == null || to[part] == null) { add([`${FILE[part]} cannot be read from git at ${from[part] == null ? c7(am.base) : next}: is that commit in this clone?`]); continue; }
+      try {
+        if (rec && rec.kind === "patch") add(patchHits({ base: from[part], target: to[part], record: rec, written: last && part === "design" ? written : null, names: { base: "the base", target: last ? "the working text" : `the text at ${next}` } }));
+        else if (rec && rec.kind === undefined) { first ||= amendmentHits({ baseDesign: from.design ?? "", design: to.design ?? "", baseJourney: from.journey ?? "", journey: to.journey ?? "", amendment: am, written, final: last }); add(first[part]); }
+        else add([`its record of ${FILE[part]} is of no kind this checker reads (${rec ? `kind ${rec.kind}` : "none"})`]);
+      } catch (e) { add([`its record of ${FILE[part]} cannot be read (${e.message})`]); }
+    }
+  });
   return out;
 }

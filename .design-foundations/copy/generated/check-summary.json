@@ -458,20 +458,47 @@
    "added": 132,
    "removed": 0
   },
-  "amendment": {
-   "id": "2026-10-18-full-body-avatar",
-   "base": "14229be579ed26965fcd3f52174a2bda58c3945d",
-   "replaced": 27,
-   "inserted": 12,
-   "appended": 12,
-   "journeyInserted": 1,
-   "lockProofs": 11,
+  "amendments": [
+   {
+    "id": "2026-10-18-full-body-avatar",
+    "base": "14229be579ed26965fcd3f52174a2bda58c3945d",
+    "design": {
+     "kind": "section",
+     "replaced": 27,
+     "inserted": 12,
+     "appended": 12
+    },
+    "journey": {
+     "kind": "section",
+     "inserted": 1
+    }
+   },
+   {
+    "id": "2026-10-18-relock-visual-layer",
+    "base": "05a85e03f6d20e3c9ecf9f1ce8ec1523ec6e905e",
+    "design": {
+     "kind": "patch",
+     "hunks": 153,
+     "removed": 328,
+     "added": 435
+    },
+    "journey": {
+     "kind": "patch",
+     "hunks": 2,
+     "removed": 2,
+     "added": 2
+    }
+   }
+  ],
+  "lockProofs": {
+   "total": 26,
+   "controls": 5,
    "proved": true
   },
   "securityPhrases": {
    "skipped": false,
    "phrases": 63,
-   "files": 32
+   "files": 33
   },
   "coverage": {
    "rules": 18,
@@ -1184,9 +1211,9 @@
   },
   {
    "id": "L8",
-   "name": "JOURNEY.md: since the amendment's base, exactly the recorded insertion after the SR-6 Companion bullet, nothing else",
+   "name": "JOURNEY.md: since the first amendment's base, exactly the recorded lock amendments changed, each held from its own base to the next one's and the newest to the working text (the first kind: its lines inserted after their anchors; a patch: its hunks, line for line at their positions); nothing else",
    "ok": true,
-   "detail": "1 line inserted after the SR-6 Companion (Phase 4) bullet, none removed or changed; its 11 planted defects (proofs.mjs LOCK, 1 a control) behave as planted"
+   "detail": "2026-10-18-full-body-avatar (base 14229be): 1 line inserted after \"- **Companion (Phase 4):** (1) **Tutor avatar**,…\"; 2026-10-18-relock-visual-layer (base 05a85e0): 2 hunks, 2 lines removed and 2 added, as recorded in lock-amendments.json; nothing else changed; its 26 planted defects (proofs.mjs LOCK, 5 of them controls) behave as planted"
   },
   {
    "id": "P1",
@@ -1198,7 +1225,7 @@
    "id": "P2",
    "name": "no phrase of the private security list is in a committed file (DESIGN.md, JOURNEY.md, .design-foundations/copy/**)",
    "ok": true,
-   "detail": "63 phrases read from the private list; none is in the 32 committed files"
+   "detail": "63 phrases read from the private list; none is in the 33 committed files"
   },
   {
    "id": "R1",
@@ -1208,9 +1235,9 @@
   },
   {
    "id": "L7",
-   "name": "DESIGN.md: since the amendment's base (the user's decisions of 2026-10-18), exactly the recorded lock amendment changed: the replaced and inserted lines of ## Companion and the appended ## Lock amendments; every other line is the base's, the blocks this checker writes aside",
+   "name": "DESIGN.md: since the first amendment's base, exactly the recorded lock amendments changed, each held from its own base to the next one's and the newest to the working text (the first kind: its replaced and inserted lines of ## Companion and the appended ## Lock amendments; a patch: its hunks, line for line at their positions); every other line is the base's, the blocks this checker writes aside",
    "ok": true,
-   "detail": "27 lines replaced and 12 inserted in ## Companion, 12 appended (## Lock amendments), as recorded in lock-amendments.json (base 14229be); the generated blocks are this run's; its 11 planted defects (proofs.mjs LOCK, 1 a control) behave as planted"
+   "detail": "2026-10-18-full-body-avatar (base 14229be): 27 lines replaced and 12 inserted in ## Companion, 12 appended (## Lock amendments); 2026-10-18-relock-visual-layer (base 05a85e0): 153 hunks, 328 lines removed and 435 added, as recorded in lock-amendments.json; the generated blocks are this run's; its 26 planted defects (proofs.mjs LOCK, 5 of them controls) behave as planted"
   }
  ]
 }

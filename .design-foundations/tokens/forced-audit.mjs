@@ -4,7 +4,9 @@
 // palette) and checks that every selected, pressed, current or checked control outside the emulation exhibits still
 // carries a visible cue: a ≥ 2 px solid outline, an SVG glyph, a dot or dash whose fill differs from its surround,
 // weight 600 on a chip, or the switch thumb with a border; the paper's marks (forced-color-adjust: none) keep their own
-// asserted colours and are counted apart. Writes generated/forced-audit.json, which the DESIGN.md evidence quotes.
+// asserted colours and are counted apart. Also (re-lock review, fix round 1): every aria-disabled control outside the emulation
+// exhibits renders its text, and its border where it has one, in GrayText, so a disabled control never looks like an enabled one.
+// Writes generated/forced-audit.json, which the DESIGN.md evidence quotes.
 //   node forced-audit.mjs        (needs Chrome or Chromium: $CHROME, $CHROME_PATH, or a usual install location)
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -39,7 +41,18 @@ const probe = `(() => {
     if (!ok && fails.length < 12) fails.push(kind + " without a surviving cue: " + (el.getAttribute("aria-label") || el.textContent.trim().slice(0, 24)) + " in " + (el.closest("section.comp")?.querySelector("h2")?.textContent || "?"));
   }
   const probeEl = main.querySelector('#c-icon-button .c-icon-button[data-s="variant-selected"]'); const pcs = probeEl ? getComputedStyle(probeEl) : null;
-  return { forcedActive: matchMedia("(forced-colors: active)").matches, checked, optOut, shadowsLeft: shadows, outlines, outlineColors: [...outlineColors], by, fails, sample: pcs ? { boxShadow: pcs.boxShadow, background: pcs.backgroundColor, color: pcs.color, outline: pcs.outlineStyle + " " + pcs.outlineWidth + " " + pcs.outlineColor } : null };
+  // disabled controls: GrayText text and border (a probe resolves GrayText in this forced palette)
+  const gt = document.createElement("span"); gt.style.color = "GrayText"; main.appendChild(gt); const GT = getComputedStyle(gt).color; gt.remove();
+  let disabledChecked = 0, disabledBordered = 0; const disabledFails = [];
+  for (const el of main.querySelectorAll('[aria-disabled="true"]')) {
+    if (!vis(el) || el.closest(".emu-forced") || el.closest(".emu-coarse")) continue;
+    const cs = getComputedStyle(el); if (cs.forcedColorAdjust === "none") continue; disabledChecked++;
+    const bordered = parseFloat(cs.borderTopWidth) > 0 && cs.borderTopStyle !== "none"; if (bordered) disabledBordered++;
+    const ok = cs.color === GT && (!bordered || cs.borderTopColor === GT);
+    if (!ok && disabledFails.length < 12) disabledFails.push("disabled control not GrayText: " + (el.getAttribute("aria-label") || el.textContent.trim().slice(0, 24)) + " (" + cs.color + " / " + (bordered ? cs.borderTopColor : "no border") + ") in " + (el.closest("section.comp")?.querySelector("h2")?.textContent || "?"));
+  }
+  fails.push(...disabledFails);
+  return { forcedActive: matchMedia("(forced-colors: active)").matches, checked, optOut, shadowsLeft: shadows, outlines, outlineColors: [...outlineColors], by, disabled: { grayText: GT, checked: disabledChecked, bordered: disabledBordered, notGrayText: disabledFails.length }, fails, sample: pcs ? { boxShadow: pcs.boxShadow, background: pcs.backgroundColor, color: pcs.color, outline: pcs.outlineStyle + " " + pcs.outlineWidth + " " + pcs.outlineColor } : null };
 })()`;
 
 const result = await withPage({ url: "about:blank", width: 1440, height: 900 }, async ({ send, evaluate }) => {
@@ -51,6 +64,7 @@ const result = await withPage({ url: "about:blank", width: 1440, height: 900 }, 
 writeFileSync(OUT, JSON.stringify(result, null, 1) + "\n");
 console.log(`real forced-colours emulation: (forced-colors: active) ${result.forcedActive}; ${result.checked} selected, pressed, current or checked controls (${result.optOut} marks on the paper opted out, keeping their own colours); box-shadow markers left on chrome ${result.shadowsLeft}; ${result.outlines} carry a ≥ 2 px outline (colours ${result.outlineColors.join(" / ")}); cues by kind:`);
 for (const [k, v] of Object.entries(result.by)) console.log(`  ${v.ok}/${v.n}  ${k}  ${JSON.stringify(v.cue)}`);
+console.log(`disabled controls in GrayText (${result.disabled.grayText}): ${result.disabled.checked - result.disabled.notGrayText}/${result.disabled.checked} (${result.disabled.bordered} with a border, its colour checked too)`);
 console.log("sample (selected icon button):", JSON.stringify(result.sample));
 console.log("wrote", OUT.replace(REPO_ROOT + "/", ""));
 if (result.fails.length) { console.log("WITHOUT A CUE:", result.fails.join("; ")); process.exit(1); }

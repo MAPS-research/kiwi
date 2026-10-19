@@ -1,11 +1,11 @@
 {
- "date": "2026-10-18",
+ "date": "2026-10-19",
  "sheet": ".design-foundations/mocks/chart-sheet.html",
  "chrome": "Chrome/155.0.8059.85",
  "modes": {
   "light": {
    "mode": "light",
-   "plot": "#faf9f3",
+   "plot": "#fdfcf6",
    "series": [
     "#2b774d",
     "#0098af",
@@ -19,14 +19,14 @@
    "minNormal": 15.257922582168534,
    "minOtherCvd": 4.661691835568995,
    "contrasts": [
-    4.79,
-    3.02,
-    4.97,
-    5.38,
-    3.09,
-    4.09
+    4.82,
+    3.03,
+    5,
+    5.41,
+    3.1,
+    4.12
    ],
-   "swatchCaptionMinContrast": 5.7,
+   "swatchCaptionMinContrast": 5.98,
    "donuts": {
     "svg-duration": {
      "slices": [
@@ -479,8 +479,8 @@
       "text": "Last full week: 12 questions, up from 9 the week before",
       "glyph": "up",
       "glyphHidden": true,
-      "glyphColour": "rgb(101, 99, 92)",
-      "lineColour": "rgb(101, 99, 92)",
+      "glyphColour": "rgb(86, 102, 82)",
+      "lineColour": "rgb(86, 102, 82)",
       "sameColour": true,
       "directionInWords": true
      },
@@ -508,7 +508,7 @@
   },
   "dark": {
    "mode": "dark",
-   "plot": "#252218",
+   "plot": "#1a251c",
    "series": [
     "#3f895e",
     "#00b2cc",
@@ -522,14 +522,14 @@
    "minNormal": 15.369006636425745,
    "minOtherCvd": 5.5664837764338,
    "contrasts": [
-    3.38,
-    5.63,
-    3.05,
-    3.18,
-    5.14,
-    4.21
+    3.37,
+    5.61,
+    3.04,
+    3.17,
+    5.12,
+    4.19
    ],
-   "swatchCaptionMinContrast": 7.92,
+   "swatchCaptionMinContrast": 9.15,
    "donuts": {
     "svg-duration": {
      "slices": [
@@ -982,8 +982,8 @@
       "text": "Last full week: 12 questions, up from 9 the week before",
       "glyph": "up",
       "glyphHidden": true,
-      "glyphColour": "rgb(185, 183, 176)",
-      "lineColour": "rgb(185, 183, 176)",
+      "glyphColour": "rgb(189, 201, 173)",
+      "lineColour": "rgb(189, 201, 173)",
       "sameColour": true,
       "directionInWords": true
      },

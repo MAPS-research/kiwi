@@ -30,34 +30,35 @@
  * because a custom property's var() references resolve where it is declared, not where it is used.
  * Hit areas and pitches that grow on touch are redeclared inside @media (pointer: coarse), per density block. */
 :root {
-  --neutral-1: #fdfdfc;
-  --neutral-2: #f9f9f7;
-  --neutral-3: #f1f0ed;
-  --neutral-4: #e9e8e4;
-  --neutral-5: #dfded8;
-  --neutral-6: #d4d2cb;
-  --neutral-7: #c6c3bb;
-  --neutral-8: #adaba1;
-  --neutral-9: #bbb7ab;
-  --neutral-10: #a8a599;
-  --neutral-11: #65635c;
-  --neutral-12: #2f2e2a;
-  --accent-1: #fafefb;
-  --accent-2: #f4fbf6;
-  --accent-3: #e6f5eb;
-  --accent-4: #d9eee0;
-  --accent-5: #c9e7d3;
-  --accent-6: #b7ddc4;
-  --accent-7: #a2d1b2;
-  --accent-8: #82ba96;
-  --accent-9: #84ca9e;
-  --accent-10: #74b68d;
-  --accent-11: #486d56;
+  --neutral-1: #fbfbf7;
+  --neutral-2: #f6f7ee;
+  --neutral-3: #f0f2e5;
+  --neutral-4: #e8eddf;
+  --neutral-5: #e5e9dc;
+  --neutral-6: #e1e6d8;
+  --neutral-7: #d9ded0;
+  --neutral-8: #a9b29d;
+  --neutral-9: #929d87;
+  --neutral-10: #7b8872;
+  --neutral-11: #566652;
+  --neutral-12: #23442d;
+  --accent-1: #f9fbf4;
+  --accent-2: #f2f6ea;
+  --accent-3: #eaf0df;
+  --accent-4: #e4ebd9;
+  --accent-5: #dce5cc;
+  --accent-6: #d0ddbd;
+  --accent-7: #c7d6b1;
+  --accent-8: #bfcea6;
+  --accent-9: #92ae70;
+  --accent-10: #577d37;
+  --accent-11: #23482e;
   --accent-12: #203327;
-  --paper-1: #fefdf9;
-  --paper-2: #faf9f3;
-  --paper-3: #f4f1e4;
-  --paper-4: #ede8d5;
+  --paper-1: #fefefa;
+  --paper-2: #fdfcf6;
+  --paper-3: #f6f5ed;
+  --paper-4: #f0eee2;
+  --code-green: #446a2c;
   --error-3: #ffebe9;
   --error-9: #e1524f;
   --error-11: #974843;
@@ -105,8 +106,9 @@
   --space-6: 32px;
   --space-7: 48px;
   --space-8: 64px;
-  --radius-control: 2px;
-  --radius-sheet: 2px;
+  --radius-control: 6px;
+  --radius-sheet: 8px;
+  --radius-small: 6px;
   --radius-none: 0;
   --radius-round: 50%;
   --duration-micro: 150ms;
@@ -126,19 +128,20 @@
   --text-secondary: var(--neutral-11);
   --text: var(--neutral-12);
   --accent-bg-subtle: var(--accent-3);
-  --accent-bg-subtle-active: var(--accent-4);
-  --accent-solid: var(--accent-12);
-  --accent-solid-hover: var(--accent-11);
-  --accent-solid-active: #06100a;
-  --accent-on-solid: var(--neutral-1);
+  --accent-bg-subtle-active: var(--accent-5);
+  --accent-solid: var(--accent-6);
+  --accent-solid-hover: var(--accent-7);
+  --accent-solid-active: var(--accent-8);
+  --accent-solid-border: var(--accent-10);
+  --accent-on-solid: var(--accent-11);
   --accent-text: var(--accent-11);
-  --border-interactive: var(--neutral-11);
-  --focus-ring: var(--accent-11);
-  --shadow-ink: var(--accent-12);
+  --border-interactive: var(--neutral-10);
+  --focus-ring: var(--accent-10);
+  --shadow-ink: var(--accent-11);
   --link: var(--accent-text);
-  --selection-bg: var(--accent-bg-subtle);
+  --selection-bg: var(--accent-4);
   --selection-text: var(--accent-text);
-  --selection-marker: var(--accent-solid);
+  --selection-marker: var(--accent-10);
   --destructive-text: var(--error-11);
   --destructive-bg-subtle: var(--error-3);
   --status-error-surface: var(--error-3);
@@ -161,6 +164,10 @@
   --disabled-text: var(--text-secondary);
   --disabled-border: var(--border);
   --disabled-icon: var(--border-strong);
+  --disabled-solid: var(--accent-5);
+  --disabled-solid-border: var(--accent-9);
+  --disabled-outline: var(--border-strong);
+  --disabled-label: var(--neutral-11);
   --skeleton-base: var(--surface-active);
   --skeleton-highlight: var(--surface);
   --icon-default: var(--text-secondary);
@@ -168,12 +175,12 @@
   --icon-accent: var(--accent-text);
   --paper-frame: var(--border);
   --fill-none: transparent;
-  --backdrop: rgba(32, 51, 39, 0.4);
+  --backdrop: rgba(35, 72, 46, 0.4);
   --logo-on-light: #000000;
   --logo-on-dark: #ffffff;
   --on-paper-page: #ffffff;
   --on-paper-pin: #203327;
-  --on-paper-chunk: #65635c;
+  --on-paper-chunk: #566652;
   --on-paper-wash: rgba(32, 51, 39, 0.122);
   --editor-bg: var(--surface);
   --editor-gutter: var(--surface-hover);
@@ -196,7 +203,7 @@
   --syntax-operator: var(--text-secondary);
   --syntax-punctuation: var(--text-secondary);
   --syntax-comment: var(--text-secondary);
-  --syntax-string: var(--accent-text);
+  --syntax-string: var(--code-green);
   --syntax-number: var(--info-11);
   --syntax-constant: var(--info-11);
   --syntax-decorator: var(--text-secondary);
@@ -210,8 +217,8 @@
   --console-prompt: var(--accent-text);
   --console-border: var(--border);
   --console-header-bg: var(--surface-hover);
-  --shadow-1: 0px 1px 2px 0px rgba(32, 51, 39, 0.14);
-  --shadow-2: 0px 1px 2px 0px rgba(32, 51, 39, 0.08), 0px 12px 32px -12px rgba(32, 51, 39, 0.26);
+  --shadow-1: 0px 1px 2px 0px rgba(35, 72, 46, 0.14);
+  --shadow-2: 0px 1px 2px 0px rgba(35, 72, 46, 0.08), 0px 12px 32px -12px rgba(35, 72, 46, 0.26);
   --space-inset-x: var(--space-4);
   --space-inset-y: var(--space-3);
   --space-inline: var(--space-3);
@@ -391,7 +398,7 @@
   --button-height: var(--size-control);
   --button-padding-x: var(--space-inset-x);
   --button-padding-y: var(--space-control-pad-y);
-  --button-radius: 2px;
+  --button-radius: var(--radius-control);
   --button-gap: var(--space-icon-gap);
   --button-icon-size: var(--size-icon-sm);
   --button-min-width: 64px;
@@ -399,22 +406,29 @@
   --button-press-scale: var(--motion-press-scale);
   --button-marker: var(--size-marker);
   --button-primary-fill: var(--accent-solid);
+  --button-primary-border: var(--accent-solid-border);
   --button-primary-text: var(--accent-on-solid);
   --button-primary-hover-fill: var(--accent-solid-hover);
+  --button-primary-hover-border: var(--accent-solid-border);
   --button-primary-hover-text: var(--accent-on-solid);
   --button-primary-focus-fill: var(--accent-solid);
+  --button-primary-focus-border: var(--accent-solid-border);
   --button-primary-focus-text: var(--accent-on-solid);
   --button-primary-focus-ring: var(--focus-ring);
   --button-primary-active-fill: var(--accent-solid-active);
+  --button-primary-active-border: var(--accent-solid-border);
   --button-primary-active-text: var(--accent-on-solid);
-  --button-primary-disabled-fill: var(--disabled-surface);
-  --button-primary-disabled-text: var(--disabled-text);
-  --button-primary-disabled-border: var(--disabled-border);
+  --button-primary-disabled-fill: var(--disabled-solid);
+  --button-primary-disabled-text: var(--disabled-label);
+  --button-primary-disabled-border: var(--disabled-solid-border);
   --button-primary-loading-fill: var(--accent-solid);
+  --button-primary-loading-border: var(--accent-solid-border);
   --button-primary-loading-text: var(--accent-on-solid);
   --button-primary-error-fill: var(--accent-solid);
+  --button-primary-error-border: var(--accent-solid-border);
   --button-primary-error-text: var(--accent-on-solid);
   --button-primary-success-fill: var(--accent-solid);
+  --button-primary-success-border: var(--accent-solid-border);
   --button-primary-success-text: var(--accent-on-solid);
   --button-primary-success-icon: var(--accent-on-solid);
   --button-secondary-fill: var(--surface);
@@ -429,10 +443,10 @@
   --button-secondary-focus-ring: var(--focus-ring);
   --button-secondary-active-fill: var(--accent-bg-subtle-active);
   --button-secondary-active-text: var(--accent-text);
-  --button-secondary-active-border: var(--border-interactive);
-  --button-secondary-disabled-fill: var(--disabled-surface);
-  --button-secondary-disabled-text: var(--disabled-text);
-  --button-secondary-disabled-border: var(--disabled-border);
+  --button-secondary-active-border: var(--text);
+  --button-secondary-disabled-fill: var(--surface);
+  --button-secondary-disabled-text: var(--disabled-label);
+  --button-secondary-disabled-border: var(--disabled-outline);
   --button-secondary-loading-fill: var(--surface);
   --button-secondary-loading-text: var(--accent-text);
   --button-secondary-loading-border: var(--border-interactive);
@@ -453,7 +467,7 @@
   --button-tertiary-active-fill: var(--accent-bg-subtle-active);
   --button-tertiary-active-text: var(--accent-text);
   --button-tertiary-disabled-fill: var(--fill-none);
-  --button-tertiary-disabled-text: var(--disabled-text);
+  --button-tertiary-disabled-text: var(--disabled-label);
   --button-tertiary-disabled-weight: var(--type-weight-regular);
   --button-tertiary-loading-fill: var(--fill-none);
   --button-tertiary-loading-text: var(--accent-text);
@@ -479,9 +493,9 @@
   --button-destructive-active-fill: var(--destructive-bg-subtle);
   --button-destructive-active-text: var(--destructive-text);
   --button-destructive-active-border: var(--destructive-text);
-  --button-destructive-disabled-fill: var(--disabled-surface);
-  --button-destructive-disabled-text: var(--disabled-text);
-  --button-destructive-disabled-border: var(--disabled-border);
+  --button-destructive-disabled-fill: var(--surface);
+  --button-destructive-disabled-text: var(--disabled-label);
+  --button-destructive-disabled-border: var(--disabled-outline);
   --button-destructive-loading-fill: var(--surface);
   --button-destructive-loading-text: var(--destructive-text);
   --button-destructive-loading-border: var(--destructive-text);
@@ -493,7 +507,7 @@
   --button-destructive-success-border: var(--destructive-text);
   --icon-button-size: var(--size-control-icon);
   --icon-button-icon-size: var(--size-icon);
-  --icon-button-radius: 2px;
+  --icon-button-radius: var(--radius-control);
   --icon-button-hit: var(--size-hit-icon);
   --icon-button-row-gap: var(--space-icon-row-gap);
   --icon-button-marker: var(--size-marker);
@@ -520,7 +534,7 @@
   --icon-button-success-icon: var(--status-success-text);
   --chip-height: var(--size-chip);
   --chip-padding-x: var(--space-icon-gap);
-  --chip-radius: 2px;
+  --chip-radius: var(--radius-control);
   --chip-icon-size: var(--size-icon-sm);
   --chip-gap: var(--space-icon-gap);
   --chip-hit: var(--size-hit-chip);
@@ -609,8 +623,8 @@
   --switch-track-width: var(--size-switch-track-w);
   --switch-track-height: var(--size-switch-track-h);
   --switch-thumb-size: var(--size-switch-thumb);
-  --switch-thumb-radius: 2px;
-  --switch-radius: 2px;
+  --switch-thumb-radius: var(--radius-small);
+  --switch-radius: var(--radius-control);
   --switch-hit: var(--size-hit-switch);
   --switch-variant-on-track: var(--selection-bg);
   --switch-variant-on-border: var(--selection-text);
@@ -646,7 +660,7 @@
   --field-height: var(--size-control);
   --field-padding-x: var(--space-inset-x);
   --field-padding-y: var(--space-field-pad-y);
-  --field-radius: 2px;
+  --field-radius: var(--radius-control);
   --field-select-padding-right: 40px;
   --field-label-gap: var(--space-label-gap);
   --field-helper-gap: var(--space-label-gap);
@@ -689,7 +703,7 @@
   --field-success-icon: var(--status-success-text);
   --checkbox-size: var(--size-checkbox);
   --checkbox-hit: var(--size-hit-checkbox);
-  --checkbox-radius: 2px;
+  --checkbox-radius: var(--radius-small);
   --checkbox-border-width: var(--border-width-interactive);
   --checkbox-dot: var(--size-status-dot);
   --checkbox-label-gap: var(--space-label-gap);
@@ -761,7 +775,7 @@
   --sidebar-item-padding-x: var(--space-inset-x);
   --sidebar-item-icon-size: var(--size-icon);
   --sidebar-item-gap: var(--space-inline);
-  --sidebar-item-radius: 2px;
+  --sidebar-item-radius: var(--radius-small);
   --sidebar-item-margin-x: var(--space-edge-margin);
   --sidebar-item-child-dot: var(--size-child-dot);
   --sidebar-item-variant-current-fill: var(--selection-bg);
@@ -793,7 +807,7 @@
   --sidebar-item-success-text: var(--text);
   --sidebar-item-success-icon: var(--icon-default);
   --panel-padding: var(--space-panel);
-  --panel-radius: 2px;
+  --panel-radius: var(--radius-sheet);
   --panel-border-width: var(--border-width-hairline);
   --panel-fill: var(--surface);
   --panel-text: var(--text);
@@ -828,7 +842,7 @@
   --dialog-width-lg: var(--size-dialog-lg);
   --dialog-max-height: 80vh;
   --dialog-padding: var(--space-panel);
-  --dialog-radius: 2px;
+  --dialog-radius: var(--radius-sheet);
   --dialog-shadow: var(--shadow-2);
   --dialog-fill: var(--surface);
   --dialog-text: var(--text);
@@ -848,7 +862,7 @@
   --dialog-disabled-fill: var(--surface);
   --dialog-disabled-text: var(--text);
   --dialog-disabled-border: var(--border);
-  --dialog-disabled-primary: var(--disabled-surface);
+  --dialog-disabled-primary: var(--disabled-solid);
   --dialog-loading-fill: var(--surface);
   --dialog-loading-text: var(--text);
   --dialog-loading-border: var(--border);
@@ -862,7 +876,7 @@
   --dialog-success-border: var(--border);
   --alert-padding: var(--space-inset-y);
   --alert-padding-x: var(--space-inset-x);
-  --alert-radius: 2px;
+  --alert-radius: var(--radius-control);
   --alert-icon-size: var(--size-icon);
   --alert-gap: var(--space-inline);
   --alert-action-underline: var(--border-width-underline);
@@ -917,7 +931,7 @@
   --toast-max-width: var(--size-toast-max);
   --toast-padding: var(--space-inset-y);
   --toast-padding-x: var(--space-inset-x);
-  --toast-radius: 2px;
+  --toast-radius: var(--radius-sheet);
   --toast-icon-size: var(--size-icon);
   --toast-offset-x: var(--space-float-offset-x);
   --toast-offset-y: var(--space-float-offset-y);
@@ -1033,7 +1047,7 @@
   --data-grid-success-fill: var(--fill-none);
   --data-grid-success-text: var(--text);
   --kpi-tile-padding: var(--space-panel);
-  --kpi-tile-radius: 2px;
+  --kpi-tile-radius: var(--radius-sheet);
   --kpi-tile-min-width: var(--size-kpi-min);
   --kpi-tile-icon-size: var(--size-icon);
   --kpi-tile-fill: var(--surface);
@@ -1068,7 +1082,7 @@
   --empty-state-slot-gap: var(--space-frame-gap);
   --empty-state-line-gap: var(--space-line-gap);
   --empty-state-cta-gap: var(--space-frame-gap);
-  --empty-state-max-width: 68ch;
+  --empty-state-max-width: var(--measure-prose);
   --empty-state-variant-no-action-fill: var(--fill-none);
   --empty-state-variant-no-action-title: var(--text);
   --empty-state-variant-no-action-copy: var(--text-secondary);
@@ -1090,7 +1104,7 @@
   --empty-state-disabled-fill: var(--fill-none);
   --empty-state-disabled-title: var(--text);
   --empty-state-disabled-copy: var(--text-secondary);
-  --empty-state-disabled-cta: var(--disabled-surface);
+  --empty-state-disabled-cta: var(--disabled-solid);
   --empty-state-loading-fill: var(--fill-none);
   --empty-state-loading-skeleton: var(--skeleton-base);
   --empty-state-error-fill: var(--fill-none);
@@ -1104,7 +1118,7 @@
   --display-menu-max-width: var(--size-menu-max);
   --display-menu-item-height: var(--size-menu-item);
   --display-menu-item-x: var(--space-menu-item-x);
-  --display-menu-radius: 2px;
+  --display-menu-radius: var(--radius-sheet);
   --display-menu-viewport-margin: var(--space-popup-margin);
   --display-menu-shadow: var(--shadow-1);
   --display-menu-fill: var(--surface);
@@ -1131,7 +1145,7 @@
   --display-menu-success-check: var(--selection-text);
   --launcher-size: var(--size-launcher);
   --launcher-icon-size: var(--size-icon-fixed);
-  --launcher-radius: 50%;
+  --launcher-radius: var(--radius-round);
   --launcher-offset-x: var(--space-float-offset-x);
   --launcher-offset-y: 96px;
   --launcher-edge-margin: var(--space-edge-margin);
@@ -1139,34 +1153,41 @@
   --launcher-shadow: var(--shadow-2);
   --launcher-press-scale: var(--motion-press-scale);
   --launcher-badge-size: var(--size-badge);
-  --launcher-badge-radius: 50%;
+  --launcher-badge-radius: var(--radius-round);
   --launcher-variant-badge-fill: var(--surface);
   --launcher-variant-badge-text: var(--text);
   --launcher-variant-badge-border: var(--border);
   --launcher-fill: var(--accent-solid);
+  --launcher-border: var(--accent-solid-border);
   --launcher-icon: var(--accent-on-solid);
   --launcher-hover-fill: var(--accent-solid-hover);
+  --launcher-hover-border: var(--accent-solid-border);
   --launcher-hover-icon: var(--accent-on-solid);
   --launcher-focus-fill: var(--accent-solid);
+  --launcher-focus-border: var(--accent-solid-border);
   --launcher-focus-icon: var(--accent-on-solid);
   --launcher-focus-ring: var(--focus-ring);
   --launcher-active-fill: var(--accent-solid-active);
+  --launcher-active-border: var(--accent-solid-border);
   --launcher-active-icon: var(--accent-on-solid);
   --launcher-disabled-fill: var(--disabled-surface);
   --launcher-disabled-text: var(--disabled-text);
   --launcher-disabled-border: var(--disabled-border);
   --launcher-loading-fill: var(--accent-solid);
+  --launcher-loading-border: var(--accent-solid-border);
   --launcher-loading-icon: var(--accent-on-solid);
   --launcher-error-fill: var(--accent-solid);
+  --launcher-error-border: var(--accent-solid-border);
   --launcher-error-icon: var(--accent-on-solid);
   --launcher-success-fill: var(--accent-solid);
+  --launcher-success-border: var(--accent-solid-border);
   --launcher-success-icon: var(--accent-on-solid);
   --tutor-message-avatar: var(--size-avatar);
   --tutor-message-avatar-gap: var(--space-block);
   --tutor-message-block-gap: var(--space-block);
   --tutor-message-message-gap: var(--space-message);
-  --tutor-message-measure: 68ch;
-  --tutor-message-measure-cjk: 36em;
+  --tutor-message-measure: var(--measure-prose);
+  --tutor-message-measure-cjk: var(--measure-cjk);
   --tutor-message-code-rule-width: var(--size-code-rule);
   --tutor-message-toolbar-button: var(--size-toolbar-button-sm);
   --tutor-message-toolbar-line: var(--size-toolbar-button-sm);
@@ -1314,7 +1335,7 @@
   --toggletip-max-width: var(--size-menu-max);
   --toggletip-padding-y: var(--space-inset-y);
   --toggletip-padding-x: var(--space-inline);
-  --toggletip-radius: 2px;
+  --toggletip-radius: var(--radius-control);
   --toggletip-shadow: var(--shadow-1);
   --toggletip-offset: var(--space-label-gap);
   --chart-1: #2b774d;
@@ -1339,32 +1360,35 @@
 }
 
 [data-theme="light"] {
-  --neutral-1: #fdfdfc;
-  --neutral-2: #f9f9f7;
-  --neutral-3: #f1f0ed;
-  --neutral-4: #e9e8e4;
-  --neutral-5: #dfded8;
-  --neutral-6: #d4d2cb;
-  --neutral-7: #c6c3bb;
-  --neutral-8: #adaba1;
-  --neutral-10: #a8a599;
-  --neutral-11: #65635c;
-  --neutral-12: #2f2e2a;
-  --accent-1: #fafefb;
-  --accent-2: #f4fbf6;
-  --accent-3: #e6f5eb;
-  --accent-4: #d9eee0;
-  --accent-5: #c9e7d3;
-  --accent-6: #b7ddc4;
-  --accent-7: #a2d1b2;
-  --accent-8: #82ba96;
-  --accent-10: #74b68d;
-  --accent-11: #486d56;
+  --neutral-1: #fbfbf7;
+  --neutral-2: #f6f7ee;
+  --neutral-3: #f0f2e5;
+  --neutral-4: #e8eddf;
+  --neutral-5: #e5e9dc;
+  --neutral-6: #e1e6d8;
+  --neutral-7: #d9ded0;
+  --neutral-8: #a9b29d;
+  --neutral-9: #929d87;
+  --neutral-10: #7b8872;
+  --neutral-11: #566652;
+  --neutral-12: #23442d;
+  --accent-1: #f9fbf4;
+  --accent-2: #f2f6ea;
+  --accent-3: #eaf0df;
+  --accent-4: #e4ebd9;
+  --accent-5: #dce5cc;
+  --accent-6: #d0ddbd;
+  --accent-7: #c7d6b1;
+  --accent-8: #bfcea6;
+  --accent-9: #92ae70;
+  --accent-10: #577d37;
+  --accent-11: #23482e;
   --accent-12: #203327;
-  --paper-1: #fefdf9;
-  --paper-2: #faf9f3;
-  --paper-3: #f4f1e4;
-  --paper-4: #ede8d5;
+  --paper-1: #fefefa;
+  --paper-2: #fdfcf6;
+  --paper-3: #f6f5ed;
+  --paper-4: #f0eee2;
+  --code-green: #446a2c;
   --error-3: #ffebe9;
   --error-11: #974843;
   --success-3: #e0f8e0;
@@ -1383,19 +1407,20 @@
   --text-secondary: var(--neutral-11);
   --text: var(--neutral-12);
   --accent-bg-subtle: var(--accent-3);
-  --accent-bg-subtle-active: var(--accent-4);
-  --accent-solid: var(--accent-12);
-  --accent-solid-hover: var(--accent-11);
-  --accent-solid-active: #06100a;
-  --accent-on-solid: var(--neutral-1);
+  --accent-bg-subtle-active: var(--accent-5);
+  --accent-solid: var(--accent-6);
+  --accent-solid-hover: var(--accent-7);
+  --accent-solid-active: var(--accent-8);
+  --accent-solid-border: var(--accent-10);
+  --accent-on-solid: var(--accent-11);
   --accent-text: var(--accent-11);
-  --border-interactive: var(--neutral-11);
-  --focus-ring: var(--accent-11);
-  --shadow-ink: var(--accent-12);
+  --border-interactive: var(--neutral-10);
+  --focus-ring: var(--accent-10);
+  --shadow-ink: var(--accent-11);
   --link: var(--accent-text);
-  --selection-bg: var(--accent-bg-subtle);
+  --selection-bg: var(--accent-4);
   --selection-text: var(--accent-text);
-  --selection-marker: var(--accent-solid);
+  --selection-marker: var(--accent-10);
   --destructive-text: var(--error-11);
   --destructive-bg-subtle: var(--error-3);
   --status-error-surface: var(--error-3);
@@ -1414,13 +1439,17 @@
   --disabled-text: var(--text-secondary);
   --disabled-border: var(--border);
   --disabled-icon: var(--border-strong);
+  --disabled-solid: var(--accent-5);
+  --disabled-solid-border: var(--accent-9);
+  --disabled-outline: var(--border-strong);
+  --disabled-label: var(--neutral-11);
   --skeleton-base: var(--surface-active);
   --skeleton-highlight: var(--surface);
   --icon-default: var(--text-secondary);
   --icon-hover: var(--text);
   --icon-accent: var(--accent-text);
   --paper-frame: var(--border);
-  --backdrop: rgba(32, 51, 39, 0.4);
+  --backdrop: rgba(35, 72, 46, 0.4);
   --editor-bg: var(--surface);
   --editor-gutter: var(--surface-hover);
   --editor-gutter-text: var(--text-secondary);
@@ -1442,7 +1471,7 @@
   --syntax-operator: var(--text-secondary);
   --syntax-punctuation: var(--text-secondary);
   --syntax-comment: var(--text-secondary);
-  --syntax-string: var(--accent-text);
+  --syntax-string: var(--code-green);
   --syntax-number: var(--info-11);
   --syntax-constant: var(--info-11);
   --syntax-decorator: var(--text-secondary);
@@ -1456,26 +1485,33 @@
   --console-prompt: var(--accent-text);
   --console-border: var(--border);
   --console-header-bg: var(--surface-hover);
-  --shadow-1: 0px 1px 2px 0px rgba(32, 51, 39, 0.14);
-  --shadow-2: 0px 1px 2px 0px rgba(32, 51, 39, 0.08), 0px 12px 32px -12px rgba(32, 51, 39, 0.26);
+  --shadow-1: 0px 1px 2px 0px rgba(35, 72, 46, 0.14);
+  --shadow-2: 0px 1px 2px 0px rgba(35, 72, 46, 0.08), 0px 12px 32px -12px rgba(35, 72, 46, 0.26);
   --opacity-paper-dim: 1;
   --button-primary-fill: var(--accent-solid);
+  --button-primary-border: var(--accent-solid-border);
   --button-primary-text: var(--accent-on-solid);
   --button-primary-hover-fill: var(--accent-solid-hover);
+  --button-primary-hover-border: var(--accent-solid-border);
   --button-primary-hover-text: var(--accent-on-solid);
   --button-primary-focus-fill: var(--accent-solid);
+  --button-primary-focus-border: var(--accent-solid-border);
   --button-primary-focus-text: var(--accent-on-solid);
   --button-primary-focus-ring: var(--focus-ring);
   --button-primary-active-fill: var(--accent-solid-active);
+  --button-primary-active-border: var(--accent-solid-border);
   --button-primary-active-text: var(--accent-on-solid);
-  --button-primary-disabled-fill: var(--disabled-surface);
-  --button-primary-disabled-text: var(--disabled-text);
-  --button-primary-disabled-border: var(--disabled-border);
+  --button-primary-disabled-fill: var(--disabled-solid);
+  --button-primary-disabled-text: var(--disabled-label);
+  --button-primary-disabled-border: var(--disabled-solid-border);
   --button-primary-loading-fill: var(--accent-solid);
+  --button-primary-loading-border: var(--accent-solid-border);
   --button-primary-loading-text: var(--accent-on-solid);
   --button-primary-error-fill: var(--accent-solid);
+  --button-primary-error-border: var(--accent-solid-border);
   --button-primary-error-text: var(--accent-on-solid);
   --button-primary-success-fill: var(--accent-solid);
+  --button-primary-success-border: var(--accent-solid-border);
   --button-primary-success-text: var(--accent-on-solid);
   --button-primary-success-icon: var(--accent-on-solid);
   --button-secondary-fill: var(--surface);
@@ -1490,10 +1526,10 @@
   --button-secondary-focus-ring: var(--focus-ring);
   --button-secondary-active-fill: var(--accent-bg-subtle-active);
   --button-secondary-active-text: var(--accent-text);
-  --button-secondary-active-border: var(--border-interactive);
-  --button-secondary-disabled-fill: var(--disabled-surface);
-  --button-secondary-disabled-text: var(--disabled-text);
-  --button-secondary-disabled-border: var(--disabled-border);
+  --button-secondary-active-border: var(--text);
+  --button-secondary-disabled-fill: var(--surface);
+  --button-secondary-disabled-text: var(--disabled-label);
+  --button-secondary-disabled-border: var(--disabled-outline);
   --button-secondary-loading-fill: var(--surface);
   --button-secondary-loading-text: var(--accent-text);
   --button-secondary-loading-border: var(--border-interactive);
@@ -1511,7 +1547,7 @@
   --button-tertiary-focus-ring: var(--focus-ring);
   --button-tertiary-active-fill: var(--accent-bg-subtle-active);
   --button-tertiary-active-text: var(--accent-text);
-  --button-tertiary-disabled-text: var(--disabled-text);
+  --button-tertiary-disabled-text: var(--disabled-label);
   --button-tertiary-loading-text: var(--accent-text);
   --button-tertiary-error-text: var(--accent-text);
   --button-tertiary-success-text: var(--accent-text);
@@ -1533,9 +1569,9 @@
   --button-destructive-active-fill: var(--destructive-bg-subtle);
   --button-destructive-active-text: var(--destructive-text);
   --button-destructive-active-border: var(--destructive-text);
-  --button-destructive-disabled-fill: var(--disabled-surface);
-  --button-destructive-disabled-text: var(--disabled-text);
-  --button-destructive-disabled-border: var(--disabled-border);
+  --button-destructive-disabled-fill: var(--surface);
+  --button-destructive-disabled-text: var(--disabled-label);
+  --button-destructive-disabled-border: var(--disabled-outline);
   --button-destructive-loading-fill: var(--surface);
   --button-destructive-loading-text: var(--destructive-text);
   --button-destructive-loading-border: var(--destructive-text);
@@ -1826,7 +1862,7 @@
   --dialog-disabled-fill: var(--surface);
   --dialog-disabled-text: var(--text);
   --dialog-disabled-border: var(--border);
-  --dialog-disabled-primary: var(--disabled-surface);
+  --dialog-disabled-primary: var(--disabled-solid);
   --dialog-loading-fill: var(--surface);
   --dialog-loading-text: var(--text);
   --dialog-loading-border: var(--border);
@@ -2004,7 +2040,7 @@
   --empty-state-active-copy: var(--text-secondary);
   --empty-state-disabled-title: var(--text);
   --empty-state-disabled-copy: var(--text-secondary);
-  --empty-state-disabled-cta: var(--disabled-surface);
+  --empty-state-disabled-cta: var(--disabled-solid);
   --empty-state-loading-skeleton: var(--skeleton-base);
   --empty-state-error-title: var(--text);
   --empty-state-error-copy: var(--status-error-text);
@@ -2039,22 +2075,29 @@
   --launcher-variant-badge-text: var(--text);
   --launcher-variant-badge-border: var(--border);
   --launcher-fill: var(--accent-solid);
+  --launcher-border: var(--accent-solid-border);
   --launcher-icon: var(--accent-on-solid);
   --launcher-hover-fill: var(--accent-solid-hover);
+  --launcher-hover-border: var(--accent-solid-border);
   --launcher-hover-icon: var(--accent-on-solid);
   --launcher-focus-fill: var(--accent-solid);
+  --launcher-focus-border: var(--accent-solid-border);
   --launcher-focus-icon: var(--accent-on-solid);
   --launcher-focus-ring: var(--focus-ring);
   --launcher-active-fill: var(--accent-solid-active);
+  --launcher-active-border: var(--accent-solid-border);
   --launcher-active-icon: var(--accent-on-solid);
   --launcher-disabled-fill: var(--disabled-surface);
   --launcher-disabled-text: var(--disabled-text);
   --launcher-disabled-border: var(--disabled-border);
   --launcher-loading-fill: var(--accent-solid);
+  --launcher-loading-border: var(--accent-solid-border);
   --launcher-loading-icon: var(--accent-on-solid);
   --launcher-error-fill: var(--accent-solid);
+  --launcher-error-border: var(--accent-solid-border);
   --launcher-error-icon: var(--accent-on-solid);
   --launcher-success-fill: var(--accent-solid);
+  --launcher-success-border: var(--accent-solid-border);
   --launcher-success-icon: var(--accent-on-solid);
   --tutor-message-text: var(--text);
   --tutor-message-link: var(--link);
@@ -2169,32 +2212,35 @@
 }
 
 [data-theme="dark"] {
-  --neutral-1: #131312;
-  --neutral-2: #1a1918;
-  --neutral-3: #232220;
-  --neutral-4: #2b2a27;
-  --neutral-5: #33322e;
-  --neutral-6: #3d3c36;
-  --neutral-7: #4b4942;
-  --neutral-8: #636057;
-  --neutral-10: #cecbbe;
-  --neutral-11: #b9b7b0;
-  --neutral-12: #e9e8e3;
-  --accent-1: #111312;
-  --accent-2: #161b18;
-  --accent-3: #1a251e;
-  --accent-4: #1e2f24;
-  --accent-5: #203929;
-  --accent-6: #234430;
-  --accent-7: #29533a;
-  --accent-8: #386e4e;
-  --accent-10: #9addb2;
-  --accent-11: #9bc3a8;
-  --accent-12: #d7efdf;
-  --paper-1: #131310;
-  --paper-2: #1b1915;
-  --paper-3: #252218;
-  --paper-4: #2e2a1b;
+  --neutral-1: #0e1510;
+  --neutral-2: #151d16;
+  --neutral-3: #1c261d;
+  --neutral-4: #222d23;
+  --neutral-5: #2a3529;
+  --neutral-6: #30382e;
+  --neutral-7: #3d4539;
+  --neutral-8: #5e6755;
+  --neutral-9: #6b7662;
+  --neutral-10: #79856e;
+  --neutral-11: #bdc9ad;
+  --neutral-12: #e4e8db;
+  --accent-1: #111810;
+  --accent-2: #1c2517;
+  --accent-3: #27321f;
+  --accent-4: #2f3b22;
+  --accent-5: #354225;
+  --accent-6: #374525;
+  --accent-7: #3f4d2d;
+  --accent-8: #495934;
+  --accent-9: #859b69;
+  --accent-10: #b1c698;
+  --accent-11: #b9cf9b;
+  --accent-12: #deeacd;
+  --paper-1: #0d150f;
+  --paper-2: #121b14;
+  --paper-3: #1a251c;
+  --paper-4: #212e23;
+  --code-green: #b9cf9b;
   --error-3: #331a18;
   --error-11: #f49c95;
   --success-3: #152715;
@@ -2213,19 +2259,20 @@
   --text-secondary: var(--neutral-11);
   --text: var(--neutral-12);
   --accent-bg-subtle: var(--accent-3);
-  --accent-bg-subtle-active: var(--accent-4);
-  --accent-solid: var(--accent-9);
-  --accent-solid-hover: var(--accent-10);
-  --accent-solid-active: var(--accent-12);
-  --accent-on-solid: #06100a;
+  --accent-bg-subtle-active: var(--accent-6);
+  --accent-solid: var(--accent-5);
+  --accent-solid-hover: var(--accent-7);
+  --accent-solid-active: var(--accent-8);
+  --accent-solid-border: var(--accent-9);
+  --accent-on-solid: var(--neutral-12);
   --accent-text: var(--accent-11);
-  --border-interactive: var(--neutral-11);
-  --focus-ring: var(--accent-9);
+  --border-interactive: var(--neutral-10);
+  --focus-ring: var(--accent-10);
   --shadow-ink: #06100a;
   --link: var(--accent-text);
-  --selection-bg: var(--accent-bg-subtle);
+  --selection-bg: var(--accent-4);
   --selection-text: var(--accent-text);
-  --selection-marker: var(--accent-solid);
+  --selection-marker: var(--accent-10);
   --destructive-text: var(--error-11);
   --destructive-bg-subtle: var(--error-3);
   --status-error-surface: var(--error-3);
@@ -2244,6 +2291,10 @@
   --disabled-text: var(--text-secondary);
   --disabled-border: var(--border);
   --disabled-icon: var(--border-strong);
+  --disabled-solid: var(--accent-4);
+  --disabled-solid-border: var(--accent-8);
+  --disabled-outline: var(--border-strong);
+  --disabled-label: var(--neutral-10);
   --skeleton-base: var(--surface-active);
   --skeleton-highlight: var(--surface);
   --icon-default: var(--text-secondary);
@@ -2256,7 +2307,7 @@
   --editor-gutter-text: var(--text-secondary);
   --editor-gutter-text-active: var(--text);
   --editor-active-line: var(--surface-active);
-  --editor-selection: var(--accent-6);
+  --editor-selection: var(--accent-bg-subtle-active);
   --editor-selection-outline: var(--selection-marker);
   --editor-cursor: var(--text);
   --editor-border: var(--border);
@@ -2272,7 +2323,7 @@
   --syntax-operator: var(--text-secondary);
   --syntax-punctuation: var(--text-secondary);
   --syntax-comment: var(--text-secondary);
-  --syntax-string: var(--accent-text);
+  --syntax-string: var(--code-green);
   --syntax-number: var(--info-11);
   --syntax-constant: var(--info-11);
   --syntax-decorator: var(--text-secondary);
@@ -2290,22 +2341,29 @@
   --shadow-2: 0px 1px 2px 0px rgba(6, 16, 10, 0.08), 0px 12px 32px -12px rgba(6, 16, 10, 0.26);
   --opacity-paper-dim: 0.92;
   --button-primary-fill: var(--accent-solid);
+  --button-primary-border: var(--accent-solid-border);
   --button-primary-text: var(--accent-on-solid);
   --button-primary-hover-fill: var(--accent-solid-hover);
+  --button-primary-hover-border: var(--accent-solid-border);
   --button-primary-hover-text: var(--accent-on-solid);
   --button-primary-focus-fill: var(--accent-solid);
+  --button-primary-focus-border: var(--accent-solid-border);
   --button-primary-focus-text: var(--accent-on-solid);
   --button-primary-focus-ring: var(--focus-ring);
   --button-primary-active-fill: var(--accent-solid-active);
+  --button-primary-active-border: var(--accent-solid-border);
   --button-primary-active-text: var(--accent-on-solid);
-  --button-primary-disabled-fill: var(--disabled-surface);
-  --button-primary-disabled-text: var(--disabled-text);
-  --button-primary-disabled-border: var(--disabled-border);
+  --button-primary-disabled-fill: var(--disabled-solid);
+  --button-primary-disabled-text: var(--disabled-label);
+  --button-primary-disabled-border: var(--disabled-solid-border);
   --button-primary-loading-fill: var(--accent-solid);
+  --button-primary-loading-border: var(--accent-solid-border);
   --button-primary-loading-text: var(--accent-on-solid);
   --button-primary-error-fill: var(--accent-solid);
+  --button-primary-error-border: var(--accent-solid-border);
   --button-primary-error-text: var(--accent-on-solid);
   --button-primary-success-fill: var(--accent-solid);
+  --button-primary-success-border: var(--accent-solid-border);
   --button-primary-success-text: var(--accent-on-solid);
   --button-primary-success-icon: var(--accent-on-solid);
   --button-secondary-fill: var(--surface);
@@ -2320,10 +2378,10 @@
   --button-secondary-focus-ring: var(--focus-ring);
   --button-secondary-active-fill: var(--accent-bg-subtle-active);
   --button-secondary-active-text: var(--accent-text);
-  --button-secondary-active-border: var(--border-interactive);
-  --button-secondary-disabled-fill: var(--disabled-surface);
-  --button-secondary-disabled-text: var(--disabled-text);
-  --button-secondary-disabled-border: var(--disabled-border);
+  --button-secondary-active-border: var(--text);
+  --button-secondary-disabled-fill: var(--surface);
+  --button-secondary-disabled-text: var(--disabled-label);
+  --button-secondary-disabled-border: var(--disabled-outline);
   --button-secondary-loading-fill: var(--surface);
   --button-secondary-loading-text: var(--accent-text);
   --button-secondary-loading-border: var(--border-interactive);
@@ -2341,7 +2399,7 @@
   --button-tertiary-focus-ring: var(--focus-ring);
   --button-tertiary-active-fill: var(--accent-bg-subtle-active);
   --button-tertiary-active-text: var(--accent-text);
-  --button-tertiary-disabled-text: var(--disabled-text);
+  --button-tertiary-disabled-text: var(--disabled-label);
   --button-tertiary-loading-text: var(--accent-text);
   --button-tertiary-error-text: var(--accent-text);
   --button-tertiary-success-text: var(--accent-text);
@@ -2363,9 +2421,9 @@
   --button-destructive-active-fill: var(--destructive-bg-subtle);
   --button-destructive-active-text: var(--destructive-text);
   --button-destructive-active-border: var(--destructive-text);
-  --button-destructive-disabled-fill: var(--disabled-surface);
-  --button-destructive-disabled-text: var(--disabled-text);
-  --button-destructive-disabled-border: var(--disabled-border);
+  --button-destructive-disabled-fill: var(--surface);
+  --button-destructive-disabled-text: var(--disabled-label);
+  --button-destructive-disabled-border: var(--disabled-outline);
   --button-destructive-loading-fill: var(--surface);
   --button-destructive-loading-text: var(--destructive-text);
   --button-destructive-loading-border: var(--destructive-text);
@@ -2640,34 +2698,34 @@
   --dialog-shadow: var(--shadow-2);
   --dialog-fill: var(--surface);
   --dialog-text: var(--text);
-  --dialog-border: var(--border);
+  --dialog-border: var(--border-strong);
   --dialog-backdrop: var(--backdrop);
   --dialog-title: var(--text);
   --dialog-hover-fill: var(--surface);
   --dialog-hover-text: var(--text);
-  --dialog-hover-border: var(--border);
+  --dialog-hover-border: var(--border-strong);
   --dialog-focus-fill: var(--surface);
   --dialog-focus-text: var(--text);
-  --dialog-focus-border: var(--border);
+  --dialog-focus-border: var(--border-strong);
   --dialog-focus-ring: var(--focus-ring);
   --dialog-active-fill: var(--surface);
   --dialog-active-text: var(--text);
-  --dialog-active-border: var(--border);
+  --dialog-active-border: var(--border-strong);
   --dialog-disabled-fill: var(--surface);
   --dialog-disabled-text: var(--text);
-  --dialog-disabled-border: var(--border);
-  --dialog-disabled-primary: var(--disabled-surface);
+  --dialog-disabled-border: var(--border-strong);
+  --dialog-disabled-primary: var(--disabled-solid);
   --dialog-loading-fill: var(--surface);
   --dialog-loading-text: var(--text);
-  --dialog-loading-border: var(--border);
+  --dialog-loading-border: var(--border-strong);
   --dialog-error-fill: var(--surface);
   --dialog-error-text: var(--text);
-  --dialog-error-border: var(--border);
+  --dialog-error-border: var(--border-strong);
   --dialog-error-alert: var(--status-error-surface);
   --dialog-error-alert-text: var(--status-error-text);
   --dialog-success-fill: var(--surface);
   --dialog-success-text: var(--text);
-  --dialog-success-border: var(--border);
+  --dialog-success-border: var(--border-strong);
   --alert-variant-error-fill: var(--status-error-surface);
   --alert-variant-error-text: var(--status-error-text);
   --alert-variant-error-icon: var(--status-error-text);
@@ -2834,7 +2892,7 @@
   --empty-state-active-copy: var(--text-secondary);
   --empty-state-disabled-title: var(--text);
   --empty-state-disabled-copy: var(--text-secondary);
-  --empty-state-disabled-cta: var(--disabled-surface);
+  --empty-state-disabled-cta: var(--disabled-solid);
   --empty-state-loading-skeleton: var(--skeleton-base);
   --empty-state-error-title: var(--text);
   --empty-state-error-copy: var(--status-error-text);
@@ -2869,22 +2927,29 @@
   --launcher-variant-badge-text: var(--text);
   --launcher-variant-badge-border: var(--border);
   --launcher-fill: var(--accent-solid);
+  --launcher-border: var(--accent-solid-border);
   --launcher-icon: var(--accent-on-solid);
   --launcher-hover-fill: var(--accent-solid-hover);
+  --launcher-hover-border: var(--accent-solid-border);
   --launcher-hover-icon: var(--accent-on-solid);
   --launcher-focus-fill: var(--accent-solid);
+  --launcher-focus-border: var(--accent-solid-border);
   --launcher-focus-icon: var(--accent-on-solid);
   --launcher-focus-ring: var(--focus-ring);
   --launcher-active-fill: var(--accent-solid-active);
+  --launcher-active-border: var(--accent-solid-border);
   --launcher-active-icon: var(--accent-on-solid);
   --launcher-disabled-fill: var(--disabled-surface);
   --launcher-disabled-text: var(--disabled-text);
   --launcher-disabled-border: var(--disabled-border);
   --launcher-loading-fill: var(--accent-solid);
+  --launcher-loading-border: var(--accent-solid-border);
   --launcher-loading-icon: var(--accent-on-solid);
   --launcher-error-fill: var(--accent-solid);
+  --launcher-error-border: var(--accent-solid-border);
   --launcher-error-icon: var(--accent-on-solid);
   --launcher-success-fill: var(--accent-solid);
+  --launcher-success-border: var(--accent-solid-border);
   --launcher-success-icon: var(--accent-on-solid);
   --tutor-message-text: var(--text);
   --tutor-message-link: var(--link);
@@ -2994,7 +3059,7 @@
   --chart-baseline: var(--border-strong);
   --chart-tick-text: var(--text-secondary);
   --chart-plot: var(--surface);
-  --companion-backing: #faf9f3;
+  --companion-backing: #fdfcf6;
   color-scheme: dark;
 }
 
@@ -3368,11 +3433,8 @@ ul.small li { margin-bottom: var(--space-1); max-width: 100ch; }
 .msg { display: flex; gap: var(--space-3); align-items: flex-start; }
 .msg[hidden] { display: none; }
 .msg .text { flex: 1; max-width: 68ch; }
-.msg .text p { position: relative; }
-.msg .text p::before { content: ""; position: absolute; left: calc(-1 * (var(--space-5) + var(--size-avatar) + var(--space-3))); top: 0; width: 6px; height: 100%; background: linear-gradient(var(--border-strong) 0 1px, transparent 1px) 0 0 / 6px 1lh repeat-y; }
 .msg.user { justify-content: flex-end; }
 .msg.user .text { max-width: 36ch; }
-.msg.user .text p::before { display: none; }
 .msg .who { font-size: var(--text-xs); line-height: 16px; color: var(--text-secondary); margin-bottom: var(--space-1); }
 .msg .text p + p { margin-top: var(--space-3); }
 .msg .text p.who + p { margin-top: 0; }
@@ -3405,7 +3467,7 @@ ul.small li { margin-bottom: var(--space-1); max-width: 100ch; }
 .field .caret { display: inline-block; width: 1px; height: 16px; background: var(--text); vertical-align: -3px; }
 .field [hidden] { display: none; }
 .btn { display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 0 var(--space-4); border-radius: var(--radius-control); font: inherit; font-size: var(--text-sm); line-height: 20px; font-weight: 600; cursor: pointer; }
-.btn-primary { background: var(--accent-solid); color: var(--accent-on-solid); border: 1px solid var(--accent-solid); }
+.btn-primary { background: var(--accent-solid); color: var(--accent-on-solid); border: 1px solid var(--accent-solid-border); } /* the 1 px edge is the Soft sage control's boundary (the fill is a tint) */
 .btn-secondary { background: var(--fill-none); color: var(--accent-text); border: 1px solid var(--border-interactive); }
 .peek { position: absolute; right: var(--space-4); bottom: calc(100% - var(--space-5)); }
 .peek[hidden] { display: none; }
@@ -3422,10 +3484,9 @@ ul.small li { margin-bottom: var(--space-1); max-width: 100ch; }
 
 /* reading columns (sign-in, empty, not-found, error) */
 .column { position: relative; padding-left: var(--space-5); background: linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 1px 100% no-repeat; max-width: 420px; }
-.column .line { font-size: var(--text-2xl); line-height: 32px; font-weight: 600; letter-spacing: -0.01em; margin-top: var(--space-5); position: relative; }
+.column .line { font-size: var(--text-2xl); line-height: 32px; font-weight: 600; letter-spacing: -0.01em; margin-top: var(--space-5); }
 .column .display { font-size: var(--text-4xl); line-height: 44px; }
-.column .line::before, .column .copy::before { content: ""; position: absolute; left: calc(-1 * var(--space-5)); top: 0; width: 6px; height: 100%; background: linear-gradient(var(--border-strong) 0 1px, transparent 1px) 0 0 / 6px 1lh repeat-y; }
-.column .copy { position: relative; color: var(--text-secondary); margin-top: var(--space-2); max-width: 36ch; }
+.column .copy { color: var(--text-secondary); margin-top: var(--space-2); max-width: 36ch; }
 .column .copy.err { color: var(--status-error-text); display: flex; gap: var(--space-2); align-items: flex-start; }
 .column .copy .ico { flex: none; width: 16px; height: 16px; margin-top: 4px; }
 .column .btn { margin-top: var(--space-5); }
@@ -3438,7 +3499,7 @@ ul.small li { margin-bottom: var(--space-1); max-width: 100ch; }
 .cardbody .i { color: var(--text-secondary); font-size: var(--text-sm); line-height: 20px; }
 
 /* launcher */
-.launcher { width: var(--launcher-size); height: var(--launcher-size); border-radius: var(--launcher-radius); background: var(--accent-solid); color: var(--accent-on-solid); border: 0; box-shadow: var(--shadow-2); display: inline-grid; place-items: center; cursor: pointer; margin-top: var(--space-2); }
+.launcher { width: var(--launcher-size); height: var(--launcher-size); border-radius: var(--launcher-radius); background: var(--accent-solid); color: var(--accent-on-solid); border: 1px solid var(--launcher-border); box-shadow: var(--shadow-2); display: inline-grid; place-items: center; cursor: pointer; margin-top: var(--space-2); }
 .launcher svg { width: var(--companion-slot-launcher); height: var(--companion-slot-launcher); }
 .launcher:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 .launcher.alt-a svg { width: 24px; height: 24px; }
@@ -3909,6 +3970,18 @@ footer pre { white-space: pre-wrap; font-size: var(--text-xs); line-height: 16px
     out.inkAligned = document.querySelectorAll('.kiwi.ink-aligned').length;
     out.layout = { innerWidth, scrollWidth: document.documentElement.scrollWidth, horizontalScroll: document.documentElement.scrollWidth > innerWidth, documentHeight: document.documentElement.scrollHeight };
     out.fonts = { sourceSans3: document.fonts.check('16px "Source Sans 3"') };
+    // the ruler (the user's 2026-10-18 decision: the rule alone, no ticks): every ruled reading region (the message regions, the sign-in, empty and
+    // not-found columns) draws its 1 px rule in its own mode's --border-strong, and nothing inside a ruled region draws a tick strip (a ::before or
+    // ::after painted with a gradient)
+    out.ruler = { regions: 0, ruleOk: 0, ticks: 0, byTheme: {}, fails: [] };
+    for (const reg of document.querySelectorAll('.region, .column')) {
+      const bg = getComputedStyle(reg).backgroundImage; if (!/linear-gradient/.test(bg)) continue; // a column drawn without the rule on purpose (the welcome row inside a region)
+      const scope = reg; const probe = document.createElement('span'); probe.style.color = 'var(--border-strong)'; scope.appendChild(probe); const want = getComputedStyle(probe).color; scope.removeChild(probe);
+      const theme = reg.closest('[data-theme]')?.dataset.theme || 'root'; out.ruler.regions++; out.ruler.byTheme[theme] = (out.ruler.byTheme[theme] || 0) + 1;
+      if (bg.split(want).length === 3) out.ruler.ruleOk++; else if (out.ruler.fails.length < 8) out.ruler.fails.push(`${theme}: the rule is not its mode's --border-strong ${want} (${bg.slice(0, 90)})`);
+      for (const e of reg.querySelectorAll('*')) for (const ps of ['::before', '::after']) { const c = getComputedStyle(e, ps); if (c.content !== 'none' && c.content !== 'normal' && /gradient/.test(c.backgroundImage)) { out.ruler.ticks++; if (out.ruler.fails.length < 8) out.ruler.fails.push(`${theme}: a tick strip renders (${ps} on ${e.tagName.toLowerCase()}.${e.className})`); } }
+    }
+    out.rulerOk = out.ruler.regions > 0 && out.ruler.ruleOk === out.ruler.regions && out.ruler.ticks === 0;
     return out;
   }
   // the scripted sequence at chosen instants: the clip and drawing the newest avatar shows (frozen clock; restored after)
@@ -3995,6 +4068,7 @@ footer pre { white-space: pre-wrap; font-size: var(--text-xs); line-height: 16px
         `backing: ${out.backingRequiredPairs} required pairs live, lowest light ${out.backing.find((b) => b.theme === 'light')?.lowestRequired}:1, dark ${out.backing.find((b) => b.theme === 'dark')?.lowestRequired}:1; ${out.backingBelow3} below 3`,
         `switch: native disabled ${out.switchControl.nativeDisabled}, aria-disabled ${out.switchControl.ariaDisabled}, described by ${out.switchControl.describedBy}; launcher glyph ${out.glyph.copies} copies, ${out.glyph.masks} masks, ${out.glyph.colourLiterals} colour literals`,
         `one mover: max ${out.oneMover.maxMovers} per chat exhibit over ${out.oneMover.frozenSamples} frozen and ${out.oneMover.samples} live samples`,
+        `ruler: ${out.ruler.regions} ruled reading regions (${Object.entries(out.ruler.byTheme).map(([k, v]) => `${k} ${v}`).join(', ')}), ${out.ruler.ruleOk} with the rule in their mode's --border-strong, ${out.ruler.ticks} tick strips${out.ruler.fails.length ? ': ' + out.ruler.fails.join(' | ') : ''}`,
         `assets ${out.assets.loaded}/${out.assets.total}; horizontal scroll ${out.layout.horizontalScroll}; Source Sans 3 ${out.fonts.sourceSans3}`,
       ].join('\n');
       document.documentElement.dataset.assets = loadedN >= loadTotal ? 'ready' : 'partial';

@@ -807,7 +807,7 @@
         "--kiwi-primary": {
           "token": "{semantic.color.accent-solid}",
           "status": "kept",
-          "note": "forest in light"
+          "note": "the Soft sage fill in light; draw it with its 1 px --kiwi-primary-border edge"
         },
         "--kiwi-primary-light": {
           "token": "{semantic.color.accent-solid-hover}",
@@ -823,7 +823,7 @@
           "replacement": "--kiwi-primary",
           "removeIn": "4.0.0",
           "notBefore": "six months after 2.0.0",
-          "note": "no darker step exists below the forest solid"
+          "note": "no darker step: the fill is a tint, its edge carries the boundary"
         },
         "--kiwi-primary-contrast": {
           "token": "{semantic.color.accent-on-solid}",
@@ -1290,12 +1290,12 @@
         "--kiwi-radius-sm": {
           "token": "{global.radius.control}",
           "status": "kept",
-          "note": "2 px: the one control/sheet radius"
+          "note": "6 px: the control radius"
         },
         "--kiwi-radius-default": {
           "token": "{global.radius.control}",
           "status": "repointed",
-          "note": "4 → 2 px"
+          "note": "4 → 6 px: the control radius"
         },
         "--kiwi-radius-md": {
           "token": "{global.radius.control}",
@@ -1303,31 +1303,31 @@
           "replacement": "--kiwi-radius-sm",
           "removeIn": "4.0.0",
           "notBefore": "six months after 2.0.0",
-          "note": "no more than two sizes of radius; both are 2 px"
+          "note": "two sizes of radius: 6 px for controls (this one's value in v1 too), 8 px for sheets"
         },
         "--kiwi-radius-lg": {
-          "token": "{global.radius.control}",
+          "token": "{global.radius.sheet}",
           "status": "deprecated",
-          "replacement": "--kiwi-radius-sm",
+          "replacement": "--kiwi-radius-sheet",
           "removeIn": "4.0.0",
           "notBefore": "six months after 2.0.0",
-          "note": "no more than two sizes of radius; both are 2 px"
+          "note": "two sizes of radius: 6 px for controls, 8 px for sheets (lg was 8 px in v1)"
         },
         "--kiwi-radius-xl": {
-          "token": "{global.radius.control}",
+          "token": "{global.radius.sheet}",
           "status": "deprecated",
-          "replacement": "--kiwi-radius-sm",
+          "replacement": "--kiwi-radius-sheet",
           "removeIn": "4.0.0",
           "notBefore": "six months after 2.0.0",
-          "note": "no more than two sizes of radius; both are 2 px"
+          "note": "two sizes of radius: 6 px for controls, 8 px for sheets (lg was 8 px in v1)"
         },
         "--kiwi-radius-2xl": {
-          "token": "{global.radius.control}",
+          "token": "{global.radius.sheet}",
           "status": "deprecated",
-          "replacement": "--kiwi-radius-sm",
+          "replacement": "--kiwi-radius-sheet",
           "removeIn": "4.0.0",
           "notBefore": "six months after 2.0.0",
-          "note": "no more than two sizes of radius; both are 2 px"
+          "note": "two sizes of radius: 6 px for controls, 8 px for sheets (lg was 8 px in v1)"
         },
         "--kiwi-radius-full": {
           "token": "{global.radius.round}",
@@ -1636,10 +1636,50 @@
           "status": "added",
           "note": "the pressed fill of the filled control (:active), one step beyond hover"
         },
+        "--kiwi-bg-tint": {
+          "token": "{semantic.color.accent-bg-subtle}",
+          "status": "added",
+          "note": "the hover tint of outlined and text controls (:hover); a selected chip, row or step takes --kiwi-bg-selected, a pressed control --kiwi-bg-pressed"
+        },
         "--kiwi-bg-pressed": {
           "token": "{semantic.color.accent-bg-subtle-active}",
           "status": "added",
           "note": "the pressed tint of outlined and text controls (:active)"
+        },
+        "--kiwi-bg-active": {
+          "token": "{semantic.color.surface-active}",
+          "status": "added",
+          "note": "the tonal active ground: a role or label chip (.kiwi-chip), a pressed row"
+        },
+        "--kiwi-primary-border": {
+          "token": "{semantic.color.accent-solid-border}",
+          "status": "added",
+          "note": "the 1 px edge of the filled control: its boundary, since --kiwi-primary is a tint"
+        },
+        "--kiwi-radius-sheet": {
+          "token": "{global.radius.sheet}",
+          "status": "added",
+          "note": "8 px: panels, dialogs, cards, menus and toasts"
+        },
+        "--kiwi-primary-disabled": {
+          "token": "{semantic.color.disabled.solid}",
+          "status": "added",
+          "note": "a disabled primary's faint sage fill (the 2026-10-18 decision): never the disabled secondary"
+        },
+        "--kiwi-primary-disabled-border": {
+          "token": "{semantic.color.disabled.solid-border}",
+          "status": "added",
+          "note": "a disabled primary's faint sage edge"
+        },
+        "--kiwi-disabled-outline": {
+          "token": "{semantic.color.disabled.outline}",
+          "status": "added",
+          "note": "a disabled button's faint edge"
+        },
+        "--kiwi-disabled-label": {
+          "token": "{semantic.color.disabled.label}",
+          "status": "added",
+          "note": "a disabled button's label, lower in luminance than the enabled label"
         },
         "--kiwi-disabled-surface": {
           "token": "{semantic.color.disabled.surface}",
@@ -1682,7 +1722,7 @@
         },
         {
           "path": "browser chrome: index.html <meta name=\"theme-color\"> (two tags with media=\"(prefers-color-scheme: light|dark)\") and public/manifest.webmanifest theme_color / background_color",
-          "reason": "the browser reads them before any stylesheet loads, so they must be literals; their values are the light and dark --surface for theme-color (#faf9f3 / #252218) and the light --surface and --background for the manifest (#faf9f3 / #f4f1e4); today's #3f7d58 (on no ramp) and #ffffff (pure white) are retired; a test compares them to the source"
+          "reason": "the browser reads them before any stylesheet loads, so they must be literals; their values are the light and dark --surface for theme-color (#fdfcf6 / #1a251c) and the light --surface and --background for the manifest (#fdfcf6 / #f6f5ed); today's #3f7d58 (on no ramp) and #ffffff (pure white) are retired; a test compares them to the source"
         },
         {
           "path": "src/components/Brand/InstitutionLogo.tsx",
@@ -1707,280 +1747,630 @@
     }
   },
   "global": {
-    "$description": "Tier 1. The locked block of kiwi-ui/DESIGN.md, verbatim: three recorded palette.mjs runs (A seed 156 muted, B seed 95 muted, C seed 156 balanced), the type scale, the space scale, radii and the motion budget. Values change only by re-running palette.mjs and re-confirming the lock.",
+    "$description": "Tier 1. The locked block of kiwi-ui/DESIGN.md, verbatim: since the 2026-10-18 re-lock the neutral, accent and paper ramps and the code-string green are aligned to the user's kiwi-icon page (each step either a reference value taken as given or an OKLCH derivation, recorded per mode in $extensions[\"org.kiwi\"].source; check-tokens.mjs § 21 re-renders every derivation), the functional ramps are palette.mjs run C (seed 156 balanced) as locked on 2026-10-16; then the type scale, the space scale, radii and the motion budget. Values change only by the regeneration procedure of DESIGN.md § Color tokens and the user's re-confirmation of the lock.",
     "color": {
-      "$description": "Ramps: step 9 is the hue's chroma cusp (the solid), so 8 → 9 → 10 is not monotonic; roles never read a ramp by position. --neutral-9/10 are not published as role tokens.",
+      "$description": "Ramps are monotonic in lightness (light: step 1 lightest; dark: step 1 darkest), so a step's number is its place in the ramp; roles still read the ramp by role, never by position. --neutral-9 is the one neutral step no role reads. Every step records its source per mode in $extensions[\"org.kiwi\"].source: given (the kiwi-icon reference value and the selector it comes from), oklch [L, C, H] with the reason (a derivation, gamut-mapped by chroma as palette.mjs does; § 21 re-renders it) or kept (the 2026-10-16 lock).",
       "neutral": {
         "1": {
           "$type": "color",
-          "$value": "#fdfdfc",
+          "$value": "#fbfbf7",
           "$extensions": {
             "mode": {
-              "dark": "#131312"
+              "dark": "#0e1510"
             },
             "org.kiwi": {
-              "css": "--neutral-1"
+              "css": "--neutral-1",
+              "source": {
+                "light": {
+                  "oklch": [
+                    0.988,
+                    0.006,
+                    110
+                  ],
+                  "why": "the lightest neutral, above the hover step"
+                },
+                "dark": {
+                  "oklch": [
+                    0.185,
+                    0.014,
+                    152
+                  ],
+                  "why": "the darkest neutral, below the canvas"
+                }
+              }
             }
           }
         },
         "2": {
           "$type": "color",
-          "$value": "#f9f9f7",
+          "$value": "#f6f7ee",
           "$extensions": {
             "mode": {
-              "dark": "#1a1918"
+              "dark": "#151d16"
             },
             "org.kiwi": {
-              "css": "--neutral-2"
+              "css": "--neutral-2",
+              "source": {
+                "light": {
+                  "oklch": [
+                    0.972,
+                    0.011,
+                    112
+                  ],
+                  "why": "one step below neutral-1"
+                },
+                "dark": {
+                  "oklch": [
+                    0.22,
+                    0.018,
+                    150
+                  ],
+                  "why": "one step up"
+                }
+              }
             }
           }
         },
         "3": {
           "$type": "color",
-          "$value": "#f1f0ed",
+          "$value": "#f0f2e5",
           "$extensions": {
             "mode": {
-              "dark": "#232220"
+              "dark": "#1c261d"
             },
             "org.kiwi": {
-              "css": "--neutral-3"
+              "css": "--neutral-3",
+              "source": {
+                "light": {
+                  "given": "kiwi-icon .km-frame-strip button (the hover row)"
+                },
+                "dark": {
+                  "oklch": [
+                    0.255,
+                    0.021,
+                    149
+                  ],
+                  "why": "one step up, beside the sheet"
+                }
+              }
             }
           }
         },
         "4": {
           "$type": "color",
-          "$value": "#e9e8e4",
+          "$value": "#e8eddf",
           "$extensions": {
             "mode": {
-              "dark": "#2b2a27"
+              "dark": "#222d23"
             },
             "org.kiwi": {
-              "css": "--neutral-4"
+              "css": "--neutral-4",
+              "source": {
+                "light": {
+                  "given": "kiwi-icon .km-motion-controls (the pressed row)"
+                },
+                "dark": {
+                  "oklch": [
+                    0.285,
+                    0.024,
+                    147
+                  ],
+                  "why": "tonal hover, one step above the sheet"
+                }
+              }
             }
           }
         },
         "5": {
           "$type": "color",
-          "$value": "#dfded8",
+          "$value": "#e5e9dc",
           "$extensions": {
             "mode": {
-              "dark": "#33322e"
+              "dark": "#2a3529"
             },
             "org.kiwi": {
-              "css": "--neutral-5"
+              "css": "--neutral-5",
+              "source": {
+                "light": {
+                  "oklch": [
+                    0.928,
+                    0.019,
+                    122.8
+                  ],
+                  "why": "between the pressed row and the rule"
+                },
+                "dark": {
+                  "oklch": [
+                    0.315,
+                    0.026,
+                    144
+                  ],
+                  "why": "pressed rows, role chips"
+                }
+              }
             }
           }
         },
         "6": {
           "$type": "color",
-          "$value": "#d4d2cb",
+          "$value": "#e1e6d8",
           "$extensions": {
             "mode": {
-              "dark": "#3d3c36"
+              "dark": "#30382e"
             },
             "org.kiwi": {
-              "css": "--neutral-6"
+              "css": "--neutral-6",
+              "source": {
+                "light": {
+                  "given": "kiwi-icon .km-stage-spec border-top (the rule)"
+                },
+                "dark": {
+                  "oklch": [
+                    0.33,
+                    0.022,
+                    140
+                  ],
+                  "why": "row dividers"
+                }
+              }
             }
           }
         },
         "7": {
           "$type": "color",
-          "$value": "#c6c3bb",
+          "$value": "#d9ded0",
           "$extensions": {
             "mode": {
-              "dark": "#4b4942"
+              "dark": "#3d4539"
             },
             "org.kiwi": {
-              "css": "--neutral-7"
+              "css": "--neutral-7",
+              "source": {
+                "light": {
+                  "given": "kiwi-icon --km-line (the hairline)"
+                },
+                "dark": {
+                  "oklch": [
+                    0.38,
+                    0.024,
+                    136
+                  ],
+                  "why": "panel edges"
+                }
+              }
             }
           }
         },
         "8": {
           "$type": "color",
-          "$value": "#adaba1",
+          "$value": "#a9b29d",
           "$extensions": {
             "mode": {
-              "dark": "#636057"
+              "dark": "#5e6755"
             },
             "org.kiwi": {
-              "css": "--neutral-8"
+              "css": "--neutral-8",
+              "source": {
+                "light": {
+                  "oklch": [
+                    0.75,
+                    0.031,
+                    126
+                  ],
+                  "why": "the ruler, in the reference's line hue, at the lock's 2.0:1 on the canvas"
+                },
+                "dark": {
+                  "oklch": [
+                    0.5,
+                    0.03,
+                    130
+                  ],
+                  "why": "the ruler at the lock's dark 2.8:1"
+                }
+              }
             }
           }
         },
         "9": {
           "$type": "color",
-          "$value": "#bbb7ab",
+          "$value": "#929d87",
           "$extensions": {
+            "mode": {
+              "dark": "#6b7662"
+            },
             "org.kiwi": {
-              "css": "--neutral-9"
+              "css": "--neutral-9",
+              "source": {
+                "light": {
+                  "oklch": [
+                    0.68,
+                    0.034,
+                    129.3
+                  ],
+                  "why": "between the ruler and the field edge"
+                },
+                "dark": {
+                  "oklch": [
+                    0.55,
+                    0.033,
+                    130
+                  ],
+                  "why": "between the ruler and the field edge"
+                }
+              }
             }
           }
         },
         "10": {
           "$type": "color",
-          "$value": "#a8a599",
+          "$value": "#7b8872",
           "$extensions": {
             "mode": {
-              "dark": "#cecbbe"
+              "dark": "#79856e"
             },
             "org.kiwi": {
-              "css": "--neutral-10"
+              "css": "--neutral-10",
+              "source": {
+                "light": {
+                  "oklch": [
+                    0.61,
+                    0.036,
+                    132.5
+                  ],
+                  "why": "the field edge, in the line hue, at >= 3:1 (the reference's line is 1.25:1)"
+                },
+                "dark": {
+                  "oklch": [
+                    0.6,
+                    0.036,
+                    130
+                  ],
+                  "why": "the field edge at >= 3:1 on the canvas, the sheet, the hover and pressed rows and the hover tint (L 0.56, the exploration's value, measured 2.78:1 on the pressed row in the component gate)"
+                }
+              }
             }
           }
         },
         "11": {
           "$type": "color",
-          "$value": "#65635c",
+          "$value": "#566652",
           "$extensions": {
             "mode": {
-              "dark": "#b9b7b0"
+              "dark": "#bdc9ad"
             },
             "org.kiwi": {
-              "css": "--neutral-11"
+              "css": "--neutral-11",
+              "source": {
+                "light": {
+                  "oklch": [
+                    0.49,
+                    0.037,
+                    139.4
+                  ],
+                  "why": "--km-muted darkened by 0.036 L so it clears 4.5:1 on every tint (the reference's is 4.33:1 on its selected fill)"
+                },
+                "dark": {
+                  "given": "kiwi-icon .km-loader-caption (secondary text on the forest band)"
+                }
+              }
             }
           }
         },
         "12": {
           "$type": "color",
-          "$value": "#2f2e2a",
+          "$value": "#23442d",
           "$extensions": {
             "mode": {
-              "dark": "#e9e8e3"
+              "dark": "#e4e8db"
             },
             "org.kiwi": {
-              "css": "--neutral-12"
+              "css": "--neutral-12",
+              "source": {
+                "light": {
+                  "given": "kiwi-icon --km-ink (body text)"
+                },
+                "dark": {
+                  "oklch": [
+                    0.925,
+                    0.018,
+                    122
+                  ],
+                  "why": "paper-tinted ink for long reading"
+                }
+              }
             }
           }
         },
-        "$description": "run B · seed 95 muted · cream/tan-tinted neutrals"
+        "$description": "Grey-green neutrals aligned to the kiwi-icon page's lines, rows and ink (2026-10-18 re-lock): steps 3, 4, 6, 7 and 12 are the reference's own values in light; the ruler (8), the field edge (10) and secondary text (11) are derived so the roles keep their measured targets; dark is derived from the reference's forest band."
       },
       "accent": {
         "1": {
           "$type": "color",
-          "$value": "#fafefb",
+          "$value": "#f9fbf4",
           "$extensions": {
             "mode": {
-              "dark": "#111312"
+              "dark": "#111810"
             },
             "org.kiwi": {
-              "css": "--accent-1"
+              "css": "--accent-1",
+              "source": {
+                "light": {
+                  "oklch": [
+                    0.985,
+                    0.01,
+                    120
+                  ],
+                  "why": "the palest sage tint"
+                },
+                "dark": {
+                  "oklch": [
+                    0.2,
+                    0.02,
+                    140
+                  ],
+                  "why": "the darkest sage, below the hover tint"
+                }
+              }
             }
           }
         },
         "2": {
           "$type": "color",
-          "$value": "#f4fbf6",
+          "$value": "#f2f6ea",
           "$extensions": {
             "mode": {
-              "dark": "#161b18"
+              "dark": "#1c2517"
             },
             "org.kiwi": {
-              "css": "--accent-2"
+              "css": "--accent-2",
+              "source": {
+                "light": {
+                  "oklch": [
+                    0.966,
+                    0.016,
+                    121
+                  ],
+                  "why": "one step deeper"
+                },
+                "dark": {
+                  "oklch": [
+                    0.25,
+                    0.028,
+                    136
+                  ],
+                  "why": "one step up"
+                }
+              }
             }
           }
         },
         "3": {
           "$type": "color",
-          "$value": "#e6f5eb",
+          "$value": "#eaf0df",
           "$extensions": {
             "mode": {
-              "dark": "#1a251e"
+              "dark": "#27321f"
             },
             "org.kiwi": {
-              "css": "--accent-3"
+              "css": "--accent-3",
+              "source": {
+                "light": {
+                  "given": "kiwi-icon button :hover (the hover tint)"
+                },
+                "dark": {
+                  "oklch": [
+                    0.3,
+                    0.035,
+                    132
+                  ],
+                  "why": "hover tint"
+                }
+              }
             }
           }
         },
         "4": {
           "$type": "color",
-          "$value": "#d9eee0",
+          "$value": "#e4ebd9",
           "$extensions": {
             "mode": {
-              "dark": "#1e2f24"
+              "dark": "#2f3b22"
             },
             "org.kiwi": {
-              "css": "--accent-4"
+              "css": "--accent-4",
+              "source": {
+                "light": {
+                  "given": "kiwi-icon [aria-pressed=true] (the selected fill)"
+                },
+                "dark": {
+                  "oklch": [
+                    0.335,
+                    0.045,
+                    130
+                  ],
+                  "why": "selected fill"
+                }
+              }
             }
           }
         },
         "5": {
           "$type": "color",
-          "$value": "#c9e7d3",
+          "$value": "#dce5cc",
           "$extensions": {
             "mode": {
-              "dark": "#203929"
+              "dark": "#354225"
             },
             "org.kiwi": {
-              "css": "--accent-5"
+              "css": "--accent-5",
+              "source": {
+                "light": {
+                  "given": "kiwi-icon [data-background=sage] stage (the pressed tint)"
+                },
+                "dark": {
+                  "oklch": [
+                    0.36,
+                    0.05,
+                    128
+                  ],
+                  "why": "the primary's fill: a deep sage tint"
+                }
+              }
             }
           }
         },
         "6": {
           "$type": "color",
-          "$value": "#b7ddc4",
+          "$value": "#d0ddbd",
           "$extensions": {
             "mode": {
-              "dark": "#234430"
+              "dark": "#374525"
             },
             "org.kiwi": {
-              "css": "--accent-6"
+              "css": "--accent-6",
+              "source": {
+                "light": {
+                  "oklch": [
+                    0.88,
+                    0.045,
+                    125
+                  ],
+                  "why": "the primary's fill: one step deeper than the selected tint, so the primary is not read as a selected chip"
+                },
+                "dark": {
+                  "oklch": [
+                    0.37,
+                    0.055,
+                    129
+                  ],
+                  "why": "pressed tint and the editor selection"
+                }
+              }
             }
           }
         },
         "7": {
           "$type": "color",
-          "$value": "#a2d1b2",
+          "$value": "#c7d6b1",
           "$extensions": {
             "mode": {
-              "dark": "#29533a"
+              "dark": "#3f4d2d"
             },
             "org.kiwi": {
-              "css": "--accent-7"
+              "css": "--accent-7",
+              "source": {
+                "light": {
+                  "oklch": [
+                    0.855,
+                    0.052,
+                    125
+                  ],
+                  "why": "the primary's hover"
+                },
+                "dark": {
+                  "oklch": [
+                    0.4,
+                    0.055,
+                    128
+                  ],
+                  "why": "the primary's hover"
+                }
+              }
             }
           }
         },
         "8": {
           "$type": "color",
-          "$value": "#82ba96",
+          "$value": "#bfcea6",
           "$extensions": {
             "mode": {
-              "dark": "#386e4e"
+              "dark": "#495934"
             },
             "org.kiwi": {
-              "css": "--accent-8"
+              "css": "--accent-8",
+              "source": {
+                "light": {
+                  "oklch": [
+                    0.83,
+                    0.057,
+                    125
+                  ],
+                  "why": "the primary's pressed fill"
+                },
+                "dark": {
+                  "oklch": [
+                    0.44,
+                    0.06,
+                    128
+                  ],
+                  "why": "the primary's pressed fill"
+                }
+              }
             }
           }
         },
         "9": {
           "$type": "color",
-          "$value": "#84ca9e",
+          "$value": "#92ae70",
           "$extensions": {
+            "mode": {
+              "dark": "#859b69"
+            },
             "org.kiwi": {
-              "css": "--accent-9"
+              "css": "--accent-9",
+              "source": {
+                "light": {
+                  "given": "kiwi-icon --kiwi-sage (the mascot's sage)"
+                },
+                "dark": {
+                  "oklch": [
+                    0.66,
+                    0.075,
+                    128
+                  ],
+                  "why": "the primary's sage edge"
+                }
+              }
             }
           }
         },
         "10": {
           "$type": "color",
-          "$value": "#74b68d",
+          "$value": "#577d37",
           "$extensions": {
             "mode": {
-              "dark": "#9addb2"
+              "dark": "#b1c698"
             },
             "org.kiwi": {
-              "css": "--accent-10"
+              "css": "--accent-10",
+              "source": {
+                "light": {
+                  "given": "kiwi-icon focus outline and the pressed icon card (the strong green)"
+                },
+                "dark": {
+                  "given": "kiwi-icon .km-toggle accent (focus and the selection marker)"
+                }
+              }
             }
           }
         },
         "11": {
           "$type": "color",
-          "$value": "#486d56",
+          "$value": "#23482e",
           "$extensions": {
             "mode": {
-              "dark": "#9bc3a8"
+              "dark": "#b9cf9b"
             },
             "org.kiwi": {
-              "css": "--accent-11"
+              "css": "--accent-11",
+              "source": {
+                "light": {
+                  "given": "kiwi-icon --km-forest (accent text, labels)"
+                },
+                "dark": {
+                  "given": "kiwi-icon .km-loader-demo accent (accent text on the forest band)"
+                }
+              }
             }
           }
         },
@@ -1989,65 +2379,166 @@
           "$value": "#203327",
           "$extensions": {
             "mode": {
-              "dark": "#d7efdf"
+              "dark": "#deeacd"
             },
             "org.kiwi": {
-              "css": "--accent-12"
+              "css": "--accent-12",
+              "source": {
+                "light": {
+                  "kept": "the 2026-10-16 lock (palette.mjs run A, accent-12): the deepest step, frozen into the on-paper pin"
+                },
+                "dark": {
+                  "oklch": [
+                    0.92,
+                    0.04,
+                    125
+                  ],
+                  "why": "the palest sage, above accent text"
+                }
+              }
             }
           }
         },
-        "$description": "run A · seed 156 muted · forest/sage accent"
+        "$description": "Sage accent aligned to the kiwi-icon page (2026-10-18 re-lock): the reference's hover, selected and pressed tints (3-5), the Soft sage primary's fill, hover and pressed (6-8, derived), the mascot's sage (9), the strong green of focus and selection (10), the forest of accent text and labels (11); step 12 keeps the 2026-10-16 forest, frozen into the on-paper pin. Dark is derived (the reference has only its forest band), with the band's toggle and slider accents at 10 and 11."
       },
       "paper": {
         "1": {
           "$type": "color",
-          "$value": "#fefdf9",
+          "$value": "#fefefa",
           "$extensions": {
             "mode": {
-              "dark": "#131310"
+              "dark": "#0d150f"
             },
             "org.kiwi": {
-              "css": "--paper-1"
+              "css": "--paper-1",
+              "source": {
+                "light": {
+                  "oklch": [
+                    0.996,
+                    0.005,
+                    99
+                  ],
+                  "why": "the lightest value, above the sheet"
+                },
+                "dark": {
+                  "oklch": [
+                    0.185,
+                    0.016,
+                    152
+                  ],
+                  "why": "below the canvas"
+                }
+              }
             }
           }
         },
         "2": {
           "$type": "color",
-          "$value": "#faf9f3",
+          "$value": "#fdfcf6",
           "$extensions": {
             "mode": {
-              "dark": "#1b1915"
+              "dark": "#121b14"
             },
             "org.kiwi": {
-              "css": "--paper-2"
+              "css": "--paper-2",
+              "source": {
+                "light": {
+                  "given": "kiwi-icon --km-paper (the sheet)"
+                },
+                "dark": {
+                  "oklch": [
+                    0.21,
+                    0.018,
+                    152
+                  ],
+                  "why": "a forest-black canvas, the night version of the reference's forest band, at the lock's dark lightness"
+                }
+              }
             }
           }
         },
         "3": {
           "$type": "color",
-          "$value": "#f4f1e4",
+          "$value": "#f6f5ed",
           "$extensions": {
             "mode": {
-              "dark": "#252218"
+              "dark": "#1a251c"
             },
             "org.kiwi": {
-              "css": "--paper-3"
+              "css": "--paper-3",
+              "source": {
+                "light": {
+                  "given": "kiwi-icon --km-cream (the page)"
+                },
+                "dark": {
+                  "oklch": [
+                    0.25,
+                    0.022,
+                    150
+                  ],
+                  "why": "the sheet, one tonal step up"
+                }
+              }
             }
           }
         },
         "4": {
           "$type": "color",
-          "$value": "#ede8d5",
+          "$value": "#f0eee2",
           "$extensions": {
             "mode": {
-              "dark": "#2e2a1b"
+              "dark": "#212e23"
             },
             "org.kiwi": {
-              "css": "--paper-4"
+              "css": "--paper-4",
+              "source": {
+                "light": {
+                  "oklch": [
+                    0.948,
+                    0.016,
+                    102
+                  ],
+                  "why": "one step below the canvas"
+                },
+                "dark": {
+                  "oklch": [
+                    0.285,
+                    0.026,
+                    148
+                  ],
+                  "why": "one step above the sheet"
+                }
+              }
             }
           }
         },
-        "$description": "run B · accent steps 1–4 · the canvas ramp"
+        "$description": "The canvas ramp (2026-10-18 re-lock): light paper-2 and paper-3 are the reference's sheet and page; dark paper-2 and paper-3 are the derived forest-black canvas and its sheet; steps 1 and 4 are derived."
+      },
+      "code-green": {
+        "$type": "color",
+        "$value": "#446a2c",
+        "$description": "The code-string green (syntax.string): accent text is now the ink's forest, so strings keep a hue of their own, at 4.5:1 or more on the editor selection in both modes. Dark equals accent-11.",
+        "$extensions": {
+          "mode": {
+            "dark": "#b9cf9b"
+          },
+          "org.kiwi": {
+            "css": "--code-green",
+            "source": {
+              "light": {
+                "oklch": [
+                  0.48,
+                  0.1,
+                  135
+                ],
+                "why": "a code-string green kept apart from the ink (accent text is now the ink's forest)"
+              },
+              "dark": {
+                "given": "kiwi-icon .km-loader-demo accent (equal to dark accent-11)"
+              }
+            }
+          }
+        }
       },
       "error": {
         "3": {
@@ -2058,7 +2549,15 @@
               "dark": "#331a18"
             },
             "org.kiwi": {
-              "css": "--error-3"
+              "css": "--error-3",
+              "source": {
+                "light": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                },
+                "dark": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                }
+              }
             }
           }
         },
@@ -2067,7 +2566,15 @@
           "$value": "#e1524f",
           "$extensions": {
             "org.kiwi": {
-              "css": "--error-9"
+              "css": "--error-9",
+              "source": {
+                "light": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                },
+                "dark": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                }
+              }
             }
           }
         },
@@ -2079,11 +2586,19 @@
               "dark": "#f49c95"
             },
             "org.kiwi": {
-              "css": "--error-11"
+              "css": "--error-11",
+              "source": {
+                "light": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                },
+                "dark": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                }
+              }
             }
           }
         },
-        "$description": "run C · seed 156 balanced"
+        "$description": "run C · seed 156 balanced (kept by the 2026-10-18 re-lock)"
       },
       "success": {
         "3": {
@@ -2094,7 +2609,15 @@
               "dark": "#152715"
             },
             "org.kiwi": {
-              "css": "--success-3"
+              "css": "--success-3",
+              "source": {
+                "light": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                },
+                "dark": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                }
+              }
             }
           }
         },
@@ -2103,7 +2626,15 @@
           "$value": "#5ad664",
           "$extensions": {
             "org.kiwi": {
-              "css": "--success-9"
+              "css": "--success-9",
+              "source": {
+                "light": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                },
+                "dark": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                }
+              }
             }
           }
         },
@@ -2115,11 +2646,19 @@
               "dark": "#88cb8a"
             },
             "org.kiwi": {
-              "css": "--success-11"
+              "css": "--success-11",
+              "source": {
+                "light": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                },
+                "dark": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                }
+              }
             }
           }
         },
-        "$description": "run C · seed 156 balanced"
+        "$description": "run C · seed 156 balanced (kept by the 2026-10-18 re-lock)"
       },
       "warning": {
         "3": {
@@ -2130,7 +2669,15 @@
               "dark": "#282113"
             },
             "org.kiwi": {
-              "css": "--warning-3"
+              "css": "--warning-3",
+              "source": {
+                "light": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                },
+                "dark": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                }
+              }
             }
           }
         },
@@ -2139,7 +2686,15 @@
           "$value": "#dbb155",
           "$extensions": {
             "org.kiwi": {
-              "css": "--warning-9"
+              "css": "--warning-9",
+              "source": {
+                "light": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                },
+                "dark": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                }
+              }
             }
           }
         },
@@ -2151,11 +2706,19 @@
               "dark": "#cdb482"
             },
             "org.kiwi": {
-              "css": "--warning-11"
+              "css": "--warning-11",
+              "source": {
+                "light": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                },
+                "dark": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                }
+              }
             }
           }
         },
-        "$description": "run C · seed 156 balanced"
+        "$description": "run C · seed 156 balanced (kept by the 2026-10-18 re-lock)"
       },
       "info": {
         "3": {
@@ -2166,7 +2729,15 @@
               "dark": "#17242d"
             },
             "org.kiwi": {
-              "css": "--info-3"
+              "css": "--info-3",
+              "source": {
+                "light": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                },
+                "dark": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                }
+              }
             }
           }
         },
@@ -2175,7 +2746,15 @@
           "$value": "#5baee5",
           "$extensions": {
             "org.kiwi": {
-              "css": "--info-9"
+              "css": "--info-9",
+              "source": {
+                "light": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                },
+                "dark": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                }
+              }
             }
           }
         },
@@ -2187,19 +2766,32 @@
               "dark": "#90bedf"
             },
             "org.kiwi": {
-              "css": "--info-11"
+              "css": "--info-11",
+              "source": {
+                "light": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                },
+                "dark": {
+                  "kept": "palette.mjs run C, the 2026-10-16 lock"
+                }
+              }
             }
           }
         },
-        "$description": "run C · seed 156 balanced"
+        "$description": "run C · seed 156 balanced (kept by the 2026-10-18 re-lock)"
       },
       "green-black": {
         "$type": "color",
         "$value": "#06100a",
-        "$description": "run A's --accent-on-solid literal: the darkest green-black the runs produce (C 0.020). Not emitted as a property of its own; the lock writes it inline as the dark --accent-on-solid and --shadow-ink.",
+        "$description": "run A's --accent-on-solid literal of the 2026-10-16 lock: the darkest green-black the runs produce (C 0.020), kept by the 2026-10-18 re-lock. Not emitted as a property of its own; the lock writes it inline as the dark --shadow-ink (the dark backdrop and shadows mix it).",
         "$extensions": {
           "org.kiwi": {
-            "emit": false
+            "emit": false,
+            "source": {
+              "light": {
+                "kept": "palette.mjs run A, the 2026-10-16 lock"
+              }
+            }
           }
         }
       }
@@ -2561,10 +3153,10 @@
       "$description": "DESIGN.md · Space, shape, depth: the 4 px scale. Density changes the step a role uses, never the scale."
     },
     "radius": {
-      "$description": "DESIGN.md · Space, shape, depth › Radius",
+      "$description": "DESIGN.md · Space, shape, depth › Radius (2026-10-18 re-lock: controls 6 px, small parts 6 px, sheets 8 px)",
       "control": {
         "$type": "dimension",
-        "$value": "2px",
+        "$value": "6px",
         "$extensions": {
           "org.kiwi": {
             "css": "--radius-control"
@@ -2573,10 +3165,20 @@
       },
       "sheet": {
         "$type": "dimension",
-        "$value": "2px",
+        "$value": "8px",
         "$extensions": {
           "org.kiwi": {
             "css": "--radius-sheet"
+          }
+        }
+      },
+      "small": {
+        "$type": "dimension",
+        "$value": "6px",
+        "$description": "Small parts inside a control or a list: checkbox boxes, sidebar rows, file rows, toolbar buttons, inline code",
+        "$extensions": {
+          "org.kiwi": {
+            "css": "--radius-small"
           }
         }
       },
@@ -2695,11 +3297,11 @@
   "semantic": {
     "$description": "Tier 2. Roles. Colour aliases (carried + additions), editor/syntax/console roles, shadows, density deltas (space, size, type), motion, layers.",
     "color": {
-      "$description": "The palette.mjs semantic aliases of the locked block, carried as references so they stay identical by construction (per-mode overrides as locked), then the additions registered by Phase 3. CSS names of the carried aliases are the locked names.",
+      "$description": "The semantic aliases of the locked block, carried as references so they stay identical by construction (per-mode overrides as locked; re-pointed by the 2026-10-18 re-lock), then the additions registered by Phase 3. CSS names of the carried aliases are the locked names.",
       "background": {
         "$type": "color",
         "$value": "{global.color.paper.3}",
-        "$description": "Canvas (page). Locked override: the cream canvas / the warm dark canvas.",
+        "$description": "Canvas (page). Locked override: the cream canvas (the reference's page) / the forest-black dark canvas.",
         "$extensions": {
           "mode": {
             "dark": "{global.color.paper.2}"
@@ -2764,50 +3366,65 @@
       "accent-bg-subtle": {
         "$type": "color",
         "$value": "{global.color.accent.3}",
-        "$description": "Selection and current-item tint; tertiary hover."
+        "$description": "The hover tint of secondary and tertiary controls and rows that tint (the reference's button hover)."
       },
       "accent-bg-subtle-active": {
         "$type": "color",
-        "$value": "{global.color.accent.4}",
-        "$description": "The pressed tint of secondary and tertiary controls: accent-4, one step past the accent-3 hover tint (the functional ramps have no fourth step, so the outlined destructive keeps error-3 and the scale on press)."
+        "$value": "{global.color.accent.5}",
+        "$description": "The pressed tint of secondary and tertiary controls (the reference's sage stage): two steps past the accent-3 hover tint, past the accent-4 selected fill (the functional ramps have no fourth step, so the outlined destructive keeps error-3 and the scale on press).",
+        "$extensions": {
+          "mode": {
+            "dark": "{global.color.accent.6}"
+          }
+        }
       },
       "accent-solid": {
         "$type": "color",
-        "$value": "{global.color.accent.12}",
-        "$description": "The one filled control per region: forest in light (accent-9 is 1.70:1 on the canvas), sage in dark.",
+        "$value": "{global.color.accent.6}",
+        "$description": "The one filled control per region, Soft sage (the user's pick, 2026-10-18): a sage tint deeper than the selected fill, with the forest label and a 1 px --accent-solid-border edge. The fill is a tint, not the control's boundary (about 1.4:1 on the sheet): the edge is.",
+        "$extensions": {
+          "mode": {
+            "dark": "{global.color.accent.5}"
+          }
+        }
+      },
+      "accent-solid-hover": {
+        "$type": "color",
+        "$value": "{global.color.accent.7}",
+        "$description": "Hover of the filled control: one step deeper.",
+        "$extensions": {
+          "mode": {
+            "dark": "{global.color.accent.7}"
+          }
+        }
+      },
+      "accent-solid-active": {
+        "$type": "color",
+        "$value": "{global.color.accent.8}",
+        "$description": "The pressed fill of a filled control: one step beyond hover, so pressed is told from hovered by its fill and not by the 0.98 scale alone (light accent-8 past the accent-7 hover; dark accent-8 past the accent-7 hover), with --accent-on-solid at 4.5:1 or more on it.",
+        "$extensions": {
+          "mode": {
+            "dark": "{global.color.accent.8}"
+          }
+        }
+      },
+      "accent-solid-border": {
+        "$type": "color",
+        "$value": "{global.color.accent.10}",
+        "$description": "The 1 px edge of the filled control, Send and the launcher: their boundary (≥ 3:1 on the canvas and the sheet in both modes), since the Soft sage fill is a tint. Light: the reference's strong green (also the focus ring); dark: the derived sage edge.",
         "$extensions": {
           "mode": {
             "dark": "{global.color.accent.9}"
           }
         }
       },
-      "accent-solid-hover": {
-        "$type": "color",
-        "$value": "{global.color.accent.11}",
-        "$description": "Hover of the filled control.",
-        "$extensions": {
-          "mode": {
-            "dark": "{global.color.accent.10}"
-          }
-        }
-      },
-      "accent-solid-active": {
-        "$type": "color",
-        "$value": "{global.color.green-black}",
-        "$description": "The pressed fill of a filled control: one step beyond hover, away from the surface, so pressed is told from hovered by its fill and not by the 0.98 scale alone. Light presses to the system's green-black (the darkest value in the system, the lock's dark --accent-on-solid), beyond the accent-11 hover; dark presses to accent-12, the lightest accent step, beyond the accent-10 hover (1.30:1 against it) and away from the dark surface, with --accent-on-solid at 15.9:1 on it.",
-        "$extensions": {
-          "mode": {
-            "dark": "{global.color.accent.12}"
-          }
-        }
-      },
       "accent-on-solid": {
         "$type": "color",
-        "$value": "{global.color.neutral.1}",
-        "$description": "The label on the filled control.",
+        "$value": "{global.color.accent.11}",
+        "$description": "The label on the filled control: the forest in light, the dark ink in dark.",
         "$extensions": {
           "mode": {
-            "dark": "{global.color.green-black}"
+            "dark": "{global.color.neutral.12}"
           }
         }
       },
@@ -2818,23 +3435,23 @@
       },
       "border-interactive": {
         "$type": "color",
-        "$value": "{global.color.neutral.11}",
-        "$description": "The ≥3:1 boundary of every control identified by a border: inputs, unchecked controls, unselected filter chips, grips."
+        "$value": "{global.color.neutral.10}",
+        "$description": "The ≥3:1 boundary of every control identified by a border: inputs, unchecked controls, unselected filter chips, grips. neutral-10, the derived field edge (the reference's hairline is 1.25:1, a divider only)."
       },
       "focus-ring": {
         "$type": "color",
-        "$value": "{global.color.accent.11}",
-        "$description": "2 px solid, 2 px offset, :focus-visible; never removed, never animated.",
+        "$value": "{global.color.accent.10}",
+        "$description": "2 px solid, 2 px offset, :focus-visible; never removed, never animated. accent-10: the reference's strong green in light, its toggle accent in dark.",
         "$extensions": {
           "mode": {
-            "dark": "{global.color.accent.9}"
+            "dark": "{global.color.accent.10}"
           }
         }
       },
       "shadow-ink": {
         "$type": "color",
-        "$value": "{global.color.accent.12}",
-        "$description": "The hue-shifted shadow colour; shadows are precomputed rgba() of it.",
+        "$value": "{global.color.accent.11}",
+        "$description": "The hue-shifted shadow colour (light: the reference's forest; dark: the lock's green-black); shadows are precomputed rgba() of it.",
         "$extensions": {
           "mode": {
             "dark": "{global.color.green-black}"
@@ -2847,10 +3464,10 @@
         "$description": "Links in prose and chrome; always underlined in prose (WCAG 1.4.1)."
       },
       "selection": {
-        "$description": "The lock's selection rule: tint + accent text + a 2 px solid marker. Also the on/checked state of switches, checkboxes and radios. Under forced-colors: active a box-shadow computes to none, so every marker selector also draws the marker as a 2 px Highlight outline (outline-offset −2 px) inside @media (forced-colors: active), and the dots, dash and thumb that are backgrounds take CanvasText there; glyph, weight and position cues survive as system colours.",
+        "$description": "The lock's selection rule: the selected fill + accent text + a 2 px solid marker. Since the 2026-10-18 re-lock the selected fill is its own step (accent-4, the reference's pressed-button fill), one step past the hover tint, and the marker is the strong green (accent-10). Also the on/checked state of switches, checkboxes and radios. Under forced-colors: active a box-shadow computes to none, so every marker selector also draws the marker as a 2 px Highlight outline (outline-offset −2 px) inside @media (forced-colors: active), and the dots, dash and thumb that are backgrounds take CanvasText there; glyph, weight and position cues survive as system colours.",
         "bg": {
           "$type": "color",
-          "$value": "{semantic.color.accent-bg-subtle}"
+          "$value": "{global.color.accent.4}"
         },
         "text": {
           "$type": "color",
@@ -2858,7 +3475,7 @@
         },
         "marker": {
           "$type": "color",
-          "$value": "{semantic.color.accent-solid}"
+          "$value": "{global.color.accent.10}"
         }
       },
       "destructive": {
@@ -2952,7 +3569,7 @@
         }
       },
       "disabled": {
-        "$description": "Disabled controls: fill, label and hairline. Exempt from WCAG 1.4.3/1.4.11 but kept ≥4.5 where a label is read; every disabled control states why (helper text or a toggletip on the aria-disabled control itself).",
+        "$description": "Disabled controls: fill, label and hairline. Exempt from WCAG 1.4.3/1.4.11; the shared trio keeps a read label at ≥ 4.5 (fields, checkboxes, tabs, menus). Buttons fade further, by the user's decision of 2026-10-18 (\"淡化即可（推荐）\"; plan Decision Log, \"Disabled buttons\"): a disabled button may be faint, and keeps every enabled requirement in its enabled states; it is told from its enabled self by a lower-luminance label and edge, the disabled primary keeps a faint sage fill (disabled.solid) so it is never the disabled secondary, and no disabled button looks like a hovered tertiary (it has an edge and a fainter label). Every disabled control states why (helper text or a toggletip on the aria-disabled control itself); under forced colours its border and text are GrayText.",
         "surface": {
           "$type": "color",
           "$value": "{semantic.color.surface-active}"
@@ -2969,6 +3586,41 @@
           "$type": "color",
           "$value": "{semantic.color.border-strong}",
           "$description": "Disabled icon-only controls (no fill to distinguish them)."
+        },
+        "solid": {
+          "$type": "color",
+          "$value": "{global.color.accent.5}",
+          "$description": "The disabled primary's faint sage fill: one step fainter than the Soft sage fill (light accent-5, dark accent-4), so a disabled primary is still the primary and never the disabled secondary's sheet, and not a hovered tertiary's tint (accent-3).",
+          "$extensions": {
+            "mode": {
+              "dark": "{global.color.accent.4}"
+            }
+          }
+        },
+        "solid-border": {
+          "$type": "color",
+          "$value": "{global.color.accent.9}",
+          "$description": "The disabled primary's faint sage edge: still an edge, lower than the enabled --accent-solid-border (light accent-9, the mascot's sage; dark accent-8). Not gated: WCAG 1.4.11 exempts inactive controls.",
+          "$extensions": {
+            "mode": {
+              "dark": "{global.color.accent.8}"
+            }
+          }
+        },
+        "outline": {
+          "$type": "color",
+          "$value": "{semantic.color.border-strong}",
+          "$description": "The disabled outlined button's faint edge (secondary, destructive): the ruler's step, lower than the enabled --border-interactive. Not gated."
+        },
+        "label": {
+          "$type": "color",
+          "$value": "{global.color.neutral.11}",
+          "$description": "A disabled button's label: lower in luminance than the enabled label in both modes. In light it is secondary text; in dark secondary text sits at accent text's luminance, so the label drops to neutral-10. Not gated: WCAG 1.4.3 exempts inactive controls.",
+          "$extensions": {
+            "mode": {
+              "dark": "{global.color.neutral.10}"
+            }
+          }
         }
       },
       "skeleton": {
@@ -3034,7 +3686,7 @@
         }
       },
       "on-paper": {
-        "$description": "Marks drawn on the white PDF page. The page keeps its own rendering in dark mode (G5), so these never follow the mode: light-ramp values frozen as literals, the allowlisted exception beside backdrop, shadows and the G2 logo. The pin, chunk and wash literals name their light source in $extensions[\"org.kiwi\"].frozen and check-tokens.mjs asserts they still equal it, so a palette.mjs re-run cannot leave them behind.",
+        "$description": "Marks drawn on the white PDF page. The page keeps its own rendering in dark mode (G5), so these never follow the mode: light-ramp values frozen as literals, the allowlisted exception beside backdrop, shadows and the G2 logo. The pin, chunk and wash literals name their light source in $extensions[\"org.kiwi\"].frozen and check-tokens.mjs asserts they still equal it, so a change of the ramps cannot leave them behind.",
         "page": {
           "$type": "color",
           "$value": "#ffffff",
@@ -3043,7 +3695,7 @@
         "pin": {
           "$type": "color",
           "$value": "#203327",
-          "$description": "Comment pins visible to students, the hidden pin's ring and the selected chunk: light --accent-12 frozen; 13.9:1 on the page in both modes.",
+          "$description": "Comment pins visible to students, the hidden pin's ring and the selected chunk: light --accent-12 frozen; 13.4:1 on the page in both modes (kept by the 2026-10-18 re-lock).",
           "$extensions": {
             "org.kiwi": {
               "frozen": {
@@ -3055,8 +3707,8 @@
         },
         "chunk": {
           "$type": "color",
-          "$value": "#65635c",
-          "$description": "Chunk boxes and the drag box (A-24): light --neutral-11 frozen; 6.2:1 on the page.",
+          "$value": "#566652",
+          "$description": "Chunk boxes and the drag box (A-24): light --neutral-11 frozen (it followed the 2026-10-18 re-lock); 6.1:1 on the page.",
           "$extensions": {
             "org.kiwi": {
               "frozen": {
@@ -3107,17 +3759,12 @@
       "selection": {
         "$type": "color",
         "$value": "{semantic.color.accent-bg-subtle-active}",
-        "$extensions": {
-          "mode": {
-            "dark": "{global.color.accent.6}"
-          }
-        },
-        "$description": "The text selection in the editor: a tint stronger than the active line's step would allow the syntax colours (light: accent-4 at 1.15:1 on --editor-bg; accent-5 would drop strings to 4.41:1) and, in dark, accent-6 at 1.47:1 on --editor-bg (every syntax colour at least 5.17:1 on it); drawn with the 1 px --editor-selection-outline so the selection reads against the surface and the active line by its edge, never by the tint alone."
+        "$description": "The text selection in the editor: the pressed tint (light accent-5, dark accent-6), stronger than the active line's step, at which every syntax colour keeps 4.5:1 (the lowest is info-11 in light, 4.58:1); drawn with the 1 px --editor-selection-outline so the selection reads against the surface and the active line by its edge, never by the tint alone."
       },
       "selection-outline": {
         "$type": "color",
         "$value": "{semantic.color.selection.marker}",
-        "$description": "The 1 px outline of the text selection (outline-offset −1 px, inside the selection box): --selection-marker, 12.7:1 light / 8.3:1 dark against --editor-bg and ≥ 3:1 against the active line, so a selection on the active line is still visible."
+        "$description": "The 1 px outline of the text selection (outline-offset −1 px, inside the selection box): --selection-marker, ≥ 3:1 against --editor-bg and against the active line in both modes, so a selection on the active line is still visible."
       },
       "cursor": {
         "$type": "color",
@@ -3145,7 +3792,7 @@
       }
     },
     "syntax": {
-      "$description": "Low-chroma, weight-led syntax roles (D7): keywords by weight, strings in the accent, numbers in info, diagnostics in error/warning. Two hues in code so status stays status.",
+      "$description": "Low-chroma, weight-led syntax roles (D7): keywords by weight, strings in the code green, numbers in info, diagnostics in error/warning. Two hues in code so status stays status.",
       "keyword": {
         "$type": "color",
         "$value": "{semantic.color.text}",
@@ -3189,7 +3836,8 @@
       },
       "string": {
         "$type": "color",
-        "$value": "{semantic.color.accent-text}"
+        "$value": "{global.color.code-green}",
+        "$description": "Strings: the code green (--code-green), since accent text is the ink's forest after the 2026-10-18 re-lock."
       },
       "number": {
         "$type": "color",
@@ -3772,7 +4420,7 @@
       "toolbar-button-sm": {
         "$type": "dimension",
         "$value": "28px",
-        "$description": "The drawn feedback-toolbar button and its line: a 16 px glyph on a 28 px square, so the toolbar row ticks the ruler once"
+        "$description": "The drawn feedback-toolbar button and its line: a 16 px glyph on a 28 px square, the toolbar row one 28 px line"
       },
       "toolbar-divider": {
         "$type": "dimension",
@@ -3882,7 +4530,7 @@
       "badge": {
         "$type": "dimension",
         "$value": "20px",
-        "$description": "The launcher's neutral count badge: a 20 px disc (--radius-round, one of the lock's three radii); counts above 9 read 9+ so the disc never becomes a pill"
+        "$description": "The launcher's neutral count badge: a 20 px disc (--radius-round); counts above 9 read 9+ so the disc never becomes a pill"
       }
     },
     "type": {
@@ -4059,7 +4707,7 @@
           "lineHeight": "{global.type.leading.base}",
           "fontWeight": "{global.type.weight.regular}"
         },
-        "$description": "Code blocks, editor, console: 14/24 so a code block ticks the ruler at 24"
+        "$description": "Code blocks, editor, console: 14/24, so a code block keeps the body text's 24 px line"
       },
       "popup-title": {
         "$type": "typography",
@@ -4174,7 +4822,7 @@
       }
     },
     "radius": {
-      "$description": "",
+      "$description": "Pass-through of the locked radius globals (not re-emitted): control and small parts 6 px, sheets 8 px, none, round.",
       "control": {
         "$type": "dimension",
         "$value": "{global.radius.control}"
@@ -4182,6 +4830,10 @@
       "sheet": {
         "$type": "dimension",
         "$value": "{global.radius.sheet}"
+      },
+      "small": {
+        "$type": "dimension",
+        "$value": "{global.radius.small}"
       },
       "none": {
         "$type": "dimension",
@@ -4260,7 +4912,7 @@
   "component": {
     "$description": "Tier 3. One group per listed component; each has a state group with the eight states (default, hover, focus, active, disabled, loading, error, success) and, where a persistent condition exists, a named variant (selected, current, on, checked, read-only). Component tokens reference semantic tokens only.",
     "button": {
-      "$description": "Buttons. One filled primary per view region (a page, a dialog, a panel; the floating layer is its own region). Labels are sentence case, --type-button 14/20 600, never multi-line (white-space: nowrap). Loading keeps width and label and appends the text dots (no spinner). Success for idempotent actions is a 2 s label swap with the check icon; for submits it is a toast. A tertiary button used as a toggle (aria-pressed) draws its pressed state as the selection tint + --selection-text + a 2 px --selection-marker bar (the tertiary pressed variant); primary and secondary buttons are never toggles. Keyboard: Tab reaches each button, Enter and Space press; a loading button stays in the tab order (aria-busy) and ignores presses.",
+      "$description": "Buttons. One filled primary per view region (a page, a dialog, a panel; the floating layer is its own region). Labels are sentence case, --type-button 14/20 600, never multi-line (white-space: nowrap). Loading keeps width and label and appends the text dots (no spinner). Success for idempotent actions is a 2 s label swap with the check icon; for submits it is a toast. A tertiary button used as a toggle (aria-pressed) draws its pressed state as the selection tint + --selection-text + a 2 px --selection-marker bar (the tertiary pressed variant); primary and secondary buttons are never toggles. Keyboard: Tab reaches each button, Enter and Space press; a loading button stays in the tab order (aria-busy) and ignores presses. A disabled button is faded (the user's decision of 2026-10-18 (\"淡化即可（推荐）\"; plan Decision Log, \"Disabled buttons\")): a lower-luminance label and edge, the primary on a faint sage fill (--disabled-solid) with a faint sage edge, the secondary and the destructive on the sheet with the faint --disabled-outline edge, the tertiary as text at weight 400; never a 3:1 boundary (WCAG 1.4.11 exempts inactive controls), always an edge or a fill, so it still reads as a control, and never a hovered tertiary's look. Under forced colours its border and text are GrayText.",
       "height": {
         "$type": "dimension",
         "$value": "{semantic.size.control}"
@@ -4314,13 +4966,17 @@
         "$description": "The 2 px --selection-marker bar along the bottom edge of a pressed tertiary toggle (aria-pressed=\"true\")"
       },
       "primary": {
-        "$description": "The one call to action: --accent-solid fill, --accent-on-solid label.",
+        "$description": "The one call to action, Soft sage: --accent-solid fill, --accent-on-solid label, and a 1 px --accent-solid-border edge, which is the control's boundary (the fill is a tint).",
         "state": {
           "default": {
-            "$description": "Filled.",
+            "$description": "Filled: the Soft sage fill, its 1 px --accent-solid-border edge and the --accent-on-solid label.",
             "fill": {
               "$type": "color",
               "$value": "{semantic.color.accent-solid}"
+            },
+            "border": {
+              "$type": "color",
+              "$value": "{semantic.color.accent-solid-border}"
             },
             "text": {
               "$type": "color",
@@ -4334,25 +4990,37 @@
                   "min": 4.5
                 },
                 {
-                  "fg": "fill",
+                  "fg": "border",
                   "bg": "{semantic.color.surface}",
                   "min": 3,
                   "kind": "non-text"
                 },
                 {
-                  "fg": "fill",
+                  "fg": "border",
                   "bg": "{semantic.color.background}",
                   "min": 3,
                   "kind": "non-text"
+                },
+                {
+                  "fg": "fill",
+                  "bg": "{semantic.color.surface}",
+                  "min": 3,
+                  "kind": "non-text",
+                  "decorative": true,
+                  "why": "the Soft sage fill is a tint, not the boundary: the 1 px --accent-solid-border edge is"
                 }
               ]
             }
           },
           "hover": {
-            "$description": "Fill steps to --accent-solid-hover, instantly.",
+            "$description": "Fill steps to --accent-solid-hover, instantly; the edge stays.",
             "fill": {
               "$type": "color",
               "$value": "{semantic.color.accent-solid-hover}"
+            },
+            "border": {
+              "$type": "color",
+              "$value": "{semantic.color.accent-solid-border}"
             },
             "text": {
               "$type": "color",
@@ -4366,8 +5034,14 @@
                   "min": 4.5
                 },
                 {
-                  "fg": "fill",
+                  "fg": "border",
                   "bg": "{semantic.color.surface}",
+                  "min": 3,
+                  "kind": "non-text"
+                },
+                {
+                  "fg": "border",
+                  "bg": "{semantic.color.background}",
                   "min": 3,
                   "kind": "non-text"
                 }
@@ -4379,6 +5053,10 @@
             "fill": {
               "$type": "color",
               "$value": "{semantic.color.accent-solid}"
+            },
+            "border": {
+              "$type": "color",
+              "$value": "{semantic.color.accent-solid-border}"
             },
             "text": {
               "$type": "color",
@@ -4406,15 +5084,31 @@
                   "bg": "{semantic.color.background}",
                   "min": 3,
                   "kind": "non-text"
+                },
+                {
+                  "fg": "border",
+                  "bg": "{semantic.color.surface}",
+                  "min": 3,
+                  "kind": "non-text"
+                },
+                {
+                  "fg": "border",
+                  "bg": "{semantic.color.background}",
+                  "min": 3,
+                  "kind": "non-text"
                 }
               ]
             }
           },
           "active": {
-            "$description": "Pressed: the fill steps past hover to --accent-solid-active (light: the system's green-black; dark: accent-12) with scale 0.98 for 150 ms, so pressed is told from hovered by fill, not by the scale alone.",
+            "$description": "Pressed: the fill steps past hover to --accent-solid-active (accent-8 in both modes) with scale 0.98 for 150 ms, so pressed is told from hovered by fill, not by the scale alone; the edge stays.",
             "fill": {
               "$type": "color",
               "$value": "{semantic.color.accent-solid-active}"
+            },
+            "border": {
+              "$type": "color",
+              "$value": "{semantic.color.accent-solid-border}"
             },
             "text": {
               "$type": "color",
@@ -4426,23 +5120,35 @@
                   "fg": "text",
                   "bg": "fill",
                   "min": 4.5
+                },
+                {
+                  "fg": "border",
+                  "bg": "{semantic.color.surface}",
+                  "min": 3,
+                  "kind": "non-text"
+                },
+                {
+                  "fg": "border",
+                  "bg": "{semantic.color.background}",
+                  "min": 3,
+                  "kind": "non-text"
                 }
               ]
             }
           },
           "disabled": {
-            "$description": "Disabled: --disabled-surface fill, --disabled-text label, --disabled-border hairline; the reason is stated in adjacent helper text, or in a toggletip on the control itself, which stays focusable (aria-disabled=\"true\", never the native disabled attribute) and opens it on hover, focus and tap, showing the text inline under (hover: none); either way it is linked by aria-describedby so keyboard and touch users read it too. Never a bare grey control.",
+            "$description": "Disabled, faded: the faint sage fill --disabled-solid, the faint sage edge --disabled-solid-border and the lower-luminance --disabled-label, so it is still the primary (never the disabled secondary) and never a hovered tertiary; the reason is stated in adjacent helper text, or in a toggletip on the control itself, which stays focusable (aria-disabled=\"true\", never the native disabled attribute) and opens it on hover, focus and tap, showing the text inline under (hover: none); either way it is linked by aria-describedby so keyboard and touch users read it too. Forced colours: GrayText border and text.",
             "fill": {
               "$type": "color",
-              "$value": "{semantic.color.disabled.surface}"
+              "$value": "{semantic.color.disabled.solid}"
             },
             "text": {
               "$type": "color",
-              "$value": "{semantic.color.disabled.text}"
+              "$value": "{semantic.color.disabled.label}"
             },
             "border": {
               "$type": "color",
-              "$value": "{semantic.color.disabled.border}"
+              "$value": "{semantic.color.disabled.solid-border}"
             },
             "$extensions": {
               "org.kiwi.contrast": [
@@ -4451,7 +5157,39 @@
                   "bg": "fill",
                   "min": 4.5,
                   "exempt": true,
-                  "why": "inactive control (WCAG 1.4.3 exemption); kept ≥ 4.5 by measurement"
+                  "why": "the faded label on its fill, lower than the enabled 7.24 / 8.62 (the user's decision of 2026-10-18 (\"淡化即可（推荐）\"; plan Decision Log, \"Disabled buttons\"); WCAG exempts inactive controls)"
+                },
+                {
+                  "fg": "border",
+                  "bg": "{semantic.color.surface}",
+                  "min": 3,
+                  "kind": "non-text",
+                  "exempt": true,
+                  "why": "the faint edge on the sheet: an edge, not a 3:1 boundary (the user's decision of 2026-10-18 (\"淡化即可（推荐）\"; plan Decision Log, \"Disabled buttons\"); WCAG exempts inactive controls)"
+                },
+                {
+                  "fg": "border",
+                  "bg": "{semantic.color.background}",
+                  "min": 3,
+                  "kind": "non-text",
+                  "exempt": true,
+                  "why": "the faint edge on the canvas (the user's decision of 2026-10-18 (\"淡化即可（推荐）\"; plan Decision Log, \"Disabled buttons\"); WCAG exempts inactive controls)"
+                },
+                {
+                  "fg": "fill",
+                  "bg": "{semantic.color.surface}",
+                  "min": 3,
+                  "kind": "non-text",
+                  "exempt": true,
+                  "why": "the faint sage fill against the disabled secondary's sheet fill: told apart (the user's decision of 2026-10-18 (\"淡化即可（推荐）\"; plan Decision Log, \"Disabled buttons\"); WCAG exempts inactive controls)"
+                },
+                {
+                  "fg": "fill",
+                  "bg": "{semantic.color.accent-bg-subtle}",
+                  "min": 3,
+                  "kind": "non-text",
+                  "exempt": true,
+                  "why": "the faint sage fill against a hovered tertiary's tint: told apart, with the edge and the fainter label (the user's decision of 2026-10-18 (\"淡化即可（推荐）\"; plan Decision Log, \"Disabled buttons\"); WCAG exempts inactive controls)"
                 }
               ]
             }
@@ -4462,6 +5200,10 @@
               "$type": "color",
               "$value": "{semantic.color.accent-solid}"
             },
+            "border": {
+              "$type": "color",
+              "$value": "{semantic.color.accent-solid-border}"
+            },
             "text": {
               "$type": "color",
               "$value": "{semantic.color.accent-on-solid}"
@@ -4472,6 +5214,18 @@
                   "fg": "text",
                   "bg": "fill",
                   "min": 4.5
+                },
+                {
+                  "fg": "border",
+                  "bg": "{semantic.color.surface}",
+                  "min": 3,
+                  "kind": "non-text"
+                },
+                {
+                  "fg": "border",
+                  "bg": "{semantic.color.background}",
+                  "min": 3,
+                  "kind": "non-text"
                 }
               ]
             }
@@ -4482,6 +5236,10 @@
               "$type": "color",
               "$value": "{semantic.color.accent-solid}"
             },
+            "border": {
+              "$type": "color",
+              "$value": "{semantic.color.accent-solid-border}"
+            },
             "text": {
               "$type": "color",
               "$value": "{semantic.color.accent-on-solid}"
@@ -4492,6 +5250,18 @@
                   "fg": "text",
                   "bg": "fill",
                   "min": 4.5
+                },
+                {
+                  "fg": "border",
+                  "bg": "{semantic.color.surface}",
+                  "min": 3,
+                  "kind": "non-text"
+                },
+                {
+                  "fg": "border",
+                  "bg": "{semantic.color.background}",
+                  "min": 3,
+                  "kind": "non-text"
                 }
               ]
             }
@@ -4501,6 +5271,10 @@
             "fill": {
               "$type": "color",
               "$value": "{semantic.color.accent-solid}"
+            },
+            "border": {
+              "$type": "color",
+              "$value": "{semantic.color.accent-solid-border}"
             },
             "text": {
               "$type": "color",
@@ -4520,6 +5294,18 @@
                 {
                   "fg": "icon",
                   "bg": "fill",
+                  "min": 3,
+                  "kind": "non-text"
+                },
+                {
+                  "fg": "border",
+                  "bg": "{semantic.color.surface}",
+                  "min": 3,
+                  "kind": "non-text"
+                },
+                {
+                  "fg": "border",
+                  "bg": "{semantic.color.background}",
                   "min": 3,
                   "kind": "non-text"
                 }
@@ -4638,7 +5424,7 @@
             "$description": "Ring; the boundary does not change colour."
           },
           "active": {
-            "$description": "Pressed: the tint steps to --accent-bg-subtle-active (accent-4, past the accent-3 hover) + scale 0.98.",
+            "$description": "Pressed: the tint steps to --accent-bg-subtle-active (the pressed tint, past the hover and selected tints) and the edge to the ink (--text), + scale 0.98; the ink edge keeps a pressed secondary apart from the resting Soft sage primary, whose fill is one step from the pressed tint.",
             "fill": {
               "$type": "color",
               "$value": "{semantic.color.accent-bg-subtle-active}"
@@ -4649,7 +5435,7 @@
             },
             "border": {
               "$type": "color",
-              "$value": "{semantic.color.border-interactive}"
+              "$value": "{semantic.color.text}"
             },
             "$extensions": {
               "org.kiwi.contrast": [
@@ -4657,23 +5443,51 @@
                   "fg": "text",
                   "bg": "fill",
                   "min": 4.5
+                },
+                {
+                  "fg": "border",
+                  "bg": "{semantic.color.surface}",
+                  "min": 3,
+                  "kind": "non-text"
+                },
+                {
+                  "fg": "border",
+                  "bg": "{semantic.color.background}",
+                  "min": 3,
+                  "kind": "non-text"
+                },
+                {
+                  "fg": "fill",
+                  "bg": "{semantic.color.accent-solid}",
+                  "min": 3,
+                  "kind": "non-text",
+                  "decorative": true,
+                  "why": "against the resting primary's fill: a tint one step away; the ink edge tells them apart"
+                },
+                {
+                  "fg": "border",
+                  "bg": "{semantic.color.accent-solid-border}",
+                  "min": 3,
+                  "kind": "non-text",
+                  "decorative": true,
+                  "why": "against the resting primary's edge: the ink against the strong green (light) or the sage edge (dark)"
                 }
               ]
             }
           },
           "disabled": {
-            "$description": "Disabled: --disabled-surface fill, --disabled-text label, --disabled-border hairline; the reason is stated in adjacent helper text, or in a toggletip on the control itself, which stays focusable (aria-disabled=\"true\", never the native disabled attribute) and opens it on hover, focus and tap, showing the text inline under (hover: none); either way it is linked by aria-describedby so keyboard and touch users read it too. Never a bare grey control.",
+            "$description": "Disabled, faded: the sheet fill (--surface), the faint --disabled-outline edge and the lower-luminance --disabled-label, so it still reads as an outlined control, is never the disabled primary (no sage fill) and never a hovered tertiary (an edge, a fainter label, no tint); the reason is stated in adjacent helper text, or in a toggletip on the control itself, which stays focusable (aria-disabled=\"true\", never the native disabled attribute) and opens it on hover, focus and tap, showing the text inline under (hover: none); either way it is linked by aria-describedby so keyboard and touch users read it too. Forced colours: GrayText border and text.",
             "fill": {
               "$type": "color",
-              "$value": "{semantic.color.disabled.surface}"
+              "$value": "{semantic.color.surface}"
             },
             "text": {
               "$type": "color",
-              "$value": "{semantic.color.disabled.text}"
+              "$value": "{semantic.color.disabled.label}"
             },
             "border": {
               "$type": "color",
-              "$value": "{semantic.color.disabled.border}"
+              "$value": "{semantic.color.disabled.outline}"
             },
             "$extensions": {
               "org.kiwi.contrast": [
@@ -4682,7 +5496,31 @@
                   "bg": "fill",
                   "min": 4.5,
                   "exempt": true,
-                  "why": "inactive control (WCAG 1.4.3 exemption); kept ≥ 4.5 by measurement"
+                  "why": "the faded label on the sheet, lower than the enabled 10.03 / 9.40 (the user's decision of 2026-10-18 (\"淡化即可（推荐）\"; plan Decision Log, \"Disabled buttons\"); WCAG exempts inactive controls)"
+                },
+                {
+                  "fg": "border",
+                  "bg": "{semantic.color.surface}",
+                  "min": 3,
+                  "kind": "non-text",
+                  "exempt": true,
+                  "why": "the faint edge on the sheet: an edge, not a 3:1 boundary (the user's decision of 2026-10-18 (\"淡化即可（推荐）\"; plan Decision Log, \"Disabled buttons\"); WCAG exempts inactive controls)"
+                },
+                {
+                  "fg": "border",
+                  "bg": "{semantic.color.background}",
+                  "min": 3,
+                  "kind": "non-text",
+                  "exempt": true,
+                  "why": "the faint edge on the canvas (the user's decision of 2026-10-18 (\"淡化即可（推荐）\"; plan Decision Log, \"Disabled buttons\"); WCAG exempts inactive controls)"
+                },
+                {
+                  "fg": "fill",
+                  "bg": "{semantic.color.accent-bg-subtle}",
+                  "min": 3,
+                  "kind": "non-text",
+                  "exempt": true,
+                  "why": "the sheet fill against a hovered tertiary's tint: told apart, with the edge and the fainter label (the user's decision of 2026-10-18 (\"淡化即可（推荐）\"; plan Decision Log, \"Disabled buttons\"); WCAG exempts inactive controls)"
                 }
               ]
             }
@@ -4861,7 +5699,7 @@
             "$description": "Ring on the transparent control."
           },
           "active": {
-            "$description": "Pressed: the tint steps to --accent-bg-subtle-active (accent-4, past the accent-3 hover) + scale 0.98.",
+            "$description": "Pressed: the tint steps to --accent-bg-subtle-active (the pressed tint, past the hover and selected tints) + scale 0.98.",
             "fill": {
               "$type": "color",
               "$value": "{semantic.color.accent-bg-subtle-active}"
@@ -4881,14 +5719,14 @@
             }
           },
           "disabled": {
-            "$description": "Disabled tertiary: there is no fill to grey, so the label drops to --disabled-text at weight 400 (enabled tertiary labels are 600) and the reason sits beside it in helper text or a toggletip on the control itself (aria-disabled, aria-describedby; shown inline under (hover: none)). Disabled is told apart by weight and the stated reason, never by hue alone.",
+            "$description": "Disabled tertiary, faded: there is no fill to grey, so the label drops to the lower-luminance --disabled-label at weight 400 (enabled tertiary labels are 600) and the reason sits beside it in helper text or a toggletip on the control itself (aria-disabled, aria-describedby; shown inline under (hover: none)). Disabled is told apart by luminance, weight and the stated reason, never by hue alone. Forced colours: GrayText text.",
             "fill": {
               "$type": "color",
               "$value": "{semantic.color.fill-none}"
             },
             "text": {
               "$type": "color",
-              "$value": "{semantic.color.disabled.text}"
+              "$value": "{semantic.color.disabled.label}"
             },
             "weight": {
               "$type": "fontWeight",
@@ -4901,14 +5739,14 @@
                   "bg": "{semantic.color.surface}",
                   "min": 4.5,
                   "exempt": true,
-                  "why": "inactive control; kept ≥ 4.5"
+                  "why": "the faded label on the sheet (the user's decision of 2026-10-18 (\"淡化即可（推荐）\"; plan Decision Log, \"Disabled buttons\"); WCAG exempts inactive controls)"
                 },
                 {
                   "fg": "text",
                   "bg": "{semantic.color.background}",
                   "min": 4.5,
                   "exempt": true,
-                  "why": "inactive control; kept ≥ 4.5"
+                  "why": "the faded label on the canvas (the user's decision of 2026-10-18 (\"淡化即可（推荐）\"; plan Decision Log, \"Disabled buttons\"); WCAG exempts inactive controls)"
                 }
               ]
             }
@@ -5186,18 +6024,18 @@
             }
           },
           "disabled": {
-            "$description": "Disabled: --disabled-surface fill, --disabled-text label, --disabled-border hairline; the reason is stated in adjacent helper text, or in a toggletip on the control itself, which stays focusable (aria-disabled=\"true\", never the native disabled attribute) and opens it on hover, focus and tap, showing the text inline under (hover: none); either way it is linked by aria-describedby so keyboard and touch users read it too. Never a bare grey control. A destructive button is disabled while nothing is selected (\"Select students to remove\").",
+            "$description": "Disabled, faded, as the disabled secondary (the reason says why; a destructive button is disabled while nothing is selected: \"Select students to remove\"): the sheet fill (--surface), the faint --disabled-outline edge and the lower-luminance --disabled-label, so it still reads as an outlined control, is never the disabled primary (no sage fill) and never a hovered tertiary (an edge, a fainter label, no tint); the reason is stated in adjacent helper text, or in a toggletip on the control itself, which stays focusable (aria-disabled=\"true\", never the native disabled attribute) and opens it on hover, focus and tap, showing the text inline under (hover: none); either way it is linked by aria-describedby so keyboard and touch users read it too. Forced colours: GrayText border and text.",
             "fill": {
               "$type": "color",
-              "$value": "{semantic.color.disabled.surface}"
+              "$value": "{semantic.color.surface}"
             },
             "text": {
               "$type": "color",
-              "$value": "{semantic.color.disabled.text}"
+              "$value": "{semantic.color.disabled.label}"
             },
             "border": {
               "$type": "color",
-              "$value": "{semantic.color.disabled.border}"
+              "$value": "{semantic.color.disabled.outline}"
             },
             "$extensions": {
               "org.kiwi.contrast": [
@@ -5206,7 +6044,31 @@
                   "bg": "fill",
                   "min": 4.5,
                   "exempt": true,
-                  "why": "inactive control (WCAG 1.4.3 exemption); kept ≥ 4.5 by measurement"
+                  "why": "the faded label on the sheet, lower than the enabled label (the user's decision of 2026-10-18 (\"淡化即可（推荐）\"; plan Decision Log, \"Disabled buttons\"); WCAG exempts inactive controls)"
+                },
+                {
+                  "fg": "border",
+                  "bg": "{semantic.color.surface}",
+                  "min": 3,
+                  "kind": "non-text",
+                  "exempt": true,
+                  "why": "the faint edge on the sheet: an edge, not a 3:1 boundary (the user's decision of 2026-10-18 (\"淡化即可（推荐）\"; plan Decision Log, \"Disabled buttons\"); WCAG exempts inactive controls)"
+                },
+                {
+                  "fg": "border",
+                  "bg": "{semantic.color.background}",
+                  "min": 3,
+                  "kind": "non-text",
+                  "exempt": true,
+                  "why": "the faint edge on the canvas (the user's decision of 2026-10-18 (\"淡化即可（推荐）\"; plan Decision Log, \"Disabled buttons\"); WCAG exempts inactive controls)"
+                },
+                {
+                  "fg": "fill",
+                  "bg": "{semantic.color.accent-bg-subtle}",
+                  "min": 3,
+                  "kind": "non-text",
+                  "exempt": true,
+                  "why": "the sheet fill against a hovered tertiary's tint: told apart, with the edge and the fainter label (the user's decision of 2026-10-18 (\"淡化即可（推荐）\"; plan Decision Log, \"Disabled buttons\"); WCAG exempts inactive controls)"
                 }
               ]
             }
@@ -6365,7 +7227,7 @@
             }
           },
           "loading": {
-            "$description": "A skeleton pill of the same size while the roster loads.",
+            "$description": "A skeleton of the chip's size and shape while the roster loads.",
             "fill": {
               "$type": "color",
               "$value": "{semantic.color.skeleton.base}"
@@ -6422,7 +7284,7 @@
       }
     },
     "switch": {
-      "$description": "Switch: a selection control (D4, TD-22). Off = --surface track, --border-interactive boundary and thumb; On = selection tint track, --accent-text boundary and thumb. Status green never styles a switch. Thumb travel 150 ms with --easing-toggle; colours switch instantly. Label always visible; a saving switch shows the ring icon beside its label. Keyboard: Tab to the switch, Space toggles (role=switch, aria-checked); the visible label is the accessible name. Shape: track and thumb are rectangles at --radius-control (2 px): --radius-round is for dot-like marks and convention-bound circles only (the plan's Decision Log, radius.round interpretation) and the lock allows no pill, so the switch reads as a slider, never as an oval.",
+      "$description": "Switch: a selection control (D4, TD-22). Off = --surface track, --border-interactive boundary and thumb; On = selection tint track, --accent-text boundary and thumb. Status green never styles a switch. Thumb travel 150 ms with --easing-toggle; colours switch instantly. Label always visible; a saving switch shows the ring icon beside its label. Keyboard: Tab to the switch, Space toggles (role=switch, aria-checked); the visible label is the accessible name. Shape: the track is a rounded rectangle at --radius-control (6 px) and the thumb a rounded square at --radius-small (6 px): --radius-round is for dot-like marks and convention-bound circles only (the plan's Decision Log, radius.round interpretation) and the lock allows no pill, so the switch reads as a slider, never as an oval.",
       "track-width": {
         "$type": "dimension",
         "$value": "{semantic.size.switch-track-w}"
@@ -6437,13 +7299,13 @@
       },
       "thumb-radius": {
         "$type": "dimension",
-        "$value": "{semantic.radius.control}",
-        "$description": "The thumb's corners: --radius-control, like the track; the on/off cue is the thumb's position, not its shape"
+        "$value": "{semantic.radius.small}",
+        "$description": "The thumb's corners: --radius-small (6 px), the small-part radius; on the 14 px thumb a rounded square, never a circle or a pill. The on/off cue is the thumb's position, not its shape"
       },
       "radius": {
         "$type": "dimension",
         "$value": "{semantic.radius.control}",
-        "$description": "The track's corners: --radius-control (2 px). The lock reserves 50 % for dot-like marks and convention-bound circles (status dots, the mascot's backing; the plan's Decision Log reads the launcher disc, its badge, radios and the PDF pins as the same) and allows no pill, so the track is a rectangle; 50 % on a 36 × 20 box drew elliptical corners."
+        "$description": "The track's corners: --radius-control (6 px) on the 36 × 20 track, a rounded rectangle and never a pill: --radius-round is for dot-like marks and convention-bound circles only (status dots, the mascot's backing; the plan's Decision Log reads the launcher disc, its badge, radios and the PDF pins as the same)."
       },
       "hit": {
         "$type": "dimension",
@@ -7171,8 +8033,8 @@
       },
       "radius": {
         "$type": "dimension",
-        "$value": "{semantic.radius.control}",
-        "$description": "The box's corners; a radio uses --radius-round"
+        "$value": "{semantic.radius.small}",
+        "$description": "The box's corners: --radius-small (6 px); a radio uses --radius-round"
       },
       "border-width": {
         "$type": "dimension",
@@ -7921,7 +8783,8 @@
       },
       "radius": {
         "$type": "dimension",
-        "$value": "{semantic.radius.control}"
+        "$value": "{semantic.radius.small}",
+        "$description": "A row inside the rail: --radius-small (6 px)"
       },
       "margin-x": {
         "$type": "dimension",
@@ -8433,7 +9296,7 @@
       }
     },
     "dialog": {
-      "$description": "Dialogs: a --surface sheet with --shadow-2, 1 px --border, --radius-sheet, over the --backdrop (shadow-ink at 40 / 60 %). Width min(100% - 2 * var(--space-popup-margin), var(--dialog-width-sm|md|lg)) with height ≤ 80vh and a scrolling body, so a phone keeps a 12 px margin around it. Title --type-section-title, body at the page's density, body measure ≤ 75ch. Actions right-aligned: one filled primary (or the outlined destructive for confirmations) and a tertiary Cancel. Focus moves to the first focusable element, the background is inert, Escape closes, focus returns to the trigger. Enter: fade + 8 px translate, 220 ms; exit 176 ms. Keyboard: on open focus moves to the first focusable element (the title for confirmations), Tab and Shift+Tab cycle inside, Escape closes, focus returns to the trigger; the background is inert.",
+      "$description": "Dialogs, the Paper style (the user's pick, 2026-10-18): a --surface sheet with --shadow-2, 1 px --border (in dark --border-strong, which clears 3:1 against the scrim: on the near-black dark scrim the sheet itself is only 1.18:1, check-tokens.mjs § 22), --radius-sheet (8 px), over the --backdrop (shadow-ink at 40 / 60 %). Width min(100% - 2 * var(--space-popup-margin), var(--dialog-width-sm|md|lg)) with height ≤ 80vh and a scrolling body, so a phone keeps a 12 px margin around it. Title --type-section-title, body at the page's density, body measure ≤ 75ch. Actions right-aligned: one filled primary, the Soft sage button with its edge (or the outlined destructive for confirmations), and a tertiary Cancel. Focus moves to the first focusable element, the background is inert, Escape closes, focus returns to the trigger. Enter: fade + 8 px translate, 220 ms; exit 176 ms. Keyboard: on open focus moves to the first focusable element (the title for confirmations), Tab and Shift+Tab cycle inside, Escape closes, focus returns to the trigger; the background is inert.",
       "width-sm": {
         "$type": "dimension",
         "$value": "{semantic.size.dialog-sm}",
@@ -8485,7 +9348,12 @@
           },
           "border": {
             "$type": "color",
-            "$value": "{semantic.color.border}"
+            "$value": "{semantic.color.border}",
+            "$extensions": {
+              "mode": {
+                "dark": "{semantic.color.border-strong}"
+              }
+            }
           },
           "backdrop": {
             "$type": "color",
@@ -8522,7 +9390,12 @@
           },
           "border": {
             "$type": "color",
-            "$value": "{semantic.color.border}"
+            "$value": "{semantic.color.border}",
+            "$extensions": {
+              "mode": {
+                "dark": "{semantic.color.border-strong}"
+              }
+            }
           },
           "$extensions": {
             "org.kiwi.contrast": [
@@ -8546,7 +9419,12 @@
           },
           "border": {
             "$type": "color",
-            "$value": "{semantic.color.border}"
+            "$value": "{semantic.color.border}",
+            "$extensions": {
+              "mode": {
+                "dark": "{semantic.color.border-strong}"
+              }
+            }
           },
           "ring": {
             "$type": "color",
@@ -8580,7 +9458,12 @@
           },
           "border": {
             "$type": "color",
-            "$value": "{semantic.color.border}"
+            "$value": "{semantic.color.border}",
+            "$extensions": {
+              "mode": {
+                "dark": "{semantic.color.border-strong}"
+              }
+            }
           },
           "$extensions": {
             "org.kiwi.contrast": [
@@ -8604,11 +9487,16 @@
           },
           "border": {
             "$type": "color",
-            "$value": "{semantic.color.border}"
+            "$value": "{semantic.color.border}",
+            "$extensions": {
+              "mode": {
+                "dark": "{semantic.color.border-strong}"
+              }
+            }
           },
           "primary": {
             "$type": "color",
-            "$value": "{semantic.color.disabled.surface}"
+            "$value": "{semantic.color.disabled.solid}"
           },
           "$extensions": {
             "org.kiwi.contrast": [
@@ -8632,7 +9520,12 @@
           },
           "border": {
             "$type": "color",
-            "$value": "{semantic.color.border}"
+            "$value": "{semantic.color.border}",
+            "$extensions": {
+              "mode": {
+                "dark": "{semantic.color.border-strong}"
+              }
+            }
           },
           "$extensions": {
             "org.kiwi.contrast": [
@@ -8656,7 +9549,12 @@
           },
           "border": {
             "$type": "color",
-            "$value": "{semantic.color.border}"
+            "$value": "{semantic.color.border}",
+            "$extensions": {
+              "mode": {
+                "dark": "{semantic.color.border-strong}"
+              }
+            }
           },
           "alert": {
             "$type": "color",
@@ -8693,7 +9591,12 @@
           },
           "border": {
             "$type": "color",
-            "$value": "{semantic.color.border}"
+            "$value": "{semantic.color.border}",
+            "$extensions": {
+              "mode": {
+                "dark": "{semantic.color.border-strong}"
+              }
+            }
           },
           "$extensions": {
             "org.kiwi.contrast": [
@@ -9205,7 +10108,8 @@
       },
       "radius": {
         "$type": "dimension",
-        "$value": "{semantic.radius.control}"
+        "$value": "{semantic.radius.sheet}",
+        "$description": "A toast is a floating sheet: --radius-sheet (8 px)"
       },
       "icon-size": {
         "$type": "dimension",
@@ -10647,7 +11551,7 @@
           },
           "cta": {
             "$type": "color",
-            "$value": "{semantic.color.disabled.surface}"
+            "$value": "{semantic.color.disabled.solid}"
           },
           "$extensions": {
             "org.kiwi.contrast": [
@@ -10773,7 +11677,8 @@
       },
       "radius": {
         "$type": "dimension",
-        "$value": "{semantic.radius.control}"
+        "$value": "{semantic.radius.sheet}",
+        "$description": "The popup is a floating sheet: --radius-sheet (8 px)"
       },
       "viewport-margin": {
         "$type": "dimension",
@@ -11011,7 +11916,7 @@
       }
     },
     "launcher": {
-      "$description": "The floating chat launcher (locked: 56 px, --accent-solid fill, --accent-on-solid icon, --shadow-2). Resting offset 24 px from the side and 96 px above the bottom (bottom-left on app tabs), measured from the safe area (right: calc(var(--launcher-offset-x) + env(safe-area-inset-right, 0px)); bottom: calc(var(--launcher-offset-y) + env(safe-area-inset-bottom, 0px))), 8 px edge margin, draggable and snapping as today; position is Stage 2. Hidden while the panel is open (fade 176 ms). Its own region in the floating layer, so it does not count against the page's one filled primary. Keyboard: the launcher is the last tab stop of the page (a fixed surface after the main content); Enter or Space opens the panel; Escape inside the panel closes it and returns focus to the launcher.",
+      "$description": "The floating chat launcher (locked: 56 px, --accent-solid fill with its 1 px --accent-solid-border edge, --accent-on-solid icon, --shadow-2). Resting offset 24 px from the side and 96 px above the bottom (bottom-left on app tabs), measured from the safe area (right: calc(var(--launcher-offset-x) + env(safe-area-inset-right, 0px)); bottom: calc(var(--launcher-offset-y) + env(safe-area-inset-bottom, 0px))), 8 px edge margin, draggable and snapping as today; position is Stage 2. Hidden while the panel is open (fade 176 ms). Its own region in the floating layer, so it does not count against the page's one filled primary. Keyboard: the launcher is the last tab stop of the page (a fixed surface after the main content); Enter or Space opens the panel; Escape inside the panel closes it and returns focus to the launcher.",
       "size": {
         "$type": "dimension",
         "$value": "{semantic.size.launcher}"
@@ -11066,7 +11971,7 @@
       "badge-radius": {
         "$type": "dimension",
         "$value": "{semantic.radius.round}",
-        "$description": "The badge is round (one of the three radii); never a pill"
+        "$description": "The badge is round (--radius-round); never a pill"
       },
       "variant": {
         "badge": {
@@ -11100,6 +12005,10 @@
             "$type": "color",
             "$value": "{semantic.color.accent-solid}"
           },
+          "border": {
+            "$type": "color",
+            "$value": "{semantic.color.accent-solid-border}"
+          },
           "icon": {
             "$type": "color",
             "$value": "{semantic.color.accent-on-solid}"
@@ -11109,6 +12018,18 @@
               {
                 "fg": "icon",
                 "bg": "fill",
+                "min": 3,
+                "kind": "non-text"
+              },
+              {
+                "fg": "border",
+                "bg": "{semantic.color.surface}",
+                "min": 3,
+                "kind": "non-text"
+              },
+              {
+                "fg": "border",
+                "bg": "{semantic.color.background}",
                 "min": 3,
                 "kind": "non-text"
               },
@@ -11116,23 +12037,23 @@
                 "fg": "fill",
                 "bg": "{semantic.color.surface}",
                 "min": 3,
-                "kind": "non-text"
-              },
-              {
-                "fg": "fill",
-                "bg": "{semantic.color.background}",
-                "min": 3,
-                "kind": "non-text"
+                "kind": "non-text",
+                "decorative": true,
+                "why": "the Soft sage fill is a tint, not the boundary: the 1 px --accent-solid-border edge is"
               }
             ]
           },
-          "$description": "Resting: --accent-solid fill, --accent-on-solid glyph, --shadow-2, 56 px round."
+          "$description": "Resting: --accent-solid fill, the 1 px --accent-solid-border edge, --accent-on-solid glyph, --shadow-2, 56 px round."
         },
         "hover": {
           "$description": "Fill steps; the shadow does not grow (no glow).",
           "fill": {
             "$type": "color",
             "$value": "{semantic.color.accent-solid-hover}"
+          },
+          "border": {
+            "$type": "color",
+            "$value": "{semantic.color.accent-solid-border}"
           },
           "icon": {
             "$type": "color",
@@ -11147,7 +12068,13 @@
                 "kind": "non-text"
               },
               {
-                "fg": "fill",
+                "fg": "border",
+                "bg": "{semantic.color.surface}",
+                "min": 3,
+                "kind": "non-text"
+              },
+              {
+                "fg": "border",
                 "bg": "{semantic.color.background}",
                 "min": 3,
                 "kind": "non-text"
@@ -11160,6 +12087,10 @@
           "fill": {
             "$type": "color",
             "$value": "{semantic.color.accent-solid}"
+          },
+          "border": {
+            "$type": "color",
+            "$value": "{semantic.color.accent-solid-border}"
           },
           "icon": {
             "$type": "color",
@@ -11188,6 +12119,18 @@
                 "bg": "{semantic.color.background}",
                 "min": 3,
                 "kind": "non-text"
+              },
+              {
+                "fg": "border",
+                "bg": "{semantic.color.surface}",
+                "min": 3,
+                "kind": "non-text"
+              },
+              {
+                "fg": "border",
+                "bg": "{semantic.color.background}",
+                "min": 3,
+                "kind": "non-text"
               }
             ]
           }
@@ -11198,6 +12141,10 @@
             "$type": "color",
             "$value": "{semantic.color.accent-solid-active}"
           },
+          "border": {
+            "$type": "color",
+            "$value": "{semantic.color.accent-solid-border}"
+          },
           "icon": {
             "$type": "color",
             "$value": "{semantic.color.accent-on-solid}"
@@ -11207,6 +12154,18 @@
               {
                 "fg": "icon",
                 "bg": "fill",
+                "min": 3,
+                "kind": "non-text"
+              },
+              {
+                "fg": "border",
+                "bg": "{semantic.color.surface}",
+                "min": 3,
+                "kind": "non-text"
+              },
+              {
+                "fg": "border",
+                "bg": "{semantic.color.background}",
                 "min": 3,
                 "kind": "non-text"
               }
@@ -11237,6 +12196,10 @@
             "$type": "color",
             "$value": "{semantic.color.accent-solid}"
           },
+          "border": {
+            "$type": "color",
+            "$value": "{semantic.color.accent-solid-border}"
+          },
           "icon": {
             "$type": "color",
             "$value": "{semantic.color.accent-on-solid}"
@@ -11246,6 +12209,18 @@
               {
                 "fg": "icon",
                 "bg": "fill",
+                "min": 3,
+                "kind": "non-text"
+              },
+              {
+                "fg": "border",
+                "bg": "{semantic.color.surface}",
+                "min": 3,
+                "kind": "non-text"
+              },
+              {
+                "fg": "border",
+                "bg": "{semantic.color.background}",
                 "min": 3,
                 "kind": "non-text"
               }
@@ -11258,6 +12233,10 @@
             "$type": "color",
             "$value": "{semantic.color.accent-solid}"
           },
+          "border": {
+            "$type": "color",
+            "$value": "{semantic.color.accent-solid-border}"
+          },
           "icon": {
             "$type": "color",
             "$value": "{semantic.color.accent-on-solid}"
@@ -11267,6 +12246,18 @@
               {
                 "fg": "icon",
                 "bg": "fill",
+                "min": 3,
+                "kind": "non-text"
+              },
+              {
+                "fg": "border",
+                "bg": "{semantic.color.surface}",
+                "min": 3,
+                "kind": "non-text"
+              },
+              {
+                "fg": "border",
+                "bg": "{semantic.color.background}",
                 "min": 3,
                 "kind": "non-text"
               }
@@ -11279,6 +12270,10 @@
             "$type": "color",
             "$value": "{semantic.color.accent-solid}"
           },
+          "border": {
+            "$type": "color",
+            "$value": "{semantic.color.accent-solid-border}"
+          },
           "icon": {
             "$type": "color",
             "$value": "{semantic.color.accent-on-solid}"
@@ -11290,6 +12285,18 @@
                 "bg": "fill",
                 "min": 3,
                 "kind": "non-text"
+              },
+              {
+                "fg": "border",
+                "bg": "{semantic.color.surface}",
+                "min": 3,
+                "kind": "non-text"
+              },
+              {
+                "fg": "border",
+                "bg": "{semantic.color.background}",
+                "min": 3,
+                "kind": "non-text"
               }
             ]
           }
@@ -11297,7 +12304,7 @@
       }
     },
     "tutor-message": {
-      "$description": "The tutor-message surface: a tutor row is a 32 px avatar slot (G9) + 12 px gap + the answer column, on the message region's ruler (text 68 px right of the rule). Answer text --type-body 16/24, CJK-dominant blocks 28, measure 68ch, blocks 12 px apart, messages 24 px apart. Links --link underlined. Code blocks: --type-code 14/24 on a transparent ground with a 2 px --editor-block-rule left rule and a Copy icon button (--tutor-message-copy-button 28 px with a 16 px glyph; hit area --tutor-message-copy-hit: 28 fine / 44 coarse); inline code on --editor-inline-bg; display math bare and centred with overflow scroll. Citations [Page N] are --link in --type-caption with a 44 px hit area on coarse pointers (--tutor-message-citation-hit). The feedback toolbar is a row of 28 px icon buttons (16 px glyphs, 44 px targets on coarse pointers) on a 28 px line so it ticks once; the two thumbs are toggles (aria-pressed) and the chosen one is drawn as a filled glyph in --selection-text, the other as an outline. The panel's chrome (header, session bar, model select, composer) is compact tool chrome on every route, student pages included (36 px icon buttons and a 36 px composer field and Send), while the message region is a comfortable reading surface (16/24); on coarse pointers the chrome's controls carry 44 px hit areas. While an answer streams the composer's Send becomes Stop (secondary) and the toolbar is hidden until the answer completes. Keyboard: the feedback toolbar is one tab stop with a roving tabindex (Left/Right between its five buttons, Enter or Space presses); citations are links; the Copy button is a tab stop inside its code block; Escape while the composer has focus stops a streaming answer.",
+      "$description": "The tutor-message surface: a tutor row is a 32 px avatar slot (G9) + 12 px gap + the answer column, on the message region's ruler (text 68 px right of the rule). Answer text --type-body 16/24, CJK-dominant blocks 28, measure 68ch, blocks 12 px apart, messages 24 px apart. Links --link underlined. Code blocks: --type-code 14/24 on a transparent ground with a 2 px --editor-block-rule left rule and a Copy icon button (--tutor-message-copy-button 28 px with a 16 px glyph; hit area --tutor-message-copy-hit: 28 fine / 44 coarse); inline code on --editor-inline-bg; display math bare and centred with overflow scroll. Citations [Page N] are --link in --type-caption with a 44 px hit area on coarse pointers (--tutor-message-citation-hit). The feedback toolbar is a row of 28 px icon buttons (16 px glyphs, 44 px targets on coarse pointers) on one 28 px line; the two thumbs are toggles (aria-pressed) and the chosen one is drawn as a filled glyph in --selection-text, the other as an outline. The panel's chrome (header, session bar, model select, composer) is compact tool chrome on every route, student pages included (36 px icon buttons and a 36 px composer field and Send), while the message region is a comfortable reading surface (16/24); on coarse pointers the chrome's controls carry 44 px hit areas. While an answer streams the composer's Send becomes Stop (secondary) and the toolbar is hidden until the answer completes. Keyboard: the feedback toolbar is one tab stop with a roving tabindex (Left/Right between its five buttons, Enter or Space presses); citations are links; the Copy button is a tab stop inside its code block; Escape while the composer has focus stops a streaming answer.",
       "avatar": {
         "$type": "dimension",
         "$value": "{semantic.size.avatar}"
@@ -11334,7 +12341,7 @@
       "toolbar-line": {
         "$type": "dimension",
         "$value": "{semantic.size.toolbar-button-sm}",
-        "$description": "the toolbar row's line height, so the row ticks the ruler once"
+        "$description": "the toolbar row's line height: one 28 px line"
       },
       "toolbar-hit": {
         "$type": "dimension",
@@ -12806,10 +13813,10 @@
     "backing": {
       "$type": "color",
       "$value": "{semantic.color.fill-none}",
-      "$description": "The disc behind the drawn mascot (--radius-round at the slot size: the lock's dark-mode backing circle). Transparent in light, where the forest outline clears every light surface by 8.6:1 or more. In dark the light sheet colour, frozen to light paper-2 (#faf9f3): the outline measures 10.0:1 on it and the disc 15-17:1 on the dark surfaces (check § 20). A light value cannot be referenced from the dark context in this resolver, so the dark value is a literal that § 15 holds to its source, like the on-paper marks. Drawn under the avatar, the peek, the empty, sign-in and not-found stills and the class-card fallback; never under the launcher glyph.",
+      "$description": "The disc behind the drawn mascot (--radius-round at the slot size: the lock's dark-mode backing circle). Transparent in light, where the forest outline clears every light surface by 8.8:1 or more (check § 20). In dark the light sheet colour, frozen to light paper-2 (#fdfcf6 since the 2026-10-18 re-lock): the outline measures 10.3:1 on it and the disc 15-17:1 on the dark surfaces (check § 20). A light value cannot be referenced from the dark context in this resolver, so the dark value is a literal that § 15 holds to its source, like the on-paper marks. Drawn under the avatar, the peek, the empty, sign-in and not-found stills and the class-card fallback; never under the launcher glyph.",
       "$extensions": {
         "mode": {
-          "dark": "#faf9f3"
+          "dark": "#fdfcf6"
         },
         "org.kiwi": {
           "css": "--companion-backing",

@@ -24,13 +24,21 @@
 //  18. Public reduced motion: every selector of the public CSS that runs an animation or a transition is listed inside one scoped @media (prefers-reduced-motion: reduce) block, and that block holds no universal selector and no !important.
 //  19. MUI grey: the preview's palette.grey is the locked neutral ramp per mode (every key, both schemes) and palette.common is the G2 logo pair, so a stray grey.NN in the code cannot keep MUI's default greys.
 //  20. Companion backing (Phase 4, DW-4.4): the mascot's forest outline (companion.$extensions["org.kiwi"].artwork.outline, metadata, not a token) clears 3:1 on companion.backing in dark and on every light surface the transparent light backing exposes; § 5 admits a companion.* literal only when it is frozen to a light source, and § 15 reads a frozen literal held in a mode block (frozen.at). Also pixel-sampled: the lightest forest-class pixel of every shipped asset (mocks/assets/mascot/inventory.json, written by export-mascot.py) clears 3:1 on the dark backing and on light --surface-active (review A-5).
+//  21. Provenance (the 2026-10-18 re-lock): every global colour step records its source per mode ($extensions["org.kiwi"].source): a reference value taken as given (with the selector it comes from),
+//      an OKLCH derivation [L, C, H] with its reason, re-rendered here and failed on any drift, or a value kept from the 2026-10-16 lock; and the neutral, accent and paper ramps are monotonic in OKLCH lightness per mode.
+//  22. The dialog against its scrim (re-lock review, fix round 1): the backdrop is composited over the canvas at its mode's alpha; in dark, where the
+//      sheet stands only about 1.2:1 clear of the near-black scrim, the dialog's edge must clear 3:1 against it; in light the sheet's own tonal step
+//      carries the separation and the pairs are reported.
+//  23. Public states (re-lock review, fix round 1): every stateful rule of the public CSS that paints a button, a field, a chip or a step resolves, in
+//      both colour modes, to the hex of the component spec's part for that state, through the public map; the emitted (light-only) literal equals the
+//      light hex; and two planted defects (the re-lock's regression: the secondary's hover on --kiwi-bg-selected) must be caught.
 // Writes ./generated/check-summary.json with every count the DESIGN.md evidence quotes, so the evidence paragraph is generated, not typed.
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { loadTokens, walk, walkGroups, getToken, getNode, resolve, refOf, cssNameFor, contrast, isHex, CONTEXTS, STATES, COMPONENTS, variesWith, TOKENS_DIR, REPO_ROOT } from "./tokens-lib.mjs";
+import { loadTokens, walk, walkGroups, getToken, getNode, resolve, refOf, cssNameFor, contrast, isHex, hexToRgb, alphaOf, dependencies, CONTEXTS, STATES, COMPONENTS, variesWith, TOKENS_DIR, REPO_ROOT } from "./tokens-lib.mjs";
 import { GATES as CHART_GATES, assertSeries, renderHex, oklchOfHex, views, dE, inArc } from "./chart-lib.mjs";
 
 const here = TOKENS_DIR; // relative to this script; nothing machine-specific
@@ -452,6 +460,157 @@ for (const r of compRows) log(`| ${r.join(" | ")} |`);
 log("\n| Asset (pixel-sampled) | Forest px | Lightest forest | on dark backing | on light surface-active | tan lightest on backing (info) | |\n|---|---:|---|---|---|---|---|");
 for (const r of pixRows) log(`| ${r.join(" | ")} |`);
 
+// ---------- 21. global provenance (the 2026-10-18 re-lock; kiwi-ui/DESIGN.md § Color tokens, the regeneration procedure) ----------
+// A derived step is reproducible from its record as the chart series are (§ 16): its recorded OKLCH parameters, gamut-mapped by chroma as
+// palette.mjs does (chart-lib.mjs renderHex), must render its hex. A given step names the reference selector it was taken from; a kept step
+// names the lock it was kept from. The three UI ramps must be monotonic in OKLCH L (light: step 1 lightest; dark: step 1 darkest).
+let provN = 0, provBad = 0; const provKinds = { given: 0, oklch: 0, kept: 0 }; const provRows = [], monoRows = [];
+{
+  const provFail = (s) => { fail(`provenance: ${s}`); provBad++; };
+  walk(tree.global.color, (p, tk) => {
+    const path = `global.color.${p}`, srcs = tk.$extensions?.["org.kiwi"]?.source || {};
+    for (const [mode, ctx] of [["light", L], ["dark", D]]) {
+      if (mode === "dark" && !tk.$extensions?.mode?.dark && !srcs.dark) continue; // a mode-less global records one source for both modes
+      provN++;
+      const hex = String(resolve(tree, path, ctx)).toLowerCase(), s = srcs[mode];
+      if (!s) { provFail(`${path} ${mode} records no source`); continue; }
+      const kind = s.oklch ? "oklch" : s.given ? "given" : s.kept ? "kept" : null;
+      if (!kind) { provFail(`${path} ${mode}: the source is neither given, oklch nor kept`); continue; }
+      provKinds[kind]++;
+      let ok = true;
+      if (kind === "oklch") { const want = renderHex(...s.oklch); ok = want === hex; if (!ok) provFail(`${path} ${mode} ${hex} is not what its recorded oklch(${s.oklch.join(" ")}) renders (${want})`); }
+      provRows.push([mode, `--${p.replace(/\./g, "-")}`, hex, kind === "oklch" ? `derived oklch(${s.oklch.join(" ")}): ${s.why || ""}` : kind === "given" ? `given: ${s.given}` : `kept: ${s.kept}`, ok ? "PASS" : "FAIL"]);
+    }
+  });
+  for (const r of ["neutral", "accent", "paper"]) for (const [mode, ctx] of [["light", L], ["dark", D]]) {
+    const steps = Object.keys(tree.global.color[r]).filter((k) => !k.startsWith("$")).sort((a, b) => +a - +b);
+    const Ls = steps.map((k) => oklchOfHex(String(resolve(tree, `global.color.${r}.${k}`, ctx))).L);
+    const bad = []; for (let i = 1; i < Ls.length; i++) if (!(mode === "light" ? Ls[i] < Ls[i - 1] : Ls[i] > Ls[i - 1])) bad.push(`${steps[i - 1]} → ${steps[i]}`);
+    if (bad.length) provFail(`${r} ${mode} is not monotonic in OKLCH L at ${bad.join(", ")}`);
+    monoRows.push([r, mode, Ls.map((x) => x.toFixed(3)).join(" → "), bad.length ? "FAIL" : "PASS"]);
+  }
+}
+log(`\n## 21. Global provenance (2026-10-18 re-lock)\n\n${provN} global colour values (per mode): ${provKinds.given} taken as given from the reference, ${provKinds.oklch} OKLCH derivations re-rendered from their recorded parameters, ${provKinds.kept} kept from the 2026-10-16 lock; ${provBad} failures. The neutral, accent and paper ramps are monotonic in OKLCH lightness in both modes.\n`);
+log("| Ramp | Mode | OKLCH L, step 1 → last | |\n|---|---|---|---|");
+for (const r of monoRows) log(`| ${r.join(" | ")} |`);
+log("\n| Mode | Global | Value | Source | |\n|---|---|---|---|---|");
+for (const r of provRows) log(`| ${r.join(" | ")} |`);
+
+// ---------- 22. the dialog against its scrim ----------
+let scrimN = 0, scrimBad = 0; const scrimRows = [];
+{
+  const comp = (fg, a, bg) => { const f = hexToRgb(fg), b = hexToRgb(bg); return "#" + f.map((x, i) => Math.round((x * a + b[i] * (1 - a)) * 255).toString(16).padStart(2, "0")).join(""); };
+  for (const [mode, ctx] of [["light", L], ["dark", D]]) {
+    const ink = String(resolve(tree, "semantic.color.backdrop", ctx)), a = alphaOf(getToken(tree, "semantic.color.backdrop"), ctx), canvas = String(resolve(tree, "semantic.color.background", ctx));
+    if (a == null) { fail(`scrim: semantic.color.backdrop carries no alpha for ${mode}`); scrimBad++; continue; }
+    const scrim = comp(ink, a, canvas), sheet = String(resolve(tree, "component.dialog.state.default.fill", ctx)), edge = String(resolve(tree, "component.dialog.state.default.border", ctx));
+    const rSheet = contrast(sheet, scrim), rEdge = contrast(edge, scrim);
+    if (mode === "dark") { scrimN++; if (rEdge < 3) { scrimBad++; fail(`scrim dark: the dialog's edge ${edge} measures ${rEdge.toFixed(2)}:1 against its scrim ${scrim}`); } }
+    scrimRows.push([mode, scrim, `sheet ${sheet} ${rSheet.toFixed(2)}`, `edge ${edge} ${rEdge.toFixed(2)}`, mode === "dark" ? (rEdge >= 3 ? "PASS (edge ≥ 3)" : "FAIL") : "informational (the sheet's tonal step)"]);
+  }
+}
+log(`\n## 22. The dialog against its scrim\n\nThe backdrop (--shadow-ink at its mode's alpha) composited over the canvas. ${scrimN} required assertion (dark: the dialog's edge ≥ 3:1 against the scrim), ${scrimBad} failures.\n`);
+log("| Mode | Scrim | Sheet against it | Edge against it | |\n|---|---|---|---|---|");
+for (const r of scrimRows) log(`| ${r.join(" | ")} |`);
+
+// ---------- 23. public states against the component spec (re-lock review, fix round 1) ----------
+// A public name points at a semantic role; the component spec points the same state's part at a role too. When the two are different roles that
+// happen to share a value, an alias move splits them silently: the re-lock moved --selection-bg to accent-4, so the secondary's hover, mapped to
+// --kiwi-bg-selected, painted the selected fill instead of the --accent-bg-subtle hover tint (DESIGN.md § Color tokens, the secondary row). Every
+// stateful public rule that paints a button, a field, a chip or a step is held here to the spec's part, in both modes (the public file is light-only,
+// G5: its emitted literal is held to the light hex, the mapping to both). The public CSS has no row class; the step indicator's current state stands
+// for the selection role (the roles table's "Selection, current nav item"). The steps, outside the twenty components, are held to the roles they name.
+const PUBLIC_STATES = [
+  [".kiwi-btn-primary", "background-color", "component.button.primary.state.default.fill"],
+  [".kiwi-btn-primary", "color", "component.button.primary.state.default.text"],
+  [".kiwi-btn-primary", "border-color", "component.button.primary.state.default.border"],
+  ['.kiwi-btn-primary:hover:not(:disabled):not([aria-disabled="true"])', "background-color", "component.button.primary.state.hover.fill"],
+  ['.kiwi-btn-primary:active:not(:disabled):not([aria-disabled="true"])', "background-color", "component.button.primary.state.active.fill"],
+  [".kiwi-btn:focus-visible", "outline", "component.button.primary.state.focus.ring"],
+  [".kiwi-btn:focus-visible", "outline", "component.button.secondary.state.focus.ring"],
+  ['.kiwi-btn-primary[aria-disabled="true"], .kiwi-btn-primary:disabled', "background-color", "component.button.primary.state.disabled.fill"],
+  ['.kiwi-btn-primary[aria-disabled="true"], .kiwi-btn-primary:disabled', "border-color", "component.button.primary.state.disabled.border"],
+  ['.kiwi-btn[aria-disabled="true"], .kiwi-btn:disabled', "color", "component.button.primary.state.disabled.text"],
+  ['.kiwi-btn[aria-disabled="true"], .kiwi-btn:disabled', "color", "component.button.secondary.state.disabled.text"],
+  ['.kiwi-btn[aria-disabled="true"], .kiwi-btn:disabled', "background-color", "component.button.secondary.state.disabled.fill"],
+  ['.kiwi-btn[aria-disabled="true"], .kiwi-btn:disabled', "border-color", "component.button.secondary.state.disabled.border"],
+  [".kiwi-btn-secondary", "background-color", "component.button.secondary.state.default.fill"],
+  [".kiwi-btn-secondary", "color", "component.button.secondary.state.default.text"],
+  [".kiwi-btn-secondary", "border-color", "component.button.secondary.state.default.border"],
+  ['.kiwi-btn-secondary:hover:not(:disabled):not([aria-disabled="true"])', "background-color", "component.button.secondary.state.hover.fill"],
+  ['.kiwi-btn-secondary:active:not(:disabled):not([aria-disabled="true"])', "background-color", "component.button.secondary.state.active.fill"],
+  ['.kiwi-btn-secondary:active:not(:disabled):not([aria-disabled="true"])', "border-color", "component.button.secondary.state.active.border"],
+  [".kiwi-input", "background-color", "component.field.state.default.fill"],
+  [".kiwi-input", "color", "component.field.state.default.text"],
+  [".kiwi-input", "border-color", "component.field.state.default.border"],
+  [".kiwi-input:hover", "border-color", "component.field.state.hover.border"],
+  [".kiwi-input:focus-visible", "outline", "component.field.state.focus.ring"],
+  ['.kiwi-input[aria-invalid="true"]', "border-color", "component.field.state.error.border"],
+  ['.kiwi-input[aria-disabled="true"], .kiwi-input:disabled', "background-color", "component.field.state.disabled.fill"],
+  ['.kiwi-input[aria-disabled="true"], .kiwi-input:disabled', "color", "component.field.state.disabled.text"],
+  ['.kiwi-input[aria-disabled="true"], .kiwi-input:disabled', "border-color", "component.field.state.disabled.border"],
+  ['.kiwi-input[aria-busy="true"]', "border-color", "component.field.state.loading.border"],
+  ['.kiwi-input[data-state="success"]', "border-color", "component.field.state.success.border"],
+  [".kiwi-chip", "background-color", "component.chip.role.state.default.fill"],
+  [".kiwi-chip", "color", "component.chip.role.state.default.text"],
+  [".kiwi-chip-primary", "background-color", "component.chip.filter.variant.selected.fill"],
+  [".kiwi-chip-primary", "color", "component.chip.filter.variant.selected.text"],
+  [".kiwi-chip-primary", "border-color", "component.chip.filter.variant.selected.border"],
+  ...["success", "warning", "error", "info"].flatMap((s) => [[`.kiwi-chip-status-${s}`, "background-color", `component.chip.status.variant.${s}.fill`], [`.kiwi-chip-status-${s}`, "color", `component.chip.status.variant.${s}.text`]]),
+  ...['.kiwi-step-indicator[aria-current="step"]', ".kiwi-step-active .kiwi-step-indicator"].flatMap((h) => [[h, "background-color", "semantic.color.selection.bg"], [h, "border-color", "semantic.color.selection.text"], [h, "color", "semantic.color.selection.text"]]),
+  [".kiwi-step-indicator[data-done]", "background-color", "semantic.color.status.success.surface"],
+  [".kiwi-step-indicator[data-done]", "color", "semantic.color.status.success.text"],
+  ['.kiwi-step-indicator[aria-invalid="true"]', "background-color", "semantic.color.status.error.surface"],
+  ['.kiwi-step-indicator[aria-invalid="true"]', "color", "semantic.color.status.error.text"],
+];
+const PROP_NAMES = { "background-color": ["background-color", "background"], "border-color": ["border-color", "border"], color: ["color"], outline: ["outline", "outline-color"] };
+function publicStates(css, map) {
+  const rows = [], bad = [], link = { sameRole: 0, sharedRole: 0, valueOnly: 0 };
+  const rootStart = css.indexOf(":root {"), root = rootStart >= 0 ? css.slice(rootStart, css.indexOf("\n}", rootStart)) : "";
+  for (const [head, prop, spec] of PUBLIC_STATES) {
+    const where = `${head} { ${prop} }`;
+    const at = css.indexOf("\n" + head + " {");
+    if (at < 0) { bad.push(`${where}: the rule is not in the public CSS`); continue; }
+    const body = css.slice(at + head.length + 3, css.indexOf("}", at));
+    const decls = body.split(";").map((s) => s.trim()).filter(Boolean).map((s) => [s.slice(0, s.indexOf(":")).trim(), s.slice(s.indexOf(":") + 1).trim()]);
+    const decl = PROP_NAMES[prop].map((n) => decls.find(([k]) => k === n)).find(Boolean);
+    if (!decl) { bad.push(`${where}: no ${PROP_NAMES[prop].join(" / ")} declaration`); continue; }
+    const colourVars = [...decl[1].matchAll(/var\((--kiwi-[a-z0-9-]+)\)/g)].map((m) => m[1]).filter((n) => { const e = map[n]; return e && refOf(e.token) && isHex(String(resolve(tree, refOf(e.token), L))); });
+    if (colourVars.length !== 1) { bad.push(`${where}: ${colourVars.length} colour variables in "${decl[1]}" (one expected)`); continue; }
+    const name = colourVars[0], pubPath = refOf(map[name].token);
+    const got = { light: String(resolve(tree, pubPath, L)).toLowerCase(), dark: String(resolve(tree, pubPath, D)).toLowerCase() };
+    const want = { light: String(resolve(tree, spec, L)).toLowerCase(), dark: String(resolve(tree, spec, D)).toLowerCase() };
+    const lit = (root.match(new RegExp(`^\\s*${name.replace(/-/g, "\\-")}\\s*:\\s*(#[0-9a-fA-F]{6})`, "m")) || [])[1];
+    const emitted = lit ? lit.toLowerCase() : null;
+    const okModes = got.light === want.light && got.dark === want.dark, okLit = emitted === want.light;
+    const specChain = new Set([spec, ...dependencies(tree, spec, L), ...dependencies(tree, spec, D)]), pubChain = new Set([pubPath, ...dependencies(tree, pubPath, L), ...dependencies(tree, pubPath, D)]);
+    const relation = specChain.has(pubPath) || pubChain.has(spec) ? "sameRole" : [...specChain].some((x) => x.startsWith("semantic.") && pubChain.has(x)) ? "sharedRole" : "valueOnly";
+    if (okModes && okLit) link[relation]++;
+    if (!okModes) bad.push(`${where}: ${name} → ${pubPath} paints ${got.light} / ${got.dark}, the spec's ${spec} is ${want.light} / ${want.dark} (light / dark)`);
+    else if (!okLit) bad.push(`${where}: ${name} is emitted as ${emitted} in the public :root, the spec's light value is ${want.light}`);
+    rows.push([head.length > 58 ? head.slice(0, 55) + "…" : head, prop, `\`${name}\` → ${pubPath.replace(/^semantic\./, "")}`, spec.replace(/^component\./, "").replace(/^semantic\./, ""), `${got.light} / ${want.light}`, `${got.dark} / ${want.dark}`, okModes && okLit ? (relation === "sameRole" ? "PASS" : relation === "sharedRole" ? "PASS (a shared role)" : "PASS (value only: an alias move would split them)") : "FAIL"]);
+  }
+  return { rows, bad, link };
+}
+const pubStates = publicStates(pubCss, pub);
+for (const b of pubStates.bad) fail(`public states: ${b}`);
+// planted defects: the re-lock's regression put back in the emitted CSS, and the same through the map; both must be caught
+const pubPlants = [];
+{
+  const re = /(\n\.kiwi-btn-secondary:hover[^{]*\{[^}]*?)var\(--kiwi-bg-tint\)/;
+  const css1 = pubCss.replace(re, "$1var(--kiwi-bg-selected)");
+  const map2 = { ...pub, "--kiwi-bg-tint": { ...pub["--kiwi-bg-tint"], token: "{semantic.color.selection.bg}" } };
+  for (const [label, css, map, applied] of [["the secondary's hover on --kiwi-bg-selected (the re-lock's regression, in the CSS)", css1, pub, css1 !== pubCss], ["--kiwi-bg-tint re-pointed at --selection-bg (the same, through the map)", pubCss, map2, !!pub["--kiwi-bg-tint"]]]) {
+    if (!applied) { fail(`public states: the planted defect "${label}" could not be applied, so the check is unproven`); pubPlants.push({ label, caught: false }); continue; }
+    const r = publicStates(css, map); const caught = r.bad.some((b) => b.startsWith('.kiwi-btn-secondary:hover'));
+    pubPlants.push({ label, caught, found: r.bad.length });
+    if (!caught) fail(`public states: the planted defect "${label}" was not caught`);
+  }
+}
+log(`\n## 23. Public states against the component spec\n\n${PUBLIC_STATES.length} stateful public rules (buttons, the field, chips, the steps; the public CSS has no row class) held to the spec's part in both modes, and their emitted light literal: ${PUBLIC_STATES.length - pubStates.bad.length} pass, ${pubStates.bad.length} fail. Linked by the same role ${pubStates.link.sameRole}, by a shared role ${pubStates.link.sharedRole}, by value only ${pubStates.link.valueOnly}. Planted defects: ${pubPlants.filter((p) => p.caught).length} of ${pubPlants.length} caught (${pubPlants.map((p) => p.label).join("; ")}).\n`);
+log("| Rule | Property | Public name → role | Spec part | Light (public / spec) | Dark (public / spec) | |\n|---|---|---|---|---|---|---|");
+for (const r of pubStates.rows) log(`| ${r.map((x) => String(x).replace(/\|/g, "\\|")).join(" | ")} |`);
+
 // ---------- report ----------
 // the run's identity is derived: the clock, the source's version and content hash, and the commit (null when uncommitted or outside git)
 const today = new Date().toISOString().slice(0, 10);
@@ -462,7 +621,7 @@ writeFileSync(join(here, "generated/contrast-report.md"), summary + out.join("\n
 // the machine-readable summary the DESIGN.md evidence paragraph is assembled from
 let descN = 0, tokenN = 0; walk(tree, (p, tk) => { if (!/^(global|semantic|component)\./.test(p)) return; tokenN++; if (tk.$description) descN++; });
 let groupN = 0, groupDescN = 0; walkGroups(tree, (p, g) => { if (!/^(semantic|component)\./.test(p)) return; groupN++; if (g.$description) groupDescN++; });
-writeFileSync(join(here, "generated/check-summary.json"), JSON.stringify({ date: today, source: { version: meta.version, sha256: srcSha, commit }, result: failures.length ? "FAIL" : "PASS", failures: failures.length, components: COMPONENTS.length, aliasOk, aliasBad, stateGroups: stateGroups.length, stateSpecs: stateGroups.length * 8, contrast: { pass, fail: failN, informational: exempt }, tier: { refs: compRefs, violations: tierBad.length }, literals: { marked: compLiterals.length, unmarked: compLiteralUnmarked.length, outsideGlobal: literalBad.length, banned: bannedReal.length }, public: { pinned: pinned.length, unmapped: unmapped.length, notEmitted: notEmitted.length, counts, classes: { pinned: v1Classes.length, missing: missingClasses.length, emitted: genClasses.size }, keyframes: { pinned: v1Keyframes.length, missing: missingKeyframes.length, emitted: genKeyframes.size }, deprecatedClasses: classDeprecated, deprecationViolations: depBad + classDepBad }, cues: { variants: TOGGLES.length, assertions: cueN, failures: cueBad }, frozen: { n: frozenN, drifted: frozenBad }, chart: { series: chartN, failures: chartBad, measured: chartMeasured }, editorSelection: { assertions: selN, failures: selBad }, motionGuard: { moving: motionAnimated, guarded: motionGuarded }, muiGrey: { keys: greyN, mismatches: greyBad }, companionBacking: { assertions: compN, failures: compBad, pixelAssets: pixN, pixelFailures: pixBad }, densityDeltas: deltas.length, descriptions: { tokens: tokenN, described: descN, groups: groupN, groupsDescribed: groupDescN } }, null, 1) + "\n");
+writeFileSync(join(here, "generated/check-summary.json"), JSON.stringify({ date: today, source: { version: meta.version, sha256: srcSha, commit }, result: failures.length ? "FAIL" : "PASS", failures: failures.length, components: COMPONENTS.length, aliasOk, aliasBad, stateGroups: stateGroups.length, stateSpecs: stateGroups.length * 8, contrast: { pass, fail: failN, informational: exempt }, tier: { refs: compRefs, violations: tierBad.length }, literals: { marked: compLiterals.length, unmarked: compLiteralUnmarked.length, outsideGlobal: literalBad.length, banned: bannedReal.length }, public: { pinned: pinned.length, unmapped: unmapped.length, notEmitted: notEmitted.length, counts, classes: { pinned: v1Classes.length, missing: missingClasses.length, emitted: genClasses.size }, keyframes: { pinned: v1Keyframes.length, missing: missingKeyframes.length, emitted: genKeyframes.size }, deprecatedClasses: classDeprecated, deprecationViolations: depBad + classDepBad }, cues: { variants: TOGGLES.length, assertions: cueN, failures: cueBad }, frozen: { n: frozenN, drifted: frozenBad }, chart: { series: chartN, failures: chartBad, measured: chartMeasured }, editorSelection: { assertions: selN, failures: selBad }, motionGuard: { moving: motionAnimated, guarded: motionGuarded }, muiGrey: { keys: greyN, mismatches: greyBad }, companionBacking: { assertions: compN, failures: compBad, pixelAssets: pixN, pixelFailures: pixBad }, provenance: { values: provN, given: provKinds.given, derived: provKinds.oklch, kept: provKinds.kept, failures: provBad }, scrim: { assertions: scrimN, failures: scrimBad }, publicStates: { rules: PUBLIC_STATES.length, failures: pubStates.bad.length, sameRole: pubStates.link.sameRole, sharedRole: pubStates.link.sharedRole, valueOnly: pubStates.link.valueOnly, plantsCaught: pubPlants.filter((p) => p.caught).length, plants: pubPlants.length }, densityDeltas: deltas.length, descriptions: { tokens: tokenN, described: descN, groups: groupN, groupsDescribed: groupDescN } }, null, 1) + "\n");
 console.log(summary.trim());
-console.log(`alias equalities ${aliasOk}/${aliasOk + aliasBad} · state groups ${stateGroups.length} · contrast required ${pass} pass / ${failN} fail, ${exempt} informational · literals outside global ${literalBad.length} · banned ${bannedReal.length} · public unmapped ${unmapped.length} · v1 classes missing ${missingClasses.length}/${v1Classes.length}, keyframes missing ${missingKeyframes.length}/${v1Keyframes.length} · tier violations ${tierBad.length} · component literals ${compLiterals.length} marked / ${compLiteralUnmarked.length} unmarked · deprecation violations ${depBad + classDepBad} (${counts.deprecated} names, ${classDeprecated} classes/keyframes) · density deltas ${deltas.length} · cues ${cueN} assertions / ${cueBad} failures · frozen literals ${frozenN} / ${frozenBad} drifted · chart ${chartN} series values / ${chartBad} failures · editor selection ${selN} assertions / ${selBad} failures · public motion guard ${motionGuarded}/${motionAnimated} · MUI grey ${greyN - greyBad}/${greyN} · companion backing ${compN - compBad}/${compN} pairs, ${pixN - pixBad}/${pixN} assets pixel-sampled`);
+console.log(`alias equalities ${aliasOk}/${aliasOk + aliasBad} · state groups ${stateGroups.length} · contrast required ${pass} pass / ${failN} fail, ${exempt} informational · literals outside global ${literalBad.length} · banned ${bannedReal.length} · public unmapped ${unmapped.length} · v1 classes missing ${missingClasses.length}/${v1Classes.length}, keyframes missing ${missingKeyframes.length}/${v1Keyframes.length} · tier violations ${tierBad.length} · component literals ${compLiterals.length} marked / ${compLiteralUnmarked.length} unmarked · deprecation violations ${depBad + classDepBad} (${counts.deprecated} names, ${classDeprecated} classes/keyframes) · density deltas ${deltas.length} · cues ${cueN} assertions / ${cueBad} failures · frozen literals ${frozenN} / ${frozenBad} drifted · chart ${chartN} series values / ${chartBad} failures · editor selection ${selN} assertions / ${selBad} failures · public motion guard ${motionGuarded}/${motionAnimated} · MUI grey ${greyN - greyBad}/${greyN} · companion backing ${compN - compBad}/${compN} pairs, ${pixN - pixBad}/${pixN} assets pixel-sampled · provenance ${provN - provBad}/${provN} (${provKinds.given} given, ${provKinds.oklch} derived, ${provKinds.kept} kept) · dialog scrim ${scrimN - scrimBad}/${scrimN} · public states ${PUBLIC_STATES.length - pubStates.bad.length}/${PUBLIC_STATES.length} (planted defects caught ${pubPlants.filter((p) => p.caught).length}/${pubPlants.length})`);
 process.exit(failures.length ? 1 : 0);

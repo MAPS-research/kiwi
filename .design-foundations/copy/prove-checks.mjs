@@ -9,7 +9,8 @@
 // An end-to-end proof copies the data, the guide and the source into a throwaway root, plants ONE defect, runs check-copy.mjs there and asks whether the named check
 // failed (an expected check written "!ID" is a control: the copy is changed in a way that must leave that check quiet); the real files are never written, and the copy is deleted afterwards. The copy is checked first with no defect: it must pass everything but the lock checks
 // (L1 to L3 read git, which a copy does not have). Exit code 1 if a proof is missed or the baseline is not clean.
-// The lock proofs (proofs.mjs LOCK: the lock amendments' check, L7 and L8) run in this process, like the unit proofs, since L7 and L8 read git too.
+// The lock proofs (proofs.mjs LOCK: the lock amendments' checks, L7 and L8, both record kinds and the chain) run in this process, like the unit proofs, since
+// L7 and L8 read git too.
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -99,7 +100,7 @@ async function check(dir) {
   catch (e) { return { out: String(e.stdout || "") }; }
 }
 // L1 to L8 read git, which a copy does not have; R1 reads the summary this run is about to write, so it cannot be a baseline of the run that writes it
-const failing = (out) => [...out.matchAll(/^FAIL  (\S+)/gm)].map((m) => m[1]).filter((id) => !/^(L[1-8]|R1)$/.test(id)); // L4 to L6 (Phase 6's lock) and L7, L8 (the 2026-10-18 amendment, proved in process: LOCK) read git too
+const failing = (out) => [...out.matchAll(/^FAIL  (\S+)/gm)].map((m) => m[1]).filter((id) => !/^(L[1-8]|R1)$/.test(id)); // L4 to L6 (Phase 6's lock) and L7, L8 (the chain of lock amendments, proved in process: LOCK) read git too
 
 // ---------------------------------------------------------------------------------------------------------------- unit proofs
 const unit = [];
@@ -119,7 +120,7 @@ for (const c of LOCK) {
 const lockMiss = lock.filter((x) => !x.ok);
 console.log(`unit proofs: ${unit.length - unitMiss.length} of ${unit.length} behave as planted (${unit.filter((x) => x.negative).length} are controls that must stay quiet)`);
 for (const m of unitMiss) console.log(`  MISSED ${m.id} (${m.rule}) ${JSON.stringify(m.text)} -> ${JSON.stringify(m.hits)}`);
-console.log(`lock proofs: ${lock.length - lockMiss.length} of ${lock.length} behave as planted (${lock.filter((x) => x.control).length} a control that must stay quiet)`);
+{ const n = lock.filter((x) => x.control).length; console.log(`lock proofs: ${lock.length - lockMiss.length} of ${lock.length} behave as planted (${n === 1 ? "1 is a control" : `${n} are controls`} that must stay quiet)`); }
 for (const m of lockMiss) console.log(`  MISSED ${m.id} (${m.name}) -> ${JSON.stringify(m.hits)}`);
 
 // ---------------------------------------------------------------------------------------------------------------- end-to-end proofs

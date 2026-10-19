@@ -1,24 +1,24 @@
 {
- "date": "2026-10-18",
+ "date": "2026-10-19",
  "source": {
   "version": "2.0.0",
-  "sha256": "e6d4e43f3934",
-  "commit": "1368572"
+  "sha256": "094207ed8c73",
+  "commit": "05a85e0"
  },
  "result": "PASS",
  "failures": 0,
  "components": 20,
- "aliasOk": 114,
+ "aliasOk": 126,
  "aliasBad": 0,
  "stateGroups": 25,
  "stateSpecs": 200,
  "contrast": {
-  "pass": 422,
+  "pass": 446,
   "fail": 0,
-  "informational": 24
+  "informational": 38
  },
  "tier": {
-  "refs": 923,
+  "refs": 937,
   "violations": 0
  },
  "literals": {
@@ -35,7 +35,7 @@
    "kept": 52,
    "deprecated": 41,
    "repointed": 50,
-   "added": 18
+   "added": 26
   },
   "classes": {
    "pinned": 89,
@@ -66,7 +66,7 @@
    "light": {
     "target": 0.56,
     "spread": 0.13,
-    "minContrast": 3.02,
+    "minContrast": 3.03,
     "minCvd": 8.14,
     "minCvdKind": "protanopia",
     "minCvdPair": [
@@ -81,14 +81,14 @@
     ],
     "other": {
      "hex": "#77746d",
-     "minContrast": 4.09,
+     "minContrast": 4.12,
      "minCvdToSeries": 4.66
     }
    },
    "dark": {
     "target": 0.634,
     "spread": 0.135,
-    "minContrast": 3.05,
+    "minContrast": 3.04,
     "minCvd": 8.16,
     "minCvdKind": "deuteranopia",
     "minCvdPair": [
@@ -103,7 +103,7 @@
     ],
     "other": {
      "hex": "#8d8b83",
-     "minContrast": 4.21,
+     "minContrast": 4.19,
      "minCvdToSeries": 5.57
     }
    }
@@ -127,11 +127,31 @@
   "pixelAssets": 21,
   "pixelFailures": 0
  },
+ "provenance": {
+  "values": 83,
+  "given": 17,
+  "derived": 40,
+  "kept": 26,
+  "failures": 0
+ },
+ "scrim": {
+  "assertions": 1,
+  "failures": 0
+ },
+ "publicStates": {
+  "rules": 53,
+  "failures": 0,
+  "sameRole": 46,
+  "sharedRole": 7,
+  "valueOnly": 0,
+  "plantsCaught": 2,
+  "plants": 2
+ },
  "densityDeltas": 30,
  "descriptions": {
-  "tokens": 1242,
-  "described": 230,
+  "tokens": 1264,
+  "described": 241,
   "groups": 330,
-  "groupsDescribed": 284
+  "groupsDescribed": 285
  }
 }
