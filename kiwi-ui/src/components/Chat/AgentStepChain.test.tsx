@@ -142,6 +142,12 @@ describe("foldAgentStep", () => {
     expect(steps[0].status).toBe("complete");
   });
 
+  it("completes the running step once the answer text begins, so the line can say it is writing", () => {
+    let steps = foldAgentStep([], "Using rag_search...");
+    steps = foldAgentStep(steps, "Here's a practical workflow for cleaning a messy survey");
+    expect(steps.map((s) => [s.toolName, s.status])).toEqual([["rag_search", "complete"]]);
+  });
+
   it("leaves the list alone for frames that carry no tool call", () => {
     const steps = foldAgentStep([], "Here's a quick behavioural snapshot.");
     expect(steps).toEqual([]);

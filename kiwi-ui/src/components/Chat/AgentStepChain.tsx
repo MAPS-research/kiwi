@@ -94,6 +94,12 @@ export const foldAgentStep = (
         { ...step, status: "running" as const },
       ];
     }
+  } else if (botResponse?.trim() && next.some((s) => s.status === "running")) {
+    // A frame of text with no tool call: the answer (or new narration) has begun, so
+    // the step before it has finished. The backend overwrites the narration with the
+    // answer and sends no step end, which left a server-side search "running" while
+    // the answer streamed (and the status line naming it instead of "Jotting it down…").
+    next = next.map((s) => (s.status === "running" ? { ...s, status: "complete" as const } : s));
   }
 
   if (streaming === "stop") {
