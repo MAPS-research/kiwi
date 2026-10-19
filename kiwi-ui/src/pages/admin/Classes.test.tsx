@@ -86,9 +86,9 @@ describe('Classes Component', () => {
   it('opens the add new class form as a dialog without leaving the list', async () => {
     renderWithProviders(<Classes />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Create New Class' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Create class' }));
 
-    expect(screen.getByRole('dialog', { name: 'Create New Class' })).toBeInTheDocument();
+    expect(screen.getByRole('dialog', { name: 'Create class' })).toBeInTheDocument();
     expect(screen.getByText('All Classes')).toBeInTheDocument();
   });
 

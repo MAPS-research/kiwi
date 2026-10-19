@@ -1,45 +1,46 @@
 import { render, screen, waitFor, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Courses from './Courses.tsx';
 
+const threeClasses = {
+  classInfoList: [
+    {
+      id: 'CS101',
+      className: 'Introduction to Computer Science',
+      professorName: 'Dr. Smith',
+      imageSnippetUrl: '/path/to/image1.jpg'
+    },
+    {
+      id: 'CS201',
+      className: 'Data Structures and Algorithms',
+      professorName: 'Dr. Johnson',
+      imageSnippetUrl: '/path/to/image2.jpg'
+    },
+    {
+      id: 'CS301',
+      className: 'Database Systems',
+      professorName: 'Dr. Brown',
+      imageSnippetUrl: '/path/to/image3.jpg'
+    }
+  ]
+};
+
+const api = vi.hoisted(() => ({
+  getEnrolledClasses: vi.fn(),
+}));
+
 // Mock the API client
 vi.mock('../utils/api.ts', () => ({
   default: {
-    studentControllerGetEnrolledClassesInfoByStudentId: vi.fn(() =>
-      Promise.resolve({
-        classInfoList: [
-          {
-            id: 'CS101',
-            className: 'Introduction to Computer Science',
-            professorName: 'Dr. Smith',
-            imageSnippetUrl: '/path/to/image1.jpg'
-          },
-          {
-            id: 'CS201',
-            className: 'Data Structures and Algorithms',
-            professorName: 'Dr. Johnson',
-            imageSnippetUrl: '/path/to/image2.jpg'
-          },
-          {
-            id: 'CS301',
-            className: 'Database Systems',
-            professorName: 'Dr. Brown',
-            imageSnippetUrl: '/path/to/image3.jpg'
-          }
-        ]
-      })
-    ),
+    studentControllerGetEnrolledClassesInfoByStudentId: api.getEnrolledClasses,
   },
 }));
 
 // Mock child components
 vi.mock('../components/TopNav/TopNav.tsx', () => ({
   default: () => <div data-testid="top-nav">TopNav Component</div>
-}));
-
-vi.mock('../components/Sidebar/Sidebar.tsx', () => ({
-  default: () => <div data-testid="sidebar">Sidebar Component</div>
 }));
 
 vi.mock('../components/ClassCard/ClassCard.tsx', () => ({
@@ -72,46 +73,50 @@ const renderWithProviders = (component: React.ReactElement) => {
 };
 
 describe('Courses Page', () => {
-  it('renders without crashing', async () => {
-    await act(async () => {
-      renderWithProviders(<Courses />);
-    });
-    expect(screen.getByTestId('top-nav')).toBeInTheDocument();
+  beforeEach(() => {
+    api.getEnrolledClasses.mockReset();
+    api.getEnrolledClasses.mockResolvedValue(threeClasses);
   });
 
-  it('renders all main layout components', async () => {
+  it('renders the top bar and the page heading', async () => {
     await act(async () => {
       renderWithProviders(<Courses />);
     });
 
     expect(screen.getByTestId('top-nav')).toBeInTheDocument();
-    // expect(screen.getByTestId('sidebar')).toBeInTheDocument();
-    expect(screen.getByTestId('responsive-grid')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: 'Your classes' })).toHaveClass(
+      'MuiTypography-h1',
+    );
+    expect(screen.queryByText(/Welcome to/)).not.toBeInTheDocument();
   });
 
-  it('uses the grey 100 student page background', async () => {
+  it('draws the page on the canvas in the main landmark, with no hero', async () => {
     await act(async () => {
       renderWithProviders(<Courses />);
     });
 
-    expect(screen.getByTestId('courses-surface')).toHaveStyle({
-      backgroundColor: 'rgb(245, 245, 245)',
-    });
+    const surface = screen.getByRole('main');
+    expect(surface).toBe(screen.getByTestId('courses-surface'));
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('hero-carousel-image')).not.toBeInTheDocument();
   });
 
-  it('displays mock course data', async () => {
+  it('displays the enrolled classes in the grid', async () => {
     renderWithProviders(<Courses />);
 
-    // Wait for the async data to load
     await waitFor(() => {
-      const courseCards = screen.getAllByTestId('course-card');
-      expect(courseCards.length).toBe(3);
+      expect(screen.getAllByTestId('course-card')).toHaveLength(3);
     });
 
-    // Check for specific mock courses
+    const grid = screen.getByTestId('responsive-grid');
+    screen.getAllByTestId('course-card').forEach((card) => {
+      expect(grid).toContainElement(card);
+    });
+
     expect(screen.getByText('Introduction to Computer Science')).toBeInTheDocument();
     expect(screen.getByText('ID: CS101')).toBeInTheDocument();
     expect(screen.getByText('Instructor: Dr. Smith')).toBeInTheDocument();
+    expect(screen.getByText('Image: /path/to/image1.jpg')).toBeInTheDocument();
 
     expect(screen.getByText('Data Structures and Algorithms')).toBeInTheDocument();
     expect(screen.getByText('ID: CS201')).toBeInTheDocument();
@@ -122,152 +127,62 @@ describe('Courses Page', () => {
     expect(screen.getByText('Instructor: Dr. Brown')).toBeInTheDocument();
   });
 
-  // it('shows add course card', async () => {
-  //   await act(async () => {
-  //     renderWithProviders(<Courses />);
-  //   });
-  //   expect(screen.getByTestId('add-course-card')).toBeInTheDocument();
-  // });
-
-  it('uses Material-UI layout components', async () => {
-    let container: any;
-    await act(async () => {
-      const result = renderWithProviders(<Courses />);
-      container = result.container;
+  it('names a class with no name or instructor', async () => {
+    api.getEnrolledClasses.mockResolvedValue({
+      classInfoList: [{ id: 'NONAME', className: '', professorName: '' }],
     });
-
-    const boxComponent = container.querySelector('.MuiBox-root');
-    const containerComponent = container.querySelector('.MuiContainer-root');
-
-    expect(boxComponent).toBeInTheDocument();
-    expect(containerComponent).toBeInTheDocument();
-  });
-
-  it('has proper page structure hierarchy', async () => {
     renderWithProviders(<Courses />);
 
-    // Main navigation should be present
-    expect(screen.getByTestId('top-nav')).toBeInTheDocument();
-    // expect(screen.getByTestId('sidebar')).toBeInTheDocument();
-
-    // Content area with responsive grid
-    expect(screen.getByTestId('responsive-grid')).toBeInTheDocument();
-
-    // Wait for course cards to load
-    await waitFor(() => {
-      const courseCards = screen.getAllByTestId('course-card');
-      expect(courseCards.length).toBe(3);
-    });
+    expect(await screen.findByText('Untitled class')).toBeInTheDocument();
+    expect(screen.getByText('Instructor: No instructor listed')).toBeInTheDocument();
+    expect(screen.queryByText('Class')).not.toBeInTheDocument();
+    expect(screen.queryByText('Instructor: TBD')).not.toBeInTheDocument();
   });
 
-  it('displays correct number of mock courses', async () => {
+  it('shows no empty frame while the classes load', () => {
+    api.getEnrolledClasses.mockImplementation(() => new Promise(() => {}));
     renderWithProviders(<Courses />);
 
-    await waitFor(() => {
-      const courseCards = screen.getAllByTestId('course-card');
-      expect(courseCards).toHaveLength(3); // Based on mock data
-    });
+    expect(screen.getByRole('heading', { level: 1, name: 'Your classes' })).toBeInTheDocument();
+    expect(screen.queryByText('No classes yet')).not.toBeInTheDocument();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
 
-  it('shows instructor information', async () => {
+  it('says there are no classes yet, with no call to action', async () => {
+    api.getEnrolledClasses.mockResolvedValue({ classInfoList: [] });
     renderWithProviders(<Courses />);
 
-    await waitFor(() => {
-      expect(screen.getByText('Instructor: Dr. Smith')).toBeInTheDocument();
-    });
-
-    expect(screen.getByText('Instructor: Dr. Johnson')).toBeInTheDocument();
-    expect(screen.getByText('Instructor: Dr. Brown')).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { level: 2, name: 'No classes yet' })).toBeInTheDocument();
+    expect(screen.queryByTestId('responsive-grid')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 
-  it('renders course images', async () => {
-    await act(async () => {
-      renderWithProviders(<Courses />);
-    });
+  it('treats a missing class list as no classes', async () => {
+    api.getEnrolledClasses.mockResolvedValue({});
+    renderWithProviders(<Courses />);
 
-    await waitFor(() => {
-      expect(screen.getByText('Image: /path/to/image1.jpg')).toBeInTheDocument();
-    });
-
-    expect(screen.getByText('Image: /path/to/image2.jpg')).toBeInTheDocument();
-    expect(screen.getByText('Image: /path/to/image3.jpg')).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'No classes yet' })).toBeInTheDocument();
   });
 
-  it('has accessible course information', async () => {
-    await act(async () => {
-      renderWithProviders(<Courses />);
-    });
+  it('states a failed load and retries it', async () => {
+    const user = userEvent.setup();
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    api.getEnrolledClasses.mockRejectedValueOnce(new Error('Network down'));
+    renderWithProviders(<Courses />);
+
+    expect(await screen.findByRole('heading', { name: "Couldn't load your classes" })).toBeInTheDocument();
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      "The server didn't respond as expected. Select Retry.",
+    );
+    expect(screen.queryByText('No classes yet')).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Retry' }));
 
     await waitFor(() => {
-      expect(screen.getByText('Introduction to Computer Science')).toBeInTheDocument();
+      expect(screen.getAllByTestId('course-card')).toHaveLength(3);
     });
-
-    // Check specific course names are rendered
-    expect(screen.getByText('Data Structures and Algorithms')).toBeInTheDocument();
-    expect(screen.getByText('Database Systems')).toBeInTheDocument();
-  });
-
-  it('handles responsive layout for different screen sizes', async () => {
-    await act(async () => {
-      renderWithProviders(<Courses />);
-    });
-
-    // ResponsiveGrid should handle the layout
-    const grid = screen.getByTestId('responsive-grid');
-    expect(grid).toBeInTheDocument();
-
-    // Wait for course cards to load then check containment
-    await waitFor(() => {
-      const courseCards = screen.getAllByTestId('course-card');
-      expect(courseCards.length).toBeGreaterThan(0);
-      courseCards.forEach(card => {
-        expect(grid).toContainElement(card);
-      });
-    });
-  });
-
-  it('displays course metadata correctly', async () => {
-    await act(async () => {
-      renderWithProviders(<Courses />);
-    });
-
-    // Wait for courses to load and check basic course data
-    await waitFor(() => {
-      expect(screen.getByText('ID: CS101')).toBeInTheDocument();
-    });
-    expect(screen.getByText('ID: CS201')).toBeInTheDocument();
-    expect(screen.getByText('ID: CS301')).toBeInTheDocument();
-    // Remove CS401 since our mock only has 3 courses
-  });
-
-  it('maintains consistent card structure', async () => {
-    await act(async () => {
-      renderWithProviders(<Courses />);
-    });
-
-    // Wait for course cards to be rendered
-    await waitFor(() => {
-      const courseCards = screen.getAllByTestId('course-card');
-      expect(courseCards.length).toBeGreaterThan(0);
-    });
-
-    const courseCards = screen.getAllByTestId('course-card');
-
-    // Each course card should contain expected elements
-    courseCards.forEach(card => {
-      expect(card.querySelector('h3')).toBeInTheDocument(); // Course name
-      expect(card.textContent).toMatch(/ID:/); // Course ID
-      expect(card.textContent).toMatch(/Instructor:/); // Instructor name
-    });
-  });
-
-  it('provides navigation context', async () => {
-    await act(async () => {
-      renderWithProviders(<Courses />);
-    });
-
-    // Navigation components provide context for the courses page
-    expect(screen.getByTestId('top-nav')).toBeInTheDocument();
-    // expect(screen.getByTestId('sidebar')).toBeInTheDocument();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    expect(api.getEnrolledClasses).toHaveBeenCalledTimes(2);
+    consoleError.mockRestore();
   });
 });

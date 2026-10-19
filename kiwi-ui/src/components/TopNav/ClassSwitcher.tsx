@@ -20,9 +20,7 @@ import {
   SchoolOutlined as ClassIcon,
   UnfoldMoreRounded as SwitcherIcon,
 } from "@mui/icons-material";
-import { alpha } from "@mui/material/styles";
 import { CREATE_NEW_CLASS_LABEL } from "../../constants/classCopy.ts";
-import { COMPACT_POPUP_TYPOGRAPHY } from "../../theme/compactPopup.ts";
 import { POPUP_FADE_DURATION_MS } from "../../theme/motion.ts";
 
 export interface ClassSwitcherOption {
@@ -42,6 +40,19 @@ export interface ClassSwitcherProps {
   emptyLabel?: string;
 }
 
+/** The 16 px glyphs of the switcher, in the neutral icon colour. */
+const smallIconSx = {
+  fontSize: "var(--size-icon-sm)",
+  color: "var(--icon-default)",
+  flexShrink: 0,
+};
+
+/**
+ * The class switcher in the top bar (JOURNEY SR-1, block 4; the Stage 1
+ * preview's `button.class-switch`): one button with the class icon, the current
+ * class and the unfold icon, opening a popover sheet with a search field, the
+ * "Classes" listbox and, for admins, the create action.
+ */
 const ClassSwitcher = ({
   options,
   optionsLoading = false,
@@ -50,7 +61,7 @@ const ClassSwitcher = ({
   selectedClassKind,
   onClassChange,
   onCreateClass,
-  emptyLabel = "No classes found",
+  emptyLabel = "No classes yet",
 }: ClassSwitcherProps) => {
   const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const [anchorElement, setAnchorElement] = useState<HTMLElement | null>(null);
@@ -71,12 +82,20 @@ const ClassSwitcher = ({
     selectedOption && !options.some((option) => option.id === selectedOption.id)
       ? [selectedOption, ...options]
       : options;
-  const normalizedQuery = query.trim().toLowerCase();
+  const trimmedQuery = query.trim();
+  const normalizedQuery = trimmedQuery.toLowerCase();
   const filteredOptions = switcherOptions.filter((option) =>
     `${option.label} ${option.id}`.toLowerCase().includes(normalizedQuery),
   );
   const currentLabel =
     selectedOption?.label ?? selectedClassLabel ?? "Select a class";
+  // First use (nothing to list) or no results (a search that matches nothing).
+  const noOptionsLabel =
+    switcherOptions.length > 0 && trimmedQuery
+      ? `No classes match "${trimmedQuery}"`
+      : emptyLabel;
+  const ScopeIcon =
+    selectedOption?.kind === "admin-all-classes" ? AdminScopeIcon : ClassIcon;
 
   const close = () => {
     setAnchorElement(null);
@@ -92,82 +111,53 @@ const ClassSwitcher = ({
 
   return (
     <>
-      <Box
+      <ButtonBase
+        aria-label={`Switch class. Current: ${currentLabel}`}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={open ? listId : undefined}
+        onClick={(event) => {
+          if (open) {
+            close();
+          } else {
+            setAnchorElement(event.currentTarget);
+            setQuery("");
+          }
+        }}
         sx={{
           minWidth: 0,
           maxWidth: "100%",
-          height: 44,
-          px: 0.5,
-          gap: 1,
-          display: "flex",
-          alignItems: "center",
-          color: "text.primary",
+          height: "var(--size-control)",
+          px: "var(--space-2)",
+          gap: "var(--space-2)",
+          justifyContent: "flex-start",
+          borderRadius: "var(--radius-control)",
+          color: "var(--text)",
+          // The hit area grows to the control's hit size without changing the drawn button.
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            left: 0,
+            top: "50%",
+            width: "100%",
+            height: "max(100%, var(--size-hit-control))",
+            transform: "translateY(-50%)",
+          },
+          "&:hover, &[aria-expanded='true']": { backgroundColor: "var(--surface-hover)" },
         }}
       >
-        {selectedOption?.kind === "admin-all-classes" ? (
-          <AdminScopeIcon
-            aria-hidden="true"
-            sx={{ flexShrink: 0, color: "primary.main" }}
-          />
-        ) : (
-          <ClassIcon
-            aria-hidden="true"
-            sx={{
-              flexShrink: 0,
-              color: "text.secondary",
-            }}
-          />
-        )}
+        <ScopeIcon aria-hidden="true" sx={smallIconSx} />
         <Typography
           component="span"
           variant="subtitle2"
           noWrap
           title={currentLabel}
-          sx={{
-            minWidth: 0,
-            maxWidth: { xs: 96, sm: 200, md: 280 },
-            fontWeight: 600,
-            ...COMPACT_POPUP_TYPOGRAPHY.primary,
-          }}
+          sx={{ minWidth: 0 }}
         >
           {currentLabel}
         </Typography>
-        <ButtonBase
-          aria-label={`Switch class scope. Current selection: ${currentLabel}`}
-          aria-haspopup="listbox"
-          aria-expanded={open}
-          aria-controls={open ? listId : undefined}
-          onClick={(event) => {
-            if (open) {
-              close();
-            } else {
-              setAnchorElement(event.currentTarget);
-              setQuery("");
-            }
-          }}
-          sx={{
-            width: 36,
-            height: 36,
-            minWidth: 36,
-            flexShrink: 0,
-            display: "grid",
-            placeItems: "center",
-            borderRadius: 1.5,
-            color: open ? "primary.main" : "text.secondary",
-            bgcolor: open ? "action.selected" : "transparent",
-            "&:hover": {
-              color: open ? "primary.main" : "text.primary",
-            },
-            "&:focus-visible": {
-              outline: "2px solid",
-              outlineColor: "primary.main",
-              outlineOffset: 2,
-            },
-          }}
-        >
-          <SwitcherIcon aria-hidden="true" fontSize="small" />
-        </ButtonBase>
-      </Box>
+        <SwitcherIcon aria-hidden="true" sx={smallIconSx} />
+      </ButtonBase>
 
       <Popover
         open={open}
@@ -180,43 +170,33 @@ const ClassSwitcher = ({
         marginThreshold={12}
         slotProps={{
           paper: {
-            elevation: 0,
             sx: {
-              mt: 0.75,
+              mt: "var(--space-1)",
               width: { xs: "calc(100vw - 24px)", sm: 360 },
               maxWidth: 360,
               maxHeight: "min(480px, calc(100dvh - 24px))",
               display: "flex",
               flexDirection: "column",
               overflow: "hidden",
-              border: "1px solid",
-              borderColor: "divider",
-              borderRadius: 2.5,
-              bgcolor: "background.paper",
-              backgroundImage: "none",
-              boxShadow: (theme) =>
-                `0 18px 46px ${alpha(theme.palette.common.black, 0.14)}, 0 3px 10px ${alpha(theme.palette.common.black, 0.06)}`,
             },
           },
         }}
       >
         <Box
+          data-density="compact"
           sx={{
-            px: 1.5,
-            py: 0.5,
+            p: "var(--space-2)",
             flexShrink: 0,
-            borderBottom: "1px solid",
-            borderColor: "divider",
+            borderBottom: "1px solid var(--border-subtle)",
           }}
         >
           <TextField
             fullWidth
             autoFocus
-            variant="standard"
             inputRef={searchInputRef}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Find class…"
+            placeholder="Search classes"
             slotProps={{
               htmlInput: {
                 "aria-label": "Search classes",
@@ -228,24 +208,11 @@ const ClassSwitcher = ({
                 },
               },
               input: {
-                disableUnderline: true,
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon
-                      fontSize="small"
-                      sx={{ color: "text.secondary" }}
-                    />
+                    <SearchIcon aria-hidden="true" sx={smallIconSx} />
                   </InputAdornment>
                 ),
-              },
-            }}
-            sx={{
-              "& .MuiInputBase-root": { minHeight: 36 },
-              "& .MuiInputBase-input": {
-                py: 0.5,
-                color: "text.primary",
-                typography: "body2",
-                ...COMPACT_POPUP_TYPOGRAPHY.primary,
               },
             }}
           />
@@ -261,7 +228,7 @@ const ClassSwitcher = ({
             minHeight: 0,
             maxHeight: 360,
             overflowY: "auto",
-            p: 1,
+            py: "var(--space-2)",
           }}
         >
           {optionsLoading ? (
@@ -272,7 +239,7 @@ const ClassSwitcher = ({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: 1,
+                gap: "var(--space-2)",
                 color: "text.secondary",
               }}
             >
@@ -296,26 +263,10 @@ const ClassSwitcher = ({
                   aria-selected={selected}
                   selected={selected}
                   onClick={() => selectClass(option.id)}
-                  sx={{
-                    minHeight: 44,
-                    px: 1.5,
-                    py: 0.75,
-                    gap: 1.5,
-                    borderRadius: 1.5,
-                    color: "text.primary",
-                    "& + &": { mt: 0.25 },
-                    "&.Mui-selected": { bgcolor: "transparent" },
-                    "&.Mui-selected:hover, &:hover, &.Mui-focusVisible": {
-                      bgcolor: "action.hover",
-                    },
-                  }}
+                  sx={{ gap: "var(--space-2)" }}
                 >
                   {option.kind === "admin-all-classes" && (
-                    <AdminScopeIcon
-                      aria-hidden="true"
-                      fontSize="small"
-                      sx={{ flexShrink: 0, color: "primary.main" }}
-                    />
+                    <AdminScopeIcon aria-hidden="true" sx={smallIconSx} />
                   )}
                   <Typography
                     component="span"
@@ -324,17 +275,17 @@ const ClassSwitcher = ({
                     sx={{
                       flex: 1,
                       minWidth: 0,
-                      fontWeight: selected ? 600 : "fontWeightRegular",
-                      ...COMPACT_POPUP_TYPOGRAPHY.primary,
+                      fontWeight: selected ? "var(--weight-semibold)" : "var(--weight-regular)",
                     }}
                   >
                     {option.label}
                   </Typography>
                   <CheckIcon
                     aria-hidden="true"
-                    fontSize="small"
                     sx={{
-                      color: "text.primary",
+                      fontSize: "var(--size-icon-sm)",
+                      color: "inherit",
+                      flexShrink: 0,
                       opacity: selected ? 1 : 0,
                     }}
                   />
@@ -342,11 +293,9 @@ const ClassSwitcher = ({
               );
             })
           ) : (
-            <Box sx={{ px: 1.5, py: 4, textAlign: "center" }}>
-              <Typography variant="body2" sx={{
-                color: "text.secondary"
-              }}>
-                {emptyLabel}
+            <Box sx={{ px: "var(--space-3)", py: "var(--space-6)", textAlign: "center" }}>
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                {noOptionsLabel}
               </Typography>
             </Box>
           )}
@@ -360,31 +309,20 @@ const ClassSwitcher = ({
             }}
             sx={{
               width: "100%",
-              minHeight: 50,
-              px: 2,
-              gap: 1.5,
+              minHeight: "var(--size-target-min)",
+              px: "var(--space-menu-item-x)",
+              gap: "var(--space-2)",
               flexShrink: 0,
               justifyContent: "flex-start",
-              borderTop: "1px solid",
-              borderColor: "divider",
-              color: "text.primary",
-              "&:hover": { bgcolor: "action.hover" },
-              "&:focus-visible": {
-                outline: "2px solid",
-                outlineColor: "primary.main",
-                outlineOffset: -3,
-              },
+              borderTop: "1px solid var(--border-subtle)",
+              color: "var(--text)",
+              "&:hover": { backgroundColor: "var(--surface-hover)" },
+              // The sheet clips its overflow, so the theme's ring sits inside the row, as on menu items.
+              "&:focus-visible": { outlineOffset: "calc(-1 * var(--size-focus-ring))" },
             }}
           >
-            <AddIcon />
-            <Typography
-              component="span"
-              variant="body2"
-              sx={{
-                fontWeight: "fontWeightMedium",
-                ...COMPACT_POPUP_TYPOGRAPHY.primary,
-              }}
-            >
+            <AddIcon aria-hidden="true" sx={smallIconSx} />
+            <Typography component="span" variant="subtitle2">
               {CREATE_NEW_CLASS_LABEL}
             </Typography>
           </ButtonBase>

@@ -1,6 +1,6 @@
 // components/AuthLayout/AuthLayout.tsx
 import React from "react";
-import { Box, Container, Typography, useTheme } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import InstitutionLogo from "../Brand/InstitutionLogo.tsx";
 import { INSTITUTION_NAME, institutionConfigured } from "../../config/branding";
 import KiwiWordmark from "../Brand/KiwiWordmark.tsx";
@@ -10,104 +10,117 @@ interface AuthLayoutProps {
   variant?: "centered" | "split";
 }
 
+/** The text sits 24 px right of the ruler, 12 px below 600 px (DESIGN.md, Signature move). */
+const READING_GUTTER = { xs: "var(--space-3)", sm: "var(--space-reading-gutter)" };
+
+/**
+ * The auth shell (JOURNEY SR-5).
+ *
+ * `split` (sign-in S-05, register S-06; the Stage 1 preview's `main.signin`):
+ * from 900 px the aside is a sheet holding one ruled column, the wordmark at
+ * the top and what Kiwi does at the bottom, beside the form column; below
+ * 900 px there is one column: Kiwi's logo, the form, then the aside's two
+ * lines on their own ruler, without the sheet or the wordmark. The page's
+ * children are the form column's ruled reading column.
+ *
+ * `centered` (S-08): the children on the canvas, centred.
+ */
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children, variant = "centered" }) => {
   const hasInstitution = institutionConfigured();
-  const theme = useTheme();
 
   if (variant === "split") {
     return (
       <Box
+        data-density="comfortable"
         sx={{
           minHeight: "100vh",
           "@supports (height: 100dvh)": {
             minHeight: "100dvh",
           },
           boxSizing: "border-box",
-          bgcolor: "grey.50",
-          p: { xs: 0, md: 5, lg: 6 },
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          bgcolor: "background.default",
+          display: "grid",
+          gridTemplateColumns: { xs: "minmax(0, 1fr)", md: "minmax(0, 1fr) minmax(0, 1fr)" },
+          alignItems: { xs: "start", md: "stretch" },
+          gap: { md: "var(--space-6)" },
+          p: { xs: "var(--space-6) var(--space-4)", md: "var(--space-6)" },
         }}
       >
         <Box
+          component="aside"
+          aria-label="About Kiwi"
           sx={{
+            order: { xs: 2, md: 0 },
             width: "100%",
-            maxWidth: 1400,
-            minHeight: { xs: "100vh", md: "calc(100vh - 80px)" },
-            "@supports (height: 100dvh)": {
-              minHeight: { xs: "100dvh", md: "calc(100dvh - 80px)" },
-            },
-            display: "grid",
-            gridTemplateColumns: { xs: "1fr", md: "minmax(380px, 0.86fr) minmax(540px, 1.14fr)" },
-            gap: { xs: 0, md: 6, lg: 10 },
+            maxWidth: { xs: 480, md: "none" },
+            justifySelf: "center",
+            boxSizing: "border-box",
+            display: "flex",
+            mt: { xs: "var(--space-6)", md: 0 },
+            // The sheet appears with the second column.
+            minHeight: { md: 640 },
+            p: { md: "var(--space-7) var(--space-7) var(--space-7) var(--space-6)" },
+            bgcolor: { md: "background.paper" },
+            border: { md: "1px solid var(--border)" },
+            borderRadius: { md: "var(--radius-sheet)" },
           }}
         >
           <Box
-            component="aside"
-            aria-label="About Kiwi"
+            className="kiwi-ruled"
             sx={{
-              display: { xs: "none", md: "flex" },
-              position: "relative",
-              minHeight: 640,
-              p: { md: 4, lg: 6 },
-              overflow: "hidden",
-              borderRadius: 4,
+              flex: "1 1 auto",
+              display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
-              color: "common.white",
-              backgroundImage: "linear-gradient(180deg, rgba(24, 10, 34, 0.28) 0%, rgba(24, 10, 34, 0.1) 38%, rgba(24, 10, 34, 0.82) 100%), url('/assets/images/bg-campus-1.jpg')",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
+              gap: "var(--space-6)",
+              pl: READING_GUTTER,
             }}
           >
-            <Box
-              sx={{
-                position: "relative",
-                zIndex: 1,
-                display: "flex",
-                alignItems: "center",
-                gap: 2,
-              }}
-            >
-              {hasInstitution && <InstitutionLogo color="common.white" />}
+            {/* Below 900 px the display line already names Kiwi, so the wordmark is left out. */}
+            <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", gap: "var(--space-4)" }}>
+              {hasInstitution && <InstitutionLogo />}
               <KiwiWordmark
-                component="span"
+                component="p"
                 data-testid="login-visual-kiwi-wordmark"
-                sx={{ color: "common.white", fontSize: "2rem", lineHeight: 1, fontWeight: 700 }}
+                sx={{
+                  m: 0,
+                  pr: "0.08em",
+                  color: "var(--accent-text)",
+                  fontSize: "var(--text-4xl)",
+                  lineHeight: "var(--leading-4xl)",
+                }}
               />
             </Box>
 
-            <Box sx={{ position: "relative", zIndex: 1, maxWidth: 430 }}>
-              <Typography
-                component="p"
-                sx={{
-                  m: 0,
-                  fontSize: { md: "1.65rem", lg: "2rem" },
-                  lineHeight: 1.3,
-                  fontWeight: 700,
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                “Learn deeply. Ask freely. Grow with AI.”
+            <Box sx={{ maxWidth: "30ch" }}>
+              <Typography component="p" variant="h4">
+                Ask about your class materials or your code.
               </Typography>
-              <Typography variant="body2" sx={{ mt: 2, opacity: 0.82, lineHeight: 1.6 }}>
+              <Typography component="p" variant="body1" sx={{ mt: "var(--space-3)", color: "text.secondary" }}>
                 {hasInstitution
-                  ? `An AI learning companion built for the ${INSTITUTION_NAME} community.`
-                  : "An AI learning companion for your courses."}
+                  ? `Kiwi is an AI tutor for classes at ${INSTITUTION_NAME}.`
+                  : "Kiwi is an AI tutor for your classes."}
               </Typography>
             </Box>
           </Box>
+        </Box>
 
+        <Box
+          component="main"
+          sx={{
+            width: "100%",
+            maxWidth: 480,
+            justifySelf: "center",
+            alignSelf: { md: "center" },
+          }}
+        >
           <Box
-            sx={{
-              display: "flex",
-              alignItems: { xs: "flex-start", md: "center" },
-              justifyContent: "center",
-              px: { xs: 3, sm: 7, lg: 10 },
-              py: { xs: 4, sm: 5, md: 7 },
-            }}
+            data-testid="auth-narrow-logo"
+            sx={{ display: { xs: "flex", md: "none" }, mb: "var(--space-6)" }}
           >
+            <InstitutionLogo />
+          </Box>
+          <Box className="kiwi-ruled" sx={{ pl: READING_GUTTER }}>
             {children}
           </Box>
         </Box>
@@ -117,20 +130,21 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, variant = "centered" 
 
   return (
     <Box
+      data-density="comfortable"
       sx={{
         minHeight: "100vh",
         "@supports (height: 100dvh)": {
           minHeight: "100dvh",
         },
         boxSizing: "border-box",
-        background: `linear-gradient(135deg, ${theme.palette.primary.dark}B8 0%, rgba(20, 13, 30, 0.45) 48%, rgba(20, 13, 30, 0.18) 100%), url('/assets/images/bg-campus.jpg') center/cover no-repeat`,
+        bgcolor: "background.default",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        py: { xs: 3, sm: 5 },
+        py: { xs: "var(--space-5)", sm: "var(--space-7)" },
       }}
     >
-      <Container maxWidth="xs" sx={{ px: { xs: 2, sm: 3 } }}>
+      <Container maxWidth="xs" sx={{ px: { xs: "var(--space-4)", sm: "var(--space-5)" } }}>
         {children}
       </Container>
     </Box>
