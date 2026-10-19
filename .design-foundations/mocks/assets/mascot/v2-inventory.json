@@ -1,0 +1,652 @@
+{
+ "about": "Companion v2 assets (kiwi-ui/DESIGN.md \u00a7 Companion, 2026-10-19): written by export-companion-v2.py; read by check-tokens.mjs \u00a7 20.",
+ "line": {
+  "cell": 72,
+  "inner": 64,
+  "pad": 4,
+  "columns": 6,
+  "rows": 4,
+  "rimPx": 3.0,
+  "rim": "#f5f4e8",
+  "camera": "the 256 px Phase 4 camera maps to the inner 64 px; the padded cell spans 288 camera units",
+  "files": {
+   "walk.light": {
+    "file": "line/walk.light.webp",
+    "bytes": 35420,
+    "sha256": "f468404fe8f5f973",
+    "size": [
+     432,
+     288
+    ],
+    "mode": "light",
+    "cells": [
+     {
+      "cell": 0,
+      "forestPixels": 694,
+      "forestLightest": "#4d6046"
+     },
+     {
+      "cell": 1,
+      "forestPixels": 708,
+      "forestLightest": "#48624f"
+     },
+     {
+      "cell": 2,
+      "forestPixels": 709,
+      "forestLightest": "#5e7263"
+     },
+     {
+      "cell": 3,
+      "forestPixels": 669,
+      "forestLightest": "#556d5e"
+     },
+     {
+      "cell": 4,
+      "forestPixels": 673,
+      "forestLightest": "#577062"
+     },
+     {
+      "cell": 5,
+      "forestPixels": 679,
+      "forestLightest": "#59684d"
+     },
+     {
+      "cell": 6,
+      "forestPixels": 692,
+      "forestLightest": "#506347"
+     },
+     {
+      "cell": 7,
+      "forestPixels": 690,
+      "forestLightest": "#4c6957"
+     },
+     {
+      "cell": 8,
+      "forestPixels": 700,
+      "forestLightest": "#455f50"
+     },
+     {
+      "cell": 9,
+      "forestPixels": 696,
+      "forestLightest": "#5d7462"
+     },
+     {
+      "cell": 10,
+      "forestPixels": 683,
+      "forestLightest": "#5b674e"
+     },
+     {
+      "cell": 11,
+      "forestPixels": 681,
+      "forestLightest": "#496252"
+     },
+     {
+      "cell": 12,
+      "forestPixels": 688,
+      "forestLightest": "#5d7160"
+     },
+     {
+      "cell": 13,
+      "forestPixels": 695,
+      "forestLightest": "#425f4c"
+     },
+     {
+      "cell": 14,
+      "forestPixels": 704,
+      "forestLightest": "#58705f"
+     },
+     {
+      "cell": 15,
+      "forestPixels": 681,
+      "forestLightest": "#46604e"
+     },
+     {
+      "cell": 16,
+      "forestPixels": 709,
+      "forestLightest": "#576449"
+     },
+     {
+      "cell": 17,
+      "forestPixels": 682,
+      "forestLightest": "#5d694e"
+     },
+     {
+      "cell": 18,
+      "forestPixels": 695,
+      "forestLightest": "#4e6045"
+     },
+     {
+      "cell": 19,
+      "forestPixels": 690,
+      "forestLightest": "#5f7767"
+     },
+     {
+      "cell": 20,
+      "forestPixels": 691,
+      "forestLightest": "#617566"
+     },
+     {
+      "cell": 21,
+      "forestPixels": 679,
+      "forestLightest": "#5e7665"
+     },
+     {
+      "cell": 22,
+      "forestPixels": 686,
+      "forestLightest": "#607466"
+     },
+     {
+      "cell": 23,
+      "forestPixels": 688,
+      "forestLightest": "#617466"
+     }
+    ]
+   },
+   "walk.dark": {
+    "file": "line/walk.dark.webp",
+    "bytes": 33520,
+    "sha256": "0f4f3de2f0ae9fa9",
+    "size": [
+     432,
+     288
+    ],
+    "mode": "dark",
+    "cells": [
+     {
+      "cell": 0,
+      "rimPixels": 483,
+      "rimDarkest": "#d8cbb0"
+     },
+     {
+      "cell": 1,
+      "rimPixels": 465,
+      "rimDarkest": "#c9cec1"
+     },
+     {
+      "cell": 2,
+      "rimPixels": 467,
+      "rimDarkest": "#d7c9ae"
+     },
+     {
+      "cell": 3,
+      "rimPixels": 451,
+      "rimDarkest": "#d9c9ac"
+     },
+     {
+      "cell": 4,
+      "rimPixels": 465,
+      "rimDarkest": "#d9caac"
+     },
+     {
+      "cell": 5,
+      "rimPixels": 457,
+      "rimDarkest": "#d8c9ab"
+     },
+     {
+      "cell": 6,
+      "rimPixels": 490,
+      "rimDarkest": "#c9cec1"
+     },
+     {
+      "cell": 7,
+      "rimPixels": 469,
+      "rimDarkest": "#d6c9ae"
+     },
+     {
+      "cell": 8,
+      "rimPixels": 489,
+      "rimDarkest": "#d7c9af"
+     },
+     {
+      "cell": 9,
+      "rimPixels": 486,
+      "rimDarkest": "#d6c9ac"
+     },
+     {
+      "cell": 10,
+      "rimPixels": 472,
+      "rimDarkest": "#c9cec2"
+     },
+     {
+      "cell": 11,
+      "rimPixels": 482,
+      "rimDarkest": "#d6cbb1"
+     },
+     {
+      "cell": 12,
+      "rimPixels": 479,
+      "rimDarkest": "#d7c9ae"
+     },
+     {
+      "cell": 13,
+      "rimPixels": 488,
+      "rimDarkest": "#d8caae"
+     },
+     {
+      "cell": 14,
+      "rimPixels": 479,
+      "rimDarkest": "#d7c9ac"
+     },
+     {
+      "cell": 15,
+      "rimPixels": 462,
+      "rimDarkest": "#d9ccb2"
+     },
+     {
+      "cell": 16,
+      "rimPixels": 492,
+      "rimDarkest": "#c9cec1"
+     },
+     {
+      "cell": 17,
+      "rimPixels": 470,
+      "rimDarkest": "#d8cbae"
+     },
+     {
+      "cell": 18,
+      "rimPixels": 477,
+      "rimDarkest": "#d7ccb1"
+     },
+     {
+      "cell": 19,
+      "rimPixels": 493,
+      "rimDarkest": "#d8caab"
+     },
+     {
+      "cell": 20,
+      "rimPixels": 494,
+      "rimDarkest": "#d6caad"
+     },
+     {
+      "cell": 21,
+      "rimPixels": 473,
+      "rimDarkest": "#d7cbb1"
+     },
+     {
+      "cell": 22,
+      "rimPixels": 482,
+      "rimDarkest": "#cacfc2"
+     },
+     {
+      "cell": 23,
+      "rimPixels": 486,
+      "rimDarkest": "#cacfc1"
+     }
+    ]
+   },
+   "hop.light": {
+    "file": "line/hop.light.webp",
+    "bytes": 35142,
+    "sha256": "823fdc9fc892e73b",
+    "size": [
+     432,
+     288
+    ],
+    "mode": "light",
+    "cells": [
+     {
+      "cell": 0,
+      "forestPixels": 694,
+      "forestLightest": "#4c6550"
+     },
+     {
+      "cell": 1,
+      "forestPixels": 673,
+      "forestLightest": "#445f4a"
+     },
+     {
+      "cell": 2,
+      "forestPixels": 668,
+      "forestLightest": "#617a67"
+     },
+     {
+      "cell": 3,
+      "forestPixels": 669,
+      "forestLightest": "#49634f"
+     },
+     {
+      "cell": 4,
+      "forestPixels": 659,
+      "forestLightest": "#5a715c"
+     },
+     {
+      "cell": 5,
+      "forestPixels": 656,
+      "forestLightest": "#566d57"
+     },
+     {
+      "cell": 6,
+      "forestPixels": 658,
+      "forestLightest": "#5f7562"
+     },
+     {
+      "cell": 7,
+      "forestPixels": 644,
+      "forestLightest": "#526b57"
+     },
+     {
+      "cell": 8,
+      "forestPixels": 645,
+      "forestLightest": "#58705b"
+     },
+     {
+      "cell": 9,
+      "forestPixels": 631,
+      "forestLightest": "#5b715f"
+     },
+     {
+      "cell": 10,
+      "forestPixels": 656,
+      "forestLightest": "#5f745f"
+     },
+     {
+      "cell": 11,
+      "forestPixels": 671,
+      "forestLightest": "#556a58"
+     },
+     {
+      "cell": 12,
+      "forestPixels": 687,
+      "forestLightest": "#5a715c"
+     },
+     {
+      "cell": 13,
+      "forestPixels": 712,
+      "forestLightest": "#4a5a40"
+     },
+     {
+      "cell": 14,
+      "forestPixels": 686,
+      "forestLightest": "#627865"
+     },
+     {
+      "cell": 15,
+      "forestPixels": 655,
+      "forestLightest": "#627b65"
+     },
+     {
+      "cell": 16,
+      "forestPixels": 651,
+      "forestLightest": "#5a725e"
+     },
+     {
+      "cell": 17,
+      "forestPixels": 643,
+      "forestLightest": "#4e6752"
+     },
+     {
+      "cell": 18,
+      "forestPixels": 679,
+      "forestLightest": "#556d5a"
+     },
+     {
+      "cell": 19,
+      "forestPixels": 664,
+      "forestLightest": "#566649"
+     },
+     {
+      "cell": 20,
+      "forestPixels": 656,
+      "forestLightest": "#566c58"
+     },
+     {
+      "cell": 21,
+      "forestPixels": 656,
+      "forestLightest": "#4e6754"
+     },
+     {
+      "cell": 22,
+      "forestPixels": 660,
+      "forestLightest": "#586d59"
+     },
+     {
+      "cell": 23,
+      "forestPixels": 653,
+      "forestLightest": "#5a6748"
+     }
+    ]
+   },
+   "hop.dark": {
+    "file": "line/hop.dark.webp",
+    "bytes": 33382,
+    "sha256": "0e2da2c02538b248",
+    "size": [
+     432,
+     288
+    ],
+    "mode": "dark",
+    "cells": [
+     {
+      "cell": 0,
+      "rimPixels": 460,
+      "rimDarkest": "#c9cfc2"
+     },
+     {
+      "cell": 1,
+      "rimPixels": 458,
+      "rimDarkest": "#c9cec0"
+     },
+     {
+      "cell": 2,
+      "rimPixels": 463,
+      "rimDarkest": "#dac9af"
+     },
+     {
+      "cell": 3,
+      "rimPixels": 457,
+      "rimDarkest": "#dacaaf"
+     },
+     {
+      "cell": 4,
+      "rimPixels": 450,
+      "rimDarkest": "#dcccb1"
+     },
+     {
+      "cell": 5,
+      "rimPixels": 456,
+      "rimDarkest": "#dacaaf"
+     },
+     {
+      "cell": 6,
+      "rimPixels": 454,
+      "rimDarkest": "#d9cbb1"
+     },
+     {
+      "cell": 7,
+      "rimPixels": 436,
+      "rimDarkest": "#c9cec1"
+     },
+     {
+      "cell": 8,
+      "rimPixels": 442,
+      "rimDarkest": "#c9cec1"
+     },
+     {
+      "cell": 9,
+      "rimPixels": 457,
+      "rimDarkest": "#d9cab0"
+     },
+     {
+      "cell": 10,
+      "rimPixels": 473,
+      "rimDarkest": "#dac9ae"
+     },
+     {
+      "cell": 11,
+      "rimPixels": 470,
+      "rimDarkest": "#dacab0"
+     },
+     {
+      "cell": 12,
+      "rimPixels": 467,
+      "rimDarkest": "#dac9ac"
+     },
+     {
+      "cell": 13,
+      "rimPixels": 476,
+      "rimDarkest": "#d7c9af"
+     },
+     {
+      "cell": 14,
+      "rimPixels": 461,
+      "rimDarkest": "#d6c9af"
+     },
+     {
+      "cell": 15,
+      "rimPixels": 449,
+      "rimDarkest": "#dac9ae"
+     },
+     {
+      "cell": 16,
+      "rimPixels": 447,
+      "rimDarkest": "#d7c9af"
+     },
+     {
+      "cell": 17,
+      "rimPixels": 452,
+      "rimDarkest": "#d9caaf"
+     },
+     {
+      "cell": 18,
+      "rimPixels": 454,
+      "rimDarkest": "#dac9af"
+     },
+     {
+      "cell": 19,
+      "rimPixels": 463,
+      "rimDarkest": "#dacab0"
+     },
+     {
+      "cell": 20,
+      "rimPixels": 446,
+      "rimDarkest": "#d9c9ac"
+     },
+     {
+      "cell": 21,
+      "rimPixels": 456,
+      "rimDarkest": "#d8cab2"
+     },
+     {
+      "cell": 22,
+      "rimPixels": 457,
+      "rimDarkest": "#d8c9ae"
+     },
+     {
+      "cell": 23,
+      "rimPixels": 457,
+      "rimDarkest": "#d8cab0"
+     }
+    ]
+   },
+   "stand.light": {
+    "file": "line/stand.light.webp",
+    "bytes": 1916,
+    "sha256": "214f1d39d7302d00",
+    "size": [
+     72,
+     72
+    ],
+    "mode": "light",
+    "cells": [
+     {
+      "cell": 0,
+      "forestPixels": 653,
+      "forestLightest": "#5a6748"
+     }
+    ]
+   },
+   "stand.dark": {
+    "file": "line/stand.dark.webp",
+    "bytes": 1816,
+    "sha256": "69ba42b4eee874c3",
+    "size": [
+     72,
+     72
+    ],
+    "mode": "dark",
+    "cells": [
+     {
+      "cell": 0,
+      "rimPixels": 457,
+      "rimDarkest": "#d8cab0"
+     }
+    ]
+   }
+  }
+ },
+ "launcher": {
+  "file": "launcher-round.svg",
+  "bytes": 1518,
+  "step": "C",
+  "scale": 0.68,
+  "anchorDeg": 135,
+  "bubble": [
+   70,
+   24,
+   56,
+   40,
+   12
+  ],
+  "states": {
+   "rest": {
+    "shade": 0.0,
+    "ground": "#92ae70",
+    "forestCorePixels": 624,
+    "groundSample": "#92ae70",
+    "forestCore": "#234631"
+   },
+   "hovered": {
+    "shade": 0.1,
+    "ground": "#87a46a",
+    "forestCorePixels": 625,
+    "groundSample": "#87a46a",
+    "forestCore": "#234631"
+   },
+   "pressed": {
+    "shade": 0.18,
+    "ground": "#7e9b65",
+    "forestCorePixels": 625,
+    "groundSample": "#7e9b65",
+    "forestCore": "#234631"
+   }
+  }
+ },
+ "logo": {
+  "16": {
+   "forestCorePixels": 70,
+   "groundSample": "#92ae70",
+   "forestCore": "#234631"
+  },
+  "24": {
+   "forestCorePixels": 165,
+   "groundSample": "#92ae70",
+   "forestCore": "#234631"
+  },
+  "28": {
+   "forestCorePixels": 231,
+   "groundSample": "#92ae70",
+   "forestCore": "#234631"
+  },
+  "32": {
+   "forestCorePixels": 308,
+   "groundSample": "#92ae70",
+   "forestCore": "#234631"
+  },
+  "48": {
+   "forestCorePixels": 709,
+   "groundSample": "#92ae70",
+   "forestCore": "#234631"
+  },
+  "64": {
+   "forestCorePixels": 1285,
+   "groundSample": "#92ae70",
+   "forestCore": "#234631"
+  },
+  "96": {
+   "forestCorePixels": 2929,
+   "groundSample": "#92ae70",
+   "forestCore": "#234631"
+  },
+  "file": "../brand/kiwi-mark.svg"
+ }
+}

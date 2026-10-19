@@ -3719,6 +3719,913 @@
      }
     ]
    }
+  },
+  {
+   "id": "2026-10-19-companion-v2",
+   "base": "588b654ee606ede2426702bc8ccf8460b78729a2",
+   "decided": "2026-10-19",
+   "decision": "Companion v2: the Kiwi animation moves out of the avatar into an inline status line, as in the Claude Code desktop app; tutor messages carry no avatar; the Runner line with the Playful words in the accent ink, the flight on completion, then the fade; the original logo at every page placement and as the favicon; the launcher becomes the logo in round form with the bubble, step C, its hover and pressed shades registered as companion tokens (plan Decision Log, from \"The Kiwi animation moves out of the avatar\" to \"Launcher size step\")",
+   "design": {
+    "kind": "patch",
+    "blocks": [
+     "evidence",
+     "coverage",
+     "evidence-p6"
+    ],
+    "hunks": [
+     {
+      "at": 2,
+      "starts": "**Date:** 2026-10-16 · **Status:** locked (2026-",
+      "removed": [
+       "26cddf6076b01f3489ed4ab66186ed1087205dc9fb07da7bd0d66de366ba2918"
+      ],
+      "added": [
+       "ad13ecf83b446327191bc25c34591da87e34ac0e71243d45d143ed9169b718bb"
+      ]
+     },
+     {
+      "at": 355,
+      "starts": "- **Elevation of the launcher:** `--shadow-2`, 5",
+      "removed": [
+       "fa8733c57f4f0da42344ad0c8d9f41f5e644a6b784c3e79a6ca6c27afa9fda07"
+      ],
+      "added": [
+       "9ec17c23562b32d6e41d97d61bd73a2e6e765c6e4d074aa819e84a717c9b0db3"
+      ]
+     },
+     {
+      "at": 514,
+      "starts": "- the launcher: a 56 px disc with a 24 px glyph ",
+      "removed": [
+       "04964afdd15bacf1076aeaca659e314f213b295a5d3a6fa803ae540b5287c118"
+      ],
+      "added": [
+       "cbca737667a4c0ae1f5768cff03edfb7ee034cbd676eed15bf86deb8a56c55e0"
+      ]
+     },
+     {
+      "at": 1087,
+      "starts": "The floating chat launcher (locked: 56 px, --acc",
+      "removed": [
+       "76f4ca55587962580811e4fb98fe7a29826240d1c0c028383209d9921b73bc0f"
+      ],
+      "added": [
+       "12a81eb471224129487e94e3bf1cab82182e2b5f6cfe766ef3528f2afdc75716"
+      ]
+     },
+     {
+      "at": 1099,
+      "starts": "| default | Resting: --accent-solid fill, the 1 ",
+      "removed": [
+       "d9fc9e4b3ccf4664cdd93c72201cd8efcdaa75d23363384f9d6c216091527ced",
+       "6027b8c603fe49cde2690ca40974a1ae2470a45fde9167a54a32e84d56904c1a"
+      ],
+      "added": [
+       "2cfe58260083fa0317649ca5ba0ce982385fbe8097d800f0ddda3a8dc8915d83",
+       "cac6ce8b466fec8f25f54bbdefaa819057c905c9af23370caa6081cc0f8bba8b"
+      ]
+     },
+     {
+      "at": 1102,
+      "starts": "| active | Pressed: the fill steps to --accent-s",
+      "removed": [
+       "24ea85a1cfc8ae5f2783b6cd05602656065860c5d520049f1f2b0dbd22ef61aa"
+      ],
+      "added": [
+       "8f3cc328891d67c6d7c2a2295c84754edd88f5af95bd6e8bf103be9f7fa1a60d"
+      ]
+     },
+     {
+      "at": 1112,
+      "starts": "The tutor-message surface: a tutor row is a 32 p",
+      "removed": [
+       "17a584ae8ffa0f027d9530bf33d245bfbcf35d99d125aae737ac079cc50d8ba8"
+      ],
+      "added": [
+       "c0dce3e8c3037d25b772d7fcf4f0a4528560c3613e3e29951d5a160b6f74e7a4"
+      ]
+     },
+     {
+      "at": 1114,
+      "starts": "Geometry and tokens of the component (not per st",
+      "removed": [
+       "f6810806e5653677a900b70e3e0a73e3083eb6bb614cd37ef119866b09b8db8b"
+      ],
+      "added": [
+       "9341b7b234a15910801101d2eb6e07804f81b0fc5ed37323430837134e2812ff"
+      ]
+     },
+     {
+      "at": 1120,
+      "starts": "| default | A complete answer on the panel sheet",
+      "removed": [
+       "814e0adb1a91f1fd47494bb6b0243662a0d26b746018fb1f3faa82c5b7a9f306"
+      ],
+      "added": [
+       "9e9b51f118a4aa42cf870708e8a3c4348d7fc622610831a59efc1b5e24cad659"
+      ]
+     },
+     {
+      "at": 1125,
+      "starts": "| loading | Waiting: the text dots in --in-progr",
+      "removed": [
+       "efda09e749e60d910f1c7bc7084d00370c250825ca70fb401eb672b0e8829ebe",
+       "35cfe82f84704e6c81975bee980d8b9dc7403d17b5d4321747c63d4ef2846741",
+       "866fc79469b7c76226cae85af503aaeb305e15efcd30bb0c234b52b13d00e9e5"
+      ],
+      "added": [
+       "1461b053674dcbe303f8d5a0387a9c93fae20765eff83a718e78d63d63d67b8a",
+       "23befde74c5761c5a733e604ab37b40e1d36a45836dc44ae0d509c646fa7f5d7",
+       "6207f67ffe1cf19ee7f628d91cbea67bfc7ed92d4a383866e2de1e40b83220c0"
+      ]
+     },
+     {
+      "at": 1245,
+      "starts": "| The launcher's glyph | the system's own chat-b",
+      "removed": [
+       "b10133400d0e4d45abced2099efb9acf4e2e0a06ceb4ac47f23477c3bb16504a"
+      ],
+      "added": [
+       "120aa6fc6fa0ccdc156b46febf80e945b047c74acc9110c259493967d200cf21"
+      ]
+     },
+     {
+      "at": 1290,
+      "starts": "| `MuiFab` (the launcher) | `--size-launcher`, `",
+      "removed": [
+       "9c584574d9b10952fd808eca27c656e3e26c74125ac084607a895ebe9b8fa81d"
+      ],
+      "added": [
+       "52b788d4e56f4f16b091e11b1f1ed2da313eb3cfd692c21fcfeb0a04fc45647d"
+      ]
+     },
+     {
+      "at": 1380,
+      "starts": "| Mascot artwork: `public/favicon.svg`, `public/",
+      "removed": [
+       "14ff5e9e11c5078edaa31f2ea0c591eb9148630cb78ca60e00c7ac4b927cd0aa"
+      ],
+      "added": [
+       "0757d9ab9046ec1e87f0a14b7044b6f060a69121f3718e7296224b6f9094b131"
+      ]
+     },
+     {
+      "at": 1444,
+      "starts": "- **Phase 4 (Companion):** register `companion.s",
+      "removed": [
+       "0015eff48bc795940d2c692e8d81336c290045fb124516c0414f5ec48907b63e"
+      ],
+      "added": [
+       "be85c51bbde0798b1035c6376930f7ca2c89b7f892b687e108fa7c06d7a8546b"
+      ]
+     },
+     {
+      "at": 1481,
+      "starts": "**Companion v2 (2026-10-19; the user's decisions",
+      "removed": [],
+      "added": [
+       "82ca5a37662d8cdd720ac60d6abd8c2ca8d6d8cb7ac88c7aea90b64ef28d3740",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      ]
+     },
+     {
+      "at": 1487,
+      "starts": "1. **React at moments; still once the answer is ",
+      "removed": [
+       "4ca4cc7b0b02afc30511da8ea5dd5d28c9bd7d8b005922512bb8ca0d34a11a87",
+       "c2068d6ab4f60f90fbf18f574e7483edf7405153b06042457f2a01c5d7b60b7c",
+       "824cf95667b119f710b8c192b81deb82510604a8783f86d3ebb3519a9f56b691",
+       "be003e7508ab87bc2ee53051d493e33e3052fd3147823d0563367d73f8e5fccb",
+       "0ffae017f2a0fcdc21bc97768158d819d2fa4d9e28201d4e5ee57d4547dc70b3",
+       "31438d7af8e6a33fc85862352f2529939ecfd9387f00c353745a19e0962d3a98",
+       "af96e0105b45b64f3142ba6f104e407dc87510c38df3be5ae085f4ec20e84b30"
+      ],
+      "added": [
+       "3a3e3731bb9f4b05a7cb12bb52d845f070b69edd23cb401f2d8566ff8867ff5f",
+       "0ac149318a1852d2b7cf15d96c52ac9656c44c95ff308134917ba96c79eb3541",
+       "38f33859c480c3128edba8f924778b6d86fc57b52337ed43d357d3e933b8fdc8",
+       "c0d5e0c456b612a166d01561cc442208cbfc2967b79f4b9828baf69cef2105a1",
+       "860422ced35533c54b1fb594bb37fb5350cce9731e7a1f5a252363fec1b566bf",
+       "eeb2b8593d84a6eed77460ea351c7c4e83545ff6711969c3af60c63a0e977ed3",
+       "41b6e380c151e7d69c0925209b22e2e162cfa66cd318c23802bb39ab2af027b9"
+      ]
+     },
+     {
+      "at": 1497,
+      "starts": "Registered in `.design-foundations/tokens/kiwi-u",
+      "removed": [
+       "2b4d579a44fa4fb066cc67cc3b0a9f6eba8503c3e8ee8eb628f3db9247f7e003"
+      ],
+      "added": [
+       "bcef43135625db9105021b44fe062ca3de8ffbae2f5df9564df3cf2c1e241aac"
+      ]
+     },
+     {
+      "at": 1501,
+      "starts": "| `companion.slot.avatar` | `--companion-slot-av",
+      "removed": [
+       "bd974c32af63b4d642212ae47c15e299e4e77c35783400b17af6d082a6b28745",
+       "544411e59f23dc7fe077ec0e2c08483e1c0c1dc865a7e67fc8b04a4a8ff1338e",
+       "51f4c07bfb636c4e867fb88f3e3189dc450ca409971cc6085dcce0773fbf51db",
+       "400511fa3771bd2c65fc649a57c39b751751597d7174400110bbed6b537aeec6",
+       "e5ec05fd8e5facc28c7f65032b29e3efbf38fa0152e0cc56699457f79aff764f",
+       "eb10fb8f98cd11f13546bbbfcd3586b908cf89546e9cf6e0d6a107da2f7c279b",
+       "b739bb1a7b8131a832aeb4349f2e956b780902230478d6bbe3ab1371e811505c",
+       "4e40649c368686194d1ff45b143313ed9016a6d84fd4f2672efcfe7b8624b9b8"
+      ],
+      "added": [
+       "22ecd2510e35e528321b872f5075d62a9b87f90631bbe0e7adc5afef1f7b379c",
+       "0504836a79fae2318a1a062d0aae3403884cb97564120a4c33d5a768c60e3c6c",
+       "5d0d22ea901fbead607dbe733a8c1b18f8fbf448bb8d9fe52098485d5e353300",
+       "ca95356d314058786d990d0af0b3cae7c3d7dfc2985502d25ca11d42d4705bb2",
+       "9a9fc34579ec77e95e993a48840d9d44f10a2ce0ad6b7b1b1e30e55d18e2ef90",
+       "66f5bdf407f03843ca095bbf5e3732b4c098561ad6eda48306a61f6c7e3db23e",
+       "c207faff293794d9f0729fdacd7fd8d692e1e81e58ecadfcbda382747c22fd59",
+       "8d842d8d173de28fab28ab3336c1c90e87136af38f3e96c65c7ff6ea94d09aab",
+       "8cd74aa09871931e16b1cd710e2c5a5cd7d1a7236bb272d6b7e9cf51e16241f8",
+       "c30f3f3c0b30e24f51a2fbcce8d4aa25691e2c26cf4d6eac8e6c6beb1025b16a",
+       "8ed58ad4df4beb0be12a666031195e55752753aa2d199b389f31c14de817c689",
+       "dd1456d03fc944169cb0b5e96f703dd2251c67c6b2299cbe69b5b519958c1aac",
+       "10b193d08a84ef75bbcc29418421ded9ea6835ec30fa19e2dd44b39b824f5ff7",
+       "19c32a3d91c8229466411cb99d517c91e030b1d990bcca6d91bb5a8883613e49"
+      ]
+     },
+     {
+      "at": 1512,
+      "starts": "**Framing.** The tutor avatar draws every state ",
+      "removed": [
+       "ea52a86a38f4583dc94f18002ac1c18063ea2ae0e84f47ec3e59e23c4e99fe6a"
+      ],
+      "added": [
+       "b4be4c02ed3cb746aa3cd0bfd5a98e66d8be6039c036d27ae970a8d4db437455"
+      ]
+     },
+     {
+      "at": 1516,
+      "starts": "Timeline: a 24 Hz clock; a drawing may occupy se",
+      "removed": [
+       "89bb3e4cd22b32a04c6f1c35fdaa9bdf238873bb1dd13dea0bfc90ee56ded2c3"
+      ],
+      "added": [
+       "2155c3d295204050119ee32ce555c525f1dfe67c62bda8627da468973f70c086"
+      ]
+     },
+     {
+      "at": 1520,
+      "starts": "| `peek` | The first keystroke of a **focus sess",
+      "removed": [
+       "3fe956861b641b502057190c5cf7d0e16ed91c6a0e11c139cf9b822ba183da09"
+      ],
+      "added": [
+       "473195036c7830235254d3e9cd28cdb4b4a834d8e4cd9a31bba1cd67da26d66d"
+      ]
+     },
+     {
+      "at": 1522,
+      "starts": "| `walk` | Waiting for the first token from the ",
+      "removed": [
+       "f1ef47608decd30ba873f0f01c95ef9c2eac7f8ff7fecb417d4c9d9af3708ede",
+       "ed2eb11a8211857f41d2228fd541d9644e53799f5162b41f8aed4b7d56c8cda8",
+       "f30af985f7c534c9daba0549f5ae434b443e92a64c77da59e38491cb34006041",
+       "ac680625314a8ae75635efa3ea8277a7abd6916be3c7c7a05f3d569d390e99dc",
+       "ee5e8992957f8148400a62cebfc78cab59e9a6eaf61e0527a32e67a2282721ee",
+       "d2edde20b848c997f55a4d96c70fcb62d70f886513778e6e99062e08064b8769",
+       "caa0d15ef9e29182304921407b25a974473455e2fa47d1c6c16036fa30fb1243"
+      ],
+      "added": [
+       "715741b421afe5b1ac9f99f1c02c362fb279d455d07ead3706fbb10fa30cf68b",
+       "1e25d898afadcf7d15d3aa6c58cec040d53bb5d09a5a2be961da1af1691769d5",
+       "9fc66367afa0c89c668dbce2cecc39e35328be218fc0b3196f87e9aa5568056d",
+       "321a796270df48570da22b304425e31fd5f85460c9484d73f7ccfd00374e3da1",
+       "054d03dd3338da6d0fae4deb00e44496592f5c0e29bffe971bcb5466a41f27cf",
+       "3ded02ea94bb7b645158d5b79ed3f06f9dba9fe21f2c41e824d23f700c16a6b4",
+       "c5d631d29c5410a64b3125e4934c79548ea69d964a3cc15e50230e3accdcd13f"
+      ]
+     },
+     {
+      "at": 1534,
+      "starts": "**Precedence when events coincide:** send (`walk",
+      "removed": [
+       "cfb0c7ee513f4b4bf0ce35bead2ddae0d4e550a6d2a02df5e9fdf33b669fee1b"
+      ],
+      "added": [
+       "b8e82c452b0b4b9be7b76853948fec1f592c7eaf4a886696625c58c894703b7a"
+      ]
+     },
+     {
+      "at": 1536,
+      "starts": "**Collisions (one clause each).** A tool or agen",
+      "removed": [
+       "db8e8282d1a7f571e78c189e747176801a80ce625030acbfe5f276e22ac2be83"
+      ],
+      "added": [
+       "22fd2bf4b289a07bfece0d65355fae0199e63e3395eaab3e6ad990956908900d"
+      ]
+     },
+     {
+      "at": 1538,
+      "starts": "**Compare mode (instructors and admins).** `Expe",
+      "removed": [
+       "6afeb26af97d0e57c59ae7f6d726acf0296fa2acb8f5f9875e4b83847f6da567"
+      ],
+      "added": [
+       "6c1e00354ce0db3955104b9093da857bc37700e945694070c19a17367e1bb7e5"
+      ]
+     },
+     {
+      "at": 1540,
+      "starts": "**Compare mode (instructors and admins; v2).** `",
+      "removed": [],
+      "added": [
+       "49aa94bd69dc21e608953878470e24b141dd3b07126b2e76629ceb32cf3413dc",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "4eb7d76358cf21af4ada96e485945ed3b50cfabe91105399b3cf7654073bd43a",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      ]
+     },
+     {
+      "at": 1542,
+      "starts": "Motion plays only when all three levels allow it",
+      "removed": [
+       "7cbafecce53b96fd9c55195dddc1def0b2b9fec1b1015252bbfd76559fc1c4e3"
+      ],
+      "added": [
+       "7a3abda74b92d08e7be1f7449505821f11c3867e854ecfadd9ac465247d1c91d"
+      ]
+     },
+     {
+      "at": 1546,
+      "starts": "| 1 | `VITE_ENABLE_MASCOT_MOTION` (build-time, r",
+      "removed": [
+       "22ec23608a31a8752a554b7924bef3965153f49ce6324e43fd2ecbf180ccfd5c",
+       "7ac41643a291a17cf616d5e704e5fae458ef1811b6fde2f07c85f6419d623fe1",
+       "2c4153a358a89888f0145fd9512adace388691c63571a1ea0dea771e2a5a0409"
+      ],
+      "added": [
+       "5cbe9e88f33e3e9c12026f8900209371690223621ace53da9be503e33a568939",
+       "f52d244bc0f3a2f2135b7fc758d0b695cecf0af41e701966a431270a39b2baf3",
+       "7a9a145d1e9d895511619524c5f7cb21487c697d98d32fea43f86496c298f648"
+      ]
+     },
+     {
+      "at": 1550,
+      "starts": "Also paused, at every level: a hidden tab and an",
+      "removed": [
+       "f8740caeaae8e662c68f2365bf9880124eb3330607bf7e36297e55ab7b05e1d7"
+      ],
+      "added": [
+       "12f4bf65632ff94bf1c5f0d09840da230c0c71fd6181405c03c453ab345c82cf"
+      ]
+     },
+     {
+      "at": 1554,
+      "starts": "Every placement names its slot token, size from ",
+      "removed": [
+       "cec922edaa1ea2a2b4230213ab4501c9529640666d4fec38f448a53918d90f85"
+      ],
+      "added": [
+       "96b2a78a4d3a14d93850e5c94abd48de0a36cc449cba106649f8af150b0d745b"
+      ]
+     },
+     {
+      "at": 1556,
+      "starts": "**Drawings (amended 2026-10-18).** Inside the ch",
+      "removed": [
+       "be613ffd4296731fe929a65a28aafb704f24910c094c321709b0dc982b3a61e2"
+      ],
+      "added": [
+       "ccb737bb8a81177f7b7f47a936258f51f3ffcd046c8640b12493d7da512b32a5"
+      ]
+     },
+     {
+      "at": 1560,
+      "starts": "| SR-6 tutor rows: the avatar | `avatar` | 32 / ",
+      "removed": [
+       "31ec90c7370514b42016ca63be93c0faaaed2f95a47024be411bb6a56626ea08",
+       "5c2b9cc0d0e9cff3b2576d026be7fbdb4ab0f2ad1ed4836ee417e4d18937994e",
+       "72eb8f9e62bb64060c9da47e4da0f0a1adea2194c362e70a9744a9b667a06db6",
+       "0891cc68d20487a6240cf22e623c1eedc9fac3f23ec1455fcacf24135300f709",
+       "63b0c89a41d72aeed51e74f0466417944badfe30a728791e974cab7e7a7e6b9a",
+       "b3cf3ee128b1abf5e584460ce9430d6e348fef7413210a4873179eb58263978b",
+       "5d9f6606dae3027849dc5efc9b5e8940435425b15e5829c3a360ac2683862b43",
+       "2bd4402e3c554fd2fd5d8446deae70026c261feeb4b06a9608477265ebcc1668",
+       "4a587a43f96e3a51519c045f858492223c1fc98f499236ba75324970ce4e55e6",
+       "3e6c92d78fdd4fe8aeff14991e42d4533e797d75dc85c7c74d3813e97f89851a",
+       "de477fd978ed1ca7ee4a2da104df6ae302c4f30628044634662e8785e1c28959",
+       "959bcf153009ef90c6c0a64876a1b47397e0c09072ad42865d6071911401fb42",
+       "aa833a547026fa5ec20e9f62d1d7d270e52d358e2fcea4a90ebad8d44405bd2b"
+      ],
+      "added": [
+       "dc13065933cabbd291c9072a5ce6995cd7b24dc32d039d098d3df93ac3abb199",
+       "4c2e6fd481c6fa1d14152e83f70e8b1b13cfb2fbee75e1c63fe298e4c4c7c2a9",
+       "415918df40ddffb68ec785587e7d7513bc1da852d8d51c256241330afbea972b",
+       "0eeeb1da25d814f5533adc8119fb9fc1fa5d53305bf93b71eefe9bd0dbeec194",
+       "3283af39257f45ac7f6caa01db7f41a3ea7bdeefac3a1794a9a52499dd059875",
+       "cac53bfa0e8dd29ef80acb28f3fb21ac37358caa5a6bb58e414a896e3929c5c2",
+       "552eacb31db44d67f32f397b129241792dabccc093aed50af1fd6d001f45939a",
+       "b9411c4fc022a72af29948a73a569877f727bb458de138675db3b7ab47e93e5b",
+       "61e02c6ee322ac0a5a0f64adf6ebc05bed0768148bcfaf23c90e90d59d2802fd",
+       "1dfc449b91460985c9989482b2beee145984ae114553e58b6b9d01360f9f2e8b",
+       "0903e0d71754aba53d3ee3dc0c68ac7490057f724275da939de8d4c53fbde94a",
+       "f8527e9a4a6f50ef73981a998045591b274518964824ff2789fcf5758739e412",
+       "148b04c127bd6a1349d3b241f9debb81f094e62210af4c98452460b5b3c26c99",
+       "ea661f133a57aa9a8079d7c16b2bccd310f395ca53bbb6272bd161fed1e996da"
+      ]
+     },
+     {
+      "at": 1574,
+      "starts": "At 390 px the chat panel is fullscreen; the avat",
+      "removed": [
+       "4280c9fbcf9b24b92c133af4f41a443e76dcda8244da3f9b11057369eebe5056"
+      ],
+      "added": [
+       "26ab052202dbf7c40c5c5eebe81bfc056a62498a7776c14615f6f873233f9d2a"
+      ]
+     },
+     {
+      "at": 1578,
+      "starts": "The forest outline `#234631` (artwork) must clea",
+      "removed": [
+       "c6a051a7d1a667f3800e362131b7be961d42f7c81ab2e2047041635eb3c9f5dd"
+      ],
+      "added": [
+       "cbaeade638dee1f7c3180ee7b82915d4e21cc43fd909f18a0d845d36b67c51bc"
+      ]
+     },
+     {
+      "at": 1580,
+      "starts": "| Mode | Behind the outline | Value | Ratio | Re",
+      "removed": [
+       "ffa62682ecac36959700f966a8c024749faae782cdf7efbdc0b507e94185683f",
+       "12af00ef4beed04e98324a76d971f94419a92b77311cf21629020e3449b8f457",
+       "95ca5a67ed2ebfef6f9165227b5203f709274815551108cb20b16c079d143690",
+       "79305d195372a5ffcf4f73d71e0216973cd1f3bdcf1c7b08b158ff88f8cd95fa",
+       "9875d1cc06e526b978a2ec126ec7fcd3e6bc3c55849e0a8231ff7feaf02a9f97",
+       "828d2118b80c1102275ba8ceff0305ce549beb69f2d53e2ec03029d60568c22e",
+       "8e1d905dbf1479be489bd23d4bed631b5bbf2dc8f3424b8eae3d9e045b656a91",
+       "caf6ac43a2c6a6ef213ff293ece1f114ea3884e4e6cc940f3558e57982b61930",
+       "523ec7b388e11e2f3202628941d0d112d12ca0f7db22fcefff7b1a4893a2a358"
+      ],
+      "added": [
+       "10d73767b6667ea4c8c404ed33bcf3f317176512a7320542a5271e64c5a8c244",
+       "4da1ec6f47782090102dc16bda978efb5655fbf2ddce0f84ecf1faf79a930f2d",
+       "1720bdb9e206ed21f8f4b77aadbbb67137233e6251fc923909679e396dd06615",
+       "661c1f864279abd6e506bef717cc01fcf6912b76e62b0dba49050b1aca835bd5",
+       "e882b22eeeb6c3aa46e7839885d458217b9132b760ae082f2455fa7efa188114",
+       "231fa3e808e77012269bbeadc6a78d490829d5394344adad5abd2c0d425e31cb",
+       "1f25f5182cd424ddd4f46a66726834b832a7239b2aa3643ac6953caf657f4e5d",
+       "d14870e79ecc0592b778f068a95fdf49c89ea1c4c3e09067c2e5d01069a2442e",
+       "f3cb13f94bed8c4f668f8e325e9f431dcd401bb34d81210d027224e048185f4c",
+       "711e44607a79a259b98c4b590d31943a2ae0d3ca2a37d8a8ee57df533d0e461e",
+       "9a21bd9943bb55412faf58011dd396716d3346adcd9dad8da24f7ab56b897587",
+       "39f17c512bd3b74ed559ec7fc592902bab52a71e0de3084c9280fe808134e750",
+       "80a0224ca0a7cfe09de5baf947eb4212d1e60beb783860c6bc732aec0741e0b4"
+      ]
+     },
+     {
+      "at": 1590,
+      "starts": "**Pixel-sampled (review A-5).** Once anti-aliase",
+      "removed": [
+       "fe68d41484e4f8fab67869ae361594aba20f938ca6538b1951251bf2e4d4337e"
+      ],
+      "added": [
+       "7698e9804bc281c273e7a7176503e4079da6071dffc40b75e4e4f9cdd935f3d6"
+      ]
+     },
+     {
+      "at": 1592,
+      "starts": "Informational: the backing disc against the dark",
+      "removed": [
+       "32885e66b30f4ac23cb1644586de1499a9a6530b15c67ef4985076188f75d3f6"
+      ],
+      "added": [
+       "1a35cdf6da1e2fa7e96a67fb32727ed50b8a813f83af6d964c315e27d14e5eec"
+      ]
+     },
+     {
+      "at": 1594,
+      "starts": "**Assistive technology and announcements.** Ever",
+      "removed": [
+       "d3e8b09d106c4b8d1caec0b9d8348027e5253ebd879f25de134acef81519ab75"
+      ],
+      "added": [
+       "038657b4fc689bf61f7f7e9c04e35785d79e2359a1eebc985d34ccfe64dda6ff"
+      ]
+     },
+     {
+      "at": 1598,
+      "starts": "**Runtime assets in the source** (`public/kiwi-m",
+      "removed": [
+       "746e0762f74fd220734137d74fd70b887ee24d270847a5448b606e5543907492"
+      ],
+      "added": [
+       "d70017fdcf51cdc92727382286f44b15acde9c42bd707b98f8354842ebe6d8b6"
+      ]
+     },
+     {
+      "at": 1600,
+      "starts": "**Cell size per placement and what is present at",
+      "removed": [
+       "377be02f4e64777e0fb9b93596215f43dbeea1e7f9814dd8269b14aa8a050b78",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "f5b47d552ba79caaa82225d620fae5ff18e4b446ba590f607b2a0dde20500e14"
+      ],
+      "added": [
+       "78e9209f16125b38bf990bfcfb87ed9d9affbbd5140c02946d4671f20b9cc65c"
+      ]
+     },
+     {
+      "at": 1604,
+      "starts": "| tutor avatar 32 px | 64 (2×) | `full-walk` (wa",
+      "removed": [
+       "9e013090cf493c2b6b363bd1d2782fb3668628e9d909d5c0e37e874a5242b35f",
+       "3d91ac1b4345e7e6896535e17213287cbdb4509e08259e79fb00e6b08eca1575",
+       "c84c09fc7a5be7d046bfdb55e86fa3dc99f78ac59c30c74c021c15d95de692c9",
+       "f6df667528acd5a61d5eab57cbf50f03b2a10e9cacdc417a5fc1b6711515cb43"
+      ],
+      "added": [
+       "27504c007e85700d89329b2a66802efdb53b51236ae0c8dfcecd0fff1cd1357c",
+       "8174e7bcc9bd615c5139c27ad9ea96147b9e9457bfd5c10e56ad97d4010af623",
+       "ef11171ea4d0ed6303a6557c2223d502874c781b47391206d61cd5311003e57a",
+       "9b0ed79dff2af5e641c5da16414a19d9fe198c5ba1746d847e8970b42687c44e",
+       "e9f1c47ead45d8ae5d123a2b2de2c99c9a7376651933c0b486b1500db31f623b"
+      ]
+     },
+     {
+      "at": 1609,
+      "starts": "**Loading order (lazy, per state, with one prefe",
+      "removed": [
+       "edcca04f641154925c0152ce695f49326f1c4ee55f9d1d232e88044bf62de2b9"
+      ],
+      "added": [
+       "5bb2b5f611c14ad30093f3e94cc19ad278fca405789d72db2faf25bba0f6ada0"
+      ]
+     },
+     {
+      "at": 1611,
+      "starts": "**Before the first answer completes,** a chat pa",
+      "removed": [],
+      "added": [
+       "5199f9efd127f9c4c67345b6448a244512fa205eb3bac777060d00e20cab8917",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "b8f9c14a100d60c8513f80654572248879917da1e6201d630dadecd379b95643",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      ]
+     },
+     {
+      "at": 1613,
+      "starts": "- **Generation stopped by the student** (Stop, P",
+      "removed": [
+       "aa7e836c23bfe68110a9e49336446a0b18c84d1e28fc97526a42b53231830ad6",
+       "de1eeac9cd30be0f4c0f3b38d868bdccdd07c48861a6ed5ca1996274340052f8",
+       "f2c22a76a4121ca84fd41e41f570c67b4f8f5fff6c61ca5be128e470a1a27a62"
+      ],
+      "added": [
+       "39fc63572533b46c55981e2ff4cf69015891570e8f4b814734a1f5daf7701fe7",
+       "fd83b3ee3d7467ac09b620fcc86ab9702db2b30eae2345c1b60c7dfd62f024da",
+       "b520b58caaf3f00612d0164470a0670b4ee2440153eca3048b2d91bee1dcb54a"
+      ]
+     },
+     {
+      "at": 1621,
+      "starts": "- **390 px:** the placements table's second size",
+      "removed": [
+       "dec5c32671321a0d8d1fb483b9adc9ac70471608623628e60062a3e31c5cc07a",
+       "36a5ba13d6aaee3475e48bbec5c808bc743790811473d07103354a14881901b7",
+       "0d3fdca602c2cfa03d5e0f88343ddc12ae6147c023ccb70a0671f4ee8fda9330",
+       "319c46c3fd0349178dfec484ec91309c7a355fe3006a871360635d61b26d601c"
+      ],
+      "added": [
+       "24ac05ea2066a70b2099806ee86942e8154e4c02b9918e81bb3f738b4ca5d1cd",
+       "258e3837e0c2c79a8f2b7ac39d7c959b7d4033a372fd12870a7444ff8b419550",
+       "0366ecc26823b37f9a81ff1b891fc60b5b87dadf1728b760fce5ecf7097d852f",
+       "fa1db4602de861a1f358bf1590be1dc72ec694812619384f2b5fbd90d0165d54"
+      ]
+     },
+     {
+      "at": 1626,
+      "starts": "- **The logo is referenced, never inlined (v2):*",
+      "removed": [],
+      "added": [
+       "856e64c9a21d651bf28c90d83d6a69d953327a54e7c0b6f521909d0425371c93",
+       "97e771eedadcbbceb0c39c419a967ef2f82da21183045901bc901753c23f5ab7",
+       "ce4147cb093d553ffc928a78a53313eb67b2677e200181b201c2513bad42317c",
+       "dc724edb5f0c330be7a9576f3311503cec92cd82161bbe993fdd9da7c91923a4"
+      ]
+     },
+     {
+      "at": 1645,
+      "starts": "**Re-checked for companion v2 and the Playful wo",
+      "removed": [],
+      "added": [
+       "c9339256a55e3356e84e5e34cbdad9dc341bef715bbeb02d3048e6e61b4d3ad4",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      ]
+     },
+     {
+      "at": 1651,
+      "starts": "**Companion v2 (2026-10-19).** `.design-foundati",
+      "removed": [],
+      "added": [
+       "0ab1db8e1376832e05973462c5da48993830c71cfc60bf5ff9e8b414bf99325d",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      ]
+     },
+     {
+      "at": 1653,
+      "starts": "**Registration and checks.** `node build-tokens.",
+      "removed": [
+       "3765a60d01b142888322847480bc1ad17d0977519c2eb7dfaaabeeec483bc633"
+      ],
+      "added": [
+       "34ec1f757b9440b4f5c7b88d7382718243f2330cca8e7056e770140e3e0b2391"
+      ]
+     },
+     {
+      "at": 1666,
+      "starts": "- **Phase 7 (amended 2026-10-18):** the chat moc",
+      "removed": [
+       "ba9c2f65b117fd0f89aa2d707140da32f7780e49a0ec3368c1dde30d91ad05f8",
+       "0e2e0fe659b4a8c1f1f8e31d6893f70744b256cdd92650ccb568eef7acacc9dd"
+      ],
+      "added": [
+       "d0d5b4f2f18ab6b93c46271d09e4428f1512f64c7661c3ffcbeebab723b7877f",
+       "82c11506eec0ec0e4d25800b9f72ee17de6890ce781155433ed580565caed47c"
+      ]
+     },
+     {
+      "at": 1689,
+      "starts": "| **Steady** | Calm in every state: warm by bein",
+      "removed": [
+       "eb7f0b6c70e1184b77f58ffebfcf0fca6f68e9ab15da029dcae228a4cb31dbcb",
+       "9472a3744137ea8f8d1fe09c4e88eed4e6dfc34bbe693416fdf5bb4b8ed6e0c6"
+      ],
+      "added": [
+       "ddea1c36f2e1bd5ab6f195e123ba4ac6d095551cc1e43cff57fb4d55bb7523f7",
+       "148e5dc9b30e610a47a0792dacceadf255b6fc837bd62b038d5bea46391d97fd"
+      ]
+     },
+     {
+      "at": 1712,
+      "starts": "| **Waiting** | Steady and present: names what i",
+      "removed": [
+       "a47703626ea34161f1c5cabc571880abb95bc0ca5e840aeb66298c00cc42e5ca"
+      ],
+      "added": [
+       "72933bfdc153a6fd5a701ee309ea5513cacc8083a6905ddf48c9f7f82b1b4173"
+      ]
+     },
+     {
+      "at": 2069,
+      "starts": "The walk state (`§ Companion › The nine states`)",
+      "removed": [
+       "9fe201dc0659bc9df2dad25d848d3a4fd707cb58a6829ac413415851b4681e66"
+      ],
+      "added": [
+       "d0c9b1ae0e92d6f8cb1f903a02e27f3dffa008d8d4ff26fe8994ecc6ac3188fd"
+      ]
+     },
+     {
+      "at": 2073,
+      "starts": "| **Wait** | Nothing to show yet: the first step",
+      "removed": [
+       "2a1de3f1be35847861278b2a3ec8c72f2e87edc434fe178b7b3d87ac2b472927"
+      ],
+      "added": [
+       "f6996a3cba2f06a27d1d4101c8c1469a4a67b5d6df40d582f5952d1aa5882034"
+      ]
+     },
+     {
+      "at": 2081,
+      "starts": "### The status line",
+      "removed": [],
+      "added": [
+       "8f5f837c7f63dcde2c03c9cf874cf5aa638e16468a6c27e72f79cf1d0965daad",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "3a14eab12095e8e5c387ebfd17c52ffcaf6b321b01bdb57a070960f7e42eb22e",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "a07d6f1404a36a50d9b98b2d742e598cfa16709c6ed73b44f58cd8e78c7bb2de",
+       "23cca02b74f386463efa24796c7a9011b0d2c93f0c38b4d15d5d276205b59b43",
+       "dfb8da40b22fc2fbec3d8d9ee371d913bdc55f40bee6f16d7be44b4cc8ac4501",
+       "942fe3bc54e4f8b1a888f05f63a78660b68354da7149def626fed1de182820db",
+       "a9d65e8da6c7b41558eed3ccf480b94075200a6aa7e96dadf3f4c1c647317579",
+       "69685608668d58d7ec142f4873ae64ff0165e50029827a027ffb00c7f8b2ac3e",
+       "9bdc715b591acd5eb0b934e4dc2214cfd624021ace103733882281c783f2b378",
+       "4222153d7f5a5674578e15035be351d4fe38046e85ab42a61247b7edf4f280bf",
+       "79946ce2c3bbbb9363618bf95f9b6a21b37ffb1c9cbaf15add4dc7083aed92ba",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "683af6dbc5fe13cf779ee176b39055dbd587299c5735e8152d34ed49dca0b416",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "6d8b8c5f52ae66671a7a25c5c394bdb208213062fd50a4f3e693bd1943cf20fb",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      ]
+     },
+     {
+      "at": 2150,
+      "starts": "- **The `walk` twin:** \"Thinking…\" with the cycl",
+      "removed": [
+       "f07b4a15fc7aed075cd3629a1b8ee09e48715dad11947c46339881fedf44a94f"
+      ],
+      "added": [
+       "1c39a8bbc813a0dc4a354daf23de0fac8afb5998e383a91733c3b488b18387ad"
+      ]
+     },
+     {
+      "at": 2152,
+      "starts": "- **A-7 under v2 (2026-10-19).** v2 drops the wa",
+      "removed": [],
+      "added": [
+       "9edc9c1a65989440e0721bd5585c022278ca55a06583b9b9f32d2fbf86d59aa9"
+      ]
+     },
+     {
+      "at": 2415,
+      "starts": "### 2026-10-19 · The status line's Kiwi is the o",
+      "removed": [],
+      "added": [
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "96251485b92231d60e631e5da440b5e73b0e52c39798f2f2586489bb7912f40e",
+       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "68d3c9ca9de7ca2be190567b85ebb39c1fb545e41760a9532febc8c5bb2cc797",
+       "1490d531558bdf46d5cd2c6be994545abc774cc169be3b4525c1c915dc059af2",
+       "546e4c9ef3d6e19ba77ff128f04149376bd3806942e705c225e1fc73f3ea3807",
+       "7f2aca1c72bd24ac6088d5748431d15c1511ecf616f446a015b048cffcea9f74",
+       "24e1f59ddd5d0cb473ca6b889479a8bc27717649a0557004fabacd53dd5e39ad",
+       "63366226004eb57bade11b1cab872bd956f260a1e4bd359bc05782f3c91f39aa",
+       "adf41014eb922203434367c67c11500cee02ac4ca391d7a783875a25a5b3cdfc",
+       "e83897b0d88be8b0e79b61f21eed26191b2ef4504e90f307a854d5158ca8b66a",
+       "481faa3d2a8535b8f4bd96cd239c3077a457d85a5d0dd873c27839235596733e",
+       "88d2b8ba6dd1a55f0e4ecc43f9e3fa041203000974a7eac6767d2412da02a2f7",
+       "b829eea9317ddb150d7b6c22ff27bd7284c228546f3935246de3f6106e34f7ef",
+       "70a4c1f97b041e41852d0adbafd3bad010f3fd967a00ecd22418da74c284066b",
+       "e1a955af80d47c3edb2fa0a3bcd7665f9c2e2e22c8915ac05c10689ba0b81db6",
+       "25ee932893991b3bd4e5aa07c9bea73a4212709e9cc895c2b83529ebac917f8e"
+      ]
+     }
+    ]
+   },
+   "journey": {
+    "kind": "patch",
+    "blocks": [],
+    "hunks": [
+     {
+      "at": 225,
+      "starts": "- **Companion (v2, 2026-10-19):** no change: blo",
+      "removed": [],
+      "added": [
+       "fdc78fb6a5c3231357ffb8b2c91209f89e251a9922559b25fb1be21f481acba9"
+      ]
+     },
+     {
+      "at": 383,
+      "starts": "- **Companion (v2, 2026-10-19):** the sign-in sl",
+      "removed": [],
+      "added": [
+       "f147e8860c78d969dd1ef7160db232854339775a4b625a5bfaf45f911a9e6936"
+      ]
+     },
+     {
+      "at": 424,
+      "starts": "- **Companion (v2, 2026-10-19):** tutor messages",
+      "removed": [],
+      "added": [
+       "3fb6a0ed1f575c6f4023251af80c71f47ca27d796f7603ed4ef54c5a95a2e057"
+      ]
+     },
+     {
+      "at": 475,
+      "starts": "  - `SR-6.49` `Thinking` → `Working…` · C13, C6 ",
+      "removed": [
+       "6a898befc86482d19cd1071a3a3971db2d3e65130be2c76cab9ff85a3fcc8394"
+      ],
+      "added": [
+       "7cf6c2b8c7202cab76aa84764f3f442238d343738571c07c41e7576a39317b3d"
+      ]
+     },
+     {
+      "at": 495,
+      "starts": "  - `SR-6.69` `{dots}` → `Thinking{dots}` · C13 ",
+      "removed": [
+       "29f1400465c70a81edb23ff7bf029ba5352749e7a996b0200da9cb55383c9bf3"
+      ],
+      "added": [
+       "5d5b9c3d20a69ddde417fcf863a81715c3cd50ca32b133db1ef9cf0a14ece697"
+      ]
+     },
+     {
+      "at": 573,
+      "starts": "- **Companion (v2, 2026-10-19):** the empty stat",
+      "removed": [],
+      "added": [
+       "d5b4cc866232b20f2e7bebd86c3848076e0e90cf451699947fea0bf8c7cac78c"
+      ]
+     },
+     {
+      "at": 769,
+      "starts": "- **Companion (v2, 2026-10-19):** the display li",
+      "removed": [],
+      "added": [
+       "152a93d6a37167062736a460a9979fcfe426871d4f6fa9968b2f60ada70ca513"
+      ]
+     },
+     {
+      "at": 813,
+      "starts": "- **Companion (v2, 2026-10-19):** the same slot ",
+      "removed": [],
+      "added": [
+       "9f79725cb6a75c08651847e4c7120c54acca674967bfce604a77d469b4699315"
+      ]
+     },
+     {
+      "at": 874,
+      "starts": "- **Companion (v2, 2026-10-19):** the card's hea",
+      "removed": [],
+      "added": [
+       "de6b96b47f6de55d3e1f41b2e5737048f1f18dba33839ad170118e3a081f589e"
+      ]
+     },
+     {
+      "at": 941,
+      "starts": "- **Companion (v2, 2026-10-19):** the **original",
+      "removed": [],
+      "added": [
+       "2687df626235ec2d613dd83ac7bcf1c31b3d591b445daf67403d9fc04d14d512"
+      ]
+     },
+     {
+      "at": 982,
+      "starts": "- **Companion (v2, 2026-10-19):** the empty stat",
+      "removed": [],
+      "added": [
+       "18d8b35183a6c9681796474950c4858a071264b987fd35c7e4655b9456803675"
+      ]
+     },
+     {
+      "at": 1032,
+      "starts": "- **Companion (v2, 2026-10-19):** the preview ca",
+      "removed": [],
+      "added": [
+       "2e4101ceefbd256b9e35ee61be3607760f526de8670c22d3e1b2ff446e091db7"
+      ]
+     },
+     {
+      "at": 2015,
+      "starts": "- **Companion (v2, 2026-10-19):** the \"Class pre",
+      "removed": [],
+      "added": [
+       "63876191794329530f03af9b36b097e47a3e69ba45cb0889f58c75a312d848e3"
+      ]
+     },
+     {
+      "at": 2414,
+      "starts": "- **Companion (v2, 2026-10-19):** the empty stat",
+      "removed": [],
+      "added": [
+       "e94923ea302310eb86c79daecd877cafe5043629bf87937dfa69758dd36dd362"
+      ]
+     },
+     {
+      "at": 3336,
+      "starts": "**1261 rows** across 44 routes and shared groups",
+      "removed": [
+       "0b571ac322ecb81227d113f5f641f4e86da545de79dd653a64207229498b0ace"
+      ],
+      "added": [
+       "2cff8577d18a529e6336f1f15a64f5c8e37a1a5b65b99424fe89f5610d6fea52"
+      ]
+     },
+     {
+      "at": 3443,
+      "starts": "| `SR-6.69` | SR-6 `(shared)` | src/components/L",
+      "removed": [
+       "6fdfa4a74409b987346f565efd3227bc60544d0365668c6beb3b11a181c94051"
+      ],
+      "added": [
+       "58110fe52a6cfbe3af965e9dd3a677777f51a7a5ad2492f9387ece6e47263997"
+      ]
+     },
+     {
+      "at": 4574,
+      "starts": "| `CP.19` | CP `(Companion)` | DESIGN.md § Compa",
+      "removed": [],
+      "added": [
+       "366eedee147a98a262fa285739975d2d04db8b68b187e1b855f7153883826dc2",
+       "84ae8d92d82f7a8d10408b18220006409b2405aa410a69dc1a3440e8b2139144",
+       "f9d4c0c57a1e43de46353a0683c210ab4d2f8e96179ad02efbb02d8ba60b0744",
+       "8de415a87e8678a70f7874df31063a51dfe3b14ea846eac803af9f6db8c1f236",
+       "2d7ebb6f8d2674260f122964b368a7e80bedaa529bb01b41911323594b19f4c7",
+       "b1003b6a2a8b6213aad78764e7463cf43c38542906f538fdbff7afcef8db859d",
+       "468e73477d0042930fbed88cb92adbc20cb43cb590ecbe53dbe40b36478c4e48",
+       "9f16473b76bfb6b8446831075ac326572aaab0ac98126063e6f84f124a7edf90",
+       "f57d76b9972968e20193eef5a2e0fda3daa64a3ac8293530fd7a68d5ab12cc86",
+       "cb6011661cbb2d75650170654a3bbef58763f930843da8de91940907a3cfd190",
+       "77d4e426ad3a06e1d499cf6d27d463487be83a883f65fc4d41fa267d1c487a9b",
+       "cbc947edc49517d529746fda669ea827dfe60d4d599d10e99c6865a6f9be145a",
+       "b43a7f8daa0980dbdbb8878634e9716e969c6ca9989e20221afb6b20e50ed9a1"
+      ]
+     }
+    ]
+   }
   }
  ]
 }

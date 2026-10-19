@@ -25,7 +25,7 @@ resetIds();
 const ctx = { theme: "light", mode: "preview", url };
 const TITLES = { "sign-in": "Sign in to Kiwi", "course-list": "Your classes", chat: "Materials", code: "Scratchpad", "enroll-students": "Enroll students", "edit-class": "Edit class" }; // DESIGN.md § Page names
 const templates = SCREENS.map((s) => `<template id="tpl-${s.key}" data-title="${esc(TITLES[s.key])}">${s.build(ctx)}</template>`).join("\n");
-const thinking = `<p class="tk wait">${esc(t("SR-6.69", { dots: "" }))}<span class="dots" aria-hidden="true">…</span></p>`;
+const thinking = `<p class="tk wait">${esc(t("CP.19"))}</p>`;
 const SNIP = {
   panel: chatPanel(ctx),
   launcher: launcher(),

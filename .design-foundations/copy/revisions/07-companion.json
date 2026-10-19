@@ -150,6 +150,110 @@
     "at": "DESIGN.md § Companion › walk row",
     "r": "C13",
     "t": "The fallback for a step Kiwi cannot name (SR-6.49): the word the chain's header shows, so it claims no process the product cannot show."
+   },
+   {
+    "o": "",
+    "n": "Foraging…",
+    "k": "status",
+    "at": "DESIGN.md § Companion › walk row; DESIGN.md § Voice and tone › The status line",
+    "t": "The first wait verb (the first answer of a chat, then every fifth). A bird looking for food: Kiwi is looking; it claims nothing about progress (companion v2).",
+    "r": "C13"
+   },
+   {
+    "o": "",
+    "n": "Poking around…",
+    "k": "status",
+    "at": "DESIGN.md § Voice and tone › The status line",
+    "t": "The second wait verb. It replaces \"Hopping to it…\", which says \"start quickly\", a speed claim.",
+    "r": "C13"
+   },
+   {
+    "o": "",
+    "n": "Rummaging around…",
+    "k": "status",
+    "at": "DESIGN.md § Voice and tone › The status line",
+    "t": "The third wait verb.",
+    "r": "C13"
+   },
+   {
+    "o": "",
+    "n": "Pecking away…",
+    "k": "status",
+    "at": "DESIGN.md § Voice and tone › The status line",
+    "t": "The fourth wait verb.",
+    "r": "C13"
+   },
+   {
+    "o": "",
+    "n": "Sniffing it out…",
+    "k": "status",
+    "at": "DESIGN.md § Voice and tone › The status line",
+    "t": "The fifth wait verb; kiwis forage by smell (the nostrils at the bill's tip), so the verb is the bird's own.",
+    "r": "C13"
+   },
+   {
+    "o": "",
+    "n": "Jotting it down…",
+    "k": "status",
+    "at": "DESIGN.md § Companion › speaking row; DESIGN.md § Voice and tone › The status line",
+    "t": "While the answer text streams: the text itself is the news, and the line only says Kiwi is still writing.",
+    "r": "C13"
+   },
+   {
+    "o": "",
+    "n": "Peeking at the page list…",
+    "k": "status",
+    "at": "DESIGN.md § Voice and tone › The status line",
+    "t": "A reading step in the status line, for the chain's \"Checking the page list\" (SR-6.41): the same object, a Kiwi verb, the progress ellipsis (companion v2). A new string: the chain's label is unchanged. The step chain keeps its plain label.",
+    "r": "C13"
+   },
+   {
+    "o": "",
+    "n": "Sniffing out your classes…",
+    "k": "status",
+    "at": "DESIGN.md § Voice and tone › The status line",
+    "t": "A reading step in the status line, for the chain's \"Looking up your classes\" (SR-6.42): the same object, a Kiwi verb, the progress ellipsis (companion v2). A new string: the chain's label is unchanged.",
+    "r": "C13"
+   },
+   {
+    "o": "",
+    "n": "Peering at this page…",
+    "k": "status",
+    "at": "DESIGN.md § Voice and tone › The status line",
+    "t": "A reading step in the status line, for the chain's \"Reading this page\" (SR-6.45): the same object, a Kiwi verb, the progress ellipsis (companion v2). A new string: the chain's label is unchanged.",
+    "r": "C13"
+   },
+   {
+    "o": "",
+    "n": "Peering at class analytics…",
+    "k": "status",
+    "at": "DESIGN.md § Voice and tone › The status line",
+    "t": "A reading step in the status line, for the chain's \"Reading class analytics\" (a kept label): the same object, a Kiwi verb, the progress ellipsis (companion v2). A new string: the chain's label is unchanged.",
+    "r": "C13"
+   },
+   {
+    "o": "",
+    "n": "Pecking through class materials…",
+    "k": "status",
+    "at": "DESIGN.md § Voice and tone › The status line",
+    "t": "A reading step in the status line, for the chain's \"Searching your class materials\" (SR-6.48): the same object, a Kiwi verb, the progress ellipsis (companion v2). A new string: the chain's label is unchanged. \"class materials\" stays the term (C6); \"your\" goes so the words fit the 390 px column.",
+    "r": "C13"
+   },
+   {
+    "o": "",
+    "n": "in the status line, an acting or tool step's label with the progress ellipsis (\"Opening a page for you…\", \"Running code…\", \"Using {displayName}…\"), and \"Working…\" for a step with no name",
+    "k": "format",
+    "at": "DESIGN.md § Voice and tone › The status line",
+    "t": "Acting and tool steps stay plain in the line: \"for you\" and a tool's name are information.",
+    "r": "C13"
+   },
+   {
+    "o": "\"Thinking…\" (the word, then the cycling dots as its ellipsis) while Kiwi waits for the first step or token",
+    "n": "the status line's words: a wait verb until the first step or token (\"Foraging…\", \"Poking around…\", \"Rummaging around…\", \"Pecking away…\" or \"Sniffing it out…\", by the answer's place in the chat), then the running step in the line's own words, a reading step with a Kiwi verb and its own object (\"Peeking at the page list…\", \"Sniffing out your classes…\", \"Peering at this page…\", \"Peering at class analytics…\", \"Pecking through class materials…\"), then \"Jotting it down…\" while text streams; static words, no dots, not a live region",
+    "k": "format",
+    "at": "DESIGN.md § Companion › walk row",
+    "t": "The walk twin, rewritten for the status line (companion v2): the wait verbs (CP.19 to CP.23), the reading steps' words (CP.25 to CP.29), the acting and tool steps (CP.30) and the streaming words (CP.24); the loader and its dots go (SR-6.69).",
+    "r": "C13"
    }
   ]
  }

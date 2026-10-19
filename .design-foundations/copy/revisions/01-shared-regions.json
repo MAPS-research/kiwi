@@ -813,7 +813,7 @@
     "Working…",
     "label",
     "",
-    "The fallback label of a step Kiwi cannot name (`describe(null)`, `AgentStepChain.tsx:131`): \"Working…\", with the ellipsis, the word the chain's header already shows while the turn runs (`:209`; C13). The rule for the walk state's words: \"Thinking…\" is the wait before the first step (SR-6.69, the user's own wording and the one concession, G9); once a step is running its label names the step, and a step that has no name says only that Kiwi is working, so it claims no process the product cannot show (`§ Voice and tone › Step labels`). `AgentStepChain.test.tsx:80` asks for the header with `getByText(\"Working…\")`: it passes while every step is named, and would find two elements if a step with no name were drawn beside the header.",
+    "The fallback label of a step Kiwi cannot name (`describe(null)`, `AgentStepChain.tsx:131`): \"Working…\", with the ellipsis, the word the chain's header already shows while the turn runs (`:209`; C13). The rule for the walk state's words: \"Thinking…\" was the wait before the first step until companion v2 (SR-6.69, the user's own wording and the one concession, G9), and the status line's wait verb is now (CP.19 to CP.23); once a step is running its label names the step, and a step that has no name says only that Kiwi is working, so it claims no process the product cannot show (`§ Voice and tone › Step labels`). `AgentStepChain.test.tsx:80` asks for the header with `getByText(\"Working…\")`: it passes while every step is named, and would find two elements if a step with no name were drawn beside the header.",
     "label: \"Thinking\"",
     "src/components/Chat/AgentStepChain.tsx",
     "C13,C6"
@@ -1002,9 +1002,9 @@
     "t": "The step chain's label for a tool it has no words for (a tool step, `§ Voice and tone › Step labels`): the same rule and the same example as the tool pill's (SR-6.57), so one tool has one name in both places (C6). Title Case made of a code is not sentence case (C1)."
    },
    {
-    "k": "status",
+    "k": "remove",
     "o": "{dots}",
-    "n": "Thinking{dots}",
+    "n": "(removed)",
     "m": "{dots}",
     "f": "src/components/Loader/Loader.tsx",
     "tq": [
@@ -1013,7 +1013,7 @@
      "..."
     ],
     "r": "C13",
-    "t": "The wait for the first step or token had no words: `Loader.tsx:15` draws the cycling dots and nothing else, for a tutor message's `typing` (`ChatMessages.tsx:377` and `:452`), against the brief's \"never the only signal\" (G9, `§ Companion` principle 4). It now draws the word first and the text dots after it, as the Phase 3 loading row has it (\"Thinking…\" + dots): the dots are the word's ellipsis, built up one, two, three and resting as \"…\" when motion is reduced (`§ Components`, the Loading rule, Phase 3), so it reads \"Thinking…\" at rest. \"Thinking…\" is the user's own wording and the one concession to `§ Voice`'s candour: it names the wait before the first step; once a step runs its label names the step (`§ Step labels`), and a step with no name reads \"Working…\" (SR-6.49). {dots} is the cycling \".\", \"..\", \"...\" the loader draws every 500 ms, unchanged: real text from the component's own interval (`Loader.tsx:5-13`), not a CSS pseudo-element, in its own element and decorative (`aria-hidden`), so `Loader.test.tsx`'s dot queries stay valid and a screen reader reads the word once; a CSS-drawn replacement would change those six tests."
+    "t": "The tutor message's loader goes (companion v2, 2026-10-19): the status line replaces it in the same place, a tutor message's `typing` (`ChatMessages.tsx:377` and `:452`), in the toolbar's row and with its own words (the wait verbs CP.19 to CP.23, a step's words CP.25 to CP.30, \"Jotting it down…\" CP.24; `DESIGN.md § Companion`), so `Loader.tsx`'s dots and this word leave the message. The loader's six dot queries in `Loader.test.tsx` go with the component."
    },
    {
     "k": "label",

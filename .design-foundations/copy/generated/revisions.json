@@ -1,8 +1,8 @@
 {
  "summary": {
   "groups": 51,
-  "rows": 1328,
-  "changed": 1261,
+  "rows": 1341,
+  "changed": 1274,
   "routes": 44,
   "byKind": {
    "aria": 51,
@@ -13,13 +13,13 @@
    "new": 5,
    "button": 86,
    "body": 53,
-   "status": 135,
+   "status": 145,
    "error": 238,
    "helper": 84,
    "heading": 133,
    "cbutton": 26,
-   "format": 74,
-   "remove": 10,
+   "format": 76,
+   "remove": 11,
    "confirm": 20,
    "announce": 3
   },
@@ -3505,8 +3505,8 @@
       "C13",
       "C6"
      ],
-     "why": "The fallback label of a step Kiwi cannot name (`describe(null)`, `AgentStepChain.tsx:131`): \"Working…\", with the ellipsis, the word the chain's header already shows while the turn runs (`:209`; C13). The rule for the walk state's words: \"Thinking…\" is the wait before the first step (SR-6.69, the user's own wording and the one concession, G9); once a step is running its label names the step, and a step that has no name says only that Kiwi is working, so it claims no process the product cannot show (`§ Voice and tone › Step labels`). `AgentStepChain.test.tsx:80` asks for the header with `getByText(\"Working…\")`: it passes while every step is named, and would find two elements if a step with no name were drawn beside the header. (C13, C6: Nielsen #1; Doherty threshold)",
-     "note": "The fallback label of a step Kiwi cannot name (`describe(null)`, `AgentStepChain.tsx:131`): \"Working…\", with the ellipsis, the word the chain's header already shows while the turn runs (`:209`; C13). The rule for the walk state's words: \"Thinking…\" is the wait before the first step (SR-6.69, the user's own wording and the one concession, G9); once a step is running its label names the step, and a step that has no name says only that Kiwi is working, so it claims no process the product cannot show (`§ Voice and tone › Step labels`). `AgentStepChain.test.tsx:80` asks for the header with `getByText(\"Working…\")`: it passes while every step is named, and would find two elements if a step with no name were drawn beside the header.",
+     "why": "The fallback label of a step Kiwi cannot name (`describe(null)`, `AgentStepChain.tsx:131`): \"Working…\", with the ellipsis, the word the chain's header already shows while the turn runs (`:209`; C13). The rule for the walk state's words: \"Thinking…\" was the wait before the first step until companion v2 (SR-6.69, the user's own wording and the one concession, G9), and the status line's wait verb is now (CP.19 to CP.23); once a step is running its label names the step, and a step that has no name says only that Kiwi is working, so it claims no process the product cannot show (`§ Voice and tone › Step labels`). `AgentStepChain.test.tsx:80` asks for the header with `getByText(\"Working…\")`: it passes while every step is named, and would find two elements if a step with no name were drawn beside the header. (C13, C6: Nielsen #1; Doherty threshold)",
+     "note": "The fallback label of a step Kiwi cannot name (`describe(null)`, `AgentStepChain.tsx:131`): \"Working…\", with the ellipsis, the word the chain's header already shows while the turn runs (`:209`; C13). The rule for the walk state's words: \"Thinking…\" was the wait before the first step until companion v2 (SR-6.69, the user's own wording and the one concession, G9), and the status line's wait verb is now (CP.19 to CP.23); once a step is running its label names the step, and a step that has no name says only that Kiwi is working, so it claims no process the product cannot show (`§ Voice and tone › Step labels`). `AgentStepChain.test.tsx:80` asks for the header with `getByText(\"Working…\")`: it passes while every step is named, and would find two elements if a step with no name were drawn beside the header.",
      "refs": "",
      "tests": [
       {
@@ -4324,9 +4324,9 @@
     {
      "id": "SR-6.69",
      "group": "SR-6",
-     "kind": "status",
+     "kind": "remove",
      "old": "{dots}",
-     "new": "Thinking{dots}",
+     "new": "(removed)",
      "anchors": [
       {
        "file": "src/components/Loader/Loader.tsx",
@@ -4338,8 +4338,8 @@
      "rules": [
       "C13"
      ],
-     "why": "The wait for the first step or token had no words: `Loader.tsx:15` draws the cycling dots and nothing else, for a tutor message's `typing` (`ChatMessages.tsx:377` and `:452`), against the brief's \"never the only signal\" (G9, `§ Companion` principle 4). It now draws the word first and the text dots after it, as the Phase 3 loading row has it (\"Thinking…\" + dots): the dots are the word's ellipsis, built up one, two, three and resting as \"…\" when motion is reduced (`§ Components`, the Loading rule, Phase 3), so it reads \"Thinking…\" at rest. \"Thinking…\" is the user's own wording and the one concession to `§ Voice`'s candour: it names the wait before the first step; once a step runs its label names the step (`§ Step labels`), and a step with no name reads \"Working…\" (SR-6.49). {dots} is the cycling \".\", \"..\", \"...\" the loader draws every 500 ms, unchanged: real text from the component's own interval (`Loader.tsx:5-13`), not a CSS pseudo-element, in its own element and decorative (`aria-hidden`), so `Loader.test.tsx`'s dot queries stay valid and a screen reader reads the word once; a CSS-drawn replacement would change those six tests. (C13: Nielsen #1; Doherty threshold)",
-     "note": "The wait for the first step or token had no words: `Loader.tsx:15` draws the cycling dots and nothing else, for a tutor message's `typing` (`ChatMessages.tsx:377` and `:452`), against the brief's \"never the only signal\" (G9, `§ Companion` principle 4). It now draws the word first and the text dots after it, as the Phase 3 loading row has it (\"Thinking…\" + dots): the dots are the word's ellipsis, built up one, two, three and resting as \"…\" when motion is reduced (`§ Components`, the Loading rule, Phase 3), so it reads \"Thinking…\" at rest. \"Thinking…\" is the user's own wording and the one concession to `§ Voice`'s candour: it names the wait before the first step; once a step runs its label names the step (`§ Step labels`), and a step with no name reads \"Working…\" (SR-6.49). {dots} is the cycling \".\", \"..\", \"...\" the loader draws every 500 ms, unchanged: real text from the component's own interval (`Loader.tsx:5-13`), not a CSS pseudo-element, in its own element and decorative (`aria-hidden`), so `Loader.test.tsx`'s dot queries stay valid and a screen reader reads the word once; a CSS-drawn replacement would change those six tests.",
+     "why": "The tutor message's loader goes (companion v2, 2026-10-19): the status line replaces it in the same place, a tutor message's `typing` (`ChatMessages.tsx:377` and `:452`), in the toolbar's row and with its own words (the wait verbs CP.19 to CP.23, a step's words CP.25 to CP.30, \"Jotting it down…\" CP.24; `DESIGN.md § Companion`), so `Loader.tsx`'s dots and this word leave the message. The loader's six dot queries in `Loader.test.tsx` go with the component. (C13: Nielsen #1; Doherty threshold)",
+     "note": "The tutor message's loader goes (companion v2, 2026-10-19): the status line replaces it in the same place, a tutor message's `typing` (`ChatMessages.tsx:377` and `:452`), in the toolbar's row and with its own words (the wait verbs CP.19 to CP.23, a step's words CP.25 to CP.30, \"Jotting it down…\" CP.24; `DESIGN.md § Companion`), so `Loader.tsx`'s dots and this word leave the message. The loader's six dot queries in `Loader.test.tsx` go with the component.",
      "refs": "",
      "tests": [
       {
@@ -51173,6 +51173,461 @@
      ],
      "why": "The fallback for a step Kiwi cannot name (SR-6.49): the word the chain's header shows, so it claims no process the product cannot show. (C13: Nielsen #1; Doherty threshold)",
      "note": "The fallback for a step Kiwi cannot name (SR-6.49): the word the chain's header shows, so it claims no process the product cannot show.",
+     "refs": "",
+     "tests": [],
+     "tq": null,
+     "shared": false,
+     "keep": false,
+     "m": null,
+     "ax": null,
+     "lnPin": null,
+     "x": [],
+     "br": null,
+     "dt": null,
+     "lk": null,
+     "uses": null,
+     "lkVals": null,
+     "err": null,
+     "phase6": false,
+     "page": null,
+     "sum": false
+    },
+    {
+     "id": "CP.19",
+     "group": "CP",
+     "kind": "status",
+     "old": "",
+     "new": "Foraging…",
+     "anchors": [
+      {
+       "at": "DESIGN.md § Companion › walk row; DESIGN.md § Voice and tone › The status line"
+      }
+     ],
+     "rules": [
+      "C13"
+     ],
+     "why": "The first wait verb (the first answer of a chat, then every fifth). A bird looking for food: Kiwi is looking; it claims nothing about progress (companion v2). (C13: Nielsen #1; Doherty threshold)",
+     "note": "The first wait verb (the first answer of a chat, then every fifth). A bird looking for food: Kiwi is looking; it claims nothing about progress (companion v2).",
+     "refs": "",
+     "tests": [],
+     "tq": null,
+     "shared": false,
+     "keep": false,
+     "m": null,
+     "ax": null,
+     "lnPin": null,
+     "x": [],
+     "br": null,
+     "dt": null,
+     "lk": null,
+     "uses": null,
+     "lkVals": null,
+     "err": null,
+     "phase6": false,
+     "page": null,
+     "sum": false
+    },
+    {
+     "id": "CP.20",
+     "group": "CP",
+     "kind": "status",
+     "old": "",
+     "new": "Poking around…",
+     "anchors": [
+      {
+       "at": "DESIGN.md § Voice and tone › The status line"
+      }
+     ],
+     "rules": [
+      "C13"
+     ],
+     "why": "The second wait verb. It replaces \"Hopping to it…\", which says \"start quickly\", a speed claim. (C13: Nielsen #1; Doherty threshold)",
+     "note": "The second wait verb. It replaces \"Hopping to it…\", which says \"start quickly\", a speed claim.",
+     "refs": "",
+     "tests": [],
+     "tq": null,
+     "shared": false,
+     "keep": false,
+     "m": null,
+     "ax": null,
+     "lnPin": null,
+     "x": [],
+     "br": null,
+     "dt": null,
+     "lk": null,
+     "uses": null,
+     "lkVals": null,
+     "err": null,
+     "phase6": false,
+     "page": null,
+     "sum": false
+    },
+    {
+     "id": "CP.21",
+     "group": "CP",
+     "kind": "status",
+     "old": "",
+     "new": "Rummaging around…",
+     "anchors": [
+      {
+       "at": "DESIGN.md § Voice and tone › The status line"
+      }
+     ],
+     "rules": [
+      "C13"
+     ],
+     "why": "The third wait verb. (C13: Nielsen #1; Doherty threshold)",
+     "note": "The third wait verb.",
+     "refs": "",
+     "tests": [],
+     "tq": null,
+     "shared": false,
+     "keep": false,
+     "m": null,
+     "ax": null,
+     "lnPin": null,
+     "x": [],
+     "br": null,
+     "dt": null,
+     "lk": null,
+     "uses": null,
+     "lkVals": null,
+     "err": null,
+     "phase6": false,
+     "page": null,
+     "sum": false
+    },
+    {
+     "id": "CP.22",
+     "group": "CP",
+     "kind": "status",
+     "old": "",
+     "new": "Pecking away…",
+     "anchors": [
+      {
+       "at": "DESIGN.md § Voice and tone › The status line"
+      }
+     ],
+     "rules": [
+      "C13"
+     ],
+     "why": "The fourth wait verb. (C13: Nielsen #1; Doherty threshold)",
+     "note": "The fourth wait verb.",
+     "refs": "",
+     "tests": [],
+     "tq": null,
+     "shared": false,
+     "keep": false,
+     "m": null,
+     "ax": null,
+     "lnPin": null,
+     "x": [],
+     "br": null,
+     "dt": null,
+     "lk": null,
+     "uses": null,
+     "lkVals": null,
+     "err": null,
+     "phase6": false,
+     "page": null,
+     "sum": false
+    },
+    {
+     "id": "CP.23",
+     "group": "CP",
+     "kind": "status",
+     "old": "",
+     "new": "Sniffing it out…",
+     "anchors": [
+      {
+       "at": "DESIGN.md § Voice and tone › The status line"
+      }
+     ],
+     "rules": [
+      "C13"
+     ],
+     "why": "The fifth wait verb; kiwis forage by smell (the nostrils at the bill's tip), so the verb is the bird's own. (C13: Nielsen #1; Doherty threshold)",
+     "note": "The fifth wait verb; kiwis forage by smell (the nostrils at the bill's tip), so the verb is the bird's own.",
+     "refs": "",
+     "tests": [],
+     "tq": null,
+     "shared": false,
+     "keep": false,
+     "m": null,
+     "ax": null,
+     "lnPin": null,
+     "x": [],
+     "br": null,
+     "dt": null,
+     "lk": null,
+     "uses": null,
+     "lkVals": null,
+     "err": null,
+     "phase6": false,
+     "page": null,
+     "sum": false
+    },
+    {
+     "id": "CP.24",
+     "group": "CP",
+     "kind": "status",
+     "old": "",
+     "new": "Jotting it down…",
+     "anchors": [
+      {
+       "at": "DESIGN.md § Companion › speaking row; DESIGN.md § Voice and tone › The status line"
+      }
+     ],
+     "rules": [
+      "C13"
+     ],
+     "why": "While the answer text streams: the text itself is the news, and the line only says Kiwi is still writing. (C13: Nielsen #1; Doherty threshold)",
+     "note": "While the answer text streams: the text itself is the news, and the line only says Kiwi is still writing.",
+     "refs": "",
+     "tests": [],
+     "tq": null,
+     "shared": false,
+     "keep": false,
+     "m": null,
+     "ax": null,
+     "lnPin": null,
+     "x": [],
+     "br": null,
+     "dt": null,
+     "lk": null,
+     "uses": null,
+     "lkVals": null,
+     "err": null,
+     "phase6": false,
+     "page": null,
+     "sum": false
+    },
+    {
+     "id": "CP.25",
+     "group": "CP",
+     "kind": "status",
+     "old": "",
+     "new": "Peeking at the page list…",
+     "anchors": [
+      {
+       "at": "DESIGN.md § Voice and tone › The status line"
+      }
+     ],
+     "rules": [
+      "C13"
+     ],
+     "why": "A reading step in the status line, for the chain's \"Checking the page list\" (SR-6.41): the same object, a Kiwi verb, the progress ellipsis (companion v2). A new string: the chain's label is unchanged. The step chain keeps its plain label. (C13: Nielsen #1; Doherty threshold)",
+     "note": "A reading step in the status line, for the chain's \"Checking the page list\" (SR-6.41): the same object, a Kiwi verb, the progress ellipsis (companion v2). A new string: the chain's label is unchanged. The step chain keeps its plain label.",
+     "refs": "",
+     "tests": [],
+     "tq": null,
+     "shared": false,
+     "keep": false,
+     "m": null,
+     "ax": null,
+     "lnPin": null,
+     "x": [],
+     "br": null,
+     "dt": null,
+     "lk": null,
+     "uses": null,
+     "lkVals": null,
+     "err": null,
+     "phase6": false,
+     "page": null,
+     "sum": false
+    },
+    {
+     "id": "CP.26",
+     "group": "CP",
+     "kind": "status",
+     "old": "",
+     "new": "Sniffing out your classes…",
+     "anchors": [
+      {
+       "at": "DESIGN.md § Voice and tone › The status line"
+      }
+     ],
+     "rules": [
+      "C13"
+     ],
+     "why": "A reading step in the status line, for the chain's \"Looking up your classes\" (SR-6.42): the same object, a Kiwi verb, the progress ellipsis (companion v2). A new string: the chain's label is unchanged. (C13: Nielsen #1; Doherty threshold)",
+     "note": "A reading step in the status line, for the chain's \"Looking up your classes\" (SR-6.42): the same object, a Kiwi verb, the progress ellipsis (companion v2). A new string: the chain's label is unchanged.",
+     "refs": "",
+     "tests": [],
+     "tq": null,
+     "shared": false,
+     "keep": false,
+     "m": null,
+     "ax": null,
+     "lnPin": null,
+     "x": [],
+     "br": null,
+     "dt": null,
+     "lk": null,
+     "uses": null,
+     "lkVals": null,
+     "err": null,
+     "phase6": false,
+     "page": null,
+     "sum": false
+    },
+    {
+     "id": "CP.27",
+     "group": "CP",
+     "kind": "status",
+     "old": "",
+     "new": "Peering at this page…",
+     "anchors": [
+      {
+       "at": "DESIGN.md § Voice and tone › The status line"
+      }
+     ],
+     "rules": [
+      "C13"
+     ],
+     "why": "A reading step in the status line, for the chain's \"Reading this page\" (SR-6.45): the same object, a Kiwi verb, the progress ellipsis (companion v2). A new string: the chain's label is unchanged. (C13: Nielsen #1; Doherty threshold)",
+     "note": "A reading step in the status line, for the chain's \"Reading this page\" (SR-6.45): the same object, a Kiwi verb, the progress ellipsis (companion v2). A new string: the chain's label is unchanged.",
+     "refs": "",
+     "tests": [],
+     "tq": null,
+     "shared": false,
+     "keep": false,
+     "m": null,
+     "ax": null,
+     "lnPin": null,
+     "x": [],
+     "br": null,
+     "dt": null,
+     "lk": null,
+     "uses": null,
+     "lkVals": null,
+     "err": null,
+     "phase6": false,
+     "page": null,
+     "sum": false
+    },
+    {
+     "id": "CP.28",
+     "group": "CP",
+     "kind": "status",
+     "old": "",
+     "new": "Peering at class analytics…",
+     "anchors": [
+      {
+       "at": "DESIGN.md § Voice and tone › The status line"
+      }
+     ],
+     "rules": [
+      "C13"
+     ],
+     "why": "A reading step in the status line, for the chain's \"Reading class analytics\" (a kept label): the same object, a Kiwi verb, the progress ellipsis (companion v2). A new string: the chain's label is unchanged. (C13: Nielsen #1; Doherty threshold)",
+     "note": "A reading step in the status line, for the chain's \"Reading class analytics\" (a kept label): the same object, a Kiwi verb, the progress ellipsis (companion v2). A new string: the chain's label is unchanged.",
+     "refs": "",
+     "tests": [],
+     "tq": null,
+     "shared": false,
+     "keep": false,
+     "m": null,
+     "ax": null,
+     "lnPin": null,
+     "x": [],
+     "br": null,
+     "dt": null,
+     "lk": null,
+     "uses": null,
+     "lkVals": null,
+     "err": null,
+     "phase6": false,
+     "page": null,
+     "sum": false
+    },
+    {
+     "id": "CP.29",
+     "group": "CP",
+     "kind": "status",
+     "old": "",
+     "new": "Pecking through class materials…",
+     "anchors": [
+      {
+       "at": "DESIGN.md § Voice and tone › The status line"
+      }
+     ],
+     "rules": [
+      "C13"
+     ],
+     "why": "A reading step in the status line, for the chain's \"Searching your class materials\" (SR-6.48): the same object, a Kiwi verb, the progress ellipsis (companion v2). A new string: the chain's label is unchanged. \"class materials\" stays the term (C6); \"your\" goes so the words fit the 390 px column. (C13: Nielsen #1; Doherty threshold)",
+     "note": "A reading step in the status line, for the chain's \"Searching your class materials\" (SR-6.48): the same object, a Kiwi verb, the progress ellipsis (companion v2). A new string: the chain's label is unchanged. \"class materials\" stays the term (C6); \"your\" goes so the words fit the 390 px column.",
+     "refs": "",
+     "tests": [],
+     "tq": null,
+     "shared": false,
+     "keep": false,
+     "m": null,
+     "ax": null,
+     "lnPin": null,
+     "x": [],
+     "br": null,
+     "dt": null,
+     "lk": null,
+     "uses": null,
+     "lkVals": null,
+     "err": null,
+     "phase6": false,
+     "page": null,
+     "sum": false
+    },
+    {
+     "id": "CP.30",
+     "group": "CP",
+     "kind": "format",
+     "old": "",
+     "new": "in the status line, an acting or tool step's label with the progress ellipsis (\"Opening a page for you…\", \"Running code…\", \"Using {displayName}…\"), and \"Working…\" for a step with no name",
+     "anchors": [
+      {
+       "at": "DESIGN.md § Voice and tone › The status line"
+      }
+     ],
+     "rules": [
+      "C13"
+     ],
+     "why": "Acting and tool steps stay plain in the line: \"for you\" and a tool's name are information. (C13: Nielsen #1; Doherty threshold)",
+     "note": "Acting and tool steps stay plain in the line: \"for you\" and a tool's name are information.",
+     "refs": "",
+     "tests": [],
+     "tq": null,
+     "shared": false,
+     "keep": false,
+     "m": null,
+     "ax": null,
+     "lnPin": null,
+     "x": [],
+     "br": null,
+     "dt": null,
+     "lk": null,
+     "uses": null,
+     "lkVals": null,
+     "err": null,
+     "phase6": false,
+     "page": null,
+     "sum": false
+    },
+    {
+     "id": "CP.31",
+     "group": "CP",
+     "kind": "format",
+     "old": "\"Thinking…\" (the word, then the cycling dots as its ellipsis) while Kiwi waits for the first step or token",
+     "new": "the status line's words: a wait verb until the first step or token (\"Foraging…\", \"Poking around…\", \"Rummaging around…\", \"Pecking away…\" or \"Sniffing it out…\", by the answer's place in the chat), then the running step in the line's own words, a reading step with a Kiwi verb and its own object (\"Peeking at the page list…\", \"Sniffing out your classes…\", \"Peering at this page…\", \"Peering at class analytics…\", \"Pecking through class materials…\"), then \"Jotting it down…\" while text streams; static words, no dots, not a live region",
+     "anchors": [
+      {
+       "at": "DESIGN.md § Companion › walk row"
+      }
+     ],
+     "rules": [
+      "C13"
+     ],
+     "why": "The walk twin, rewritten for the status line (companion v2): the wait verbs (CP.19 to CP.23), the reading steps' words (CP.25 to CP.29), the acting and tool steps (CP.30) and the streaming words (CP.24); the loader and its dots go (SR-6.69). (C13: Nielsen #1; Doherty threshold)",
+     "note": "The walk twin, rewritten for the status line (companion v2): the wait verbs (CP.19 to CP.23), the reading steps' words (CP.25 to CP.29), the acting and tool steps (CP.30) and the streaming words (CP.24); the loader and its dots go (SR-6.69).",
      "refs": "",
      "tests": [],
      "tq": null,
