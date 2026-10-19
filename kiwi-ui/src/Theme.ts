@@ -113,6 +113,19 @@ const hitArea = (token: string) => ({
   },
 });
 
+/**
+ * A pressed or current marker: a flat bar along one edge of a rounded control,
+ * inset from its corners. Drawn as an inset box-shadow it bent up the corners and
+ * read as a drop shadow under a raised key.
+ */
+const markerBar = (edge: "bottom" | "left", color: string, thickness: string, radius: string) => ({
+  boxShadow: "none",
+  backgroundImage: `linear-gradient(${color}, ${color})`,
+  backgroundRepeat: "no-repeat",
+  backgroundPosition: edge === "bottom" ? "center bottom" : "left center",
+  backgroundSize: edge === "bottom" ? `calc(100% - 2 * ${radius}) ${thickness}` : `${thickness} calc(100% - 2 * ${radius})`,
+});
+
 const DISABLED = "&.Mui-disabled, &[aria-disabled='true'], &[aria-disabled='true']:hover";
 const FOCUS = "&.Mui-focusVisible, &:focus-visible";
 const PRESS = {
@@ -155,7 +168,7 @@ const TERTIARY = {
   "&[aria-pressed='true']": {
     backgroundColor: "var(--button-tertiary-variant-pressed-fill)",
     color: "var(--button-tertiary-variant-pressed-text)",
-    boxShadow: "inset 0 calc(-1 * var(--button-marker)) 0 var(--button-tertiary-variant-pressed-marker)",
+    ...markerBar("bottom", "var(--button-tertiary-variant-pressed-marker)", "var(--button-marker)", "var(--button-radius)"),
   },
 };
 
@@ -332,8 +345,12 @@ export function createKiwiTheme({ dark = darkModeEnabled() }: { dark?: boolean }
             "&[aria-pressed='true']": {
               backgroundColor: "var(--icon-button-variant-selected-fill)",
               color: "var(--icon-button-variant-selected-icon)",
-              boxShadow:
-                "inset 0 calc(-1 * var(--icon-button-marker)) 0 var(--icon-button-variant-selected-marker)",
+              ...markerBar(
+                "bottom",
+                "var(--icon-button-variant-selected-marker)",
+                "var(--icon-button-marker)",
+                "var(--icon-button-radius)"
+              ),
             },
             variants: [
               { props: { color: "primary" }, style: { color: "var(--icon-accent)" } },
@@ -531,6 +548,15 @@ export function createKiwiTheme({ dark = darkModeEnabled() }: { dark?: boolean }
             padding: 0,
             overflow: "visible",
             ...hitArea("--switch-hit"),
+            // The design has one switch: `size="small"` takes the same 14 px thumb and 3 px inset.
+            // MUI's small variant styles them through the root, so this matches its specificity.
+            "&.MuiSwitch-sizeSmall .MuiSwitch-switchBase": {
+              padding: "calc((var(--switch-track-height) - var(--switch-thumb-size)) / 2)",
+            },
+            "&.MuiSwitch-sizeSmall .MuiSwitch-thumb": {
+              width: "var(--switch-thumb-size)",
+              height: "var(--switch-thumb-size)",
+            },
           },
           switchBase: {
             padding: "calc((var(--switch-track-height) - var(--switch-thumb-size)) / 2)",
@@ -681,7 +707,7 @@ export function createKiwiTheme({ dark = darkModeEnabled() }: { dark?: boolean }
             "&.Mui-selected, &[aria-current='page']": {
               backgroundColor: "var(--sidebar-item-variant-current-fill)",
               color: "var(--sidebar-item-variant-current-text)",
-              boxShadow: "inset var(--size-marker) 0 0 var(--sidebar-item-variant-current-marker)",
+              ...markerBar("left", "var(--sidebar-item-variant-current-marker)", "var(--size-marker)", "var(--sidebar-item-radius)"),
               "& .MuiListItemIcon-root": { color: "var(--sidebar-item-variant-current-icon)" },
             },
             "&.Mui-selected:hover": { backgroundColor: "var(--sidebar-item-variant-current-fill)" },
