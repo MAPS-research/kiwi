@@ -4247,7 +4247,8 @@
       "avatar": {
         "$type": "dimension",
         "$value": "32px",
-        "$description": "The tutor avatar (G9); other mascot slots are companion.slot.* (Phase 4)"
+        "$description": "The tutor avatar (G9); other mascot slots are companion.slot.* (Phase 4)",
+        "$deprecated": "Companion v2 (2026-10-19): the tutor avatar is removed. Kept emitted per the deprecation policy (removed no earlier than two MAJOR versions after 2.0.0 and six months after it); only the deprecated companion.slot.avatar and component.tutor-message.avatar read it."
       },
       "composer-action": {
         "$type": "dimension",
@@ -12322,11 +12323,13 @@
       "$description": "The tutor-message surface: a tutor row is a 32 px avatar slot (G9) + 12 px gap + the answer column, on the message region's ruler (text 68 px right of the rule). Answer text --type-body 16/24, CJK-dominant blocks 28, measure 68ch, blocks 12 px apart, messages 24 px apart. Links --link underlined. Code blocks: --type-code 14/24 on a transparent ground with a 2 px --editor-block-rule left rule and a Copy icon button (--tutor-message-copy-button 28 px with a 16 px glyph; hit area --tutor-message-copy-hit: 28 fine / 44 coarse); inline code on --editor-inline-bg; display math bare and centred with overflow scroll. Citations [Page N] are --link in --type-caption with a 44 px hit area on coarse pointers (--tutor-message-citation-hit). The feedback toolbar is a row of 28 px icon buttons (16 px glyphs, 44 px targets on coarse pointers) on one 28 px line; the two thumbs are toggles (aria-pressed) and the chosen one is drawn as a filled glyph in --selection-text, the other as an outline. The panel's chrome (header, session bar, model select) is compact tool chrome on every route, student pages included (36 px icon buttons), while the message region is a comfortable reading surface (16/24); on coarse pointers the chrome's controls carry 44 px hit areas. The composer (the user's decision of 2026-10-19) is one text box with Send and Stop inside it: the box takes --tutor-message-composer-radius (the sheet radius, 8 px), at least --tutor-message-composer-min-height (44 px) and a 1 px --border-interactive edge, which becomes the 2 px --focus-ring frame while its text has focus; at its right end, inside the border, sits one 32 px round icon button (--tutor-message-composer-action; hit area --tutor-message-composer-action-hit, 32 with a fine pointer, 44 with a coarse one, the drawing never grows). Send is an up arrow in the primary style (--accent-solid fill, its 1 px --accent-solid-border edge, the arrow in --accent-on-solid), faded as the disabled primary while the box is empty; while Kiwi answers it becomes Stop, a --text ring around a filled --text square on the surface. The helper line under the box (\"Kiwi is answering. Select Stop to interrupt.\") stays, and the accessible names stay \"Send\" and \"Stop\". While an answer streams the toolbar is hidden until the answer completes. Keyboard: the feedback toolbar is one tab stop with a roving tabindex (Left/Right between its five buttons, Enter or Space presses); citations are links; the Copy button is a tab stop inside its code block; Escape while the composer has focus stops a streaming answer.",
       "avatar": {
         "$type": "dimension",
-        "$value": "{semantic.size.avatar}"
+        "$value": "{semantic.size.avatar}",
+        "$deprecated": "Companion v2 (2026-10-19): tutor messages carry no avatar; the answer column starts at the reading gutter. Kept emitted per the deprecation policy (removed no earlier than two MAJOR versions after 2.0.0 and six months after it); nothing reads it."
       },
       "avatar-gap": {
         "$type": "dimension",
-        "$value": "{semantic.space.block}"
+        "$value": "{semantic.space.block}",
+        "$deprecated": "Companion v2 (2026-10-19): there is no avatar column, so no gap beside it. Kept emitted per the deprecation policy (removed no earlier than two MAJOR versions after 2.0.0 and six months after it); nothing reads it."
       },
       "block-gap": {
         "$type": "dimension",
@@ -12587,7 +12590,8 @@
           },
           "text": {
             "$type": "color",
-            "$value": "{semantic.color.in-progress.text}"
+            "$value": "{semantic.color.in-progress.text}",
+            "$deprecated": "Companion v2 (2026-10-19): the loading row's words are the status line's, in companion.line.ink (--accent-text, a G1 exception for this line only); the text dots are gone. Kept emitted per the deprecation policy (removed no earlier than two MAJOR versions after 2.0.0 and six months after it)."
           },
           "stop": {
             "$type": "color",
@@ -13755,7 +13759,7 @@
     }
   },
   "companion": {
-    "$description": "Phase 4 (2026-10-17), the tutor companion: the slot size per placement and the backing behind the drawn mascot (kiwi-ui/DESIGN.md § Companion; fix round 1 and the review's follow-up applied 2026-10-17). Registered under the reserved namespace and never edited into the three tiers; every token names its CSS property explicitly (--companion-*). The mascot's artwork keeps its own flat palette (allowlisted, G11) and is not a token: its outline and bill colours are recorded in this group's metadata for check § 20 only, never emitted.",
+    "$description": "Phase 4 (2026-10-17), the tutor companion, amended by companion v2 (2026-10-19; kiwi-ui/DESIGN.md § Companion and § Lock amendments): the status line's tokens (companion.line.*), the launcher's state shades (companion.launcher.*) and the slot sizes per page placement; the avatar's slot and the 28 px launcher glyph box are deprecated (no tutor avatar; the launcher's face is the whole button), and the backing disc now serves the composer peek only. Registered under the reserved namespace and never edited into the three tiers; every token names its CSS property explicitly (--companion-*). The mascot's artwork and the original logo keep their own flat palette (allowlisted, G11) and are not tokens: their colours are recorded in this group's metadata for check § 20 only, never emitted.",
     "$extensions": {
       "org.kiwi": {
         "artwork": {
@@ -13765,10 +13769,76 @@
           "tan": "#ccbd99",
           "outline": "#234631",
           "bill": "#ccbd99",
-          "note": "The drawn frames' four colours: the pinned hue family (G11). Anti-aliased and resampled pixels vary around them, so § 20 asserts the token pairs on outline and also the lightest sampled forest pixel of every shipped asset (export-mascot.py writes the extremes to .design-foundations/mocks/assets/mascot/inventory.json). outline = the forest silhouette that must clear 3:1 on its backing (DW-4.4); bill = the tan beak, informational (not the outline)."
+          "note": "The drawn frames' and the original logo's four colours: the pinned hue family (G11). Anti-aliased and resampled pixels vary around them, so § 20 asserts the token pairs on these colours and also samples every shipped asset: the lightest forest pixel of every light status-line cell, the darkest rim pixel of every dark one, the logo's forest core at the sizes it is drawn and the round launcher's forest in each state (export-companion-v2.py writes them to .design-foundations/mocks/assets/mascot/v2-inventory.json), and the composer peek's atlas as before (export-mascot.py, inventory.json). outline = forest, the silhouette that must clear 3:1 on what is behind it; cream = the dark status line's die-cut rim; sage = the logo's tile and the launcher's ground; bill = the tan beak, informational (not the outline)."
         },
-        "assets": ".design-foundations/mocks/assets/mascot/ (stills, resampled atlases, the launcher glyph, provenance.md); source NYUSH-ML/kiwi-ui@fbb4db85f90aeda3a1250c8e9c8aa2d7473e2e11",
+        "assets": ".design-foundations/mocks/assets/mascot/ (the Phase 4 stills and atlases, provenance.md; since v2 line/ for the status line, launcher-round.svg for the launcher, v2-inventory.json) and .design-foundations/mocks/assets/brand/kiwi-mark.svg (the original logo); source NYUSH-ML/kiwi-ui@fbb4db85f90aeda3a1250c8e9c8aa2d7473e2e11",
         "evidence": ".design-foundations/mocks/companion-sheet.html and its screenshots"
+      }
+    },
+    "line": {
+      "$description": "Companion v2 (2026-10-19): the status line, which holds the newest tutor message's toolbar row while the turn runs: the Kiwi runs in place left of its words from the send until the answer is complete, flies once, fades and gives the row to the toolbar (kiwi-ui/DESIGN.md § Companion).",
+      "height": {
+        "$type": "dimension",
+        "$value": "{semantic.size.toolbar-button-sm}",
+        "$description": "The line's row: the tutor message's toolbar row (28 px), which the line holds while the turn runs, so the row never changes height when the toolbar takes it back.",
+        "$extensions": {
+          "org.kiwi": {
+            "css": "--companion-line-height"
+          }
+        }
+      },
+      "kiwi": {
+        "$type": "dimension",
+        "$value": "24px",
+        "$description": "The box the line's Kiwi is framed in: the run 22 × 18 px, its feet on the label's baseline (19 px below the row's top), the flight rising up to 3 px above the row; the padded 72 px cells of line/*.webp drawn at 30.5 px, left −5.04 px, top −6.97 px.",
+        "$extensions": {
+          "org.kiwi": {
+            "css": "--companion-line-kiwi"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{semantic.space.icon-gap}",
+        "$description": "Between the line's Kiwi and its words (8 px).",
+        "$extensions": {
+          "org.kiwi": {
+            "css": "--companion-line-gap"
+          }
+        }
+      },
+      "ink": {
+        "$type": "color",
+        "$value": "{semantic.color.accent-text}",
+        "$description": "The line's words: the green accent for this line only, a G1 exception the user granted (\"绿色强调（像 Claude Code）\"); every other in-progress string stays neutral.",
+        "$extensions": {
+          "org.kiwi": {
+            "css": "--companion-line-ink"
+          }
+        }
+      }
+    },
+    "launcher": {
+      "$description": "Companion v2 (2026-10-19): the launcher's face is the original logo in round form (the button's circle is its sage ground; launcher-round.svg). Hover and pressed lay the forest over the ground at these opacities, under the bird, so no state repaints the bird or the bubble.",
+      "shade-hover": {
+        "$type": "number",
+        "$value": 0.1,
+        "$description": "The forest over the launcher's ground when hovered: the ground #87a46a, the bird and the bubble 3.79:1 on it.",
+        "$extensions": {
+          "org.kiwi": {
+            "css": "--companion-launcher-shade-hover"
+          }
+        }
+      },
+      "shade-active": {
+        "$type": "number",
+        "$value": 0.18,
+        "$description": "The same when pressed (with the 0.98 press scale): the ground #7e9b65, 3.40:1.",
+        "$extensions": {
+          "org.kiwi": {
+            "css": "--companion-launcher-shade-active"
+          }
+        }
       }
     },
     "slot": {
@@ -13781,7 +13851,8 @@
           "org.kiwi": {
             "css": "--companion-slot-avatar"
           }
-        }
+        },
+        "$deprecated": "Companion v2 (2026-10-19): tutor messages carry no avatar, so no placement reads this slot. Kept emitted per the deprecation policy (removed no earlier than two MAJOR versions after 2.0.0 and six months after it); no other token reads it."
       },
       "peek": {
         "$type": "dimension",
@@ -13802,7 +13873,8 @@
             "css": "--companion-slot-launcher",
             "literal": "companion-specific: the glyph's own box on the locked disc, chosen on a 1x recognition check (review F6)"
           }
-        }
+        },
+        "$deprecated": "Companion v2 (2026-10-19): the launcher's face is the whole 56 px button (--launcher-size), the original logo in round form, so this 28 px glyph box is retired. Kept emitted per the deprecation policy (removed no earlier than two MAJOR versions after 2.0.0 and six months after it)."
       },
       "signin": {
         "$type": "dimension",

@@ -1380,8 +1380,8 @@
       "population": {
        "regex": "\\btokens?\\b"
       },
-      "result": "34 read: 28 are the webhook's API token (a credential), 3 the model tokens of the analytics, 1 the model setting, 1 an OAuth token URL, 1 a design note about a model stream; 0 mixes the credential with the usage limit",
-      "rows": 34
+      "result": "35 read: 28 are the webhook's API token (a credential), 3 the model tokens of the analytics, 1 the model setting, 1 an OAuth token URL, 2 design notes about a model stream (CP.15, and CP.31 since companion v2); 0 mixes the credential with the usage limit",
+      "rows": 35
      }
     },
     "MCP server (a registered tool provider)": {
@@ -1540,11 +1540,6 @@
     "says": "there is a control that creates the first class",
     "cite": "`Classes.tsx:296-310`: the button shows when no search is active and the user may create (`Classes.tsx:39`)"
    },
-   "SR-6.69": {
-    "kind": "verified",
-    "says": "Kiwi is waiting for the first step or token",
-    "cite": "`ChatMessages.tsx:377` and `ChatMessages.tsx:452`: a message that is typing draws the loader; the word is the user's own (G9) and the one concession in `§ Voice`"
-   },
    "SR-6.48": {
     "kind": "handoff",
     "says": "the step is a search of the class materials",
@@ -1616,6 +1611,27 @@
     "kind": "verified",
     "says": "how many events were approved and that the rest were not",
     "cite": "`WebhookEventApprovals.tsx:366-380`: the loop counts each approval and each failure"
+   },
+   "CP.19": {
+    "kind": "verified",
+    "says": "Kiwi is waiting for the first step or token",
+    "cite": "`ChatMessages.tsx:377` and `ChatMessages.tsx:452`: a message that is typing draws the wait in this place, where the status line replaces the loader; the verb is cosmetic and claims no progress (`§ The status line`)"
+   },
+   "CP.24": {
+    "kind": "verified",
+    "says": "the answer's text is arriving while the line runs",
+    "cite": "`ChatCore.tsx:945-950`: every streamed event gives the newest message its text so far and its `streaming` value, and `ChatCore.tsx:960` ends the answer at `stop`"
+   },
+   "CP.29": {
+    "kind": "handoff",
+    "says": "the step is a search of the class materials",
+    "cite": "`AgentStepChain.tsx:125` and `AgentStepChain.tsx:133-134`: the label is drawn for every tool whose name matches `/rag|search/i`",
+    "needs": "matches the built-in search by its exact tool name"
+   },
+   "CP.30": {
+    "kind": "verified",
+    "says": "Kiwi is opening a page for the student",
+    "cite": "`AgentStepChain.tsx:119`: the step is the `navigate` tool, a client action that `ChatCore.tsx:907-923` runs in the browser, on the student's page"
    }
   }
  }

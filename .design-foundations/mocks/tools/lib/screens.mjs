@@ -192,7 +192,7 @@ function frameStrip(ctx) {
   const older = tutorRow(ctx, { state: "idle", blocks: [`<p class="tk">${esc(data(F.older))}</p>`], meta: metaLine(ctx, {}) });
   const ask = userRow(esc(data(F.question)));
   const newest = ` data-newest="true"`;
-  const thinking = (drawing) => tutorRow(ctx, { state: "walk", drawing, blocks: [`<p class="tk wait">${esc(t("SR-6.69", { dots: "…" }))}</p>`], attrs: newest });
+  const thinking = (drawing) => tutorRow(ctx, { state: "walk", drawing, blocks: [`<p class="tk wait">${esc(t("CP.19"))}</p>`], attrs: newest });
   const streaming = (drawing, text) => tutorRow(ctx, { state: "speaking", drawing, blocks: [`<p class="tk">${esc(data(text))}</p>`], attrs: newest });
   const done = (state, drawing, chosen) => tutorRow(ctx, { state, drawing, blocks: [`<p class="tk">${esc(data(F.answer))}</p>`], meta: metaLine(ctx, { chosen }), attrs: newest });
   const busy = { stop: true, disabled: true, why: t("DS.07"), model: false };

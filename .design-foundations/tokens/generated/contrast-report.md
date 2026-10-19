@@ -1,4 +1,4 @@
-# Kiwi UI token checks — 2026-10-19 · source v2.0.0 (sha256 842bb648afc3) · at a052f86
+# Kiwi UI token checks — 2026-10-19 · source v2.0.0 (sha256 051772c4039b) · at 588b654
 
 Source: `.design-foundations/tokens/kiwi-ui.tokens.json` · Locked block: `kiwi-ui/DESIGN.md` · Result: **PASS**
 
@@ -552,7 +552,7 @@ Targets: text ≥ 4.5:1, non-text (boundaries, icons, markers, rings) ≥ 3:1. 4
 
 ## 4. Per-mode closure of the emitted CSS
 
-:root declares 1333 properties. Dark: 849 depend on a mode token (transitively), 849 are redeclared in [data-theme="dark"], 0 missing. Compact: 96 depend on a density token, 96 redeclared in [data-density="compact"], 0 missing. Root-only composites that embed a mode colour (shadows, backdrop): 0.
+:root declares 1339 properties. Dark: 850 depend on a mode token (transitively), 850 are redeclared in [data-theme="dark"], 0 missing. Compact: 96 depend on a density token, 96 redeclared in [data-density="compact"], 0 missing. Root-only composites that embed a mode colour (shadows, backdrop): 0.
 
 ## 10. Coarse pointer
 
@@ -756,46 +756,184 @@ Policy: A deprecated name keeps a safe value and is removed no earlier than two 
 | semantic.type.body-cjk | 1rem / 28px | 0.875rem / 24px |
 | semantic.type.control | 1rem / 24px | 0.875rem / 20px |
 
-## 20. Companion backing (Phase 4)
+## 20. Companion (Phase 4; companion v2, 2026-10-19)
 
-7 required token pairs (the forest outline ≥ 3:1 on the dark backing and on the light surfaces behind the transparent light backing), 0 below; 21 shipped assets pixel-sampled (the lightest forest-class pixel of each on the dark backing and on light --surface-active), 0 below 3.
+39 required pairs (the status line's Kiwi and words, the composer peek, the original logo, the round launcher; non-text 3:1, the words 4.5:1), 0 below; 109 shipped assets pixel-sampled (every status-line cell, the peek's atlas, the logo at 7 sizes, the launcher in 3 states), 0 below 3.
 
-| Mode | Pair | Value | Ratio | |
+| Mode | Pair | Colours | Ratio | Target | |
+|---|---|---|---|---|---|
+| light | the line's Kiwi: forest on --surface | #234631 / #fdfbfb | 10.23 | ≥ 3 | PASS |
+| light | the line's Kiwi: forest on --background | #234631 / #f6f4f3 | 9.62 | ≥ 3 | PASS |
+| light | the line's Kiwi: forest on --surface-hover | #234631 / #f2f0ee | 9.27 | ≥ 3 | PASS |
+| light | the line's Kiwi: forest on --surface-active | #234631 / #eceae8 | 8.79 | ≥ 3 | PASS |
+| light | the line's Kiwi: forest on --accent-bg-subtle | #234631 / #eaf0df | 9.05 | ≥ 3 | PASS |
+| light | the line's Kiwi: forest on --status-error-surface | #234631 / #ffebe9 | 9.19 | ≥ 3 | PASS |
+| dark | the line's Kiwi: its cream rim on --surface | #f5f4e8 / #22221f | 14.42 | ≥ 3 | PASS |
+| dark | the line's Kiwi: its cream rim on --background | #f5f4e8 / #191816 | 16.04 | ≥ 3 | PASS |
+| dark | the line's Kiwi: its cream rim on --surface-hover | #f5f4e8 / #2a2a27 | 13.02 | ≥ 3 | PASS |
+| dark | the line's Kiwi: its cream rim on --surface-active | #f5f4e8 / #33312f | 11.71 | ≥ 3 | PASS |
+| dark | the line's Kiwi: its cream rim on --accent-bg-subtle | #f5f4e8 / #27321f | 12.15 | ≥ 3 | PASS |
+| dark | the line's Kiwi: its cream rim on --status-error-surface | #f5f4e8 / #331a18 | 14.59 | ≥ 3 | PASS |
+| dark | the line's Kiwi: forest on its cream rim | #234631 / #f5f4e8 | 9.53 | ≥ 3 | PASS |
+| light | the line's words: companion.line.ink on --surface | #23482e / #fdfbfb | 9.99 | ≥ 4.5 | PASS |
+| light | the line's words: companion.line.ink on --background | #23482e / #f6f4f3 | 9.40 | ≥ 4.5 | PASS |
+| light | the line's words: companion.line.ink on --surface-hover | #23482e / #f2f0ee | 9.07 | ≥ 4.5 | PASS |
+| light | the line's words: companion.line.ink on --surface-active | #23482e / #eceae8 | 8.59 | ≥ 4.5 | PASS |
+| light | the line's words: companion.line.ink on --accent-bg-subtle | #23482e / #eaf0df | 8.85 | ≥ 4.5 | PASS |
+| light | the line's words: companion.line.ink on --status-error-surface | #23482e / #ffebe9 | 8.99 | ≥ 4.5 | PASS |
+| dark | the line's words: companion.line.ink on --surface | #b9cf9b / #22221f | 9.46 | ≥ 4.5 | PASS |
+| dark | the line's words: companion.line.ink on --background | #b9cf9b / #191816 | 10.53 | ≥ 4.5 | PASS |
+| dark | the line's words: companion.line.ink on --surface-hover | #b9cf9b / #2a2a27 | 8.54 | ≥ 4.5 | PASS |
+| dark | the line's words: companion.line.ink on --surface-active | #b9cf9b / #33312f | 7.69 | ≥ 4.5 | PASS |
+| dark | the line's words: companion.line.ink on --accent-bg-subtle | #b9cf9b / #27321f | 7.98 | ≥ 4.5 | PASS |
+| dark | the line's words: companion.line.ink on --status-error-surface | #b9cf9b / #331a18 | 9.57 | ≥ 4.5 | PASS |
+| dark | the composer peek: forest on its backing disc (companion.backing) | #234631 / #fdfbfb | 10.23 | ≥ 3 | PASS |
+| both | the original logo: forest on its sage | #234631 / #92ae70 | 4.27 | ≥ 3 | PASS |
+| both | the launcher: the bird on its sage ground, at rest | #234631 / #92ae70 | 4.27 | ≥ 3 | PASS |
+| both | the launcher: the bubble on its sage ground, at rest | #234631 / #92ae70 | 4.27 | ≥ 3 | PASS |
+| both | the launcher: the bird on its sage ground, hovered | #234631 / #87a46a | 3.79 | ≥ 3 | PASS |
+| both | the launcher: the bubble on its sage ground, hovered | #234631 / #87a46a | 3.79 | ≥ 3 | PASS |
+| both | the launcher: the bird on its sage ground, pressed | #234631 / #7e9b65 | 3.40 | ≥ 3 | PASS |
+| both | the launcher: the bubble on its sage ground, pressed | #234631 / #7e9b65 | 3.40 | ≥ 3 | PASS |
+| light | the launcher: its edge (--launcher-border) on --background | #577d37 / #f6f4f3 | 4.36 | ≥ 3 | PASS |
+| light | the launcher: its edge (--launcher-border) on --surface | #577d37 / #fdfbfb | 4.64 | ≥ 3 | PASS |
+| light | the launcher: its sage ground on --background (the edge carries the boundary) | #92ae70 / #f6f4f3 | 2.25 | — | informational |
+| light | the launcher: its sage ground on --surface (the edge carries the boundary) | #92ae70 / #fdfbfb | 2.39 | — | informational |
+| light | the launcher: forest where the circle cuts the bird, on --background (why the edge runs over it) | #234631 / #f6f4f3 | 9.62 | — | informational |
+| light | the launcher: forest where the circle cuts the bird, on --surface (why the edge runs over it) | #234631 / #fdfbfb | 10.23 | — | informational |
+| light | the launcher: its edge on its sage | #577d37 / #92ae70 | 1.94 | — | informational |
+| light | the original logo: its sage tile's edge on --surface | #92ae70 / #fdfbfb | 2.39 | — | informational |
+| light | the original logo: its sage tile's edge on --background | #92ae70 / #f6f4f3 | 2.25 | — | informational |
+| light | the original logo: its sage tile's edge on --surface-hover | #92ae70 / #f2f0ee | 2.17 | — | informational |
+| light | the original logo: its sage tile's edge on --surface-active | #92ae70 / #eceae8 | 2.06 | — | informational |
+| light | the original logo: its sage tile's edge on --accent-bg-subtle | #92ae70 / #eaf0df | 2.12 | — | informational |
+| light | the original logo: its sage tile's edge on --status-error-surface | #92ae70 / #ffebe9 | 2.15 | — | informational |
+| dark | the launcher: its edge (--launcher-border) on --background | #859b69 / #191816 | 5.82 | ≥ 3 | PASS |
+| dark | the launcher: its edge (--launcher-border) on --surface | #859b69 / #22221f | 5.23 | ≥ 3 | PASS |
+| dark | the launcher: its sage ground on --background | #92ae70 / #191816 | 7.19 | ≥ 3 | PASS |
+| dark | the launcher: its sage ground on --surface | #92ae70 / #22221f | 6.46 | ≥ 3 | PASS |
+| dark | the launcher: forest where the circle cuts the bird, on --background (why the edge runs over it) | #234631 / #191816 | 1.68 | — | informational |
+| dark | the launcher: forest where the circle cuts the bird, on --surface (why the edge runs over it) | #234631 / #22221f | 1.51 | — | informational |
+| dark | the launcher: its edge on its sage | #859b69 / #92ae70 | 1.24 | — | informational |
+| dark | the original logo: its sage tile's edge on --surface | #92ae70 / #22221f | 6.46 | — | informational |
+| dark | the original logo: its sage tile's edge on --background | #92ae70 / #191816 | 7.19 | — | informational |
+| dark | the original logo: its sage tile's edge on --surface-hover | #92ae70 / #2a2a27 | 5.83 | — | informational |
+| dark | the original logo: its sage tile's edge on --surface-active | #92ae70 / #33312f | 5.25 | — | informational |
+| dark | the original logo: its sage tile's edge on --accent-bg-subtle | #92ae70 / #27321f | 5.45 | — | informational |
+| dark | the original logo: its sage tile's edge on --status-error-surface | #92ae70 / #331a18 | 6.54 | — | informational |
+| both | the tan bill on the sage (not the outline) | #ccbd99 / #92ae70 | 1.33 | — | informational |
+
+| Asset (pixel-sampled) | Sample | Ratio | Ratio (dark sheet) | |
 |---|---|---|---|---|
-| dark | outline on companion.backing | #fdfbfb | 10.23 | PASS |
-| light | outline on --surface (light backing transparent) | #fdfbfb | 10.23 | PASS |
-| light | outline on --background (light backing transparent) | #f6f4f3 | 9.62 | PASS |
-| light | outline on --surface-hover (light backing transparent) | #f2f0ee | 9.27 | PASS |
-| light | outline on --surface-active (light backing transparent) | #eceae8 | 8.79 | PASS |
-| light | outline on --accent-bg-subtle (light backing transparent) | #eaf0df | 9.05 | PASS |
-| light | outline on --status-error-surface (light backing transparent) | #ffebe9 | 9.19 | PASS |
-| dark | backing disc on --background | #191816 | 17.21 | informational |
-| dark | backing disc on --surface | #22221f | 15.47 | informational |
-| dark | tan bill on companion.backing (not the outline) | #fdfbfb | 1.80 | informational |
-
-| Asset (pixel-sampled) | Forest px | Lightest forest | on dark backing | on light surface-active | tan lightest on backing (info) | |
-|---|---:|---|---|---|---|---|
-| atlas/full-walk.64.webp | 16,562 | #5f7767 | 4.71 | 4.05 | 1.04 | PASS |
-| atlas/full-hop-flight.64.webp | 15,926 | #627b65 | 4.49 | 3.85 | 1.02 | PASS |
-| atlas/full-wave-bow.64.webp | 15,655 | #627768 | 4.67 | 4.02 | 1.56 | PASS |
-| atlas/stamp-peek.96.webp | 31,093 | #5f7565 | 4.83 | 4.15 | 1.02 | PASS |
-| stills/stand.64.webp | 653 | #5a6748 | 5.87 | 5.05 | 1.69 | PASS |
-| stills/stand.128.webp | 2,614 | #5d725f | 5.04 | 4.33 | 1.05 | PASS |
-| stills/idle.128.webp | 5,804 | #627866 | 4.63 | 3.98 | 1.05 | PASS |
-| stills/idle.192.webp | 13,065 | #627260 | 4.97 | 4.27 | 1.05 | PASS |
-| stills/error.128.webp | 4,145 | #61735e | 4.94 | 4.25 | 1.02 | PASS |
-| stills/error.192.webp | 9,333 | #627762 | 4.70 | 4.04 | 1.03 | PASS |
-| stills/walk.128.webp | 2,781 | #54634a | 6.25 | 5.37 | 1.09 | PASS |
-| stills/walk.192.webp | 6,262 | #5a715c | 5.15 | 4.43 | 1.14 | PASS |
-| stills/wave.64.webp | 713 | #485d4b | 6.92 | 5.95 | 1.56 | PASS |
-| stills/wave.128.webp | 2,863 | #516955 | 5.82 | 5.00 | 1.57 | PASS |
-| stills/wave.192.webp | 6,432 | #5c6f5f | 5.23 | 4.49 | 1.67 | PASS |
-| stills/peek.64.webp | 812 | #5d6d5d | 5.34 | 4.59 | 1.05 | PASS |
-| stills/peek.128.webp | 3,322 | #5f7060 | 5.13 | 4.40 | 1.02 | PASS |
-| stills/peek.192.webp | 7,448 | #627061 | 5.08 | 4.36 | 1.02 | PASS |
-| stills/retract.64.webp | 224 | #5d6d5e | 5.34 | 4.59 | 1.05 | PASS |
-| stills/retract.128.webp | 910 | #5f6d60 | 5.30 | 4.55 | 1.09 | PASS |
-| stills/retract.192.webp | 2,048 | #606d59 | 5.32 | 4.57 | 1.03 | PASS |
+| line/walk.light.webp cell 0 | #4d6046 | 5.69 | — | PASS |
+| line/walk.light.webp cell 1 | #48624f | 5.58 | — | PASS |
+| line/walk.light.webp cell 2 | #5e7263 | 4.31 | — | PASS |
+| line/walk.light.webp cell 3 | #556d5e | 4.69 | — | PASS |
+| line/walk.light.webp cell 4 | #577062 | 4.49 | — | PASS |
+| line/walk.light.webp cell 5 | #59684d | 4.98 | — | PASS |
+| line/walk.light.webp cell 6 | #506347 | 5.44 | — | PASS |
+| line/walk.light.webp cell 7 | #4c6957 | 5.05 | — | PASS |
+| line/walk.light.webp cell 8 | #455f50 | 5.82 | — | PASS |
+| line/walk.light.webp cell 9 | #5d7462 | 4.23 | — | PASS |
+| line/walk.light.webp cell 10 | #5b674e | 5.01 | — | PASS |
+| line/walk.light.webp cell 11 | #496252 | 5.55 | — | PASS |
+| line/walk.light.webp cell 12 | #5d7160 | 4.38 | — | PASS |
+| line/walk.light.webp cell 13 | #425f4c | 5.89 | — | PASS |
+| line/walk.light.webp cell 14 | #58705f | 4.49 | — | PASS |
+| line/walk.light.webp cell 15 | #46604e | 5.75 | — | PASS |
+| line/walk.light.webp cell 16 | #576449 | 5.26 | — | PASS |
+| line/walk.light.webp cell 17 | #5d694e | 4.87 | — | PASS |
+| line/walk.light.webp cell 18 | #4e6045 | 5.68 | — | PASS |
+| line/walk.light.webp cell 19 | #5f7767 | 4.05 | — | PASS |
+| line/walk.light.webp cell 20 | #617566 | 4.12 | — | PASS |
+| line/walk.light.webp cell 21 | #5e7665 | 4.11 | — | PASS |
+| line/walk.light.webp cell 22 | #607466 | 4.18 | — | PASS |
+| line/walk.light.webp cell 23 | #617466 | 4.17 | — | PASS |
+| line/walk.dark.webp cell 0 | #d8cbb0 | 8.07 | 9.94 | PASS |
+| line/walk.dark.webp cell 1 | #c9cec1 | 8.07 | 9.94 | PASS |
+| line/walk.dark.webp cell 2 | #d7c9ae | 7.93 | 9.76 | PASS |
+| line/walk.dark.webp cell 3 | #d9c9ac | 7.96 | 9.80 | PASS |
+| line/walk.dark.webp cell 4 | #d9caac | 8.02 | 9.87 | PASS |
+| line/walk.dark.webp cell 5 | #d8c9ab | 7.93 | 9.77 | PASS |
+| line/walk.dark.webp cell 6 | #c9cec1 | 8.07 | 9.94 | PASS |
+| line/walk.dark.webp cell 7 | #d6c9ae | 7.91 | 9.74 | PASS |
+| line/walk.dark.webp cell 8 | #d7c9af | 7.93 | 9.77 | PASS |
+| line/walk.dark.webp cell 9 | #d6c9ac | 7.90 | 9.73 | PASS |
+| line/walk.dark.webp cell 10 | #c9cec2 | 8.08 | 9.94 | PASS |
+| line/walk.dark.webp cell 11 | #d6cbb1 | 8.04 | 9.90 | PASS |
+| line/walk.dark.webp cell 12 | #d7c9ae | 7.93 | 9.76 | PASS |
+| line/walk.dark.webp cell 13 | #d8caae | 8.01 | 9.86 | PASS |
+| line/walk.dark.webp cell 14 | #d7c9ac | 7.92 | 9.75 | PASS |
+| line/walk.dark.webp cell 15 | #d9ccb2 | 8.16 | 10.05 | PASS |
+| line/walk.dark.webp cell 16 | #c9cec1 | 8.07 | 9.94 | PASS |
+| line/walk.dark.webp cell 17 | #d8cbae | 8.06 | 9.93 | PASS |
+| line/walk.dark.webp cell 18 | #d7ccb1 | 8.12 | 10.00 | PASS |
+| line/walk.dark.webp cell 19 | #d8caab | 7.99 | 9.84 | PASS |
+| line/walk.dark.webp cell 20 | #d6caad | 7.96 | 9.81 | PASS |
+| line/walk.dark.webp cell 21 | #d7cbb1 | 8.06 | 9.92 | PASS |
+| line/walk.dark.webp cell 22 | #cacfc2 | 8.15 | 10.04 | PASS |
+| line/walk.dark.webp cell 23 | #cacfc1 | 8.15 | 10.03 | PASS |
+| line/hop.light.webp cell 0 | #4c6550 | 5.33 | — | PASS |
+| line/hop.light.webp cell 1 | #445f4a | 5.87 | — | PASS |
+| line/hop.light.webp cell 2 | #617a67 | 3.90 | — | PASS |
+| line/hop.light.webp cell 3 | #49634f | 5.50 | — | PASS |
+| line/hop.light.webp cell 4 | #5a715c | 4.43 | — | PASS |
+| line/hop.light.webp cell 5 | #566d57 | 4.70 | — | PASS |
+| line/hop.light.webp cell 6 | #5f7562 | 4.16 | — | PASS |
+| line/hop.light.webp cell 7 | #526b57 | 4.86 | — | PASS |
+| line/hop.light.webp cell 8 | #58705b | 4.51 | — | PASS |
+| line/hop.light.webp cell 9 | #5b715f | 4.41 | — | PASS |
+| line/hop.light.webp cell 10 | #5f745f | 4.22 | — | PASS |
+| line/hop.light.webp cell 11 | #556a58 | 4.88 | — | PASS |
+| line/hop.light.webp cell 12 | #5a715c | 4.43 | — | PASS |
+| line/hop.light.webp cell 13 | #4a5a40 | 6.19 | — | PASS |
+| line/hop.light.webp cell 14 | #627865 | 3.98 | — | PASS |
+| line/hop.light.webp cell 15 | #627b65 | 3.85 | — | PASS |
+| line/hop.light.webp cell 16 | #5a725e | 4.37 | — | PASS |
+| line/hop.light.webp cell 17 | #4e6752 | 5.17 | — | PASS |
+| line/hop.light.webp cell 18 | #556d5a | 4.70 | — | PASS |
+| line/hop.light.webp cell 19 | #566649 | 5.16 | — | PASS |
+| line/hop.light.webp cell 20 | #566c58 | 4.75 | — | PASS |
+| line/hop.light.webp cell 21 | #4e6754 | 5.16 | — | PASS |
+| line/hop.light.webp cell 22 | #586d59 | 4.67 | — | PASS |
+| line/hop.light.webp cell 23 | #5a6748 | 5.05 | — | PASS |
+| line/hop.dark.webp cell 0 | #c9cfc2 | 8.13 | 10.02 | PASS |
+| line/hop.dark.webp cell 1 | #c9cec0 | 8.06 | 9.93 | PASS |
+| line/hop.dark.webp cell 2 | #dac9af | 7.99 | 9.84 | PASS |
+| line/hop.dark.webp cell 3 | #dacaaf | 8.05 | 9.91 | PASS |
+| line/hop.dark.webp cell 4 | #dcccb1 | 8.21 | 10.11 | PASS |
+| line/hop.dark.webp cell 5 | #dacaaf | 8.05 | 9.91 | PASS |
+| line/hop.dark.webp cell 6 | #d9cbb1 | 8.10 | 9.97 | PASS |
+| line/hop.dark.webp cell 7 | #c9cec1 | 8.07 | 9.94 | PASS |
+| line/hop.dark.webp cell 8 | #c9cec1 | 8.07 | 9.94 | PASS |
+| line/hop.dark.webp cell 9 | #d9cab0 | 8.03 | 9.89 | PASS |
+| line/hop.dark.webp cell 10 | #dac9ae | 7.99 | 9.83 | PASS |
+| line/hop.dark.webp cell 11 | #dacab0 | 8.05 | 9.92 | PASS |
+| line/hop.dark.webp cell 12 | #dac9ac | 7.98 | 9.82 | PASS |
+| line/hop.dark.webp cell 13 | #d7c9af | 7.93 | 9.77 | PASS |
+| line/hop.dark.webp cell 14 | #d6c9af | 7.92 | 9.75 | PASS |
+| line/hop.dark.webp cell 15 | #dac9ae | 7.99 | 9.83 | PASS |
+| line/hop.dark.webp cell 16 | #d7c9af | 7.93 | 9.77 | PASS |
+| line/hop.dark.webp cell 17 | #d9caaf | 8.03 | 9.89 | PASS |
+| line/hop.dark.webp cell 18 | #dac9af | 7.99 | 9.84 | PASS |
+| line/hop.dark.webp cell 19 | #dacab0 | 8.05 | 9.92 | PASS |
+| line/hop.dark.webp cell 20 | #d9c9ac | 7.96 | 9.80 | PASS |
+| line/hop.dark.webp cell 21 | #d8cab2 | 8.03 | 9.88 | PASS |
+| line/hop.dark.webp cell 22 | #d8c9ae | 7.95 | 9.79 | PASS |
+| line/hop.dark.webp cell 23 | #d8cab0 | 8.02 | 9.87 | PASS |
+| line/stand.light.webp cell 0 | #5a6748 | 5.05 | — | PASS |
+| line/stand.dark.webp cell 0 | #d8cab0 | 8.02 | 9.87 | PASS |
+| atlas/stamp-peek.96.webp | #5f7565 | 4.83 | 4.15 | PASS |
+| kiwi-mark.svg at 16 px | #234631 | 4.27 | — | PASS |
+| kiwi-mark.svg at 24 px | #234631 | 4.27 | — | PASS |
+| kiwi-mark.svg at 28 px | #234631 | 4.27 | — | PASS |
+| kiwi-mark.svg at 32 px | #234631 | 4.27 | — | PASS |
+| kiwi-mark.svg at 48 px | #234631 | 4.27 | — | PASS |
+| kiwi-mark.svg at 64 px | #234631 | 4.27 | — | PASS |
+| kiwi-mark.svg at 96 px | #234631 | 4.27 | — | PASS |
+| launcher-round.svg, rest | #234631 | 4.27 | — | PASS |
+| launcher-round.svg, hovered | #234631 | 3.79 | — | PASS |
+| launcher-round.svg, pressed | #234631 | 3.40 | — | PASS |
 
 ## 21. Global provenance (2026-10-18 re-lock)
 

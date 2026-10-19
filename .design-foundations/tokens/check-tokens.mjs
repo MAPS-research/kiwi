@@ -23,7 +23,7 @@
 //  17. Editor selection: the selection tint is visible on --editor-bg (≥ 1.1:1) and differs from the active line, its 1 px outline clears 3:1 against --editor-bg and the active line, and every syntax colour keeps 4.5:1 on the selection, both modes; the generated Ace rule carries both.
 //  18. Public reduced motion: every selector of the public CSS that runs an animation or a transition is listed inside one scoped @media (prefers-reduced-motion: reduce) block, and that block holds no universal selector and no !important.
 //  19. MUI grey: the preview's palette.grey is the locked neutral ramp per mode (every key, both schemes) and palette.common is the G2 logo pair, so a stray grey.NN in the code cannot keep MUI's default greys.
-//  20. Companion backing (Phase 4, DW-4.4): the mascot's forest outline (companion.$extensions["org.kiwi"].artwork.outline, metadata, not a token) clears 3:1 on companion.backing in dark and on every light surface the transparent light backing exposes; § 5 admits a companion.* literal only when it is frozen to a light source, and § 15 reads a frozen literal held in a mode block (frozen.at). Also pixel-sampled: the lightest forest-class pixel of every shipped asset (mocks/assets/mascot/inventory.json, written by export-mascot.py) clears 3:1 on the dark backing and on light --surface-active (review A-5).
+//  20. The companion (Phase 4, DW-4.4; companion v2, 2026-10-19): the status line's Kiwi (forest on the light surfaces, its cream rim on the dark ones) and its words (companion.line.ink, 4.5:1), the composer peek on its dark backing, the original logo (forest on its sage) and the round launcher (the bird and the bubble on its ground at rest, hovered and pressed; its edge on the page) clear their targets; § 5 still admits the frozen companion.backing literal and § 15 reads it. Also pixel-sampled (review A-5): every status-line cell, the peek's atlas, the logo at 7 sizes and the launcher in 3 states (mocks/assets/mascot/v2-inventory.json and inventory.json).
 //  21. Provenance (the 2026-10-18 re-lock): every global colour step records its source per mode ($extensions["org.kiwi"].source): a reference value taken as given (with the selector it comes from),
 //      an OKLCH derivation [L, C, H] with its reason, re-rendered here and failed on any drift, or a value kept from the 2026-10-16 lock; and the neutral, accent and paper ramps are monotonic in OKLCH lightness per mode.
 //  22. The dialog against its scrim (re-lock review, fix round 1): the backdrop is composited over the canvas at its mode's alpha; in dark, where the
@@ -418,50 +418,82 @@ if (!has(/^semantic\.space\./)) fail("no space delta"); if (!has(/^semantic\.siz
 log(`\n## 7. Density deltas (comfortable → compact), identical in both colour modes\n\n| Token | Comfortable | Compact |\n|---|---|---|`);
 for (const [p, a, b] of deltas) log(`| ${p} | ${typeof a === "object" ? `${a.fontSize} / ${a.lineHeight}` : a} | ${typeof b === "object" ? `${b.fontSize} / ${b.lineHeight}` : b} |`);
 
-// ---------- 20. companion backing (Phase 4, DW-4.4) ----------
-// The mascot's outline is artwork (its flat palette is allowlisted, G11), not a token: the checker reads it from the companion
-// group's metadata and asserts it clears 3:1 (WCAG 1.4.11) on the dark backing and, in light, on every surface the transparent
-// light backing exposes. Informational rows: the backing disc's own edge on the dark canvas and sheet, and the tan bill.
+// ---------- 20. the companion (Phase 4, DW-4.4; companion v2, 2026-10-19) ----------
+// The mascot's drawings and the original logo are artwork (their flat palette is allowlisted, G11), not tokens: the checker reads
+// their colours from the companion group's metadata. Required pairs (non-text 3:1, the line's words 4.5:1): the status line's Kiwi
+// (forest on the six light surfaces; its cream rim on the six dark surfaces; forest on its rim), its words (companion.line.ink on the
+// six surfaces in both modes), the composer peek (forest on its dark backing disc), the original logo (forest on its sage), and the
+// round launcher (the bird and the bubble on its sage ground at rest, hovered and pressed, the shades read from companion.launcher.*;
+// its edge, --launcher-border, on the canvas and the sheet in both modes; its sage on the dark ones). Informational: the logo tile's
+// edge, the light sage, the tan bill, the edge on the sage, and forest where the circle cuts the bird (why the edge runs over it).
 let compN = 0, compBad = 0; const compRows = [];
+const compSurf = ["surface", "background", "surface-hover", "surface-active", "accent-bg-subtle", "status.error.surface"];
+const compCol = (p, ctx) => String(resolve(tree, `semantic.color.${p}`, ctx));
+const compName = (p) => `--${p.replace(/\./g, "-")}`;
 {
   const art = tree.companion?.$extensions?.["org.kiwi"]?.artwork;
-  const backing = getToken(tree, "companion.backing");
-  if (!art?.outline || !backing) fail("companion: no artwork outline metadata or no companion.backing token");
+  const ink = getToken(tree, "companion.line.ink"), sh = getToken(tree, "companion.launcher.shade-hover"), sa = getToken(tree, "companion.launcher.shade-active"), backing = getToken(tree, "companion.backing");
+  if (!art?.forest || !art?.sage || !art?.cream || !ink || !sh || !sa || !backing) fail("companion: no artwork colours, or no companion.line.ink, companion.launcher.shade-* or companion.backing token");
   else {
-    const check = (label, bg, mode, min = 3) => { const r = contrast(art.outline, bg); compN++; if (r < min) { compBad++; fail(`companion backing ${mode}: outline ${art.outline} on ${label} ${bg} ${r.toFixed(2)} < ${min}`); } compRows.push([mode, `outline on ${label}`, bg, r.toFixed(2), r >= min ? "PASS" : "FAIL"]); };
-    const darkBacking = String(resolve(tree, "companion.backing", D)), lightBacking = String(resolve(tree, "companion.backing", L));
-    check("companion.backing", darkBacking, "dark");
-    if (lightBacking !== "transparent") check("companion.backing", lightBacking, "light");
-    for (const s of ["surface", "background", "surface-hover", "surface-active", "accent-bg-subtle", "status.error.surface"]) check(`--${s.replace(/\./g, "-")} (light backing transparent)`, String(resolve(tree, `semantic.color.${s}`, L)), "light");
-    for (const s of ["background", "surface"]) { const bg = String(resolve(tree, `semantic.color.${s}`, D)); compRows.push(["dark", `backing disc on --${s}`, bg, contrast(darkBacking, bg).toFixed(2), "informational"]); }
-    if (art.bill) compRows.push(["dark", "tan bill on companion.backing (not the outline)", darkBacking, contrast(art.bill, darkBacking).toFixed(2), "informational"]);
+    const req = (mode, label, fg, bg, min = 3) => { const r = contrast(fg, bg); compN++; if (r < min) { compBad++; fail(`companion ${mode}: ${label} ${fg} on ${bg} ${r.toFixed(2)} < ${min}`); } compRows.push([mode, label, `${fg} / ${bg}`, r.toFixed(2), `≥ ${min}`, r >= min ? "PASS" : "FAIL"]); };
+    const info = (mode, label, fg, bg) => compRows.push([mode, label, `${fg} / ${bg}`, contrast(fg, bg).toFixed(2), "—", "informational"]);
+    for (const s of compSurf) req("light", `the line's Kiwi: forest on ${compName(s)}`, art.forest, compCol(s, L));
+    for (const s of compSurf) req("dark", `the line's Kiwi: its cream rim on ${compName(s)}`, art.cream, compCol(s, D));
+    req("dark", "the line's Kiwi: forest on its cream rim", art.forest, art.cream);
+    for (const [mode, ctx] of [["light", L], ["dark", D]]) for (const s of compSurf) req(mode, `the line's words: companion.line.ink on ${compName(s)}`, String(resolve(tree, "companion.line.ink", ctx)), compCol(s, ctx), 4.5);
+    req("dark", "the composer peek: forest on its backing disc (companion.backing)", art.forest, String(resolve(tree, "companion.backing", D)));
+    req("both", "the original logo: forest on its sage", art.forest, art.sage);
+    const mix = (b, a, t) => "#" + [1, 3, 5].map((i) => Math.round(parseInt(b.slice(i, i + 2), 16) * (1 - t) + parseInt(a.slice(i, i + 2), 16) * t).toString(16).padStart(2, "0")).join("");
+    for (const [st, g] of [["at rest", art.sage], ["hovered", mix(art.sage, art.forest, Number(sh.$value))], ["pressed", mix(art.sage, art.forest, Number(sa.$value))]]) {
+      req("both", `the launcher: the bird on its sage ground, ${st}`, art.forest, g);
+      req("both", `the launcher: the bubble on its sage ground, ${st}`, art.forest, g);
+    }
+    for (const [mode, ctx] of [["light", L], ["dark", D]]) {
+      const edge = String(resolve(tree, "component.launcher.state.default.border", ctx));
+      for (const s of ["background", "surface"]) req(mode, `the launcher: its edge (--launcher-border) on ${compName(s)}`, edge, compCol(s, ctx));
+      for (const s of ["background", "surface"]) (mode === "dark" ? req : info)(mode, `the launcher: its sage ground on ${compName(s)}${mode === "light" ? " (the edge carries the boundary)" : ""}`, art.sage, compCol(s, ctx));
+      for (const s of ["background", "surface"]) info(mode, `the launcher: forest where the circle cuts the bird, on ${compName(s)} (why the edge runs over it)`, art.forest, compCol(s, ctx));
+      info(mode, "the launcher: its edge on its sage", edge, art.sage);
+      for (const s of compSurf) info(mode, `the original logo: its sage tile's edge on ${compName(s)}`, art.sage, compCol(s, ctx));
+    }
+    if (art.bill) info("both", "the tan bill on the sage (not the outline)", art.bill, art.sage);
   }
 }
-// pixel-sampled (review A-5): the export writes, for every shipped asset, the lightest forest-class pixel it contains (alpha ≥ 128, the
-// source's own mask rule); that pixel must still clear 3:1 on the dark backing and on the lowest light surface, so resampling can never
-// hide an outline that fails. Every still and every shipped atlas inventory.json lists (since the 2026-10-18 amendment: 17 stills, one per drawing at
-// the sizes it is exported, and the 4 shipped atlases). A still's files are named by its `stem` (its `state` key only repeats the stem).
+// pixel-sampled (review A-5; companion v2): once anti-aliased and resampled, the artwork's colours are a hue family, so every shipped
+// asset is sampled (alpha >= 128, the source's own mask rules; export-companion-v2.py and export-mascot.py write the samples): the
+// lightest forest pixel of every light status-line cell on light --surface-active, the darkest rim pixel of every dark cell on the dark
+// --surface-active and the dark sheet, the composer peek's atlas on the dark backing and light --surface-active as before, the original
+// logo's forest core on its sage at every size it is drawn, and the round launcher's forest on its ground in each state.
 let pixN = 0, pixBad = 0; const pixRows = [];
 {
-  const invFile = join(ROOT, ".design-foundations/mocks/assets/mascot/inventory.json");
-  if (!existsSync(invFile)) fail("companion: .design-foundations/mocks/assets/mascot/inventory.json missing (run export-mascot.py)");
+  const v2File = join(ROOT, ".design-foundations/mocks/assets/mascot/v2-inventory.json"), invFile = join(ROOT, ".design-foundations/mocks/assets/mascot/inventory.json");
+  if (!existsSync(v2File) || !existsSync(invFile)) fail("companion: .design-foundations/mocks/assets/mascot/v2-inventory.json or inventory.json missing (run export-companion-v2.py and export-mascot.py)");
   else {
-    const inv = JSON.parse(readFileSync(invFile, "utf8"));
-    const darkBacking = String(resolve(tree, "companion.backing", D)); const lightLowest = String(resolve(tree, "semantic.color.surface-active", L));
-    const assets = [...inv.atlases.filter((a) => a.pixels).map((a) => [a.file, a.pixels]), ...inv.stills.flatMap((s) => { if (!s.stem) fail(`companion pixels: a still in inventory.json has no stem (re-run export-mascot.py)`); return Object.entries(s.pixels).map(([n, px]) => [`stills/${s.stem}.${n}.webp`, px]); })];
-    for (const [file, px] of assets) {
-      pixN++;
-      if (!px.forestLightest) { pixBad++; fail(`companion pixels ${file}: no forest-class pixel sampled`); continue; }
-      const onDark = contrast(px.forestLightest, darkBacking), onLight = contrast(px.forestLightest, lightLowest);
-      const ok = onDark >= 3 && onLight >= 3; if (!ok) { pixBad++; fail(`companion pixels ${file}: lightest forest pixel ${px.forestLightest} measures ${onDark.toFixed(2)} on the dark backing / ${onLight.toFixed(2)} on light --surface-active`); }
-      pixRows.push([file, px.forestPixels.toLocaleString("en-US"), px.forestLightest, onDark.toFixed(2), onLight.toFixed(2), px.tanLightest ? contrast(px.tanLightest, darkBacking).toFixed(2) : "—", ok ? "PASS" : "FAIL"]);
+    const v2 = JSON.parse(readFileSync(v2File, "utf8")), inv = JSON.parse(readFileSync(invFile, "utf8"));
+    const lightLowest = compCol("surface-active", L), darkLowest = compCol("surface-active", D), darkSheet = compCol("surface", D), darkBacking = String(resolve(tree, "companion.backing", D));
+    const sample = (asset, sampleHex, r1, r2, ok, why) => { pixN++; if (!ok) { pixBad++; fail(`companion pixels ${asset}: ${why}`); } pixRows.push([asset, sampleHex || "—", r1 == null ? "—" : r1.toFixed(2), r2 == null ? "—" : r2.toFixed(2), ok ? "PASS" : "FAIL"]); };
+    let cells = 0;
+    for (const [key, f] of Object.entries(v2.line?.files || {})) for (const c of f.cells || []) {
+      cells++;
+      if (f.mode === "light") { const px = c.forestLightest; const r = px ? contrast(px, lightLowest) : 0; sample(`line/${key}.webp cell ${c.cell}`, px, r, null, !!px && r >= 3, `lightest forest ${px} measures ${r.toFixed(2)} on light --surface-active`); }
+      else { const px = c.rimDarkest; const r1 = px ? contrast(px, darkLowest) : 0, r2 = px ? contrast(px, darkSheet) : 0; sample(`line/${key}.webp cell ${c.cell}`, px, r1, r2, !!px && r1 >= 3 && r2 >= 3, `darkest rim ${px} measures ${r1.toFixed(2)} on dark --surface-active / ${r2.toFixed(2)} on the dark sheet`); }
     }
+    if (cells !== 98) fail(`companion pixels: ${cells} status-line cells sampled, expected 98 (24 + 24 + 1 per mode; re-run export-companion-v2.py)`);
+    const peek = (inv.atlases || []).filter((a) => a.pixels && /stamp-peek/.test(a.file));
+    if (peek.length !== 1) fail("companion pixels: the composer peek's atlas is not in inventory.json (re-run export-mascot.py)");
+    for (const a of peek) { const px = a.pixels.forestLightest; const r1 = px ? contrast(px, darkBacking) : 0, r2 = px ? contrast(px, lightLowest) : 0; sample(a.file, px, r1, r2, !!px && r1 >= 3 && r2 >= 3, `lightest forest ${px} measures ${r1.toFixed(2)} on the dark backing / ${r2.toFixed(2)} on light --surface-active`); }
+    const sizes = Object.keys(v2.logo || {}).filter((k) => /^\d+$/.test(k));
+    if (sizes.length !== 7) fail(`companion pixels: the original logo is sampled at ${sizes.length} sizes, expected 7`);
+    for (const k of sizes) { const s = v2.logo[k]; const r = s.forestCore ? contrast(s.forestCore, s.groundSample) : 0; sample(`kiwi-mark.svg at ${k} px`, s.forestCore, r, null, s.forestCorePixels > 0 && r >= 3, `forest core ${s.forestCore} (${s.forestCorePixels} px) measures ${r.toFixed(2)} on its sage ${s.groundSample}`); }
+    const states = Object.entries(v2.launcher?.states || {});
+    if (states.length !== 3) fail(`companion pixels: the launcher is sampled in ${states.length} states, expected 3`);
+    for (const [st, s] of states) { const r = s.forestCore ? contrast(s.forestCore, s.groundSample) : 0; sample(`launcher-round.svg, ${st}`, s.forestCore, r, null, s.forestCorePixels > 0 && r >= 3, `forest ${s.forestCore} measures ${r.toFixed(2)} on its ground ${s.groundSample}`); }
   }
 }
-log(`\n## 20. Companion backing (Phase 4)\n\n${compN} required token pairs (the forest outline ≥ 3:1 on the dark backing and on the light surfaces behind the transparent light backing), ${compBad} below; ${pixN} shipped assets pixel-sampled (the lightest forest-class pixel of each on the dark backing and on light --surface-active), ${pixBad} below 3.\n`);
-log("| Mode | Pair | Value | Ratio | |\n|---|---|---|---|---|");
+log(`\n## 20. Companion (Phase 4; companion v2, 2026-10-19)\n\n${compN} required pairs (the status line's Kiwi and words, the composer peek, the original logo, the round launcher; non-text 3:1, the words 4.5:1), ${compBad} below; ${pixN} shipped assets pixel-sampled (every status-line cell, the peek's atlas, the logo at 7 sizes, the launcher in 3 states), ${pixBad} below 3.\n`);
+log("| Mode | Pair | Colours | Ratio | Target | |\n|---|---|---|---|---|---|");
 for (const r of compRows) log(`| ${r.join(" | ")} |`);
-log("\n| Asset (pixel-sampled) | Forest px | Lightest forest | on dark backing | on light surface-active | tan lightest on backing (info) | |\n|---|---:|---|---|---|---|---|");
+log("\n| Asset (pixel-sampled) | Sample | Ratio | Ratio (dark sheet) | |\n|---|---|---|---|---|");
 for (const r of pixRows) log(`| ${r.join(" | ")} |`);
 
 // ---------- 21. global provenance (the 2026-10-18 re-lock; kiwi-ui/DESIGN.md § Color tokens, the regeneration procedure) ----------
@@ -676,5 +708,5 @@ let descN = 0, tokenN = 0; walk(tree, (p, tk) => { if (!/^(global|semantic|compo
 let groupN = 0, groupDescN = 0; walkGroups(tree, (p, g) => { if (!/^(semantic|component)\./.test(p)) return; groupN++; if (g.$description) groupDescN++; });
 writeFileSync(join(here, "generated/check-summary.json"), JSON.stringify({ date: today, source: { version: meta.version, sha256: srcSha, commit }, result: failures.length ? "FAIL" : "PASS", failures: failures.length, components: COMPONENTS.length, aliasOk, aliasBad, stateGroups: stateGroups.length, stateSpecs: stateGroups.length * 8, contrast: { pass, fail: failN, informational: exempt }, tier: { refs: compRefs, violations: tierBad.length }, literals: { marked: compLiterals.length, unmarked: compLiteralUnmarked.length, outsideGlobal: literalBad.length, banned: bannedReal.length }, public: { pinned: pinned.length, unmapped: unmapped.length, notEmitted: notEmitted.length, counts, classes: { pinned: v1Classes.length, missing: missingClasses.length, emitted: genClasses.size }, keyframes: { pinned: v1Keyframes.length, missing: missingKeyframes.length, emitted: genKeyframes.size }, deprecatedClasses: classDeprecated, deprecationViolations: depBad + classDepBad }, cues: { variants: TOGGLES.length, assertions: cueN, failures: cueBad }, frozen: { n: frozenN, drifted: frozenBad }, chart: { series: chartN, failures: chartBad, measured: chartMeasured }, editorSelection: { assertions: selN, failures: selBad }, motionGuard: { moving: motionAnimated, guarded: motionGuarded }, muiGrey: { keys: greyN, mismatches: greyBad }, companionBacking: { assertions: compN, failures: compBad, pixelAssets: pixN, pixelFailures: pixBad }, provenance: { values: provN, given: provKinds.given, derived: provKinds.oklch, kept: provKinds.kept, failures: provBad }, scrim: { assertions: scrimN, failures: scrimBad }, oneFrame: { assertions: frameN, failures: frameBad }, publicStates: { rules: PUBLIC_STATES.length, failures: pubStates.bad.length, sameRole: pubStates.link.sameRole, sharedRole: pubStates.link.sharedRole, valueOnly: pubStates.link.valueOnly, plantsCaught: pubPlants.filter((p) => p.caught).length, plants: pubPlants.length }, densityDeltas: deltas.length, descriptions: { tokens: tokenN, described: descN, groups: groupN, groupsDescribed: groupDescN } }, null, 1) + "\n");
 console.log(summary.trim());
-console.log(`alias equalities ${aliasOk}/${aliasOk + aliasBad} · state groups ${stateGroups.length} · contrast required ${pass} pass / ${failN} fail, ${exempt} informational · literals outside global ${literalBad.length} · banned ${bannedReal.length} · public unmapped ${unmapped.length} · v1 classes missing ${missingClasses.length}/${v1Classes.length}, keyframes missing ${missingKeyframes.length}/${v1Keyframes.length} · tier violations ${tierBad.length} · component literals ${compLiterals.length} marked / ${compLiteralUnmarked.length} unmarked · deprecation violations ${depBad + classDepBad} (${counts.deprecated} names, ${classDeprecated} classes/keyframes) · density deltas ${deltas.length} · cues ${cueN} assertions / ${cueBad} failures · frozen literals ${frozenN} / ${frozenBad} drifted · chart ${chartN} series values / ${chartBad} failures · editor selection ${selN} assertions / ${selBad} failures · public motion guard ${motionGuarded}/${motionAnimated} · MUI grey ${greyN - greyBad}/${greyN} · companion backing ${compN - compBad}/${compN} pairs, ${pixN - pixBad}/${pixN} assets pixel-sampled · provenance ${provN - provBad}/${provN} (${provKinds.given} given, ${provKinds.oklch} derived, ${provKinds.kept} kept) · dialog scrim ${scrimN - scrimBad}/${scrimN} · public states ${PUBLIC_STATES.length - pubStates.bad.length}/${PUBLIC_STATES.length} (planted defects caught ${pubPlants.filter((p) => p.caught).length}/${pubPlants.length}) · one frame ${frameN - frameBad}/${frameN}`);
+console.log(`alias equalities ${aliasOk}/${aliasOk + aliasBad} · state groups ${stateGroups.length} · contrast required ${pass} pass / ${failN} fail, ${exempt} informational · literals outside global ${literalBad.length} · banned ${bannedReal.length} · public unmapped ${unmapped.length} · v1 classes missing ${missingClasses.length}/${v1Classes.length}, keyframes missing ${missingKeyframes.length}/${v1Keyframes.length} · tier violations ${tierBad.length} · component literals ${compLiterals.length} marked / ${compLiteralUnmarked.length} unmarked · deprecation violations ${depBad + classDepBad} (${counts.deprecated} names, ${classDeprecated} classes/keyframes) · density deltas ${deltas.length} · cues ${cueN} assertions / ${cueBad} failures · frozen literals ${frozenN} / ${frozenBad} drifted · chart ${chartN} series values / ${chartBad} failures · editor selection ${selN} assertions / ${selBad} failures · public motion guard ${motionGuarded}/${motionAnimated} · MUI grey ${greyN - greyBad}/${greyN} · companion ${compN - compBad}/${compN} pairs, ${pixN - pixBad}/${pixN} assets pixel-sampled · provenance ${provN - provBad}/${provN} (${provKinds.given} given, ${provKinds.oklch} derived, ${provKinds.kept} kept) · dialog scrim ${scrimN - scrimBad}/${scrimN} · public states ${PUBLIC_STATES.length - pubStates.bad.length}/${PUBLIC_STATES.length} (planted defects caught ${pubPlants.filter((p) => p.caught).length}/${pubPlants.length}) · one frame ${frameN - frameBad}/${frameN}`);
 process.exit(failures.length ? 1 : 0);

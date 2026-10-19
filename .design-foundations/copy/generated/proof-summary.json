@@ -1,6 +1,6 @@
 {
  "about": "Written by prove-checks.mjs. check-copy.mjs (R1) reads it: every proof the coverage table names is here and was caught, and codeHash is the hash of the checker, its library, the resolver, the proofs and the TypeScript scanner, so a summary older than a change to any of them is stale.",
- "codeHash": "3a6fb763d2cc56e7",
+ "codeHash": "28b5963127b26b13",
  "unit": {
   "total": 189,
   "ok": 189,

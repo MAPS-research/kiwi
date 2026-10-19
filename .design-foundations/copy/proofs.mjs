@@ -398,7 +398,7 @@ e("E-K1-1", "XSEC", "guide", "K1", "an unlisted word in a twin cell", (c) => c.d
 e("E-K1-2", "XSEC", "guide", "K1", "a stale declaration in doc-strings.json", (c) => c.json("doc-strings.json", (d) => { d.strings.push({ text: "A string nothing quotes", kind: "sample", why: "proof" }); return d; }));
 e("E-K1-3", "XSEC", "guide", "K1", "an unlisted word in § Errors", (c) => c.design((t) => t.replace("**Kiwi once.** A cause line", '**Kiwi once.** "Sorry about that." A cause line')));
 e("E-K1-4", "XSEC", "guide", "K1", "an unlisted word in a Voice hand-off", (c) => c.design((t) => t.replace("- **Implementation plan (CSS capitals):**", '- **Implementation plan (retry):** the button reads "Retry now".\n- **Implementation plan (CSS capitals):**')));
-e("E-K2-1", "XSEC", "guide", "K2", "an unlisted word in the Companion's state table", (c) => c.design((t) => t.replace("| `walk` | Waiting for the first token", '| `walk` | Waiting ("Please hold on") for the first token')));
+e("E-K2-1", "XSEC", "guide", "K2", "an unlisted word in the Companion's state table", (c) => c.design((t) => t.replace("| `walk` → **the line runs** (v2) | Waiting for the first token", '| `walk` → **the line runs** (v2) | Waiting ("Please hold on") for the first token')));
 e("E-K2-2", "XSEC", "guide", "K2", "a committed line quotes a Phase 5 word with no row", (c) => c.design((t) => t.replace('("Thinking…" + dots, Phase 5 words)', '("Pondering…" + dots, Phase 5 words)')));
 e("E-K6-1", "XSEC", "guide", "K6", "a cite of a kept row", (c) => c.design((t) => t.replace("(the kept entry in the A-14 `Copy (Phase 5)` bullet)", "(A-14.34)")));
 e("E-K7-1", "XSEC", "data", "K7", "a supersession that supersedes nothing", (c) => c.row("DS.07", { o: "Kiwi is answering; Stop interrupts!" }));

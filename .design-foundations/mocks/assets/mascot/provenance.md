@@ -114,3 +114,18 @@ Over every solid pixel (alpha ≥ 128) of each shipped asset, classified by the 
 | `src/components/KiwiMascot/KiwiArtwork.tsx` (glyph geometry) | 4,604 | `e094b733ee4dcd1e68c295c60a4f46b9fba43e9dfaba3f07f8157d5147b6cdcf` |
 | `src/components/KiwiMascot/frames.ts` (timelines) | 4,305 | `1f1d5a6f96dbd31ec3252583eb683253451852577e2b3f519a1dbbbc30387be5` |
 | `src/components/KiwiMascot/framing.ts` (circle framing) | 2,488 | `6dd64d4f5cad95bcb73f07916ed21105d23eef9bca8e729e0dca1b5603687476` |
+
+## Companion v2 (2026-10-19): the status line's drawings and the launcher's face
+
+`export-companion-v2.py` (beside this file) derives them from files already here and from the original logo; nothing is redrawn (G11). The status line's drawings are the 64 px cells of `atlas/full-walk.64.webp` and `atlas/full-hop-flight.64.webp` (the standing still: `stills/stand.64.webp`, `full-hop-flight` 23), each padded to 72 px with 4 px of transparency on every side; the dark set adds a 3 px cream (`#f5f4e8`) die-cut rim behind the drawing, whose own pixels are never recoloured, resampled or warped. The launcher's face (`launcher-round.svg`, step C) is the original logo's own paths in its own colours (`../brand/kiwi-mark.svg`, byte-identical to `kiwi-ui/public/favicon.svg`), the bird scaled 0.68 about the circle's lower left, clipped by the circle, with a plain forest bubble. `v2-inventory.json` holds the bytes, a short hash and the pixel samples `check-tokens.mjs` § 20 asserts (109 assets).
+
+| File | Bytes | SHA-256 |
+|---|---:|---|
+| `line/walk.light.webp` | 35,420 | `f468404fe8f5f973e539cfc3b7871a556a89374df6f70f4294b7ae2f1de21902` |
+| `line/walk.dark.webp` | 33,520 | `0f4f3de2f0ae9fa9b60486ea002bb0771f053b027266aed2285f08c565054f76` |
+| `line/hop.light.webp` | 35,142 | `823fdc9fc892e73b2b9f9e0681ee976ab33d0106f03722b975ca98501b2ebc67` |
+| `line/hop.dark.webp` | 33,382 | `0e2da2c02538b24889cd85806dca302bde42167ba3400a45027386bdb77c501c` |
+| `line/stand.light.webp` | 1,916 | `214f1d39d7302d00752ed2d5a70d91aad4c88651155f24f32f81a7ec8ea26edd` |
+| `line/stand.dark.webp` | 1,816 | `69ba42b4eee874c3d0b49793aecc0b249c333c43e92ed9c6aa36cf6002595c5d` |
+| `launcher-round.svg` | 1,518 | `14bcc49e66a19961c5d102787d598c8ca7280bc76a3d838b533c391fdbcef289` |
+| `../brand/kiwi-mark.svg` | 14,462 | `7ea848f9b1618b24d2d5a70af319f96661698e47a87e3c02c199840acf497f51` |

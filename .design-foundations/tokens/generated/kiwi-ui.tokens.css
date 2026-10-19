@@ -1332,6 +1332,12 @@
   --chart-baseline: var(--border-strong);
   --chart-tick-text: var(--text-secondary);
   --chart-plot: var(--surface);
+  --companion-line-height: var(--size-toolbar-button-sm);
+  --companion-line-kiwi: 24px;
+  --companion-line-gap: var(--space-icon-gap);
+  --companion-line-ink: var(--accent-text);
+  --companion-launcher-shade-hover: 0.1;
+  --companion-launcher-shade-active: 0.18;
   --companion-slot-avatar: var(--size-avatar);
   --companion-slot-peek: 48px;
   --companion-slot-launcher: 28px;
@@ -2192,6 +2198,7 @@
   --chart-baseline: var(--border-strong);
   --chart-tick-text: var(--text-secondary);
   --chart-plot: var(--surface);
+  --companion-line-ink: var(--accent-text);
   --companion-backing: var(--fill-none);
   color-scheme: light;
 }
@@ -3045,6 +3052,7 @@
   --chart-baseline: var(--border-strong);
   --chart-tick-text: var(--text-secondary);
   --chart-plot: var(--surface);
+  --companion-line-ink: var(--accent-text);
   --companion-backing: #fdfbfb;
   color-scheme: dark;
 }
