@@ -52,14 +52,18 @@ const ROLE_COLUMN_WIDTH = 128;
 interface EnrolledUser {
   id: string;
   email: string;
-  role: 'admin' | 'student' | 'professor';
+  role: 'admin' | 'student' | 'professor' | 'instructor';
   status: 'active' | 'pending';
   userId?: string; // For active users
 }
 
-/** The neutral role chip's word; any other role reads as a student, as before. */
+/**
+ * The neutral role chip's word. A class's instructor is enrolled as "professor" or
+ * "instructor" (the instructor system role); both read "Instructor". Any other
+ * role reads as a student, as before.
+ */
 const roleLabel = (role: EnrolledUser["role"]) =>
-  role === "admin" ? "Admin" : role === "professor" ? "Instructor" : "Student";
+  role === "admin" ? "Admin" : role === "professor" || role === "instructor" ? "Instructor" : "Student";
 
 /** Text cells are one line; the email cell truncates with its full text on hover and focus. */
 const textCellSx = {
@@ -253,7 +257,7 @@ const ClassEnrollRoster = ({ classID }: { classID: string }) => {
         ...rosterRes.users.map((user: Student) => ({
           id: user.userId,
           email: user.email,
-          role: user.role as 'admin' | 'student' | 'professor',
+          role: user.role as EnrolledUser["role"],
           status: 'active' as const,
           userId: user.userId
         })),
@@ -261,7 +265,7 @@ const ClassEnrollRoster = ({ classID }: { classID: string }) => {
         ...pendingRes.pendingUsers.map((user: PendingUser) => ({
           id: user.id,
           email: user.userEmail,
-          role: user.role as 'admin' | 'student' | 'professor',
+          role: user.role as EnrolledUser["role"],
           status: 'pending' as const
         }))
       ];

@@ -134,6 +134,20 @@ describe("ClassEnroll", () => {
     expect(screen.getByText("Roster: 6 users (4 active, 2 pending)")).toBeInTheDocument();
   });
 
+  it("reads an enrollment with the instructor role as Instructor, not Student", async () => {
+    mockApiClient.classControllerRoster.mockResolvedValue({
+      users: [{ userId: "inst1", email: "inst1@example.com", role: "instructor" }],
+    });
+    mockApiClient.classControllerGetPendingEnrollment.mockResolvedValue({ pendingUsers: [] });
+    mockApiClient.classControllerGetById.mockResolvedValue({ className: "Test Class" });
+
+    renderWithRouter();
+
+    await waitFor(() => expect(screen.getByText("inst1@example.com")).toBeInTheDocument());
+    expect(screen.getByText("Instructor")).toBeInTheDocument();
+    expect(screen.queryByText("Student")).not.toBeInTheDocument();
+  });
+
   it("shows neutral role chips and status chips with their words", async () => {
     mockLoadedRoster();
 

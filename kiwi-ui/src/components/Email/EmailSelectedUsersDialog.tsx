@@ -30,7 +30,7 @@ import { countNoun } from '../AdminPage/countNoun.ts';
 interface EnrolledUser {
   id: string;
   email: string;
-  role: 'admin' | 'student' | 'professor';
+  role: 'admin' | 'student' | 'professor' | 'instructor';
   status: 'active' | 'pending';
   userId?: string;
 }
@@ -46,7 +46,7 @@ interface EmailSelectedUsersDialogProps {
 
 /** A recipient's role chip and status chip words. */
 const roleLabel = (role: EnrolledUser['role']) =>
-  role === 'admin' ? 'Admin' : role === 'professor' ? 'Instructor' : 'Student';
+  role === 'admin' ? 'Admin' : role === 'professor' || role === 'instructor' ? 'Instructor' : 'Student';
 
 /**
  * The email preview is paper (DESIGN.md, Paper stays paper): the templated HTML
