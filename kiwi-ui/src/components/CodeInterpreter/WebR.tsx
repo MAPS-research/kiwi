@@ -53,7 +53,7 @@ const runRCode = async (
       // you could extend this list with other heavy packages
       return {
         results: "",
-        error: "Package installation/loading is not supported in the browser R environment. Only base packages are available.",
+        error: "Couldn't load that package. R in the browser includes base packages only. Use base R functions instead.",
         stdoutLines: [],
         stderr: "package support limited",
         images: [],

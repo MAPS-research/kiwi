@@ -1,6 +1,7 @@
 import React, { useContext, useState, useCallback, useEffect, useRef } from "react";
 import { Box } from "@mui/material";
 import { CodeInterpreter } from "../components/CodeInterpreter/CodeInterpreter.tsx";
+import { CODE_TAB_LABEL } from "../components/CodeInterpreter/codeTab.ts";
 import { IDEContext } from "../components/Chat/ChatComponent.tsx";
 import { ChatContext } from "./ClassLayout.tsx";
 import { useGlobalChat } from "../context/GlobalChatContext.tsx";
@@ -12,7 +13,7 @@ import type { ChatMessage } from "../components/Chat/ChatMessages.tsx";
  * IDE state persisted to localStorage so the student's code survives both a
  * tab-switch (ClassIDE unmounts when leaving the Code tab) and a full refresh.
  * We persist the editor code only — uploaded-file ArrayBuffers don't serialize
- * and can be large, so file tabs are session-scoped and reset to [Code Space]
+ * and can be large, so file tabs are session-scoped and reset to [Code]
  * on any remount (see the hydration effect below). Mirrors the load/save +
  * useEffect pattern in GlobalChatContext.tsx.
  */
@@ -140,7 +141,7 @@ export const ClassIDE: React.FC = () => {
   const [IDEfileNameState, setIDEFileNameState] = useState<string[]>([]);
   const [IDEFileBufferState, setIDEFileBufferState] = useState<ArrayBuffer[]>([]);
   const [IDEModifiedFileBufferState, setModifiedFileBufferState] = useState<ArrayBuffer[]>([]);
-  const [IDETabs, setIDETabs] = useState([{ label: "Code Space", content: "Code space" }]);
+  const [IDETabs, setIDETabs] = useState([{ label: CODE_TAB_LABEL, content: CODE_TAB_LABEL }]);
   const [IDETabvalue, setIDETabValue] = useState(0);
 
   // Consume code handed off from the chat's "Import Code to IDE" button (#177):
@@ -254,7 +255,7 @@ export const ClassIDE: React.FC = () => {
       sx={{
         height: "100%",
         width: "100%",
-        p: 2,
+        p: { xs: "var(--space-3)", sm: "var(--space-4)" },
         display: "flex",
         justifyContent: "center",
       }}
@@ -295,38 +296,41 @@ export const ClassIDE: React.FC = () => {
           />
         </IDEContext.Provider>
 
-        {/* Drag handle to resize the IDE column */}
+        {/* Drag handle to resize the IDE column: a 4 x 48 px bar in the control
+            edge colour, the Soft sage fill while hovered or dragged (preview
+            SPEC § 6); shown from 900 px, where the column can be narrower than
+            the page. */}
         <Box
           onPointerDown={handleResizePointerDown}
           onPointerMove={handleResizePointerMove}
-          aria-label="resize editor"
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize editor"
           sx={{
             position: "absolute",
             top: 0,
-            right: -14,
-            width: 14,
+            left: "100%",
+            width: "14px",
             height: "100%",
             cursor: "col-resize",
             touchAction: "none",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            "&:hover .resize-grip, &:active .resize-grip": {
-              bgcolor: "primary.main",
+            display: { xs: "none", md: "block" },
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              width: "4px",
+              height: "48px",
+              transform: "translate(-50%, -50%)",
+              borderRadius: "var(--radius-control)",
+              backgroundColor: "var(--border-interactive)",
+            },
+            "&:hover::before, &:active::before": {
+              backgroundColor: "var(--accent-solid)",
             },
           }}
-        >
-          <Box
-            className="resize-grip"
-            sx={{
-              width: 4,
-              height: 48,
-              borderRadius: 2,
-              bgcolor: "divider",
-              transition: "background-color 0.15s",
-            }}
-          />
-        </Box>
+        />
       </Box>
     </Box>
   );

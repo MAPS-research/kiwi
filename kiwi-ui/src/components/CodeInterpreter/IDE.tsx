@@ -4,25 +4,23 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/ace";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-r";
-import "ace-builds/src-noconflict/theme-monokai";
-import "ace-builds/src-noconflict/theme-clouds";
 import "ace-builds/src-noconflict/mode-text";
 
 import { runPythonCode } from "./Pyodide.tsx";
 import { runRCode } from "./WebR.tsx";
 
 // MUI components and icons
-import { Button, IconButton, Snackbar, Tabs, Tab, Select, MenuItem, FormControl } from "@mui/material";
+import { Button, IconButton, Tabs, Tab, Select, MenuItem, FormControl, Tooltip } from "@mui/material";
 import { BasicTabs } from "./FileTabs.tsx";
+import { InfoToast } from "./InfoToast.tsx";
+import { CODE_TAB_LABEL } from "./codeTab.ts";
 import { IDEContext } from "../Chat/ChatComponent.tsx";
 
 import {
   Box,
-  Paper,
   Stack,
   Typography,
   useTheme,
-  alpha,
   Table,
   TableBody,
   TableCell,
@@ -31,11 +29,93 @@ import {
   TableRow,
   // Avatar
 } from "@mui/material";
-import { PlayArrow, FileUpload } from "@mui/icons-material";
+import PlayArrowOutlined from "@mui/icons-material/PlayArrowOutlined";
+import FileUploadOutlined from "@mui/icons-material/FileUploadOutlined";
 import { useSaveInteraction } from "../../utils/useSaveInteraction.ts";
 import { useDispatch } from "react-redux";
 import { toggleCodeView } from "../../redux/codePanelSlice.ts";
+import { aceThemeFor, registerKiwiAceThemes } from "../../theme/codeThemes.ts";
 
+// WHY: react-ace applies its theme when the editor mounts, and Ace fetches a theme it
+// has not been given from the network; registering first makes ace/theme/kiwi-light
+// and kiwi-dark (DESIGN.md, Code surfaces) resolve locally. It runs once per page load.
+registerKiwiAceThemes();
+
+/**
+ * The editable editor's host (DESIGN.md, Code surfaces): a control, so its
+ * boundary is the 1 px --editor-border-editable on --radius-sheet. On focus it
+ * takes the one frame of a bordered control (the preview's `.editor:focus-within`):
+ * the border recoloured plus a second pixel inward. Ace covers the host's own
+ * inset shadow and its gutter and scrollbars sit at z-index 4 to 6, so that pixel
+ * is drawn by a pseudo-element just above them, never as a ring outside.
+ */
+const EDITOR_HOST = {
+  position: "relative",
+  flex: 1,
+  minHeight: 0,
+  overflow: "hidden",
+  border: "1px solid var(--editor-border-editable)",
+  borderRadius: "var(--radius-sheet)",
+  backgroundColor: "var(--editor-bg)",
+  "&:focus-within": { borderColor: "var(--focus-ring)" },
+  "&:focus-within::after": {
+    content: '""',
+    position: "absolute",
+    inset: 0,
+    zIndex: 7,
+    borderRadius: "calc(var(--radius-sheet) - 1px)",
+    boxShadow: "inset 0 0 0 1px var(--focus-ring)",
+    pointerEvents: "none",
+  },
+  "@media (forced-colors: active)": {
+    "&:focus-within": { outline: "2px solid Highlight", outlineOffset: "-2px" },
+  },
+} as const;
+
+/** A read-only surface in the editor's place (an image preview): the 1 px --editor-border hairline. */
+const VIEWER_HOST = {
+  position: "relative",
+  flex: 1,
+  minHeight: 0,
+  width: "100%",
+  overflow: "auto",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  p: "var(--space-2)",
+  border: "1px solid var(--editor-border)",
+  borderRadius: "var(--radius-sheet)",
+  backgroundColor: "var(--editor-bg)",
+} as const;
+
+/** The editor overlay (compact tool chrome): bottom right, 8 px in. */
+const OVERLAY = {
+  position: "absolute",
+  right: "var(--space-2)",
+  bottom: "var(--space-2)",
+  display: "inline-flex",
+  gap: "var(--icon-button-row-gap)",
+} as const;
+
+/** An empty line inside the console ("No plots generated", "No variables"). */
+const CONSOLE_EMPTY = {
+  p: "var(--space-4)",
+  textAlign: "center",
+  color: "var(--text-secondary)",
+} as const;
+
+/** Shown in the editor when a file tab has lost its buffer (copy row S-03.13). */
+const FILE_GONE =
+  "This file is no longer available. Uploaded files are cleared when you leave the scratchpad. Upload it again.";
+
+/** R's printed values keep their columns: the code face at the code size. */
+const CODE_TEXT = {
+  m: 0,
+  whiteSpace: "pre-wrap",
+  fontFamily: "var(--type-code-family)",
+  fontSize: "var(--type-code-size)",
+  lineHeight: "var(--type-code-leading)",
+} as const;
 
 interface ChatMessages {
   isAi: boolean;
@@ -112,9 +192,11 @@ export const IDE: React.FC<IDEProps> = ({
   const [selectedLanguage, setSelectedLanguage] = useState<"python" | "r">("python");
 
   const [SnackbarOpen, setSnackbarOpen] = React.useState(false);
+  // Whether the console shows an error (stderr look) rather than the program's output.
+  const [outputIsError, setOutputIsError] = useState<boolean>(false);
 
-  const theme = useTheme();
-  const editorTheme = theme.palette.mode === "dark" ? "monokai" : "clouds";
+  // Code is not paper: the editor follows the colour mode (DESIGN.md, Code surfaces).
+  const colorMode = useTheme().palette.mode;
 
   const [editorMode, setEditorMode] = useState<string>("python");
   const [editorSaveCodeFlag, setEditorSaveCodeFlag] = useState<boolean>(true);
@@ -229,7 +311,9 @@ export const IDE: React.FC<IDEProps> = ({
     if (result?.error) {
       output = result.error;
       setIDEOutputCode(output);
+      setOutputIsError(true);
     } else {
+      setOutputIsError(false);
       console.log("Error getting the result");
     }
 
@@ -299,7 +383,7 @@ export const IDE: React.FC<IDEProps> = ({
     setTabValue(value);
     console.log("The newly chosen tab at IDE", value);
 
-    if (value === "Code Space") {
+    if (value === CODE_TAB_LABEL) {
       setEditorMode("python");
       setEditorSaveCodeFlag(true);
       setEditText(IDECode);
@@ -313,7 +397,7 @@ export const IDE: React.FC<IDEProps> = ({
       if (value.endsWith(".txt")) {
         setEditorMode("text");
         if (bufferMissing) {
-          setEditText("File is no longer available. Please re-upload.");
+          setEditText(FILE_GONE);
         } else {
           const filect = arrayBufferToText(modifiedFileBuffers[fileid]);
           setEditText(filect);
@@ -326,14 +410,14 @@ export const IDE: React.FC<IDEProps> = ({
       ) {
         if (bufferMissing) {
           setEditorMode("text");
-          setEditText("File is no longer available. Please re-upload.");
+          setEditText(FILE_GONE);
         } else {
           setEditorMode("image");
           addImageToDiv("editorImage", modifiedFileBuffers[fileid]);
         }
       } else {
         setEditorMode("text");
-        setEditText("This file type is not supported.");
+        setEditText("This file can't be opened here. The editor opens text files only. Open a text file instead.");
       }
     }
   };
@@ -350,13 +434,8 @@ export const IDE: React.FC<IDEProps> = ({
     return buffer;
   }
 
-  const handleSnackbarClose = (
-    event: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
+  // A click elsewhere on the page never closes the notice (InfoToast ignores clickaway).
+  const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
 
@@ -383,24 +462,48 @@ export const IDE: React.FC<IDEProps> = ({
     }
   }
 
+  // The overlay in the editor's corner (compact tool chrome). The info toast is
+  // rendered right after Run, so one Tab from Run reaches its Dismiss.
+  const editorOverlay = (
+    <Box data-density="compact" sx={OVERLAY}>
+      <Tooltip title="Run code">
+        <IconButton
+          aria-label="Run code"
+          onClick={() => {
+            runCode(IDECode);
+            SnackbarActivate();
+          }}
+        >
+          <PlayArrowOutlined />
+        </IconButton>
+      </Tooltip>
+      <InfoToast open={SnackbarOpen} message="Running your code…" onClose={handleSnackbarClose} />
+      <Tooltip title="Upload files">
+        <IconButton aria-label="Upload files" onClick={handleUploadButtonClick}>
+          <FileUploadOutlined />
+        </IconButton>
+      </Tooltip>
+      {/* Hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        onChange={handleManyFileChange}
+        style={{ display: "none" }}
+      />
+    </Box>
+  );
+
   return (
     <Stack
       sx={{
         height: "100%",
-        bgcolor: theme.palette.background.default,
-        color: theme.palette.text.primary
+        gap: "var(--space-3)",
+        bgcolor: "background.default",
+        color: "text.primary",
       }}>
       {/* -------------------- TABS (TOP) -------------------- */}
-      <Box
-        id="tab"
-        sx={{
-          flex: "0 0 auto",
-          borderBottom: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
-          bgcolor: alpha(theme.palette.background.paper, 0.5),
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
+      <Box id="tab" sx={{ flex: "0 0 auto" }}>
         <BasicTabs
           fileNames={newFileNames}
           value_change={value_change}
@@ -411,24 +514,24 @@ export const IDE: React.FC<IDEProps> = ({
       </Box>
 
       {/* -------------------- CODE EDITOR AREA -------------------- */}
-      {/* Flex-fill the remaining height so the now-visible tab bar (auto height)
-          plus the fixed-height output area lay out without overflowing the
-          Stack. minHeight:0 lets the editor shrink in short viewports. */}
+      {/* Flex-fill the remaining height so the tab bar (auto height) plus the
+          fixed-height output area lay out without overflowing the Stack.
+          minHeight:0 lets the editor shrink in short viewports. */}
       <Box
         sx={{
           flex: 1,
           minHeight: 0,
           width: "100%",
           position: "relative",
-          p: 1,
           display: "flex",
           flexDirection: "column",
+          gap: "var(--space-3)",
         }}
       >
         {/* Language Selector — only when this class has the R feature. */}
         {allowR && (
-        <Box sx={{ mb: 1, display: "flex", alignItems: "center", gap: 1 }}>
-          <FormControl size="small" sx={{ minWidth: 120 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: "var(--space-3)" }}>
+          <FormControl data-density="compact" sx={{ width: "132px" }}>
             <Select
               value={selectedLanguage}
               onChange={(e) => {
@@ -442,205 +545,111 @@ export const IDE: React.FC<IDEProps> = ({
                 setVariables([]);
                 setOutputTabValue(0);
               }}
-              sx={{
-                bgcolor: alpha(theme.palette.background.paper, 0.6),
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: alpha(theme.palette.divider, 0.3),
-                },
-              }}
             >
               <MenuItem value="python">Python</MenuItem>
               <MenuItem value="r">R</MenuItem>
             </Select>
           </FormControl>
-          <Typography variant="caption" sx={{ color: theme.palette.text.secondary }}>
-            {selectedLanguage === "python" ? "Python" : "R Language"}
+          <Typography variant="caption" sx={{ color: "var(--text-secondary)" }}>
+            {selectedLanguage === "python" ? "Python" : "R"}
           </Typography>
         </Box>
         )}
 
         {/* Editor or Image */}
         {editorMode !== "image" ? (
-          <Box
-            sx={{
-              height: "calc(100% - 40px)", // reserve space for overlay icon buttons
-              borderRadius: 1,
-              position: "relative",
-              flex: 1,
-            }}
-          >
+          <Box sx={EDITOR_HOST}>
             <AceEditor
               mode={editorMode}
-              theme={editorTheme}
+              theme={aceThemeFor(colorMode)}
               name="editor"
               value={editText}
               onChange={handleEditorChange}
-              fontSize={14}
+              // The code role, 14/24 mono (--type-code); the theme sheet sets the face.
+              fontSize="var(--type-code-size)"
+              lineHeight="var(--type-code-leading)"
               width="100%"
               height="100%"
-              style={{
-                borderRadius: 4,
-                border: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
-              }}
               setOptions={{ showPrintMargin: false }}
             />
             {/* Overlay: Bottom-right icon buttons */}
-            <Stack
-              direction="row"
-              spacing={1}
-              sx={{
-                position: "absolute",
-                bottom: 8,
-                right: 8,
-              }}
-            >
-              <IconButton
-                color="primary"
-                onClick={() => {
-                  runCode(IDECode);
-                  SnackbarActivate();
-                }}
-              >
-                <PlayArrow />
-              </IconButton>
-
-              <IconButton
-                color="info"
-                onClick={handleUploadButtonClick}
-              >
-                <FileUpload />
-              </IconButton>
-              {/* Hidden file input */}
-              <input
-                ref={fileInputRef}
-                type="file"
-                multiple
-                onChange={handleManyFileChange}
-                style={{ display: "none" }}
-              />
-            </Stack>
+            {editorOverlay}
           </Box>
         ) : (
-          <Box
-            id="editorImage"
-            sx={{
-              width: "100%",
-              flex: 1,
-              overflow: "auto",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              border: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
-              borderRadius: 2,
-              p: 1,
-              position: "relative",
-            }}
-          >
+          // Uploaded images are shown as drawn: never recoloured or dimmed.
+          <Box id="editorImage" sx={VIEWER_HOST}>
             {/* Overlay icon buttons for image mode */}
-            <Stack
-              direction="row"
-              spacing={1}
-              sx={{
-                position: "absolute",
-                bottom: 8,
-                right: 8,
-              }}
-            >
-              <IconButton
-                color="primary"
-                onClick={() => {
-                  runCode(IDECode);
-                  SnackbarActivate();
-                }}
-              >
-                <PlayArrow />
-              </IconButton>
-              <IconButton
-                color="info"
-                onClick={handleUploadButtonClick}
-              >
-                <FileUpload />
-              </IconButton>
-              <input
-                ref={fileInputRef}
-                type="file"
-                multiple
-                onChange={handleManyFileChange}
-                style={{ display: "none" }}
-              />
-            </Stack>
+            {editorOverlay}
           </Box>
         )}
       </Box>
-
-      {/* -------------------- SNACKBAR (GLOBAL) -------------------- */}
-      <Snackbar
-        open={SnackbarOpen}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        autoHideDuration={3000}
-        onClose={handleSnackbarClose}
-        message="Code executed and files updated."
-      />
 
       {/* -------------------- EXECUTION RESULT AREA -------------------- */}
       <Box
         sx={{
           height: "35%",
+          minHeight: 0,
           position: "relative",
-          px: 1,
-          pt: 0,
-          pb: 1,
           display: "flex",
           flexDirection: "column",
+          gap: "var(--space-3)",
         }}
       >
-        {/* Output Tabs */}
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        {/* Output Tabs: compact tool chrome on a hairline rule */}
+        <Box data-density="compact" sx={{ borderBottom: "1px solid var(--border-subtle)" }}>
           <Tabs
             value={outputTabValue}
             onChange={(event, newValue) => setOutputTabValue(newValue)}
-            sx={{ minHeight: 32 }}
           >
-            <Tab label="Output" sx={{ py: 0, minHeight: 32 }} />
+            <Tab label="Output" />
             {selectedLanguage === "r" && (
-              <Tab label={`Plots (${outputImages.length})`} sx={{ py: 0, minHeight: 32 }} />
+              <Tab label={`Plots (${outputImages.length})`} />
             )}
             {selectedLanguage === "r" && (
-              <Tab label={`Vars (${variables.length})`} sx={{ py: 0, minHeight: 32 }} />
+              <Tab label={`Variables (${variables.length})`} />
             )}
           </Tabs>
         </Box>
 
-        {/* Output Content */}
-        <Paper
-          variant="outlined"
+        {/* Output Content: the console (generated .kiwi-console look; it follows the mode) */}
+        <Box
+          className="kiwi-console"
           sx={{
-            height: "100%",
             flex: 1,
-            p: 1,
-            pb: 1,
+            minHeight: 0,
+            mt: "var(--space-2)",
+            p: "var(--space-3)",
+            borderRadius: "var(--radius-sheet)",
             overflow: "auto",
-            bgcolor: alpha(theme.palette.background.paper, 0.4),
           }}
         >
           {outputTabValue === 0 ? (
-            <Typography
+            <Box
               component="pre"
               id="code-output"
+              className={
+                IDEOutputCode
+                  ? outputIsError
+                    ? "kiwi-console-stderr"
+                    : "kiwi-console-stdout"
+                  : undefined
+              }
               sx={{
-                fontFamily: "monospace",
+                m: 0,
+                font: "inherit",
                 width: "100%",
                 whiteSpace: "pre-wrap",
-                wordBreak: "break-word"
+                wordBreak: "break-word",
+                ...(IDEOutputCode ? {} : { color: "var(--text-secondary)" }),
               }}>
               {IDEOutputCode || "Output will appear here."}
-            </Typography>
+            </Box>
           ) : outputTabValue === 1 && selectedLanguage === "r" ? (
             <Box
               sx={{
                 display: "flex",
                 flexDirection: "column",
-                gap: 2,
+                gap: "var(--space-4)",
                 height: "100%",
               }}
             >
@@ -654,6 +663,7 @@ export const IDE: React.FC<IDEProps> = ({
                       alignItems: "center",
                     }}
                   >
+                    {/* R plots are shown as drawn: never recoloured or dimmed. */}
                     <img
                       src={imageBase64}
                       alt={`Plot ${index + 1}`}
@@ -666,15 +676,15 @@ export const IDE: React.FC<IDEProps> = ({
                   </Box>
                 ))
               ) : (
-                <Typography sx={{ p: 2, textAlign: "center" }}>
-                  No plots generated.
+                <Typography variant="body2" sx={CONSOLE_EMPTY}>
+                  No plots generated
                 </Typography>
               )}
             </Box>
           ) : selectedLanguage === "r" && outputTabValue === 2 ? (
             <Box sx={{ overflow: "auto", height: "100%" }}>
               {variables.length > 0 ? (
-                <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
+                <TableContainer sx={{ maxHeight: "400px" }}>
                   <Table size="small" stickyHeader>
                     <TableHead>
                       <TableRow>
@@ -697,7 +707,7 @@ export const IDE: React.FC<IDEProps> = ({
                             <TableCell>{v.name}</TableCell>
                             <TableCell>
                               {tableData ? (
-                                <TableContainer component={Paper} sx={{ maxHeight: 200 }}>
+                                <TableContainer sx={{ maxHeight: "200px" }}>
                                   <Table size="small">
                                     <TableHead>
                                       <TableRow>
@@ -710,7 +720,9 @@ export const IDE: React.FC<IDEProps> = ({
                                       {tableData.slice(1).map((row, ri) => (
                                         <TableRow key={ri}>
                                           {row.map((cell, ci) => (
-                                            <TableCell key={ci}>{cell}</TableCell>
+                                            <TableCell key={ci} sx={{ fontVariantNumeric: "tabular-nums" }}>
+                                              {cell}
+                                            </TableCell>
                                           ))}
                                         </TableRow>
                                       ))}
@@ -718,9 +730,9 @@ export const IDE: React.FC<IDEProps> = ({
                                   </Table>
                                 </TableContainer>
                               ) : (
-                                <Typography component="pre" sx={{ whiteSpace: "pre-wrap" }}>
+                                <Box component="pre" sx={CODE_TEXT}>
                                   {v.preview}
-                                </Typography>
+                                </Box>
                               )}
                             </TableCell>
                           </TableRow>
@@ -730,26 +742,26 @@ export const IDE: React.FC<IDEProps> = ({
                   </Table>
                 </TableContainer>
               ) : (
-                <Typography sx={{ p: 2, textAlign: "center" }}>
-                  No variables.
+                <Typography variant="body2" sx={CONSOLE_EMPTY}>
+                  No variables
                 </Typography>
               )}
             </Box>
           ) : null}
-        </Paper>
+        </Box>
 
-        {/* Overlayed buttons at the bottom center of the output area */}
-        <Stack
-          direction="row"
-          spacing={2}
+        {/* The page's actions, centred: one filled primary (Ask Kiwi to check), a
+            secondary and a tertiary (preview SPEC § 6). */}
+        <Box
           sx={{
+            display: "flex",
+            flexWrap: "wrap",
             justifyContent: "center",
-            mt: 0.5,
-            p: 0.5
+            gap: "var(--space-inline)",
+            pb: "var(--space-2)",
           }}>
           <Button
-            variant="contained"
-            // color="secondary"
+            variant="outlined"
             onClick={() => {
               const code_correction_prompt = `I have the following solution for question #.\n\n\`\`\`python\n${IDECode}\n\`\`\`\nOutput:\n\`\n${IDEOutputCode}\n\``;
               saveInteraction({
@@ -763,19 +775,10 @@ export const IDE: React.FC<IDEProps> = ({
               dispatch(toggleCodeView());
             }}
           >
-            <Typography
-              variant="button"
-              noWrap
-              sx={{
-                letterSpacing: "-0.02em",
-              }}
-            >
-              Move to Chat
-            </Typography>
+            Open in chat
           </Button>
           <Button
             variant="contained"
-            // color="secondary"
             onClick={() => {
               const code_correction_prompt = `Check my answer for question #.\n\n\`\`\`python\n${IDECode}\n\`\`\`\nOutput:\n\`\n${IDEOutputCode}\n\``;
               saveInteraction({
@@ -789,18 +792,10 @@ export const IDE: React.FC<IDEProps> = ({
               dispatch(toggleCodeView());
             }}
           >
-            <Typography
-              variant="button"
-              noWrap
-              sx={{
-                letterSpacing: "-0.02em",
-              }}
-            >
-              Check Answer
-            </Typography>
+            Ask Kiwi to check
           </Button>
           <Button
-            variant="contained"
+            variant="text"
             onClick={() => {
               saveInteraction({
                 type: "frontend-interaction-ide-savecodetofile",
@@ -812,9 +807,9 @@ export const IDE: React.FC<IDEProps> = ({
               saveCodeToFile(IDECode);
             }}
           >
-            Save Code
+            Save code
           </Button>
-        </Stack>
+        </Box>
       </Box>
     </Stack>
   );

@@ -1,5 +1,13 @@
 import { render } from '@testing-library/react';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import ReadOnlyCodeViewer from './ReadOnlyCodeViewer.tsx';
+import { kiwiPrism } from '../../theme/codeThemes.ts';
+
+/** "#b9cf9b" → "rgb(185, 207, 155)", the form jsdom reports for a style colour. */
+const rgb = (hex: string) => {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  return `rgb(${r}, ${g}, ${b})`;
+};
 
 describe('ReadOnlyCodeViewer highlighting', () => {
   it.each([
@@ -22,5 +30,25 @@ describe('ReadOnlyCodeViewer highlighting', () => {
     );
     expect(container.querySelector('code')?.textContent).toBe(code);
     expect(container.querySelector('script')).toBeNull();
+  });
+
+  it.each(['light', 'dark'] as const)('uses the Kiwi Prism colours in %s mode', (mode) => {
+    const { container } = render(
+      <ThemeProvider theme={createTheme({ palette: { mode } })}>
+        <ReadOnlyCodeViewer code={"x = 'hi'"} language="python" showLineNumbers={false} />
+      </ThemeProvider>
+    );
+    const string = Array.from(container.querySelectorAll('code span')).find(
+      (span) => span.textContent === "'hi'"
+    ) as HTMLElement;
+    expect(string.style.color).toBe(rgb(kiwiPrism(mode).string.color as string));
+  });
+
+  it('keeps line numbers upright in the gutter colour, not styled as comments', () => {
+    const { container } = render(<ReadOnlyCodeViewer code={'x = 1'} language="python" />);
+    const lineNumber = container.querySelector('.react-syntax-highlighter-line-number') as HTMLElement;
+    expect(lineNumber.textContent).toBe('1');
+    expect(lineNumber.style.fontStyle).toBe('normal');
+    expect(lineNumber.getAttribute('style')).toContain('var(--editor-gutter-text)');
   });
 });
