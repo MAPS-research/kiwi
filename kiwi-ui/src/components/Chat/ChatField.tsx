@@ -72,11 +72,19 @@ const FRAME = {
   boxShadow: "inset 0 0 0 1px var(--focus-ring)",
 };
 
+/**
+ * The inset that centres Send and Stop in the box at its two-line minimum
+ * (2 x 20 px lines + 2 x 8 px padding - 32 px = 24 px, so 12 px each side). The
+ * button keeps that inset from the bottom as the box grows with its text.
+ */
+const ACTION_INSET =
+  "calc((2 * var(--leading-sm) + 2 * var(--space-2) - var(--tutor-message-composer-action)) / 2)";
+
 /** Send and Stop: 32 px round buttons inside the box, at its right end; 44 px hit areas on a coarse pointer. */
 const actionSx = {
   position: "absolute",
-  right: "6px",
-  bottom: "6px",
+  right: ACTION_INSET,
+  bottom: ACTION_INSET,
   width: "var(--tutor-message-composer-action)",
   height: "var(--tutor-message-composer-action)",
   borderRadius: "50%",
@@ -225,7 +233,7 @@ const ChatField: React.FC<ChatFieldProps> = ({
             }}
             sx={{
               display: "block",
-              padding: "var(--space-2) calc(var(--tutor-message-composer-action) + 6px + var(--space-2)) var(--space-2) var(--space-3)",
+              padding: `var(--space-2) calc(var(--tutor-message-composer-action) + ${ACTION_INSET} + var(--space-2)) var(--space-2) var(--space-3)`,
               color: "var(--field-text)",
               "& textarea": { cursor: botAnswering ? "not-allowed" : "text" },
             }}
