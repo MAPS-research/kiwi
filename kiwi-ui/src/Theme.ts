@@ -234,6 +234,19 @@ export function createKiwiTheme({ dark = darkModeEnabled() }: { dark?: boolean }
       : { light: { palette: palette("light") } },
     shape: { borderRadius: generated.shape.borderRadius },
     shadows,
+    // WHY: MUI's ButtonBase resets `outline: 0` in a rule that loads after base.css,
+    // so without this an icon, text or tab button showed no focus at all. This is the
+    // one 2 px ring of a borderless control; MUI insets it on clip-prone rows (tabs,
+    // menu items, list buttons) and skips checkboxes, radios and switches, which frame
+    // their own box. A bordered control's `frame()` comes later and turns it off.
+    // boxShadow stays unset so a pressed marker or the launcher's shadow survives focus.
+    focusVisible: {
+      outlineStyle: "solid",
+      outlineColor: "var(--focus-ring)",
+      outlineWidth: "var(--border-width-focus)",
+      outlineOffset: "var(--size-focus-offset)",
+      boxShadow: undefined,
+    },
     typography: {
       ...typography,
       fontWeightLight: 400,
@@ -472,6 +485,8 @@ export function createKiwiTheme({ dark = darkModeEnabled() }: { dark?: boolean }
             position: "relative",
             padding: 0,
             ...hitArea("--checkbox-hit"),
+            // The box's own frame is the focus (controlBoxStyles); MUI's ring on the glyph would be a second one.
+            "&.Mui-focusVisible svg:first-of-type": { outline: "none" },
           },
         },
       },
@@ -486,6 +501,7 @@ export function createKiwiTheme({ dark = darkModeEnabled() }: { dark?: boolean }
             position: "relative",
             padding: 0,
             ...hitArea("--checkbox-hit"),
+            "&.Mui-focusVisible svg:first-of-type": { outline: "none" },
           },
         },
       },
@@ -606,6 +622,11 @@ export function createKiwiTheme({ dark = darkModeEnabled() }: { dark?: boolean }
             ],
           },
         },
+      },
+
+      // A toggle button is bordered: focus recolours its own edge, never a ring outside it.
+      MuiToggleButton: {
+        styleOverrides: { root: { [FOCUS]: frame("var(--focus-ring)") } },
       },
 
       MuiTabs: {
