@@ -2,6 +2,8 @@
    from the design pipeline by scripts/sync-design-tokens.mjs. Light and
    comfortable are the defaults; [data-theme] and [data-density] switch them. */
 @import './theme/generated/kiwi-ui.tokens.css';
+/* The output console's classes (.kiwi-console*), which follow data-theme. */
+@import './theme/generated/code-themes/console.css';
 
 /* Self-hosted fonts. Imported here (not in main.tsx) so every entry that pulls in
    index.css (the app and the Storybook preview) gets them once: Source Sans 3 for
