@@ -59,14 +59,19 @@ The design documents come from the design branch
   - while the text streams, the line reads "Jotting it down…";
   - when the answer completes, Kiwi flies off, the line fades and screen
     readers hear "Kiwi finished answering.".
-- Message rows have no avatars. Each answer has a toolbar (feedback, copy).
-  The toolbar takes one Tab stop, and the arrow keys move between its
-  buttons.
+- Message rows have no avatars. The student's question sits in a bubble on
+  the right; Kiwi's answers have no bubble.
+- Each answer has a feedback toolbar (regenerate, flag, thumbs up and down,
+  share) at its bottom left, before the citations. It appears once Kiwi's
+  flight has left that spot, about 1.4 s after the answer completes. The
+  toolbar takes one Tab stop, and the arrow keys move between its buttons.
 - Send and Stop sit inside the composer. Students can stop an answer, and the
   text so far stays.
 - A round launcher opens the "Kiwi chat" panel, which can be a modal, a side
-  panel, docked or fullscreen. At the side, its edge can be resized with the
-  mouse or from the keyboard (arrow keys, Home, End).
+  panel, docked or fullscreen. Nothing dims the page behind it, so the PDF
+  and the menus stay readable and usable while the student asks. At the
+  side, its edge can be resized with the mouse or from the keyboard (arrow
+  keys, Home, End).
 - Focus goes into the composer when the chat opens, and back to it when an
   answer finishes unless the student has moved elsewhere. Close chat returns
   focus to the launcher.
@@ -89,8 +94,8 @@ The design documents come from the design branch
 ## How it was checked
 
 - Each UI commit type-checks on its own (`npx tsc --noEmit` in a clean
-  checkout). At `c2b9c75`:
-  - all 877 tests in 95 files pass;
+  checkout). At `05262f4`:
+  - all 881 tests in 95 files pass;
   - `npm run build` succeeds;
   - `npm run tokens:check` finds the token copies in sync.
 - The six Stage 1 screens were measured against the v2 preview in a browser,
@@ -102,6 +107,10 @@ The design documents come from the design branch
   covered the wait, step and streaming words, the flight and fade, the
   announcement, focus, Stop, feedback and copy, and the dark-mode drawings and
   code colours.
+- The bubble, the toolbar at the left and the undimmed page were checked in
+  the browser in the side panel and the modal, in light and dark and at
+  375 px. With the chat open, the materials drawer still responded to
+  clicks, and the toolbar appeared about 1.4 s after the answer completed.
 
 ## Where it differs from the preview
 
@@ -115,6 +124,14 @@ The design documents come from the design branch
   second line.
 - Enroll students keeps the error toast for an empty input (A-16) rather
   than a disabled button (DS.35), as decided.
+- Three decisions of 2026-10-19 differ from the preview and DESIGN.md:
+  - the student's question sits in a bubble (`--surface-active`, 8 px
+    corners), where DESIGN.md has none, and there is no bubble token yet;
+  - the feedback toolbar opens an answer's toolbar row at the left, where
+    the preview puts it at the right;
+  - no backdrop sits behind the modal or the side panel, so clicking
+    outside no longer closes the chat (Escape and Close chat still do), and
+    DESIGN.md's backdrop rule no longer applies to the chat.
 - Collapse and Accordion open at once. DESIGN.md allows a
   `grid-template-rows` animation, which is not built yet.
 - Smaller gaps, noted when each page was built:
