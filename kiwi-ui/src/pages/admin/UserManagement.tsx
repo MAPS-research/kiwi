@@ -1101,7 +1101,7 @@ const UserManagement: React.FC = () => {
                             Clear
                           </Button>
                         </Stack>
-                        <TableContainer component={Paper} elevation={0} variant="outlined" sx={{ maxHeight: 260, display: { xs: "none", md: "block" } }}>
+                        <TableContainer component={Paper} elevation={0} variant="outlined" sx={{ maxHeight: 260, display: { xs: "none", md: "block" }, "& .MuiTableCell-stickyHeader": { backgroundColor: "var(--surface)" } }}>
                           <Table size="small" stickyHeader aria-label="Registration results">
                             <TableHead>
                               <TableRow>

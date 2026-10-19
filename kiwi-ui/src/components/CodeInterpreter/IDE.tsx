@@ -684,7 +684,8 @@ export const IDE: React.FC<IDEProps> = ({
           ) : selectedLanguage === "r" && outputTabValue === 2 ? (
             <Box sx={{ overflow: "auto", height: "100%" }}>
               {variables.length > 0 ? (
-                <TableContainer sx={{ maxHeight: "400px" }}>
+                // The header's fill is transparent; stuck, it takes the console's ground so rows never show through.
+                <TableContainer sx={{ maxHeight: "400px", "& .MuiTableCell-stickyHeader": { backgroundColor: "var(--console-bg)" } }}>
                   <Table size="small" stickyHeader>
                     <TableHead>
                       <TableRow>

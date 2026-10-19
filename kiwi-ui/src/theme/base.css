@@ -28,6 +28,12 @@ pre {
   font-family: var(--font-mono);
 }
 
+/* The system keeps two weights: the browser's bold (700) is the semibold here. */
+b,
+strong {
+  font-weight: var(--weight-semibold);
+}
+
 /*
  * Focus is one frame. A control with no border (a text or icon button, a link, a
  * tab, a row, a menu item) takes one 2 px ring, its only frame. A control with a
