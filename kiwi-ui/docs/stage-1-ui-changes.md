@@ -1,9 +1,9 @@
 # Stage 1 UI changes
 
-This note sums up the branch `claude/nostalgic-hugle-5893db`: what it
+This note sums up the Stage 1 UI work on the branch `Nagi-ui`: what it
 changes, how it was checked, and the problems found along the way that it
-leaves open, one of them in the backend. The branch starts from `development`
-(merge base `1703040`) and changes nothing under `kiwi/`.
+leaves open, one of them in the backend. The work starts from `development`
+at `1703040` and changes nothing under `kiwi/`.
 
 The design itself is in [DESIGN.md](../DESIGN.md) and
 [JOURNEY.md](../JOURNEY.md); this note does not repeat it.
