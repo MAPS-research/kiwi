@@ -43,6 +43,8 @@ it locally.
 - [UI design system](../kiwi-ui/DESIGN.md) and the
   [palette tuner](../.design-foundations/palette-tuner/README.md), for trying
   colour changes live and sharing them.
+- [Stage 1 UI changes](../kiwi-ui/docs/stage-1-ui-changes.md) — what the
+  redesign branch changed, how it was checked, and the issues it leaves open.
 - [Kiwi Apps host internals](../kiwi-ui/KIWI-APPS.md)
 - [Kiwi Apps manual QA checklist](kiwi-apps-qa-checklist.md)
 
