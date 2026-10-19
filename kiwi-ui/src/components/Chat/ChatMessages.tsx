@@ -116,6 +116,7 @@ const CodeBlock: React.FC<{ code: string; language: string; importCode: (code: s
   const colorMode = useColorMode();
   return (
     <Box
+      className="kiwi-code-block"
       sx={{
         borderLeft: "var(--tutor-message-code-rule-width) solid var(--tutor-message-code-rule)",
         pl: "var(--space-3)",
@@ -172,9 +173,11 @@ const extractToolInfo = (
 /** The reading surface's prose rules: blocks 12 px apart, links underlined, inline code on its tonal step, bare display math. */
 const proseSx = {
   overflowWrap: "anywhere",
+  // WHY :where(): the reset adds no specificity, so the block gap below still wins.
+  // A plain `& p { margin: 0 }` (0,1,1) beat `& > * + *` (0,1,0) and the blocks touched.
+  "& :where(p, ul, ol)": { m: 0 },
+  "& :where(ul, ol)": { pl: "var(--space-5)" },
   "& > * + *": { mt: "var(--tutor-message-block-gap)" },
-  "& p": { m: 0 },
-  "& ul, & ol": { m: 0, pl: "var(--space-5)" },
   "& li + li": { mt: "var(--space-1)" },
   "& a": {
     color: "var(--tutor-message-link)",
@@ -190,6 +193,10 @@ const proseSx = {
     borderRadius: "var(--radius-small)",
     padding: "0 4px",
   },
+  // The highlighter wraps a block's code in a div, not a pre, so the inline rule above
+  // matched it and drew a tinted band behind every line; a block's code is on the
+  // transparent ground (DESIGN.md, the tutor-message surface: code blocks).
+  "& .kiwi-code-block code": { backgroundColor: "transparent", borderRadius: 0, padding: 0 },
   "& .katex-display": { m: 0, textAlign: "center", overflowX: "auto", overflowY: "hidden" },
   "& .katex-display > .katex": { fontSize: "var(--text-lg)" },
 } as const;
