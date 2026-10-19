@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
+import { createKiwiTheme } from '../../Theme.ts';
 import ReadOnlyCodeViewer from './ReadOnlyCodeViewer.tsx';
 import { kiwiPrism } from '../../theme/codeThemes.ts';
 
@@ -34,7 +35,8 @@ describe('ReadOnlyCodeViewer highlighting', () => {
 
   it.each(['light', 'dark'] as const)('uses the Kiwi Prism colours in %s mode', (mode) => {
     const { container } = render(
-      <ThemeProvider theme={createTheme({ palette: { mode } })}>
+      // The app's CSS-variables theme: the scheme on screen is the colour-scheme state, not palette.mode.
+      <ThemeProvider theme={createKiwiTheme({ dark: true })} defaultMode={mode} storageManager={null}>
         <ReadOnlyCodeViewer code={"x = 'hi'"} language="python" showLineNumbers={false} />
       </ThemeProvider>
     );

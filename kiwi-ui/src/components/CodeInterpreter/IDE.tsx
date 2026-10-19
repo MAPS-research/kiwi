@@ -20,7 +20,6 @@ import {
   Box,
   Stack,
   Typography,
-  useTheme,
   Table,
   TableBody,
   TableCell,
@@ -35,6 +34,7 @@ import { useSaveInteraction } from "../../utils/useSaveInteraction.ts";
 import { useDispatch } from "react-redux";
 import { toggleCodeView } from "../../redux/codePanelSlice.ts";
 import { aceThemeFor, registerKiwiAceThemes } from "../../theme/codeThemes.ts";
+import { useColorMode } from "../../theme/useColorMode.ts";
 
 // WHY: react-ace applies its theme when the editor mounts, and Ace fetches a theme it
 // has not been given from the network; registering first makes ace/theme/kiwi-light
@@ -196,7 +196,7 @@ export const IDE: React.FC<IDEProps> = ({
   const [outputIsError, setOutputIsError] = useState<boolean>(false);
 
   // Code is not paper: the editor follows the colour mode (DESIGN.md, Code surfaces).
-  const colorMode = useTheme().palette.mode;
+  const colorMode = useColorMode();
 
   const [editorMode, setEditorMode] = useState<string>("python");
   const [editorSaveCodeFlag, setEditorSaveCodeFlag] = useState<boolean>(true);

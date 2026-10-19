@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, useTheme } from '@mui/material';
+import { Box } from '@mui/material';
+import { useColorMode } from '../../theme/useColorMode.ts';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { kiwiPrism } from '../../theme/codeThemes.ts';
 
@@ -25,7 +26,7 @@ const ReadOnlyCodeViewer: React.FC<ReadOnlyCodeViewerProps> = ({
   height = '100%',
   fontSize,
 }) => {
-  const colorMode = useTheme().palette.mode;
+  const colorMode = useColorMode();
 
   return (
     <Box

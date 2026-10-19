@@ -6,7 +6,7 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import { BlockMath, InlineMath } from "react-katex";
 
-import { Box, Button, ButtonBase, IconButton, Tooltip, Typography, useTheme } from "@mui/material";
+import { Box, Button, ButtonBase, IconButton, Tooltip, Typography } from "@mui/material";
 import CopyButton from "../CopyButton/CopyButton.tsx";
 import {
   ExitToApp as ExitToAppIcon,
@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 import { toggleCodeView } from "../../redux/codePanelSlice.ts";
 import apiClient from "../../utils/api.ts";
 import { kiwiPrism } from "../../theme/codeThemes.ts";
+import { useColorMode } from "../../theme/useColorMode.ts";
 import KiwiLogo from "../Brand/KiwiLogo.tsx";
 import ToolStatusIndicator, { getDisplayName } from "./ToolStatusIndicator.tsx";
 import AgentStepChain, { agentStepOf, stepLabel, type AgentStep } from "./AgentStepChain.tsx";
@@ -112,7 +113,7 @@ const CodeBlock: React.FC<{ code: string; language: string; importCode: (code: s
   language,
   importCode,
 }) => {
-  const theme = useTheme();
+  const colorMode = useColorMode();
   return (
     <Box
       sx={{
@@ -127,7 +128,7 @@ const CodeBlock: React.FC<{ code: string; language: string; importCode: (code: s
       </Box>
       <SyntaxHighlighter
         language={language}
-        style={kiwiPrism(theme.palette.mode)}
+        style={kiwiPrism(colorMode)}
         PreTag="div"
         wrapLongLines
         customStyle={{ margin: 0, padding: 0, background: "transparent" }}

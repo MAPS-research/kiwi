@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
+import { createKiwiTheme } from "../../Theme.ts";
 import { Provider } from "react-redux";
 import store from "../../redux/store.ts";
 import { IDE } from "./IDE.tsx";
@@ -87,7 +88,8 @@ const renderIDE = ({
 } = {}) =>
   render(
     <Provider store={store}>
-      <ThemeProvider theme={createTheme({ palette: { mode } })}>
+      {/* The app's CSS-variables theme: the scheme on screen is the colour-scheme state, not palette.mode. */}
+      <ThemeProvider theme={createKiwiTheme({ dark: true })} defaultMode={mode} storageManager={null}>
         <Harness exportCode={exportCode} allowR={allowR} initialTabs={initialTabs} />
       </ThemeProvider>
     </Provider>

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
-import { Box, useTheme } from "@mui/material";
+import { Box } from "@mui/material";
+import { useColorMode } from "../../../theme/useColorMode.ts";
 import walkLight from "./assets/walk.light.webp";
 import hopLight from "./assets/hop.light.webp";
 import standLight from "./assets/stand.light.webp";
@@ -66,8 +67,7 @@ export interface KiwiStatusLineProps {
 }
 
 export default function KiwiStatusLine({ label, complete, startedAt, motion, onGone }: KiwiStatusLineProps) {
-  const theme = useTheme();
-  const atlases = ATLASES[theme.palette.mode === "dark" ? "dark" : "light"];
+  const atlases = ATLASES[useColorMode()];
   const lineRef = useRef<HTMLSpanElement>(null);
   const cameraRef = useRef<HTMLSpanElement>(null);
   const inViewRef = useRef(true);
