@@ -354,32 +354,37 @@ export const GlobalChatModal: React.FC = () => {
             onPointerUp={handleResizePointerUp}
             onKeyDown={handleResizeKeyDown}
             sx={{
+              // Centred on the panel's left border; the bar is the ::before, and
+              // keyboard focus outlines the bar rather than the 14 px hit strip.
               position: 'absolute',
               top: 0,
-              left: -7,
-              width: 14,
-              height: '100%',
+              bottom: 0,
+              left: 'calc(-1 * var(--border-width-interactive) / 2)',
+              transform: 'translateX(-50%)',
+              width: '14px',
               cursor: 'col-resize',
               touchAction: 'none',
               zIndex: 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              '@media (pointer: coarse)': { left: -22, width: 44 },
-              '&:hover .resize-grip, &:active .resize-grip': {
-                bgcolor: 'var(--accent-solid)',
+              '@media (pointer: coarse)': { width: 'var(--size-hit-control)' },
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                width: '4px',
+                height: '48px',
+                transform: 'translate(-50%, -50%)',
+                borderRadius: 'var(--radius-control)',
+                backgroundColor: 'var(--border-interactive)',
+              },
+              '&:hover::before, &:active::before': { backgroundColor: 'var(--accent-solid)' },
+              '&:focus-visible': { outline: 0 },
+              '&:focus-visible::before': {
+                outline: 'var(--border-width-focus) solid var(--focus-ring)',
+                outlineOffset: 'var(--size-focus-offset)',
               },
             }}
-          >
-            <Box
-              className="resize-grip"
-              sx={{
-                width: 4,
-                height: 48,
-                bgcolor: 'var(--border-interactive)',
-              }}
-            />
-          </Box>
+          />
         )}
         {renderHeader()}
         <Box
