@@ -310,16 +310,12 @@ export const EmailAudit: React.FC = () => {
                                         }}
                                     />
                                 </Grid>
-                                <Grid size={{ xs: 12, md: 1 }}>
+                                {/* The fields carry their labels above, so Apply sits on their baseline. */}
+                                <Grid size={{ xs: 12, md: 1 }} sx={{ display: "flex", alignItems: "flex-end" }}>
                                     <Button
                                         fullWidth
                                         variant="contained"
                                         onClick={loadLogs}
-                                        sx={{
-                                            height: "56px",
-                                            bgcolor: "#4B2E5D",
-                                            "&:hover": { bgcolor: "#3A1E4A" }
-                                        }}
                                     >
                                         Apply
                                     </Button>
@@ -329,57 +325,43 @@ export const EmailAudit: React.FC = () => {
                     </Accordion>
 
                     {/* Logs Table */}
-                    <Paper elevation={2}>
+                    <Paper variant="outlined">
                         <TableContainer>
                             <Table>
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>
-                                            <Typography variant="subtitle2" sx={{
-                                                fontWeight: "bold"
-                                            }}>
+                                            <Typography variant="subtitle2">
                                                 Timestamp
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <Typography variant="subtitle2" sx={{
-                                                fontWeight: "bold"
-                                            }}>
+                                            <Typography variant="subtitle2">
                                                 From
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <Typography variant="subtitle2" sx={{
-                                                fontWeight: "bold"
-                                            }}>
+                                            <Typography variant="subtitle2">
                                                 Recipients
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <Typography variant="subtitle2" sx={{
-                                                fontWeight: "bold"
-                                            }}>
+                                            <Typography variant="subtitle2">
                                                 Subject
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <Typography variant="subtitle2" sx={{
-                                                fontWeight: "bold"
-                                            }}>
+                                            <Typography variant="subtitle2">
                                                 Type
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <Typography variant="subtitle2" sx={{
-                                                fontWeight: "bold"
-                                            }}>
+                                            <Typography variant="subtitle2">
                                                 Status
                                             </Typography>
                                         </TableCell>
                                         <TableCell align="center">
-                                            <Typography variant="subtitle2" sx={{
-                                                fontWeight: "bold"
-                                            }}>
+                                            <Typography variant="subtitle2">
                                                 Actions
                                             </Typography>
                                         </TableCell>
@@ -396,7 +378,7 @@ export const EmailAudit: React.FC = () => {
                                         <TableRow>
                                             <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
                                                 <Box className="admin-empty-state">
-                                                    <EmailIcon sx={{ fontSize: 48, color: "#ccc", mb: 2 }} />
+                                                    <EmailIcon sx={{ fontSize: 48, color: "var(--icon-default)", mb: 2 }} />
                                                     <Typography variant="h6" color="textSecondary">
                                                         No email logs found
                                                     </Typography>
@@ -444,7 +426,6 @@ export const EmailAudit: React.FC = () => {
                                                     <Chip
                                                         label={log.emailType.replace('_', ' ')}
                                                         size="small"
-                                                        variant="outlined"
                                                     />
                                                 </TableCell>
                                                 <TableCell>
@@ -499,8 +480,14 @@ export const EmailAudit: React.FC = () => {
                             <Grid size={{ xs: 12, md: 3 }}>
                                 <Card className="admin-stats-card">
                                     <CardContent sx={{ textAlign: 'center' }}>
-                                        <CheckCircleIcon sx={{ fontSize: 48, color: '#4caf50', mb: 2 }} />
-                                        <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
+                                        <CheckCircleIcon sx={{ fontSize: 48, color: 'var(--kpi-tile-icon)', mb: 2 }} />
+                                        <Typography variant="h4" sx={{
+                                            fontSize: 'var(--type-kpi-value-size)',
+                                            lineHeight: 'var(--type-kpi-value-leading)',
+                                            fontWeight: 'var(--type-kpi-value-weight)',
+                                            fontVariantNumeric: 'tabular-nums',
+                                            color: 'var(--kpi-tile-value)',
+                                        }}>
                                             {stats.totalSent}
                                         </Typography>
                                         <Typography variant="subtitle1" sx={{
@@ -514,8 +501,14 @@ export const EmailAudit: React.FC = () => {
                             <Grid size={{ xs: 12, md: 3 }}>
                                 <Card className="admin-stats-card">
                                     <CardContent sx={{ textAlign: 'center' }}>
-                                        <ErrorIcon sx={{ fontSize: 48, color: '#f44336', mb: 2 }} />
-                                        <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#f44336' }}>
+                                        <ErrorIcon sx={{ fontSize: 48, color: 'var(--kpi-tile-icon)', mb: 2 }} />
+                                        <Typography variant="h4" sx={{
+                                            fontSize: 'var(--type-kpi-value-size)',
+                                            lineHeight: 'var(--type-kpi-value-leading)',
+                                            fontWeight: 'var(--type-kpi-value-weight)',
+                                            fontVariantNumeric: 'tabular-nums',
+                                            color: 'var(--kpi-tile-value)',
+                                        }}>
                                             {stats.totalFailed}
                                         </Typography>
                                         <Typography variant="subtitle1" sx={{
@@ -529,8 +522,14 @@ export const EmailAudit: React.FC = () => {
                             <Grid size={{ xs: 12, md: 3 }}>
                                 <Card className="admin-stats-card">
                                     <CardContent sx={{ textAlign: 'center' }}>
-                                        <TestTubeIcon sx={{ fontSize: 48, color: '#ff9800', mb: 2 }} />
-                                        <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#ff9800' }}>
+                                        <TestTubeIcon sx={{ fontSize: 48, color: 'var(--kpi-tile-icon)', mb: 2 }} />
+                                        <Typography variant="h4" sx={{
+                                            fontSize: 'var(--type-kpi-value-size)',
+                                            lineHeight: 'var(--type-kpi-value-leading)',
+                                            fontWeight: 'var(--type-kpi-value-weight)',
+                                            fontVariantNumeric: 'tabular-nums',
+                                            color: 'var(--kpi-tile-value)',
+                                        }}>
                                             {stats.totalTestMode}
                                         </Typography>
                                         <Typography variant="subtitle1" sx={{
@@ -544,8 +543,14 @@ export const EmailAudit: React.FC = () => {
                             <Grid size={{ xs: 12, md: 3 }}>
                                 <Card className="admin-stats-card">
                                     <CardContent sx={{ textAlign: 'center' }}>
-                                        <EmailIcon sx={{ fontSize: 48, color: '#4B2E5D', mb: 2 }} />
-                                        <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#4B2E5D' }}>
+                                        <EmailIcon sx={{ fontSize: 48, color: 'var(--kpi-tile-icon)', mb: 2 }} />
+                                        <Typography variant="h4" sx={{
+                                            fontSize: 'var(--type-kpi-value-size)',
+                                            lineHeight: 'var(--type-kpi-value-leading)',
+                                            fontWeight: 'var(--type-kpi-value-weight)',
+                                            fontVariantNumeric: 'tabular-nums',
+                                            color: 'var(--kpi-tile-value)',
+                                        }}>
                                             {stats.totalSent + stats.totalFailed + stats.totalTestMode}
                                         </Typography>
                                         <Typography variant="subtitle1" sx={{
@@ -569,12 +574,10 @@ export const EmailAudit: React.FC = () => {
                                                 <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
                                                     <Card variant="outlined">
                                                         <CardContent>
-                                                            <Typography variant="subtitle1" sx={{
-                                                                fontWeight: "bold"
-                                                            }}>
+                                                            <Typography variant="subtitle1">
                                                                 {typeStats.emailType?.replace('_', ' ') || 'Unknown'}
                                                             </Typography>
-                                                            <Typography variant="h6" color="primary">
+                                                            <Typography variant="h6" sx={{ fontVariantNumeric: 'tabular-nums' }}>
                                                                 {typeStats.count || 0}
                                                             </Typography>
                                                         </CardContent>
@@ -594,7 +597,7 @@ export const EmailAudit: React.FC = () => {
                         </Grid>
                     ) : (
                         <Box className="admin-empty-state">
-                            <TrendingUpIcon sx={{ fontSize: 48, color: "#ccc", mb: 2 }} />
+                            <TrendingUpIcon sx={{ fontSize: 48, color: "var(--icon-default)", mb: 2 }} />
                             <Typography variant="h6" color="textSecondary">
                                 No statistics available
                             </Typography>

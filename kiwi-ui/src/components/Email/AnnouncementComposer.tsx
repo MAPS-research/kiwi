@@ -67,13 +67,13 @@ const AnnouncementComposer: React.FC<AnnouncementComposerProps> = ({
           </Typography>
           <Box sx={{ display: 'flex', gap: 4, mb: 2 }}>
             <Typography variant="body2">
-              <strong>Class:</strong> {className}
+              <strong style={{ fontWeight: "var(--weight-semibold)" }}>Class:</strong> {className}
             </Typography>
             <Typography variant="body2">
-              <strong>From:</strong> {professorName}
+              <strong style={{ fontWeight: "var(--weight-semibold)" }}>From:</strong> {professorName}
             </Typography>
             <Typography variant="body2">
-              <strong>Recipients:</strong> {recipientCount} student{recipientCount !== 1 ? 's' : ''}
+              <strong style={{ fontWeight: "var(--weight-semibold)" }}>Recipients:</strong> {recipientCount} student{recipientCount !== 1 ? 's' : ''}
             </Typography>
           </Box>
         </Box>

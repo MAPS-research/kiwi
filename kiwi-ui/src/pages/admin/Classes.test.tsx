@@ -92,14 +92,17 @@ describe('Classes Component', () => {
     expect(screen.getByText('All Classes')).toBeInTheDocument();
   });
 
-  it('uses the class card radius and compact neutral search styling', () => {
+  it('draws the search as the standard field with a neutral icon', () => {
     renderWithProviders(<Classes />);
 
     const searchInput = screen.getByPlaceholderText('Search classes or professors...');
     const inputRoot = searchInput.closest('.MuiOutlinedInput-root');
 
-    expect(inputRoot).toHaveStyle({ height: '44px', borderRadius: '12px' });
+    // The page leaves the field to the theme (its radius and density-aware height).
+    expect(inputRoot).not.toHaveStyle({ height: '44px' });
+    expect(inputRoot).not.toHaveStyle({ borderRadius: '12px' });
     expect(screen.getByTestId('SearchOutlinedIcon')).not.toHaveClass('MuiSvgIcon-colorAction');
+    expect(screen.getByTestId('SearchOutlinedIcon')).toHaveStyle({ color: 'var(--icon-default)' });
   });
 
   it('fetches individual class details for each class ID', async () => {

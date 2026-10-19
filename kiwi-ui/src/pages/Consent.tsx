@@ -9,6 +9,7 @@ import {
   Checkbox,
   Button,
   FormGroup,
+  Typography,
 } from "@mui/material";
 import { useAuth } from "../auth/AuthContext.tsx";
 import { consentFormUrl } from "../config/branding";
@@ -49,8 +50,9 @@ export const Consent: React.FC = () => {
   return (
     <div>
       <Container>
-        <h1>Consent Form</h1>
-        <p>Please read the document below and accept to continue.</p>
+        {/* The page title and its line in the theme's type roles (no UA bold). */}
+        <Typography component="h1" variant="h2" sx={{ mt: 3, mb: 1 }}>Consent Form</Typography>
+        <Typography variant="body1" sx={{ mb: 2 }}>Please read the document below and accept to continue.</Typography>
       </Container>
       <Container>
         <PDFViewer pdfFile={formUrl} continuous />

@@ -670,8 +670,8 @@ export const KiwiAppsAdmin: React.FC = () => {
                       <Typography
                         variant="body2"
                         sx={{
-                          fontWeight: 500,
-                          fontFamily: "monospace"
+                          fontWeight: 600,
+                          fontFamily: "var(--type-code-family)"
                         }}>
                         {entry.slug}
                       </Typography>
@@ -681,7 +681,7 @@ export const KiwiAppsAdmin: React.FC = () => {
                         variant="body2"
                         sx={{
                           color: "text.secondary",
-                          fontFamily: "monospace"
+                          fontFamily: "var(--font-mono)"
                         }}>
                         {entry.baseUrl || "-"}
                       </Typography>
@@ -822,7 +822,7 @@ export const KiwiAppsAdmin: React.FC = () => {
                         </TableCell>
                         <TableCell>
                           <Typography variant="body2" sx={{
-                            fontWeight: 500
+                            fontWeight: 600
                           }}>
                             {app.name}
                           </Typography>
@@ -836,7 +836,7 @@ export const KiwiAppsAdmin: React.FC = () => {
                         </TableCell>
                         <TableCell>
                           <Typography variant="body2" sx={{
-                            fontFamily: "monospace"
+                            fontFamily: "var(--font-mono)"
                           }}>
                             {app.slug}
                           </Typography>
@@ -905,7 +905,7 @@ export const KiwiAppsAdmin: React.FC = () => {
                                   No UIs registered for this app.
                                 </Typography>
                               ) : (
-                                <Table size="small" sx={{ bgcolor: 'grey.50', borderRadius: 1 }}>
+                                <Table size="small" sx={{ bgcolor: 'action.hover' }}>
                                   <TableHead>
                                     <TableRow>
                                       <TableCell>UI Slug</TableCell>
@@ -924,7 +924,7 @@ export const KiwiAppsAdmin: React.FC = () => {
                                           <Typography
                                             variant="body2"
                                             sx={{
-                                              fontFamily: "monospace",
+                                              fontFamily: "var(--font-mono)",
                                               fontSize: 12
                                             }}>
                                             {ui.uiSlug}
@@ -940,7 +940,7 @@ export const KiwiAppsAdmin: React.FC = () => {
                                             <Typography
                                               variant="body2"
                                               sx={{
-                                                fontFamily: "monospace",
+                                                fontFamily: "var(--font-mono)",
                                                 fontSize: 12,
                                                 maxWidth: 200,
                                                 overflow: 'hidden',
@@ -1037,8 +1037,6 @@ export const KiwiAppsAdmin: React.FC = () => {
                                             key={scope}
                                             label={scope}
                                             size="small"
-                                            color="primary"
-                                            variant="outlined"
                                           />
                                         ))}
                                       </Box>
@@ -1062,8 +1060,6 @@ export const KiwiAppsAdmin: React.FC = () => {
                                             key={scope}
                                             label={scope}
                                             size="small"
-                                            color="secondary"
-                                            variant="outlined"
                                           />
                                         ))}
                                       </Box>
@@ -1108,7 +1104,7 @@ export const KiwiAppsAdmin: React.FC = () => {
                                   No prompts registered for this app.
                                 </Typography>
                               ) : (
-                                <Table size="small" sx={{ bgcolor: 'grey.50', borderRadius: 1 }}>
+                                <Table size="small" sx={{ bgcolor: 'action.hover' }}>
                                   <TableHead>
                                     <TableRow>
                                       <TableCell>Name</TableCell>
@@ -1131,7 +1127,7 @@ export const KiwiAppsAdmin: React.FC = () => {
                                         <TableRow key={prompt.id}>
                                           <TableCell>
                                             <Typography variant="body2" sx={{
-                                              fontWeight: 500
+                                              fontWeight: 600
                                             }}>
                                               {prompt.name}
                                             </Typography>
@@ -1150,7 +1146,7 @@ export const KiwiAppsAdmin: React.FC = () => {
                                             <Typography
                                               variant="body2"
                                               sx={{
-                                                fontFamily: "monospace",
+                                                fontFamily: "var(--font-mono)",
                                                 fontSize: 12
                                               }}>
                                               {prompt.promptId}
@@ -1387,8 +1383,6 @@ export const KiwiAppsAdmin: React.FC = () => {
                   label={scope}
                   size="small"
                   onDelete={() => handleRemoveScope(scope)}
-                  color="primary"
-                  variant="outlined"
                 />
               ))}
             </Box>
@@ -1414,7 +1408,7 @@ export const KiwiAppsAdmin: React.FC = () => {
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle sx={{ color: "warning.main" }}>
+        <DialogTitle>
           Save Your Registration Secret
         </DialogTitle>
         <DialogContent>
@@ -1427,11 +1421,11 @@ export const KiwiAppsAdmin: React.FC = () => {
           <Typography
             variant="body1"
             sx={{
-              fontFamily: "monospace",
+              fontFamily: "var(--type-code-family)",
               mb: 2,
               p: 1,
-              bgcolor: "grey.100",
-              borderRadius: 1
+              bgcolor: "action.hover",
+              borderRadius: "var(--radius-control)"
             }}>
             {createdSlug}
           </Typography>
@@ -1444,14 +1438,14 @@ export const KiwiAppsAdmin: React.FC = () => {
               alignItems: "center",
               gap: 1,
               p: 1,
-              bgcolor: "grey.100",
-              borderRadius: 1,
+              bgcolor: "action.hover",
+              borderRadius: "var(--radius-control)",
             }}
           >
             <Typography
               variant="body2"
               sx={{
-                fontFamily: "monospace",
+                fontFamily: "var(--type-code-family)",
                 flex: 1,
                 wordBreak: "break-all"
               }}>
@@ -1573,8 +1567,6 @@ export const KiwiAppsAdmin: React.FC = () => {
                   label={scope}
                   size="small"
                   onDelete={() => handleRemoveScope(scope)}
-                  color="primary"
-                  variant="outlined"
                 />
               ))}
             </Box>

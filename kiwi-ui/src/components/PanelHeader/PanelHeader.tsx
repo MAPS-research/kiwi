@@ -40,27 +40,19 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
         <Stack direction="row" spacing={1} sx={{
           alignItems: "center"
         }}>
-          <Typography variant="subtitle1" sx={{
-            fontWeight: "bold"
-          }}>
+          <Typography variant="subtitle1">
             {label}
           </Typography>
         </Stack>
 
         {/* Right: Buttons with Tooltips */}
         <Stack direction="row" spacing={1}>
-          {/* Code Button */}
+          {/* Code Button: a toggle; the theme draws the pressed state (selection tint and marker). */}
           <Tooltip title="Code" arrow>
             <IconButton
               aria-label="code"
+              aria-pressed={isCodeActive}
               onClick={onCodeToggle}
-              sx={{
-                color: isCodeActive ? 'primary.main' : 'text.secondary',
-                backgroundColor: isCodeActive ? 'action.selected' : 'transparent',
-                '&:hover': {
-                  backgroundColor: 'action.hover',
-                },
-              }}
             >
               <Terminal />
             </IconButton>

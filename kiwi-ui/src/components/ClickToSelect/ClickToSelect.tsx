@@ -1,5 +1,6 @@
 import html2canvas from "html2canvas";
 import React, { CSSProperties, useRef, useState } from "react";
+import { Button } from "@mui/material";
 
 interface BoxCoordinates {
   left: number;
@@ -164,7 +165,8 @@ const ClickToSelect: React.FC<ClickToSelectProps> = ({
     transform: `translate(${startX}px, ${startY}px)`,
     width: `${dx}px`,
     height: `${dy}px`,
-    border: "2px dashed rgb(203 213 225)",
+    // The marquee is drawn on the paper, so it takes the mode-frozen chunk mark.
+    border: "2px dashed var(--on-paper-chunk)",
     pointerEvents: "none",
   };
 
@@ -196,16 +198,17 @@ const ClickToSelect: React.FC<ClickToSelectProps> = ({
             top: `${startY + dy}px`,
             zIndex: 2,
             display: "flex",
-            gap: "8px",
-            backgroundColor: "rgba(255,255,255,0.95)",
-            border: "1px solid #cbd5e1",
-            borderRadius: 6,
-            padding: "6px 8px",
-            boxShadow: "0 4px 12px rgba(15,23,42,0.18)",
+            gap: "var(--space-2)",
+            // A floating toolbar: the sheet, its hairline edge and --shadow-1.
+            backgroundColor: "var(--surface)",
+            border: "1px solid var(--border)",
+            borderRadius: "var(--radius-sheet)",
+            padding: "var(--space-1) var(--space-2)",
+            boxShadow: "var(--shadow-1)",
           }}
         >
-          <button onClick={handleAddChunk}>Add Chunk</button>
-          <button onClick={handleAddComment}>Add Comments</button>
+          <Button size="small" onClick={handleAddChunk}>Add Chunk</Button>
+          <Button size="small" onClick={handleAddComment}>Add Comments</Button>
         </div>
       )}
     </div>

@@ -63,7 +63,7 @@ const AddUserFeature: React.FC<AddUserFeatureProps> = ({ onAdded }) => {
 
   return (
     <>
-      <Card variant="outlined" sx={{ height: "100%", borderRadius: 2 }}>
+      <Card variant="outlined" sx={{ height: "100%" }}>
         <CardContent sx={{ p: 3 }}>
           <Stack spacing={2.5}>
             <Stack direction="row" spacing={1.5} sx={{
