@@ -117,6 +117,15 @@ describe("ChatMessages rows", () => {
     expect(screen.getByText("Peeking at the page list…")).toBeInTheDocument();
   });
 
+  it("names a tool on the pill plainly in the status line, as the pill does", () => {
+    const { container } = renderMessages(
+      [question, { isAi: true, content: "", error: false, toolExecution: { toolName: "rag", status: "running" } }],
+      { statusLine: running() }
+    );
+
+    expect(container.querySelector(".kiwi-status-line")).toHaveTextContent("Using Materials search…");
+  });
+
   it("gives a finished answer its toolbar and its citations", () => {
     renderMessages([question, { ...answer, citations: [{ pdfID: "pdf-1", pageNumber: 3 }] }]);
 

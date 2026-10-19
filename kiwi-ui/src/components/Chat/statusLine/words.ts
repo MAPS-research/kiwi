@@ -25,6 +25,8 @@ const PLAYFUL_READING: Record<string, string> = {
   "Reading this page": "Peering at this page…",
   "Reading class analytics": "Peering at class analytics…",
   "Searching your class materials": "Pecking through class materials…",
+  // The chain keeps its old label while SR-6.48 is gated; the line's words (CP.29) do not wait for it.
+  "Searching materials": "Pecking through class materials…",
 };
 
 /**

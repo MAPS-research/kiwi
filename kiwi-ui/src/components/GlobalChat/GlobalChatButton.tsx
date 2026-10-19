@@ -260,13 +260,13 @@ export const GlobalChatButton: React.FC<GlobalChatButtonProps> = ({ visible = tr
                 boxShadow: 'var(--launcher-shadow)',
                 touchAction: 'none',
                 pointerEvents: 'auto',
-                '--kiwi-launcher-shade': 0,
+                '--launcher-face-shade': 0,
                 transition: 'transform var(--motion-micro) var(--motion-ease-toggle)',
                 // Hover and press shade the ground under the bird, instantly; the bird never repaints.
-                '&:hover': { '--kiwi-launcher-shade': 0.1 },
-                '&:active': { '--kiwi-launcher-shade': 0.18, transform: 'scale(var(--launcher-press-scale))' },
+                '&:hover': { '--launcher-face-shade': 'var(--companion-launcher-shade-hover)' },
+                '&:active': { '--launcher-face-shade': 'var(--companion-launcher-shade-active)', transform: 'scale(var(--launcher-press-scale))' },
                 // One frame: the disc's 1 px edge becomes 2 px of --focus-ring, drawn inward.
-                '&:focus-visible': { outline: 'none', '--kiwi-launcher-edge': 'var(--focus-ring)' },
+                '&:focus-visible': { outline: 'none', '--launcher-face-edge': 'var(--focus-ring)' },
                 '&:focus-visible .kiwi-launcher-edge': { strokeWidth: 5.714, r: 77.143 },
                 '@media (forced-colors: active)': {
                   '&:focus-visible': { outline: '2px solid Highlight', outlineOffset: '-2px' },

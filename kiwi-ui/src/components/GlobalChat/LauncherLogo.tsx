@@ -8,7 +8,8 @@ import { useId } from "react";
  * arc; a forest speech bubble sits inside the circle, clear of the edge and the
  * bird. The four fills are the mascot artwork's own palette (#92ae70 sage,
  * #234631 forest, #ccbd99 tan, #f5f4e8 cream), which no token recolours; the
- * edge reads --launcher-border and the state shade reads --kiwi-launcher-shade.
+ * edge reads --launcher-face-edge (falling back to --launcher-border) and the state
+ * shade reads --launcher-face-shade, the names of the design's launcher-round.svg.
  * Inline, not an <img>, so those custom properties reach it.
  */
 const LauncherLogo = () => {
@@ -29,7 +30,7 @@ const LauncherLogo = () => {
         </clipPath>
       </defs>
       <circle cx="80" cy="80" r="80" fill="#92ae70" />
-      <circle cx="80" cy="80" r="80" fill="#234631" style={{ fillOpacity: "var(--kiwi-launcher-shade, 0)" }} />
+      <circle cx="80" cy="80" r="80" fill="#234631" style={{ fillOpacity: "var(--launcher-face-shade, 0)" }} />
       <g clipPath={`url(#${clipId})`}>
         <g transform="translate(23.431 136.569) scale(0.68) translate(-23.431 -136.569)">
           <path fill="#234631" d="M-12 160V92C4 99 12 83 20 72C33 54 50 47 66 51C87 56 101 74 99 91C98 107 80 118 80 133L82 170Z" />
@@ -45,7 +46,7 @@ const LauncherLogo = () => {
         r="78.571"
         fill="none"
         strokeWidth="2.857"
-        style={{ stroke: "var(--kiwi-launcher-edge, var(--launcher-border))" }}
+        style={{ stroke: "var(--launcher-face-edge, var(--launcher-border))" }}
       />
       <path
         fill="#234631"

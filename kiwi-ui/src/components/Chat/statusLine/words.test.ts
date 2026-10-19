@@ -13,6 +13,12 @@ describe("status line words", () => {
     expect(stepLabelFor("Checking the page list")).toBe("Peeking at the page list…");
     expect(stepLabelFor("Looking up your classes")).toBe("Sniffing out your classes…");
     expect(stepLabelFor("Reading class analytics")).toBe("Peering at class analytics…");
+    expect(stepLabelFor("Reading this page")).toBe("Peering at this page…");
+  });
+
+  it("pecks through class materials for the materials search, under its new or its kept chain label", () => {
+    expect(stepLabelFor("Searching your class materials")).toBe("Pecking through class materials…");
+    expect(stepLabelFor("Searching materials")).toBe("Pecking through class materials…");
   });
 
   it("leaves acting and tool steps plain, with one ellipsis", () => {

@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import KiwiStatusLine from "./KiwiStatusLine.tsx";
+import tokensCss from "../../../theme/generated/kiwi-ui.tokens.css?raw";
+import KiwiStatusLine, { CAMERA } from "./KiwiStatusLine.tsx";
 
 const camera = () => screen.getByTestId("kiwi-status-line-camera");
 
@@ -7,6 +8,13 @@ describe("KiwiStatusLine", () => {
   afterEach(() => {
     vi.useRealTimers();
     Object.defineProperty(document, "hidden", { configurable: true, value: false });
+  });
+
+  it("frames the artwork for the stage size the companion.line.kiwi token sets", () => {
+    const stage = tokensCss.match(/--companion-line-kiwi:\s*(\d+(?:\.\d+)?)px/);
+
+    expect(stage).not.toBeNull();
+    expect(Number(stage![1])).toBe(CAMERA.stage);
   });
 
   it("shows its words, with Kiwi hidden from assistive technology", () => {

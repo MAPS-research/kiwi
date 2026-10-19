@@ -41,10 +41,11 @@ const LOST_FRAMES_MS = 250;
 
 /**
  * The camera: the 72 px atlas cell drawn at 30.528 px, offset so the bird's feet
- * stand on the label's baseline (19 px down the 28 px row) in a 24 px stage.
- * Framing constants of the artwork, measured on the sign-off preview.
+ * stand on the label's baseline (19 px down the 28 px row) in the 24 px stage
+ * (`companion.line.kiwi`). Framing constants of the artwork, measured on the
+ * sign-off preview; they hold only for that stage size, which a test checks.
  */
-const CAMERA = { size: 30.528, left: -5.042, top: -6.97, stage: 24 };
+export const CAMERA = { size: 30.528, left: -5.042, top: -6.97, stage: 24 };
 
 type Atlas = "walk" | "hop" | "stand";
 
@@ -189,17 +190,18 @@ export default function KiwiStatusLine({ label, complete, startedAt, motion, onG
         position: "relative",
         display: "inline-flex",
         alignItems: "flex-start",
-        gap: "var(--space-2)",
-        height: "var(--tutor-message-toolbar-line)",
+        gap: "var(--companion-line-gap)",
+        height: "var(--companion-line-height)",
         maxWidth: "100%",
-        color: "var(--accent-text)",
+        // The one in-progress string that is not neutral (DESIGN.md, The status line).
+        color: "var(--companion-line-ink)",
         verticalAlign: "top",
       }}
     >
       <Box
         component="span"
         aria-hidden="true"
-        sx={{ position: "relative", flex: "none", width: `${CAMERA.stage}px`, height: "100%" }}
+        sx={{ position: "relative", flex: "none", width: "var(--companion-line-kiwi)", height: "100%" }}
       >
         <Box
           ref={cameraRef}

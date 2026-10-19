@@ -304,7 +304,7 @@ const lineLabelFor = (message: ChatMessage, steps: AgentStep[], answerNumber: nu
     ? { toolName: null, cleanedText: "" }
     : extractToolInfo(message.content || "");
   const tool = message.toolExecution?.status === "running" ? message.toolExecution.toolName : toolName;
-  if (tool && !cleanedText) return stepLabelFor(getDisplayName(tool));
+  if (tool && !cleanedText) return `Using ${getDisplayName(tool)}…`;
   if (cleanedText) return STREAM_LABEL;
   return waitVerbFor(answerNumber);
 };
