@@ -5,7 +5,6 @@ import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import ViewSidebarIcon from '@mui/icons-material/ViewSidebar';
 import WebAssetIcon from '@mui/icons-material/WebAsset';
 import {
-  Backdrop,
   Box,
   IconButton,
   Paper,
@@ -332,15 +331,9 @@ export const GlobalChatModal: React.FC = () => {
 
   return (
     <Portal>
-      {/* Backdrop - shown for modal and sidepanel modes: the shadow ink, no blur */}
-      <Backdrop
-        open={isOpen && effectiveMode !== 'fullscreen' && effectiveMode !== 'snap'}
-        onClick={closePanel}
-        sx={{
-          zIndex: theme.zIndex.modal - 1,
-          backgroundColor: 'var(--backdrop)',
-        }}
-      />
+      {/* No backdrop in any mode: students read the PDF while they ask, so the page
+          behind keeps its colours and stays usable (the user's decision of
+          2026-10-19). Escape and Close chat still close the panel. */}
 
       {/* Single container that changes shape based on mode */}
       <Paper

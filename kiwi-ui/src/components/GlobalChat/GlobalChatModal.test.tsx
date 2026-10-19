@@ -150,15 +150,16 @@ describe('GlobalChatModal', () => {
     expect(hoisted.chat.closeChat).toHaveBeenCalledTimes(1);
   });
 
-  it('closes when the backdrop behind the modal is clicked', () => {
-    renderPanel();
+  it.each(['modal', 'sidepanel'] as const)(
+    'puts no backdrop behind the %s, so the PDF and the menus keep their colours and stay usable',
+    (mode) => {
+      hoisted.chat.displayMode = mode;
+      renderPanel();
 
-    const backdrop = document.querySelector('.MuiBackdrop-root');
-    expect(backdrop).not.toBeNull();
-    fireEvent.click(backdrop!);
-
-    expect(hoisted.chat.closeChat).toHaveBeenCalledTimes(1);
-  });
+      expect(screen.getByRole('complementary', { name: 'Kiwi chat' })).toBeInTheDocument();
+      expect(document.querySelector('.MuiBackdrop-root')).toBeNull();
+    },
+  );
 
   it('resizes a docked panel from the keyboard on its separator', () => {
     hoisted.chat.displayMode = 'snap';
