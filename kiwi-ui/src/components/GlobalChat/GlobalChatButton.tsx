@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Fab, Badge, Tooltip, Zoom } from '@mui/material';
-import ChatIcon from '@mui/icons-material/Chat';
+import { Badge, ButtonBase, Fade, Tooltip } from '@mui/material';
+import LauncherLogo from './LauncherLogo.tsx';
 import DraggableExport from 'react-draggable';
 import type { DraggableData, DraggableEvent, DraggableProps } from 'react-draggable';
 import { useGlobalChat } from '../../context/GlobalChatContext.tsx';
@@ -31,7 +31,7 @@ interface Viewport {
 }
 
 const FAB_POSITION_KEY = 'globalChatButtonPosition';
-const FAB_SIZE = 56; // MUI Fab default diameter
+const FAB_SIZE = 56; // --launcher-size
 const EDGE_MARGIN = 8;
 // Raised from the old 24 so the button doesn't sit on top of content that
 // commonly lives in the very bottom corner (footers, in-app action bars).
@@ -245,36 +245,55 @@ export const GlobalChatButton: React.FC<GlobalChatButtonProps> = ({ visible = tr
           transition: isDragging ? 'none' : `transform ${SNAP_DURATION_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`,
         }}
       >
-        <Zoom in={!isOpen}>
-          <Tooltip title="Open Kiwi Chat" placement={isAppTab ? 'right' : 'left'}>
-            <Fab
-              color="primary"
-              aria-label="open chat"
+        {/* Hidden while the panel is open: a fade, no scale (the launcher never bounces). */}
+        <Fade in={!isOpen} timeout={{ enter: 220, exit: 176 }}>
+          <Tooltip title="Open Kiwi chat" placement={isAppTab ? 'right' : 'left'}>
+            <ButtonBase
+              aria-label="Open Kiwi chat"
+              data-kiwi-launcher=""
               onClick={handleClick}
               sx={{
-                boxShadow: 3,
+                position: 'relative',
+                width: 'var(--launcher-size)',
+                height: 'var(--launcher-size)',
+                borderRadius: '50%',
+                boxShadow: 'var(--launcher-shadow)',
                 touchAction: 'none',
                 pointerEvents: 'auto',
-                '&:hover': {
-                  boxShadow: 6,
+                '--kiwi-launcher-shade': 0,
+                transition: 'transform var(--motion-micro) var(--motion-ease-toggle)',
+                // Hover and press shade the ground under the bird, instantly; the bird never repaints.
+                '&:hover': { '--kiwi-launcher-shade': 0.1 },
+                '&:active': { '--kiwi-launcher-shade': 0.18, transform: 'scale(var(--launcher-press-scale))' },
+                // One frame: the disc's 1 px edge becomes 2 px of --focus-ring, drawn inward.
+                '&:focus-visible': { outline: 'none', '--kiwi-launcher-edge': 'var(--focus-ring)' },
+                '&:focus-visible .kiwi-launcher-edge': { strokeWidth: 5.714, r: 77.143 },
+                '@media (forced-colors: active)': {
+                  '&:focus-visible': { outline: '2px solid Highlight', outlineOffset: '-2px' },
                 },
               }}
             >
-              <Badge
-                badgeContent={messageCount > 0 ? messageCount : undefined}
-                color="error"
-                max={99}
-                sx={{
-                  '& .MuiBadge-badge': {
-                    display: messageCount > 0 ? 'flex' : 'none',
-                  },
-                }}
-              >
-                <ChatIcon />
-              </Badge>
-            </Fab>
+              <LauncherLogo />
+              {messageCount > 0 ? (
+                <Badge
+                  badgeContent={messageCount}
+                  color="primary"
+                  max={9}
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    '& .MuiBadge-badge': {
+                      minWidth: 'var(--launcher-badge-size)',
+                      height: 'var(--launcher-badge-size)',
+                      borderRadius: 'var(--launcher-badge-radius)',
+                    },
+                  }}
+                />
+              ) : null}
+            </ButtonBase>
           </Tooltip>
-        </Zoom>
+        </Fade>
       </div>
     </Draggable>
   );
