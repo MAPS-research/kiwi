@@ -15,7 +15,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import React, { useCallback, useId } from 'react';
+import React, { useCallback, useEffect, useId, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { ChatDisplayMode } from '../../context/GlobalChatContext.tsx';
 import { MAX_PANEL_WIDTH, MIN_PANEL_WIDTH, useGlobalChat } from '../../context/GlobalChatContext.tsx';
@@ -116,6 +116,21 @@ export const GlobalChatModal: React.FC = () => {
   // On mobile, always use fullscreen
   const effectiveMode = isMobile ? 'fullscreen' : displayMode;
   const titleId = useId();
+
+  // Opening the panel takes the student to its composer, as a dialog takes focus on open
+  // (DESIGN.md, Dialogs). Only an open that happens now moves focus: a panel that is
+  // already open when the page loads, or stays open across a navigation, does not.
+  const panelRef = useRef<HTMLElement | null>(null);
+  const wasOpenRef = useRef(isOpen);
+  useEffect(() => {
+    const opened = isOpen && !wasOpenRef.current;
+    wasOpenRef.current = isOpen;
+    if (!opened) return undefined;
+    const timer = window.setTimeout(() => {
+      panelRef.current?.querySelector<HTMLTextAreaElement>('textarea')?.focus();
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [isOpen]);
 
   /** Closes the panel and hands focus back to the launcher (it reappears once the panel has gone). */
   const closePanel = useCallback(() => {
@@ -330,6 +345,7 @@ export const GlobalChatModal: React.FC = () => {
       {/* Single container that changes shape based on mode */}
       <Paper
         component="aside"
+        ref={panelRef}
         aria-labelledby={titleId}
         elevation={0}
         sx={getContainerStyles()}

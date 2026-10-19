@@ -54,21 +54,23 @@ vi.mock('../Chat/ChatCore.tsx', () => ({
         }}
       />
       <input aria-label="Box that ignores Escape" />
+      <textarea aria-label="Composer stub" />
     </div>
   ),
 }));
 
-const renderPanel = () =>
-  render(
-    <MemoryRouter>
-      <ThemeProvider theme={createKiwiTheme({ dark: false })}>
-        <button data-kiwi-launcher type="button">
-          Open Kiwi chat
-        </button>
-        <GlobalChatModal />
-      </ThemeProvider>
-    </MemoryRouter>
-  );
+const panelTree = () => (
+  <MemoryRouter>
+    <ThemeProvider theme={createKiwiTheme({ dark: false })}>
+      <button data-kiwi-launcher type="button">
+        Open Kiwi chat
+      </button>
+      <GlobalChatModal />
+    </ThemeProvider>
+  </MemoryRouter>
+);
+
+const renderPanel = () => render(panelTree());
 
 const originalMatchMedia = window.matchMedia;
 
@@ -119,6 +121,23 @@ describe('GlobalChatModal', () => {
 
     expect(hoisted.chat.closeChat).toHaveBeenCalledTimes(1);
     await waitFor(() => expect(screen.getByRole('button', { name: 'Open Kiwi chat' })).toHaveFocus());
+  });
+
+  it('takes the student to the composer when they open the panel', async () => {
+    hoisted.chat.isOpen = false;
+    const { rerender } = renderPanel();
+
+    hoisted.chat.isOpen = true;
+    rerender(panelTree());
+
+    await waitFor(() => expect(screen.getByRole('textbox', { name: 'Composer stub' })).toHaveFocus());
+  });
+
+  it('leaves focus alone when the panel is already open as the page loads', async () => {
+    renderPanel();
+
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    expect(screen.getByRole('textbox', { name: 'Composer stub' })).not.toHaveFocus();
   });
 
   it('closes on Escape, unless a control inside has already used the key', () => {

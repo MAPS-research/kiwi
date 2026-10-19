@@ -41,6 +41,7 @@ import { NavigationActionFromJSON } from "../../services/models/NavigationAction
 import apiClient, { basePath } from "../../utils/api.ts";
 import { Experiment, experimentApi } from "../../utils/experimentApi.ts";
 import { buildChatContext } from "./chatContext.ts";
+import { returnFocusToComposer } from "./composerFocus.ts";
 import ChatField from "./ChatField.tsx";
 import ExperimentCompare from "./ExperimentCompare.tsx";
 import { useChatLane } from "./useChatLane.ts";
@@ -320,7 +321,10 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
   const completeTurn = () => {
     setStatusLine((line) => (line ? { ...line, complete: true } : line));
     setFinishedAnnouncement("");
-    window.setTimeout(() => setFinishedAnnouncement(FINISHED), 40);
+    window.setTimeout(() => {
+      setFinishedAnnouncement(FINISHED);
+      returnFocusToComposer(formRef.current);
+    }, 40);
   };
   const cutTurn = () => setStatusLine(null);
   const [engineChoice, setEngineChoice] = useState<string>(() => {
