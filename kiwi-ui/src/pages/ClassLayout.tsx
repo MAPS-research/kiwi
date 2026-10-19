@@ -334,7 +334,6 @@ export const StudentClassLayout: React.FC = () => {
             sx={{
               flex: "1 1 auto",
               minWidth: 0,
-              "& .MuiTabs-flexContainer": { gap: "var(--tabs-gap)" },
             }}
           >
             {menuItems.map((item) => (

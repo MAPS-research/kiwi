@@ -161,6 +161,7 @@ const TERTIARY = {
 
 /** One frame on a status, filter or role chip; MUI's filled colours never reach the screen. */
 const statusChip = (kind: "success" | "warning" | "error" | "info") => ({
+  fontWeight: "var(--weight-semibold)",
   backgroundColor: `var(--chip-status-variant-${kind}-fill)`,
   color: `var(--chip-status-variant-${kind}-text)`,
   border: "none",
@@ -569,7 +570,8 @@ export function createKiwiTheme({ dark = darkModeEnabled() }: { dark?: boolean }
       MuiChip: {
         styleOverrides: {
           root: {
-            ...type("label"),
+            // The preview's .chip: the caption role, regular; status chips add 600.
+            ...type("caption"),
             height: "var(--chip-height)",
             borderRadius: "var(--chip-radius)",
             backgroundColor: "var(--chip-role-fill)",
@@ -632,6 +634,7 @@ export function createKiwiTheme({ dark = darkModeEnabled() }: { dark?: boolean }
       MuiTabs: {
         styleOverrides: {
           root: { minHeight: "var(--tabs-height)" },
+          list: { gap: "var(--tabs-gap)" },
           indicator: {
             height: "var(--tabs-marker)",
             backgroundColor: "var(--tabs-variant-selected-marker)",
@@ -847,18 +850,40 @@ export function createKiwiTheme({ dark = darkModeEnabled() }: { dark?: boolean }
         styleOverrides: { root: { ...type("label"), marginTop: 0, color: "inherit" } },
       },
 
+      MuiSnackbar: {
+        styleOverrides: {
+          // Toasts sit at the bottom right of the safe area (the preview's .toast). The
+          // width lives on this fixed root, whose 100% is the viewport: 420 px on a
+          // desktop, 24 px clear of both edges on a phone.
+          anchorOriginBottomRight: {
+            left: "auto",
+            right: "calc(var(--toast-offset-x) + env(safe-area-inset-right, 0px))",
+            bottom: "calc(var(--toast-offset-y) + env(safe-area-inset-bottom, 0px))",
+            width: "min(100% - 2 * var(--toast-edge-offset), var(--toast-max-width))",
+          },
+        },
+      },
+
       MuiSnackbarContent: {
         styleOverrides: {
           root: {
-            ...type("body"),
+            fontFamily: "var(--type-label-family)",
+            fontSize: "var(--text-sm)",
+            lineHeight: "var(--leading-sm)",
+            fontWeight: "var(--type-weight-regular)",
+            flexWrap: "nowrap",
             backgroundColor: "var(--toast-fill)",
             color: "var(--toast-text)",
             border: "1px solid var(--toast-border)",
             borderRadius: "var(--toast-radius)",
             boxShadow: "var(--toast-shadow)",
             padding: "var(--toast-padding) var(--toast-padding-x)",
-            width: "min(100% - 2 * var(--toast-edge-offset), var(--toast-max-width))",
+            width: "100%",
+            maxWidth: "var(--toast-max-width)",
           },
+          // MUI pads the message 8 px top and bottom, which made a one-line toast ~64 px tall.
+          message: { padding: 0, minWidth: 0 },
+          action: { marginRight: 0, paddingLeft: "var(--space-3)" },
         },
       },
 
