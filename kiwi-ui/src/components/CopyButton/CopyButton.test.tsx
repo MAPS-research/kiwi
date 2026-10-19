@@ -33,9 +33,9 @@ describe('CodeCopyButton', () => {
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
-  it('displays Copy text initially', () => {
+  it('is named "Copy code"', () => {
     render(<CodeCopyButton>Test content</CodeCopyButton>);
-    expect(screen.getByText('Copy')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Copy code' })).toBeInTheDocument();
   });
 
   it('displays ContentCopy icon initially', () => {
@@ -54,7 +54,7 @@ describe('CodeCopyButton', () => {
     expect(mockWriteText).toHaveBeenCalled();
 
     await waitFor(() => {
-      expect(screen.getByText('Copied')).toBeInTheDocument();
+      expect(screen.getByRole('status')).toHaveTextContent('Copied');
     });
   });
 

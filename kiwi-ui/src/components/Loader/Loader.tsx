@@ -12,7 +12,11 @@ const Loader: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  return <div className="loader">{dots}</div>;
+  return (
+    <div className="loader" data-dots>
+      Thinking{dots}
+    </div>
+  );
 };
 
 export default Loader;

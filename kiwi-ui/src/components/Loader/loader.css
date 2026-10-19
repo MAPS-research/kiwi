@@ -1,4 +1,4 @@
+/* The in-progress text: "Thinking" and its cycling dots, neutral (kiwi-ui/DESIGN.md, Loading). */
 .loader {
-  font-size: 24px;
-  /* color: white; */
+  color: var(--in-progress-text);
 }

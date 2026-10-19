@@ -1,14 +1,30 @@
-import { createElement, ReactNode, useCallback, useState } from "react";
+import { createElement, ReactNode, useCallback, useEffect, useState } from "react";
 import { renderToString } from "react-dom/server";
-import { Check, ContentCopy } from "@mui/icons-material";
-import { Button } from "@mui/material";
+import Check from "@mui/icons-material/Check";
+import ContentCopy from "@mui/icons-material/ContentCopy";
+import { Box, IconButton, Tooltip } from "@mui/material";
+import { toolbarButtonSx } from "../Chat/toolbarButton.ts";
 
+/** How long the copied state shows before the button reverts (an idempotent action's label swap). */
+const COPIED_MS = 2000;
+
+/**
+ * The code block's Copy button (kiwi-ui/DESIGN.md, The tutor-message surface): a
+ * 28 px toolbar button named "Copy code". After a copy it shows the check for
+ * 2 s and says "Copied" once to assistive technology.
+ */
 export default function CodeCopyButton({
   children,
 }: {
   children: ReactNode | ReactNode[];
 }) {
-  const [buttonState, setButtonState] = useState<"Copy" | "Copied">("Copy");
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!copied) return undefined;
+    const timer = window.setTimeout(() => setCopied(false), COPIED_MS);
+    return () => window.clearTimeout(timer);
+  }, [copied]);
 
   const handleCopy = useCallback((reactChildren: ReactNode | ReactNode[]) => {
     const textString = renderToString(
@@ -20,8 +36,7 @@ export default function CodeCopyButton({
 
     navigator.clipboard.writeText(unencodedText).then(
       () => {
-        setButtonState("Copied");
-        // console.log('Copied to clipboard:', unencodedText);
+        setCopied(true);
       },
       (err) => {
         console.error("Failed to copy to clipboard:", err);
@@ -30,12 +45,19 @@ export default function CodeCopyButton({
   }, []);
 
   return (
-    <Button
-      variant="contained"
-      startIcon={buttonState === "Copy" ? <ContentCopy /> : <Check />}
-      onClick={() => handleCopy(children)}
-    >
-      {buttonState}
-    </Button>
+    <>
+      <Tooltip title={copied ? "Copied" : "Copy code"}>
+        <IconButton aria-label="Copy code" onClick={() => handleCopy(children)} sx={toolbarButtonSx}>
+          {copied ? <Check /> : <ContentCopy />}
+        </IconButton>
+      </Tooltip>
+      <Box
+        component="span"
+        role="status"
+        sx={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)", whiteSpace: "nowrap" }}
+      >
+        {copied ? "Copied" : ""}
+      </Box>
+    </>
   );
 }

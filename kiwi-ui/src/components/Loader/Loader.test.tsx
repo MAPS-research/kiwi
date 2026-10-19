@@ -16,37 +16,37 @@ describe('Loader', () => {
 
   it('renders without crashing', () => {
     render(<Loader />);
-    expect(screen.getByText('.')).toBeInTheDocument();
+    expect(screen.getByText('Thinking.')).toBeInTheDocument();
   });
 
   it('starts with a single dot', () => {
     render(<Loader />);
-    expect(screen.getByText('.')).toBeInTheDocument();
+    expect(screen.getByText('Thinking.')).toBeInTheDocument();
   });
 
   it('animates dots correctly', () => {
     render(<Loader />);
 
     // Initial state: single dot
-    expect(screen.getByText('.')).toBeInTheDocument();
+    expect(screen.getByText('Thinking.')).toBeInTheDocument();
 
     // After 500ms: two dots
     act(() => {
       vi.advanceTimersByTime(500);
     });
-    expect(screen.getByText('..')).toBeInTheDocument();
+    expect(screen.getByText('Thinking..')).toBeInTheDocument();
 
     // After another 500ms: three dots
     act(() => {
       vi.advanceTimersByTime(500);
     });
-    expect(screen.getByText('...')).toBeInTheDocument();
+    expect(screen.getByText('Thinking...')).toBeInTheDocument();
 
     // After another 500ms: back to single dot
     act(() => {
       vi.advanceTimersByTime(500);
     });
-    expect(screen.getByText('.')).toBeInTheDocument();
+    expect(screen.getByText('Thinking.')).toBeInTheDocument();
   });
 
   it('applies loader class', () => {

@@ -1,27 +1,22 @@
 import React from "react";
+import { Box, ButtonBase, Typography } from "@mui/material";
 import {
-  Box,
-  ButtonBase,
-  Collapse,
-  CircularProgress,
-  Typography,
-} from "@mui/material";
-import {
-  AutoAwesome as AutoAwesomeIcon,
-  CheckCircle as CheckCircleIcon,
-  ErrorOutlined as ErrorOutlineIcon,
+  Check as CheckIcon,
+  WarningAmberOutlined as WarningIcon,
   ExpandMore as ExpandMoreIcon,
-  Search as SearchIcon,
-  Code as CodeIcon,
-  Build as BuildIcon,
-  Map as MapIcon,
-  School as SchoolIcon,
-  OpenInNew as OpenInNewIcon,
-  Visibility as VisibilityIcon,
-  TouchApp as TouchAppIcon,
-  Edit as EditIcon,
-  Insights as InsightsIcon,
-  MenuBook as MenuBookIcon,
+  FormatListBulletedOutlined as StepsIcon,
+  MoreHoriz as MoreHorizIcon,
+  SearchOutlined as SearchIcon,
+  CodeOutlined as CodeIcon,
+  BuildOutlined as BuildIcon,
+  MapOutlined as MapIcon,
+  SchoolOutlined as SchoolIcon,
+  OpenInNewOutlined as OpenInNewIcon,
+  VisibilityOutlined as VisibilityIcon,
+  TouchAppOutlined as TouchAppIcon,
+  EditOutlined as EditIcon,
+  InsightsOutlined as InsightsIcon,
+  MenuBookOutlined as MenuBookIcon,
 } from "@mui/icons-material";
 
 /**
@@ -114,32 +109,37 @@ export interface AgentStepChainProps {
 }
 
 const TOOL_ICONS: { match: RegExp; icon: React.ReactElement; label: string }[] = [
-  { match: /sitemap/i, icon: <MapIcon fontSize="inherit" />, label: "Reading the sitemap" },
-  { match: /list_classes/i, icon: <SchoolIcon fontSize="inherit" />, label: "Looking up classes" },
-  { match: /navigate/i, icon: <OpenInNewIcon fontSize="inherit" />, label: "Navigating" },
-  { match: /open_material/i, icon: <MenuBookIcon fontSize="inherit" />, label: "Opening class content" },
-  { match: /observe/i, icon: <VisibilityIcon fontSize="inherit" />, label: "Looking at the page" },
-  { match: /click/i, icon: <TouchAppIcon fontSize="inherit" />, label: "Clicking" },
-  { match: /fill/i, icon: <EditIcon fontSize="inherit" />, label: "Filling a field" },
+  { match: /sitemap/i, icon: <MapIcon fontSize="inherit" />, label: "Checking the page list" },
+  { match: /list_classes/i, icon: <SchoolIcon fontSize="inherit" />, label: "Looking up your classes" },
+  { match: /navigate/i, icon: <OpenInNewIcon fontSize="inherit" />, label: "Opening a page for you" },
+  { match: /open_material/i, icon: <MenuBookIcon fontSize="inherit" />, label: "Opening class materials for you" },
+  { match: /observe/i, icon: <VisibilityIcon fontSize="inherit" />, label: "Reading this page" },
+  { match: /click/i, icon: <TouchAppIcon fontSize="inherit" />, label: "Clicking for you" },
+  { match: /fill/i, icon: <EditIcon fontSize="inherit" />, label: "Filling in a field for you" },
   { match: /analytics/i, icon: <InsightsIcon fontSize="inherit" />, label: "Reading class analytics" },
   { match: /rag|search/i, icon: <SearchIcon fontSize="inherit" />, label: "Searching materials" },
   { match: /code|interpreter/i, icon: <CodeIcon fontSize="inherit" />, label: "Running code" },
 ];
 
+/** A tool's own name in sentence case ("search_papers" → "Search papers"). */
+const sentenceCase = (toolName: string) => {
+  const words = toolName.split(/[\s_-]+/).filter(Boolean).map((w) => w.toLowerCase());
+  if (!words.length) return toolName;
+  words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1);
+  return words.join(" ");
+};
+
 const describe = (toolName: string | null) => {
   if (!toolName) {
-    return { icon: <AutoAwesomeIcon fontSize="inherit" />, label: "Thinking" };
+    return { icon: <MoreHorizIcon fontSize="inherit" />, label: "Working…" };
   }
   const hit = TOOL_ICONS.find((t) => t.match.test(toolName));
   if (hit) return { icon: hit.icon, label: hit.label };
-  return {
-    icon: <BuildIcon fontSize="inherit" />,
-    label: toolName
-      .split(/[\s_-]+/)
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-      .join(" "),
-  };
+  return { icon: <BuildIcon fontSize="inherit" />, label: sentenceCase(toolName) };
 };
+
+/** The words for a step: what the chain shows, and what the status line builds on. */
+export const stepLabel = (toolName: string | null) => describe(toolName).label;
 
 /**
  * The same tool repeating back-to-back is the signature of an agent going in
@@ -161,37 +161,13 @@ const collapseRepeats = (steps: AgentStep[]) => {
 };
 
 /**
- * Three staggered dots for the step currently in flight. A tool call can sit for
- * seconds (a class lookup, a page navigation) with nothing else moving on screen,
- * so the row needs to say "still working" on its own.
+ * The step in flight. The chat's status line already moves while Kiwi works, and
+ * one thing moves at a time, so the chain marks the running step with a still
+ * ellipsis instead of animated dots.
  */
 const WorkingDots: React.FC = () => (
-  <Box
-    component="span"
-    aria-label="working"
-    sx={{
-      display: "inline-flex",
-      alignItems: "flex-end",
-      gap: "2px",
-      ml: 0.25,
-      "& > span": {
-        width: 3,
-        height: 3,
-        borderRadius: "50%",
-        bgcolor: "primary.main",
-        animation: "kiwiStepDot 1.2s ease-in-out infinite",
-      },
-      "& > span:nth-of-type(2)": { animationDelay: "0.15s" },
-      "& > span:nth-of-type(3)": { animationDelay: "0.3s" },
-      "@keyframes kiwiStepDot": {
-        "0%, 60%, 100%": { opacity: 0.25, transform: "translateY(0)" },
-        "30%": { opacity: 1, transform: "translateY(-2px)" },
-      },
-    }}
-  >
-    <span />
-    <span />
-    <span />
+  <Box component="span" aria-label="Still working" role="img" sx={{ ml: 0.25, color: "var(--in-progress-text)" }}>
+    …
   </Box>
 );
 
@@ -210,47 +186,30 @@ export const AgentStepChain: React.FC<AgentStepChainProps> = ({ steps, running }
     : `${toolCount} step${toolCount === 1 ? "" : "s"}`;
 
   return (
-    <Box sx={{ mb: 1 }}>
+    <Box sx={{ mb: "var(--tutor-message-block-gap)" }}>
       <ButtonBase
         onClick={() => setOverride(!expanded)}
         aria-expanded={expanded}
-        aria-label={expanded ? "Hide agent steps" : "Show agent steps"}
+        aria-label={expanded ? "Hide Kiwi's steps" : "Show Kiwi's steps"}
         sx={{
           justifyContent: "flex-start",
-          gap: 0.75,
-          py: 0.25,
-          borderRadius: 1,
+          gap: "var(--space-2)",
+          minHeight: "var(--tutor-message-toolbar-line)",
+          borderRadius: "var(--radius-small)",
           textAlign: "left",
+          color: "var(--text-secondary)",
+          "&:hover": { color: "var(--text)" },
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            fontSize: 18,
-            color: running ? "primary.main" : "text.secondary",
-            ...(running && {
-              animation: "kiwiChainPulse 1.4s ease-in-out infinite",
-              "@keyframes kiwiChainPulse": {
-                "0%, 100%": { opacity: 1 },
-                "50%": { opacity: 0.35 },
-              },
-            }),
-          }}
-        >
-          <AutoAwesomeIcon fontSize="inherit" />
-        </Box>
+        <StepsIcon aria-hidden sx={{ fontSize: "var(--size-icon-sm)", color: "var(--icon-default)" }} />
 
-        <Typography
-          variant="body2"
-          sx={{ fontWeight: 500, color: "text.primary" }}
-        >
+        <Typography variant="body2" component="span" sx={{ fontWeight: "var(--weight-semibold)", color: "inherit" }}>
           {summary}
           {looping && !running && (
             <Typography
               component="span"
               variant="caption"
-              sx={{ ml: 1, color: "warning.main" }}
+              sx={{ ml: 1, color: "var(--status-warning-text)" }}
             >
               repeated steps
             </Typography>
@@ -258,24 +217,22 @@ export const AgentStepChain: React.FC<AgentStepChainProps> = ({ steps, running }
         </Typography>
 
         <ExpandMoreIcon
-          fontSize="small"
+          aria-hidden
           sx={{
-            color: "text.secondary",
+            fontSize: "var(--size-icon-sm)",
+            color: "var(--icon-default)",
             transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
-            transition: "transform 0.2s ease",
           }}
         />
-
-        {running && <CircularProgress size={14} thickness={5} />}
       </ButtonBase>
 
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <Box sx={{ pl: 0.25, pb: 0.5, pt: 0.5 }}>
+      {expanded && (
+        <Box sx={{ pt: "var(--space-2)" }}>
           {rows.map((step, i) => {
             const { icon, label } = describe(step.toolName);
             const isLast = i === rows.length - 1;
             return (
-              <Box key={i} sx={{ display: "flex", gap: 1.25, position: "relative" }}>
+              <Box key={i} sx={{ display: "flex", gap: "var(--space-3)", position: "relative" }}>
                 {/* rail */}
                 <Box
                   sx={{
@@ -286,6 +243,7 @@ export const AgentStepChain: React.FC<AgentStepChainProps> = ({ steps, running }
                   }}
                 >
                   <Box
+                    aria-hidden
                     sx={{
                       width: 22,
                       height: 22,
@@ -294,34 +252,33 @@ export const AgentStepChain: React.FC<AgentStepChainProps> = ({ steps, running }
                       alignItems: "center",
                       justifyContent: "center",
                       fontSize: 13,
-                      bgcolor: "background.paper",
-                      border: 1,
-                      borderColor:
-                        step.status === "running" ? "primary.main" : "divider",
-                      color:
-                        step.status === "running" ? "primary.main" : "text.secondary",
+                      bgcolor: "var(--surface)",
+                      border: "1px solid",
+                      borderColor: step.status === "running" ? "var(--border-interactive)" : "var(--border)",
+                      color: step.status === "running" ? "var(--text)" : "var(--icon-default)",
                     }}
                   >
                     {icon}
                   </Box>
                   {!isLast && (
-                    <Box sx={{ width: "1px", flexGrow: 1, minHeight: 12, bgcolor: "divider" }} />
+                    <Box sx={{ width: "1px", flexGrow: 1, minHeight: 12, bgcolor: "var(--border-subtle)" }} />
                   )}
                 </Box>
 
                 <Box sx={{ pb: isLast ? 0 : 1, minWidth: 0, flexGrow: 1 }}>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
-                    <Typography variant="body2" sx={{ color: "text.primary" }}>
+                    <Typography variant="body2" sx={{ color: "var(--text)" }}>
                       {label}
                     </Typography>
                     {step.repeats > 1 && (
                       <Typography
                         variant="caption"
                         sx={{
-                          px: 0.6,
-                          borderRadius: 0.75,
-                          bgcolor: step.repeats > 2 ? "warning.light" : "action.selected",
-                          color: step.repeats > 2 ? "warning.contrastText" : "text.secondary",
+                          px: 0.75,
+                          borderRadius: "var(--radius-small)",
+                          fontVariantNumeric: "tabular-nums",
+                          bgcolor: step.repeats > 2 ? "var(--status-warning-surface)" : "var(--surface-active)",
+                          color: step.repeats > 2 ? "var(--status-warning-text)" : "var(--text-secondary)",
                         }}
                       >
                         ×{step.repeats}
@@ -330,7 +287,7 @@ export const AgentStepChain: React.FC<AgentStepChainProps> = ({ steps, running }
                     {step.status === "running" ? (
                       <WorkingDots />
                     ) : (
-                      <CheckCircleIcon sx={{ fontSize: 14, color: "success.main" }} />
+                      <CheckIcon aria-hidden sx={{ fontSize: 14, color: "var(--icon-default)" }} />
                     )}
                   </Box>
                   {step.thinking && (
@@ -338,7 +295,7 @@ export const AgentStepChain: React.FC<AgentStepChainProps> = ({ steps, running }
                       variant="caption"
                       sx={{
                         display: "block",
-                        color: "text.secondary",
+                        color: "var(--text-secondary)",
                         whiteSpace: "pre-wrap",
                         mt: 0.25,
                       }}
@@ -353,14 +310,14 @@ export const AgentStepChain: React.FC<AgentStepChainProps> = ({ steps, running }
 
           {looping && (
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, mt: 1 }}>
-              <ErrorOutlineIcon sx={{ fontSize: 14, color: "warning.main" }} />
-              <Typography variant="caption" sx={{ color: "text.secondary" }}>
-                The same step repeated — the agent may be stuck.
+              <WarningIcon aria-hidden sx={{ fontSize: 14, color: "var(--status-warning-text)" }} />
+              <Typography variant="caption" sx={{ color: "var(--text-secondary)" }}>
+                Kiwi repeated this step. It may be stuck.
               </Typography>
             </Box>
           )}
         </Box>
-      </Collapse>
+      )}
     </Box>
   );
 };
