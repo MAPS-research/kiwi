@@ -188,6 +188,10 @@ const TopNav = ({
         <Box sx={{ flexGrow: 1 }} />
 
         <Box sx={{ display: "inline-flex", alignItems: "center", flexShrink: 0 }}>
+          {/* The preview's order: Display settings, then the view switch, then Sign out.
+              Display settings: theme and Kiwi animation (shown when the deployment offers either). */}
+          <DisplayMenu />
+
           {/* Student view: on admin routes, for instructors and admins */}
           {isAdminRoute && isInstructorOrAdmin && (
             <Tooltip title="Switch to student view">
@@ -208,9 +212,6 @@ const TopNav = ({
               </IconButton>
             </Tooltip>
           )}
-
-          {/* Display settings: theme and Kiwi animation (shown when the deployment offers either) */}
-          <DisplayMenu />
 
           <Tooltip title="Sign out">
             <IconButton component="a" href="/logout" aria-label="Sign out">

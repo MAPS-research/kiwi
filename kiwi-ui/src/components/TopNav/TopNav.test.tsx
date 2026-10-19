@@ -199,6 +199,19 @@ describe('TopNav', () => {
     expect(screen.getByRole('button', { name: 'Switch to Instructor view' })).toBeInTheDocument();
   });
 
+  it('orders the right group as the preview does: Display settings, the view switch, Sign out', () => {
+    // Display settings shows when the deployment offers a theme choice.
+    vi.stubEnv('VITE_ENABLE_DARK_MODE', 'true');
+    auth.user = { systemRole: 'instructor' };
+    renderWithProviders(<TopNav />, '/admin/classes');
+
+    const names = ['Display settings', 'Switch to student view', 'Sign out'];
+    const [display, view, signOut] = names.map((name) => screen.getByRole(name === 'Sign out' ? 'link' : 'button', { name }));
+    expect(display.compareDocumentPosition(view) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(view.compareDocumentPosition(signOut) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    vi.unstubAllEnvs();
+  });
+
   it('offers the student view on admin routes', () => {
     auth.user = { systemRole: 'instructor' };
     renderWithProviders(<TopNav />, '/admin/classes');
