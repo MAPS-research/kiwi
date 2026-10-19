@@ -11,7 +11,6 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { alpha } from "@mui/material/styles";
 import {
   ChatBubbleOutlined as MessageSquare,
   DownloadOutlined as Download,
@@ -30,15 +29,7 @@ import {
 } from "../../../utils/experimentApi.ts";
 import ExperimentAssistant from "./ExperimentAssistant.tsx";
 import { computeGroups, isReproducibleStrategy } from "./grouping.ts";
-import {
-  ExperimentTheme,
-  HoverCard,
-  MotionStack,
-  PageHeader,
-  PROMPT_FIELDS,
-  StatusChip,
-  VIOLET,
-} from "./experimentUi.tsx";
+import { HoverCard, PageHeader, PROMPT_FIELDS, StatusChip } from "./experimentUi.tsx";
 
 const StatPill: React.FC<{ icon: React.ReactNode; label: string; value: number }> = ({
   icon,
@@ -52,16 +43,17 @@ const StatPill: React.FC<{ icon: React.ReactNode; label: string; value: number }
       gap: 1,
       px: 1.5,
       py: 0.75,
-      borderRadius: 2,
-      bgcolor: alpha(VIOLET, 0.05),
+      borderRadius: "var(--radius-small)",
+      bgcolor: "action.hover",
     }}
   >
-    <Box sx={{ color: VIOLET, display: "grid", placeItems: "center" }}>{icon}</Box>
+    <Box sx={{ color: "var(--icon-default)", display: "grid", placeItems: "center" }}>{icon}</Box>
     <Box>
       <Typography
         sx={{
-          fontWeight: 700,
-          lineHeight: 1
+          fontWeight: 600,
+          lineHeight: 1,
+          fontVariantNumeric: "tabular-nums",
         }}>
         {value}
       </Typography>
@@ -156,11 +148,11 @@ const ExperimentDetail: React.FC = () => {
   if (loading)
     return (
       <Box sx={{ display: "grid", placeItems: "center", py: 10 }}>
-        <CircularProgress sx={{ color: VIOLET }} />
+        <CircularProgress />
       </Box>
     );
   if (!experiment)
-    return <Alert severity="error" sx={{ m: 4, borderRadius: 2 }}>{error || "Not found"}</Alert>;
+    return <Alert severity="error" sx={{ m: 4 }}>{error || "Not found"}</Alert>;
 
   const cfg = experiment.config;
   const assignmentLabel =
@@ -183,30 +175,26 @@ const ExperimentDetail: React.FC = () => {
         ).length
       : 0;
 
-  // Collapsible sub-section style shared by the two accordions in each card.
+  // Collapsible sub-section style shared by the two accordions in each card:
+  // the theme draws the accordion's hairline and sheet radius.
   const accordionSx = {
     mt: 1.5,
-    border: `1px solid ${alpha(VIOLET, 0.12)}`,
-    borderRadius: 3,
-    bgcolor: alpha(VIOLET, 0.015),
     overflow: "hidden",
-    boxShadow: "none",
-    "&:before": { display: "none" },
   } as const;
 
   return (
-    <ExperimentTheme>
+    <>
       <Box sx={{ px: { xs: 2, md: 3 }, pt: { xs: 2, md: 3 }, pb: 4, maxWidth: 920, mx: "auto" }}>
         <PageHeader
           icon={<FlaskConical />}
           title={experiment.name}
           subtitle={assignmentSubtitle}
-          status={<StatusChip status={experiment.status} onLight />}
+          status={<StatusChip status={experiment.status} />}
           onBack={() => navigate(`/admin/class/${classID}/experiments`)}
         />
 
         {error && (
-          <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }} onClose={() => setError(null)}>
+          <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
             {error}
           </Alert>
         )}
@@ -216,26 +204,25 @@ const ExperimentDetail: React.FC = () => {
             variant="outlined"
             startIcon={<Pencil sx={{ fontSize: 16 }} />}
             onClick={() => navigate(`/admin/class/${classID}/experiments/${experimentId}/edit`)}
-            sx={{ borderColor: alpha(VIOLET, 0.4), color: VIOLET }}
           >
             Edit
           </Button>
           {experiment.status === "draft" && (
-            <Button variant="contained" onClick={() => act(() => experimentApi.activate(classID!, experimentId!))} sx={{ background: VIOLET, fontWeight: 600 }}>
+            <Button variant="contained" onClick={() => act(() => experimentApi.activate(classID!, experimentId!))}>
               Activate
             </Button>
           )}
           {experiment.status === "completed" && (
-            <Button variant="contained" onClick={() => act(() => experimentApi.activate(classID!, experimentId!))} sx={{ background: VIOLET, fontWeight: 600 }}>
+            <Button variant="contained" onClick={() => act(() => experimentApi.activate(classID!, experimentId!))}>
               Re-activate
             </Button>
           )}
           {experiment.status === "active" && (
-            <Button variant="outlined" color="error" onClick={() => act(() => experimentApi.complete(classID!, experimentId!))} sx={{ fontWeight: 600 }}>
+            <Button variant="outlined" color="error" onClick={() => act(() => experimentApi.complete(classID!, experimentId!))}>
               Turn off
             </Button>
           )}
-          <Button variant="outlined" startIcon={<Download sx={{ fontSize: 16 }} />} onClick={handleExport} sx={{ borderColor: alpha(VIOLET, 0.4), color: VIOLET }}>
+          <Button variant="outlined" startIcon={<Download sx={{ fontSize: 16 }} />} onClick={handleExport}>
             Export JSON
           </Button>
         </Stack>
@@ -254,41 +241,35 @@ const ExperimentDetail: React.FC = () => {
           variant="overline"
           sx={{
             color: "text.secondary",
-            fontWeight: 700
           }}>
           Variants · {cfg.variants.length}
         </Typography>
         <Stack spacing={1.5} sx={{ mt: 1 }}>
-          {cfg.variants.map((v, i) => (
-            <MotionStack key={v.key} delay={i * 0.06}>
+          {cfg.variants.map((v) => (
+            <Box key={v.key}>
               <HoverCard sx={{ p: 2.5 }}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, flexWrap: "wrap" }}>
                   <Typography sx={{
-                    fontWeight: 700
+                    fontWeight: 600
                   }}>{v.label}</Typography>
                   <Typography
                     variant="caption"
                     sx={{
                       color: "text.secondary",
-                      fontFamily: "monospace"
+                      fontFamily: "var(--font-mono)"
                     }}>
                     {v.key}
                   </Typography>
                   <Chip
                     size="small"
                     label={v.config.engine}
-                    sx={{
-                      height: 22,
-                      fontWeight: 600,
-                      bgcolor: v.config.engine === "qwen" ? "#eef2ff" : "#ecfdf5",
-                      color: v.config.engine === "qwen" ? "#4338ca" : "#047857",
-                    }}
+                    sx={{ height: 22 }}
                   />
                   <Box sx={{ flexGrow: 1 }} />
                   <Chip
                     size="small"
                     label={`${Math.round(v.allocation * 100)}%`}
-                    sx={{ height: 22, fontWeight: 700, bgcolor: alpha(VIOLET, 0.1), color: VIOLET }}
+                    sx={{ height: 22, fontVariantNumeric: "tabular-nums" }}
                   />
                 </Box>
 
@@ -305,7 +286,7 @@ const ExperimentDetail: React.FC = () => {
                   <Accordion disableGutters elevation={0} sx={accordionSx}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                       <Box sx={{ display: "flex", alignItems: "center", gap: 1, width: "100%", pr: 1 }}>
-                        <Users sx={{ fontSize: 16, color: VIOLET }} />
+                        <Users sx={{ fontSize: 16, color: "var(--icon-default)" }} />
                         <Typography variant="body2" sx={{
                           fontWeight: 600
                         }}>
@@ -315,7 +296,7 @@ const ExperimentDetail: React.FC = () => {
                         <Chip
                           size="small"
                           label={`${groups[v.key]?.length ?? 0} students`}
-                          sx={{ height: 22, fontWeight: 600, bgcolor: alpha(VIOLET, 0.08), color: VIOLET }}
+                          sx={{ height: 22, fontVariantNumeric: "tabular-nums" }}
                         />
                       </Box>
                     </AccordionSummary>
@@ -323,7 +304,7 @@ const ExperimentDetail: React.FC = () => {
                       {(groups[v.key]?.length ?? 0) > 0 ? (
                         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                           {groups[v.key].map((email) => (
-                            <Chip key={email} size="small" variant="outlined" label={email} sx={{ height: 22 }} />
+                            <Chip key={email} size="small" label={email} sx={{ height: 22 }} />
                           ))}
                         </Box>
                       ) : (
@@ -340,7 +321,7 @@ const ExperimentDetail: React.FC = () => {
                 <Accordion disableGutters elevation={0} sx={accordionSx}>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1, width: "100%", pr: 1 }}>
-                      <MessageSquare sx={{ fontSize: 16, color: VIOLET }} />
+                      <MessageSquare sx={{ fontSize: 16, color: "var(--icon-default)" }} />
                       <Typography variant="body2" sx={{
                         fontWeight: 600
                       }}>
@@ -353,12 +334,7 @@ const ExperimentDetail: React.FC = () => {
                           <Chip
                             size="small"
                             label={n ? "Customized" : "Using default"}
-                            sx={{
-                              height: 22,
-                              fontWeight: 600,
-                              bgcolor: n ? alpha(VIOLET, 0.1) : "action.hover",
-                              color: n ? VIOLET : "text.secondary",
-                            }}
+                            sx={{ height: 22 }}
                           />
                         );
                       })()}
@@ -375,7 +351,7 @@ const ExperimentDetail: React.FC = () => {
                           <Box key={f.key}>
                             <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, mb: 0.75 }}>
                               <Typography variant="caption" sx={{
-                                fontWeight: 700
+                                fontWeight: 600
                               }}>
                                 {f.label}
                               </Typography>
@@ -390,24 +366,20 @@ const ExperimentDetail: React.FC = () => {
                                 label={isCustom ? "Customized" : "Default"}
                                 sx={{
                                   height: 18,
-                                  fontSize: 10,
-                                  fontWeight: 600,
-                                  bgcolor: isCustom ? alpha(VIOLET, 0.1) : "action.hover",
-                                  color: isCustom ? VIOLET : "text.secondary",
+                                  fontSize: "var(--type-caption-size)",
                                 }}
                               />
                             </Box>
+                            {/* Read-only text: the read-only field's fill and edge. */}
                             <Typography
                               variant="body2"
                               sx={{
                                 whiteSpace: "pre-wrap",
                                 p: 1.25,
-                                borderRadius: 2,
-                                bgcolor: "#fff",
-                                border: `1px solid ${alpha(VIOLET, isCustom ? 0.25 : 0.08)}`,
-                                fontSize: 13,
-                                lineHeight: 1.5,
-                                color: value ? "text.primary" : "text.disabled",
+                                borderRadius: "var(--field-radius)",
+                                bgcolor: "var(--field-variant-read-only-fill)",
+                                border: "1px solid var(--field-variant-read-only-border)",
+                                color: value ? "text.primary" : "text.secondary",
                               }}
                             >
                               {value || "(empty — class default applies)"}
@@ -419,13 +391,13 @@ const ExperimentDetail: React.FC = () => {
                   </AccordionDetails>
                 </Accordion>
               </HoverCard>
-            </MotionStack>
+            </Box>
           ))}
         </Stack>
 
         <ExperimentAssistant />
       </Box>
-    </ExperimentTheme>
+    </>
   );
 };
 

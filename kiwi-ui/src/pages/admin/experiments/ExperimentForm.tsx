@@ -32,7 +32,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { alpha } from "@mui/material/styles";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
@@ -47,14 +46,7 @@ import {
   Variant,
 } from "../../../utils/experimentApi.ts";
 import ExperimentAssistant from "./ExperimentAssistant.tsx";
-import {
-  ExperimentTheme,
-  HoverCard,
-  PageHeader,
-  PROMPT_FIELDS,
-  VIOLET,
-  violetGradient
-} from "./experimentUi.tsx";
+import { HoverCard, PageHeader, PROMPT_FIELDS } from "./experimentUi.tsx";
 import { computeGroups, isReproducibleStrategy } from "./grouping.ts";
 
 /** A titled section card. */
@@ -66,11 +58,10 @@ const Section: React.FC<{
 }> = ({ icon, title, action, children }) => (
   <HoverCard sx={{ p: { xs: 2, sm: 3 } }}>
     <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
-      <Box sx={{ color: VIOLET, display: "grid", placeItems: "center" }}>{icon}</Box>
+      <Box sx={{ color: "var(--icon-default)", display: "grid", placeItems: "center" }}>{icon}</Box>
       <Typography
         variant="subtitle1"
         sx={{
-          fontWeight: 700,
           flexGrow: 1
         }}>
         {title}
@@ -607,12 +598,12 @@ const ExperimentForm: React.FC = () => {
   if (loadingExperiment)
     return (
       <Box sx={{ display: "grid", placeItems: "center", py: 10 }}>
-        <CircularProgress sx={{ color: VIOLET }} />
+        <CircularProgress />
       </Box>
     );
 
   return (
-    <ExperimentTheme>
+    <>
       <Box sx={{ px: { xs: 2, md: 3 }, pt: { xs: 2, md: 3 }, pb: 4, maxWidth: 900, mx: "auto" }}>
         <PageHeader
           icon={<FlaskConical />}
@@ -626,12 +617,12 @@ const ExperimentForm: React.FC = () => {
         />
 
         {error && (
-          <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }} onClose={() => setError(null)}>
+          <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
             {error}
           </Alert>
         )}
         {info && (
-          <Alert severity="info" sx={{ mb: 2, borderRadius: 2 }} onClose={() => setInfo(null)}>
+          <Alert severity="info" sx={{ mb: 2 }} onClose={() => setInfo(null)}>
             {info}
           </Alert>
         )}
@@ -679,7 +670,7 @@ const ExperimentForm: React.FC = () => {
                   control={
                     <Radio
                       size="small"
-                      sx={{ pt: 0.5, color: alpha(VIOLET, 0.5), "&.Mui-checked": { color: VIOLET } }}
+                      sx={{ pt: 0.5 }}
                     />
                   }
                   label={
@@ -689,7 +680,7 @@ const ExperimentForm: React.FC = () => {
                         color={
                           draftDiff?.strategy &&
                             config.assignment.strategy === o.value
-                            ? "error.main"
+                            ? "var(--status-error-text)"
                             : undefined
                         }
                         sx={{
@@ -726,16 +717,14 @@ const ExperimentForm: React.FC = () => {
             )}
 
             {rosterError && (
-              <Alert severity="warning" sx={{ mt: 2, borderRadius: 2 }}>
+              <Alert severity="warning" sx={{ mt: 2 }}>
                 Couldn't load the class roster: {rosterError}. Group preview is
                 unavailable until it loads.
               </Alert>
             )}
 
             <Box sx={{ mt: 2, display: "flex", alignItems: "center", gap: 1.5, flexWrap: "wrap" }}>
-              <Typography variant="subtitle2" sx={{
-                fontWeight: 700
-              }}>
+              <Typography variant="subtitle2">
                 Student groups
               </Typography>
               {!isRandom && (
@@ -762,7 +751,6 @@ const ExperimentForm: React.FC = () => {
                     }
                   }}
                   disabled={previewing}
-                  sx={{ color: VIOLET, fontWeight: 600 }}
                 >
                   {previewing
                     ? "Computing…"
@@ -787,12 +775,12 @@ const ExperimentForm: React.FC = () => {
               <Alert
                 severity="info"
                 icon={false}
-                sx={{ mt: 1.5, borderRadius: 2, bgcolor: alpha(VIOLET, 0.05) }}
+                sx={{ mt: 1.5 }}
               >
                 “Random on first chat” is decided on the server when you activate,
                 so it can’t be shown as a stable list here. To fix each student’s
-                group (and which config they get) <b>before</b> they chat, use{" "}
-                <b>Seeded split</b> above.
+                group (and which config they get) <b style={{ fontWeight: "var(--weight-semibold)" }}>before</b> they chat, use{" "}
+                <b style={{ fontWeight: "var(--weight-semibold)" }}>Seeded split</b> above.
               </Alert>
             ) : rosterLoaded && !isManual && roster.length === 0 && !rosterError ? (
               <Typography
@@ -812,27 +800,21 @@ const ExperimentForm: React.FC = () => {
                     <Box
                       key={v.key}
                       sx={{
-                        border: `1px solid ${alpha(VIOLET, 0.15)}`,
-                        borderRadius: 3,
+                        border: "1px solid var(--border-subtle)",
+                        borderRadius: "var(--radius-small)",
                         p: 1.5,
-                        borderLeft: `4px solid ${v.config.engine === "qwen" ? "#6366f1" : "#10b981"}`,
                       }}
                     >
                       <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: members.length ? 1 : 0 }}>
                         <Typography variant="body2" sx={{
-                          fontWeight: 700
+                          fontWeight: 600
                         }}>
                           {v.label}
                         </Typography>
                         <Chip
                           size="small"
                           label={v.config.engine}
-                          sx={{
-                            height: 20,
-                            fontWeight: 600,
-                            bgcolor: v.config.engine === "qwen" ? "#eef2ff" : "#ecfdf5",
-                            color: v.config.engine === "qwen" ? "#4338ca" : "#047857",
-                          }}
+                          sx={{ height: 20 }}
                         />
                         <Box sx={{ flexGrow: 1 }} />
                         <Chip
@@ -844,13 +826,13 @@ const ExperimentForm: React.FC = () => {
                                   (Number(v.allocation) || 0) * 100,
                                 )}%`
                           }
-                          sx={{ height: 20, fontWeight: 600, bgcolor: alpha(VIOLET, 0.08), color: VIOLET }}
+                          sx={{ height: 20, fontVariantNumeric: "tabular-nums" }}
                         />
                       </Box>
                       {members.length ? (
                         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                           {members.map((m) => (
-                            <Chip key={m} size="small" variant="outlined" label={m} sx={{ height: 22 }} />
+                            <Chip key={m} size="small" label={m} sx={{ height: 22 }} />
                           ))}
                         </Box>
                       ) : (
@@ -877,7 +859,6 @@ const ExperimentForm: React.FC = () => {
                     size="small"
                     startIcon={<Shuffle sx={{ fontSize: 14 }} />}
                     onClick={randomAssign}
-                    sx={{ color: VIOLET, fontWeight: 600 }}
                   >
                     Random assign
                   </Button>
@@ -886,7 +867,7 @@ const ExperimentForm: React.FC = () => {
                   <Chip
                     size="small"
                     label={`${config.variants.reduce((s, v) => s + (v.members?.length ?? 0), 0)} / ${roster.length} assigned`}
-                    sx={{ bgcolor: alpha(VIOLET, 0.08), color: VIOLET, fontWeight: 600 }}
+                    sx={{ fontVariantNumeric: "tabular-nums" }}
                   />
                 ) : (
                   <Chip
@@ -909,9 +890,7 @@ const ExperimentForm: React.FC = () => {
                     variant="outlined"
                     sx={{
                       p: 2.5,
-                      borderRadius: 4,
-                      borderColor: alpha(VIOLET, 0.15),
-                      borderLeft: `4px solid ${v.config.engine === "qwen" ? "#6366f1" : "#10b981"}`,
+                      borderRadius: "var(--radius-sheet)",
                     }}
                   >
                     <Stack direction="row" spacing={2} sx={{ mb: 1 }}>
@@ -1020,21 +999,18 @@ const ExperimentForm: React.FC = () => {
                       </Accordion>
                     )}
 
+                    {/* The theme draws the accordion's hairline and sheet radius. */}
                     <Accordion
                       disableGutters
                       elevation={0}
                       sx={{
                         mt: 1.5,
-                        border: `1px solid ${alpha(VIOLET, 0.12)}`,
-                        borderRadius: 3,
-                        bgcolor: alpha(VIOLET, 0.015),
                         overflow: "hidden",
-                        "&:before": { display: "none" },
                       }}
                     >
                       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Box sx={{ display: "flex", alignItems: "center", gap: 1, width: "100%", pr: 1 }}>
-                          <MessageSquare sx={{ fontSize: 16, color: VIOLET }} />
+                          <MessageSquare sx={{ fontSize: 16, color: "var(--icon-default)" }} />
                           <Typography variant="body2" sx={{
                             fontWeight: 600
                           }}>
@@ -1047,12 +1023,7 @@ const ExperimentForm: React.FC = () => {
                               <Chip
                                 size="small"
                                 label={n ? "Customized" : "Using default"}
-                                sx={{
-                                  height: 22,
-                                  fontWeight: 600,
-                                  bgcolor: n ? alpha(VIOLET, 0.1) : "action.hover",
-                                  color: n ? VIOLET : "text.secondary",
-                                }}
+                                sx={{ height: 22 }}
                               />
                             );
                           })()}
@@ -1069,7 +1040,7 @@ const ExperimentForm: React.FC = () => {
                               <Box key={f.key}>
                                 <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, mb: 0.75 }}>
                                   <Typography variant="caption" sx={{
-                                    fontWeight: 700
+                                    fontWeight: 600
                                   }}>
                                     {f.label}
                                   </Typography>
@@ -1086,7 +1057,7 @@ const ExperimentForm: React.FC = () => {
                                       onClick={() =>
                                         updateSystemPrompt(i, f.key, defaults?.[f.key] || "")
                                       }
-                                      sx={{ minWidth: 0, px: 1, color: "text.secondary", fontSize: 11 }}
+                                      sx={{ minWidth: 0, px: 1, color: "text.secondary", fontSize: "var(--type-caption-size)" }}
                                     >
                                       Reset
                                     </Button>
@@ -1096,10 +1067,7 @@ const ExperimentForm: React.FC = () => {
                                     label={isCustom ? "Customized" : "Default"}
                                     sx={{
                                       height: 18,
-                                      fontSize: 10,
-                                      fontWeight: 600,
-                                      bgcolor: isCustom ? alpha(VIOLET, 0.1) : "action.hover",
-                                      color: isCustom ? VIOLET : "text.secondary",
+                                      fontSize: "var(--type-caption-size)",
                                     }}
                                   />
                                 </Box>
@@ -1110,13 +1078,6 @@ const ExperimentForm: React.FC = () => {
                                   minRows={2}
                                   fullWidth
                                   error={!!vd?.prompts[f.key]}
-                                  sx={{
-                                    "& .MuiOutlinedInput-root": {
-                                      bgcolor: "#fff",
-                                      fontSize: 13,
-                                      lineHeight: 1.5,
-                                    },
-                                  }}
                                 />
                               </Box>
                             );
@@ -1132,7 +1093,7 @@ const ExperimentForm: React.FC = () => {
                 onClick={addVariant}
                 variant="outlined"
                 startIcon={<Plus sx={{ fontSize: 16 }} />}
-                sx={{ alignSelf: "flex-start", borderColor: alpha(VIOLET, 0.4), color: VIOLET }}
+                sx={{ alignSelf: "flex-start" }}
               >
                 Add variant
               </Button>
@@ -1157,7 +1118,7 @@ const ExperimentForm: React.FC = () => {
               multiline
               minRows={5}
               fullWidth
-              sx={{ "& .MuiInputBase-root": { fontFamily: "monospace", fontSize: 12 } }}
+              sx={{ "& .MuiInputBase-root": { fontFamily: "var(--type-code-family)", fontSize: "var(--type-code-size)" } }}
             />
             <input
               ref={fileInputRef}
@@ -1172,14 +1133,13 @@ const ExperimentForm: React.FC = () => {
               }}
             />
             <Stack direction="row" spacing={1.5} sx={{ mt: 1.5, flexWrap: "wrap" }}>
-              <Button onClick={applyJson} variant="outlined" sx={{ borderColor: alpha(VIOLET, 0.4), color: VIOLET }}>
+              <Button onClick={applyJson} variant="outlined">
                 Apply JSON
               </Button>
               <Button
                 onClick={() => fileInputRef.current?.click()}
                 variant="outlined"
                 startIcon={<Upload sx={{ fontSize: 16 }} />}
-                sx={{ borderColor: alpha(VIOLET, 0.4), color: VIOLET }}
               >
                 Import file
               </Button>
@@ -1187,7 +1147,6 @@ const ExperimentForm: React.FC = () => {
                 onClick={exportJson}
                 variant="outlined"
                 startIcon={<Download sx={{ fontSize: 16 }} />}
-                sx={{ borderColor: alpha(VIOLET, 0.4), color: VIOLET }}
               >
                 Export JSON
               </Button>
@@ -1204,14 +1163,14 @@ const ExperimentForm: React.FC = () => {
               position: "sticky",
               bottom: -10,
               zIndex: 10,
-              boxShadow: `0 6px 20px ${alpha(VIOLET, 0.1)}`,
+              // Docked to the bottom of the form: its hairline separates it, no shadow.
             }}
           >
             <Button
               variant="contained"
               onClick={handleApprove}
               disabled={submitting}
-              sx={{ background: violetGradient, fontWeight: 700, px: 3, "&.Mui-disabled": { background: alpha(VIOLET, 0.3), color: "#fff" } }}
+              sx={{ px: 3 }}
             >
               {submitting
                 ? "Submitting…"
@@ -1225,7 +1184,6 @@ const ExperimentForm: React.FC = () => {
                   <Checkbox
                     checked={activateOnSubmit}
                     onChange={(e) => setActivateOnSubmit(e.target.checked)}
-                    sx={{ color: VIOLET, "&.Mui-checked": { color: VIOLET } }}
                   />
                 }
                 label={isEdit ? "Activate after saving" : "Activate immediately"}
@@ -1240,7 +1198,7 @@ const ExperimentForm: React.FC = () => {
 
         <ExperimentAssistant />
       </Box>
-    </ExperimentTheme>
+    </>
   );
 };
 

@@ -8,7 +8,6 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { alpha } from "@mui/material/styles";
 import {
   AccountTreeOutlined as GitBranch,
   AddOutlined as Plus,
@@ -20,15 +19,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Experiment, experimentApi } from "../../../utils/experimentApi.ts";
 import ExperimentAssistant from "./ExperimentAssistant.tsx";
-import {
-  ExperimentTheme,
-  HoverCard,
-  MotionStack,
-  PageHeader,
-  StatusChip,
-  VIOLET,
-  violetGradient,
-} from "./experimentUi.tsx";
+import { HoverCard, PageHeader, StatusChip } from "./experimentUi.tsx";
 
 const ExperimentList: React.FC = () => {
   const navigate = useNavigate();
@@ -64,7 +55,7 @@ const ExperimentList: React.FC = () => {
   };
 
   return (
-    <ExperimentTheme>
+    <>
       <Box sx={{ px: { xs: 2, md: 3 }, pt: { xs: 2, md: 3 }, pb: 4, maxWidth: 1000, mx: "auto" }}>
         <PageHeader
           icon={<GitBranch />}
@@ -75,13 +66,6 @@ const ExperimentList: React.FC = () => {
               variant="contained"
               startIcon={<Plus sx={{ fontSize: 18 }} />}
               onClick={() => navigate(`/admin/class/${classID}/experiments/new`)}
-              sx={{
-                background: violetGradient,
-                color: "#fff",
-                fontWeight: 600,
-                boxShadow: "none",
-                "&:hover": { opacity: 0.92, boxShadow: "none" },
-              }}
             >
               New Experiment
             </Button>
@@ -89,17 +73,17 @@ const ExperimentList: React.FC = () => {
         />
 
         {error && (
-          <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }} onClose={() => setError(null)}>
+          <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
             {error}
           </Alert>
         )}
 
         {loading ? (
           <Box sx={{ display: "grid", placeItems: "center", py: 8 }}>
-            <CircularProgress sx={{ color: VIOLET }} />
+            <CircularProgress />
           </Box>
         ) : experiments.length === 0 ? (
-          <MotionStack delay={0.1}>
+          <Box>
             <HoverCard sx={{ p: 6, textAlign: "center" }}>
               <Box
                 sx={{
@@ -110,14 +94,12 @@ const ExperimentList: React.FC = () => {
                   placeItems: "center",
                   mx: "auto",
                   mb: 2,
-                  background: alpha(VIOLET, 0.08),
+                  bgcolor: "action.hover",
                 }}
               >
-                <FlaskConical sx={{ fontSize: 34, color: VIOLET }} />
+                <FlaskConical sx={{ fontSize: 34, color: "var(--icon-default)" }} />
               </Box>
-              <Typography variant="h6" sx={{
-                fontWeight: 700
-              }}>
+              <Typography variant="h6">
                 No experiments yet
               </Typography>
               <Typography
@@ -135,16 +117,15 @@ const ExperimentList: React.FC = () => {
                 variant="contained"
                 startIcon={<Plus sx={{ fontSize: 18 }} />}
                 onClick={() => navigate(`/admin/class/${classID}/experiments/new`)}
-                sx={{ background: violetGradient, fontWeight: 600 }}
               >
                 Create your first experiment
               </Button>
             </HoverCard>
-          </MotionStack>
+          </Box>
         ) : (
           <Stack spacing={1.5}>
-            {experiments.map((exp, i) => (
-              <MotionStack key={exp.id} delay={i * 0.06}>
+            {experiments.map((exp) => (
+              <Box key={exp.id}>
                 <HoverCard
                   onClick={() => navigate(`/admin/class/${classID}/experiments/${exp.id}`)}
                   sx={{ p: 2.5 }}
@@ -154,23 +135,23 @@ const ExperimentList: React.FC = () => {
                       sx={{
                         width: 44,
                         height: 44,
-                        borderRadius: 2.5,
+                        borderRadius: "var(--radius-small)",
                         display: "grid",
                         placeItems: "center",
-                        background: alpha(VIOLET, 0.08),
+                        bgcolor: "action.hover",
                         flexShrink: 0,
                       }}
                     >
-                      <FlaskConical sx={{ fontSize: 22, color: VIOLET }} />
+                      <FlaskConical sx={{ fontSize: 22, color: "var(--icon-default)" }} />
                     </Box>
                     <Box sx={{ flexGrow: 1, minWidth: 0 }}>
                       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                         <Typography noWrap sx={{
-                          fontWeight: 700
+                          fontWeight: 600
                         }}>
                           {exp.name || "Untitled experiment"}
                         </Typography>
-                        <StatusChip status={exp.status} onLight />
+                        <StatusChip status={exp.status} />
                       </Box>
                       <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 0.75, flexWrap: "wrap" }}>
                         <Tooltip title="Variant groups">
@@ -178,7 +159,7 @@ const ExperimentList: React.FC = () => {
                             size="small"
                             icon={<Users sx={{ fontSize: 13 }} />}
                             label={`${exp.config?.variants?.length ?? 0} groups`}
-                            sx={{ height: 22, bgcolor: alpha(VIOLET, 0.06), color: "text.secondary", "& .MuiChip-icon": { color: "text.secondary" } }}
+                            sx={{ height: 22, "& .MuiChip-icon": { color: "var(--icon-default)" } }}
                           />
                         </Tooltip>
                         {(exp.config?.variants ?? []).slice(0, 4).map((v) => (
@@ -188,10 +169,7 @@ const ExperimentList: React.FC = () => {
                             label={v.config?.engine}
                             sx={{
                               height: 22,
-                              fontWeight: 600,
                               textTransform: "lowercase",
-                              bgcolor: v.config?.engine === "qwen" ? "#eef2ff" : "#ecfdf5",
-                              color: v.config?.engine === "qwen" ? "#4338ca" : "#047857",
                             }}
                           />
                         ))}
@@ -211,17 +189,16 @@ const ExperimentList: React.FC = () => {
                         variant="outlined"
                         startIcon={<Pencil sx={{ fontSize: 14 }} />}
                         onClick={() => navigate(`/admin/class/${classID}/experiments/${exp.id}/edit`)}
-                        sx={{ borderColor: alpha(VIOLET, 0.4), color: VIOLET }}
                       >
                         Edit
                       </Button>
                       {exp.status === "draft" && (
-                        <Button size="small" variant="outlined" onClick={() => act(() => experimentApi.activate(classID!, exp.id))} sx={{ borderColor: alpha(VIOLET, 0.4), color: VIOLET }}>
+                        <Button size="small" variant="outlined" onClick={() => act(() => experimentApi.activate(classID!, exp.id))}>
                           Activate
                         </Button>
                       )}
                       {exp.status === "completed" && (
-                        <Button size="small" variant="outlined" onClick={() => act(() => experimentApi.activate(classID!, exp.id))} sx={{ borderColor: alpha(VIOLET, 0.4), color: VIOLET }}>
+                        <Button size="small" variant="outlined" onClick={() => act(() => experimentApi.activate(classID!, exp.id))}>
                           Re-activate
                         </Button>
                       )}
@@ -233,14 +210,14 @@ const ExperimentList: React.FC = () => {
                     </Stack>
                   </Box>
                 </HoverCard>
-              </MotionStack>
+              </Box>
             ))}
           </Stack>
         )}
 
         <ExperimentAssistant />
       </Box>
-    </ExperimentTheme>
+    </>
   );
 };
 
