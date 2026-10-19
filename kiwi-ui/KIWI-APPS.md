@@ -175,9 +175,10 @@ mounts it. `ClassLayout`, `ClassAppPage` and the admin pages call
 ### Matching Kiwi's look
 
 `public/kiwi-design-tokens.css` is served from the Kiwi origin, and embedded apps
-can link to it. Its `--kiwi-font-family` names **Montserrat only**, the single
-typeface Kiwi uses for ordinary UI (see
-[README.md](README.md#typography-montserrat-only)).
+can link to it. Its `--kiwi-font-family` names **Montserrat**. Kiwi's own UI now
+uses Source Sans 3 (see [README.md](README.md#typography-source-sans-3)); the
+public tokens keep Montserrat until their 2.0.0 release moves them to the same
+design.
 
 The token file has no `@font-face` rule, so an embedded app must load the font
 itself. Otherwise the app falls back to the iframe's default font. Self-host the

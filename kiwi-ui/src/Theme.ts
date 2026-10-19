@@ -1,5 +1,36 @@
-import { alpha, createTheme } from "@mui/material/styles";
-import materialDesign2014 from "./theme/material-design-2014.json" with { type: "json" };
+import { createElement, type CSSProperties } from "react";
+import { createTheme, type PaletteOptions, type Theme } from "@mui/material/styles";
+import type {} from "@mui/x-data-grid/themeAugmentation";
+import CheckCircleOutlined from "@mui/icons-material/CheckCircleOutlined";
+import HighlightOffOutlined from "@mui/icons-material/HighlightOffOutlined";
+import InfoOutlined from "@mui/icons-material/InfoOutlined";
+import WarningAmberOutlined from "@mui/icons-material/WarningAmberOutlined";
+import generated from "./theme/generated/mui-theme.json" with { type: "json" };
+import { darkModeEnabled } from "./config/branding.ts";
+import {
+  CheckboxCheckedIcon,
+  CheckboxIcon,
+  CheckboxIndeterminateIcon,
+  CONTROL_BOX_CLASS,
+  RadioCheckedIcon,
+  RadioIcon,
+} from "./theme/controlIcons.tsx";
+
+/**
+ * The MUI theme of the Stage 1 design (kiwi-ui/DESIGN.md, Design system >
+ * Generation spec > The MUI theme).
+ *
+ * - The palettes, type scale and radius come from the generated preview
+ *   (src/theme/generated/mui-theme.json), never typed here.
+ * - MUI switches colour schemes on the same `data-theme` attribute as the token
+ *   CSS (src/theme/generated/kiwi-ui.tokens.css), so one attribute re-themes both.
+ * - Component overrides read the token custom properties (var(--button-height),
+ *   var(--space-inset-x), ...), so `data-density` and the coarse-pointer media query
+ *   re-resolve them with no second theme.
+ * - Focus is one frame: a control with a border recolours that border to the
+ *   2 px --focus-ring (the extra pixel drawn inward); a control without one keeps
+ *   the global 2 px ring from src/theme/base.css.
+ */
 
 interface ChartPalette {
   series1: string;
@@ -7,6 +38,11 @@ interface ChartPalette {
   series3: string;
   series4: string;
   series5: string;
+  other: string;
+  grid: string;
+  baseline: string;
+  tickText: string;
+  plot: string;
 }
 
 declare module "@mui/material/styles" {
@@ -17,195 +53,973 @@ declare module "@mui/material/styles" {
   interface PaletteOptions {
     chart?: ChartPalette;
   }
+
+  interface TypographyVariants {
+    display: CSSProperties;
+  }
+
+  interface TypographyVariantsOptions {
+    display?: CSSProperties;
+  }
 }
 
-const { blue, green, grey, orange, pink, purple, red } =
-  materialDesign2014.palettes;
+declare module "@mui/material/Typography" {
+  interface TypographyPropsVariantOverrides {
+    display: true;
+  }
+}
 
-const theme = createTheme({
-  palette: {
-    mode: "light",
-    contrastThreshold: 4.5,
-    primary: {
-      main: purple["800"],
-      light: purple["500"],
-      dark: purple["900"],
-      contrastText: "#ffffff",
-    },
-    secondary: {
-      main: grey["700"],
-      light: grey["500"],
-      dark: grey["900"],
-      contrastText: "#ffffff",
-    },
-    success: {
-      main: green["800"],
-      light: green["600"],
-      dark: green["900"],
-      contrastText: "#ffffff",
-    },
-    warning: {
-      main: orange["800"],
-      light: orange["600"],
-      dark: orange["900"],
-      contrastText: grey["900"],
-    },
-    error: {
-      main: red["700"],
-      light: red["500"],
-      dark: red["900"],
-      contrastText: "#ffffff",
-    },
-    info: {
-      main: blue["700"],
-      light: blue["500"],
-      dark: blue["900"],
-      contrastText: "#ffffff",
-    },
-    chart: {
-      series1: "#6A1B9A",
-      series2: "#CF007E",
-      series3: "#FF4E4C",
-      series4: "#FFA600",
-      series5: grey["500"],
-    },
-    text: {
-      primary: grey["900"],
-      secondary: grey["700"],
-      disabled: grey["500"],
-    },
-    background: {
-      default: grey["50"],
-      paper: "#ffffff",
-    },
-    divider: grey["300"],
-    action: {
-      active: purple["700"],
-      hover: "rgba(123, 31, 162, 0.04)",
-      selected: "rgba(123, 31, 162, 0.08)",
-      disabled: grey["500"],
-      disabledBackground: grey["200"],
-      focus: "rgba(123, 31, 162, 0.12)",
-    },
-  },
-  typography: {
-    fontFamily: "'Montserrat', sans-serif",
-  },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-          textTransform: "none",
-        },
-      },
-    },
-    MuiTab: {
-      styleOverrides: {
-        root: {
-          textTransform: "none",
-        },
-      },
-    },
-    MuiCard: {
-      defaultProps: {
-        elevation: 0,
-        variant: "outlined",
-      },
-      styleOverrides: {
-        root: {
-          borderRadius: 12,
-          boxShadow: "none",
-          backgroundImage: "none",
-        },
-      },
-    },
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-        },
-      },
-    },
-    MuiOutlinedInput: {
-      defaultProps: {
-        notched: false,
-      },
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-          minHeight: 44,
-          alignItems: "center",
-          "&:not(.MuiInputBase-multiline) .MuiOutlinedInput-input": {
-            padding: "0 14px",
-            fontSize: "0.875rem",
-            height: "20px",
-            lineHeight: "20px",
-          },
-          "&.MuiInputBase-sizeSmall": {
-            minHeight: 38,
-          },
-          "&.MuiInputBase-sizeSmall:not(.MuiInputBase-multiline) .MuiOutlinedInput-input": {
-            padding: "0 12px",
-          },
-          "&.MuiInputBase-multiline": {
-            padding: "12px 14px",
-          },
-          "&.MuiInputBase-multiline .MuiOutlinedInput-input": {
-            padding: 0,
-            fontSize: "0.875rem",
-            height: "auto",
-            lineHeight: "20px",
-          },
-          "&.MuiInputBase-adornedStart:not(.MuiInputBase-multiline) .MuiOutlinedInput-input": {
-            paddingLeft: 0,
-          },
-          "&.MuiInputBase-adornedEnd:not(.MuiInputBase-multiline) .MuiOutlinedInput-input": {
-            paddingRight: 0,
-          },
-          "& .MuiSelect-select": {
-            paddingRight: "36px",
-          },
-          "& .MuiOutlinedInput-notchedOutline": {
-            top: 0,
-          },
-          "& .MuiOutlinedInput-notchedOutline legend": {
-            display: "none",
-          },
-        },
-      },
-    },
-    MuiInputLabel: {
-      defaultProps: {
-        disableAnimation: true,
-      },
-      styleOverrides: {
-        root: {
-          position: "static",
-          transform: "none",
-          maxWidth: "100%",
-          fontSize: "0.875rem",
-          marginBottom: 6,
-          pointerEvents: "auto",
-          transition: "none",
-          "&.MuiInputLabel-shrink": {
-            transform: "none",
-            maxWidth: "100%",
-          },
-        },
-      },
-    },
-    MuiDialog: {
-      styleOverrides: {
-        paper: ({ theme }) => ({
-          border: `1px solid ${theme.palette.divider}`,
-          borderRadius: 16,
-          backgroundImage: "none",
-          boxShadow: `0 12px 32px ${alpha(theme.palette.common.black, 0.14)}`,
-        }),
-      },
-    },
+/** Drops the generator's notes (`_note`, `_kiwi`, `_dot`, ...), which MUI would turn into CSS variables. */
+function withoutNotes<T>(value: T): T {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return value;
+  return Object.fromEntries(
+    Object.entries(value)
+      .filter(([key]) => !key.startsWith("_"))
+      .map(([key, entry]) => [key, withoutNotes(entry)])
+  ) as T;
+}
+
+const palette = (scheme: "light" | "dark") =>
+  withoutNotes(generated.colorSchemes[scheme].palette) as unknown as PaletteOptions;
+
+/** A composite type role (`--type-<role>-*`) as style properties. */
+const type = (role: string) => ({
+  fontFamily: `var(--type-${role}-family)`,
+  fontSize: `var(--type-${role}-size)`,
+  lineHeight: `var(--type-${role}-leading)`,
+  fontWeight: `var(--type-${role}-weight)`,
+});
+
+/**
+ * Focus on a bordered control: the border itself becomes the 2 px frame, the
+ * second pixel drawn inward so nothing shifts, and no ring outside it.
+ */
+const frame = (color: string) => ({
+  outline: "none",
+  borderColor: color,
+  boxShadow: `inset 0 0 0 1px ${color}`,
+});
+
+/** A hit area of at least `token` around a control, without changing its drawn size. */
+const hitArea = (token: string) => ({
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    left: "50%",
+    top: "50%",
+    width: `max(100%, var(${token}))`,
+    height: `max(100%, var(${token}))`,
+    transform: "translate(-50%, -50%)",
   },
 });
+
+const DISABLED = "&.Mui-disabled, &[aria-disabled='true'], &[aria-disabled='true']:hover";
+const FOCUS = "&.Mui-focusVisible, &:focus-visible";
+const PRESS = {
+  transition: "transform var(--motion-micro) var(--motion-ease-toggle)",
+  "&:active": { transform: "scale(var(--motion-press-scale))" },
+  "&[aria-disabled='true']:active": { transform: "none" },
+};
+
+/** The four button roles of `§ Buttons`: the state order puts focus after disabled, so a focused aria-disabled button still shows its frame. */
+const buttonRole = (role: "primary" | "secondary" | "destructive") => ({
+  backgroundColor: `var(--button-${role}-fill)`,
+  color: `var(--button-${role}-text)`,
+  border: `1px solid var(--button-${role}-border)`,
+  "&:hover": {
+    backgroundColor: `var(--button-${role}-hover-fill)`,
+    borderColor: `var(--button-${role}-hover-border)`,
+  },
+  "&:active": {
+    backgroundColor: `var(--button-${role}-active-fill)`,
+    borderColor: `var(--button-${role}-active-border)`,
+  },
+  [DISABLED]: {
+    backgroundColor: `var(--button-${role}-disabled-fill)`,
+    color: `var(--button-${role}-disabled-text)`,
+    borderColor: `var(--button-${role}-disabled-border)`,
+  },
+  [FOCUS]: frame(`var(--button-${role}-focus-border)`),
+});
+
+const TERTIARY = {
+  backgroundColor: "var(--button-tertiary-fill)",
+  color: "var(--button-tertiary-text)",
+  "&:hover": { backgroundColor: "var(--button-tertiary-hover-fill)" },
+  "&:active": { backgroundColor: "var(--button-tertiary-active-fill)" },
+  [DISABLED]: {
+    backgroundColor: "var(--button-tertiary-disabled-fill)",
+    color: "var(--button-tertiary-disabled-text)",
+    fontWeight: "var(--button-tertiary-disabled-weight)",
+  },
+  "&[aria-pressed='true']": {
+    backgroundColor: "var(--button-tertiary-variant-pressed-fill)",
+    color: "var(--button-tertiary-variant-pressed-text)",
+    boxShadow: "inset 0 calc(-1 * var(--button-marker)) 0 var(--button-tertiary-variant-pressed-marker)",
+  },
+};
+
+/** One frame on a status, filter or role chip; MUI's filled colours never reach the screen. */
+const statusChip = (kind: "success" | "warning" | "error" | "info") => ({
+  backgroundColor: `var(--chip-status-variant-${kind}-fill)`,
+  color: `var(--chip-status-variant-${kind}-text)`,
+  border: "none",
+  "& .MuiChip-icon": { color: `var(--chip-status-variant-${kind}-icon)` },
+});
+
+/** Elevation keeps two depths: menus and tooltips cast --shadow-1, floating sheets --shadow-2. */
+const shadows = [
+  "none",
+  ...Array.from({ length: 24 }, (_, index) => (index < 4 ? "var(--shadow-1)" : "var(--shadow-2)")),
+] as Theme["shadows"];
+
+/** Box styles for the checkbox and radio drawings; kept beside the theme so both change together. */
+export const controlBoxStyles = {
+  [`.${CONTROL_BOX_CLASS}`]: {
+    boxSizing: "border-box",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "var(--checkbox-size)",
+    height: "var(--checkbox-size)",
+    border: "var(--checkbox-border-width) solid var(--checkbox-border)",
+    borderRadius: "var(--checkbox-radius)",
+    backgroundColor: "var(--checkbox-fill)",
+    color: "var(--checkbox-variant-checked-glyph)",
+  },
+  [`.${CONTROL_BOX_CLASS}--radio`]: { borderRadius: "50%" },
+  [`.${CONTROL_BOX_CLASS}--check, .${CONTROL_BOX_CLASS}--dash`]: {
+    backgroundColor: "var(--checkbox-variant-checked-fill)",
+    borderColor: "var(--checkbox-variant-checked-border)",
+  },
+  [`.${CONTROL_BOX_CLASS}--dot`]: {
+    backgroundColor: "var(--checkbox-variant-radio-checked-fill)",
+    borderColor: "var(--checkbox-variant-radio-checked-border)",
+  },
+  [`.${CONTROL_BOX_CLASS}__dot`]: {
+    width: "var(--checkbox-dot)",
+    height: "var(--checkbox-dot)",
+    borderRadius: "50%",
+    backgroundColor: "var(--checkbox-variant-radio-checked-glyph)",
+  },
+  [`.MuiCheckbox-root:hover .${CONTROL_BOX_CLASS}, .MuiRadio-root:hover .${CONTROL_BOX_CLASS}`]: {
+    borderColor: "var(--checkbox-hover-border)",
+  },
+  [`.MuiCheckbox-root:active .${CONTROL_BOX_CLASS}, .MuiRadio-root:active .${CONTROL_BOX_CLASS}`]: {
+    backgroundColor: "var(--checkbox-active-fill)",
+  },
+  [`.MuiCheckbox-root.Mui-focusVisible .${CONTROL_BOX_CLASS}, .MuiRadio-root.Mui-focusVisible .${CONTROL_BOX_CLASS}`]:
+    frame("var(--checkbox-focus-border)"),
+  [`.MuiCheckbox-root.Mui-disabled .${CONTROL_BOX_CLASS}, .MuiRadio-root.Mui-disabled .${CONTROL_BOX_CLASS}`]: {
+    backgroundColor: "var(--checkbox-disabled-fill)",
+    borderColor: "var(--checkbox-disabled-border)",
+    color: "var(--checkbox-disabled-glyph)",
+  },
+  [`.MuiCheckbox-root:has(input[aria-invalid='true']) .${CONTROL_BOX_CLASS}`]: {
+    borderColor: "var(--status-error-text)",
+  },
+  // A focused checkbox inside a row or a menu keeps the box as its frame.
+  ".MuiCheckbox-root input:focus-visible, .MuiRadio-root input:focus-visible, .MuiSwitch-input:focus-visible": {
+    outline: "none",
+  },
+};
+
+const { _note: _typographyNote, ...typography } = generated.typography;
+
+export function createKiwiTheme({ dark = darkModeEnabled() }: { dark?: boolean } = {}): Theme {
+  return createTheme({
+    cssVariables: { colorSchemeSelector: "data-theme", cssVarPrefix: "mui" },
+    colorSchemes: dark
+      ? { light: { palette: palette("light") }, dark: { palette: palette("dark") } }
+      : { light: { palette: palette("light") } },
+    shape: { borderRadius: generated.shape.borderRadius },
+    shadows,
+    typography: {
+      ...typography,
+      fontWeightLight: 400,
+      fontWeightRegular: 400,
+      fontWeightMedium: 600,
+      fontWeightBold: 600,
+    },
+    components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          // The global rules live in src/theme/base.css; MUI's own reset sets the canvas and ink.
+          body: { backgroundColor: "var(--background)", color: "var(--text)" },
+          ...controlBoxStyles,
+        },
+      },
+
+      // Ripples are motion outside the budget (`§ Motion`): colour switches instantly instead.
+      MuiButtonBase: { defaultProps: { disableRipple: true, disableTouchRipple: true } },
+
+      MuiButton: {
+        defaultProps: { disableElevation: true },
+        styleOverrides: {
+          root: {
+            ...type("button"),
+            position: "relative",
+            minHeight: "var(--button-height)",
+            minWidth: "var(--button-min-width)",
+            padding: "0 var(--button-padding-x)",
+            borderRadius: "var(--button-radius)",
+            textTransform: "none",
+            whiteSpace: "nowrap",
+            boxShadow: "none",
+            ...PRESS,
+            ...hitArea("--button-hit"),
+            "&:hover": { boxShadow: "none" },
+            "& .MuiButton-startIcon": { marginLeft: 0, marginRight: "var(--button-gap)" },
+            "& .MuiButton-endIcon": { marginRight: 0, marginLeft: "var(--button-gap)" },
+            "& .MuiButton-startIcon > *:nth-of-type(1), & .MuiButton-endIcon > *:nth-of-type(1)": {
+              fontSize: "var(--button-icon-size)",
+            },
+            variants: [
+              { props: { variant: "contained" }, style: buttonRole("primary") },
+              { props: { variant: "outlined" }, style: buttonRole("secondary") },
+              { props: { variant: "text" }, style: TERTIARY },
+              // Destructive actions are outlined in the destructive colour; a filled red button is not used.
+              { props: { variant: "contained", color: "error" }, style: buttonRole("destructive") },
+              { props: { variant: "outlined", color: "error" }, style: buttonRole("destructive") },
+              { props: { variant: "text", color: "error" }, style: { color: "var(--destructive-text)" } },
+            ],
+          },
+        },
+      },
+
+      MuiIconButton: {
+        styleOverrides: {
+          root: {
+            position: "relative",
+            minWidth: "var(--icon-button-size)",
+            minHeight: "var(--icon-button-size)",
+            padding: 0,
+            borderRadius: "var(--icon-button-radius)",
+            color: "var(--icon-button-icon)",
+            ...PRESS,
+            ...hitArea("--icon-button-hit"),
+            "& .MuiSvgIcon-root": { fontSize: "var(--icon-button-icon-size)" },
+            "&:hover": {
+              backgroundColor: "var(--icon-button-hover-fill)",
+              color: "var(--icon-button-hover-icon)",
+            },
+            "&:active": {
+              backgroundColor: "var(--icon-button-active-fill)",
+              color: "var(--icon-button-active-icon)",
+            },
+            [DISABLED]: {
+              backgroundColor: "var(--icon-button-disabled-fill)",
+              color: "var(--icon-button-disabled-icon)",
+            },
+            "&[aria-pressed='true']": {
+              backgroundColor: "var(--icon-button-variant-selected-fill)",
+              color: "var(--icon-button-variant-selected-icon)",
+              boxShadow:
+                "inset 0 calc(-1 * var(--icon-button-marker)) 0 var(--icon-button-variant-selected-marker)",
+            },
+            variants: [
+              { props: { color: "primary" }, style: { color: "var(--icon-accent)" } },
+              { props: { color: "error" }, style: { color: "var(--destructive-text)" } },
+              { props: { color: "inherit" }, style: { color: "inherit" } },
+            ],
+          },
+        },
+      },
+
+      MuiInputBase: {
+        styleOverrides: {
+          root: {
+            ...type("control"),
+            color: "var(--field-text)",
+          },
+          input: {
+            "&::placeholder": { color: "var(--field-placeholder)", opacity: 1 },
+          },
+        },
+      },
+
+      MuiOutlinedInput: {
+        defaultProps: { notched: false },
+        styleOverrides: {
+          root: {
+            borderRadius: "var(--field-radius)",
+            minHeight: "var(--field-height)",
+            alignItems: "center",
+            backgroundColor: "var(--field-fill)",
+            "&:not(.MuiInputBase-multiline) .MuiOutlinedInput-input": {
+              padding: "var(--field-padding-y) var(--field-padding-x)",
+              height: "var(--type-control-leading)",
+              lineHeight: "var(--type-control-leading)",
+            },
+            "&.MuiInputBase-multiline": {
+              padding: "var(--field-padding-y) var(--field-padding-x)",
+            },
+            "&.MuiInputBase-multiline .MuiOutlinedInput-input": {
+              padding: 0,
+              lineHeight: "var(--type-control-leading)",
+            },
+            "&.MuiInputBase-adornedStart": { paddingLeft: "var(--field-padding-x)" },
+            "&.MuiInputBase-adornedEnd": { paddingRight: "var(--space-2)" },
+            "&.MuiInputBase-adornedStart:not(.MuiInputBase-multiline) .MuiOutlinedInput-input": {
+              paddingLeft: "var(--space-2)",
+            },
+            "&.MuiInputBase-adornedEnd:not(.MuiInputBase-multiline) .MuiOutlinedInput-input": {
+              paddingRight: 0,
+            },
+            "& .MuiSelect-select": { paddingRight: "var(--field-select-padding-right)" },
+            "& .MuiOutlinedInput-notchedOutline": {
+              top: 0,
+              borderColor: "var(--field-border)",
+              borderRadius: "var(--field-radius)",
+            },
+            "& .MuiOutlinedInput-notchedOutline legend": { display: "none" },
+            "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "var(--field-hover-border)" },
+            // One frame: the outline MUI draws inside the box becomes 2 px of --focus-ring.
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "var(--field-focus-border)",
+              borderWidth: "var(--border-width-focus)",
+            },
+            "&.Mui-error .MuiOutlinedInput-notchedOutline, &.Mui-error:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "var(--status-error-text)",
+            },
+            "&.Mui-error.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "var(--status-error-text)",
+              borderWidth: "var(--border-width-focus)",
+            },
+            "&.MuiInputBase-readOnly": { backgroundColor: "var(--field-variant-read-only-fill)" },
+            "&.MuiInputBase-readOnly .MuiOutlinedInput-notchedOutline": {
+              borderColor: "var(--field-variant-read-only-border)",
+            },
+            "&.Mui-disabled": { backgroundColor: "var(--field-disabled-fill)" },
+            "&.Mui-disabled .MuiOutlinedInput-notchedOutline": {
+              borderColor: "var(--field-disabled-border)",
+            },
+            "&.Mui-disabled .MuiOutlinedInput-input": {
+              color: "var(--field-disabled-text)",
+              WebkitTextFillColor: "var(--field-disabled-text)",
+            },
+          },
+        },
+      },
+
+      MuiInput: {
+        styleOverrides: {
+          underline: {
+            "&::before": { borderBottomColor: "var(--field-border)" },
+            "&:hover:not(.Mui-disabled, .Mui-error)::before": { borderBottomColor: "var(--field-hover-border)" },
+            "&::after": { borderBottomColor: "var(--field-focus-border)", transition: "none" },
+            "&.Mui-error::after": { borderBottomColor: "var(--status-error-text)" },
+          },
+        },
+      },
+
+      MuiInputLabel: {
+        defaultProps: { disableAnimation: true },
+        styleOverrides: {
+          root: {
+            ...type("label"),
+            position: "static",
+            transform: "none",
+            maxWidth: "100%",
+            marginBottom: "var(--field-label-gap)",
+            color: "var(--field-label)",
+            pointerEvents: "auto",
+            transition: "none",
+            "&.MuiInputLabel-shrink": { transform: "none", maxWidth: "100%" },
+            "&.Mui-focused, &.Mui-error": { color: "var(--field-label)" },
+            "&.Mui-disabled": { color: "var(--disabled-text)" },
+          },
+        },
+      },
+
+      MuiFormLabel: {
+        styleOverrides: {
+          root: {
+            ...type("label"),
+            color: "var(--field-label)",
+            "&.Mui-focused, &.Mui-error": { color: "var(--field-label)" },
+            "&.Mui-disabled": { color: "var(--disabled-text)" },
+          },
+        },
+      },
+
+      MuiFormHelperText: {
+        styleOverrides: {
+          root: {
+            ...type("caption"),
+            margin: "var(--field-helper-gap) 0 0",
+            color: "var(--field-helper)",
+            "&.Mui-error": { color: "var(--status-error-text)" },
+            "&.Mui-disabled": { color: "var(--disabled-text)" },
+          },
+        },
+      },
+
+      MuiSelect: {
+        styleOverrides: {
+          icon: { color: "var(--icon-default)" },
+        },
+      },
+
+      MuiCheckbox: {
+        defaultProps: {
+          icon: createElement(CheckboxIcon),
+          checkedIcon: createElement(CheckboxCheckedIcon),
+          indeterminateIcon: createElement(CheckboxIndeterminateIcon),
+        },
+        styleOverrides: {
+          root: {
+            position: "relative",
+            padding: 0,
+            ...hitArea("--checkbox-hit"),
+          },
+        },
+      },
+
+      MuiRadio: {
+        defaultProps: {
+          icon: createElement(RadioIcon),
+          checkedIcon: createElement(RadioCheckedIcon),
+        },
+        styleOverrides: {
+          root: {
+            position: "relative",
+            padding: 0,
+            ...hitArea("--checkbox-hit"),
+          },
+        },
+      },
+
+      MuiFormControlLabel: {
+        styleOverrides: {
+          root: {
+            marginLeft: 0,
+            columnGap: "var(--checkbox-label-gap)",
+            "& .MuiFormControlLabel-label": { color: "var(--checkbox-label)" },
+            "& .MuiFormControlLabel-label.Mui-disabled": { color: "var(--checkbox-disabled-label)" },
+          },
+        },
+      },
+
+      MuiSwitch: {
+        styleOverrides: {
+          root: {
+            position: "relative",
+            width: "var(--switch-track-width)",
+            height: "var(--switch-track-height)",
+            padding: 0,
+            overflow: "visible",
+            ...hitArea("--switch-hit"),
+          },
+          switchBase: {
+            padding: "calc((var(--switch-track-height) - var(--switch-thumb-size)) / 2)",
+            color: "var(--switch-thumb)",
+            transitionDuration: "var(--motion-micro)",
+            transitionTimingFunction: "var(--motion-ease-toggle)",
+            "&:hover": { backgroundColor: "transparent" },
+            "&.Mui-checked": {
+              transform: "translateX(calc(var(--switch-track-width) - var(--switch-track-height)))",
+              color: "var(--switch-variant-on-thumb)",
+            },
+            "&.Mui-checked + .MuiSwitch-track": {
+              backgroundColor: "var(--switch-variant-on-track)",
+              borderColor: "var(--switch-variant-on-border)",
+              opacity: 1,
+            },
+            "&.Mui-focusVisible + .MuiSwitch-track": frame("var(--switch-focus-border)"),
+            "&.Mui-disabled": { color: "var(--switch-disabled-thumb)" },
+            "&.Mui-disabled + .MuiSwitch-track": {
+              backgroundColor: "var(--switch-disabled-track)",
+              borderColor: "var(--switch-disabled-border)",
+              opacity: 1,
+            },
+          },
+          thumb: {
+            width: "var(--switch-thumb-size)",
+            height: "var(--switch-thumb-size)",
+            borderRadius: "var(--switch-thumb-radius)",
+            boxShadow: "none",
+          },
+          track: {
+            boxSizing: "border-box",
+            borderRadius: "var(--switch-radius)",
+            backgroundColor: "var(--switch-track)",
+            border: "1px solid var(--switch-border)",
+            opacity: 1,
+          },
+        },
+      },
+
+      MuiChip: {
+        styleOverrides: {
+          root: {
+            ...type("label"),
+            height: "var(--chip-height)",
+            borderRadius: "var(--chip-radius)",
+            backgroundColor: "var(--chip-role-fill)",
+            color: "var(--chip-role-text)",
+            border: "none",
+            "& .MuiChip-label": { padding: "0 var(--chip-padding-x)" },
+            "& .MuiChip-icon": {
+              fontSize: "var(--chip-icon-size)",
+              marginLeft: "var(--chip-padding-x)",
+              marginRight: "calc(-1 * var(--chip-gap) / 2)",
+              color: "inherit",
+            },
+            "& .MuiChip-deleteIcon": { color: "var(--icon-default)", "&:hover": { color: "var(--icon-hover)" } },
+            "&.MuiChip-clickable:hover": { backgroundColor: "var(--chip-role-hover-fill)" },
+            [FOCUS]: frame("var(--focus-ring)"),
+            variants: [
+              {
+                // An outlined chip is a filter chip: the sheet, the field edge and the ink.
+                props: { variant: "outlined" },
+                style: {
+                  backgroundColor: "var(--chip-filter-fill)",
+                  color: "var(--chip-filter-text)",
+                  border: "1px solid var(--chip-filter-border)",
+                  fontWeight: "var(--type-weight-regular)",
+                  "&.MuiChip-clickable:hover": { backgroundColor: "var(--chip-filter-hover-fill)" },
+                  "&.MuiChip-clickable:active": { backgroundColor: "var(--chip-filter-active-fill)" },
+                  [FOCUS]: frame("var(--chip-filter-focus-border)"),
+                },
+              },
+              {
+                // Primary marks the selected filter: the selection tint, accent edge and 600.
+                props: { color: "primary" },
+                style: {
+                  backgroundColor: "var(--chip-filter-variant-selected-fill)",
+                  color: "var(--chip-filter-variant-selected-text)",
+                  border: "1px solid var(--chip-filter-variant-selected-border)",
+                  fontWeight: "var(--chip-filter-variant-selected-weight)",
+                  "&.MuiChip-clickable:hover": { backgroundColor: "var(--chip-filter-variant-selected-fill)" },
+                },
+              },
+              { props: { color: "success" }, style: statusChip("success") },
+              { props: { color: "warning" }, style: statusChip("warning") },
+              { props: { color: "error" }, style: statusChip("error") },
+              { props: { color: "info" }, style: statusChip("info") },
+              { props: { color: "secondary" }, style: { backgroundColor: "var(--chip-role-fill)", color: "var(--chip-role-text)", border: "none" } },
+              {
+                props: { size: "small" },
+                style: { height: "calc(var(--chip-height) - var(--space-1))" },
+              },
+            ],
+          },
+        },
+      },
+
+      MuiTabs: {
+        styleOverrides: {
+          root: { minHeight: "var(--tabs-height)" },
+          indicator: {
+            height: "var(--tabs-marker)",
+            backgroundColor: "var(--tabs-variant-selected-marker)",
+            transition: "none",
+          },
+        },
+      },
+
+      MuiTab: {
+        styleOverrides: {
+          root: {
+            ...type("label"),
+            minHeight: "var(--tabs-height)",
+            padding: "0 var(--tabs-padding-x)",
+            textTransform: "none",
+            whiteSpace: "nowrap",
+            color: "var(--tabs-text)",
+            "&:hover": { backgroundColor: "var(--tabs-hover-fill)", color: "var(--tabs-hover-text)" },
+            "&:active": { backgroundColor: "var(--tabs-active-fill)", color: "var(--tabs-active-text)" },
+            "&.Mui-selected": { color: "var(--tabs-variant-selected-text)" },
+            "&.Mui-disabled, &[aria-disabled='true']": {
+              color: "var(--tabs-disabled-text)",
+              fontWeight: "var(--tabs-disabled-weight)",
+            },
+            // Inside a tab bar the ring is inset, so the bar never clips it.
+            "&:focus-visible, &.Mui-focusVisible": { outlineOffset: "calc(-1 * var(--size-focus-ring))" },
+          },
+        },
+      },
+
+      MuiListItemButton: {
+        styleOverrides: {
+          root: {
+            minHeight: "var(--sidebar-item-height)",
+            borderRadius: "var(--sidebar-item-radius)",
+            color: "var(--sidebar-item-text)",
+            "& .MuiListItemIcon-root": { color: "var(--sidebar-item-icon)" },
+            "&:hover": { backgroundColor: "var(--sidebar-item-hover-fill)", color: "var(--sidebar-item-hover-text)" },
+            "&:active": { backgroundColor: "var(--sidebar-item-active-fill)" },
+            "&.Mui-selected, &[aria-current='page']": {
+              backgroundColor: "var(--sidebar-item-variant-current-fill)",
+              color: "var(--sidebar-item-variant-current-text)",
+              boxShadow: "inset var(--size-marker) 0 0 var(--sidebar-item-variant-current-marker)",
+              "& .MuiListItemIcon-root": { color: "var(--sidebar-item-variant-current-icon)" },
+            },
+            "&.Mui-selected:hover": { backgroundColor: "var(--sidebar-item-variant-current-fill)" },
+            "&.Mui-focusVisible": { backgroundColor: "transparent" },
+            "&:focus-visible, &.Mui-focusVisible": { outlineOffset: "calc(-1 * var(--size-focus-ring))" },
+          },
+        },
+      },
+
+      MuiMenu: {
+        styleOverrides: {
+          paper: {
+            border: "1px solid var(--display-menu-border)",
+            borderRadius: "var(--display-menu-radius)",
+            boxShadow: "var(--display-menu-shadow)",
+            backgroundColor: "var(--display-menu-fill)",
+          },
+        },
+      },
+
+      MuiPopover: {
+        styleOverrides: {
+          paper: {
+            border: "1px solid var(--border)",
+            borderRadius: "var(--radius-sheet)",
+            boxShadow: "var(--shadow-1)",
+          },
+        },
+      },
+
+      MuiMenuItem: {
+        styleOverrides: {
+          root: {
+            ...type("popup-title"),
+            fontWeight: "var(--type-weight-regular)",
+            minHeight: "var(--display-menu-item-height)",
+            padding: "0 var(--display-menu-item-x)",
+            color: "var(--display-menu-text)",
+            "&:hover": { backgroundColor: "var(--display-menu-hover-fill)" },
+            "&:active": { backgroundColor: "var(--display-menu-active-fill)" },
+            "&.Mui-selected, &.Mui-selected:hover": { backgroundColor: "var(--selection-bg)", color: "var(--selection-text)" },
+            "&.Mui-focusVisible": { backgroundColor: "transparent" },
+            "&:focus-visible, &.Mui-focusVisible": { outlineOffset: "calc(-1 * var(--size-focus-ring))" },
+          },
+        },
+      },
+
+      MuiPaper: {
+        defaultProps: { elevation: 0 },
+        styleOverrides: {
+          root: { backgroundImage: "none", backgroundColor: "var(--surface)", color: "var(--text)" },
+          rounded: { borderRadius: "var(--radius-sheet)" },
+          outlined: { border: "1px solid var(--panel-border)" },
+        },
+      },
+
+      MuiCard: {
+        defaultProps: { elevation: 0, variant: "outlined" },
+        styleOverrides: {
+          root: {
+            borderRadius: "var(--panel-radius)",
+            border: "1px solid var(--panel-border)",
+            boxShadow: "none",
+            backgroundImage: "none",
+          },
+        },
+      },
+
+      MuiAccordion: {
+        defaultProps: { elevation: 0, disableGutters: true },
+        styleOverrides: {
+          root: {
+            border: "1px solid var(--panel-border)",
+            borderRadius: "var(--panel-radius)",
+            "&::before": { display: "none" },
+          },
+        },
+      },
+
+      MuiBackdrop: {
+        styleOverrides: {
+          root: { variants: [{ props: { invisible: false }, style: { backgroundColor: "var(--backdrop)" } }] },
+        },
+      },
+
+      MuiDialog: {
+        styleOverrides: {
+          paper: {
+            border: "1px solid var(--dialog-border)",
+            borderRadius: "var(--dialog-radius)",
+            boxShadow: "var(--dialog-shadow)",
+            backgroundColor: "var(--dialog-fill)",
+            color: "var(--dialog-text)",
+            margin: "var(--space-popup-margin)",
+            width: "calc(100% - 2 * var(--space-popup-margin))",
+            maxHeight: "var(--dialog-max-height)",
+          },
+          paperWidthXs: { maxWidth: "var(--dialog-width-sm)" },
+          paperWidthSm: { maxWidth: "var(--dialog-width-sm)" },
+          paperWidthMd: { maxWidth: "var(--dialog-width-md)" },
+          paperWidthLg: { maxWidth: "var(--dialog-width-lg)" },
+          paperFullScreen: { margin: 0, width: "100%", maxHeight: "none", borderRadius: 0, border: "none" },
+        },
+      },
+
+      MuiDialogTitle: {
+        styleOverrides: {
+          root: { ...type("section-title"), color: "var(--dialog-title)", padding: "var(--dialog-padding) var(--dialog-padding) var(--space-3)" },
+        },
+      },
+
+      MuiDialogContent: {
+        styleOverrides: { root: { padding: "var(--space-2) var(--dialog-padding)" } },
+      },
+
+      MuiDialogActions: {
+        styleOverrides: {
+          root: { padding: "var(--space-4) var(--dialog-padding) var(--dialog-padding)", gap: "var(--space-inline)", "& > :not(style) ~ :not(style)": { marginLeft: 0 } },
+        },
+      },
+
+      MuiTooltip: {
+        styleOverrides: {
+          tooltip: {
+            ...type("caption"),
+            backgroundColor: "var(--surface)",
+            color: "var(--text)",
+            border: "1px solid var(--border)",
+            boxShadow: "var(--toggletip-shadow)",
+            borderRadius: "var(--toggletip-radius)",
+            padding: "var(--toggletip-padding-y) var(--toggletip-padding-x)",
+            maxWidth: "var(--toggletip-max-width)",
+          },
+          arrow: { color: "var(--surface)", "&::before": { border: "1px solid var(--border)" } },
+        },
+      },
+
+      MuiAlert: {
+        defaultProps: {
+          iconMapping: {
+            success: createElement(CheckCircleOutlined, { fontSize: "inherit" }),
+            warning: createElement(WarningAmberOutlined, { fontSize: "inherit" }),
+            error: createElement(HighlightOffOutlined, { fontSize: "inherit" }),
+            info: createElement(InfoOutlined, { fontSize: "inherit" }),
+          },
+        },
+        styleOverrides: {
+          root: {
+            ...type("body"),
+            borderRadius: "var(--alert-radius)",
+            padding: "var(--alert-padding) var(--alert-padding-x)",
+            gap: "var(--alert-gap)",
+            border: "none",
+            "& .MuiAlert-icon": { marginRight: 0, padding: 0, fontSize: "var(--alert-icon-size)", opacity: 1 },
+            "& .MuiAlert-message": { padding: 0 },
+            "& .MuiAlert-action": { paddingTop: 0, marginRight: 0 },
+            variants: (["success", "warning", "error", "info"] as const).map((kind) => ({
+              props: { severity: kind },
+              style: {
+                backgroundColor: `var(--alert-variant-${kind}-fill)`,
+                color: `var(--alert-variant-${kind}-text)`,
+                "& .MuiAlert-icon": { color: `var(--alert-variant-${kind}-icon)` },
+              },
+            })),
+          },
+        },
+      },
+
+      MuiAlertTitle: {
+        styleOverrides: { root: { ...type("label"), marginTop: 0, color: "inherit" } },
+      },
+
+      MuiSnackbarContent: {
+        styleOverrides: {
+          root: {
+            ...type("body"),
+            backgroundColor: "var(--toast-fill)",
+            color: "var(--toast-text)",
+            border: "1px solid var(--toast-border)",
+            borderRadius: "var(--toast-radius)",
+            boxShadow: "var(--toast-shadow)",
+            padding: "var(--toast-padding) var(--toast-padding-x)",
+            width: "min(100% - 2 * var(--toast-edge-offset), var(--toast-max-width))",
+          },
+        },
+      },
+
+      MuiTableCell: {
+        styleOverrides: {
+          root: {
+            ...type("body"),
+            padding: "var(--table-cell-y) var(--table-cell-x)",
+            borderBottom: "1px solid var(--table-rule)",
+            color: "var(--table-text)",
+          },
+          head: {
+            ...type("label"),
+            color: "var(--table-variant-header-text)",
+            backgroundColor: "var(--table-variant-header-fill)",
+            borderBottom: "1px solid var(--table-variant-header-rule)",
+          },
+          paddingCheckbox: { width: "var(--table-col-min-check)", padding: "0 var(--table-cell-x)" },
+        },
+      },
+
+      MuiTableRow: {
+        styleOverrides: {
+          root: {
+            height: "var(--table-row-height)",
+            "&.MuiTableRow-hover:hover": { backgroundColor: "var(--table-hover-fill)" },
+            "&.Mui-selected, &.Mui-selected:hover": {
+              backgroundColor: "var(--table-variant-selected-fill)",
+              boxShadow: "inset var(--size-marker) 0 0 var(--table-variant-selected-marker)",
+            },
+          },
+        },
+      },
+
+      MuiTablePagination: {
+        styleOverrides: {
+          root: { color: "var(--text-secondary)", borderTop: "1px solid var(--border)" },
+          displayedRows: { ...type("caption"), fontVariantNumeric: "tabular-nums" },
+          selectLabel: type("caption"),
+        },
+      },
+
+      MuiDataGrid: {
+        styleOverrides: {
+          root: {
+            border: "none",
+            color: "var(--table-text)",
+            "--DataGrid-rowBorderColor": "var(--table-rule)",
+            "& .MuiDataGrid-columnHeaders, & .MuiDataGrid-columnHeader": {
+              color: "var(--table-variant-header-text)",
+              backgroundColor: "var(--table-variant-header-fill)",
+            },
+            "& .MuiDataGrid-columnHeaderTitle": { fontWeight: "var(--weight-semibold)" },
+            "& .MuiDataGrid-row:hover": { backgroundColor: "var(--table-hover-fill)" },
+            "& .MuiDataGrid-row.Mui-selected": { backgroundColor: "var(--table-variant-selected-fill)" },
+            "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within, & .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-columnHeader:focus-within": {
+              outline: "var(--border-width-focus) solid var(--focus-ring)",
+              outlineOffset: "calc(-1 * var(--size-focus-ring))",
+            },
+          },
+        },
+      },
+
+      MuiSkeleton: {
+        defaultProps: { animation: "wave" },
+        styleOverrides: {
+          root: { backgroundColor: "var(--skeleton-base)" },
+          wave: {
+            "&::after": {
+              background: "linear-gradient(90deg, transparent, var(--skeleton-highlight), transparent)",
+              animationDuration: "var(--motion-shimmer)",
+            },
+          },
+          text: { borderRadius: 0 },
+          rounded: { borderRadius: "var(--radius-control)" },
+        },
+      },
+
+      MuiLinearProgress: {
+        styleOverrides: {
+          root: { height: 4, borderRadius: 0, backgroundColor: "var(--in-progress-track)" },
+          bar: { borderRadius: 0, backgroundColor: "var(--in-progress-bar)" },
+        },
+      },
+
+      MuiCircularProgress: {
+        styleOverrides: { root: { color: "var(--in-progress-text)" } },
+      },
+
+      MuiLink: {
+        defaultProps: { underline: "always" },
+        styleOverrides: {
+          root: {
+            color: "var(--link)",
+            textDecorationColor: "currentColor",
+            textDecorationThickness: "var(--border-width-underline)",
+            textUnderlineOffset: "2px",
+            "&:hover": { textDecorationThickness: "var(--border-width-underline-hover)" },
+          },
+        },
+      },
+
+      MuiFab: {
+        styleOverrides: {
+          root: {
+            width: "var(--launcher-size)",
+            height: "var(--launcher-size)",
+            backgroundColor: "var(--launcher-fill)",
+            color: "var(--launcher-icon)",
+            border: "1px solid var(--launcher-border)",
+            boxShadow: "var(--launcher-shadow)",
+            ...PRESS,
+            "&:hover": { backgroundColor: "var(--launcher-hover-fill)", boxShadow: "var(--launcher-shadow)" },
+            "&:active": { backgroundColor: "var(--launcher-active-fill)", boxShadow: "var(--launcher-shadow)" },
+            [FOCUS]: { ...frame("var(--focus-ring)"), boxShadow: "inset 0 0 0 1px var(--focus-ring), var(--launcher-shadow)" },
+          },
+        },
+      },
+
+      MuiAppBar: {
+        defaultProps: { elevation: 0, color: "inherit" },
+        styleOverrides: {
+          root: {
+            backgroundColor: "var(--surface)",
+            color: "var(--text)",
+            boxShadow: "none",
+            borderBottom: "1px solid var(--border)",
+          },
+        },
+      },
+
+      MuiDivider: {
+        styleOverrides: { root: { borderColor: "var(--border-subtle)" } },
+      },
+
+      MuiAvatar: {
+        styleOverrides: {
+          colorDefault: { backgroundColor: "var(--surface-active)", color: "var(--text)" },
+        },
+      },
+
+      MuiBadge: {
+        styleOverrides: {
+          badge: { ...type("caption"), fontWeight: "var(--weight-semibold)", fontVariantNumeric: "tabular-nums" },
+          colorPrimary: {
+            backgroundColor: "var(--surface)",
+            color: "var(--text)",
+            border: "1px solid var(--border)",
+          },
+        },
+      },
+
+      MuiDrawer: {
+        styleOverrides: {
+          paper: { backgroundColor: "var(--surface)", borderColor: "var(--border)" },
+        },
+      },
+
+      MuiTypography: {
+        styleOverrides: {
+          root: {
+            variants: [
+              // Primary text is the accent text; the Soft sage fill is for filled controls only.
+              { props: { color: "primary" }, style: { color: "var(--accent-text)" } },
+              { props: { color: "textSecondary" }, style: { color: "var(--text-secondary)" } },
+            ],
+          },
+        },
+      },
+
+      MuiSvgIcon: {
+        styleOverrides: {
+          colorPrimary: { color: "var(--icon-accent)" },
+          colorSecondary: { color: "var(--icon-default)" },
+          colorAction: { color: "var(--icon-default)" },
+          colorDisabled: { color: "var(--disabled-icon)" },
+        },
+      },
+    },
+  });
+}
+
+const theme = createKiwiTheme();
 
 export default theme;

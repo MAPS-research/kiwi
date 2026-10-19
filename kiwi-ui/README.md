@@ -108,43 +108,46 @@ Shared UI patterns — the admin page shell and header, theme, typography, butto
 are documented as live Storybook stories in `.storybook/stories/`. Run `npm run storybook`
 and read the autodocs there; they are the source of truth for these patterns.
 
-### Typography: Montserrat only
+### Typography: Source Sans 3
 
-[Montserrat](https://fonts.google.com/specimen/Montserrat) is the single typeface
-for ordinary product UI — body text, headings, buttons, forms, navigation, and
-everything inheriting the MUI theme. Both font stacks that matter are literally
-`'Montserrat', sans-serif`: `typography.fontFamily` in `src/Theme.ts` and `body`
-in `src/index.css`. `sans-serif` is a generic fallback for glyphs Montserrat does
-not cover (e.g. CJK), not an alternative UI font.
+Source Sans 3 is the typeface for ordinary product UI: body text, headings,
+buttons, forms, navigation, and everything inheriting the MUI theme
+(`kiwi-ui/DESIGN.md`, Type). The stack is the `--font-ui` design token,
+`"Source Sans 3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+"Noto Sans CJK SC", sans-serif`, so Chinese text falls back to faces drawn to sit
+beside it. `typography.fontFamily` in `src/Theme.ts` and `body` in `src/index.css`
+both use it. Montserrat survives only as the `KiwiWordmark` face (`--font-wordmark`).
+The UI uses two weights, 400 and 600, and the true italic; `font-synthesis: none`
+keeps browsers from faking any other.
 
-**How it loads.** The font is self-hosted from the `@fontsource-variable/montserrat`
-npm package. `src/fonts/montserrat.css` re-declares the package's faces under the
-plain family name `Montserrat`; `src/index.css` imports it, so the app entry and
-the Storybook preview (which both import `src/index.css`) load it exactly once.
-Vite emits the woff2 files into `dist/assets/`, so there is **no runtime request
-to fonts.googleapis.com or fonts.gstatic.com**. One variable file per subset
-covers weights 100–900, including the 300/400/500/600/700 the UI uses, plus
-italics. To upgrade, bump the package and regenerate `src/fonts/montserrat.css`
-as its header comment describes.
+**How it loads.** Both faces are self-hosted from npm packages,
+`@fontsource-variable/source-sans-3` and `@fontsource-variable/montserrat`.
+`src/fonts/source-sans-3.css` and `src/fonts/montserrat.css` re-declare the
+packages' faces under the plain family names the tokens use, and `src/index.css`
+imports both, so the app entry and the Storybook preview (which both import
+`src/index.css`) load them exactly once. Vite emits the woff2 files into
+`dist/assets/`, so there is **no runtime request to fonts.googleapis.com or
+fonts.gstatic.com**. To upgrade, bump a package and regenerate its stylesheet as
+the stylesheet's header comment describes.
 
 **Allowed exceptions.** Do not use another named UI font. A different font is only
 acceptable where it carries meaning: math (KaTeX/MathJax), monospace for code,
-commands, IDs, and JSON, the Ace editor, icon fonts (slick), SVG icons, HTML email
-templates, and third-party component internals (e.g. the PDF viewer). Prefer the
-`monospace` generic over naming a specific mono face, and never mark ordinary prose
-as monospace.
+commands, IDs, and JSON (the `--font-mono` token), the Ace editor, icon fonts
+(slick), SVG icons, HTML email templates, and third-party component internals
+(e.g. the PDF viewer). Never mark ordinary prose as monospace.
 
 **External Kiwi Apps.** `public/kiwi-design-tokens.css` exposes `--kiwi-font-family`,
-which now names only Montserrat. That file ships tokens, not `@font-face` rules, so
-an embedded app must load Montserrat itself. With a bundler, install
-`@fontsource-variable/montserrat` and mirror the `@font-face` aliases in
+which still names Montserrat: the public tokens keep their v1 values until their
+2.0.0 release moves them to the Stage 1 design. That file ships tokens, not
+`@font-face` rules, so an embedded app must load Montserrat itself. With a bundler,
+install `@fontsource-variable/montserrat` and mirror the `@font-face` aliases in
 `src/fonts/montserrat.css`; importing the package's root stylesheet alone names
 the family `Montserrat Variable`, which does not match this token. A build-less
 app can instead link Google Fonts. See [KIWI-APPS.md](KIWI-APPS.md).
 
-`src/fonts/montserrat.test.ts` and `src/typography.test.ts` fail the build if a
-different ordinary-UI font creeps back into the theme, global CSS, design tokens,
-or Storybook guidance.
+`src/fonts/source-sans-3.test.ts`, `src/fonts/montserrat.test.ts` and
+`src/typography.test.ts` fail the build if a different ordinary-UI font creeps
+back into the theme, global CSS, design tokens, or Storybook guidance.
 
 ## Documentation
 

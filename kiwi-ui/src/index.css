@@ -1,20 +1,21 @@
-/* Self-hosted Montserrat. Imported here (not in main.tsx) so every entry that
-   pulls in index.css — the app and the Storybook preview — gets the font once. */
+/* Design tokens of the Stage 1 design (kiwi-ui/DESIGN.md), copied byte for byte
+   from the design pipeline by scripts/sync-design-tokens.mjs. Light and
+   comfortable are the defaults; [data-theme] and [data-density] switch them. */
+@import './theme/generated/kiwi-ui.tokens.css';
+
+/* Self-hosted fonts. Imported here (not in main.tsx) so every entry that pulls in
+   index.css (the app and the Storybook preview) gets them once: Source Sans 3 for
+   the UI, Montserrat for the KiwiWordmark only. */
+@import './fonts/source-sans-3.css';
 @import './fonts/montserrat.css';
 
-/* Montserrat is the only typeface for ordinary product UI; `sans-serif` is the
-   generic fallback for glyphs Montserrat does not cover (e.g. CJK). Math
-   (KaTeX/MathJax), code, and the Ace editor keep their own fonts. */
-body {
-  margin: 0;
-  font-family: 'Montserrat', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+/* Global rules: one-frame focus, disabled cursor, the ruler. */
+@import './theme/base.css';
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Source Sans 3 is the typeface for ordinary product UI, with the CJK fallbacks of
+   --font-ui. Math (KaTeX/MathJax), code, and the Ace editor keep their own fonts. */
+body {
+  font-family: var(--font-ui);
 }
 
 /*
@@ -26,33 +27,3 @@ code {
 html.global-chat-dragging iframe {
   pointer-events: none !important;
 }
-
-
-/* ============================================================================
-   Custom Design Overrides (design branch only)
-   Author: Oliver Zhang
-   Date: 2025-03-29
-   Purpose:
-     These styles are added exclusively in the 'design' branch to experiment
-     with updated visual design (typography, colors, layout, media queries etc).
-     They are **non-destructive** and do not modify existing component styles.
-     Other developers can safely test visual changes without affecting logic.
-
-     To migrate these changes into other branches, look for this comment block.
-============================================================================ */
-
-/* ----------------------------------------------------------------------------
-   Note:
-   The designer is aware that this project currently includes multiple UI
-   frameworks (Material-UI, Bootstrap, Bulma, etc.), which may result in
-   inconsistent or overlapping styles.
-
-   For this reason, all design-related overrides and visual updates are kept
-   strictly within this file (index.css) to ensure:
-     - Minimal disruption to existing components and logic
-     - Clear isolation of design work from other branches
-     - Easier future migration or refactoring into a unified design system
-
-   Please refer to this section when integrating or porting styles in the future.
----------------------------------------------------------------------------- */
-
