@@ -133,6 +133,34 @@ describe("ChatMessages rows", () => {
     expect(screen.getByRole("button", { name: "[Page 3]" })).toBeInTheDocument();
   });
 
+  it("sets the student's question in a bubble and leaves Kiwi's answer without one", () => {
+    const { container } = renderMessages([question, answer]);
+
+    expect(container.querySelector(".user-row")).toHaveStyle({
+      backgroundColor: "var(--surface-active)",
+      borderRadius: "var(--radius-sheet)",
+    });
+    expect(container.querySelector(".tutor-row")).not.toHaveStyle({ backgroundColor: "var(--surface-active)" });
+  });
+
+  it("starts the answer's toolbar row with the feedback buttons, before the citations", () => {
+    renderMessages([question, { ...answer, citations: [{ pdfID: "pdf-1", pageNumber: 3 }] }]);
+
+    const toolbar = screen.getByRole("toolbar", { name: "Feedback" });
+    const citation = screen.getByRole("button", { name: "[Page 3]" });
+    expect(toolbar.compareDocumentPosition(citation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(toolbar.parentElement).not.toHaveStyle({ marginLeft: "auto" });
+  });
+
+  it("holds the toolbar back while Kiwi flies off from the same spot", () => {
+    const { container } = renderMessages([question, answer], { statusLine: running({ complete: true }) });
+
+    // A hidden toolbar has no accessible name, so find it by its label attribute.
+    const toolbar = container.querySelector('[role="toolbar"][aria-label="Feedback"]');
+    expect(toolbar?.parentElement).toHaveStyle({ visibility: "hidden" });
+    expect(screen.queryByRole("toolbar", { name: "Feedback" })).not.toBeInTheDocument();
+  });
+
   it("sets a CJK-dominant paragraph at the CJK leading, with upright emphasis", () => {
     const { container } = renderMessages([
       question,

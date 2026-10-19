@@ -409,8 +409,10 @@ const renderChatMessages = (chatMessages: ChatMessage[], options: RenderOptions)
                 />
               </Box>
             ) : null}
+            {/* The feedback buttons open the row (the user's decision of 2026-10-19).
+                Kiwi flies off from that spot, so they wait for it, as the citations do. */}
+            {feedback ? <Box sx={{ visibility: flying ? "hidden" : "visible" }}>{feedback}</Box> : null}
             {citations}
-            {feedback ? <Box sx={{ ml: "auto" }}>{feedback}</Box> : null}
           </Box>
         ) : null}
       </Box>
@@ -428,7 +430,8 @@ const renderChatMessages = (chatMessages: ChatMessage[], options: RenderOptions)
 
     if (message.isAi) return renderTutorRow(message, index, leading, steps, hostsLine);
 
-    // The student's question: right-aligned, a step larger, no bubble.
+    // The student's question: right-aligned and a step larger, in a bubble (the
+    // user's decision of 2026-10-19); Kiwi's answers stay on the sheet without one.
     const cjk = /[㐀-鿿]/.test(message.content);
     return (
       <Box
@@ -436,8 +439,15 @@ const renderChatMessages = (chatMessages: ChatMessage[], options: RenderOptions)
         className="user-row"
         sx={{
           alignSelf: "flex-end",
-          maxWidth: "min(100%, var(--tutor-message-measure))",
-          textAlign: "right",
+          maxWidth: "min(85%, var(--tutor-message-measure))",
+          px: "var(--space-3)",
+          py: "var(--space-2)",
+          borderRadius: "var(--radius-sheet)",
+          // WHY: there is no bubble token yet. surface-active (neutral 4 light,
+          // 5 dark) clears the panel sheet by 1.16:1 and 1.23:1; surface-hover
+          // fades to 1.11:1 in dark.
+          bgcolor: "var(--surface-active)",
+          overflowWrap: "anywhere",
           fontSize: "var(--text-lg)",
           lineHeight: cjk ? "var(--leading-lg-cjk)" : "var(--leading-lg)",
           color: "var(--text)",
