@@ -1,18 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate, useLocation, Outlet } from "react-router-dom";
-import {
-  Box,
-  Tabs,
-  Tab,
-  CircularProgress,
-  useMediaQuery,
-} from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import TopNav, {
-  TOP_NAV_BRAND_AREA_WIDTH,
-  TOP_NAV_HEIGHT,
-  type ClassSwitcherOption,
-} from "../components/TopNav/TopNav.tsx";
+import { Box, Tabs, Tab, CircularProgress } from "@mui/material";
+import TopNav, { type ClassSwitcherOption } from "../components/TopNav/TopNav.tsx";
 import apiClient, { classAppsApiClient } from "../utils/api.ts";
 
 import type { ClassAppResponseDto } from "../services/models/index.ts";
@@ -53,6 +42,9 @@ const staticMenuItems = [
   { label: "Scratchpad", path: "code", isApp: false },
 ];
 
+// The one fallback for a class with no name (SR-2.01).
+const UNTITLED_CLASS = "Untitled class";
+
 interface MenuItem {
   label: string;
   path: string;
@@ -64,8 +56,6 @@ export const StudentClassLayout: React.FC = () => {
   const { classID } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const navigationClassName = (location.state as { className?: string } | null)
     ?.className;
   const hasUserChangedTabRef = useRef(false);
@@ -169,7 +159,7 @@ export const StudentClassLayout: React.FC = () => {
             classInfoList
               .map((classInfo) => ({
                 id: classInfo.id,
-                label: classInfo.className || "Unnamed class",
+                label: classInfo.className || UNTITLED_CLASS,
               }))
               .sort((a, b) => a.label.localeCompare(b.label)),
           );
@@ -310,11 +300,11 @@ export const StudentClassLayout: React.FC = () => {
           ...contentResizeStyles,
         }}
       >
-        {/* Top Navigation spans the full width */}
+        {/* Top bar: on a class page the logo is followed by the divider and the
+            class switch (no brand column: that aligns the admin sidebar only). */}
         <TopNav
-          brandAreaWidth={!isMobile ? TOP_NAV_BRAND_AREA_WIDTH : undefined}
           contextLabel={
-            topNavClassName || (!classLoading ? "Unnamed class" : undefined)
+            topNavClassName || (!classLoading ? UNTITLED_CLASS : undefined)
           }
           contextLoading={classLoading && !topNavClassName}
           classOptions={classOptions}
@@ -323,9 +313,18 @@ export const StudentClassLayout: React.FC = () => {
           onClassChange={handleClassChange}
         />
 
-        {/* Tab Navigation (Materials Page Redesign: 44px bar, compact tabs) */}
+        {/* Class bar (SR-2): the tab row on the sheet, one tab tall plus its
+            bottom rule. The theme draws the tabs (44 px, label type, 2 px marker). */}
         <Box
-          sx={{ borderBottom: "1px solid #E5E1EB", backgroundColor: "#fff" }}
+          sx={{
+            flex: "none",
+            display: "flex",
+            alignItems: "stretch",
+            height: "calc(var(--size-tab) + 1px)",
+            px: { xs: "var(--space-2)", sm: "var(--space-3)" },
+            bgcolor: "var(--surface)",
+            borderBottom: "1px solid var(--border-subtle)",
+          }}
         >
           <Tabs
             value={currentTabIndex >= 0 ? currentTabIndex : 0}
@@ -333,17 +332,9 @@ export const StudentClassLayout: React.FC = () => {
             variant="scrollable"
             scrollButtons="auto"
             sx={{
-              px: 1.5,
-              minHeight: 44,
-              "& .MuiTab-root": {
-                minHeight: 44,
-                px: 1.75,
-                fontSize: 12,
-                fontWeight: 600,
-                letterSpacing: "0.8px",
-                color: "#77777F",
-                "&.Mui-selected": { color: "primary.main" },
-              },
+              flex: "1 1 auto",
+              minWidth: 0,
+              "& .MuiTabs-flexContainer": { gap: "var(--tabs-gap)" },
             }}
           >
             {menuItems.map((item) => (
@@ -352,12 +343,13 @@ export const StudentClassLayout: React.FC = () => {
           </Tabs>
         </Box>
 
-        {/* Main Content */}
+        {/* Main content on the canvas: it takes the rest of the viewport, so
+            pages that fill it (height: 100%) get a definite height. */}
         <Box
           sx={{
-            minHeight: `calc(100vh - ${TOP_NAV_HEIGHT + 44}px)`,
-            backgroundColor: "grey.100",
-            flexGrow: 1,
+            flex: "1 1 auto",
+            minHeight: 0,
+            bgcolor: "background.default",
           }}
         >
           {myClass ? (

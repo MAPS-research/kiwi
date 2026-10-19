@@ -1,4 +1,4 @@
-import { render, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { useState } from "react";
 import { ChatContext } from "../../pages/ClassLayout.tsx";
 import apiClient from "../../utils/api.ts";
@@ -194,5 +194,119 @@ describe("PDFComponent Materials persistence", () => {
 
     const saved = JSON.parse(store.get("materialsPdf_class-1")!);
     expect(saved.page).toBe(9);
+  });
+});
+
+/**
+ * The drawer (Materials page, S-02): the rail toggles it, the Lecture /
+ * Recitation filter chips pick the group, and the open file is marked.
+ */
+describe("PDFComponent drawer", () => {
+  // Owns the selection like StudentClassLayout, so auto-select marks a file.
+  const StatefulMaterials = () => {
+    const [pdfId, setPdfId] = useState("");
+    const [pdfName, setPdfName] = useState("");
+    const [materialType, setMaterialType] = useState("");
+    return (
+      <ChatContext.Provider
+        value={{
+          class: { classID: "class-1" } as any,
+          currentPDFID: pdfId,
+          setCurrentPDFID: setPdfId,
+          currentPdfName: pdfName,
+          setCurrentPdfName: setPdfName,
+          currentPDFMaterialType: materialType,
+          setCurrentPDFMaterialType: setMaterialType,
+          setCurrentPDFPage: vi.fn(),
+          pdfContent: "",
+          setPdfContent: vi.fn(),
+        }}
+      >
+        <PDFComponent />
+      </ChatContext.Provider>
+    );
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    installMemoryLocalStorage();
+    mockRetrieveDoc.mockResolvedValue({ document: { documentContent: "content" } });
+  });
+
+  it("marks the open file with the selection and a check", async () => {
+    mockGetDocList.mockResolvedValue({
+      documentIds: [
+        { id: "doc-1", fileName: "Lecture 1.pdf", materialType: "class materials" },
+        { id: "doc-2", fileName: "Lecture 2.pdf", materialType: "class materials" },
+      ],
+    });
+    render(<StatefulMaterials />);
+
+    // Auto-select opens the last lecture.
+    const current = await screen.findByRole("button", { name: "Lecture 2.pdf" });
+    await waitFor(() => expect(current).toHaveAttribute("aria-current", "true"));
+    expect(within(current).getByTestId("CheckIcon")).toBeInTheDocument();
+
+    const other = screen.getByRole("button", { name: "Lecture 1.pdf" });
+    expect(other).not.toHaveAttribute("aria-current");
+    expect(within(other).queryByTestId("CheckIcon")).not.toBeInTheDocument();
+  });
+
+  it("switches groups with the filter chips and names an empty group", async () => {
+    mockGetDocList.mockResolvedValue({
+      documentIds: [{ id: "doc-1", fileName: "Lecture 1.pdf", materialType: "class materials" }],
+    });
+    render(<StatefulMaterials />);
+
+    const lecture = screen.getByRole("button", { name: "Lecture" });
+    const recitation = screen.getByRole("button", { name: "Recitation" });
+    expect(lecture).toHaveAttribute("aria-pressed", "true");
+    expect(lecture).toHaveClass("MuiChip-outlined", "MuiChip-colorPrimary");
+    expect(recitation).toHaveAttribute("aria-pressed", "false");
+    expect(recitation).not.toHaveClass("MuiChip-colorPrimary");
+    expect(await screen.findByRole("button", { name: "Lecture 1.pdf" })).toBeInTheDocument();
+
+    fireEvent.click(recitation);
+    expect(recitation).toHaveAttribute("aria-pressed", "true");
+    expect(lecture).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByText("No recitations yet")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Lecture 1.pdf" })).not.toBeInTheDocument();
+  });
+
+  it("names an empty lecture group", async () => {
+    mockGetDocList.mockResolvedValue({
+      documentIds: [{ id: "doc-r", fileName: "Recitation 1.pdf", materialType: "recitation" }],
+    });
+    renderWithContext(makeSetters());
+    expect(await screen.findByText("No lectures yet")).toBeInTheDocument();
+  });
+
+  it("shows and hides the drawer from the rail", async () => {
+    mockGetDocList.mockResolvedValue({ documentIds: DOCS });
+    render(<StatefulMaterials />);
+    // Let the list load and auto-select settle first.
+    const opened = await screen.findByRole("button", { name: "lecture-5.pdf" });
+    await waitFor(() => expect(opened).toHaveAttribute("aria-current", "true"));
+
+    const rail = screen.getByRole("button", { name: "Show class materials" });
+    expect(rail).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("region", { name: "Class materials" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Close" }));
+    expect(screen.queryByRole("region", { name: "Class materials" })).not.toBeInTheDocument();
+    expect(rail).toHaveAttribute("aria-pressed", "false");
+
+    fireEvent.click(rail);
+    expect(screen.getByRole("heading", { name: "Class materials" })).toBeInTheDocument();
+    expect(rail).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it("says the class has no materials instead of loading forever", async () => {
+    mockGetDocList.mockResolvedValue({ documentIds: [] });
+    renderWithContext(makeSetters());
+
+    expect(await screen.findByText("No materials yet")).toBeInTheDocument();
+    expect(screen.getByText("Your instructor hasn't added any to this class.")).toBeInTheDocument();
+    expect(screen.queryByTestId("pdf-viewer")).not.toBeInTheDocument();
   });
 });
