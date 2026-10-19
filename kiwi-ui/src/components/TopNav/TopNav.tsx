@@ -78,7 +78,11 @@ const TopNav = ({
       data-density={isAdminRoute ? "compact" : "comfortable"}
       sx={{
         zIndex: "var(--z-top-bar)",
-        // The bar closes on the light hairline; the theme's AppBar edge is the panel edge.
+        // The bar is 52 px with its hairline inside it (TOP_NAV_HEIGHT), so the chat
+        // panel's header, also 52 px, lines up with it. The bar closes on the light
+        // hairline; the theme's AppBar edge is the panel edge.
+        boxSizing: "border-box",
+        height: "var(--size-top-bar)",
         borderBottom: "1px solid var(--border-subtle)",
       }}
     >
@@ -86,8 +90,8 @@ const TopNav = ({
         variant="dense"
         disableGutters
         sx={{
-          minHeight: "var(--size-top-bar)",
-          height: "var(--size-top-bar)",
+          minHeight: 0,
+          height: "100%",
           gap: "var(--space-2)",
           pl: { xs: "var(--space-3)", sm: "var(--space-4)" },
           pr: { xs: "var(--space-2)", sm: "var(--space-3)" },
