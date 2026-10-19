@@ -2,7 +2,6 @@ import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import {
   Box,
   Chip,
-  CircularProgress,
   IconButton,
   Stack,
   Tooltip,
@@ -10,7 +9,10 @@ import {
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import type { Variant } from "../../utils/experimentApi.ts";
-import ChatMessages from "./ChatMessages.tsx";
+import ChatMessages, { type StatusLineState } from "./ChatMessages.tsx";
+
+/** The model names people see; the raw engine id never shows. */
+const ENGINE_NAMES: Record<string, string> = { openai: "ChatGPT", qwen: "Qwen" };
 import type { ChatLane } from "./useChatLane.ts";
 
 /**
@@ -36,6 +38,16 @@ const LaneColumn: React.FC<LaneColumnProps> = ({
   importCode,
 }) => {
   const messageEndRef = useRef<HTMLDivElement>(null!);
+  // One mover: a lane's status line stands still (its words carry the state),
+  // so two answering columns never animate at once.
+  const statusLine: StatusLineState | null = lane.busy
+    ? {
+        turn: 1,
+        startedAt: 0,
+        answerNumber: lane.messages.filter((message) => !message.isAi).length,
+        complete: false,
+      }
+    : null;
 
   return (
     <Box
@@ -51,56 +63,41 @@ const LaneColumn: React.FC<LaneColumnProps> = ({
         sx={{
           px: 1.5,
           py: 0.75,
-          borderBottom: 1,
-          borderColor: "divider",
-          bgcolor: "background.paper",
+          borderBottom: "1px solid var(--border-subtle)",
+          bgcolor: "var(--surface)",
           display: "flex",
           alignItems: "center",
           gap: 1,
           flexShrink: 0,
         }}
       >
-        <Chip
-          size="small"
-          label={slot}
-          sx={{
-            height: 20,
-            fontWeight: 700,
-            borderRadius: 999,
-            bgcolor: "rgba(87, 6, 140, 0.08)",
-            color: "primary.main",
-          }}
-        />
+        <Chip size="small" label={slot} />
         <Box sx={{ minWidth: 0, flexGrow: 1 }}>
           <Typography variant="body2" noWrap sx={{
-            fontWeight: 700
+            fontWeight: "var(--weight-semibold)"
           }}>
             {variant?.label || "No variant selected"}
           </Typography>
           {variant && (
             <Typography variant="caption" noWrap sx={{
-              color: "text.secondary"
+              display: "block",
+              color: "var(--text-secondary)"
             }}>
               {variant.key}
             </Typography>
           )}
         </Box>
         {variant && (
-          <Chip
-            size="small"
-            label={variant.config.engine}
-            sx={{ height: 20, borderRadius: 999 }}
-          />
+          <Chip size="small" label={ENGINE_NAMES[variant.config.engine] ?? variant.config.engine} />
         )}
-        {lane.busy && <CircularProgress size={14} />}
         <Tooltip title="Clear this column">
           <span>
             <IconButton
-              size="small"
+              aria-label="Clear this column"
               onClick={lane.reset}
               disabled={lane.messages.length === 0 && !lane.busy}
             >
-              <RestartAltIcon fontSize="small" />
+              <RestartAltIcon />
             </IconButton>
           </span>
         </Tooltip>
@@ -109,8 +106,8 @@ const LaneColumn: React.FC<LaneColumnProps> = ({
       {lane.error && (
         <Typography
           variant="caption"
-          color="error"
-          sx={{ px: 1.5, py: 0.5, flexShrink: 0 }}
+          role="alert"
+          sx={{ px: 1.5, py: 0.5, flexShrink: 0, color: "var(--status-error-text)" }}
         >
           {lane.error}
         </Typography>
@@ -124,6 +121,8 @@ const LaneColumn: React.FC<LaneColumnProps> = ({
           }}
           messageEndRef={messageEndRef}
           importCode={importCode}
+          statusLine={statusLine}
+          motion={false}
         />
       </Box>
     </Box>
@@ -174,7 +173,7 @@ export const ExperimentCompare: React.FC<ExperimentCompareProps> = ({
               ...(sideBySide
                 ? { width: "1px", alignSelf: "stretch" }
                 : { height: "1px" }),
-              bgcolor: "divider",
+              bgcolor: "var(--border)",
             }}
           />
         }

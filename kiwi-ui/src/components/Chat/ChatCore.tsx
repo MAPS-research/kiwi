@@ -7,16 +7,13 @@ import {
   Box,
   Button,
   Chip,
-  Collapse,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Divider,
   FormControl,
   FormControlLabel,
-  Grid,
   IconButton,
   InputLabel,
   List,
@@ -27,6 +24,7 @@ import {
   Snackbar,
   Stack,
   Switch,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import React, {
@@ -47,8 +45,38 @@ import ChatField from "./ChatField.tsx";
 import ExperimentCompare from "./ExperimentCompare.tsx";
 import { useChatLane } from "./useChatLane.ts";
 import type { ChatMessage } from "./ChatMessages.tsx";
-import ChatMessages from "./ChatMessages.tsx";
+import ChatMessages, { type StatusLineState } from "./ChatMessages.tsx";
 import { foldAgentStep, type AgentStep } from "./AgentStepChain.tsx";
+import { useDisplayPreferences } from "../../theme/displayPreferences.tsx";
+
+/** The model names people see (DESIGN.md, Terminology: Model names); the raw engine id never shows. */
+const ENGINE_NAMES: Record<string, string> = { openai: "ChatGPT", qwen: "Qwen" };
+const engineName = (engine: string) => ENGINE_NAMES[engine] ?? engine;
+
+/** "17 Oct 2026": the one date format of the chat history list. */
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const formatDate = (value: string) => {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "" : `${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`;
+};
+
+const SIGN_IN_EXPIRED =
+  "Couldn't send your question. Your sign-in has expired. Your question isn't saved. Copy it, then reload the page to sign in again.";
+const USAGE_LIMIT =
+  "Kiwi can't answer right now. You've reached your usage limit. Ask your instructor or an administrator about it.";
+const NOT_ALLOWED =
+  "Kiwi can't answer right now. Your account can't use this feature. Ask an administrator for access.";
+const ANSWER_FAILED = "Kiwi couldn't finish answering. The server didn't respond as expected. Try again.";
+const FINISHED = "Kiwi finished answering.";
+
+const visuallyHidden = {
+  position: "absolute",
+  width: 1,
+  height: 1,
+  overflow: "hidden",
+  clip: "rect(0 0 0 0)",
+  whiteSpace: "nowrap",
+} as const;
 
 // Detect tool execution from bot response content
 const detectToolExecution = (
@@ -196,7 +224,7 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
             const firstUserMsg = sortedMsgs.find((m) => m.role === 'user');
             return {
               conversationId,
-              firstMessage: firstUserMsg?.content.slice(0, 50) || 'New conversation',
+              firstMessage: firstUserMsg?.content.slice(0, 50) || 'Untitled chat',
               timestamp: sortedMsgs[0]?.timestamp || '',
               messageCount: data.messages.length,
             };
@@ -278,6 +306,23 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
     }
   }, [initialPrompt, onInitialPromptConsumed]);
   const [botAnswering, setBotAnswering] = useState<boolean>(false);
+  // The status line of the turn in flight: the Runner, from the send until the
+  // answer completes and its flight has gone (ChatMessages draws it).
+  const [statusLine, setStatusLine] = useState<StatusLineState | null>(null);
+  const turnRef = useRef(0);
+  // Set by Stop: the turn is over, so neither a summary that resolves late nor a
+  // client-tool round-trip may start the stream again.
+  const userAbortRef = useRef(false);
+  // Announced once, politely, when an answer completes.
+  const [finishedAnnouncement, setFinishedAnnouncement] = useState("");
+  const { motionAllowed } = useDisplayPreferences();
+
+  const completeTurn = () => {
+    setStatusLine((line) => (line ? { ...line, complete: true } : line));
+    setFinishedAnnouncement("");
+    window.setTimeout(() => setFinishedAnnouncement(FINISHED), 40);
+  };
+  const cutTurn = () => setStatusLine(null);
   const [engineChoice, setEngineChoice] = useState<string>(() => {
     return localStorage.getItem("engineChoice") || "openai";
   });
@@ -425,7 +470,9 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
         console.warn("[ChatCore] Failed to load experiments:", error);
         if (!ignore) {
           setExperiments([]);
-          setExperimentError("Experiments are currently unavailable.");
+          setExperimentError(
+            "Couldn't load experiments. The server didn't respond as expected. Try again later.",
+          );
         }
       })
       .finally(() => {
@@ -637,6 +684,8 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
     interactionId?: string;
   }) => {
     const result = await executeClientAction(action);
+    // Stop ended the turn while the tool ran: never resume the agent loop.
+    if (userAbortRef.current) return;
 
     toolTrailRef.current = [
       ...toolTrailRef.current,
@@ -658,14 +707,14 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
     if (roundTripRef.current >= MAX_ROUND_TRIPS) {
       sseAbortRef.current?.abort();
       setBotAnswering(false);
+      completeTurn();
       updateMessages((prev) => [
         ...prev.filter((m) => !m.typing),
         {
           isAi: true,
           content:
-            "I went in circles trying to complete that on the page and stopped to avoid looping. " +
-            "I may have filled some fields — please check the form and finish the last step yourself, " +
-            "or tell me more specifically what to do.",
+            "Kiwi stopped because this took too many steps on the page. It may have filled in some fields, " +
+            "so check the form and finish the last step yourself, or tell Kiwi more precisely what to do.",
           error: false,
         },
       ]);
@@ -763,7 +812,9 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
 
     if (!token) {
       setSnackbarOpen(true);
-      setSnackbarMessage("No token found, please login again");
+      setSnackbarMessage(SIGN_IN_EXPIRED);
+      setBotAnswering(false);
+      cutTurn();
       return;
     }
 
@@ -794,7 +845,7 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
                 resolve();
               } else if (response.status === 401) {
                 setSnackbarOpen(true);
-                setSnackbarMessage("Token expired, refreshing...");
+                setSnackbarMessage("Refreshing your sign-in…");
                 const failRefresh = () => {
                   localStorage.removeItem("authToken");
                   localStorage.removeItem("authUser");
@@ -812,7 +863,7 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
                         "authToken",
                         accessTokenResponse.accessToken
                       );
-                      setSnackbarMessage("Token refreshed, retrying...");
+                      setSnackbarMessage("Retrying your question…");
                       // Abort the 401 response before replaying. Resolving this
                       // onopen would make fetch-event-source read and close the
                       // original empty response, marking the shared loader as an
@@ -832,21 +883,23 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
                 response.status !== 403
               ) {
                 setSnackbarOpen(true);
-                setSnackbarMessage(`An error occurred: ${response.statusText}`);
+                setSnackbarMessage(
+                  `Kiwi couldn't answer. The server returned an error (${response.status}). Try again in a moment.`,
+                );
                 reject(new Error("Client side error, stop the request"));
               } else {
                 if (response.status === 429) {
                   setSnackbarOpen(true);
-                  setSnackbarMessage("You are out of tokens.");
+                  setSnackbarMessage(USAGE_LIMIT);
                 }
                 if (response.status === 403) {
                   setSnackbarOpen(true);
-                  setSnackbarMessage("You are not allowed to use this feature.");
+                  setSnackbarMessage(NOT_ALLOWED);
                 }
                 if (response.status >= 500) {
                   setSnackbarOpen(true);
                   setSnackbarMessage(
-                    `Server error (${response.status}). Please try again.`
+                    `Kiwi couldn't answer. The server returned an error (${response.status}). Try again in a moment.`
                   );
                 }
                 resolve();
@@ -888,6 +941,7 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
                     })
                   );
                   setBotAnswering(false);
+                  completeTurn();
                   return;
                 }
 
@@ -959,6 +1013,7 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
 
                 if (streaming === "stop") {
                   setBotAnswering(false);
+                  completeTurn();
                 }
               }
             } catch (error) {
@@ -967,11 +1022,12 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
           },
           onerror(err) {
             setSnackbarOpen(true);
-            setSnackbarMessage("Connection lost. Reconnecting...");
+            setSnackbarMessage("Connection lost. Kiwi is reconnecting…");
             console.error("Error:", err);
             setBotAnswering(false);
-            if (err.code === 429) throw new Error("You are out of tokens.");
-            if (err.code === 403) throw new Error("You are not allowed to use this feature.");
+            cutTurn();
+            if (err.code === 429) throw new Error(USAGE_LIMIT);
+            if (err.code === 403) throw new Error(NOT_ALLOWED);
           },
           onclose() {
             console.log("Connection closed by the server");
@@ -979,20 +1035,23 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
             // If the stream closed before any bot frame arrived (e.g. the
             // request failed server-side), don't leave the "..." loader
             // hanging — turn it into a visible error bubble.
-            updateMessages((prevMessages) =>
-              prevMessages.map((msg) =>
+            updateMessages((prevMessages) => {
+              const failed = prevMessages.some(
+                (msg) => msg.uniqueId === loaderIdRef.current && msg.typing
+              );
+              if (failed) cutTurn();
+              return prevMessages.map((msg) =>
                 msg.uniqueId === loaderIdRef.current && msg.typing
                   ? {
                       ...msg,
                       typing: false,
                       streaming: "stop",
-                      content:
-                        "Something went wrong while answering. Please try again.",
+                      content: ANSWER_FAILED,
                       error: true,
                     }
                   : msg
-              )
-            );
+              );
+            });
           },
         });
       };
@@ -1000,9 +1059,12 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
       try {
         makeRequest(token);
       } catch (error: any) {
+        // The library's or the browser's own text is never shown (C16).
+        console.error("[ChatCore] Could not start the chat request:", error);
         setSnackbarOpen(true);
-        setSnackbarMessage(error.message);
+        setSnackbarMessage(ANSWER_FAILED);
         setBotAnswering(false);
+        cutTurn();
       }
     });
   };
@@ -1032,6 +1094,11 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
     roundTripRef.current = 0;
     toolTrailRef.current = [];
     turnStepsRef.current = [];
+    userAbortRef.current = false;
+    // The n-th answer of this chat picks the n-th wait verb (a retry is a new answer).
+    const answerNumber = chatMessages.filter((message) => !message.isAi).length + 1;
+    turnRef.current += 1;
+    setStatusLine({ turn: turnRef.current, startedAt: performance.now(), answerNumber, complete: false });
     const newMessage: ChatMessage = {
       isAi: false,
       content: promptMessage,
@@ -1084,10 +1151,12 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
       console.error("Error getting summary:", error);
       setSnackbarOpen(true);
       if (error.status === 429) {
-        setSnackbarMessage("You are out of tokens.");
+        setSnackbarMessage(USAGE_LIMIT);
       }
     }
 
+    // Stop arrived while the summary was being made: the turn is already over.
+    if (userAbortRef.current) return;
     makeLLMAPICall(promptMessage, summary);
   };
 
@@ -1098,6 +1167,31 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
     setPrompt("");
     laneA.send(promptMessage);
     laneB.send(promptMessage);
+  };
+
+  /**
+   * Stop (the composer's Stop, or Escape in the composer): the stream is aborted
+   * and the line is cut, with no flight. What arrived stays; an answer with no
+   * text yet goes, since there is nothing to keep.
+   */
+  const handleStop = () => {
+    if (compareActive) {
+      laneA.stop();
+      laneB.stop();
+      return;
+    }
+    userAbortRef.current = true;
+    sseAbortRef.current?.abort();
+    setBotAnswering(false);
+    cutTurn();
+    updateMessages((prev) => {
+      const last = prev[prev.length - 1];
+      if (!last?.isAi || last.error) return prev;
+      if (last.typing) return prev.slice(0, -1);
+      return prev.map((msg, idx) =>
+        idx === prev.length - 1 ? { ...msg, typing: false, streaming: "stop" } : msg
+      );
+    });
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -1116,28 +1210,22 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
     onImportCode?.(code);
   };
 
+  const labelSx = {
+    fontFamily: "var(--type-label-family)",
+    fontSize: "var(--type-label-size)",
+    lineHeight: "var(--type-label-leading)",
+    fontWeight: "var(--type-label-weight)",
+  };
+
   const experimentModeControls = canUseExperimentMode && classId ? (
-    <Box
-      sx={{
-        borderBottom: 1,
-        borderColor: "divider",
-        bgcolor: experimentMode ? "rgba(87, 6, 140, 0.04)" : "background.paper",
-        transition: "background-color 0.2s ease",
-      }}
-    >
-      {/* Toggle row stays put; the panel below drawers open beneath it. */}
-      <Box sx={{ px: 2, py: 1.08 }}>
+    <Box sx={{ borderBottom: "1px solid var(--border-subtle)" }}>
+      <Box sx={{ px: 2, py: 1 }}>
         <FormControlLabel
           label="Experiment"
           sx={{
-            ml: 0,
-            mr: 0,
             "& .MuiFormControlLabel-label": {
-              fontSize: 12,
-              fontWeight: 600,
-              letterSpacing: "0.8px",
-              textTransform: "uppercase",
-              color: experimentMode ? "primary.main" : "#77777F",
+              ...labelSx,
+              color: experimentMode ? "var(--text)" : "var(--text-secondary)",
             },
           }}
           control={
@@ -1145,22 +1233,6 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
               size="small"
               checked={experimentMode}
               onChange={(event) => setExperimentMode(event.target.checked)}
-              sx={{
-                "& .MuiSwitch-track": {
-                  borderRadius: 999,
-                  opacity: 1,
-                  bgcolor: "rgba(0,0,0,0.25)",
-                },
-                "& .MuiSwitch-thumb": {
-                  borderRadius: "50%",
-                  boxShadow: "0 1px 2px rgba(0,0,0,0.25)",
-                },
-                "& .MuiSwitch-switchBase.Mui-checked": { color: "#fff" },
-                "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                  bgcolor: "primary.main",
-                  opacity: 1,
-                },
-              }}
               slotProps={{
                 input: { "aria-label": "Experiment mode" }
               }}
@@ -1169,10 +1241,9 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
         />
       </Box>
 
-      {/* Drawer-style reveal (no shadow) for the experiment/variant picker. */}
-      <Collapse in={experimentMode} timeout={280} unmountOnExit>
-        <Box sx={{ px: 2, pb: 1.25 }}>
-          <Stack spacing={1.25}>
+      {experimentMode && (
+        <Box sx={{ px: 2, pb: 1.5 }}>
+          <Stack spacing={1.5}>
             <FormControl size="small" sx={{ minWidth: 240 }}>
               <InputLabel id="experiment-preview-select-label">
                 Experiment
@@ -1193,47 +1264,38 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
                     experiment?.config.variants[0]?.key ?? "",
                   );
                 }}
-                sx={{ borderRadius: 2 }}
               >
                 {experiments.map((experiment) => (
                   <MenuItem key={experiment.id} value={experiment.id}>
-                    {experiment.name || "Untitled experiment"} · {experiment.status}
+                    {experiment.name || "Untitled experiment"} ·{" "}
+                    {experiment.status.charAt(0).toUpperCase() + experiment.status.slice(1)}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
 
             {experimentError && (
-              <Typography variant="caption" sx={{
-                color: "text.secondary"
-              }}>
+              <Typography variant="caption" sx={{ color: "var(--status-error-text)" }}>
                 {experimentError}
               </Typography>
             )}
             {loadingExperiments && (
-              <Typography variant="caption" sx={{
-                color: "text.secondary"
-              }}>
-                Loading experiments...
+              <Typography variant="caption" sx={{ color: "var(--text-secondary)" }}>
+                Loading experiments…
               </Typography>
             )}
             {!loadingExperiments && !experimentError && experiments.length === 0 && (
-              <Typography variant="caption" sx={{
-                color: "text.secondary"
-              }}>
-                No experiments have been created for this class.
+              <Typography variant="caption" sx={{ color: "var(--text-secondary)" }}>
+                No experiments in this class yet. Create one on the Experiments page.
               </Typography>
             )}
             {selectedExperiment && canCompare && (
               <FormControlLabel
-                label="Compare two variants side by side"
+                label="Compare 2 variants side by side"
                 sx={{
-                  ml: 0,
-                  mr: 0,
                   "& .MuiFormControlLabel-label": {
-                    fontSize: 12,
-                    color: compareMode ? "primary.main" : "text.secondary",
-                    fontWeight: compareMode ? 600 : 400,
+                    fontSize: "var(--text-sm)",
+                    color: compareMode ? "var(--text)" : "var(--text-secondary)",
                   },
                 }}
                 control={
@@ -1242,14 +1304,14 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
                     checked={compareMode}
                     onChange={(event) => setCompareMode(event.target.checked)}
                     slotProps={{
-                      input: { "aria-label": "Compare two variants" }
+                      input: { "aria-label": "Compare 2 variants" }
                     }}
                   />
                 }
               />
             )}
 
-            {/* Compare mode picks two variants; single mode keeps the chip row. */}
+            {/* Compare mode picks two variants; single mode keeps the button row. */}
             {selectedExperiment && compareMode && canCompare && (
               <Stack direction="row" spacing={1}>
                 {(
@@ -1268,11 +1330,10 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
                       value={value}
                       label={`Variant ${slot}`}
                       onChange={(event) => setValue(event.target.value)}
-                      sx={{ borderRadius: 2 }}
                     >
                       {experimentVariants.map((variant) => (
                         <MenuItem key={variant.key} value={variant.key}>
-                          {variant.label} · {variant.config.engine}
+                          {variant.label} · {engineName(variant.config.engine)}
                         </MenuItem>
                       ))}
                     </Select>
@@ -1282,11 +1343,8 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
             )}
 
             {compareMode && canCompare && compareVariantKeyA === compareVariantKeyB && (
-              <Typography variant="caption" sx={{
-                color: "text.secondary"
-              }}>
-                Both columns run the same variant — pick two different ones to
-                see a difference.
+              <Typography variant="caption" sx={{ color: "var(--text-secondary)" }}>
+                Both columns use the same variant. Choose 2 different variants to compare them.
               </Typography>
             )}
 
@@ -1298,47 +1356,26 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
                     <Button
                       key={variant.key}
                       variant={selected ? "contained" : "outlined"}
+                      aria-pressed={selected}
                       onClick={() => setSelectedVariantKey(variant.key)}
                       sx={{
                         minWidth: 168,
                         flex: "1 0 168px",
                         justifyContent: "space-between",
-                        textTransform: "none",
-                        borderRadius: 3,
+                        height: "auto",
+                        py: 0.75,
                         px: 1.5,
-                        py: 0.85,
-                        borderColor: selected ? "transparent" : "divider",
-                        bgcolor: selected ? "primary.main" : "background.paper",
-                        color: selected ? "primary.contrastText" : "text.primary",
-                        boxShadow: "none",
-                        "&:hover": {
-                          boxShadow: "none",
-                          borderColor: selected ? "transparent" : "primary.main",
-                          bgcolor: selected ? "#4a0577" : "action.hover",
-                        },
                       }}
                     >
                       <Box sx={{ minWidth: 0, textAlign: "left" }}>
-                        <Typography variant="body2" noWrap sx={{
-                          fontWeight: 700
-                        }}>
+                        <Typography variant="body2" noWrap sx={{ fontWeight: "var(--weight-semibold)", color: "inherit" }}>
                           {variant.label}
                         </Typography>
-                        <Typography variant="caption" sx={{ opacity: 0.75 }} noWrap>
+                        <Typography variant="caption" noWrap sx={{ display: "block", color: "inherit" }}>
                           {variant.key}
                         </Typography>
                       </Box>
-                      <Chip
-                        size="small"
-                        label={variant.config.engine}
-                        sx={{
-                          ml: 1,
-                          height: 22,
-                          borderRadius: 999,
-                          bgcolor: selected ? "rgba(255,255,255,0.22)" : "action.hover",
-                          color: selected ? "#fff" : "text.secondary",
-                        }}
-                      />
+                      <Chip size="small" label={engineName(variant.config.engine)} sx={{ ml: 1 }} />
                     </Button>
                   );
                 })}
@@ -1346,96 +1383,95 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
             )}
           </Stack>
         </Box>
-      </Collapse>
+      )}
     </Box>
   ) : null;
+
+  const toggleSessionPicker = () => {
+    if (!showSessionPicker) loadAvailableSessions();
+    setShowSessionPicker(!showSessionPicker);
+  };
 
   return (
     <Box
       sx={{
         height: "100%",
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
+        backgroundColor: "var(--surface)",
       }}>
       <Stack
         sx={{
           height: "100%",
           flexGrow: 1
         }}>
-        {/* Session Picker Header — 44px content + 1px border to match the main
-            page's tab bar (44px Tabs + 1px border), so the divider below lines
-            up with the tab strip's border in side-panel modes. */}
-        <Box sx={{ px: 2, height: 45, flexShrink: 0, borderBottom: 1, borderColor: 'divider', display: 'flex', alignItems: 'center', gap: 1 }}>
-          <IconButton
-            size="small"
-            onClick={() => {
-              if (!showSessionPicker) loadAvailableSessions();
-              setShowSessionPicker(!showSessionPicker);
-            }}
-            title="Chat history"
-          >
-            <HistoryIcon fontSize="small" />
-          </IconButton>
-          <Typography
-            sx={{
-              flexGrow: 1,
-              fontSize: 12,
-              fontWeight: 600,
-              letterSpacing: '0.8px',
-              textTransform: 'uppercase',
-              color: '#77777F',
-            }}
-          >
-            {currentConversationId ? 'Current session' : 'New session'}
+        {/* The session bar: compact chrome, 44 px plus its rule, so its rule lines
+            up with the page's tab bar in the side modes. */}
+        <Box
+          data-density="compact"
+          sx={{
+            px: 1,
+            height: 45,
+            boxSizing: "border-box",
+            flexShrink: 0,
+            borderBottom: "1px solid var(--border-subtle)",
+            display: "flex",
+            alignItems: "center",
+            gap: 0.5,
+          }}
+        >
+          <Tooltip title="Chat history">
+            <IconButton aria-label="Chat history" aria-expanded={showSessionPicker} onClick={toggleSessionPicker}>
+              <HistoryIcon />
+            </IconButton>
+          </Tooltip>
+          <Typography sx={{ ...labelSx, flexGrow: 1, color: "var(--text-secondary)" }}>
+            {currentConversationId ? "Current chat" : "New chat"}
           </Typography>
-          <IconButton size="small" onClick={startNewConversation} title="New chat">
-            <AddIcon fontSize="small" />
-          </IconButton>
-          <IconButton
-            size="small"
-            onClick={() => {
-              if (!showSessionPicker) loadAvailableSessions();
-              setShowSessionPicker(!showSessionPicker);
-            }}
-          >
-            {showSessionPicker ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+          <Tooltip title="New chat">
+            <IconButton aria-label="New chat" onClick={startNewConversation}>
+              <AddIcon />
+            </IconButton>
+          </Tooltip>
+          <IconButton aria-label="Chat history" aria-expanded={showSessionPicker} onClick={toggleSessionPicker}>
+            {showSessionPicker ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </IconButton>
         </Box>
 
         {/* Session List */}
-        <Collapse in={showSessionPicker}>
-          <Box sx={{ maxHeight: 200, overflow: 'auto', borderBottom: 1, borderColor: 'divider' }}>
+        {showSessionPicker && (
+          <Box sx={{ maxHeight: 200, overflow: "auto", borderBottom: "1px solid var(--border-subtle)" }}>
             {loadingSessions ? (
-              <Typography variant="body2" sx={{ p: 2, textAlign: 'center', color: 'text.secondary' }}>
-                Loading sessions...
+              <Typography variant="caption" component="p" sx={{ m: 0, px: 2, py: 1.5, color: "var(--text-secondary)" }}>
+                Loading chats…
               </Typography>
             ) : availableSessions.length === 0 ? (
-              <Typography variant="body2" sx={{ p: 2, textAlign: 'center', color: 'text.secondary' }}>
-                No previous sessions
+              <Typography variant="caption" component="p" sx={{ m: 0, px: 2, py: 1.5, color: "var(--text-secondary)" }}>
+                No previous chats
               </Typography>
             ) : (
-              <List dense disablePadding>
+              <List dense disablePadding sx={{ py: 0.5 }}>
                 {availableSessions.map((session) => (
                   <ListItemButton
                     key={session.conversationId}
                     selected={session.conversationId === currentConversationId}
                     onClick={() => loadConversation(session.conversationId)}
-                    sx={{ py: 0.5 }}
+                    sx={{ mx: 1, py: 0.5 }}
                   >
                     <ListItemText
-                      primary={session.firstMessage + (session.firstMessage.length >= 50 ? '...' : '')}
-                      secondary={new Date(session.timestamp).toLocaleDateString()}
+                      primary={session.firstMessage + (session.firstMessage.length >= 50 ? "…" : "")}
+                      secondary={formatDate(session.timestamp)}
                       slotProps={{
-                        primary: { variant: 'body2', noWrap: true },
-                        secondary: { variant: 'caption' }
+                        primary: { variant: "body2", noWrap: true },
+                        secondary: { variant: "caption" }
                       }} />
-                    <Chip label={session.messageCount} size="small" sx={{ ml: 1 }} />
+                    <Chip label={session.messageCount} size="small" sx={{ ml: 1, fontVariantNumeric: "tabular-nums" }} />
                   </ListItemButton>
                 ))}
               </List>
             )}
           </Box>
-        </Collapse>
+        )}
 
         {experimentModeControls}
 
@@ -1451,39 +1487,55 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
               />
             </Box>
           ) : (
-            <Box sx={{ position: "absolute", height: "100%", width: "100%", top: 0, left: 0, bottom: 0, right: 0, overflow: "auto" }}>
+            <Box
+              role="region"
+              aria-label="Kiwi chat"
+              tabIndex={0}
+              sx={{
+                position: "absolute",
+                inset: 0,
+                overflow: "auto",
+                scrollbarWidth: "thin",
+                scrollbarColor: "var(--border-strong) transparent",
+                "&:focus-visible": { outlineOffset: "calc(-1 * var(--size-focus-ring))" },
+              }}
+            >
               <ChatMessages
                 chatMessages={chatMessages}
                 handleSendRetryMessage={handleSendRetryMessage}
                 messageEndRef={messageEndRef}
                 importCode={importCode}
+                statusLine={statusLine}
+                motion={motionAllowed}
+                onStatusLineGone={(turn) =>
+                  setStatusLine((line) => (line && line.turn === turn ? null : line))
+                }
               />
             </Box>
           )}
         </Box>
 
-        <Divider />
-
-        <Box sx={{
-          padding: 1
-        }}>
+        {/* The composer: compact chrome on every route, with Send and Stop inside the box. */}
+        <Box
+          data-density="compact"
+          sx={{
+            flexShrink: 0,
+            borderTop: "1px solid var(--border-subtle)",
+            p: { xs: "24px 16px 16px 16px", sm: "24px 16px 16px 24px" },
+          }}
+        >
           <form ref={formRef} onSubmit={handleSubmit}>
-            <Grid container columnSpacing={1} columns={16} direction="row">
+            <Stack spacing={1}>
               {qwenEnabled && !experimentMode && (
-                <Grid
-                  size={16}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center"
-                  }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <Typography component="label" id="model-select-label" htmlFor="model-select" sx={{ ...labelSx, color: "var(--text-secondary)" }}>
+                    Model
+                  </Typography>
                   <FormControl size="small">
-                    <InputLabel id="model-select-label">Model</InputLabel>
                     <Select
                       labelId="model-select-label"
                       id="model-select"
                       value={engineChoice}
-                      label="Model"
                       onChange={(e) => {
                         if (e.target.value) {
                           localStorage.setItem("engineChoice", e.target.value);
@@ -1495,42 +1547,45 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
                       <MenuItem value={"qwen"}>Qwen</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid>
+                </Box>
               )}
 
-              <Grid size={{ xs: 15, sm: 13, md: 16 }}>
-                <ChatField
-                  botAnswering={
-                    compareActive ? laneA.busy || laneB.busy : botAnswering
-                  }
-                  setPrompt={setPrompt}
-                  prompt={prompt}
-                  formRef={formRef}
-                />
-              </Grid>
-            </Grid>
+              <ChatField
+                botAnswering={
+                  compareActive ? laneA.busy || laneB.busy : botAnswering
+                }
+                setPrompt={setPrompt}
+                prompt={prompt}
+                formRef={formRef}
+                onStop={handleStop}
+              />
+            </Stack>
           </form>
         </Box>
       </Stack>
 
+      <Box role="status" aria-live="polite" sx={visuallyHidden}>
+        {finishedAnnouncement}
+      </Box>
+
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         open={snackbarOpen}
-        autoHideDuration={3000}
+        autoHideDuration={6000}
         onClose={() => setSnackbarOpen(false)}
         message={snackbarMessage}
       />
 
       {/* OAuth Authorization Dialog for MCP Tools */}
       <Dialog open={!!oAuthRequired} onClose={() => setOAuthRequired(null)}>
-        <DialogTitle>Authorization Required</DialogTitle>
+        <DialogTitle>Connect your account</DialogTitle>
         <DialogContent>
           <DialogContentText>{oAuthRequired?.message}</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOAuthRequired(null)}>Cancel</Button>
           <Button variant="contained" onClick={handleStudentAuthorize}>
-            Connect Account
+            Connect account
           </Button>
         </DialogActions>
       </Dialog>

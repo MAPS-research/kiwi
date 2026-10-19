@@ -24,6 +24,8 @@ export interface ChatLane {
   busy: boolean;
   error: string | null;
   send: (prompt: string) => void;
+  /** Stops the answer in flight: what arrived stays, an answer with no text yet goes. */
+  stop: () => void;
   reset: () => void;
 }
 
@@ -34,6 +36,9 @@ export interface UseChatLaneOptions extends ChatContextParams {
   /** Turn the lane off entirely (compare mode closed). */
   enabled: boolean;
 }
+
+const SIGN_IN_EXPIRED =
+  "Couldn't send your question. Your sign-in has expired. Your question isn't saved. Copy it, then reload the page to sign in again.";
 
 const newConversationId = (): string =>
   (globalThis.crypto?.randomUUID?.() as string) ||
@@ -123,8 +128,8 @@ export const useChatLane = ({
     const token = localStorage.getItem("authToken");
     if (!token) {
       setBusy(false);
-      setError("No token found, please login again.");
-      finalizeLoader("No token found, please login again.", true);
+      setError(SIGN_IN_EXPIRED);
+      finalizeLoader(SIGN_IN_EXPIRED, true);
       return;
     }
 
@@ -177,10 +182,10 @@ export const useChatLane = ({
             } else {
               const message =
                 response.status === 429
-                  ? "You are out of tokens."
+                  ? "Kiwi can't answer right now. You've reached your usage limit. Ask your instructor or an administrator about it."
                   : response.status === 403
-                    ? "You are not allowed to preview this variant."
-                    : `Request failed (${response.status}).`;
+                    ? "Kiwi can't answer in this preview. Your account can't preview this variant. Ask an administrator for access."
+                    : `Kiwi couldn't answer in this preview. The server returned an error (${response.status}). Try again in a moment.`;
               setError(message);
               setBusy(false);
               finalizeLoader(message, true);
@@ -199,8 +204,8 @@ export const useChatLane = ({
               parsedData.clientAction || parsedData.data?.clientAction;
             if (clientAction) {
               finalizeLoader(
-                "This variant asked to act on the page. Page actions are disabled " +
-                  "in compare mode — run it in the normal chat to try that.",
+                "This variant asked to act on the page. Page actions are off in compare mode. " +
+                  "Run it in the normal chat to try them.",
                 false,
               );
               setBusy(false);
@@ -235,7 +240,9 @@ export const useChatLane = ({
         onerror(err) {
           console.error("[useChatLane] Stream error:", err);
           setBusy(false);
-          setError("Connection lost.");
+          setError(
+            "Kiwi couldn't finish answering. The connection was lost. Check your connection, then try again.",
+          );
           // Returning stops fetch-event-source from retrying forever; throwing
           // is how the library is told to give up.
           throw err instanceof Error ? err : new Error("Stream error");
@@ -245,7 +252,7 @@ export const useChatLane = ({
           // A stream that closed before any bot frame arrived would otherwise
           // leave the "..." loader spinning forever.
           finalizeLoader(
-            "Something went wrong while answering. Please try again.",
+            "Kiwi couldn't finish answering. The server didn't respond as expected. Try again.",
             true,
           );
         },
@@ -304,5 +311,17 @@ export const useChatLane = ({
     [enabled, applyMessages],
   );
 
-  return { variantKey: variantKey ?? "", messages, busy, error, send, reset: clear };
+  const stop = useCallback(() => {
+    abortRef.current?.abort();
+    setBusy(false);
+    applyMessages((prev) => {
+      const last = prev[prev.length - 1];
+      if (!last?.isAi || last.error || last.streaming === "stop") return prev;
+      // Nothing arrived yet: there is no answer to keep.
+      if (last.typing) return prev.slice(0, -1);
+      return prev.map((msg, idx) => (idx === prev.length - 1 ? { ...msg, streaming: "stop" } : msg));
+    });
+  }, [applyMessages]);
+
+  return { variantKey: variantKey ?? "", messages, busy, error, send, stop, reset: clear };
 };

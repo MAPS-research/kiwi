@@ -90,6 +90,9 @@ const ChatCommands: React.FC<ChatFieldProps> = ({
     }
 
     if (event.key === "Escape") {
+      // The menu is the top layer: it takes Escape so the chat panel stays open.
+      event.preventDefault();
+      event.stopPropagation();
       setVisible(false);
       if (promptRef.current instanceof HTMLElement) promptRef.current.focus();
     }
