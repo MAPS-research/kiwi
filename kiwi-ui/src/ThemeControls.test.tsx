@@ -47,6 +47,20 @@ describe("Kiwi theme controls", () => {
     expect(rulesFor(root, ":has(.MuiSwitch-root) .MuiFormControlLabel-label")).toContain("font-weight:var(--type-label-weight)");
   });
 
+  it("shows the not-allowed pointer on an aria-disabled button, over ButtonBase's own hand", () => {
+    render(
+      <ThemeProvider theme={createKiwiTheme({ dark: false })}>
+        <IconButton aria-label="Share answer" aria-disabled="true">
+          <span />
+        </IconButton>
+      </ThemeProvider>
+    );
+
+    expect(rulesFor(screen.getByRole("button", { name: "Share answer" }), "[aria-disabled='true']")).toContain(
+      "cursor:not-allowed"
+    );
+  });
+
   it("draws a small switch with the one 14 px thumb and 3 px inset", () => {
     const { container } = render(
       <ThemeProvider theme={createKiwiTheme({ dark: false })}>

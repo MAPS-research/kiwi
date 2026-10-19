@@ -278,7 +278,14 @@ export function createKiwiTheme({ dark = darkModeEnabled() }: { dark?: boolean }
       },
 
       // Ripples are motion outside the budget (`§ Motion`): colour switches instantly instead.
-      MuiButtonBase: { defaultProps: { disableRipple: true, disableTouchRipple: true } },
+      MuiButtonBase: {
+        defaultProps: { disableRipple: true, disableTouchRipple: true },
+        styleOverrides: {
+          // ButtonBase's own `cursor: pointer` outranked base.css's [aria-disabled] rule
+          // (same specificity, inserted later), so every aria-disabled button kept a hand.
+          root: { "&[aria-disabled='true']": { cursor: "not-allowed" } },
+        },
+      },
 
       // Only opacity and transform animate (`§ Motion`): a Collapse, and every Accordion
       // built on it, opens and closes at once instead of animating its height.
