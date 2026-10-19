@@ -1,4 +1,4 @@
-# Kiwi UI token checks — 2026-10-19 · source v2.0.0 (sha256 143764822337) · at 2521f47
+# Kiwi UI token checks — 2026-10-19 · source v2.0.0 (sha256 842bb648afc3) · at a052f86
 
 Source: `.design-foundations/tokens/kiwi-ui.tokens.json` · Locked block: `kiwi-ui/DESIGN.md` · Result: **PASS**
 
@@ -108,7 +108,7 @@ Targets: text ≥ 4.5:1, non-text (boundaries, icons, markers, rings) ≥ 3:1. 4
 | button.secondary | active | border on {background} | non-text | 3 | 10.06 (#443c16 / #f6f4f3) | 14.18 (#efe4da / #191816) | PASS |
 | button.secondary | active | fill on {accent-solid} | non-text | 3 | 1.09 (#dce5cc / #d0ddbd) | 1.04 (#374525 / #354225) | info: below · against the resting primary's fill: a tint one step away; the ink edge tells them apart |
 | button.secondary | active | border on {accent-solid-border} | non-text | 3 | 2.31 (#443c16 / #577d37) | 2.44 (#efe4da / #859b69) | info: below · against the resting primary's edge: the ink against the strong green (light) or the sage edge (dark) |
-| button.secondary | disabled | text on fill | text | 4.5 | 6.09 (#6a5f49 / #fdfbfb) | 4.05 (#83807b / #22221f) | info: below · the faded label on the sheet, lower than the enabled 10.03 / 9.40 (the user's decision of 2026-10-18 ("淡化即可（推荐）"; plan Decision Log, "Disabled buttons"); WCAG exempts inactive controls) |
+| button.secondary | disabled | text on fill | text | 4.5 | 6.09 (#6a5f49 / #fdfbfb) | 4.05 (#83807b / #22221f) | info: below · the faded label on the sheet, lower than the enabled 9.99 / 9.46 (the user's decision of 2026-10-18 ("淡化即可（推荐）"; plan Decision Log, "Disabled buttons"); WCAG exempts inactive controls) |
 | button.secondary | disabled | border on {surface} | non-text | 3 | 2.16 (#b1adaa / #fdfbfb) | 2.66 (#656360 / #22221f) | info: below · the faint edge on the sheet: an edge, not a 3:1 boundary (the user's decision of 2026-10-18 ("淡化即可（推荐）"; plan Decision Log, "Disabled buttons"); WCAG exempts inactive controls) |
 | button.secondary | disabled | border on {background} | non-text | 3 | 2.03 (#b1adaa / #f6f4f3) | 2.96 (#656360 / #191816) | info: below · the faint edge on the canvas (the user's decision of 2026-10-18 ("淡化即可（推荐）"; plan Decision Log, "Disabled buttons"); WCAG exempts inactive controls) |
 | button.secondary | disabled | fill on {accent-bg-subtle} | non-text | 3 | 1.13 (#fdfbfb / #eaf0df) | 1.19 (#22221f / #27321f) | info: below · the sheet fill against a hovered tertiary's tint: told apart, with the edge and the fainter label (the user's decision of 2026-10-18 ("淡化即可（推荐）"; plan Decision Log, "Disabled buttons"); WCAG exempts inactive controls) |

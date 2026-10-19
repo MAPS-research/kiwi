@@ -2245,7 +2245,7 @@
    "id": "2026-10-19-palette-retune",
    "base": "2521f47151fcd2078b27aea7553f5852182ebb9b",
    "decided": "2026-10-19",
-   "decision": "Palette re-tune: the neutral and paper ramps the user saved in the palette tuner (chroma × 0.20, hue − 55°; the text steps chroma × 1.00, hue − 55°), dark derived with the same transform; with the composer's Send and Stop inside the box and one frame on focus (plan Decision Log, \"Palette re-tune\" and the same day's rows)",
+   "decision": "Palette re-tune: the neutral and paper ramps the user saved in the palette tuner (chroma × 0.20, hue − 55°; the text steps chroma × 1.00, hue − 55°), dark derived with the same transform, and the dark canvas #191816 kept with § Never's flat near-black line relaxed for it; with the composer's Send and Stop inside the box and one frame on focus (plan Decision Log, \"Palette re-tune\", \"Dark canvas kept\" and the same day's rows)",
    "design": {
     "kind": "patch",
     "blocks": [
@@ -2261,7 +2261,7 @@
        "ef0c865d943533a60b19cbce203389acde2b5b3169e841ed60b167a103e9e403"
       ],
       "added": [
-       "02ff9298d7d1e181fed5e81c82f2d6618f537171226e3a2027704552c3581805"
+       "26cddf6076b01f3489ed4ab66186ed1087205dc9fb07da7bd0d66de366ba2918"
       ]
      },
      {
@@ -2444,6 +2444,16 @@
       ],
       "added": [
        "0af90ecd609ac2e9f631151c8acb9364702b59fae90db460b7fc5b3be3e920ff"
+      ]
+     },
+     {
+      "at": 218,
+      "starts": "`--accent-9` (the mascot's sage) is not a fill a",
+      "removed": [
+       "2813f6c1c0edf0ce1870e2fcc106c5a015f4a1a155f2a4e55439f3e8a553c09c"
+      ],
+      "added": [
+       "f27382d88c8b39df28f79b2dff81f28d97651be2e0521eae2d6ce2ee6815b182"
       ]
      },
      {
@@ -2771,13 +2781,23 @@
       ]
      },
      {
+      "at": 354,
+      "starts": "- **Backdrops:** dialog and modal backdrops are ",
+      "removed": [
+       "aeb2b91fbed44c2814abfdd547633672a6a6459c4548ce6f22ceca21286e8283"
+      ],
+      "added": [
+       "121a26a023e4d9051a67edecf9dcc98cc8727e1eaab9202a2fb6de213e3e6a9f"
+      ]
+     },
+     {
       "at": 372,
       "starts": "- **The dark + acid-green cluster.** The dark ca",
       "removed": [
        "3b1ef38546465e4ba28e8f9d6bf7aa53b245222d20489b777c422c852e3d2a1b"
       ],
       "added": [
-       "53897372afceec7aad91e53152ca27662287ddcad98809f4cec2d9d75235154a"
+       "08ca278be6ff98ee9e226694f2466e4d013d249843b51b3eea0d06039dd5285c"
       ]
      },
      {
@@ -2797,7 +2817,7 @@
        "cdab90962a172242f4c9031509125d763628e46070decc352a53a7a657837683"
       ],
       "added": [
-       "b40dc8d1408af35d684a08249d3abbaa4e09fac72416cbabb7122141b43cb03a"
+       "64318225773de9ae6b7df9e3d7371f7bc87826aa9aae2afd2649090b5cce2335"
       ]
      },
      {
@@ -2850,6 +2870,16 @@
       ],
       "added": [
        "85667dbe16224d7aee2f35c454fc3db77ae1e191dddaebc3629f4f2da3f67fbf"
+      ]
+     },
+     {
+      "at": 469,
+      "starts": "| `semantic.editor.*` (12) | `bg` = `surface`, `",
+      "removed": [
+       "d60c6082b066fd39965b812f2849b369ceec2a73e2928994afe0b6afdb3b21b4"
+      ],
+      "added": [
+       "41543ca61044dc721927bb14f03e9ff45787b15d4272412e746f39a6820ba819"
       ]
      },
      {
@@ -3438,6 +3468,36 @@
       ]
      },
      {
+      "at": 1402,
+      "starts": "| `#5C3B6E` button | `welcome .btn` | `--accent-",
+      "removed": [
+       "aba7f86346cfdd3f63ef696fa123feaf4b2365ae482b5438c5379fb07bd5c49e"
+      ],
+      "added": [
+       "53af07995f115246776a0dd5925a45492543bc5f326a47de7c9707037d03d1ff"
+      ]
+     },
+     {
+      "at": 1420,
+      "starts": "The live sources are `generated/check-summary.js",
+      "removed": [
+       "af5fc9cc5b5d7557c7a35e3cef16301375f1373ac328077bde020991b632d572"
+      ],
+      "added": [
+       "c18da38b76501b980edd870409ca41e7a8b1b7f5f77281b55879e0345238c515"
+      ]
+     },
+     {
+      "at": 1422,
+      "starts": "| Check | Result (2026-10-18, after the re-lock ",
+      "removed": [
+       "1caa925e481bd3f730300b3ba4fcd760e76dace538e7ad6eeef2bf225ac9da52"
+      ],
+      "added": [
+       "a4236f3359a3af2ebd7a4b3d868c347debd184a7de8df3fc64cce5a9b3676ba8"
+      ]
+     },
+     {
       "at": 1424,
       "starts": "| The globals' sources | 83 global colour values",
       "removed": [
@@ -3455,14 +3515,18 @@
        "2f0e32077e14cf86967dc479e73d50e692301416d0dc30bf4fd8c85c35115989",
        "73dd4cbbdd437568ef96c6e221e83cf60440cf8cb467d368e57cc4537b70782e",
        "c394f18a2a21cf37bf337267dbf9e30cda4b52f44670aa8a9559d5b467bfd57e",
-       "977c78c8008247fb28c4a4c4ce1089866e1251e95a4111b7d6797d57f9d532af"
+       "977c78c8008247fb28c4a4c4ce1089866e1251e95a4111b7d6797d57f9d532af",
+       "6b2f5ee3e47ef684e67ac3de8cab1cb81ad86810015fae92c58b6ef2e3da98bc",
+       "f35c9097d5b3384d3946a7540fb01ec59310c48bfa9ef3e48013c38e18731e53"
       ],
       "added": [
        "7e263f4b2a24e8ad658213557b9fa2c4997e704e95bd620c8d0999b5f57563d8",
        "54f1ccf1d622082ece74e079e9fc4e2ef0e16e5b602fb9a5974d8d765c9d5592",
        "b43a5d9ba7ad517006a623d798780a2e923105bc8012ae53c940350198afbaa1",
        "0713ec64265f00485315def3bbf76ef19793c49f8b803dc27a917874cc3fc6de",
-       "e07b996cc73103aacb04833c5d5da655166375bfb2e665d7ae372afdb1302f3b"
+       "064b0a125e54d64987d42aa098b6f6d6f6d2683a07973898956d3d84fb6c9cbb",
+       "53b098161038df9618cd929db194a8fe0f99328debe738c7517ae7497782ac37",
+       "ef79c601bd3bd456b49aa75b724bb1e6ad2864d9981a455fa008ca4c740e90ad"
       ]
      },
      {
@@ -3470,11 +3534,23 @@
       "starts": "| Real coarse emulation (the DevTools protocol) ",
       "removed": [
        "2fc90db1d8302877ac2c58f4a3ffe3ef099c6276cb5bb0c9d914e4bc793eb6ac",
-       "532069e4632984d125e9ef91c716a97d21200b41786a2fdd9b42b2b50315db09"
+       "532069e4632984d125e9ef91c716a97d21200b41786a2fdd9b42b2b50315db09",
+       "2a1bbeff2b4f643a5d5034413628e39b1aa83d59465fbd21741a2530ff8dde2a"
       ],
       "added": [
-       "aad777eeb0c2abbd98af5b9c67ebbfcab59a8f62cfb2cfc5a2dcdf1082280072",
-       "b75e0ffc60b7d2801ea863454149de8a0d731a18f0da970c25afc61695b8ea74"
+       "8ec4715fbeb0fdaa485be1b451f19c1a9d1f4a6fcf4515071dd52d9449c974b9",
+       "16293f0661952e306c1562ed2c5a20a86fb1132b4d45d669941a55999881457d",
+       "b38061830d85edd270664cd957ff104c627ca2a78117a7d75d4b51f3333a8a90"
+      ]
+     },
+     {
+      "at": 1453,
+      "starts": "  - the sign-in aside drops its photo dependency",
+      "removed": [
+       "d93310ed810969c998fdfb4611af72113613309030921043720d95f6982e01a4"
+      ],
+      "added": [
+       "469b52a0785b943dc9fd778fa24dadf2eadfb35747bbbdeb122a77ddaff65b05"
       ]
      },
      {
@@ -3485,6 +3561,16 @@
       ],
       "added": [
        "4e40649c368686194d1ff45b143313ed9016a6d84fd4f2672efcfe7b8624b9b8"
+      ]
+     },
+     {
+      "at": 1509,
+      "starts": "**Framing.** The tutor avatar draws every state ",
+      "removed": [
+       "bd914d0345e911ee680953d6e334f776608e3dcc13e1b2d8b6362cdffd3cdbd7"
+      ],
+      "added": [
+       "ea52a86a38f4583dc94f18002ac1c18063ea2ae0e84f47ec3e59e23c4e99fe6a"
       ]
      },
      {
@@ -3522,7 +3608,7 @@
        "029bbea22a1dd159c3dcb0c425ed546433e7019547ffb90e5b88922c843e1303"
       ],
       "added": [
-       "5db96e7de99b0ea68c6c4284285c13a8ab67d9426ffea0558ca616ddf07260ae"
+       "32885e66b30f4ac23cb1644586de1499a9a6530b15c67ef4985076188f75d3f6"
       ]
      },
      {
@@ -3532,7 +3618,7 @@
        "30a6c8da7601fed954739113223af62123e4b99858947a4bd5cd2be1378ec928"
       ],
       "added": [
-       "ed196d19902a141583a2f792ce67c9fc1bcef4194da9eb7a7328d7aaabec5754"
+       "cebd211182aedfc95bf6f53e594d363372f363cbbdf7c70ac60bad1953ceaab9"
       ]
      },
      {
@@ -3546,6 +3632,36 @@
       ]
      },
      {
+      "at": 2243,
+      "starts": "- **Donuts:** only for part-to-whole with two to",
+      "removed": [
+       "01e679c182caaaa88f19595715b7b565b83d864a6691690853a05f8b9677cf06"
+      ],
+      "added": [
+       "0e1057923bb2d19eb38d8e8def5527f68362e391b8e6cac3cd380d4687e44de4"
+      ]
+     },
+     {
+      "at": 2285,
+      "starts": "- **Tokens and contrast:** `node .design-foundat",
+      "removed": [
+       "0819fbbad43da2d53a1161cb51d0b0c275435a431685315c5be6bec0fb1dd485"
+      ],
+      "added": [
+       "2ed1fc4d98e796d24a26330ed7ada1a0cd8998d7ef92f50ea2729980d057d46e"
+      ]
+     },
+     {
+      "at": 2287,
+      "starts": "- **Render:** `.design-foundations/mocks/chart-s",
+      "removed": [
+       "46e324937fdfe10a656f9caf6a06cd0100c9775ab237f6955c054bf5c0387323"
+      ],
+      "added": [
+       "2fa9a569ccc0fe1584ed88d2b87b1401daf0c00d18f35cbe376d4e11b0f7ed55"
+      ]
+     },
+     {
       "at": 2377,
       "starts": "### 2026-10-19 · Re-tune: warm near-grey neutral",
       "removed": [],
@@ -3553,8 +3669,8 @@
        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
        "94c6915d2af2fc6a147903133e530d43894e405e147d7b6a29b7d9211ee6ef6c",
        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-       "6b990cf1adecf28f90996a8a11445b62051274d2b4935e018d786d950ada0215",
-       "bc16fc55808e5c070e43ab4ac532561474c811baf61e11845baf0a7b27f9c000",
+       "8ae38ad9fd445cff43807c25d7af1c54f52bb8e31f1346adcee1e5ac0f1fd130",
+       "b3ae393a28ad44e9665fae2aaa87db8497e63a64119a218535393d87131756b0",
        "b4c36edbb44d0706c009e33a3a0f9090b38e64b229720aef0bf3190886c9f2eb",
        "fa0b1903435879329671adfd2cdfe8f6aa45b24537c8d4348fa93964bfabea30",
        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -3578,12 +3694,12 @@
        "d1c3aa812e7e61d1de41a7a0303b286c2bb33b8a38bc118e39bbb6d92c70e638",
        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
        "889fc1f20cd06693a181d92e7dfd6b3265a187783ff78d0b9f7bbb666e64f0be",
-       "9b41bcdc89acaafc756a5925dd77aba23122fa93a30d2409dfbd0bd4545e70ce",
+       "c09707de4cb66553fe90f74d85c2ad5bffb3861448c122f455ad9a666babf03b",
        "363d032a8998b056750ed38348f42762b6867b0cbac75c633efbed31aaaad204",
        "620df96a7f0524199659c8062bb2da851eab95da9d40e6eeb86f68cd75f00fd4",
-       "14bd42d762ddacee54f9bb3ffd7a61f127412ac5246272ea236b0a075f19e26d",
-       "99c7450d204e60843f20ec30fdb2b36291be3ae173f376a30dbc6e81c29bec58",
-       "417c6c5360e43cab96059f04e8187baef9c42c3f93a6f1be030311cef7d83f7d",
+       "18c216389da11d0cbb96b99e0717b2ab336ec743918961dca451baa0924296fc",
+       "6fb7c85263dd9a25c4ae35ab2b67a95fe9f15bec4492569d4a7a5de16f9dde76",
+       "a5868dd9371a43249bb6ed2a365733948a2b05ff3c6a4e5180fb909e2a5f3cb8",
        "5a7c6779e95a23f68de91b10bc410fa38149a1d4ae51a04860fce3c550a76a3d"
       ]
      }

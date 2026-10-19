@@ -5501,7 +5501,7 @@
                   "bg": "fill",
                   "min": 4.5,
                   "exempt": true,
-                  "why": "the faded label on the sheet, lower than the enabled 10.03 / 9.40 (the user's decision of 2026-10-18 (\"淡化即可（推荐）\"; plan Decision Log, \"Disabled buttons\"); WCAG exempts inactive controls)"
+                  "why": "the faded label on the sheet, lower than the enabled 9.99 / 9.46 (the user's decision of 2026-10-18 (\"淡化即可（推荐）\"; plan Decision Log, \"Disabled buttons\"); WCAG exempts inactive controls)"
                 },
                 {
                   "fg": "border",
