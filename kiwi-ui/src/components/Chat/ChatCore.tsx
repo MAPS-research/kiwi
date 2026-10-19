@@ -69,6 +69,13 @@ const NOT_ALLOWED =
   "Kiwi can't answer right now. Your account can't use this feature. Ask an administrator for access.";
 const ANSWER_FAILED = "Kiwi couldn't finish answering. The server didn't respond as expected. Try again.";
 const FINISHED = "Kiwi finished answering.";
+/** The chat's notices that report progress rather than a failure: a status, never an alert. */
+const CHAT_NOTICES = new Set([
+  "Connected to Kiwi",
+  "Refreshing your sign-in…",
+  "Retrying your question…",
+  "Connection lost. Kiwi is reconnecting…",
+]);
 
 const visuallyHidden = {
   position: "absolute",
@@ -1517,6 +1524,30 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
               />
             </Box>
           )}
+
+          {/* The chat's notices ("Connected to Kiwi", reconnecting, sign-in) sit inside the
+              panel, just above the composer, so they never cover what the student types. A
+              click elsewhere never closes one; a notice is a status, an error an alert. */}
+          <Snackbar
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            open={snackbarOpen}
+            autoHideDuration={6000}
+            onClose={(_event, reason) => {
+              if (reason !== "clickaway") setSnackbarOpen(false);
+            }}
+            message={snackbarMessage}
+            slotProps={{ content: { role: CHAT_NOTICES.has(snackbarMessage) ? "status" : "alert" } }}
+            sx={{
+              // Centred over the message region, 12 px above the composer's rule (on a phone
+              // MUI spans it 8 px in from both edges). The doubled class outranks MUI's own
+              // centring, which sits in a media query emitted after these rules.
+              position: "absolute",
+              bottom: "var(--space-3)",
+              zIndex: 1,
+              "&&": { maxWidth: "calc(100% - 2 * var(--space-4))" },
+              "& .MuiSnackbarContent-root": { minWidth: 0 },
+            }}
+          />
         </Box>
 
         {/* The composer: compact chrome on every route, with Send and Stop inside the box. */}
@@ -1571,14 +1602,6 @@ export const ChatCore: React.FC<ChatCoreProps> = ({
       <Box role="status" aria-live="polite" sx={visuallyHidden}>
         {finishedAnnouncement}
       </Box>
-
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setSnackbarOpen(false)}
-        message={snackbarMessage}
-      />
 
       {/* OAuth Authorization Dialog for MCP Tools */}
       <Dialog open={!!oAuthRequired} onClose={() => setOAuthRequired(null)}>
