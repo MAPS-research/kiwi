@@ -20,6 +20,7 @@ import ClassSwitcher, {
   type ClassSwitcherOption,
 } from "./ClassSwitcher.tsx";
 import InstitutionLogo from "../Brand/InstitutionLogo.tsx";
+import DisplayMenu from "./DisplayMenu.tsx";
 
 export type { ClassSwitcherOption } from "./ClassSwitcher.tsx";
 
@@ -230,6 +231,9 @@ const TopNav = ({
             </IconButton>
           </Tooltip>
         )}
+
+        {/* Display settings: theme and Kiwi animation (shown when the deployment offers either) */}
+        <DisplayMenu />
 
         {/* Logout Button */}
         <Tooltip title="Logout">

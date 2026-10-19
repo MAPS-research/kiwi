@@ -2,7 +2,7 @@
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 
 // MUI
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
 // Auth
@@ -201,6 +201,11 @@ const router = createBrowserRouter([
 ]);
 
 import theme from "./Theme.ts";
+import { darkModeEnabled } from "./config/branding.ts";
+import {
+  DisplayPreferencesProvider,
+  THEME_MODE_STORAGE_KEY,
+} from "./theme/displayPreferences.tsx";
 
 // Apps Framework
 import { AppRegistryProvider, builtinApps } from "./apps/index.ts";
@@ -212,11 +217,21 @@ function App() {
   return (
     <AuthProvider>
       <GlobalChatProvider>
-        <ThemeProvider theme={theme}>
+        {/* The scheme follows the device until the user picks one in the Display menu;
+            before the dark release (VITE_ENABLE_DARK_MODE) the app is always light. */}
+        <ThemeProvider
+          theme={theme}
+          defaultMode={darkModeEnabled() ? "system" : "light"}
+          modeStorageKey={THEME_MODE_STORAGE_KEY}
+          storageManager={darkModeEnabled() ? undefined : null}
+          disableTransitionOnChange
+        >
           <CssBaseline />
-          <AppRegistryProvider initialApps={builtinApps}>
-            <RouterProvider router={router} />
-          </AppRegistryProvider>
+          <DisplayPreferencesProvider>
+            <AppRegistryProvider initialApps={builtinApps}>
+              <RouterProvider router={router} />
+            </AppRegistryProvider>
+          </DisplayPreferencesProvider>
         </ThemeProvider>
       </GlobalChatProvider>
     </AuthProvider>
