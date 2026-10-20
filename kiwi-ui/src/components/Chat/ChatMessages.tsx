@@ -324,7 +324,7 @@ const renderChatMessages = (chatMessages: ChatMessage[], options: RenderOptions)
     if (message.isAi) lastAiIndex = index;
   });
 
-  const renderCitations = (message: ChatMessage, hidden: boolean) => {
+  const renderCitations = (message: ChatMessage) => {
     const jumpToPage = (page: number) => context.pdfNavigationRef?.current?.(page);
     const { setCurrentPDFID, currentPDFID, setPdfContent } = context;
     if (!message.citations?.length) return null;
@@ -349,7 +349,6 @@ const renderChatMessages = (chatMessages: ChatMessage[], options: RenderOptions)
           }}
           sx={{
             position: "relative",
-            visibility: hidden ? "hidden" : "visible",
             fontSize: "var(--text-xs)",
             lineHeight: "var(--tutor-message-toolbar-line)",
             fontVariantNumeric: "tabular-nums",
@@ -375,10 +374,11 @@ const renderChatMessages = (chatMessages: ChatMessage[], options: RenderOptions)
 
   const renderTutorRow = (message: ChatMessage, key: React.Key, leading: ReactNode, steps: AgentStep[], hostsLine: boolean) => {
     const line = hostsLine && statusLine ? statusLine : null;
-    const answering = !!line && !line.complete;
     const flying = !!line && line.complete;
-    const showToolbar = !message.typing && !answering;
-    const citations = showToolbar ? renderCitations(message, flying) : null;
+    // The line owns this row through the flight and fade. Mount the controls
+    // only after onGone removes it, so they cannot flash during the handover.
+    const showToolbar = !message.typing && !line;
+    const citations = showToolbar ? renderCitations(message) : null;
     const feedback = showToolbar && message.uniqueId ? <Feedback index={message.uniqueId} /> : null;
 
     return (
@@ -399,19 +399,18 @@ const renderChatMessages = (chatMessages: ChatMessage[], options: RenderOptions)
             }}
           >
             {line ? (
-              <Box sx={flying ? { position: "absolute", left: 0, top: 0 } : { display: "contents" }}>
-                <KiwiStatusLine
-                  label={flying ? "" : lineLabelFor(message, steps, line.answerNumber)}
-                  complete={line.complete}
-                  startedAt={line.startedAt}
-                  motion={motion}
-                  onGone={() => onStatusLineGone?.(line.turn)}
-                />
-              </Box>
+              <KiwiStatusLine
+                key={line.turn}
+                label={flying ? "" : lineLabelFor(message, steps, line.answerNumber)}
+                complete={line.complete}
+                startedAt={line.startedAt}
+                motion={motion}
+                onGone={() => onStatusLineGone?.(line.turn)}
+              />
             ) : null}
             {/* The feedback buttons open the row (the user's decision of 2026-10-19).
                 Kiwi flies off from that spot, so they wait for it, as the citations do. */}
-            {feedback ? <Box sx={{ visibility: flying ? "hidden" : "visible" }}>{feedback}</Box> : null}
+            {feedback}
             {citations}
           </Box>
         ) : null}

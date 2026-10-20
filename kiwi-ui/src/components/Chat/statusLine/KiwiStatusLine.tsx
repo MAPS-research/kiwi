@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { Box } from "@mui/material";
 import { useColorMode } from "../../../theme/useColorMode.ts";
 import walkLight from "./assets/walk.light.webp";
@@ -113,7 +113,7 @@ export default function KiwiStatusLine({ label, complete, startedAt, motion, onG
   }, [motion, atlases.hop]);
 
   // The run, from the send until the answer completes.
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (complete) return undefined;
     if (!motion) {
       draw("stand");
@@ -133,7 +133,7 @@ export default function KiwiStatusLine({ label, complete, startedAt, motion, onG
   }, [complete, motion, startedAt, atlases]);
 
   // The flight at the next tick of the run's clock, the landing hold, the fade, then gone.
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!complete) return undefined;
     if (!motion || document.hidden || !inViewRef.current) {
       leave();
@@ -171,7 +171,9 @@ export default function KiwiStatusLine({ label, complete, startedAt, motion, onG
       }
       frame = requestAnimationFrame(step);
     };
-    frame = requestAnimationFrame(step);
+    // Keep a drawn frame on screen before paint, including a row mounted at
+    // completion (for example after the final tool narration becomes text).
+    step();
     return () => {
       cancelAnimationFrame(frame);
       window.clearTimeout(timer);

@@ -1,4 +1,4 @@
-import { render, screen, within, fireEvent } from "@testing-library/react";
+import { act, render, screen, within, fireEvent } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { ThemeProvider } from "@mui/material/styles";
@@ -25,23 +25,34 @@ const answer: ChatMessage = {
 
 function renderMessages(
   chatMessages: ChatMessage[],
-  { statusLine = null, handleSendRetryMessage = vi.fn() }: { statusLine?: StatusLineState | null; handleSendRetryMessage?: (message: ChatMessage) => void } = {}
+  { statusLine = null, handleSendRetryMessage = vi.fn(), motion = false, onStatusLineGone }: {
+    statusLine?: StatusLineState | null;
+    handleSendRetryMessage?: (message: ChatMessage) => void;
+    motion?: boolean;
+    onStatusLineGone?: (turn: number) => void;
+  } = {}
 ) {
   const store = configureStore({ reducer: { interactionId: interactionIdReducer, codePanel: codePanelReducer } });
-  return render(
+  const ui = (messages: ChatMessage[], line: StatusLineState | null) => (
     <Provider store={store}>
       <ThemeProvider theme={createKiwiTheme({ dark: false })}>
         <ChatMessages
-          chatMessages={chatMessages}
+          chatMessages={messages}
           handleSendRetryMessage={handleSendRetryMessage}
           messageEndRef={{ current: null } as unknown as React.RefObject<HTMLDivElement>}
           importCode={vi.fn()}
-          statusLine={statusLine}
-          motion={false}
+          statusLine={line}
+          motion={motion}
+          onStatusLineGone={onStatusLineGone}
         />
       </ThemeProvider>
     </Provider>
   );
+  const view = render(ui(chatMessages, statusLine));
+  return {
+    ...view,
+    rerenderMessages: (messages: ChatMessage[], line: StatusLineState | null) => view.rerender(ui(messages, line)),
+  };
 }
 
 const running = (overrides: Partial<StatusLineState> = {}): StatusLineState => ({
@@ -152,13 +163,54 @@ describe("ChatMessages rows", () => {
     expect(toolbar.parentElement).not.toHaveStyle({ marginLeft: "auto" });
   });
 
-  it("holds the toolbar back while Kiwi flies off from the same spot", () => {
-    const { container } = renderMessages([question, answer], { statusLine: running({ complete: true }) });
+  it("keeps the same Kiwi in place through the run, flight and fade before mounting feedback", () => {
+    vi.useFakeTimers({
+      toFake: ["setTimeout", "clearTimeout", "requestAnimationFrame", "cancelAnimationFrame", "performance"],
+    });
+    try {
+      const onGone = vi.fn();
+      const line = running({ startedAt: performance.now() });
+      const messages = [question, { ...answer, citations: [{ pdfID: "pdf-1", pageNumber: 3 }] }];
+      const { container, rerenderMessages } = renderMessages([question, { ...answer, typing: true }], {
+        statusLine: line,
+        motion: true,
+        onStatusLineGone: onGone,
+      });
+      const camera = screen.getByTestId("kiwi-status-line-camera");
+      const status = container.querySelector(".kiwi-status-line");
+      const row = status?.parentElement;
+      act(() => vi.advanceTimersByTime(500));
+      expect(camera).toHaveAttribute("data-atlas", "walk");
 
-    // A hidden toolbar has no accessible name, so find it by its label attribute.
-    const toolbar = container.querySelector('[role="toolbar"][aria-label="Feedback"]');
-    expect(toolbar?.parentElement).toHaveStyle({ visibility: "hidden" });
-    expect(screen.queryByRole("toolbar", { name: "Feedback" })).not.toBeInTheDocument();
+      // The final text and the completion signal may render separately.
+      rerenderMessages(messages, line);
+      expect(container.querySelector('[role="toolbar"]')).toBeNull();
+      rerenderMessages(messages, { ...line, complete: true });
+      expect(screen.getByTestId("kiwi-status-line-camera")).toBe(camera);
+      expect(status?.parentElement).toBe(row);
+      expect(status?.parentElement).not.toHaveStyle({ position: "absolute" });
+      expect(container.querySelector('[role="toolbar"]')).toBeNull();
+      expect(screen.queryByRole("button", { name: "[Page 3]" })).not.toBeInTheDocument();
+
+      act(() => vi.advanceTimersByTime(200));
+      expect(camera).toHaveAttribute("data-atlas", "hop");
+      expect(onGone).not.toHaveBeenCalled();
+      expect(container.querySelector('[role="toolbar"]')).toBeNull();
+
+      act(() => vi.advanceTimersByTime(1000));
+      expect(status).toHaveStyle({ opacity: "0" });
+      expect(onGone).not.toHaveBeenCalled();
+      expect(container.querySelector('[role="toolbar"]')).toBeNull();
+
+      act(() => vi.advanceTimersByTime(200));
+      expect(onGone).toHaveBeenCalledExactlyOnceWith(line.turn);
+      rerenderMessages(messages, null);
+      expect(screen.queryByTestId("kiwi-status-line-camera")).not.toBeInTheDocument();
+      expect(screen.getByRole("toolbar", { name: "Feedback" })).toBeVisible();
+      expect(screen.getByRole("button", { name: "[Page 3]" })).toBeVisible();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("sets a CJK-dominant paragraph at the CJK leading, with upright emphasis", () => {
