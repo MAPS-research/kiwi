@@ -1,0 +1,413 @@
+#!/usr/bin/env node
+// build-tokens.mjs — the reference emitter of the generation spec (kiwi-ui/DESIGN.md § Design system).
+// One DTCG source → (1) the internal CSS custom properties (light/dark × comfortable/compact),
+// (2) a preview of public/kiwi-design-tokens.css (light-only, every name kept, purple-era roles deprecated),
+// (3) a preview of the MUI theme (colorSchemes on the data-theme attribute; density through CSS variables).
+// Design-side artefact: it emits into ./generated/ and never touches kiwi-ui/. The implementation plan ports it.
+//   node build-tokens.mjs            # writes ./generated/*
+import { writeFileSync, mkdirSync, readFileSync } from "node:fs";
+import { dirname, join, relative } from "node:path";
+import { fileURLToPath } from "node:url";
+import { loadTokens, walk, getToken, resolve, refOf, rawValue, cssNameFor, cssValue, variesWith, CONTEXTS, TYPO_FIELDS, isHex, hex8ToRgba, withAlpha, alphaOf, TOKENS_DIR, REPO_ROOT } from "./tokens-lib.mjs";
+
+const here = TOKENS_DIR; // every path is relative to this script or the repository root (no machine-specific path)
+const SRC = join(here, "kiwi-ui.tokens.json");
+const OUT = join(here, "generated");
+mkdirSync(OUT, { recursive: true });
+const tree = loadTokens(SRC);
+const meta = tree.$extensions["org.kiwi"];
+
+// ---------- 1. internal CSS ----------
+// Each emitted token becomes one or more declarations. A reference is emitted as var(--name) of the nearest
+// emitted token along its reference chain (a pass-through role such as semantic.radius.control has no name of its
+// own, so --button-radius reads var(--radius-control)), so the output reads like the locked block and a component
+// follows its global; a chain that ends in a literal no name carries (the lock's green-black) emits the literal;
+// composites resolve to literals.
+const emitted = []; // { path, name, token }
+const byName = new Map();
+walk(tree, (path, token) => {
+  const name = cssNameFor(tree, path);
+  if (!name) return;
+  if (byName.has(name)) throw new Error(`CSS name collision: ${name} ← ${byName.get(name)} and ${path}`);
+  byName.set(name, path);
+  emitted.push({ path, name, token });
+});
+const nameOf = (path) => cssNameFor(tree, path);
+// the nearest emitted name along a reference chain, in a context (null when the chain ends in a nameless literal)
+const chainName = (path, ctx) => { let p = path; for (let i = 0; i < 20 && p; i++) { const n = nameOf(p); if (n) return n; const t = getToken(tree, p); p = t ? refOf(rawValue(t, ctx)) : null; } return null; };
+// Shadows and the backdrop reference --shadow-ink; their alphas ($extensions["org.kiwi"].alpha, per layer or per mode)
+// are composed here into rgba(), so the ink is written once and the composites follow it.
+const terminal = (path, ctx) => { let p = path, t = getToken(tree, p); for (let i = 0; i < 20 && t && refOf(rawValue(t, ctx)); i++) { p = refOf(rawValue(t, ctx)); t = getToken(tree, p); } return t; };
+const shadowCss = (path, ctx) => {
+  const t = terminal(path, ctx); const layers = resolve(tree, path, ctx); const alphas = Array.isArray(t?.$extensions?.["org.kiwi"]?.alpha) ? t.$extensions["org.kiwi"].alpha : [];
+  return cssValue("shadow", (Array.isArray(layers) ? layers : [layers]).map((l, i) => ({ ...l, color: alphas[i] != null && isHex(l.color) ? withAlpha(l.color, alphas[i]) : l.color })));
+};
+const colorCss = (path, ctx) => { const t = getToken(tree, path); const v = resolve(tree, path, ctx); const a = alphaOf(t, ctx); return a != null && isHex(v) ? withAlpha(v, a) : cssValue("color", v); };
+
+function declsFor(entry, ctx) {
+  const { path, name, token } = entry;
+  const raw = rawValue(token, ctx);
+  if (token.$type === "shadow") { const r = refOf(raw); if (r) { const n = nameOf(r); return [[name, n ? `var(${n})` : shadowCss(r, ctx)]]; } return [[name, shadowCss(path, ctx)]]; } // an elevation alias stays an alias: var(--shadow-N)
+  if (token.$type === "color" && alphaOf(token, ctx) != null) return [[name, colorCss(path, ctx)]];
+  const render = (v, type) => {
+    const r = refOf(v);
+    if (r) { const n = chainName(r, ctx); return n ? `var(${n})` : cssValue(type, resolve(tree, r, ctx)); }
+    if (typeof v === "string" && /\{[^{}]+\}/.test(v)) return cssValue(type, resolve(tree, path, ctx));
+    return cssValue(type, v);
+  };
+  if (token.$type === "typography") {
+    const obj = typeof raw === "object" ? raw : resolve(tree, path, ctx);
+    return Object.entries(obj).map(([k, v]) => [`${name}-${TYPO_FIELDS[k] || k}`, render(v, k === "fontFamily" ? "fontFamily" : "dimension")]);
+  }
+  return [[name, render(raw, token.$type)]];
+}
+
+const block = (selector, entries, ctx, extra = []) => {
+  const lines = entries.flatMap((e) => declsFor(e, ctx)).map(([n, v]) => `  ${n}: ${v};`);
+  return `${selector} {\n${[...lines, ...extra].join("\n")}\n}\n`;
+};
+const colorDependent = emitted.filter((e) => variesWith(tree, e.path, "color"));
+const densityDependent = emitted.filter((e) => variesWith(tree, e.path, "density"));
+const pointerDependent = emitted.filter((e) => variesWith(tree, e.path, "pointer"));
+for (const e of pointerDependent) if (variesWith(tree, e.path, "color")) throw new Error(`${e.path} varies with both pointer and colour; the coarse block cannot nest colour`);
+const header = `/* Kiwi UI — Ruled Folio · design tokens (internal CSS) · v${meta.version}
+ * GENERATED by .design-foundations/tokens/build-tokens.mjs from kiwi-ui.tokens.json. Do not edit.
+ * Globals are the locked block of kiwi-ui/DESIGN.md. Light + comfortable are the defaults on :root.
+ * Every custom property that depends on a mode token is redeclared in [data-theme="dark"]; every one
+ * that depends on a density token is redeclared in [data-density="compact"] (and in the explicit
+ * [data-theme="light"] / [data-density="comfortable"] blocks so a nested region can switch back),
+ * because a custom property's var() references resolve where it is declared, not where it is used.
+ * Hit areas and pitches that grow on touch are redeclared inside @media (pointer: coarse), per density block. */
+`;
+let css = header;
+css += block(":root", emitted, CONTEXTS.light, ["  font-synthesis: none;"]);
+css += "\n" + block('[data-theme="light"]', colorDependent, CONTEXTS.light, ["  color-scheme: light;"]);
+css += "\n" + block('[data-theme="dark"]', colorDependent, CONTEXTS.dark, ["  color-scheme: dark;"]);
+css += "\n" + block('[data-density="comfortable"]', densityDependent, CONTEXTS.light);
+css += "\n" + block('[data-density="compact"]', densityDependent, CONTEXTS.compact);
+css += `
+@media (pointer: coarse) {
+${block(":root", pointerDependent, CONTEXTS.coarse).trimEnd().replace(/^/gm, "  ")}
+${block('[data-density="comfortable"]', pointerDependent, CONTEXTS.coarse).trimEnd().replace(/^/gm, "  ")}
+${block('[data-density="compact"]', pointerDependent, CONTEXTS["coarse-compact"]).trimEnd().replace(/^/gm, "  ")}
+}
+`;
+css += `
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+`;
+writeFileSync(join(OUT, "kiwi-ui.tokens.css"), css);
+
+// ---------- 2. public CSS (names kept, light-only) ----------
+const light = CONTEXTS.light;
+const lit = (path) => { const t = getToken(tree, path); return cssValue(t.$type, resolve(tree, path, light)); };
+const surfaceHex = resolve(tree, "semantic.color.surface", light), ringHex = resolve(tree, "semantic.color.focus-ring", light);
+function publicValue(entry) {
+  if (entry.literal) return entry.token;
+  if (entry.composite === "focus") return `0 0 0 2px ${surfaceHex}, 0 0 0 4px ${ringHex}`;
+  if (entry.composite === "motion-micro") return `${lit("global.motion.duration.micro")} ${lit("global.motion.easing.toggle")}`;
+  if (entry.composite === "motion-standard") return `${lit("global.motion.duration.standard")} ${lit("global.motion.easing.enter")}`;
+  const r = refOf(entry.token);
+  if (r) { const t = getToken(tree, r); return t.$type === "shadow" ? shadowCss(r, light) : t.$type === "color" ? colorCss(r, light) : cssValue(t.$type, resolve(tree, r, light)); }
+  return entry.token;
+}
+// Class selectors and keyframes are part of the v1 contract too: a deprecated one carries the same marker as a token.
+const depTag = (sel) => { const e = meta.publicClasses?.[sel]; if (!e) return ""; return e.status === "deprecated" ? ` /* @deprecated since ${meta.version}, removed in ${e.removeIn}: use ${e.replacement}${e.note ? ` (${e.note})` : ""} */` : e.note ? ` /* ${e.note} */` : ""; };
+// The v1 contract is pinned in the source ($extensions["org.kiwi"].publicV1Names), never read from the file this build overwrites.
+const order = [...new Set([...meta.publicV1Names, ...Object.keys(meta.public)])];
+const pubLines = order.map((n) => {
+  const e = meta.public[n];
+  if (!e) throw new Error(`public token ${n} has no mapping`);
+  const tag = e.status === "deprecated" ? ` /* @deprecated since ${meta.version}, removed in ${e.removeIn}: use ${e.replacement}${e.note ? ` (${e.note})` : ""} */`
+    : e.status === "added" ? ` /* added in ${meta.version}${e.note ? `: ${e.note}` : ""} */`
+      : e.note ? ` /* ${e.note} */` : "";
+  return `  ${n}: ${publicValue(e)};${tag}`;
+});
+const pubHeader = `/**
+ * Kiwi Design Tokens — public contract for Kiwi Apps · v${meta.version} (Ruled Folio)
+ * GENERATED from the Kiwi UI token source; values are the light scheme (the public tokens are light-only in
+ * Stage 1, G5). Every custom property, class selector and keyframe of v1 is kept: the ones the new system has no
+ * use for are deprecated, not deleted (marked @deprecated with a replacement, restyled from the tokens), and stay
+ * until 4.0.0 (two MAJOR versions after the 2.0.0 deprecation, and at least six months). CHANGELOG.md records the value change.
+ *
+ * Typography: --kiwi-font-family names Source Sans 3 and the system CJK stack. Self-host the face as Kiwi does:
+ *   npm i @fontsource-variable/source-sans-3   // load the upright and the italic variable files
+ * Montserrat is Kiwi's wordmark only and is not part of this contract.
+ *
+ * Boundaries and status: use --kiwi-border-interactive for any control identified by a border (≥ 3:1);
+ * --kiwi-border-* are decorative hairlines. Status colours live on status surfaces (--kiwi-{status}-surface +
+ * --kiwi-{status}-text with an icon and a label); --kiwi-primary is for one filled control per region.
+ */
+`;
+const patterns = `
+/* ============================================
+ * UTILITY CLASSES (regenerated: same names, token-driven)
+ * ============================================ */
+.kiwi-text-primary { color: var(--kiwi-text-primary); }
+.kiwi-text-secondary { color: var(--kiwi-text-secondary); }
+.kiwi-text-disabled { color: var(--kiwi-text-disabled); }${depTag(".kiwi-text-disabled")}
+.kiwi-text-success { color: var(--kiwi-success-text); }
+.kiwi-text-warning { color: var(--kiwi-warning-text); }
+.kiwi-text-error { color: var(--kiwi-error-text); }
+.kiwi-text-info { color: var(--kiwi-info-text); }
+.kiwi-bg-primary { background-color: var(--kiwi-primary); color: var(--kiwi-primary-contrast); }
+.kiwi-bg-secondary { background-color: var(--kiwi-secondary); color: var(--kiwi-secondary-contrast); }${depTag(".kiwi-bg-secondary")}
+.kiwi-bg-success { background-color: var(--kiwi-success-surface); color: var(--kiwi-success-text); }
+.kiwi-bg-warning { background-color: var(--kiwi-warning-surface); color: var(--kiwi-warning-text); }
+.kiwi-bg-error { background-color: var(--kiwi-error-surface); color: var(--kiwi-error-text); }
+.kiwi-bg-info { background-color: var(--kiwi-info-surface); color: var(--kiwi-info-text); }
+.kiwi-bg-subtle { background-color: var(--kiwi-bg-subtle); }
+.kiwi-rounded-none { border-radius: var(--kiwi-radius-none); }
+.kiwi-rounded-sm, .kiwi-rounded, .kiwi-rounded-md { border-radius: var(--kiwi-radius-sm); } /* the control radius */
+.kiwi-rounded-lg, .kiwi-rounded-xl { border-radius: var(--kiwi-radius-sheet); } /* the sheet radius: two sizes only */
+.kiwi-rounded-full { border-radius: var(--kiwi-radius-full); }
+.kiwi-shadow-none { box-shadow: var(--kiwi-shadow-none); }
+.kiwi-shadow-sm, .kiwi-shadow { box-shadow: var(--kiwi-shadow-sm); }
+.kiwi-shadow-md, .kiwi-shadow-lg, .kiwi-shadow-xl { box-shadow: var(--kiwi-shadow-lg); } /* two depths only */
+
+/* ============================================
+ * COMPONENT PATTERNS (regenerated to the Ruled Folio rules)
+ * ============================================ */
+.kiwi-card { background-color: var(--kiwi-bg-paper); border: var(--kiwi-border-width) solid var(--kiwi-border-default); border-radius: var(--kiwi-radius-sheet); padding: var(--kiwi-space-4); box-shadow: none; } /* a sheet: one tonal step + a hairline; never a card inside a card */
+.kiwi-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--kiwi-space-2); min-height: var(--kiwi-size-control); padding: 0 var(--kiwi-space-4); font-family: var(--kiwi-font-family); font-size: var(--kiwi-font-size-sm); font-weight: var(--kiwi-font-weight-semibold); line-height: 1.43; white-space: nowrap; border-radius: var(--kiwi-radius-sm); border: var(--kiwi-border-width) solid transparent; cursor: pointer; }
+.kiwi-btn[aria-disabled="true"], .kiwi-btn:disabled { background-color: var(--kiwi-bg-paper); color: var(--kiwi-disabled-label); border-color: var(--kiwi-disabled-outline); cursor: not-allowed; } /* faded (the 2026-10-18 decision): the sheet, a faint edge, a lower label; aria-disabled="true" is the mechanism (the control stays focusable and keeps its aria-describedby reason); :disabled is kept as an alias */
+.kiwi-btn-primary { background-color: var(--kiwi-primary); color: var(--kiwi-primary-contrast); border-color: var(--kiwi-primary-border); } /* the edge is the boundary: the fill is a tint */
+.kiwi-btn-primary:hover:not(:disabled):not([aria-disabled="true"]) { background-color: var(--kiwi-primary-hover); }
+.kiwi-btn-primary:active:not(:disabled):not([aria-disabled="true"]) { background-color: var(--kiwi-primary-active); transform: scale(0.98); } /* pressed: one fill step beyond hover plus the shared press scale */
+.kiwi-btn-primary[aria-disabled="true"], .kiwi-btn-primary:disabled { background-color: var(--kiwi-primary-disabled); border-color: var(--kiwi-primary-disabled-border); } /* a disabled primary keeps a faint sage fill, so it is never the disabled secondary */
+.kiwi-btn-secondary { background-color: var(--kiwi-bg-paper); color: var(--kiwi-link); border-color: var(--kiwi-border-interactive); }
+.kiwi-btn-secondary:hover:not(:disabled):not([aria-disabled="true"]) { background-color: var(--kiwi-bg-tint); } /* the hover tint (--accent-bg-subtle), one step below the selected fill */
+.kiwi-btn-secondary:active:not(:disabled):not([aria-disabled="true"]) { background-color: var(--kiwi-bg-pressed); border-color: var(--kiwi-text-primary); transform: scale(0.98); } /* pressed: the pressed tint and the ink edge, never the resting primary's look */
+.kiwi-input { width: 100%; min-height: var(--kiwi-size-control); padding: var(--kiwi-space-2) var(--kiwi-space-4); font-family: var(--kiwi-font-family); font-size: var(--kiwi-font-size-base); line-height: var(--kiwi-line-height-normal); color: var(--kiwi-text-primary); background-color: var(--kiwi-bg-paper); border: var(--kiwi-border-width) solid var(--kiwi-border-interactive); border-radius: var(--kiwi-radius-sm); }
+.kiwi-input:hover { border-color: var(--kiwi-text-primary); }
+.kiwi-input[aria-invalid="true"] { border-color: var(--kiwi-error-text); }
+.kiwi-input[aria-disabled="true"], .kiwi-input:disabled { background-color: var(--kiwi-disabled-surface); color: var(--kiwi-disabled-text); border-color: var(--kiwi-disabled-border); cursor: not-allowed; }
+.kiwi-input[aria-busy="true"] { border-color: var(--kiwi-border-interactive); cursor: progress; } /* loading keeps the boundary: busy is not disabled; the trailing "Loading…" sits in .kiwi-help */
+.kiwi-input[data-state="success"] { border-color: var(--kiwi-border-interactive); } /* success keeps the boundary; the check and the word sit in .kiwi-help[data-state="success"] */
+/* one frame on focus (the user's decision of 2026-10-19): a bordered control recolours its own border to --kiwi-border-focus at 2 px, the extra pixel inward, so nothing shifts; never a second ring outside it. The transparent outline sits over the border and shows only under forced colours. These follow every state rule above, so a focused aria-disabled control shows focus too; a pressed secondary keeps its ink edge; a field in error keeps its error edge. */
+.kiwi-btn:focus-visible { outline: 2px solid transparent; outline-offset: -2px; border-color: var(--kiwi-border-focus); box-shadow: inset 0 0 0 1px var(--kiwi-border-focus); }
+.kiwi-input:focus-visible { outline: 2px solid transparent; outline-offset: -2px; border-color: var(--kiwi-border-focus); box-shadow: inset 0 0 0 1px var(--kiwi-border-focus); }
+.kiwi-input[aria-invalid="true"]:focus-visible { border-color: var(--kiwi-error-text); box-shadow: inset 0 0 0 1px var(--kiwi-error-text); } /* the error stays visible while focused: one frame at 2 px */
+.kiwi-help { display: block; margin-top: var(--kiwi-space-2); font-size: var(--kiwi-font-size-xs); line-height: var(--kiwi-line-height-normal); color: var(--kiwi-text-secondary); }${depTag(".kiwi-help")}
+.kiwi-help[data-state="error"] { color: var(--kiwi-error-text); } .kiwi-help[data-state="success"] { color: var(--kiwi-success-text); }
+.kiwi-input::placeholder { color: var(--kiwi-text-secondary); }
+.kiwi-label { display: block; margin-bottom: var(--kiwi-space-2); font-size: var(--kiwi-font-size-sm); font-weight: var(--kiwi-font-weight-semibold); color: var(--kiwi-text-primary); }
+.kiwi-alert { display: flex; gap: var(--kiwi-space-3); align-items: flex-start; padding: var(--kiwi-space-3) var(--kiwi-space-4); border-radius: var(--kiwi-radius-sm); font-size: var(--kiwi-font-size-sm); border: 0; } /* status = surface + icon + label; no coloured border */
+.kiwi-alert-success { background-color: var(--kiwi-success-surface); color: var(--kiwi-success-text); }
+.kiwi-alert-warning { background-color: var(--kiwi-warning-surface); color: var(--kiwi-warning-text); }
+.kiwi-alert-error { background-color: var(--kiwi-error-surface); color: var(--kiwi-error-text); }
+.kiwi-alert-info { background-color: var(--kiwi-info-surface); color: var(--kiwi-info-text); }
+.kiwi-spinner { width: 24px; height: 24px; border: 2px solid var(--kiwi-border-light); border-top-color: var(--kiwi-text-secondary); border-radius: 50%; animation: kiwi-spin 0.8s linear infinite; }${depTag(".kiwi-spinner")}
+@keyframes kiwi-spin { to { transform: rotate(360deg); } }${depTag("@keyframes kiwi-spin")}
+.kiwi-in-progress { display: inline-flex; align-items: center; gap: var(--kiwi-space-2); color: var(--kiwi-text-secondary); font-size: var(--kiwi-font-size-sm); } /* added in ${meta.version}: neutral in-progress text; progress is words + the text dots (G9), never a spinner */
+.kiwi-in-progress::after { content: "…"; display: inline-block; width: 1.2em; text-align: left; animation: kiwi-dots 1.5s steps(1, end) infinite; }
+@keyframes kiwi-dots { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75%, 100% { content: "..."; } }
+.kiwi-chip { display: inline-flex; align-items: center; gap: var(--kiwi-space-2); min-height: var(--kiwi-size-chip); padding: 0 var(--kiwi-space-2); font-size: var(--kiwi-font-size-xs); font-weight: var(--kiwi-font-weight-regular); border-radius: var(--kiwi-radius-sm); background-color: var(--kiwi-bg-active); color: var(--kiwi-text-primary); } /* a role or label chip: --surface-active with the ink, no border (not a control) */
+.kiwi-chip-primary { background-color: var(--kiwi-bg-selected); color: var(--kiwi-link); border: var(--kiwi-border-width) solid var(--kiwi-link); font-weight: var(--kiwi-font-weight-semibold); } /* a selected filter chip */
+.kiwi-chip-status { display: inline-flex; align-items: center; gap: var(--kiwi-space-2); min-height: var(--kiwi-size-chip); padding: 0 var(--kiwi-space-2); font-size: var(--kiwi-font-size-xs); font-weight: var(--kiwi-font-weight-semibold); border-radius: var(--kiwi-radius-sm); border: 0; } /* added in ${meta.version}: the one tinted chip, status surface + the -11 icon and label */
+.kiwi-chip-status-success { background-color: var(--kiwi-success-surface); color: var(--kiwi-success-text); }
+.kiwi-chip-status-warning { background-color: var(--kiwi-warning-surface); color: var(--kiwi-warning-text); }
+.kiwi-chip-status-error { background-color: var(--kiwi-error-surface); color: var(--kiwi-error-text); }
+.kiwi-chip-status-info { background-color: var(--kiwi-info-surface); color: var(--kiwi-info-text); }
+.kiwi-divider { height: 1px; background-color: var(--kiwi-border-light); border: none; margin: var(--kiwi-space-4) 0; }
+.kiwi-base { font-family: var(--kiwi-font-family); font-size: var(--kiwi-font-size-base); line-height: var(--kiwi-line-height-normal); color: var(--kiwi-text-primary); background-color: var(--kiwi-bg-default); font-synthesis: none; }
+.kiwi-base * { box-sizing: border-box; }
+.kiwi-base h1, .kiwi-base h2, .kiwi-base h3, .kiwi-base h4, .kiwi-base h5, .kiwi-base h6 { margin: 0 0 var(--kiwi-space-4) 0; font-weight: var(--kiwi-font-weight-semibold); line-height: var(--kiwi-line-height-tight); }
+.kiwi-base h1 { font-size: var(--kiwi-font-size-3xl); letter-spacing: var(--kiwi-letter-spacing-tight); }
+.kiwi-base h2 { font-size: var(--kiwi-font-size-2xl); letter-spacing: var(--kiwi-letter-spacing-tight); }
+.kiwi-base h3 { font-size: var(--kiwi-font-size-xl); }
+.kiwi-base h4 { font-size: var(--kiwi-font-size-lg); }
+.kiwi-base h5, .kiwi-base h6 { font-size: var(--kiwi-font-size-base); }
+.kiwi-base p { margin: 0 0 var(--kiwi-space-4) 0; }
+.kiwi-base a { color: var(--kiwi-link); text-decoration: underline; text-underline-offset: 2px; }
+.kiwi-base code { font-family: var(--kiwi-font-family-mono); font-size: 0.875em; padding: 0.125em 0.25em; background-color: var(--kiwi-editor-bg-light); border-radius: var(--kiwi-radius-sm); }
+.kiwi-base pre { font-family: var(--kiwi-font-family-mono); font-size: var(--kiwi-font-size-sm); line-height: 1.714; padding: var(--kiwi-space-4); background-color: var(--kiwi-editor-bg); color: var(--kiwi-editor-fg); border: var(--kiwi-border-width) solid var(--kiwi-border-default); border-radius: var(--kiwi-radius-sm); overflow-x: auto; }
+.kiwi-base pre code { background: none; padding: 0; }
+.kiwi-editor { background-color: var(--kiwi-editor-bg); color: var(--kiwi-editor-fg); font-family: var(--kiwi-font-family-mono); font-size: var(--kiwi-font-size-sm); line-height: 1.714; border: var(--kiwi-border-width) solid var(--kiwi-border-default); border-radius: var(--kiwi-radius-sm); overflow: hidden; }
+.kiwi-editor-gutter { background-color: var(--kiwi-editor-gutter); border-right: 1px solid var(--kiwi-editor-gutter-border); color: var(--kiwi-editor-line-number); padding-right: var(--kiwi-space-2); text-align: right; user-select: none; }
+.kiwi-editor-gutter-active { color: var(--kiwi-editor-line-number-active); }
+.kiwi-syntax-keyword, .kiwi-syntax-builtin, .kiwi-syntax-type, .kiwi-syntax-class, .kiwi-syntax-decorator { font-weight: var(--kiwi-font-weight-semibold); }
+.kiwi-syntax-keyword { color: var(--kiwi-syntax-keyword); } .kiwi-syntax-string { color: var(--kiwi-syntax-string); } .kiwi-syntax-number { color: var(--kiwi-syntax-number); }
+.kiwi-syntax-comment { color: var(--kiwi-syntax-comment); font-style: italic; } .kiwi-syntax-function { color: var(--kiwi-syntax-function); } .kiwi-syntax-variable { color: var(--kiwi-syntax-variable); }
+.kiwi-syntax-class { color: var(--kiwi-syntax-class); } .kiwi-syntax-operator { color: var(--kiwi-syntax-operator); } .kiwi-syntax-punctuation { color: var(--kiwi-syntax-punctuation); }
+.kiwi-syntax-constant { color: var(--kiwi-syntax-constant); } .kiwi-syntax-builtin { color: var(--kiwi-syntax-builtin); } .kiwi-syntax-decorator { color: var(--kiwi-syntax-decorator); } .kiwi-syntax-type { color: var(--kiwi-syntax-type); }
+.kiwi-syntax-error { color: var(--kiwi-syntax-error); text-decoration: wavy underline; } .kiwi-syntax-warning { color: var(--kiwi-syntax-warning); text-decoration: wavy underline; }
+.kiwi-console { background-color: var(--kiwi-console-bg); color: var(--kiwi-console-fg); font-family: var(--kiwi-font-family-mono); font-size: var(--kiwi-font-size-sm); line-height: 1.714; padding: var(--kiwi-space-3); border: var(--kiwi-border-width) solid var(--kiwi-console-border); border-radius: var(--kiwi-radius-sm); overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; }
+.kiwi-console-container { border-radius: var(--kiwi-radius-sm); overflow: hidden; border: 1px solid var(--kiwi-console-border); }
+.kiwi-console-header { background-color: var(--kiwi-console-bg-alt); padding: var(--kiwi-space-2) var(--kiwi-space-3); font-family: var(--kiwi-font-family); font-size: var(--kiwi-font-size-xs); font-weight: var(--kiwi-font-weight-semibold); color: var(--kiwi-text-secondary); border-bottom: 1px solid var(--kiwi-console-border); display: flex; align-items: center; gap: var(--kiwi-space-2); } /* no decorative green dot: status green is for status */
+.kiwi-console-stdout { color: var(--kiwi-console-stdout); } .kiwi-console-stderr { color: var(--kiwi-console-stderr); } .kiwi-console-stdin { color: var(--kiwi-console-stdin); } .kiwi-console-prompt { color: var(--kiwi-console-prompt); user-select: none; }
+.kiwi-console-line { display: block; min-height: 1.5em; }
+.kiwi-console-line-error { background-color: var(--kiwi-error-surface); margin: 0 calc(-1 * var(--kiwi-space-3)); padding: 0 var(--kiwi-space-3); }
+.kiwi-steps { display: flex; align-items: center; gap: var(--kiwi-space-2); } .kiwi-steps-vertical { flex-direction: column; align-items: flex-start; }
+.kiwi-step { display: flex; align-items: center; gap: var(--kiwi-space-2); }
+.kiwi-step-indicator { width: var(--kiwi-step-size); height: var(--kiwi-step-size); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: var(--kiwi-font-size-xs); font-weight: var(--kiwi-font-weight-semibold); flex-shrink: 0; border: var(--kiwi-border-width) solid var(--kiwi-border-interactive); color: var(--kiwi-text-secondary); background: var(--kiwi-bg-paper); } /* state by attribute: aria-current="step", data-done, aria-invalid="true" */
+.kiwi-step-indicator[aria-current="step"] { background: var(--kiwi-bg-selected); border-color: var(--kiwi-link); color: var(--kiwi-link); }
+.kiwi-step-indicator[data-done] { background: var(--kiwi-success-surface); border-color: transparent; color: var(--kiwi-success-text); }
+.kiwi-step-indicator[aria-invalid="true"] { background: var(--kiwi-error-surface); border-color: transparent; color: var(--kiwi-error-text); }
+.kiwi-step-label { font-size: var(--kiwi-font-size-sm); color: var(--kiwi-text-secondary); }
+.kiwi-step-connector { flex: 1; height: var(--kiwi-step-connector-height); background-color: var(--kiwi-border-light); min-width: 24px; }${depTag(".kiwi-step-connector")}
+.kiwi-step-connector[data-done] { background-color: var(--kiwi-border-dark); }
+.kiwi-step-pending .kiwi-step-indicator { background-color: var(--kiwi-bg-paper); color: var(--kiwi-text-secondary); border-color: var(--kiwi-border-interactive); }${depTag(".kiwi-step-pending")}
+.kiwi-step-active .kiwi-step-indicator { background-color: var(--kiwi-bg-selected); border-color: var(--kiwi-link); color: var(--kiwi-link); box-shadow: none; }${depTag(".kiwi-step-active")}
+.kiwi-step-active .kiwi-step-label { color: var(--kiwi-link); font-weight: var(--kiwi-font-weight-semibold); }
+.kiwi-step-completed .kiwi-step-indicator { background-color: var(--kiwi-success-surface); border-color: transparent; color: var(--kiwi-success-text); }${depTag(".kiwi-step-completed")}
+.kiwi-step-completed .kiwi-step-label { color: var(--kiwi-text-primary); }
+.kiwi-step-error .kiwi-step-indicator { background-color: var(--kiwi-error-surface); border-color: transparent; color: var(--kiwi-error-text); }${depTag(".kiwi-step-error")}
+.kiwi-step-error .kiwi-step-label { color: var(--kiwi-error-text); }
+.kiwi-step-connector-active { background-color: var(--kiwi-border-dark); }${depTag(".kiwi-step-connector-active")}
+.kiwi-step-connector-completed { background-color: var(--kiwi-border-dark); }${depTag(".kiwi-step-connector-completed")}
+.kiwi-progress-dots { display: flex; align-items: center; gap: var(--kiwi-space-3); }${depTag(".kiwi-progress-dots")}
+.kiwi-progress-dot { display: flex; align-items: center; gap: var(--kiwi-space-2); font-size: var(--kiwi-font-size-sm); color: var(--kiwi-text-secondary); }${depTag(".kiwi-progress-dot")}
+.kiwi-progress-dot::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background-color: var(--kiwi-border-dark); }
+.kiwi-progress-dot-active::before { background-color: var(--kiwi-text-secondary); box-shadow: none; animation: none; }${depTag(".kiwi-progress-dot-active")}
+.kiwi-progress-dot-active { color: var(--kiwi-text-primary); font-weight: var(--kiwi-font-weight-semibold); }
+.kiwi-progress-dot-completed::before { background-color: var(--kiwi-success-text); }${depTag(".kiwi-progress-dot-completed")}
+.kiwi-progress-dot-completed { color: var(--kiwi-success-text); }
+.kiwi-progress-dot-error::before { background-color: var(--kiwi-error-text); }${depTag(".kiwi-progress-dot-error")}
+.kiwi-progress-dot-error { color: var(--kiwi-error-text); }
+@keyframes kiwi-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }${depTag("@keyframes kiwi-pulse")}
+.kiwi-progress-bar { height: 4px; background-color: var(--kiwi-bg-hover); border-radius: var(--kiwi-radius-none); overflow: hidden; } /* square: the control radius would round a 4 px bar into a pill */${depTag(".kiwi-progress-bar")}
+.kiwi-progress-bar-fill { height: 100%; background-color: var(--kiwi-border-interactive); border-radius: var(--kiwi-radius-none); transition: width var(--kiwi-transition-default); }${depTag(".kiwi-progress-bar-fill")}
+.kiwi-progress-bar-indeterminate .kiwi-progress-bar-fill { width: 30%; animation: kiwi-progress-indeterminate 1.5s ease-in-out infinite; }${depTag(".kiwi-progress-bar-indeterminate")}
+@keyframes kiwi-progress-indeterminate { 0% { transform: translateX(-100%); } 100% { transform: translateX(400%); } }${depTag("@keyframes kiwi-progress-indeterminate")}
+
+/* Forced colours (Windows High Contrast): a disabled control's border and text are GrayText, so it never renders like an enabled one; the focused frame is Highlight */
+@media (forced-colors: active) {
+  .kiwi-btn[aria-disabled="true"], .kiwi-btn:disabled, .kiwi-input[aria-disabled="true"], .kiwi-input:disabled { color: GrayText; border-color: GrayText; }
+  .kiwi-btn:focus-visible, .kiwi-input:focus-visible { border-color: Highlight; outline-color: Highlight; }
+}
+`;
+// Reduced motion: every selector of the file that declares a running animation or a transition is listed, and only those,
+// inside one @media (prefers-reduced-motion: reduce) block (a universal `* { … !important }` reset would leak into the host app).
+// The orphan @keyframes kiwi-pulse is kept for the deprecation schedule; no generated selector runs it.
+const ruleRe = /^([^@{\n][^{\n]*?)\s*\{([^}]*)\}/gm;
+const animatedSelectors = [], transitionedSelectors = [];
+for (const m of patterns.matchAll(ruleRe)) { const [, sel, body] = m; if (/\banimation:(?!\s*none\b)[^;]*;/.test(body)) animatedSelectors.push(sel.trim()); if (/\btransition:(?!\s*none\b)[^;]*;/.test(body)) transitionedSelectors.push(sel.trim()); }
+const motionGuard = `
+/* ============================================
+ * REDUCED MOTION (generated: the ${animatedSelectors.length} animated and ${transitionedSelectors.length} transitioned selectors above, scoped; never a universal reset)
+ * ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  ${animatedSelectors.join(", ")} { animation: none; } /* the spinner rests as a ring, the dots as a static ellipsis, the indeterminate bar as a static segment */
+  ${transitionedSelectors.join(", ")} { transition: none; }
+}
+`;
+const pubClassCount = new Set([...patterns.matchAll(/\.(kiwi-[a-z0-9-]+)/g)].map((m) => m[1])).size, pubKeyframeCount = new Set([...patterns.matchAll(/@keyframes\s+([a-z0-9-]+)/g)].map((m) => m[1])).size;
+writeFileSync(join(OUT, "kiwi-design-tokens.public.css"), `${pubHeader}\n:root {\n${pubLines.join("\n")}\n}\n${patterns}${motionGuard}`);
+
+// ---------- 3. MUI theme preview ----------
+const S = (p, ctx) => resolve(tree, `semantic.color.${p}`, ctx);
+// F1 (review round 6): MUI's grey scale is overridden with the locked neutral ramp per mode, so a stray 'grey.NN' or
+// palette.grey[...] in the code still flips with data-theme. A safety net, not a role: the migration table in DESIGN.md moves
+// every use to a role (page canvas → background.default, sunken band or table head → action.hover, hairline → divider).
+const GREY_MAP = { 50: 1, 100: 2, 200: 3, 300: 5, 400: 7, 500: 8, 600: 10, 700: 11, 800: 12, 900: 12, A100: 3, A200: 5, A400: 8, A700: 11 };
+const GREY = (ctx) => Object.fromEntries(Object.entries(GREY_MAP).map(([k, n]) => [k, resolve(tree, `global.color.neutral.${n}`, ctx)]));
+const palette = (ctx) => ({
+  mode: ctx.color,
+  primary: { main: S("accent-solid", ctx), dark: S("accent-solid-hover", ctx), light: S("accent-text", ctx), contrastText: S("accent-on-solid", ctx), _note: "MUI contained hover uses primary.dark; text/outlined buttons and links are overridden to --accent-text" },
+  secondary: { main: S("border-interactive", ctx), dark: S("text", ctx), light: S("text-secondary", ctx), contrastText: resolve(tree, "global.color.neutral.1", ctx), _note: "neutral: the pink secondary is retired" },
+  ...Object.fromEntries(["error", "success", "warning", "info"].map((k) => [k, { main: S(`status.${k}.text`, ctx), light: S(`status.${k}.surface`, ctx), dark: S(`status.${k}.text`, ctx), contrastText: resolve(tree, "global.color.neutral.1", ctx), _dot: S(`status.${k}.dot`, ctx) }])),
+  text: { primary: S("text", ctx), secondary: S("text-secondary", ctx), disabled: S("disabled.text", ctx) },
+  background: { default: S("background", ctx), paper: S("surface", ctx) },
+  divider: S("border-subtle", ctx),
+  action: { active: S("icon.default", ctx), hover: S("surface-hover", ctx), selected: S("selection.bg", ctx), focus: "transparent", disabled: S("disabled.text", ctx), disabledBackground: S("disabled.surface", ctx), _note: "hover/selected are opaque tonal steps; focus is the outline ring, never a wash" },
+  common: { black: S("logo.on-light", ctx), white: S("logo.on-dark", ctx), _note: "read only by InstitutionLogo (G2); the raw-colour guard allows palette.common in that file alone" },
+  grey: { ...GREY(ctx), _note: "MUI's grey scale overridden with the locked neutral ramp per mode (50 → neutral-1, 100 → 2, 200 → 3, 300 → 5, 400 → 7, 500 → 8, 600 → 10, 700 → 11, 800 → 12, 900 → 12; A100 → 3, A200 → 5, A400 → 8, A700 → 11), so a stray grey.NN or palette.grey[...] still flips with data-theme; a safety net, not a role: migrate by role (page canvas → background.default; sunken band or table head → action.hover; hairline → divider; wordmark fallback → the mascot); the guard flags every grey.NN and palette.grey access" },
+  // Phase 6 (kiwi-ui/DESIGN.md § Chart tokens): palette.chart reads the registered chart.* tokens (the interim stand-ins of Phase 3 are gone).
+  chart: { ...Object.fromEntries([1, 2, 3, 4, 5].map((i) => [`series${i}`, resolve(tree, `chart.series.${i}`, ctx)])), other: resolve(tree, "chart.other", ctx), grid: resolve(tree, "chart.grid", ctx), baseline: resolve(tree, "chart.baseline", ctx), tickText: resolve(tree, "chart.tick-text", ctx), plot: resolve(tree, "chart.plot", ctx), _note: "series1–5 are --chart-1…5 (categorical, fixed order, marks only: never text, never a status surface); other is --chart-other (Other and Unknown); grid, baseline, tickText and plot are the chart chrome roles (references to semantic tokens); no track is registered (the topic bars have none since the Phase 6 follow-up; the progress bar's track is --in-progress-track). Replaces Phase 3's interim stand-ins; Theme.ts's ChartPalette gains `other` and the chrome keys, and Theme.test.ts expects these values (§ Chart tokens › Hand-offs)" },
+  _kiwi: { focusRing: S("focus-ring", ctx), borderInteractive: S("border-interactive", ctx), border: S("border", ctx), borderStrong: S("border-strong", ctx), shadowInk: S("shadow-ink", ctx), backdrop: colorCss("semantic.color.backdrop", ctx), shadow1: shadowCss("semantic.shadow.1", ctx), shadow2: shadowCss("semantic.shadow.2", ctx), link: S("link", ctx), inProgressBar: S("in-progress.bar", ctx) },
+});
+// Numbers inside the illustrative components prose come from the tokens (Minor 5): N(path) resolves a dimension / duration / weight in the light, comfortable context.
+let TOKEN_NUMBERS = 0; const N = (path) => { TOKEN_NUMBERS++; const v = resolve(tree, path, CONTEXTS.light); return typeof v === "object" ? JSON.stringify(v) : String(v); };
+const HAIR = N("semantic.border.hairline"); const bodyCompact = resolve(tree, "semantic.type.body", CONTEXTS.compact); const BODY_COMPACT = `${bodyCompact.fontSize}/${bodyCompact.lineHeight}`;
+const typo = (role) => { const v = resolve(tree, `semantic.type.${role}`, CONTEXTS.light); return { fontSize: v.fontSize, lineHeight: v.lineHeight, fontWeight: v.fontWeight, ...(v.letterSpacing ? { letterSpacing: v.letterSpacing } : {}), ...(v.fontVariantNumeric ? { fontVariantNumeric: v.fontVariantNumeric } : {}) }; };
+const mui = {
+  _note: "Preview of createKiwiTheme(): MUI 9 createTheme input with cssVariables.colorSchemeSelector = 'data-theme' so MUI and the token CSS switch on one attribute. Density is not a theme instance: styleOverrides read the density-aware custom properties (var(--size-control), var(--space-inset-x), …) which [data-density] re-resolves.",
+  cssVariables: { colorSchemeSelector: "data-theme", cssVarPrefix: "mui" },
+  colorSchemes: { light: { palette: palette(CONTEXTS.light) }, dark: { palette: palette(CONTEXTS.dark) } },
+  shape: { borderRadius: parseFloat(resolve(tree, "global.radius.control", CONTEXTS.light)), _note: "theme.shape.borderRadius in px: --radius-control, read from the token (the styleOverrides name the var() radii per component)" },
+  typography: {
+    fontFamily: cssValue("fontFamily", resolve(tree, "global.font.ui", CONTEXTS.light)),
+    display: typo("display"), h1: typo("display-lg"), h2: typo("page-title"), h3: typo("section-title"), h4: typo("deck"), h5: typo("group-title"), h6: typo("label"),
+    subtitle1: typo("group-title"), subtitle2: typo("label"), body1: typo("body"), body2: { ...typo("body"), fontSize: "0.875rem", lineHeight: "20px" }, button: { ...typo("button"), textTransform: "none" }, caption: typo("caption"), overline: { ...typo("caption"), fontWeight: 600, textTransform: "none" },
+    _note: "h1 = --text-3xl (course-list header, large empty states); h2 = --text-2xl page headings (AdminPageHeader renders component=h1 variant=h2); display (custom variant) = --text-4xl, sign-in only. No CSS capitals anywhere.",
+  },
+  components: {
+    _illustrative: "", // filled below, once every N() of this block has run
+    MuiCssBaseline: { styleOverrides: `@import the generated kiwi-ui.tokens.css; html { font-synthesis: none } ; :focus-visible on a control with no border (text buttons, icon buttons, links, tabs, list items, rows) { outline: ${N("semantic.border.focus")} solid var(--focus-ring); outline-offset: ${N("semantic.size.focus-offset")} (-${N("semantic.size.focus-offset")} inside clipped rails, tab bars, rows and menus) }, its only frame; a control with a border never takes it: its own border becomes the frame (one frame, the 2026-10-19 decision: borderColor var(--focus-ring) + boxShadow inset 0 0 0 1px var(--focus-ring), so nothing shifts) ; @media (forced-colors: active) { :focus-visible { outline-color: Highlight; border-color: Highlight } } ; [aria-disabled='true'], [aria-disabled='true'] * { cursor: not-allowed } ; @media (forced-colors: active) { [aria-disabled='true'] { color: GrayText; border-color: GrayText } } (a disabled control never renders like an enabled one in high-contrast mode) ; after the locked reduced-motion block: @media (prefers-reduced-motion: reduce) { [data-dots]::after { animation: none; content: "…" } } (the text dots rest as a static ellipsis, never a frozen frame)` },
+    MuiButton: { defaultProps: { disableElevation: true }, styleOverrides: { root: `minHeight var(--size-control); padding 0 var(--space-inset-x); borderRadius var(--radius-control); font --type-button; whiteSpace nowrap; &:active { transform: scale(var(--button-press-scale)) } ; contained and outlined &.Mui-focusVisible { outline none; borderColor var(--focus-ring); boxShadow inset 0 0 0 1px var(--focus-ring) } (one frame: the border becomes the 2 px focus frame); text &.Mui-focusVisible the CssBaseline ring (it has no border) ; variant text/outlined color var(--accent-text); outlined borderColor var(--border-interactive), background var(--surface), &:hover background var(--accent-bg-subtle), &:active background var(--accent-bg-subtle-active) borderColor var(--button-secondary-active-border) (the ink edge); contained background var(--accent-solid) color var(--accent-on-solid) border ${N("semantic.border.interactive")} solid var(--button-primary-border) (the --accent-solid-border edge is the boundary: the Soft sage fill is a tint), &:hover background var(--accent-solid-hover), &:active background var(--accent-solid-active); &[aria-disabled='true'] (never the disabled prop) the faded state of its variant (the 2026-10-18 decision; not gated, WCAG exempts inactive controls): contained background var(--button-primary-disabled-fill) borderColor var(--button-primary-disabled-border) (a faint sage fill and edge), outlined background var(--button-secondary-disabled-fill) borderColor var(--button-secondary-disabled-border) (the sheet and the faint outline), text weight var(--type-weight-regular), each with color var(--button-{variant}-disabled-text) (a lower-luminance label); color=error outlined → the destructive variant (border/text var(--destructive-text), hover var(--destructive-bg-subtle)); contained error is not used` } },
+    MuiIconButton: { styleOverrides: { root: "width/height var(--size-control-icon); color var(--icon-default); &:hover background var(--surface-hover) color var(--icon-hover); &[aria-disabled='true'] color var(--disabled-icon); [aria-pressed=true] background var(--selection-bg) color var(--selection-text)" } },
+    MuiOutlinedInput: { defaultProps: { notched: false }, styleOverrides: { root: `minHeight var(--size-control); borderRadius var(--radius-control); background var(--surface); .MuiOutlinedInput-notchedOutline borderColor var(--border-interactive); &:hover notchedOutline borderColor var(--text); &.Mui-focused notchedOutline borderColor var(--focus-ring) borderWidth ${N("semantic.border.focus")} (one frame: the edge becomes the focus frame, no outline; MUI draws the notched outline inside the box, so nothing shifts), &.Mui-focused.Mui-error notchedOutline borderColor var(--status-error-text) (the error stays visible at 2 px); &.Mui-error notchedOutline borderColor var(--status-error-text); &[aria-disabled='true'] background var(--disabled-surface); .MuiSelect-select paddingRight var(--field-select-padding-right)` } },
+    MuiInputLabel: { defaultProps: { disableAnimation: true }, styleOverrides: { root: "position static; transform none; font --type-label; marginBottom var(--field-label-gap)" } },
+    MuiFormHelperText: { styleOverrides: { root: "font --type-caption; color var(--text-secondary); &.Mui-error color var(--status-error-text); icon + text" } },
+    MuiCheckbox: { styleOverrides: { root: `box var(--checkbox-size), corners var(--checkbox-radius) (${N("component.checkbox.radius")}); unchecked border ${N("component.checkbox.border-width")} var(--border-interactive) (var(--checkbox-border-width)); &.Mui-focusVisible the box's border var(--focus-ring) + boxShadow inset 0 0 0 1px var(--focus-ring) (one frame, no ring around the box); &.Mui-checked fill var(--selection-bg) border/glyph var(--selection-text); hit area var(--checkbox-hit) through the centred ::before` } },
+    MuiRadio: { styleOverrides: { root: "as MuiCheckbox" } },
+    MuiSwitch: { styleOverrides: { root: `track var(--switch-track-width)×var(--switch-track-height), fill var(--switch-track) border ${N("semantic.border.interactive")} var(--switch-border), thumb var(--switch-thumb) fill var(--switch-thumb); &.Mui-checked track var(--switch-variant-on-track) border/thumb var(--switch-variant-on-border); thumb travel var(--motion-micro) var(--motion-ease-toggle); &.Mui-focusVisible the track's border var(--focus-ring) + boxShadow inset 0 0 0 1px var(--focus-ring) (one frame); track corners var(--switch-radius) (${N("component.switch.radius")}, --radius-control: a rounded rectangle, never a pill) and thumb corners var(--switch-thumb-radius) (${N("component.switch.thumb-radius")}, --radius-small: a rounded square on the 14 px thumb, never a circle); 50 % is for dot-like marks and convention-bound circles only, the plan's Decision Log` } },
+    MuiChip: { styleOverrides: { root: `height var(--size-chip); borderRadius var(--radius-control); status: background var(--chip-status-variant-{k}-fill) color var(--chip-status-variant-{k}-text) + icon; filter (clickable): border var(--border-interactive) background var(--surface) color var(--text), &.Mui-focusVisible border var(--focus-ring) + boxShadow inset 0 0 0 1px var(--focus-ring) (one frame), [aria-pressed=true] background var(--selection-bg) color/border var(--selection-text) weight ${N("semantic.type-weight.emphasis")}; role: background var(--surface-active) color var(--text) no border` } },
+    MuiTabs: { styleOverrides: { indicator: "height var(--size-marker); background var(--selection-marker)" } },
+    MuiTab: { styleOverrides: { root: "minHeight var(--size-tab); font --type-label (600 for all tabs); color var(--text-secondary); &.Mui-selected color var(--selection-text); &:hover background var(--surface-hover) color var(--text); textTransform none; whiteSpace nowrap; &[aria-disabled='true'] color var(--disabled-text) weight var(--type-weight-regular) with the lock glyph var(--tabs-disabled-glyph) in var(--disabled-icon) before the label, cursor not-allowed, kept in the roving order" } },
+    MuiListItemButton: { styleOverrides: { root: `minHeight var(--size-nav-item); borderRadius var(--sidebar-item-radius) (${N("component.sidebar-item.radius")}); &:hover background var(--surface-hover); &.Mui-selected background var(--selection-bg) color var(--selection-text) + ${N("semantic.size.marker")} inset marker var(--selection-marker) (var(--size-marker)); @media (forced-colors: active) &.Mui-selected outline ${N("semantic.size.marker")} solid Highlight, outline-offset -${N("semantic.size.marker")}` } },
+    MuiPaper: { defaultProps: { elevation: 0 }, styleOverrides: { root: "backgroundImage none; background var(--surface)", outlined: `border ${HAIR} var(--border); borderRadius var(--radius-sheet)` } },
+    MuiCard: { defaultProps: { elevation: 0, variant: "outlined" }, styleOverrides: { root: `a panel: border ${HAIR} var(--border); borderRadius var(--radius-sheet); boxShadow none; never nested` } },
+    MuiDialog: { styleOverrides: { paper: `border ${HAIR} var(--border); borderRadius var(--radius-sheet); boxShadow var(--shadow-2); maxWidth per --dialog-width-*`, root: "backdrop background var(--backdrop); no blur" } },
+    MuiMenu: { styleOverrides: { paper: `border ${HAIR} var(--border); boxShadow var(--shadow-1); borderRadius var(--display-menu-radius) (${N("component.display-menu.radius")}, the sheet radius: a menu is a floating sheet); minWidth var(--display-menu-min-width)` } },
+    MuiMenuItem: { styleOverrides: { root: `minHeight var(--size-menu-item) (${N("semantic.size.target-min")} on pointer: coarse); font --type-popup-title; &:hover background var(--surface-hover); &.Mui-selected background var(--selection-bg) color var(--selection-text)` } },
+    MuiTooltip: { styleOverrides: { tooltip: `background var(--surface); color var(--text); border ${HAIR} var(--border); boxShadow var(--toggletip-shadow); borderRadius var(--toggletip-radius); padding var(--toggletip-padding-y) var(--toggletip-padding-x); maxWidth var(--toggletip-max-width); font --type-caption; offset var(--toggletip-offset) from its control; as a toggletip (a disabled control's reason): opens on hover, focus and tap, Escape closes it without moving focus, the pointer can move onto it, it stays until dismissed (WCAG 1.4.13: dismissible, hoverable, persistent); aria-describedby links the text` } },
+    MuiAlert: { styleOverrides: { root: "borderRadius var(--radius-control); border 0; standard{k}: background var(--status-{k}-surface) color var(--status-{k}-text), icon var(--status-{k}-text) shape icon (check/triangle/cross/i); action: the text-action pattern — color inherit, font-weight 600, text-decoration underline var(--alert-action-underline), &:hover var(--alert-action-underline-hover), &:focus-visible the ring, &:active var(--alert-action-underline-hover) + transform scale(var(--motion-press-scale)); the same rules style MuiSnackbarContent's action (var(--toast-action-underline*))" } },
+    MuiSnackbarContent: { styleOverrides: { root: `background var(--surface); color var(--text); border ${HAIR} var(--border); borderRadius var(--toast-radius) (${N("component.toast.radius")}); boxShadow var(--shadow-1); width min(100% - 2 * var(--toast-edge-offset), var(--toast-max-width)) (at most ${N("component.toast.max-width")}; the launcher's edge offset kept on narrow viewports)` } },
+    MuiTableCell: { styleOverrides: { root: `padding var(--space-cell-y) var(--space-cell-x); borderBottom ${HAIR} var(--border-subtle); font --type-body (compact ${BODY_COMPACT}); whiteSpace nowrap; textOverflow ellipsis`, head: `color var(--text-secondary); font --type-label; borderBottom ${HAIR} var(--border)` } },
+    MuiTableRow: { styleOverrides: { root: `height var(--size-row); &:hover background var(--surface-hover); &.Mui-selected background var(--selection-bg) + ${N("semantic.size.marker")} inset marker (var(--size-marker)); @media (forced-colors: active) &.Mui-selected outline ${N("semantic.size.marker")} solid Highlight` } },
+    MuiDataGrid: { defaultProps: { density: "compact (admin) via data-density" }, styleOverrides: { root: `--DataGrid rowHeight/headerHeight var(--size-row); columnHeaders color var(--text-secondary) font --type-label background transparent; cell borderColor var(--border-subtle); row:hover var(--surface-hover); row.Mui-selected var(--selection-bg); cell:focus-within outline ${N("semantic.border.focus")} solid var(--focus-ring) outline-offset -${N("semantic.size.focus-offset")}; loadingOverlay = skeleton rows; noRowsOverlay = the empty-state frame` } },
+    MuiSkeleton: { styleOverrides: { root: `background var(--skeleton-base); wave highlight var(--skeleton-highlight), ${N("semantic.motion.shimmer")} (var(--motion-shimmer))` } },
+    MuiLinearProgress: { styleOverrides: { root: "background var(--in-progress-track)", bar: "background var(--in-progress-bar)" } },
+    MuiCircularProgress: { defaultProps: { _note: "avoided: progress is neutral text + dots; where a ring is unavoidable it is static and var(--in-progress-text)" } },
+    MuiFab: { styleOverrides: { root: `the launcher: width/height var(--size-launcher); background var(--accent-solid); color var(--accent-on-solid); border ${N("semantic.border.interactive")} solid var(--launcher-border) (the --accent-solid-border edge); boxShadow var(--shadow-2); &:hover background var(--accent-solid-hover) boxShadow unchanged; &:active background var(--accent-solid-active); &.Mui-focusVisible borderColor var(--focus-ring) + boxShadow inset 0 0 0 1px var(--focus-ring), var(--shadow-2) (one frame: the edge becomes the 2 px focus frame)` } },
+    MuiLink: { defaultProps: { underline: "always" }, styleOverrides: { root: "color var(--link); textUnderlineOffset clear of the descenders" } },
+  },
+};
+mui.components._illustrative = `prose, not code: each entry names the custom properties the real styleOverrides read; every number inside the prose is interpolated from the token source at build time (${TOKEN_NUMBERS} values), so the preview cannot state a width the tokens do not hold`;
+writeFileSync(join(OUT, "mui-theme.json"), JSON.stringify(mui, null, 2) + "\n");
+
+// ---------- 4. code themes (Ace, Prism, console) from $extensions["org.kiwi"].codeThemes ----------
+// The selector → role maps live in the source; this step resolves them per mode. Ace gets one CSS file per mode
+// (literal values: an Ace theme is injected as cssText and registered with { cssClass, isDark }); Prism gets one
+// style object per mode (kiwiPrism(mode)); the console gets var() rules because it lives inside the themed DOM.
+const CT = meta.codeThemes;
+mkdirSync(join(OUT, "code-themes"), { recursive: true });
+const declBlock = (spec, ctx, viaVar = false) => {
+  const val = (p) => (viaVar ? `var(${nameOf(p)})` : resolve(tree, p, ctx));
+  const d = [];
+  if (spec.background) d.push(`background-color: ${val(spec.background)};`);
+  if (spec.color) d.push(`color: ${val(spec.color)};`);
+  if (spec.border) d.push(`border: 1px solid ${val(spec.border)};`);
+  if (spec.shadow) d.push(`box-shadow: ${shadowCss(spec.shadow, ctx)};`);
+  if (spec.outline) d.push(`outline: 1px solid ${val(spec.outline)}; background: transparent;`);
+  if (spec.ring) d.push(`outline: 1px solid ${val(spec.ring)}; outline-offset: -1px;`); // the selection's edge (Major 2): visible against the active line, inside the box so it never touches neighbouring text
+  if (spec.guide) d.push(`border-left: 1px dotted ${val(spec.guide)};`);
+  if (spec.weight) d.push(`font-weight: ${resolve(tree, spec.weight, ctx)};`);
+  if (spec.style) d.push(`font-style: ${spec.style};`);
+  if (spec.decoration) d.push(`text-decoration: ${spec.decoration} ${val(spec.color)};`);
+  if (spec.font) { const n = nameOf(spec.font); const f = resolve(tree, spec.font, ctx); d.push(viaVar ? `font: var(${n}-weight) var(${n}-size)/var(${n}-leading) var(${n}-family);` : `font: ${f.fontWeight} ${f.fontSize}/${f.lineHeight} ${cssValue("fontFamily", f.fontFamily)};`); }
+  return d.join(" ");
+};
+for (const [mode, ctx] of [["light", CONTEXTS.light], ["dark", CONTEXTS.dark]]) {
+  const cls = CT.ace.cssClass[mode];
+  const aceCss = [`/* Ace theme ${cls} — GENERATED by build-tokens.mjs from the ${mode} resolution of semantic.editor.*, semantic.syntax.* and semantic.color.*. Register as ace/theme/kiwi-${mode} with { cssClass: "${cls}", isDark: ${mode === "dark"}, cssText }. Do not edit. */`];
+  for (const [sels, spec] of CT.ace.rules) aceCss.push(`${sels.map((s) => `.${cls} ${s}`).join(", ")} { ${declBlock(spec, ctx)} }`);
+  writeFileSync(join(OUT, "code-themes", `ace-kiwi-${mode}.css`), aceCss.join("\n") + "\n");
+}
+const prism = { _note: "GENERATED by build-tokens.mjs: the kiwiPrism(mode) style object for react-syntax-highlighter (Prism). Keys are Prism token classes; the two code selectors carry the base. Do not edit.", light: {}, dark: {} };
+for (const [mode, ctx] of [["light", CONTEXTS.light], ["dark", CONTEXTS.dark]]) {
+  const f = resolve(tree, CT.prism.base.font, ctx);
+  const base = { color: resolve(tree, CT.prism.base.color, ctx), fontFamily: cssValue("fontFamily", f.fontFamily), fontSize: f.fontSize, lineHeight: f.lineHeight, background: "transparent" };
+  prism[mode]['code[class*="language-"]'] = base; prism[mode]['pre[class*="language-"]'] = { ...base, margin: 0 };
+  for (const [toks, spec] of CT.prism.tokens) for (const t of toks) prism[mode][t] = { color: resolve(tree, spec.color, ctx), ...(spec.weight ? { fontWeight: resolve(tree, spec.weight, ctx) } : {}), ...(spec.style ? { fontStyle: spec.style } : {}) };
+}
+writeFileSync(join(OUT, "code-themes", "prism-kiwi.json"), JSON.stringify(prism, null, 2) + "\n");
+const consoleCss = [`/* Console — GENERATED by build-tokens.mjs from semantic.console.* as var() rules, so the console follows data-theme like the rest of the app. Do not edit. */`];
+for (const [sels, spec] of CT.console.rules) consoleCss.push(`${sels.join(", ")} { ${declBlock(spec, CONTEXTS.light, true)} }`);
+writeFileSync(join(OUT, "code-themes", "console.css"), consoleCss.join("\n") + "\n");
+
+const countBlock = (sel) => { const i = css.indexOf(`${sel} {`); return (css.slice(i, css.indexOf("\n}", i)).match(/^\s*--/gm) || []).length; };
+console.log(`emitted ${emitted.length} tokens → ${countBlock(":root")} custom properties on :root (${countBlock('[data-theme="dark"]')} redeclared per colour mode, ${countBlock('[data-density="compact"]')} per density, ${pointerDependent.length} coarse-pointer tokens); public ${pubLines.length} names, ${pubClassCount} classes, ${pubKeyframeCount} keyframes; code themes 4 files; wrote ${relative(REPO_ROOT, OUT)}/{kiwi-ui.tokens.css,kiwi-design-tokens.public.css,mui-theme.json,code-themes/*}`);

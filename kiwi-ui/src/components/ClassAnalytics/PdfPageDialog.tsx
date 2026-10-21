@@ -11,7 +11,7 @@ import {
 import { CloseOutlined as CloseIcon } from "@mui/icons-material";
 import apiClient from "../../utils/api.ts";
 import { StandalonePDFViewer } from "./StandalonePDFViewer.tsx";
-import { tokens } from "./tokens.ts";
+import { tokens, typeRole } from "./tokens.ts";
 
 interface PdfPageDialogProps {
   open: boolean;
@@ -66,13 +66,11 @@ export const PdfPageDialog: React.FC<PdfPageDialogProps> = ({
       onClose={onClose}
       maxWidth="lg"
       fullWidth
+      // The theme draws the dialog sheet: hairline edge, sheet radius, --shadow-2.
       slotProps={{
         paper: {
           sx: {
             height: "82vh",
-            borderRadius: 3,
-            border: `1px solid ${tokens.line}`,
-            boxShadow: "0 24px 64px rgba(26, 21, 35, 0.18)",
           },
         }
       }}
@@ -84,14 +82,14 @@ export const PdfPageDialog: React.FC<PdfPageDialogProps> = ({
           justifyContent: "space-between",
           px: 2.5,
           py: 1.5,
-          borderBottom: `1px solid ${tokens.line}`,
+          borderBottom: `1px solid ${tokens.rule}`,
         }}
       >
-        <Typography sx={{ fontWeight: 600, color: tokens.ink, fontSize: 15 }}>
+        <Typography sx={{ ...typeRole("group-title"), color: tokens.ink }}>
           {fileName || "Document"}
           <Typography
             component="span"
-            sx={{ color: tokens.slate, ml: 1, fontSize: 14 }}
+            sx={{ color: tokens.slate, ml: 1, ...typeRole("small") }}
           >
             · page {pageNumber}
           </Typography>
@@ -112,8 +110,8 @@ export const PdfPageDialog: React.FC<PdfPageDialogProps> = ({
               flexDirection: "column",
             }}
           >
-            <CircularProgress size={32} sx={{ color: tokens.violet }} />
-            <Typography sx={{ color: tokens.slate, fontSize: 14 }}>
+            <CircularProgress size={32} />
+            <Typography sx={{ color: tokens.slate, ...typeRole("small") }}>
               Loading page {pageNumber}…
             </Typography>
           </Box>

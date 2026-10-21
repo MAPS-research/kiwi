@@ -402,7 +402,7 @@ const TemplatedEmailForm: React.FC<TemplatedEmailFormProps> = ({ template, onCha
 
       {/* Email Preview */}
       {onPreviewChange && (
-        <Paper sx={{ p: 2, bgcolor: 'grey.50' }}>
+        <Paper sx={{ p: 2, bgcolor: 'action.hover' }}>
           <Typography variant="h6" gutterBottom>
             Email Preview
           </Typography>
@@ -432,12 +432,13 @@ const TemplatedEmailForm: React.FC<TemplatedEmailFormProps> = ({ template, onCha
           </Box>
 
           {previewTab === 0 ? (
+            // The email is paper (G5): it keeps its own light rendering in either mode,
+            // and only its frame follows the mode.
             <Box
               sx={{
-                border: 1,
-                borderColor: 'divider',
-                borderRadius: 1,
-                bgcolor: 'white',
+                border: '1px solid var(--paper-frame)',
+                borderRadius: 'var(--radius-small)',
+                bgcolor: 'var(--on-paper-page)',
                 maxHeight: 400,
                 overflow: 'hidden',
               }}
@@ -463,16 +464,15 @@ const TemplatedEmailForm: React.FC<TemplatedEmailFormProps> = ({ template, onCha
           ) : (
             <Box
               sx={{
-                border: 1,
-                borderColor: 'divider',
-                borderRadius: 1,
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-small)',
                 p: 2,
-                bgcolor: 'white',
+                bgcolor: 'background.paper',
                 maxHeight: 400,
                 overflow: 'auto',
                 whiteSpace: 'pre-wrap',
-                fontFamily: 'monospace',
-                fontSize: '0.875rem',
+                fontFamily: 'var(--type-code-family)',
+                fontSize: 'var(--type-code-size)',
               }}
             >
               {(() => {

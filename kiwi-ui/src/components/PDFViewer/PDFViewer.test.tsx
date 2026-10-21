@@ -130,3 +130,28 @@ it("selects a page from thumbnails", async () => {
   fireEvent.click(screen.getByRole("button", { name: "Go to page 3" }));
   expect(screen.getByRole("spinbutton", { name: "Page" })).toHaveValue(3);
 });
+it("asks for a file when there is none", async () => {
+  render(<PDFViewer pdfFile="" />);
+  expect(screen.getByText("Choose a file to open.")).toBeInTheDocument();
+  // Let the source probe settle inside act().
+  await act(async () => {});
+});
+it("reads an unknown page count as no value until the document loads", async () => {
+  render(<PDFViewer pdfFile="a.pdf" />);
+  await screen.findByTestId("document");
+  expect(screen.getByText("—")).toHaveAttribute("aria-hidden", "true");
+  expect(screen.getByText("No value")).toBeInTheDocument();
+  await load(4);
+  expect(screen.queryByText("No value")).not.toBeInTheDocument();
+  expect(screen.getByRole("link", { name: "Open or print" })).toHaveAttribute("href", "a.pdf");
+});
+it("says what to check when the PDF fails, with Retry beside it", async () => {
+  state.error = true;
+  render(<PDFViewer pdfFile="a.pdf" />);
+  expect(
+    await screen.findByText(
+      "Couldn't load this PDF. Your connection may be slow or unstable. Check it, then select Retry.",
+    ),
+  ).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Retry" })).toBeInTheDocument();
+});

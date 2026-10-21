@@ -104,7 +104,7 @@ export const MCPAuthorize: React.FC = () => {
         <FormCard>
           <LogoBox />
           <Box sx={{ textAlign: "center", mt: 2 }}>
-            <Typography variant="h6" color="error">
+            <Typography variant="h6" sx={{ color: "var(--status-error-text)" }}>
               Invalid Authorization Request
             </Typography>
             <Typography variant="body2" sx={{ mt: 1 }}>
@@ -134,12 +134,13 @@ export const MCPAuthorize: React.FC = () => {
             </Typography>
 
             {error && (
+              // A status surface: the -3 fill and its -11 text, never a saturated fill.
               <Box
                 sx={{
-                  bgcolor: "error.main",
-                  color: "error.contrastText",
+                  bgcolor: "var(--status-error-surface)",
+                  color: "var(--status-error-text)",
                   p: 1,
-                  borderRadius: 1,
+                  borderRadius: "var(--alert-radius)",
                   mb: 2,
                 }}
               >
@@ -178,10 +179,10 @@ export const MCPAuthorize: React.FC = () => {
       <FormCard>
         <Box
           sx={{
-            bgcolor: "info.main",
-            color: "info.contrastText",
+            bgcolor: "var(--status-info-surface)",
+            color: "var(--status-info-text)",
             p: 1,
-            borderRadius: 1,
+            borderRadius: "var(--alert-radius)",
             mb: 2,
             textAlign: "center",
           }}
@@ -194,10 +195,10 @@ export const MCPAuthorize: React.FC = () => {
         {error && (
           <Box
             sx={{
-              bgcolor: "error.main",
-              color: "error.contrastText",
+              bgcolor: "var(--status-error-surface)",
+              color: "var(--status-error-text)",
               p: 1,
-              borderRadius: 1,
+              borderRadius: "var(--alert-radius)",
               mb: 2,
               textAlign: "center",
             }}

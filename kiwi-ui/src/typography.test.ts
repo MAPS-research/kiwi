@@ -4,20 +4,23 @@ import { describe, expect, it } from 'vitest';
 import theme from './Theme.ts';
 
 /**
- * Montserrat is the only typeface for ordinary product UI — body text, headings,
- * buttons, forms, navigation, and anything inheriting the MUI theme. These are the
- * guards that keep it that way: the UI used to run on a `-apple-system, …` system
- * font stack while MUI silently fell back to its own Roboto/Helvetica default, and
- * that mix is easy to reintroduce one `sx={{ fontFamily: … }}` at a time.
+ * Source Sans 3 is the typeface for ordinary product UI (kiwi-ui/DESIGN.md, Type):
+ * body text, headings, buttons, forms, navigation, and anything inheriting the MUI
+ * theme, with the CJK fallbacks of --font-ui. Montserrat survives only as the
+ * KiwiWordmark's face. These are the guards that keep it that way: a mix of faces
+ * is easy to reintroduce one `sx={{ fontFamily: … }}` at a time.
  *
  * The scan below deliberately tolerates the narrow set of fonts that carry meaning
  * (math, monospace, icon fonts, third-party internals) so it does not become noise.
- * See "Typography: Montserrat only" in README.md.
+ * See "Typography: Source Sans 3" in README.md.
  */
 
 const projectRoot = resolve(__dirname, '..');
 
-const UI_FONT_STACK = "'Montserrat', sans-serif";
+/** The --font-ui stack of the generated design tokens. */
+const UI_FONT_STACK =
+  '"Source Sans 3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif';
+const UI_FAMILIES = ['Source Sans 3', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', 'sans-serif'];
 
 /** Generic CSS families used only to recognize likely font-stack literals. */
 const GENERIC_FAMILIES = new Set([
@@ -38,14 +41,27 @@ const GENERIC_FAMILIES = new Set([
 const CONTROL_VALUES = new Set(['inherit', 'initial', 'unset']);
 
 /**
- * Files allowed to declare a non-Montserrat UI font, with the reason. Keep this
- * list short: every entry is a place the rule does not hold.
+ * Files allowed to declare another face, with the reason. Keep this list short:
+ * every entry is a place the rule does not hold.
  */
 const EXEMPT_FILES = new Map([
   [
     'src/components/Email/TemplatedEmailForm.tsx',
     'HTML email template — mail clients cannot load our self-hosted webfont, so the ' +
       'inlined template falls back to a font they all have.',
+  ],
+  [
+    'src/fonts/montserrat.css',
+    'the @font-face rules of the wordmark face; only KiwiWordmark uses the family.',
+  ],
+  [
+    'src/theme/generated/kiwi-ui.tokens.css',
+    'the generated design tokens, which define --font-wordmark beside --font-ui.',
+  ],
+  [
+    'public/kiwi-design-tokens.css',
+    'the v1 public contract for Kiwi Apps keeps its Montserrat font token until the ' +
+      'public tokens move to the Stage 1 design in their 2.0.0 release.',
   ],
 ]);
 
@@ -79,8 +95,9 @@ const splitFamilies = (value: string): string[] =>
     .filter(Boolean);
 
 /**
- * A declaration is fine when it is the Montserrat stack, or when it is clearly a
- * monospace stack (code, commands, IDs, JSON — an allowed exception). `var(…)`
+ * A declaration is fine when it is the UI stack (or a prefix of it ending in the
+ * generic family), the bare `Source Sans 3` of its @font-face rules, or clearly a
+ * monospace stack (code, commands, IDs, JSON: an allowed exception). `var(…)`
  * indirection is checked where the custom property is defined instead.
  */
 const isAllowedStack = (value: string): boolean => {
@@ -91,11 +108,12 @@ const isAllowedStack = (value: string): boolean => {
   if (families.length === 0) return true;
   if (families.length === 1 && CONTROL_VALUES.has(families[0].toLowerCase())) return true;
   if (families[families.length - 1].toLowerCase() === 'monospace') return true;
+  if (families.length === 1) return families[0] === 'Source Sans 3';
 
   return (
-    families[0] === 'Montserrat' &&
-    (families.length === 1 ||
-      (families.length === 2 && families[1].toLowerCase() === 'sans-serif'))
+    families[0] === 'Source Sans 3' &&
+    families[families.length - 1] === 'sans-serif' &&
+    families.every((family) => UI_FAMILIES.includes(family))
   );
 };
 
@@ -115,8 +133,8 @@ const looksLikeFontStack = (value: string): boolean => {
   return GENERIC_FAMILIES.has(last.toLowerCase());
 };
 
-/** `font-family:` and `--kiwi-font-family*:` declarations, including inside CSS-in-template-strings. */
-const CSS_DECLARATION = /(?:^|[;{\s])(?:font-family|--[\w-]*font-family[\w-]*)\s*:\s*([^;}]+)/g;
+/** `font-family:` and `--*font*:` declarations, including inside CSS-in-template-strings. */
+const CSS_DECLARATION = /(?:^|[;{\s])(?:font-family|--[\w-]*font[\w-]*)\s*:\s*([^;}]+)/g;
 /** `fontFamily: '…'` in `sx`/`style` objects and `fontFamily="…"` JSX props. */
 const JS_DECLARATION = /fontFamily\s*[:=]\s*(?:"([^"]*)"|'([^']*)'|`([^`]*)`)/g;
 const STRING_LITERAL = /(["'`])((?:(?!\1)[^\\\n])*)\1/g;
@@ -133,15 +151,15 @@ const declarationsIn = (text: string): string[] => {
   return values.map((value) => value.replace(/\s+/g, ' ').trim());
 };
 
-describe('Montserrat is the only UI font', () => {
-  it.each(['sans-serif', 'serif', 'system-ui', 'ui-sans-serif', 'cursive', 'fantasy'])(
-    'rejects %s as a standalone ordinary-UI font',
+describe('Source Sans 3 is the UI font', () => {
+  it.each(['sans-serif', 'serif', 'system-ui', 'ui-sans-serif', 'cursive', 'fantasy', "'Montserrat', sans-serif"])(
+    'rejects %s as an ordinary-UI font',
     (fontFamily) => {
       expect(isAllowedStack(fontFamily)).toBe(false);
     }
   );
 
-  it.each(["'Montserrat'", "'Montserrat', sans-serif", 'inherit', 'initial', 'unset', 'monospace'])(
+  it.each([UI_FONT_STACK, "'Source Sans 3'", '"Source Sans 3", sans-serif', 'inherit', 'initial', 'unset', 'monospace'])(
     'accepts the intended stack or exception: %s',
     (fontFamily) => {
       expect(isAllowedStack(fontFamily)).toBe(true);
@@ -152,21 +170,33 @@ describe('Montserrat is the only UI font', () => {
     expect(theme.typography.fontFamily).toBe(UI_FONT_STACK);
   });
 
+  it('is the --font-ui token of the generated design tokens', () => {
+    const tokens = readFileSync(resolve(projectRoot, 'src/theme/generated/kiwi-ui.tokens.css'), 'utf8');
+
+    expect(tokens).toContain(`--font-ui: ${UI_FONT_STACK};`);
+    expect(tokens).toMatch(/--font-wordmark:\s*"Montserrat",\s*sans-serif;/);
+  });
+
   it('is the global body font, loaded from the shared entry stylesheet', () => {
     const css = readFileSync(resolve(projectRoot, 'src/index.css'), 'utf8');
 
     // Imported from index.css (not main.tsx) so the Storybook preview, which
-    // imports the same stylesheet, gets the font without duplicating the wiring.
-    expect(css).toMatch(/@import\s+['"]\.\/fonts\/montserrat\.css['"]/);
-    expect(css).toMatch(/body\s*\{[^}]*font-family:\s*'Montserrat',\s*sans-serif;/);
+    // imports the same stylesheet, gets the fonts without duplicating the wiring.
+    expect(css).toMatch(/@import\s+['"]\.\/fonts\/source-sans-3\.css['"]/);
+    expect(css).toMatch(/body\s*\{[^}]*font-family:\s*var\(--font-ui\);/);
   });
 
-  it('is the ordinary-UI font token published to external Kiwi Apps', () => {
-    const css = readFileSync(resolve(projectRoot, 'public/kiwi-design-tokens.css'), 'utf8');
+  it('never synthesises a bold or an italic, and sets CJK emphasis upright', () => {
+    const base = readFileSync(resolve(projectRoot, 'src/theme/base.css'), 'utf8');
 
-    expect(css).toMatch(/--kiwi-font-family:\s*"Montserrat",\s*sans-serif;/);
-    // The monospace token is a legitimate separate stack and stays as-is.
-    expect(css).toMatch(/--kiwi-font-family-mono:[^;]*monospace;/);
+    expect(base).toMatch(/html\s*\{[^}]*font-synthesis:\s*none;/);
+    expect(base).toMatch(/\[data-script="cjk"\] em[^{]*\{[^}]*font-style:\s*normal;[^}]*font-weight:\s*var\(--weight-semibold\);/);
+  });
+
+  it('keeps Montserrat inside the KiwiWordmark', () => {
+    const wordmark = readFileSync(resolve(projectRoot, 'src/components/Brand/KiwiWordmark.tsx'), 'utf8');
+
+    expect(wordmark).toContain('var(--font-wordmark)');
   });
 
   it('is the only UI font declared anywhere in src/ and the design tokens', () => {
@@ -189,23 +219,23 @@ describe('typography documentation', () => {
   it('records the rule and how the font loads in the README', () => {
     const readme = readFileSync(resolve(projectRoot, 'README.md'), 'utf8');
 
-    expect(readme).toContain('### Typography: Montserrat only');
-    expect(readme).toContain('@fontsource-variable/montserrat');
+    expect(readme).toContain('### Typography: Source Sans 3');
+    expect(readme).toContain('@fontsource-variable/source-sans-3');
     // Self-hosted: the point of the package is that there is no runtime CDN request.
     expect(readme).not.toMatch(/https?:\/\/fonts\.(googleapis|gstatic)\.com/);
   });
 
-  it('tells external Kiwi Apps how to match the font', () => {
+  it('tells external Kiwi Apps how to match the font of the public tokens', () => {
     const kiwiApps = readFileSync(resolve(projectRoot, 'KIWI-APPS.md'), 'utf8');
 
     expect(kiwiApps).toContain('Montserrat');
     expect(kiwiApps).toContain('@fontsource-variable/montserrat');
   });
 
-  it('shows Montserrat rather than a system font stack in Storybook', () => {
+  it('shows Source Sans 3 rather than a system font stack in Storybook', () => {
     const story = readFileSync(resolve(projectRoot, '.storybook/stories/Typography.stories.tsx'), 'utf8');
 
-    expect(story).toContain('Montserrat');
+    expect(story).toContain('Source Sans 3');
     expect(story).not.toMatch(/system font stack/i);
   });
 });

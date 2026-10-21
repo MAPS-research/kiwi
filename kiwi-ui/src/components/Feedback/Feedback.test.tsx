@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { Feedback } from './Feedback.tsx';
 
 const mockSaveInteraction = vi.fn();
@@ -24,39 +24,67 @@ const defaultProps = {
 describe('Feedback', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockSaveInteraction.mockResolvedValue(true);
   });
 
-  it('renders without crashing', () => {
+  it('renders the five toolbar buttons by name', () => {
     render(<Feedback {...defaultProps} />);
-    expect(screen.getByTestId('CachedIcon')).toBeInTheDocument();
+
+    expect(screen.getByRole('toolbar', { name: 'Feedback' })).toBeInTheDocument();
+    for (const name of ['Regenerate answer', 'Flag this answer', 'Thumbs up', 'Thumbs down', 'Share answer']) {
+      expect(screen.getByRole('button', { name })).toBeInTheDocument();
+    }
   });
 
-  it('renders all feedback buttons', () => {
+  it('is one tab stop, moved between its buttons with the arrow keys, Home and End', () => {
     render(<Feedback {...defaultProps} />);
+    const button = (name: string) => screen.getByRole('button', { name });
+    const toolbar = screen.getByRole('toolbar', { name: 'Feedback' });
 
-    expect(screen.getByTestId('CachedIcon')).toBeInTheDocument();
-    expect(screen.getByTestId('FlagIcon')).toBeInTheDocument();
-    expect(screen.getByTestId('ThumbUpIcon')).toBeInTheDocument();
-    expect(screen.getByTestId('ThumbDownIcon')).toBeInTheDocument();
-    expect(screen.getByTestId('ShareIcon')).toBeInTheDocument();
+    const tabStops = screen.getAllByRole('button').filter((b) => b.tabIndex === 0);
+    expect(tabStops).toEqual([button('Regenerate answer')]);
+
+    button('Regenerate answer').focus();
+    fireEvent.keyDown(toolbar, { key: 'ArrowRight' });
+    expect(button('Flag this answer')).toHaveFocus();
+    expect(button('Flag this answer')).toHaveAttribute('tabindex', '0');
+    expect(button('Regenerate answer')).toHaveAttribute('tabindex', '-1');
+
+    fireEvent.keyDown(toolbar, { key: 'End' });
+    expect(button('Share answer')).toHaveFocus();
+    fireEvent.keyDown(toolbar, { key: 'ArrowRight' });
+    expect(button('Regenerate answer')).toHaveFocus();
+    fireEvent.keyDown(toolbar, { key: 'ArrowLeft' });
+    expect(button('Share answer')).toHaveFocus();
+    fireEvent.keyDown(toolbar, { key: 'Home' });
+    expect(button('Regenerate answer')).toHaveFocus();
   });
 
-  it('displays tooltips on hover', async () => {
+  it('keeps Regenerate and Share focusable and says why they are unavailable', () => {
     render(<Feedback {...defaultProps} />);
 
-    // Check for aria-labels instead of titles since disabled buttons don't show tooltips properly
-    expect(screen.getByLabelText('Regenerate response')).toBeInTheDocument();
-    expect(screen.getByLabelText('Flag this answer')).toBeInTheDocument();
-    expect(screen.getByLabelText('Thumbs up')).toBeInTheDocument();
-    expect(screen.getByLabelText('Thumbs down')).toBeInTheDocument();
-    expect(screen.getByLabelText('Share answer')).toBeInTheDocument();
+    const regenerate = screen.getByRole('button', { name: 'Regenerate answer' });
+    const share = screen.getByRole('button', { name: 'Share answer' });
+
+    expect(regenerate).toHaveAttribute('aria-disabled', 'true');
+    expect(regenerate).not.toBeDisabled();
+    expect(regenerate).toHaveAccessibleDescription("Regenerating answers isn't available yet.");
+    expect(share).toHaveAttribute('aria-disabled', 'true');
+    expect(share).toHaveAccessibleDescription("Sharing answers isn't available yet.");
+
+    fireEvent.click(regenerate);
+    fireEvent.click(share);
+    expect(mockSaveInteraction).not.toHaveBeenCalled();
   });
 
-  it('handles thumbs up click', () => {
+  it('saves a thumbs up and draws the chosen thumb filled', async () => {
     render(<Feedback {...defaultProps} />);
 
-    const thumbsUpButton = screen.getByTestId('ThumbUpIcon').closest('button');
-    fireEvent.click(thumbsUpButton!);
+    const thumbsUp = screen.getByRole('button', { name: 'Thumbs up' });
+    expect(thumbsUp).toHaveAttribute('aria-pressed', 'false');
+    expect(screen.getByTestId('ThumbUpOutlinedIcon')).toBeInTheDocument();
+
+    fireEvent.click(thumbsUp);
 
     expect(mockSaveInteraction).toHaveBeenCalledWith({
       type: 'frontend-interaction-thumbs',
@@ -65,13 +93,15 @@ describe('Feedback', () => {
         thumbsValue: 1,
       },
     });
+    expect(thumbsUp).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByTestId('ThumbUpIcon')).toBeInTheDocument();
+    expect(screen.getByTestId('ThumbDownOutlinedIcon')).toBeInTheDocument();
   });
 
-  it('handles thumbs down click', () => {
+  it('saves a thumbs down', () => {
     render(<Feedback {...defaultProps} />);
 
-    const thumbsDownButton = screen.getByTestId('ThumbDownIcon').closest('button');
-    fireEvent.click(thumbsDownButton!);
+    fireEvent.click(screen.getByRole('button', { name: 'Thumbs down' }));
 
     expect(mockSaveInteraction).toHaveBeenCalledWith({
       type: 'frontend-interaction-thumbs',
@@ -82,55 +112,41 @@ describe('Feedback', () => {
     });
   });
 
-  it('changes color when thumbs up is clicked', () => {
+  it('lets the student change their mind, and does not save the same choice twice', () => {
     render(<Feedback {...defaultProps} />);
 
-    const thumbsUpButton = screen.getByTestId('ThumbUpIcon').closest('button');
-    fireEvent.click(thumbsUpButton!);
+    const thumbsUp = screen.getByRole('button', { name: 'Thumbs up' });
+    const thumbsDown = screen.getByRole('button', { name: 'Thumbs down' });
 
-    expect(thumbsUpButton).toHaveClass('MuiIconButton-colorSuccess');
+    fireEvent.click(thumbsUp);
+    fireEvent.click(thumbsUp);
+    fireEvent.click(thumbsDown);
+
+    expect(mockSaveInteraction).toHaveBeenCalledTimes(2);
+    expect(thumbsDown).toHaveAttribute('aria-pressed', 'true');
+    expect(thumbsUp).toHaveAttribute('aria-pressed', 'false');
   });
 
-  it('changes color when thumbs down is clicked', () => {
+  it('announces "Feedback saved." only once the save succeeded', async () => {
+    mockSaveInteraction.mockResolvedValueOnce(false);
     render(<Feedback {...defaultProps} />);
 
-    const thumbsDownButton = screen.getByTestId('ThumbDownIcon').closest('button');
-    fireEvent.click(thumbsDownButton!);
+    fireEvent.click(screen.getByRole('button', { name: 'Thumbs up' }));
+    await waitFor(() => expect(mockSaveInteraction).toHaveBeenCalledTimes(1));
+    expect(screen.getByRole('status')).toHaveTextContent('');
 
-    expect(thumbsDownButton).toHaveClass('MuiIconButton-colorError');
+    fireEvent.click(screen.getByRole('button', { name: 'Thumbs down' }));
+    await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Feedback saved.'));
   });
 
-  it('disables other buttons after thumbs up', () => {
-    render(<Feedback {...defaultProps} />);
-
-    const thumbsUpButton = screen.getByTestId('ThumbUpIcon').closest('button');
-    const thumbsDownButton = screen.getByTestId('ThumbDownIcon').closest('button');
-
-    fireEvent.click(thumbsUpButton!);
-
-    expect(thumbsDownButton).toBeDisabled();
-  });
-
-  it('disables other buttons after thumbs down', () => {
-    render(<Feedback {...defaultProps} />);
-
-    const thumbsUpButton = screen.getByTestId('ThumbUpIcon').closest('button');
-    const thumbsDownButton = screen.getByTestId('ThumbDownIcon').closest('button');
-
-    fireEvent.click(thumbsDownButton!);
-
-    expect(thumbsUpButton).toBeDisabled();
-  });
-
-  it('handles flag button click with user input', () => {
+  it('asks what is wrong when the answer is flagged', () => {
     mockPrompt.mockReturnValue('This is incorrect');
 
     render(<Feedback {...defaultProps} />);
 
-    const flagButton = screen.getByTestId('FlagIcon').closest('button');
-    fireEvent.click(flagButton!);
+    fireEvent.click(screen.getByRole('button', { name: 'Flag this answer' }));
 
-    expect(mockPrompt).toHaveBeenCalledWith('Please enter your feedback:', '');
+    expect(mockPrompt).toHaveBeenCalledWith("What's wrong with this answer?", '');
     expect(mockSaveInteraction).toHaveBeenCalledWith({
       type: 'frontend-interaction-feedback-flag',
       context: {
@@ -139,13 +155,12 @@ describe('Feedback', () => {
     });
   });
 
-  it('handles flag button click with no user input', () => {
+  it('saves a flag with no reply when the prompt is dismissed', () => {
     mockPrompt.mockReturnValue(null);
 
     render(<Feedback {...defaultProps} />);
 
-    const flagButton = screen.getByTestId('FlagIcon').closest('button');
-    fireEvent.click(flagButton!);
+    fireEvent.click(screen.getByRole('button', { name: 'Flag this answer' }));
 
     expect(mockSaveInteraction).toHaveBeenCalledWith({
       type: 'frontend-interaction-feedback-flag',
@@ -155,37 +170,19 @@ describe('Feedback', () => {
     });
   });
 
-  it('disables flag button after clicking', () => {
+  it('flags an answer once', () => {
     mockPrompt.mockReturnValue('Feedback');
 
     render(<Feedback {...defaultProps} />);
 
-    const flagButton = screen.getByTestId('FlagIcon').closest('button');
-    fireEvent.click(flagButton!);
+    const flag = screen.getByRole('button', { name: 'Flag this answer' });
+    fireEvent.click(flag);
 
-    expect(flagButton).toBeDisabled();
-    expect(flagButton).toHaveClass('MuiIconButton-colorWarning');
-  });
-
-  it('regenerate and share buttons are disabled', () => {
-    render(<Feedback {...defaultProps} />);
-
-    const regenerateButton = screen.getByTestId('CachedIcon').closest('button');
-    const shareButton = screen.getByTestId('ShareIcon').closest('button');
-
-    expect(regenerateButton).toBeDisabled();
-    expect(shareButton).toBeDisabled();
-  });
-
-  it('uses horizontal stack layout', () => {
-    const { container } = render(<Feedback {...defaultProps} />);
-    const stack = container.firstChild;
-
-    expect(stack).toHaveClass('MuiStack-root');
+    expect(flag).toBeDisabled();
   });
 
   it('works without videoID prop', () => {
     render(<Feedback index="msg-123" />);
-    expect(screen.getByTestId('ThumbUpIcon')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Thumbs up' })).toBeInTheDocument();
   });
 });

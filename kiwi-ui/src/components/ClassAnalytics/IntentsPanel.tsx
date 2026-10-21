@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, ButtonBase, Skeleton, Tooltip, Typography } from "@mui/material";
 import { IntentSummary } from "../../utils/classAnalyticsApi.ts";
-import { intentStyleOf, mono, tokens } from "./tokens.ts";
+import { numeric, tokens, typeRole } from "./tokens.ts";
 
 interface IntentsPanelProps {
   intents: IntentSummary[];
@@ -25,8 +25,8 @@ export const IntentsPanel: React.FC<IntentsPanelProps> = ({
   return (
     <Box
       sx={{
-        border: `1px solid ${tokens.line}`,
-        borderRadius: 3,
+        border: `1px solid ${tokens.edge}`,
+        borderRadius: "var(--radius-sheet)",
         backgroundColor: tokens.paper,
         px: 3,
         pt: 2.25,
@@ -34,18 +34,10 @@ export const IntentsPanel: React.FC<IntentsPanelProps> = ({
         mb: 2,
       }}
     >
-      <Typography
-        sx={{
-          fontSize: 11,
-          fontWeight: 700,
-          letterSpacing: "0.12em",
-          color: tokens.slate,
-          textTransform: "uppercase",
-        }}
-      >
+      <Typography sx={{ ...typeRole("group-title"), color: tokens.ink }}>
         Student intent
       </Typography>
-      <Typography sx={{ fontSize: 13, color: tokens.faint, mt: 0.25, mb: 1.75 }}>
+      <Typography sx={{ ...typeRole("small"), color: tokens.slate, mt: 0.25, mb: 1.75 }}>
         What students are trying to get from the AI — and the topics inside
         each intent
       </Typography>
@@ -53,26 +45,24 @@ export const IntentsPanel: React.FC<IntentsPanelProps> = ({
       {loading && intents.length === 0 ? (
         <Skeleton height={72} sx={{ transform: "none" }} />
       ) : total === 0 ? (
-        <Typography sx={{ fontSize: 14, color: tokens.slate }}>
+        <Typography sx={{ ...typeRole("small"), color: tokens.slate }}>
           {generating
             ? "Intent analysis will appear here once processing finishes."
             : "No analyzed questions yet."}
         </Typography>
       ) : (
         <>
-          {/* Stacked distribution bar */}
+          {/* Distribution bar: one series in --chart-1, square ends, 2 px gaps on the plot. */}
           <Box
             sx={{
               display: "flex",
               height: 12,
-              borderRadius: 6,
               overflow: "hidden",
               mb: 2,
               gap: "2px",
             }}
           >
             {intents.map((intent) => {
-              const style = intentStyleOf(intent.id);
               const share = (intent.questionCount / total) * 100;
               return (
                 <Tooltip
@@ -84,9 +74,9 @@ export const IntentsPanel: React.FC<IntentsPanelProps> = ({
                     sx={{
                       width: `${share}%`,
                       minWidth: 6,
-                      backgroundColor: style.color,
+                      backgroundColor: tokens.bar,
                       cursor: "pointer",
-                      transition: "opacity 120ms ease",
+                      transition: "opacity var(--motion-micro) var(--motion-ease-toggle)",
                       "&:hover": { opacity: 0.8 },
                     }}
                     onClick={() => onIntentClick(intent)}
@@ -99,15 +89,14 @@ export const IntentsPanel: React.FC<IntentsPanelProps> = ({
           {/* Intent cards */}
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.25 }}>
             {intents.map((intent) => {
-              const style = intentStyleOf(intent.id);
               const share = Math.round((intent.questionCount / total) * 100);
               return (
                 <ButtonBase
                   key={intent.id}
                   onClick={() => onIntentClick(intent)}
                   sx={{
-                    border: `1px solid ${tokens.line}`,
-                    borderRadius: 2.5,
+                    border: `1px solid ${tokens.edge}`,
+                    borderRadius: "var(--radius-sheet)",
                     px: 1.75,
                     py: 1.25,
                     minWidth: 190,
@@ -117,16 +106,14 @@ export const IntentsPanel: React.FC<IntentsPanelProps> = ({
                     flexDirection: "column",
                     alignItems: "flex-start",
                     textAlign: "left",
-                    transition:
-                      "border-color 130ms ease, box-shadow 130ms ease",
-                    "&:hover": {
-                      borderColor: style.color,
-                      boxShadow: `0 2px 12px ${style.soft}`,
-                      backgroundColor: style.soft,
-                    },
-                    "&.Mui-focusVisible": {
-                      outline: `2px solid ${style.color}`,
-                      outlineOffset: 1,
+                    // A tile that opens a detail: the hover fill, no lift and no tint.
+                    "&:hover": { backgroundColor: tokens.hover },
+                    "&:active": { backgroundColor: "var(--surface-active)" },
+                    // Bordered: focus recolours its own edge (one frame), never a ring outside it.
+                    "&.Mui-focusVisible, &:focus-visible": {
+                      outline: "none",
+                      borderColor: "var(--focus-ring)",
+                      boxShadow: "inset 0 0 0 1px var(--focus-ring)",
                     },
                   }}
                 >
@@ -138,19 +125,9 @@ export const IntentsPanel: React.FC<IntentsPanelProps> = ({
                       width: "100%",
                     }}
                   >
-                    <Box
-                      sx={{
-                        width: 9,
-                        height: 9,
-                        borderRadius: "3px",
-                        backgroundColor: style.color,
-                        flexShrink: 0,
-                      }}
-                    />
                     <Typography
                       sx={{
-                        fontSize: 13.5,
-                        fontWeight: 600,
+                        ...typeRole("label"),
                         color: tokens.ink,
                         whiteSpace: "nowrap",
                         overflow: "hidden",
@@ -161,10 +138,9 @@ export const IntentsPanel: React.FC<IntentsPanelProps> = ({
                     </Typography>
                     <Typography
                       sx={{
-                        fontFamily: mono,
-                        fontSize: 13,
-                        fontWeight: 600,
-                        color: style.color,
+                        ...typeRole("label"),
+                        ...numeric,
+                        color: tokens.ink,
                         marginLeft: "auto",
                       }}
                     >
@@ -172,7 +148,7 @@ export const IntentsPanel: React.FC<IntentsPanelProps> = ({
                     </Typography>
                   </Box>
                   <Typography
-                    sx={{ fontSize: 11.5, color: tokens.faint, mt: 0.25 }}
+                    sx={{ ...typeRole("caption"), ...numeric, color: tokens.slate, mt: 0.25 }}
                   >
                     {share}% of questions · {intent.studentCount}{" "}
                     {intent.studentCount === 1 ? "student" : "students"}
@@ -191,13 +167,12 @@ export const IntentsPanel: React.FC<IntentsPanelProps> = ({
                           key={topic.id}
                           component="span"
                           sx={{
-                            fontSize: 11,
+                            ...typeRole("caption"),
                             px: 0.75,
                             py: 0.25,
-                            borderRadius: 1,
-                            backgroundColor: style.soft,
-                            color: style.color,
-                            fontWeight: 600,
+                            borderRadius: "var(--radius-small)",
+                            backgroundColor: "var(--chip-role-fill)",
+                            color: "var(--chip-role-text)",
                             maxWidth: 150,
                             overflow: "hidden",
                             textOverflow: "ellipsis",

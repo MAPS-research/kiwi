@@ -6,6 +6,18 @@ export type PdfDocument = Parameters<
   NonNullable<DocumentProps["onLoadSuccess"]>
 >[0];
 
+const SEARCHING = "Searching…";
+const SEARCH_FAILED =
+  "Couldn't search this PDF. The server didn't respond as expected. Try again.";
+
+/** The status line's colour: in progress, failed, or a plain result. */
+const statusColor = (status: string) =>
+  status === SEARCHING
+    ? "var(--in-progress-text)"
+    : status === SEARCH_FAILED
+      ? "var(--status-error-text)"
+      : "var(--pdf-toolbar-variant-search-panel-status)";
+
 /** Search only when requested, so opening a PDF retains lazy range loading. */
 export function PdfSearch({
   pdf,
@@ -23,7 +35,7 @@ export function PdfSearch({
     const term = query.trim().toLocaleLowerCase();
     if (!term || searching.current) return;
     searching.current = true;
-    setStatus("Searching…");
+    setStatus(SEARCHING);
     setMatches([]);
     try {
       const result: number[] = [];
@@ -38,11 +50,13 @@ export function PdfSearch({
       setMatches(result);
       setSelected(0);
       setStatus(
-        result.length ? `${result.length} matching pages` : "No matches",
+        result.length
+          ? `${result.length} ${result.length === 1 ? "matching page" : "matching pages"}`
+          : "No matches",
       );
       if (result.length) onSelect(result[0]);
     } catch {
-      setStatus("Search failed. Try again.");
+      setStatus(SEARCH_FAILED);
     } finally {
       searching.current = false;
     }
@@ -50,6 +64,7 @@ export function PdfSearch({
   return (
     <Box
       component="form"
+      data-density="compact"
       onSubmit={(event) => {
         event.preventDefault();
         void search();
@@ -57,10 +72,13 @@ export function PdfSearch({
       sx={{
         display: "flex",
         flexWrap: "wrap",
-        gap: 1,
-        alignItems: "center",
-        px: 1,
-        pb: 1,
+        gap: "var(--space-2)",
+        alignItems: "flex-end",
+        px: "var(--space-2)",
+        py: "var(--space-2)",
+        bgcolor: "var(--pdf-toolbar-variant-search-panel-fill)",
+        color: "var(--pdf-toolbar-variant-search-panel-text)",
+        borderBottom: "1px solid var(--pdf-toolbar-rule)",
       }}
     >
       <TextField
@@ -69,7 +87,11 @@ export function PdfSearch({
         value={query}
         onChange={(event) => setQuery(event.target.value)}
       />
-      <Button type="submit" disabled={status === "Searching…" || !query.trim()}>
+      <Button
+        type="submit"
+        variant="outlined"
+        disabled={status === SEARCHING || !query.trim()}
+      >
         Find
       </Button>
       <Button
@@ -82,7 +104,19 @@ export function PdfSearch({
       >
         Next match
       </Button>
-      <span role="status">{status}</span>
+      <Box
+        component="span"
+        role="status"
+        sx={{
+          alignSelf: "center",
+          color: statusColor(status),
+          fontFamily: "var(--type-caption-family)",
+          fontSize: "var(--type-caption-size)",
+          lineHeight: "var(--type-caption-leading)",
+        }}
+      >
+        {status}
+      </Box>
     </Box>
   );
 }

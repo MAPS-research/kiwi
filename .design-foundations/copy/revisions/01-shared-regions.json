@@ -1,0 +1,1130 @@
+[
+ {
+  "id": "SR-1",
+  "name": "Top bar (TopNav, class switcher)",
+  "route": "(shared)",
+  "file": "src/components/TopNav/TopNav.tsx",
+  "kept": [
+   "Classes (the listbox name)",
+   "Loading classes…",
+   "Select a class",
+   "Search classes (the field's name)"
+  ],
+  "note": "The Display menu's copy is in the shared strings of `DESIGN.md § Voice and tone`, indexed under `DS`: the button's name and tooltip (DS.01), the Theme group and its items (DS.02, DS.03), the Kiwi animation switch and its reduced-motion reason (DS.04, DS.05) and the storage caption (DS.06). The fallback label is \"Untitled class\" wherever a class has no name (here, SR-3 and S-01).",
+  "rows": [
+   [
+    "Toggle navigation menu",
+    "Open navigation menu",
+    "aria",
+    "",
+    "The button opens the drawer; its name says what it does, not that it toggles.",
+    "aria-label=\"Toggle navigation menu\""
+   ],
+   [
+    "Switch to Student View",
+    "Switch to student view",
+    "tooltip",
+    "",
+    "",
+    ""
+   ],
+   [
+    "Admin View",
+    "Admin view",
+    "label",
+    "",
+    "Case: the view's name in \"Switch to {view}\".",
+    "\"Admin View\""
+   ],
+   [
+    "Instructor View",
+    "Instructor view",
+    "label",
+    "",
+    "",
+    "\"Instructor View\""
+   ],
+   {
+    "o": "Logout",
+    "n": "Sign out",
+    "k": "tooltip",
+    "t": "One verb pair: sign in and sign out everywhere. The button's aria-label is the same word as its tooltip, so both change (C15).",
+    "m": "\"Logout\"",
+    "r": "C6,C15"
+   },
+   [
+    "Switch class scope. Current selection: {currentLabel}",
+    "Switch class. Current: {currentLabel}",
+    "aria",
+    "",
+    "\"Scope\" is jargon; the name says what the control does and what it shows now.",
+    "Switch class scope. Current selection",
+    "src/components/TopNav/ClassSwitcher.tsx"
+   ],
+   [
+    "Find class…",
+    "Search classes",
+    "placeholder",
+    "",
+    "The field already has the name \"Search classes\"; the placeholder said a second thing for the same control.",
+    "placeholder=\"Find class…\"",
+    "src/components/TopNav/ClassSwitcher.tsx"
+   ],
+   {
+    "o": "No classes found",
+    "n": "No classes yet",
+    "k": "empty",
+    "t": "First-use form: says the list is empty, not that a search failed. It is the switcher's default and the admin sidebar's label for the same case (`AdminLayout.tsx:572`). The no-results form is the next row. A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23).",
+    "m": "No classes found",
+    "f": [
+     "src/components/TopNav/ClassSwitcher.tsx",
+     "src/pages/admin/AdminLayout.tsx"
+    ],
+    "r": "C12,C5"
+   },
+   [
+    "",
+    "No classes match \"{query}\"",
+    "new",
+    "",
+    "No-results form: names what was searched so the student can retry it.",
+    "emptyLabel",
+    "src/components/TopNav/ClassSwitcher.tsx"
+   ],
+   {
+    "o": "No assigned classes",
+    "n": "No classes assigned to you yet. An administrator assigns them.",
+    "k": "empty",
+    "t": "The no-action form of C12, in the sidebar's narrow list: it says what is true and who acts, because an instructor has no button to press (A-01.14 says the same on the Classes page). Two sentences, so each takes its full stop; a one-clause state line takes none (C5, DS.23).",
+    "m": "No assigned classes",
+    "f": "src/pages/admin/AdminLayout.tsx",
+    "r": "C12,C5"
+   },
+   [
+    "Unnamed class",
+    "Untitled class",
+    "label",
+    "TD-04",
+    "One fallback for a class with no name, here and on every card.",
+    "Unnamed class",
+    "src/pages/admin/AdminLayout.tsx"
+   ],
+   [
+    "All Classes",
+    "All classes",
+    "label",
+    "TD-21",
+    "The admin scope label; sentence case.",
+    "All Classes",
+    "src/apps/adminNavigation.ts"
+   ],
+   [
+    "Create New Class",
+    "Create class",
+    "button",
+    "",
+    "\"New\" is redundant beside \"Create\". One constant, so the switcher footer, the dialog title, its submit and the Classes header all follow.",
+    "Create New Class",
+    "src/constants/classCopy.ts"
+   ]
+  ]
+ },
+ {
+  "id": "SR-2",
+  "name": "Student class layout",
+  "route": "(shared)",
+  "file": "src/pages/ClassLayout.tsx",
+  "kept": [
+   "Materials",
+   "Scratchpad (the two tabs already follow the guide; app tabs show the app's own label)"
+  ],
+  "rows": [
+   [
+    "Unnamed class",
+    "Untitled class",
+    "label",
+    "TD-04",
+    "",
+    "Unnamed class"
+   ]
+  ]
+ },
+ {
+  "id": "SR-3",
+  "name": "Admin shell (sidebar and class sub-menu)",
+  "route": "(shared)",
+  "file": "src/pages/admin/AdminLayout.tsx",
+  "kept": [
+   "Classes",
+   "Webhooks",
+   "Materials",
+   "Experiments",
+   "Collapse admin navigation",
+   "Expand admin navigation",
+   "Loading admin navigation"
+  ],
+  "note": "Each sidebar label now equals its page's title (C7), which settles TD-21: the page-name table in `DESIGN.md § Voice and tone` lists both.",
+  "rows": [
+   [
+    "My Classes",
+    "Your classes",
+    "label",
+    "TD-21",
+    "Second person, like the student's \"Your classes\" (S-01.01): the interface says you to the reader (C8). The label equals the page's title, A-01.02 (C7).",
+    "\"My Classes\""
+   ],
+   [
+    "User Management",
+    "Users",
+    "label",
+    "TD-21",
+    "The page lists people; \"management\" says nothing the page does not.",
+    "label: \"User Management\""
+   ],
+   [
+    "System Analytics",
+    "System analytics",
+    "label",
+    "TD-21",
+    "",
+    "label: \"System Analytics\""
+   ],
+   [
+    "System Email",
+    "System email",
+    "label",
+    "TD-21",
+    "The page title was \"Email Management\"; the scope prefix tells it from Class email.",
+    "label: \"System Email\""
+   ],
+   [
+    "Email Audit",
+    "Email audit",
+    "label",
+    "TD-21",
+    "",
+    "label: \"Email Audit\""
+   ],
+   [
+    "System Flags",
+    "System flags",
+    "label",
+    "TD-21",
+    "The page title was \"Feature Flags\" for both the system and the class page; the prefix keeps them apart.",
+    "label: \"System Flags\""
+   ],
+   [
+    "MCP Server Registry",
+    "MCP servers",
+    "label",
+    "TD-21",
+    "The page title was \"MCP Server Management\"; one short noun phrase for both.",
+    "label: \"MCP Server Registry\""
+   ],
+   [
+    "App Registry",
+    "App registry",
+    "label",
+    "TD-21",
+    "The page title was \"Kiwi Apps Management\".",
+    "label: \"App Registry\""
+   ],
+   [
+    "Webhook Approvals",
+    "Webhook approvals",
+    "label",
+    "TD-21",
+    "The page title was \"Webhook Event Approvals\" and A-09's button \"Event Approvals\".",
+    "label: \"Webhook Approvals\""
+   ],
+   [
+    "Edit Class",
+    "Edit class",
+    "label",
+    "TD-21",
+    "",
+    "label: \"Edit Class\"",
+    "src/pages/admin/ClassLayout.tsx"
+   ],
+   [
+    "Class Flags",
+    "Class flags",
+    "label",
+    "TD-21",
+    "The page title was \"Feature Flags\".",
+    "label: \"Class Flags\"",
+    "src/pages/admin/ClassLayout.tsx"
+   ],
+   [
+    "Class MCP & Tools",
+    "Class MCP and tools",
+    "label",
+    "TD-21",
+    "",
+    "label: \"Class MCP & Tools\"",
+    "src/pages/admin/ClassLayout.tsx"
+   ],
+   [
+    "Class Apps",
+    "Class apps",
+    "label",
+    "TD-21",
+    "The page title was \"Kiwi Apps\".",
+    "label: \"Class Apps\"",
+    "src/pages/admin/ClassLayout.tsx"
+   ],
+   [
+    "Enroll Students",
+    "Enroll students",
+    "label",
+    "TD-21",
+    "",
+    "label: \"Enroll Students\"",
+    "src/pages/admin/ClassLayout.tsx"
+   ],
+   [
+    "Class Email",
+    "Class email",
+    "label",
+    "TD-21",
+    "The page title was \"Send Emails\".",
+    "label: \"Class Email\"",
+    "src/pages/admin/ClassLayout.tsx"
+   ],
+   [
+    "Class Analytics",
+    "Class analytics",
+    "label",
+    "TD-21",
+    "",
+    "label: \"Class Analytics\"",
+    "src/pages/admin/ClassLayout.tsx"
+   ]
+  ]
+ },
+ {
+  "id": "SR-4",
+  "name": "Admin page frame",
+  "route": "(shared)",
+  "file": "src/components/AdminPage/AdminPageHeader.tsx",
+  "rows": [],
+  "kept": [
+   "Back to {label} (the pattern is right; each page passes a sentence-case label)"
+  ],
+  "noChange": "The frame's labels are built from props; the pattern \"Back to {label}\" is already right, and each page passes its label in sentence case (A-20, A-21, A-24)."
+ },
+ {
+  "id": "SR-5",
+  "name": "Auth layout (split and centred)",
+  "route": "(shared)",
+  "file": "src/components/AuthLayout/AuthLayout.tsx",
+  "kept": [
+   "About Kiwi (the aside's accessible name)"
+  ],
+  "note": "The aside carries the wordmark, one line that says what Kiwi does and the institution sub-line; the three-beat slogan is gone (TD-20).",
+  "rows": [
+   [
+    "“Learn deeply. Ask freely. Grow with AI.”",
+    "Ask about your class materials or your code.",
+    "body",
+    "TD-20",
+    "One concrete line that says what Kiwi does, and the same line the chat's welcome row says (SR-6.01), so the product states its use once and the two places cannot disagree; no three beats and no \"Grow with AI\" (the brief's known failing example).",
+    "Learn deeply. Ask freely. Grow with AI."
+   ],
+   {
+    "o": "An AI learning companion built for the {INSTITUTION_NAME} community.",
+    "n": "Kiwi is an AI tutor for classes at {INSTITUTION_NAME}.",
+    "k": "body",
+    "refs": "TD-20",
+    "t": "The first branch of one conditional (`AuthLayout.tsx:95-97`, on `hasInstitution`, true when the deployment sets `VITE_INSTITUTION_NAME`); the conditional stays. Branded: this row, \"Kiwi is an AI tutor for classes at {INSTITUTION_NAME}.\" Unbranded: SR-5.03, \"Kiwi is an AI tutor for your classes.\" Both say \"AI tutor\" and \"classes\" (C6), and the default INSTITUTION_NAME, \"Kiwi\", only reaches the unbranded branch, so the line never reads \"classes at Kiwi\" (C17). One thing is said in one set of words in both branches (Nielsen #4: consistency).",
+    "m": "An AI learning companion built for the",
+    "r": "C6,C17"
+   },
+   {
+    "o": "An AI learning companion for your courses.",
+    "n": "Kiwi is an AI tutor for your classes.",
+    "k": "body",
+    "refs": "TD-20",
+    "t": "The second branch of the same conditional (SR-5.02), shown when no institution is configured: no name, so none is shown (C17). The same term, \"AI tutor\", and \"classes\", not \"courses\" (C6). One thing is said in one set of words in both branches (Nielsen #4: consistency).",
+    "m": "An AI learning companion for your courses.",
+    "r": "C6,C17"
+   }
+  ]
+ },
+ {
+  "id": "SR-6",
+  "name": "Kiwi Chat: launcher and panel",
+  "route": "(shared)",
+  "file": "src/components/Chat/ChatCore.tsx",
+  "kept": [
+   "Chat history (tooltip)",
+   "New chat (tooltip)",
+   "Experiment (the row's label)",
+   "Variant A, Variant B",
+   "Clear this column",
+   "Thumbs up",
+   "Thumbs down",
+   "Share answer",
+   "Grab code from slide, Explain this slide, Generate exercise (the slash commands)",
+   "Reading class analytics (a reading step label)",
+   "Running code (a tool step label)",
+   "Working… (the chain's header while the turn runs)",
+   "repeated steps",
+   "Connected to Kiwi"
+  ],
+  "note": "TD-10: \"NEW SESSION\" is drawn by CSS capitals over the string \"New session\", so the string only changes for the vocabulary (session becomes chat); the capitals go with the type tokens. Per-state words (the nine Companion twins and the live-region strings) are the CP rows; the shared reasons (Stop, the composer's, the disabled toolbar) are the DS rows. The quoted draft strings in this entry's `Companion (Phase 4)` bullet (\"Paused: no connection.\", the offline line, the retryable error text) are superseded by the `CP` rows. The wait before the first step is the loader's \"Thinking…\" with its dots (SR-6.69); once a step runs, its label names the step, in one of three kinds, and a step with no name reads \"Working…\" (SR-6.49; `DESIGN.md § Voice and tone › Step labels`). The same bullet's list of error subtypes gains a fourth, expired: \"No token\" is SR-6.13, with no Retry, and \"Token expired\" is the automatic renewal, not an error (SR-6.14, SR-6.15; `DESIGN.md § Voice and tone › Errors`).",
+  "rows": [
+   [
+    "Welcome to Kiwi! How can I help you?",
+    "Ask about your class materials or your code.",
+    "empty",
+    "TD-12",
+    "The welcome row is the empty conversation: it says what Kiwi helps with and what to do first, without an exclamation mark or \"I\".",
+    "Welcome to Kiwi!",
+    "src/components/Chat/ChatMessages.tsx"
+   ],
+   [
+    "Ask Kiwi... You can type / to see available commands.",
+    "Ask a question, or type / for commands",
+    "placeholder",
+    "",
+    "Shorter, one idea per clause, and the real ellipsis rule no longer applies.",
+    "Ask Kiwi... You can type",
+    "src/components/Chat/ChatField.tsx"
+   ],
+   [
+    "",
+    "Send message",
+    "aria",
+    "",
+    "The send button had no name at all (icon only, no tooltip).",
+    "<SendIcon />",
+    "src/components/Chat/ChatField.tsx"
+   ],
+   [
+    "New session",
+    "New chat",
+    "label",
+    "TD-10",
+    "One word for one thing: the panel is Kiwi chat, so its unit is a chat.",
+    "'New session'"
+   ],
+   [
+    "Current session",
+    "Current chat",
+    "label",
+    "",
+    "",
+    "'Current session'"
+   ],
+   {
+    "o": "No previous sessions",
+    "n": "No previous chats",
+    "k": "empty",
+    "m": "No previous sessions",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23).",
+    "r": "C12,C5"
+   },
+   [
+    "Loading sessions...",
+    "Loading chats…",
+    "status",
+    "",
+    "",
+    "Loading sessions..."
+   ],
+   [
+    "New conversation",
+    "Untitled chat",
+    "label",
+    "",
+    "A history row for a chat with no first message.",
+    "'New conversation'"
+   ],
+   [
+    "Loading experiments...",
+    "Loading experiments…",
+    "status",
+    "",
+    "",
+    "Loading experiments..."
+   ],
+   [
+    "No experiments have been created for this class.",
+    "No experiments in this class yet. Create one on the Experiments page.",
+    "empty",
+    "",
+    "Empty state with the first step, for staff who can act.",
+    "No experiments have been created for this class."
+   ],
+   {
+    "k": "error",
+    "o": "Experiments are currently unavailable.",
+    "what": "Couldn't load experiments.",
+    "c": "unknown",
+    "fix": "Try again later.",
+    "m": "Experiments are currently unavailable.",
+    "t": "Said only that something is unavailable; now what failed, why and what to do."
+   },
+   [
+    "Both columns run the same variant — pick two different ones to see a difference.",
+    "Both columns use the same variant. Choose 2 different variants to compare them.",
+    "helper",
+    "",
+    "No em dash; one idea per sentence; \"compare\" names the goal.",
+    "Both columns run the same variant"
+   ],
+   {
+    "k": "error",
+    "o": "No token found, please login again",
+    "what": "Couldn't send your question.",
+    "c": "expired",
+    "m": "No token found, please login again",
+    "t": "\"Token\" is an implementation word; the cause is a sign-in that has ended, and the way out is a reload. \"Session\" is kept for analytics (§ Terminology). This is the `expired` cause, not the retryable one: `§ Voice and tone › Errors` supersedes the Phase 4 hand-off, which put \"No token\" under retryable. There is no Retry, because trying again with no sign-in cannot work. What the student sees, from the code: the question leaves the composer when the send starts and stays in the thread (`ChatCore.tsx:1041`); the no-token branch then shows this toast and returns before anything is sent (`ChatCore.tsx:762-768`), so the question is never saved, and the conversation a reload restores is read back from the server (`ChatCore.tsx:253-269`) without it. A reload reaches the sign-in page, because every path that drops the token drops the stored user too (`middleware.ts:27-28`, `:47`, `:66-67`, `:82-83`) and the route guard sends a user-less visit to it (`ProtectedRoute.tsx:51`). No control is added: that would be a flow change. The compare lane draws the same sentence in its bubble (`useChatLane.ts:124-127`).",
+    "f": [
+     "src/components/Chat/ChatCore.tsx",
+     "src/components/Chat/useChatLane.ts"
+    ],
+    "nosafe": "the question leaves the box when the send starts (ChatCore.tsx:1041) and the no-token branch returns before anything is sent or saved (ChatCore.tsx:762-768), so there is no form to keep",
+    "fix": "Your question isn't saved. Copy it, then reload the page to sign in again."
+   },
+   {
+    "o": "Token expired, refreshing...",
+    "n": "Refreshing your sign-in…",
+    "k": "status",
+    "t": "Names what is happening in the student's terms, not the mechanism; \"session\" is the analytics word (§ Terminology), so the sign-in is what is refreshed. It is the automatic renewal, not an error (`ChatCore.tsx:797`): the app asks for a new sign-in itself and the student does nothing. When the renewal fails the app signs the student out and opens the sign-in page (`ChatCore.tsx:798-806`, `useChatLane.ts:152-160`), where S-05.06 says the sign-in has expired once that page reads this redirect (`§ Voice and tone › Hand-offs`); the chat shows no error row for it.",
+    "m": "Token expired, refreshing...",
+    "r": "C13,C5"
+   },
+   [
+    "Token refreshed, retrying...",
+    "Retrying your question…",
+    "status",
+    "",
+    "The renewal worked and the app sends the question again by itself (`ChatCore.tsx:815-824`); the student does nothing.",
+    "Token refreshed, retrying...",
+    "",
+    "C13,C5"
+   ],
+   {
+    "k": "error",
+    "o": "An error occurred: {statusText}",
+    "what": "Kiwi couldn't answer.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "m": "An error occurred:",
+    "t": "A response with no readable body: the code shows `{statusText}`, the status's reason phrase (\"Internal Server Error\"), which is not the server's own words. A reason phrase and a status line always take the cause line with the status as a support reference (§ Errors 3); quoting is for a message in the response body (§ Errors 2). `{statusText}` is the old text and is dropped; `{status}` replaces it.",
+    "br": "http",
+    "r": "C9"
+   },
+   {
+    "k": "error",
+    "o": "You are out of tokens.",
+    "what": "Kiwi can't answer right now.",
+    "c": "quota",
+    "why": "You've reached your usage limit.",
+    "fix": "Ask your instructor or an administrator about it.",
+    "m": "You are out of tokens.",
+    "t": "\"Tokens\" is a metering word; the student needs the cause (a limit) and who to ask.",
+    "f": [
+     "src/components/Chat/ChatCore.tsx",
+     "src/components/Chat/useChatLane.ts"
+    ]
+   },
+   {
+    "k": "error",
+    "o": "You are not allowed to use this feature.",
+    "what": "Kiwi can't answer right now.",
+    "c": "denied",
+    "why": "Your account can't use this feature.",
+    "fix": "Ask an administrator for access.",
+    "m": "You are not allowed to use this feature."
+   },
+   {
+    "k": "error",
+    "o": "Server error ({status}). Please try again.",
+    "what": "Kiwi couldn't answer.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "fix": "Try again in a moment.",
+    "m": "Server error ("
+   },
+   [
+    "Connection lost. Reconnecting...",
+    "Connection lost. Kiwi is reconnecting…",
+    "status",
+    "",
+    "What happened, then what happens next; the library does retry about once a second.",
+    "Connection lost. Reconnecting..."
+   ],
+   {
+    "k": "error",
+    "o": "Something went wrong while answering. Please try again.",
+    "what": "Kiwi couldn't finish answering.",
+    "c": "unknown",
+    "f": [
+     "src/components/Chat/ChatCore.tsx",
+     "src/components/Chat/useChatLane.ts"
+    ],
+    "m": "Something went wrong while answering. Please try again.",
+    "t": "The retryable error row's text (Companion `error`); the Retry button is its action."
+   },
+   {
+    "k": "error",
+    "o": "Something went wrong. Please try again.",
+    "what": "Kiwi couldn't answer.",
+    "c": "unknown",
+    "f": "src/components/Chat/ChatMessages.tsx",
+    "m": "Something went wrong. Please try again."
+   },
+   [
+    "I went in circles trying to complete that on the page and stopped to avoid looping. I may have filled some fields — please check the form and finish the last step yourself, or tell me more specifically what to do.",
+    "Kiwi stopped because this took too many steps on the page. It may have filled in some fields, so check the form and finish the last step yourself, or tell Kiwi more precisely what to do.",
+    "status",
+    "",
+    "No \"I\", no \"please\", no em dash; says what is safe to assume (some fields may be filled) and what to do. The reason is the one the code has: after 15 consecutive client-tool round trips in one turn (`MAX_ROUND_TRIPS`, `ChatCore.tsx:299`) the app aborts the stream, ends the turn and adds this message (`ChatCore.tsx:654-675`). The cap counts steps and nothing detects repetition, so the sentence says that the task took too many steps, not that Kiwi repeated itself or went in circles, which the product cannot know (C16). An earlier draft said \"after repeating the same steps\"; the repeated-step caption is a different place (SR-6.52, `AgentStepChain.tsx:145-158`: the same tool called three or more times in a row).",
+    "I went in circles trying to complete that on the page"
+   ],
+   [
+    "Authorization Required",
+    "Connect your account",
+    "heading",
+    "",
+    "Title says the task, not the system state.",
+    "<DialogTitle>Authorization Required</DialogTitle>"
+   ],
+   [
+    "Connect Account",
+    "Connect account",
+    "cbutton",
+    "",
+    "",
+    "Connect Account"
+   ],
+   [
+    "Kiwi Chat",
+    "Kiwi chat",
+    "heading",
+    "",
+    "The panel title; \"Kiwi\" is the only capital.",
+    "        Kiwi Chat",
+    "src/components/GlobalChat/GlobalChatModal.tsx"
+   ],
+   [
+    "Modal view",
+    "Show as modal",
+    "tooltip",
+    "TD-09",
+    "An icon-only control is named by a verb phrase; the pressed state says which mode is current.",
+    "title=\"Modal view\"",
+    "src/components/GlobalChat/GlobalChatModal.tsx"
+   ],
+   [
+    "modal view",
+    "Show as modal",
+    "aria",
+    "TD-09",
+    "The aria-label differed from the tooltip; they are now one string.",
+    "aria-label=\"modal view\"",
+    "src/components/GlobalChat/GlobalChatModal.tsx"
+   ],
+   [
+    "Side panel",
+    "Show as side panel",
+    "tooltip",
+    "TD-09",
+    "",
+    "title=\"Side panel\"",
+    "src/components/GlobalChat/GlobalChatModal.tsx"
+   ],
+   [
+    "side panel view",
+    "Show as side panel",
+    "aria",
+    "TD-09",
+    "",
+    "aria-label=\"side panel view\"",
+    "src/components/GlobalChat/GlobalChatModal.tsx"
+   ],
+   [
+    "snap to side",
+    "Snap to side",
+    "aria",
+    "TD-09",
+    "The tooltip was already \"Snap to side\"; the aria-label now matches it.",
+    "aria-label=\"snap to side\"",
+    "src/components/GlobalChat/GlobalChatModal.tsx"
+   ],
+   [
+    "fullscreen view",
+    "Fullscreen",
+    "aria",
+    "TD-09",
+    "",
+    "\"fullscreen view\"",
+    "src/components/GlobalChat/GlobalChatModal.tsx"
+   ],
+   [
+    "exit fullscreen",
+    "Exit fullscreen",
+    "aria",
+    "TD-09",
+    "",
+    "\"exit fullscreen\"",
+    "src/components/GlobalChat/GlobalChatModal.tsx"
+   ],
+   [
+    "close",
+    "Close chat",
+    "aria",
+    "TD-09",
+    "\"Close\" alone does not say what closes.",
+    "aria-label=\"close\"",
+    "src/components/GlobalChat/GlobalChatModal.tsx"
+   ],
+   [
+    "resize chat panel",
+    "Resize chat panel",
+    "aria",
+    "",
+    "",
+    "aria-label=\"resize chat panel\"",
+    "src/components/GlobalChat/GlobalChatModal.tsx"
+   ],
+   [
+    "Open Kiwi Chat",
+    "Open Kiwi chat",
+    "tooltip",
+    "TD-05",
+    "",
+    "title=\"Open Kiwi Chat\"",
+    "src/components/GlobalChat/GlobalChatButton.tsx"
+   ],
+   [
+    "open chat",
+    "Open Kiwi chat",
+    "aria",
+    "TD-05",
+    "The aria-label differed from the tooltip; they are now one string.",
+    "aria-label=\"open chat\"",
+    "src/components/GlobalChat/GlobalChatButton.tsx"
+   ],
+   [
+    "Regenerate response",
+    "Regenerate answer",
+    "tooltip",
+    "SF-53",
+    "\"Answer\" is the word the rest of the toolbar uses.",
+    "title=\"Regenerate response\"",
+    "src/components/Feedback/Feedback.tsx"
+   ],
+   [
+    "Please enter your feedback:",
+    "What's wrong with this answer?",
+    "body",
+    "",
+    "Native prompt, copy only: a question instead of a command with \"please\".",
+    "Please enter your feedback:",
+    "src/components/Feedback/Feedback.tsx"
+   ],
+   [
+    "Import to Scratchpad",
+    "Import to scratchpad",
+    "button",
+    "",
+    "Case only: the name of another place is not a proper noun.",
+    "Import to Scratchpad",
+    "src/components/Chat/ChatMessages.tsx"
+   ],
+   [
+    "Reading the sitemap",
+    "Checking the page list",
+    "label",
+    "",
+    "A reading step: \"sitemap\" is jargon, and the verb says nothing on the page changes.",
+    "label: \"Reading the sitemap\"",
+    "src/components/Chat/AgentStepChain.tsx"
+   ],
+   [
+    "Looking up classes",
+    "Looking up your classes",
+    "label",
+    "",
+    "A reading step.",
+    "label: \"Looking up classes\"",
+    "src/components/Chat/AgentStepChain.tsx"
+   ],
+   [
+    "Navigating",
+    "Opening a page for you",
+    "label",
+    "",
+    "An acting step: it operates the page on the student's behalf, and the label says so.",
+    "label: \"Navigating\"",
+    "src/components/Chat/AgentStepChain.tsx"
+   ],
+   [
+    "Opening class content",
+    "Opening class materials for you",
+    "label",
+    "",
+    "An acting step.",
+    "label: \"Opening class content\"",
+    "src/components/Chat/AgentStepChain.tsx"
+   ],
+   [
+    "Looking at the page",
+    "Reading this page",
+    "label",
+    "",
+    "A reading step.",
+    "label: \"Looking at the page\"",
+    "src/components/Chat/AgentStepChain.tsx"
+   ],
+   [
+    "Clicking",
+    "Clicking for you",
+    "label",
+    "",
+    "An acting step.",
+    "label: \"Clicking\"",
+    "src/components/Chat/AgentStepChain.tsx"
+   ],
+   [
+    "Filling a field",
+    "Filling in a field for you",
+    "label",
+    "",
+    "An acting step.",
+    "label: \"Filling a field\"",
+    "src/components/Chat/AgentStepChain.tsx"
+   ],
+   [
+    "Searching materials",
+    "Searching your class materials",
+    "label",
+    "",
+    "A reading step; names whose materials.",
+    "label: \"Searching materials\"",
+    "src/components/Chat/AgentStepChain.tsx"
+   ],
+   [
+    "Thinking",
+    "Working…",
+    "label",
+    "",
+    "The fallback label of a step Kiwi cannot name (`describe(null)`, `AgentStepChain.tsx:131`): \"Working…\", with the ellipsis, the word the chain's header already shows while the turn runs (`:209`; C13). The rule for the walk state's words: \"Thinking…\" was the wait before the first step until companion v2 (SR-6.69, the user's own wording and the one concession, G9), and the status line's wait verb is now (CP.19 to CP.23); once a step is running its label names the step, and a step that has no name says only that Kiwi is working, so it claims no process the product cannot show (`§ Voice and tone › Step labels`). `AgentStepChain.test.tsx:80` asks for the header with `getByText(\"Working…\")`: it passes while every step is named, and would find two elements if a step with no name were drawn beside the header.",
+    "label: \"Thinking\"",
+    "src/components/Chat/AgentStepChain.tsx",
+    "C13,C6"
+   ],
+   [
+    "Hide agent steps",
+    "Hide Kiwi's steps",
+    "aria",
+    "",
+    "\"Agent\" is jargon for the student.",
+    "\"Hide agent steps\"",
+    "src/components/Chat/AgentStepChain.tsx"
+   ],
+   [
+    "Show agent steps",
+    "Show Kiwi's steps",
+    "aria",
+    "",
+    "",
+    "\"Show agent steps\"",
+    "src/components/Chat/AgentStepChain.tsx"
+   ],
+   [
+    "The same step repeated — the agent may be stuck.",
+    "Kiwi repeated this step. It may be stuck.",
+    "status",
+    "",
+    "No em dash, no \"agent\"; says what happened and the likely state.",
+    "The same step repeated",
+    "src/components/Chat/AgentStepChain.tsx"
+   ],
+   [
+    "Using {displayName}...",
+    "Using {displayName}…",
+    "status",
+    "",
+    "A tool step, the third kind of step label (`§ Voice and tone › Step labels`): Kiwi runs one of its own tools away from the page, so the pill says what it is using, with the ellipsis (C13), and never ends \"for you\", because it does not operate the page. It appears only where an answer's text begins with \"Using …\" (`ChatMessages.tsx:140-159`); a narration bubble becomes a step in the chain instead. The name inside is the tool's own words (SR-6.55, SR-6.56, SR-6.57).",
+    "Using ${displayName}...",
+    "src/components/Chat/ToolStatusIndicator.tsx"
+   ],
+   {
+    "k": "error",
+    "o": "Connection lost.",
+    "what": "Kiwi couldn't finish answering.",
+    "c": "net",
+    "why": "The connection was lost.",
+    "m": "Connection lost.",
+    "f": "src/components/Chat/useChatLane.ts",
+    "t": "The compare lane's own wording; the chat column says \"Connection lost. Reconnecting…\" (above)."
+   },
+   [
+    "RAG Search",
+    "Materials search",
+    "status",
+    "",
+    "\"RAG\" is internal vocabulary; the name says what the tool does.",
+    "return \"RAG Search\"",
+    "src/components/Chat/ToolStatusIndicator.tsx"
+   ],
+   [
+    "Code Interpreter",
+    "Code interpreter",
+    "status",
+    "",
+    "",
+    "return \"Code Interpreter\"",
+    "src/components/Chat/ToolStatusIndicator.tsx"
+   ],
+   [
+    "Search Papers",
+    "Search papers",
+    "format",
+    "",
+    "The pill's fallback name for a tool that has no words of its own, capitalised word by word. Old and New show one tool, `search_papers`, as it is drawn today and as it will be: the name in sentence case, only its first word capitalised (C1). The name is what the tool calls itself, so Kiwi cannot make it a verb phrase; it reads as a name inside \"Using Search papers…\" (SR-6.53).",
+    "word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()",
+    "src/components/Chat/ToolStatusIndicator.tsx",
+    "C1"
+   ],
+   [
+    "new Date(session.timestamp).toLocaleDateString()",
+    "17 Oct 2026",
+    "format",
+    "TD-24",
+    "One date format in the chat history list (C3).",
+    "toLocaleDateString()",
+    "src/components/Chat/ChatCore.tsx",
+    "C3"
+   ],
+   {
+    "k": "remove",
+    "o": "{error.message}",
+    "n": "(removed)",
+    "m": "setSnackbarMessage(error.message)",
+    "f": "src/components/Chat/ChatCore.tsx",
+    "br": "dev",
+    "t": "A synchronous exception thrown while the request is made: its `error.message` is the library's or the browser's text, never shown (C16); the chat's own error row (SR-6.21) is the whole message."
+   },
+   {
+    "k": "error",
+    "o": "You are not allowed to preview this variant.",
+    "what": "Kiwi can't answer in this preview.",
+    "c": "denied",
+    "why": "Your account can't preview this variant.",
+    "fix": "Ask an administrator for access.",
+    "m": "You are not allowed to preview this variant.",
+    "f": "src/components/Chat/useChatLane.ts",
+    "t": "Compare mode: the lane's refused-permission message (C9)."
+   },
+   {
+    "k": "error",
+    "o": "Request failed ({status}).",
+    "what": "Kiwi couldn't answer in this preview.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "fix": "Try again in a moment.",
+    "m": "`Request failed (${response.status}).`",
+    "f": "src/components/Chat/useChatLane.ts",
+    "br": "http",
+    "t": "Compare mode: a status code stood in for words; it follows them as a support reference."
+   },
+   {
+    "k": "label",
+    "o": "{label} · {engine}",
+    "n": "{label} · {engine: display name}",
+    "m": "{variant.label} · {variant.config.engine}",
+    "f": "src/components/Chat/ChatCore.tsx",
+    "refs": "SF-30",
+    "r": "C6",
+    "t": "The variant picker shows the model by its display name from the one table (`DESIGN.md § Terminology › Model names`), never the raw id.",
+    "uses": "engine"
+   },
+   {
+    "k": "label",
+    "m": "label={variant.config.engine}",
+    "f": [
+     "src/components/Chat/ChatCore.tsx",
+     "src/components/Chat/ExperimentCompare.tsx"
+    ],
+    "refs": "SF-30",
+    "r": "C6",
+    "t": "The variant chips in the picker and over each compare column show the model by its display name from the one table, never the raw id.",
+    "lk": "engine"
+   },
+   {
+    "k": "aria",
+    "o": "Basic button group",
+    "n": "Code actions",
+    "m": "aria-label=\"Basic button group\"",
+    "f": "src/components/Chat/ChatMessages.tsx",
+    "r": "C15",
+    "t": "A group's name says what it is for; this is a library sample's name. The group holds Import code and Copy on a code block."
+   },
+   {
+    "k": "body",
+    "o": "This variant asked to act on the page. Page actions are disabled in compare mode — run it in the normal chat to try that.",
+    "n": "This variant asked to act on the page. Page actions are off in compare mode. Run it in the normal chat to try them.",
+    "m": "This variant asked to act on the page",
+    "f": "src/components/Chat/useChatLane.ts",
+    "r": "C5",
+    "t": "No em dash; one idea per sentence, each with its full stop."
+   },
+   {
+    "k": "label",
+    "lk": "experiment-status",
+    "m": "{experiment.status}",
+    "f": "src/components/Chat/ChatCore.tsx",
+    "r": "C6",
+    "t": "The experiment picker listed each experiment with its raw status."
+   },
+   {
+    "k": "aria",
+    "o": "working",
+    "n": "Still working",
+    "m": "aria-label=\"working\"",
+    "f": "src/components/Chat/AgentStepChain.tsx",
+    "r": "C15,C13",
+    "t": "An accessible name only: the three dots beside a running step draw no text, so there is nothing to give an ellipsis. The span takes `role=\"img\"` so that the name is exposed (an `aria-label` on a bare `span` is not announced). The dots say that the step is still going, not a bare lowercase word."
+   },
+   {
+    "k": "format",
+    "o": "Search Papers",
+    "n": "Search papers",
+    "m": ".map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())",
+    "f": "src/components/Chat/AgentStepChain.tsx",
+    "r": "C1,C6",
+    "t": "The step chain's label for a tool it has no words for (a tool step, `§ Voice and tone › Step labels`): the same rule and the same example as the tool pill's (SR-6.57), so one tool has one name in both places (C6). Title Case made of a code is not sentence case (C1)."
+   },
+   {
+    "k": "remove",
+    "o": "{dots}",
+    "n": "(removed)",
+    "m": "{dots}",
+    "f": "src/components/Loader/Loader.tsx",
+    "tq": [
+     ".",
+     "..",
+     "..."
+    ],
+    "r": "C13",
+    "t": "The tutor message's loader goes (companion v2, 2026-10-19): the status line replaces it in the same place, a tutor message's `typing` (`ChatMessages.tsx:377` and `:452`), in the toolbar's row and with its own words (the wait verbs CP.19 to CP.23, a step's words CP.25 to CP.30, \"Jotting it down…\" CP.24; `DESIGN.md § Companion`), so `Loader.tsx`'s dots and this word leave the message. The loader's six dot queries in `Loader.test.tsx` go with the component."
+   },
+   {
+    "k": "label",
+    "o": "Compare two variants side by side",
+    "n": "Compare 2 variants side by side",
+    "m": "Compare two variants side by side",
+    "f": "src/components/Chat/ChatCore.tsx",
+    "r": "C4",
+    "t": "Digits for numbers (C4). The label of the switch that puts the two columns next to each other."
+   },
+   {
+    "k": "aria",
+    "o": "Compare two variants",
+    "n": "Compare 2 variants",
+    "m": "Compare two variants",
+    "f": "src/components/Chat/ChatCore.tsx",
+    "r": "C4",
+    "t": "Digits for numbers (C4). The switch's own accessible name says what the label beside it says (C15)."
+   }
+  ]
+ },
+ {
+  "id": "SR-7",
+  "name": "Experiment Assistant",
+  "route": "(shared)",
+  "file": "src/pages/admin/experiments/ExperimentAssistant.tsx",
+  "kept": [
+   "Describe your experiment…",
+   "View last draft JSON",
+   "Hide last draft JSON"
+  ],
+  "rows": [
+   [
+    "open experiment assistant",
+    "Open experiment assistant",
+    "aria",
+    "SF-18",
+    "",
+    "aria-label=\"open experiment assistant\""
+   ],
+   [
+    "Experiment Assistant",
+    "Experiment assistant",
+    "heading",
+    "TD-31",
+    "",
+    "Experiment Assistant"
+   ],
+   [
+    "Describe it · I'll draft the config",
+    "Describe the experiment. The assistant drafts the setup for you to review.",
+    "helper",
+    "",
+    "No \"I\", no \"config\"; says who does what.",
+    "Describe it"
+   ],
+   [
+    "Describe the experiment you want — e.g. \"Two groups 50/50: control on openai with default prompts, treatment on qwen that never gives direct answers.\" I'll draft the config and open it for review.",
+    "Describe the experiment you want, for example: \"Two groups, 50/50. The control group uses ChatGPT with the default instructions. The treatment group uses Qwen and never gives direct answers.\" The assistant drafts the setup and opens it for your review.",
+    "empty",
+    "",
+    "Model and instruction names match the form (C6); no \"I\".",
+    "Describe the experiment you want"
+   ],
+   {
+    "k": "error",
+    "o": "⚠️ {e.message}",
+    "what": "The assistant couldn't draft that.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Try again.",
+    "m": "⚠️",
+    "t": "The error bubble began with an emoji and showed the raw message alone; it now follows C9 and C10. `{e.message}` becomes `{message}`.",
+    "br": "srv"
+   },
+   {
+    "k": "error",
+    "o": "The design assistant is unavailable — the server's chat model isn't configured. Set LLM_API_KEY (or QWEN_API_KEY) in the backend .env and restart, then try again.",
+    "what": "The assistant isn't available.",
+    "c": "server",
+    "why": "The server has no chat model set up.",
+    "fix": "Ask an administrator to set one up, then try again.",
+    "refs": "SF-12",
+    "t": "Developer instructions (an environment variable and a restart) removed from the interface; the cause and who can fix it stay.",
+    "m": "The design assistant is unavailable",
+    "f": "../kiwi/src/experiment/experiment.service.ts"
+   },
+   [
+    "resize experiment assistant",
+    "Resize experiment assistant",
+    "aria",
+    "",
+    "",
+    "aria-label=\"resize experiment assistant\""
+   ],
+   [
+    "",
+    "Close experiment assistant",
+    "aria",
+    "SF-18",
+    "The close icon had no accessible name.",
+    "CloseIcon"
+   ],
+   [
+    "",
+    "Send message",
+    "aria",
+    "SF-18",
+    "The send icon had no accessible name.",
+    "<Send sx"
+   ]
+  ]
+ }
+]

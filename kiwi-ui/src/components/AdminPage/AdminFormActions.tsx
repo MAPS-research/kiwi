@@ -1,12 +1,17 @@
 import type { BoxProps } from "@mui/material";
 import { Box } from "@mui/material";
-import { alpha } from "@mui/material/styles";
 
 export interface AdminFormActionsProps extends BoxProps {
   sticky?: boolean;
 }
 
-/** Responsive action row with one visual boundary and no card elevation. */
+/**
+ * The action row at the foot of an admin form panel: right-aligned from 600 px,
+ * stacked below it with the primary on top, over a --border-subtle rule. Even
+ * when it sticks to the bottom of the panel it is docked, not floating, so it
+ * casts no shadow: the rule is its only edge. Buttons keep the height of the
+ * region's density.
+ */
 const AdminFormActions = ({ children, sticky = false, sx, ...props }: AdminFormActionsProps) => (
   <Box
     {...props}
@@ -16,21 +21,15 @@ const AdminFormActions = ({ children, sticky = false, sx, ...props }: AdminFormA
         flexDirection: { xs: "column-reverse", sm: "row" },
         justifyContent: "flex-end",
         alignItems: { xs: "stretch", sm: "center" },
-        gap: 1.5,
-        px: { xs: 2, sm: 3 },
-        py: 2,
-        borderTop: 1,
-        borderColor: "divider",
+        gap: "var(--space-inline)",
+        px: { xs: "var(--space-4)", sm: "var(--space-5)" },
+        py: "var(--space-4)",
+        borderTop: "1px solid var(--border-subtle)",
         bgcolor: "background.paper",
         position: sticky ? "sticky" : "static",
         bottom: sticky ? 0 : "auto",
         zIndex: sticky ? 10 : "auto",
-        boxShadow: sticky
-          ? (theme) => `0 -8px 20px ${alpha(theme.palette.common.black, 0.06)}`
-          : "none",
-        "& > .MuiButton-root": {
-          minHeight: 44,
-        },
+        boxShadow: "none",
       },
       ...(Array.isArray(sx) ? sx : [sx]),
     ]}

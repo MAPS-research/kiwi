@@ -1,14 +1,15 @@
 /*
- * Montserrat — the single typeface for Kiwi UI.
+ * Montserrat: the face of the KiwiWordmark only (kiwi-ui/DESIGN.md, Type: the
+ * wordmark). The UI is Source Sans 3 (./source-sans-3.css).
  *
  * Self-hosted from the `@fontsource-variable/montserrat` npm package: the woff2
  * files below are resolved and emitted by Vite, so nothing is fetched from
  * fonts.googleapis.com / fonts.gstatic.com at runtime.
  *
  * The package declares the family as 'Montserrat Variable'; we re-declare it as
- * plain 'Montserrat' so every font stack in the app is literally
- * `'Montserrat', sans-serif`. One variable file per subset covers weights
- * 100-900, which includes the 300/400/500/600/700 the UI uses.
+ * plain 'Montserrat', the name the --font-wordmark token uses. One variable file
+ * per subset covers weights 100-900, which includes the 800 italic of the
+ * wordmark.
  *
  * Generated from the package stylesheets. To refresh after a package upgrade,
  * copy `index.css` + `wght-italic.css`, rename the family, and point `src` at

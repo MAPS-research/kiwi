@@ -89,6 +89,7 @@ import {
   AdminPage,
   AdminPageHeader,
 } from "../../components/AdminPage/index.ts";
+import StatusChip from "../../components/StatusChip/StatusChip.tsx";
 interface RegistrationResult {
   email: string;
   password: string;
@@ -1004,7 +1005,7 @@ const UserManagement: React.FC = () => {
                       alignItems: "flex-start",
                       mb: 2.5
                     }}>
-                    <PlaylistAddIcon sx={{ color: "primary.main", mt: 0.25 }} aria-hidden="true" />
+                    <PlaylistAddIcon sx={{ color: "var(--icon-accent)", mt: 0.25 }} aria-hidden="true" />
                     <Box>
                       <Typography component="h3" variant="subtitle1" sx={{ fontWeight: 600 }}>Grant product access</Typography>
                       <Typography variant="body2" sx={{
@@ -1040,7 +1041,7 @@ const UserManagement: React.FC = () => {
                       alignItems: "flex-start",
                       mb: 2.5
                     }}>
-                    <PersonAddIcon sx={{ color: "primary.main", mt: 0.25 }} aria-hidden="true" />
+                    <PersonAddIcon sx={{ color: "var(--icon-accent)", mt: 0.25 }} aria-hidden="true" />
                     <Box>
                       <Typography component="h3" variant="subtitle1" sx={{ fontWeight: 600 }}>Create password accounts</Typography>
                       <Typography variant="body2" sx={{
@@ -1100,7 +1101,7 @@ const UserManagement: React.FC = () => {
                             Clear
                           </Button>
                         </Stack>
-                        <TableContainer component={Paper} elevation={0} variant="outlined" sx={{ maxHeight: 260, display: { xs: "none", md: "block" } }}>
+                        <TableContainer component={Paper} elevation={0} variant="outlined" sx={{ maxHeight: 260, display: { xs: "none", md: "block" }, "& .MuiTableCell-stickyHeader": { backgroundColor: "var(--surface)" } }}>
                           <Table size="small" stickyHeader aria-label="Registration results">
                             <TableHead>
                               <TableRow>
@@ -1115,7 +1116,7 @@ const UserManagement: React.FC = () => {
                               {registrationResults.map((result) => (
                                 <TableRow key={`${result.email}-${result.classId}`}>
                                   <TableCell>{result.email}</TableCell>
-                                  <TableCell><Box component="span" sx={{ fontFamily: "monospace", fontSize: "0.85rem" }}>{result.password}</Box></TableCell>
+                                  <TableCell><Box component="span" sx={{ fontFamily: "var(--type-code-family)", fontSize: "var(--type-code-size)" }}>{result.password}</Box></TableCell>
                                   <TableCell>{result.classId}</TableCell>
                                   <TableCell><Chip label={result.status} color={result.status === "success" ? "success" : result.status === "error" ? "error" : "default"} size="small" /></TableCell>
                                   <TableCell>
@@ -1125,7 +1126,7 @@ const UserManagement: React.FC = () => {
                                           variant="body2"
                                           noWrap
                                           sx={{
-                                            color: "error.main",
+                                            color: "var(--status-error-text)",
                                             maxWidth: 160
                                           }}>{result.error}</Typography>
                                       </Tooltip>
@@ -1138,7 +1139,7 @@ const UserManagement: React.FC = () => {
                         </TableContainer>
                         <Stack spacing={1} sx={{ display: { xs: "flex", md: "none" } }}>
                           {registrationResults.map((result) => (
-                            <Box key={`${result.email}-${result.classId}`} sx={{ p: 1.5, border: 1, borderColor: "divider", borderRadius: 2 }}>
+                            <Box key={`${result.email}-${result.classId}`} sx={{ p: 1.5, border: "1px solid var(--border)", borderRadius: "var(--radius-sheet)" }}>
                               <Stack
                                 direction="row"
                                 sx={{
@@ -1156,10 +1157,10 @@ const UserManagement: React.FC = () => {
                                   display: "block",
                                   mt: 1
                                 }}>
-                                Class {result.classId} · Password <Box component="span" sx={{ fontFamily: "monospace" }}>{result.password}</Box>
+                                Class {result.classId} · Password <Box component="span" sx={{ fontFamily: "var(--type-code-family)" }}>{result.password}</Box>
                               </Typography>
                               {result.error && <Typography variant="caption" role="alert" sx={{
-                                color: "error.main"
+                                color: "var(--status-error-text)"
                               }}>{result.error}</Typography>}
                             </Box>
                           ))}
@@ -1298,7 +1299,7 @@ const UserManagement: React.FC = () => {
                     ) : (
                       <Stack spacing={1}>
                         {classAssignments.map((assignment) => (
-                          <Box key={assignment.userId} sx={{ p: 1.5, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 1, border: 1, borderColor: "divider", borderRadius: 2 }}>
+                          <Box key={assignment.userId} sx={{ p: 1.5, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 1, border: "1px solid var(--border)", borderRadius: "var(--radius-sheet)" }}>
                             <Typography variant="body2" sx={{ flexGrow: 1, overflowWrap: "anywhere" }}>{assignment.email}</Typography>
                             {assignment.permissions?.canManageMaterials && <Chip label="Manage Materials" size="small" />}
                             {assignment.permissions?.canViewAnalytics && <Chip label="View Analytics" size="small" />}
@@ -1370,9 +1371,9 @@ const UserManagement: React.FC = () => {
                   justifySelf: "start",
                   minHeight: 36,
                   px: 1.25,
-                  color: "text.primary",
-                  bgcolor: "action.selected",
-                  borderRadius: 1
+                  color: "var(--selection-text)",
+                  bgcolor: "var(--selection-bg)",
+                  borderRadius: "var(--radius-control)"
                 }}>
                 <TableViewIcon aria-hidden="true" fontSize="small" />
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>Table</Typography>
@@ -1397,7 +1398,7 @@ const UserManagement: React.FC = () => {
                 sx={{
                   gridArea: "search",
                   width: "100%",
-                  "& .MuiOutlinedInput-root": { minHeight: 36, borderRadius: 1 },
+                  "& .MuiOutlinedInput-root": { minHeight: 36 },
                 }} />
               <Button
                 variant="outlined"
@@ -1432,11 +1433,11 @@ const UserManagement: React.FC = () => {
                     <Stack direction="row" spacing={0.75} sx={{
                       alignItems: "center"
                     }}>
-                      <AccessFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "text.secondary" }} />
+                      <AccessFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "var(--icon-default)" }} />
                       <Typography variant="body2" sx={{ fontWeight: 600 }}>{accessFilterLabel}</Typography>
                     </Stack>
                   )}
-                  sx={{ minHeight: { xs: 44, sm: 36 }, borderRadius: 999, "& .MuiSelect-select": { py: 0.75 } }}
+                  sx={{ minHeight: { xs: 44, sm: 36 }, "& .MuiSelect-select": { py: 0.75 } }}
                 >
                 <MenuItem value="all">All access</MenuItem>
                 <MenuItem value="enabled">Enabled</MenuItem>
@@ -1452,11 +1453,11 @@ const UserManagement: React.FC = () => {
                     <Stack direction="row" spacing={0.75} sx={{
                       alignItems: "center"
                     }}>
-                      <RoleFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "text.secondary" }} />
+                      <RoleFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "var(--icon-default)" }} />
                       <Typography variant="body2" sx={{ fontWeight: 600 }}>{roleFilterLabel}</Typography>
                     </Stack>
                   )}
-                  sx={{ minHeight: { xs: 44, sm: 36 }, borderRadius: 999, "& .MuiSelect-select": { py: 0.75 } }}
+                  sx={{ minHeight: { xs: 44, sm: 36 }, "& .MuiSelect-select": { py: 0.75 } }}
                 >
                 <MenuItem value="all">All roles</MenuItem>
                 <MenuItem value="user">User</MenuItem>
@@ -1473,11 +1474,11 @@ const UserManagement: React.FC = () => {
                     <Stack direction="row" spacing={0.75} sx={{
                       alignItems: "center"
                     }}>
-                      <StatusFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "text.secondary" }} />
+                      <StatusFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "var(--icon-default)" }} />
                       <Typography variant="body2" sx={{ fontWeight: 600 }}>{accountStatusFilterLabel}</Typography>
                     </Stack>
                   )}
-                  sx={{ minHeight: { xs: 44, sm: 36 }, borderRadius: 999, "& .MuiSelect-select": { py: 0.75 } }}
+                  sx={{ minHeight: { xs: 44, sm: 36 }, "& .MuiSelect-select": { py: 0.75 } }}
                 >
                 <MenuItem value="all">All statuses</MenuItem>
                 <MenuItem value="registered">Registered</MenuItem>
@@ -1512,7 +1513,7 @@ const UserManagement: React.FC = () => {
               </Box>
             ) : paginatedUsers.length === 0 ? (
               <Box sx={{ px: 2, py: 6, textAlign: "center" }}>
-                <GroupIcon sx={{ color: "text.disabled", fontSize: 36 }} aria-hidden="true" />
+                <GroupIcon sx={{ color: "var(--icon-default)", fontSize: 36 }} aria-hidden="true" />
                 <Typography component="p" variant="h6" sx={{ mt: 1 }}>No accounts found</Typography>
                 <Typography
                   variant="body2"
@@ -1552,7 +1553,7 @@ const UserManagement: React.FC = () => {
                         <Stack direction="row" spacing={0.75} sx={{
                           alignItems: "center"
                         }}>
-                          <AccountFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "text.disabled" }} />
+                          <AccountFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "var(--icon-default)" }} />
                           <span>Account</span>
                         </Stack>
                       </TableSortLabel>
@@ -1567,7 +1568,7 @@ const UserManagement: React.FC = () => {
                         <Stack direction="row" spacing={0.75} sx={{
                           alignItems: "center"
                         }}>
-                          <AccessFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "text.disabled" }} />
+                          <AccessFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "var(--icon-default)" }} />
                           <span>Access</span>
                         </Stack>
                       </TableSortLabel>
@@ -1580,7 +1581,7 @@ const UserManagement: React.FC = () => {
                           alignItems: "center",
                           color: "text.secondary"
                         }}>
-                        <RoleFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "text.disabled" }} />
+                        <RoleFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "var(--icon-default)" }} />
                         <Typography variant="body2" sx={{ fontWeight: 600 }}>Role</Typography>
                       </Stack>
                     </TableCell>
@@ -1592,7 +1593,7 @@ const UserManagement: React.FC = () => {
                           alignItems: "center",
                           color: "text.secondary"
                         }}>
-                        <StatusFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "text.disabled" }} />
+                        <StatusFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "var(--icon-default)" }} />
                         <Typography variant="body2" sx={{ fontWeight: 600 }}>Account status</Typography>
                       </Stack>
                     </TableCell>
@@ -1605,7 +1606,7 @@ const UserManagement: React.FC = () => {
                           justifyContent: "flex-end",
                           color: "text.secondary"
                         }}>
-                        <ActionFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "text.disabled" }} />
+                        <ActionFieldIcon aria-hidden="true" sx={{ fontSize: 17, color: "var(--icon-default)" }} />
                         <Typography variant="body2" sx={{ fontWeight: 600 }}>Account action</Typography>
                       </Stack>
                     </TableCell>
@@ -1642,14 +1643,13 @@ const UserManagement: React.FC = () => {
                                 handleWhitelistStatusToggle(user.id, newStatus);
                               }}
                               disabled={isProcessing}
-                              color="success"
                               slotProps={{
                                 input: { "aria-label": `${isEnabled ? "Disable" : "Enable"} access for ${user.email}` }
                               }}
                             />
                             <Typography
                               variant="body2"
-                              color={isEnabled ? 'success.dark' : 'text.secondary'}
+                              color={isEnabled ? 'text.primary' : 'text.secondary'}
                               sx={{ fontWeight: isEnabled ? 600 : 400 }}
                             >
                               {isEnabled ? 'Enabled' : 'Disabled'}
@@ -1668,15 +1668,15 @@ const UserManagement: React.FC = () => {
                               inputProps={{ "aria-label": `Role for ${user.email}` }}
                               sx={{
                                 minHeight: 34,
-                                borderRadius: 1,
+                                borderRadius: "var(--radius-control)",
                                 "&:hover": { bgcolor: "action.hover" },
+                                // A role is a category: the text colour, never a status hue.
                                 '& .MuiSelect-select': {
                                   py: 0.75,
                                   px: 1,
                                   fontSize: '0.875rem',
-                                  fontWeight: 'medium',
-                                  color: userRoles[user.email] === 'admin' ? 'warning.main' :
-                                    userRoles[user.email] === 'instructor' ? 'info.main' : 'text.primary'
+                                  fontWeight: 600,
+                                  color: 'text.primary'
                                 }
                               }}
                             >
@@ -1688,26 +1688,12 @@ const UserManagement: React.FC = () => {
                         </TableCell>
 
                         <TableCell sx={{ py: 1 }}>
-                          <Box
-                            sx={{
-                              display: "inline-flex",
-                              alignItems: "center",
-                              gap: 0.75,
-                              px: 1,
-                              py: 0.5,
-                              border: 1,
-                              borderColor: "divider",
-                              borderRadius: 1,
-                            }}
-                          >
-                            <Box
-                              aria-hidden="true"
-                              sx={{ width: 7, height: 7, borderRadius: "50%", bgcolor: user.isPending ? "warning.main" : "success.main" }}
-                            />
-                            <Typography variant="caption" sx={{ fontWeight: 600, whiteSpace: "nowrap" }}>
-                              {user.isPending ? "Pending" : "Registered"}
-                            </Typography>
-                          </Box>
+                          {/* A status is the status chip with its shape icon, never a bare dot. */}
+                          <StatusChip
+                            size="small"
+                            kind={user.isPending ? "warning" : "success"}
+                            label={user.isPending ? "Pending" : "Registered"}
+                          />
                         </TableCell>
 
                         <TableCell align="right" sx={{ py: 1, pr: 2, whiteSpace: "nowrap" }}>
@@ -1774,8 +1760,8 @@ const UserManagement: React.FC = () => {
                             flexWrap: "wrap",
                             mt: 0.75
                           }}>
-                          <Chip size="small" variant="outlined" label={user.oauth ? "OAuth" : "Password"} />
-                          <Chip size="small" label={user.isPending ? "Pending" : "Registered"} color={user.isPending ? "warning" : "success"} />
+                          <Chip size="small" label={user.oauth ? "OAuth" : "Password"} />
+                          <StatusChip size="small" kind={user.isPending ? "warning" : "success"} label={user.isPending ? "Pending" : "Registered"} />
                         </Stack>
                       </Box>
                       <Stack
@@ -1801,13 +1787,12 @@ const UserManagement: React.FC = () => {
                             checked={isEnabled}
                             onChange={(event) => handleWhitelistStatusToggle(user.id, event.target.checked ? "enabled" : "disabled")}
                             disabled={isProcessing}
-                            color="success"
                             slotProps={{
                               input: { "aria-label": `${isEnabled ? "Disable" : "Enable"} access for ${user.email}` }
                             }}
                           />
                         </Box>
-                        <Typography variant="caption" color={isEnabled ? "success.dark" : "text.secondary"}>{isEnabled ? "Enabled" : "Disabled"}</Typography>
+                        <Typography variant="caption" color={isEnabled ? "text.primary" : "text.secondary"}>{isEnabled ? "Enabled" : "Disabled"}</Typography>
                       </Stack>
                     </Stack>
 

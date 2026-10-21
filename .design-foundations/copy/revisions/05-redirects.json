@@ -1,0 +1,46 @@
+[
+ {
+  "id": "R-1",
+  "name": "Admin index redirect",
+  "route": "/admin",
+  "rows": [],
+  "noChange": "The route renders nothing; it redirects to Classes (A-01), whose copy is revised there."
+ },
+ {
+  "id": "R-2",
+  "name": "Batch-upload redirect",
+  "route": "/admin/class/:classID/batch-upload",
+  "rows": [],
+  "noChange": "The route renders nothing; it redirects to Materials (A-14), whose copy is revised there."
+ },
+ {
+  "id": "R-3",
+  "name": "Sign-out",
+  "route": "/logout",
+  "file": "src/pages/Logout.tsx",
+  "rows": [
+   [
+    "Logout",
+    "Signing you out…",
+    "status",
+    "SF-02",
+    "The bare word \"Logout\" showed for a moment; this says what is happening, with the one verb pair (C6, C13).",
+    "<div>Logout</div>"
+   ]
+  ]
+ },
+ {
+  "id": "R-4",
+  "name": "Consent redirect",
+  "route": "/consent",
+  "rows": [],
+  "noChange": "Without a consent form the route renders nothing and redirects to the course list (S-01); with one it is page S-09, whose copy is revised there."
+ },
+ {
+  "id": "R-5",
+  "name": "Direct-load app redirect",
+  "route": "/:classID/app/:appSlug",
+  "rows": [],
+  "noChange": "An effect of the class layout, not a page: nothing is drawn, and the student lands on Materials (S-02). The defect is B6 (a routing fix outside Stage 1), not wording."
+ }
+]

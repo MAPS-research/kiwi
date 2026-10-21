@@ -84,16 +84,17 @@ export const MCPTestResultDialog: React.FC<MCPTestResultDialogProps> = ({
                 gap: 2,
                 mb: 3,
                 p: 2,
+                // A status surface with its shape icon, never a coloured edge.
                 bgcolor: testResult.success
-                  ? "success.light"
-                  : "error.light",
-                borderRadius: 1,
+                  ? "var(--status-success-surface)"
+                  : "var(--status-error-surface)",
+                borderRadius: "var(--radius-control)",
               }}
             >
               {testResult.success ? (
-                <SuccessIcon sx={{ fontSize: 40, color: "success.dark" }} />
+                <SuccessIcon sx={{ fontSize: 40, color: "var(--status-success-text)" }} />
               ) : (
-                <ErrorIcon sx={{ fontSize: 40, color: "error.dark" }} />
+                <ErrorIcon sx={{ fontSize: 40, color: "var(--status-error-text)" }} />
               )}
               <Box>
                 <Typography variant="h6">
@@ -135,7 +136,7 @@ export const MCPTestResultDialog: React.FC<MCPTestResultDialogProps> = ({
                           primary={
                             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                               <Typography variant="body1" sx={{
-                                fontWeight: 500
+                                fontWeight: 600
                               }}>
                                 {tool.name}
                               </Typography>
@@ -158,7 +159,7 @@ export const MCPTestResultDialog: React.FC<MCPTestResultDialogProps> = ({
                       {tool.inputSchema && (
                         <Collapse in={expandedTool === tool.name}>
                           <Divider />
-                          <Box sx={{ p: 2, bgcolor: "grey.50" }}>
+                          <Box sx={{ p: 2, bgcolor: "action.hover" }}>
                             <Typography
                               variant="caption"
                               gutterBottom
@@ -172,8 +173,8 @@ export const MCPTestResultDialog: React.FC<MCPTestResultDialogProps> = ({
                               component="pre"
                               sx={{
                                 p: 1,
-                                bgcolor: "grey.100",
-                                borderRadius: 1,
+                                bgcolor: "action.hover",
+                                borderRadius: "var(--radius-small)",
                                 overflow: "auto",
                                 fontSize: "0.75rem",
                                 m: 0,
@@ -192,7 +193,7 @@ export const MCPTestResultDialog: React.FC<MCPTestResultDialogProps> = ({
 
             {/* No tools message */}
             {testResult.success && tools.length === 0 && (
-              <Paper sx={{ p: 3, textAlign: "center", bgcolor: "grey.50" }}>
+              <Paper sx={{ p: 3, textAlign: "center", bgcolor: "action.hover" }}>
                 <Typography variant="body2" sx={{
                   color: "text.secondary"
                 }}>
@@ -205,14 +206,14 @@ export const MCPTestResultDialog: React.FC<MCPTestResultDialogProps> = ({
 
             {/* Error details */}
             {!testResult.success && testResult.error && (
-              <Paper sx={{ p: 2, bgcolor: "error.light", mt: 2 }}>
+              <Paper sx={{ p: 2, bgcolor: "var(--status-error-surface)", color: "var(--status-error-text)", mt: 2 }}>
                 <Typography variant="subtitle2" gutterBottom>
                   Error Details
                 </Typography>
                 <Typography
                   variant="body2"
                   sx={{
-                    fontFamily: "monospace",
+                    fontFamily: "var(--font-mono)",
                     whiteSpace: "pre-wrap",
                     wordBreak: "break-all",
                   }}

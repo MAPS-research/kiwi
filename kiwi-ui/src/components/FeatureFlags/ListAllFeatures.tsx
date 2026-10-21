@@ -117,7 +117,7 @@ const ListAllFeatures: React.FC<ListAllFeaturesProps> = ({ refreshKey = 0 }) => 
       flex: 1,
       minWidth: 170,
       renderCell: ({ row }) => <Typography variant="body2" sx={{
-        fontWeight: 500
+        fontWeight: 600
       }}>{row.featureName}</Typography>,
     },
     {
@@ -178,7 +178,7 @@ const ListAllFeatures: React.FC<ListAllFeaturesProps> = ({ refreshKey = 0 }) => 
 
   return (
     <>
-      <Card variant="outlined" sx={{ borderRadius: 2 }}>
+      <Card variant="outlined">
         <CardContent sx={{ p: 0, "&:last-child": { pb: 0 } }}>
           <Stack
             direction={{ xs: "column", sm: "row" }}

@@ -4,10 +4,8 @@ import {
     Bar,
     XAxis,
     YAxis,
-    CartesianGrid,
     Tooltip,
     ResponsiveContainer,
-    Cell
 } from "recharts";
 import {
     Box,
@@ -15,16 +13,14 @@ import {
     Card,
     CardContent,
     Skeleton,
-    useTheme
 } from '@mui/material';
 import { SessionActivity } from './interface.tsx';
 import { AnalyticsChartTooltip } from './AnalyticsChartTooltip.tsx';
-import { useAnalyticsChartAnimation } from './chartAnimation.ts';
+import { CHART_MAX_BAR_SIZE, useChartTokens } from './chartTokens.ts';
 
 interface ActionData {
     action: string;
     count: number;
-    color: string;
 }
 
 interface StandaloneTopActionsProps {
@@ -33,10 +29,7 @@ interface StandaloneTopActionsProps {
 }
 
 // Generate real data for top actions from SessionActivity[] (see CodeRelated.tsx and TopActions.tsx)
-const generateRealActionData = (
-    sessions: SessionActivity[],
-    colorMap: Record<string, string>,
-): ActionData[] => {
+const generateRealActionData = (sessions: SessionActivity[]): ActionData[] => {
     const actionCounts: { [key: string]: number } = {};
 
     // Initialize counters
@@ -82,7 +75,6 @@ const generateRealActionData = (
     const data: ActionData[] = orderedKeys.map(action => ({
         action,
         count: actionCounts[action] ?? 0,
-        color: colorMap[action]
     }));
 
     // Sort by predefined order (no dynamic sorting to keep zero entries visible in position)
@@ -93,34 +85,26 @@ export const StandaloneTopActions: React.FC<StandaloneTopActionsProps> = ({
     realDataSessions = [],
     loading = false
 }) => {
-    const theme = useTheme();
-    const chartAnimation = useAnalyticsChartAnimation();
-    const chartColors = theme.palette.chart;
-    const actionColors = useMemo(() => ({
-        'Chat Action': chartColors.series1,
-        'PDF Action': chartColors.series2,
-        'Run Code': chartColors.series3,
-        'Export Code and Output': chartColors.series4,
-        'Other Code Actions': chartColors.series5,
-        'Other Actions': chartColors.series5,
-    }), [chartColors]);
+    // One series in one colour: the category is on the axis, never in the hue
+    // (DESIGN.md § Chart tokens › Colour rules).
+    const chart = useChartTokens();
 
     // Generate chart data from real data
     const chartData = useMemo(() => {
         if (realDataSessions.length > 0) {
-            return generateRealActionData(realDataSessions, actionColors);
+            return generateRealActionData(realDataSessions);
         } else {
             // Return zeroed baseline when no sessions available
             return [
-                { action: 'Chat Action', count: 0, color: actionColors['Chat Action'] },
-                { action: 'PDF Action', count: 0, color: actionColors['PDF Action'] },
-                { action: 'Run Code', count: 0, color: actionColors['Run Code'] },
-                { action: 'Export Code and Output', count: 0, color: actionColors['Export Code and Output'] },
-                { action: 'Other Code Actions', count: 0, color: actionColors['Other Code Actions'] },
-                { action: 'Other Actions', count: 0, color: actionColors['Other Actions'] },
+                { action: 'Chat Action', count: 0 },
+                { action: 'PDF Action', count: 0 },
+                { action: 'Run Code', count: 0 },
+                { action: 'Export Code and Output', count: 0 },
+                { action: 'Other Code Actions', count: 0 },
+                { action: 'Other Actions', count: 0 },
             ];
         }
-    }, [actionColors, realDataSessions]);
+    }, [realDataSessions]);
 
     // Custom tooltip
     const CustomTooltip = ({ active, payload, label }: any) => {
@@ -141,7 +125,6 @@ export const StandaloneTopActions: React.FC<StandaloneTopActionsProps> = ({
                 <AnalyticsChartTooltip
                     title={`Action: ${fullName}`}
                     value={`Count: ${payload[0].value}`}
-                    valueColor={payload[0].payload.color}
                 />
             );
         }
@@ -153,11 +136,6 @@ export const StandaloneTopActions: React.FC<StandaloneTopActionsProps> = ({
             width: '100%',
             minHeight: 340,
             height: '100%',
-            backgroundColor: "background.paper",
-            boxShadow: "none",
-            borderRadius: 2,
-            border: "1px solid",
-            borderColor: "divider"
         }}>
             <CardContent sx={{
                 p: 2.5,
@@ -188,7 +166,7 @@ export const StandaloneTopActions: React.FC<StandaloneTopActionsProps> = ({
                 {/* Chart or Loading */}
                 {loading ? (
                     <Box sx={{ flex: 1, minHeight: 230 }}>
-                        <Skeleton variant="rounded" width="100%" height="100%" sx={{ borderRadius: 1.5 }} />
+                        <Skeleton variant="rounded" width="100%" height="100%" />
                     </Box>
                 ) : (
                     <Box sx={{ flex: 1, minHeight: 230, width: '100%' }}>
@@ -197,22 +175,25 @@ export const StandaloneTopActions: React.FC<StandaloneTopActionsProps> = ({
                             data={chartData}
                             layout="vertical"
                             margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+                            accessibilityLayer={false}
                         >
-                            <CartesianGrid horizontal={false} strokeDasharray="3 3" stroke={theme.palette.divider} />
+                            {/* A horizontal bar chart draws the zero baseline and no vertical gridlines. */}
                             <XAxis
                                 type="number"
                                 axisLine={false}
                                 tickLine={false}
-                                tick={{ fontSize: 12, fill: theme.palette.text.secondary }}
+                                tick={chart.tick}
                                 height={20}
                                 tickMargin={4}
+                                allowDecimals={false}
+                                domain={[0, 'auto']}
                             />
                             <YAxis
                                 type="category"
                                 dataKey="action"
-                                axisLine={false}
+                                axisLine={{ stroke: chart.baseline }}
                                 tickLine={false}
-                                tick={{ fontSize: 11, fill: theme.palette.text.secondary }}
+                                tick={chart.tick}
                                 width={72}
                                 tickMargin={4}
                                 tickFormatter={(value: string) => ({
@@ -224,16 +205,19 @@ export const StandaloneTopActions: React.FC<StandaloneTopActionsProps> = ({
                                     'Other Actions': 'Other',
                                 } as Record<string, string>)[value] || value}
                             />
-                            <Tooltip content={<CustomTooltip />} offset={12} />
+                            <Tooltip
+                                content={<CustomTooltip />}
+                                offset={12}
+                                isAnimationActive={false}
+                                cursor={{ fill: chart.cursorFill }}
+                            />
+                            {/* Square at both ends, at most 24 px thick, no entrance animation. */}
                             <Bar
-                                {...chartAnimation}
+                                isAnimationActive={false}
                                 dataKey="count"
-                                radius={[0, 4, 4, 0]}
-                            >
-                                {chartData.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={entry.color} />
-                                ))}
-                            </Bar>
+                                fill={chart.series1}
+                                maxBarSize={CHART_MAX_BAR_SIZE}
+                            />
                         </BarChart>
                     </ResponsiveContainer>
                     </Box>

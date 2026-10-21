@@ -32,3 +32,13 @@ describe('LogoBox', () => {
     expect(box).toHaveClass('MuiBox-root');
   });
 });
+describe('LogoBox look', () => {
+  it('shows the logo as is: no crop and no shadow', () => {
+    const { container } = render(<LogoBox />);
+    const box = container.firstChild as HTMLElement;
+
+    expect(getComputedStyle(box).boxShadow).toBe('');
+    expect(getComputedStyle(box).overflow).not.toBe('hidden');
+    expect(getComputedStyle(box).borderRadius).toBe('');
+  });
+});

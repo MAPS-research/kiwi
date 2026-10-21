@@ -172,7 +172,7 @@ export const AddNewClassDialog: React.FC<AddNewClassDialogProps> = ({
           pr: 1,
         }}
       >
-        <Typography component="span" variant="h6" sx={{ fontWeight: 700 }}>
+        <Typography component="span" variant="h6">
           {CREATE_NEW_CLASS_LABEL}
         </Typography>
         <IconButton

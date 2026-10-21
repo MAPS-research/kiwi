@@ -1,50 +1,30 @@
-import Loader from "../Loader/Loader.tsx";
 import { Feedback } from "../Feedback/Feedback.tsx";
-import {
-  ReactNode,
-  RefObject,
-  createElement,
-  useCallback,
-  useContext,
-  useEffect,
-} from "react";
+import { ReactNode, RefObject, useCallback, useContext, useEffect } from "react";
 import Markdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import { BlockMath, InlineMath } from "react-katex";
 
-import {
-  Avatar,
-  Box,
-  Button,
-  ButtonGroup,
-  Card,
-  CardHeader,
-  Grid,
-  Paper,
-  Stack,
-  // Tooltip,
-  Typography,
-  // useTheme,
-} from "@mui/material";
+import { Box, Button, ButtonBase, IconButton, Tooltip, Typography } from "@mui/material";
 import CopyButton from "../CopyButton/CopyButton.tsx";
-import { renderToString } from "react-dom/server";
 import {
   ExitToApp as ExitToAppIcon,
-  Android as AndroidIcon,
-  Replay as ReplayIcon,
-  Person as PersonIcon,
-  SmartToy as SmartToyIcon } from "@mui/icons-material";
-import { useAuth, User } from "../../auth/AuthContext.tsx";
+  HighlightOffOutlined as ErrorIcon,
+} from "@mui/icons-material";
 import { ChatContext } from "../../pages/ClassLayout.tsx";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { toggleCodeView } from "../../redux/codePanelSlice.ts";
 import apiClient from "../../utils/api.ts";
-import ToolStatusIndicator from "./ToolStatusIndicator.tsx";
-import AgentStepChain, { agentStepOf, type AgentStep } from "./AgentStepChain.tsx";
+import { kiwiPrism } from "../../theme/codeThemes.ts";
+import { useColorMode } from "../../theme/useColorMode.ts";
+import KiwiLogo from "../Brand/KiwiLogo.tsx";
+import ToolStatusIndicator, { getDisplayName } from "./ToolStatusIndicator.tsx";
+import AgentStepChain, { agentStepOf, stepLabel, type AgentStep } from "./AgentStepChain.tsx";
+import KiwiStatusLine from "./statusLine/KiwiStatusLine.tsx";
+import { STREAM_LABEL, stepLabelFor, waitVerbFor } from "./statusLine/words.ts";
+import { toolbarButtonSx } from "./toolbarButton.ts";
 
 export interface ChatMessage {
   isAi: boolean;
@@ -75,66 +55,98 @@ export interface ChatMessage {
   agentSteps?: AgentStep[];
 }
 
+/**
+ * The status line of the turn in flight (the companion v2 decision): it sits in
+ * the newest tutor row's toolbar row from the send until the answer is complete
+ * and its flight has ended, when ChatCore drops it.
+ */
+export interface StatusLineState {
+  /** The turn the line belongs to. */
+  turn: number;
+  /** The turn's clock origin, `performance.now()` at the send. */
+  startedAt: number;
+  /** The n-th answer of this chat (1-based), which picks the wait verb. */
+  answerNumber: number;
+  /** The answer completed: the line flies, fades and leaves. */
+  complete: boolean;
+}
+
+const WELCOME = "Ask about your class materials or your code.";
+
+/** Whether more than half of a block's non-space characters are CJK, so it reads at the CJK leading and upright emphasis. */
+const CJK_CHARACTER = /[⺀-⿟　-ヿ㐀-䶿一-鿿가-힯豈-﫿＀-￯]/g;
+export const isCjkDominant = (text: string): boolean => {
+  const characters = text.replace(/\s/g, "");
+  if (!characters) return false;
+  return (characters.match(CJK_CHARACTER)?.length ?? 0) / characters.length > 0.5;
+};
+
+type HastNode = { type?: string; value?: string; tagName?: string; children?: HastNode[]; properties?: { className?: unknown } };
+const hastText = (node?: HastNode): string =>
+  !node ? "" : node.type === "text" ? node.value ?? "" : (node.children ?? []).map(hastText).join("");
+
 interface ImportCodeButtonProps {
-  children: ReactNode | ReactNode[];
+  code: string;
   importCode: (code: string) => void;
 }
 
-const ImportCodeButton: React.FC<ImportCodeButtonProps> = ({
-  children,
-  importCode,
-}) => {
+const ImportCodeButton: React.FC<ImportCodeButtonProps> = ({ code, importCode }) => {
   const dispatch = useDispatch();
 
-  const handleImport = useCallback(
-    (reactChildren: ReactNode | ReactNode[]) => {
-      const textString = renderToString(
-        createElement("div", null, reactChildren)
-      );
-      const tempElement = document.createElement("div");
-      tempElement.innerHTML = textString;
-      const unencodedText = tempElement.textContent || "";
-
-      importCode(unencodedText);
-      dispatch(toggleCodeView()); // Call the toggle function to open the code panel
-    },
-    [importCode, dispatch]
-  );
+  const handleImport = useCallback(() => {
+    importCode(code);
+    dispatch(toggleCodeView()); // Call the toggle function to open the code panel
+  }, [code, importCode, dispatch]);
 
   return (
-    <Button
-      variant="contained"
-      startIcon={<ExitToAppIcon />}
-      onClick={() => handleImport(children)}
-    >
-      Import to Scratchpad
-    </Button>
+    <Tooltip title="Import to scratchpad">
+      <IconButton aria-label="Import to scratchpad" onClick={handleImport} sx={toolbarButtonSx}>
+        <ExitToAppIcon />
+      </IconButton>
+    </Tooltip>
   );
 };
 
-// const RAGIcon = () => (
-//   <Stack
-//     direction="row"
-//     alignItems="center"
-//     justifyContent="center"
-//     position="relative"
-//   >
-//     <CropFreeIcon />
-//     <ShortTextIcon sx={{ fontSize: "0.9em", position: "absolute" }} />
-//   </Stack>
-// );
-
-// const CodeInterpreterIcon = () => (
-//     <Stack
-//       direction="row"
-//       alignItems="center"
-//       justifyContent="center"
-//       position="relative"
-//     >
-//       <CropFreeIcon />
-//     <CodeIcon sx={{ fontSize: "0.9em", position: "absolute" }} />
-//     </Stack>
-//   );
+/** A code block: a 2 px rule on its left, no box, with its two actions floated at the top right. */
+const CodeBlock: React.FC<{ code: string; language: string; importCode: (code: string) => void }> = ({
+  code,
+  language,
+  importCode,
+}) => {
+  const colorMode = useColorMode();
+  return (
+    <Box
+      className="kiwi-code-block"
+      sx={{
+        borderLeft: "var(--tutor-message-code-rule-width) solid var(--tutor-message-code-rule)",
+        pl: "var(--space-3)",
+        color: "var(--tutor-message-code)",
+      }}
+    >
+      <Box role="group" aria-label="Code actions" sx={{ float: "right", display: "flex", gap: "2px", ml: "var(--space-2)" }}>
+        <ImportCodeButton code={code} importCode={importCode} />
+        <CopyButton>{code}</CopyButton>
+      </Box>
+      <SyntaxHighlighter
+        language={language}
+        style={kiwiPrism(colorMode)}
+        PreTag="div"
+        wrapLongLines
+        customStyle={{ margin: 0, padding: 0, background: "transparent" }}
+        codeTagProps={{
+          style: {
+            fontFamily: "var(--font-mono)",
+            fontSize: "var(--type-code-size)",
+            lineHeight: "var(--type-code-leading)",
+            whiteSpace: "pre-wrap",
+          },
+        }}
+      >
+        {code}
+      </SyntaxHighlighter>
+    </Box>
+  );
+};
 
 // Extract tool name from content and return cleaned content
 const extractToolInfo = (
@@ -158,6 +170,37 @@ const extractToolInfo = (
   return { toolName: null, cleanedText: text };
 };
 
+/** The reading surface's prose rules: blocks 12 px apart, links underlined, inline code on its tonal step, bare display math. */
+const proseSx = {
+  overflowWrap: "anywhere",
+  // WHY :where(): the reset adds no specificity, so the block gap below still wins.
+  // A plain `& p { margin: 0 }` (0,1,1) beat `& > * + *` (0,1,0) and the blocks touched.
+  "& :where(p, ul, ol)": { m: 0 },
+  "& :where(ul, ol)": { pl: "var(--space-5)" },
+  "& > * + *": { mt: "var(--tutor-message-block-gap)" },
+  "& li + li": { mt: "var(--space-1)" },
+  "& a": {
+    color: "var(--tutor-message-link)",
+    textDecoration: "underline",
+    textDecorationThickness: "var(--border-width-underline)",
+    textUnderlineOffset: "2px",
+  },
+  "& a:hover": { textDecorationThickness: "var(--border-width-underline-hover)" },
+  "& :not(pre) > code": {
+    fontFamily: "var(--font-mono)",
+    fontSize: "var(--type-code-size)",
+    backgroundColor: "var(--tutor-message-inline-code-bg)",
+    borderRadius: "var(--radius-small)",
+    padding: "0 4px",
+  },
+  // The highlighter wraps a block's code in a div, not a pre, so the inline rule above
+  // matched it and drew a tinted band behind every line; a block's code is on the
+  // transparent ground (DESIGN.md, the tutor-message surface: code blocks).
+  "& .kiwi-code-block code": { backgroundColor: "transparent", borderRadius: 0, padding: 0 },
+  "& .katex-display": { m: 0, textAlign: "center", overflowX: "auto", overflowY: "hidden" },
+  "& .katex-display > .katex": { fontSize: "var(--text-lg)" },
+} as const;
+
 const renderText = (
   text: string,
   importCode: (code: string) => void,
@@ -169,9 +212,6 @@ const renderText = (
   // Determine the tool to display (prefer passed toolExecution, fallback to extracted)
   const toolToShow = toolExecution || (extractedTool ? { toolName: extractedTool, status: "running" as const } : null);
 
-  // Use cleaned text for rendering
-  const displayText = cleanedText;
-
   return (
     <>
       {toolToShow && (
@@ -180,329 +220,240 @@ const renderText = (
           status={toolToShow.status}
         />
       )}
-      {displayText && (
-    <Typography component="div" sx={{ fontSize: "0.875rem" }}>
-      <Markdown
-        children={displayText}
-remarkPlugins={[remarkMath]}
-        rehypePlugins={[rehypeKatex]}
-        components={{
-          // Override paragraph rendering to remove extra vertical space
-          p({ children, ...props }) {
-            return (
-              <p style={{ margin: 0, padding: 0, lineHeight: 1.618 }} {...props}>
-                {children}
-              </p>
-            );
-          },
-          code(props) {
-            const { children, className, ...rest } = props;
-            const { node, ref, ...cleanRest } = rest;
-            const match = /language-(\w+)/.exec(className || "");
-if (match?.[1] === 'latex') {
-              // Render block LaTeX
-              if (typeof children === 'string') {
-                if (children.trim().startsWith('$') && children.trim().endsWith('$')) {
-                  return <InlineMath math={children.trim().slice(1, -1)} />;
+      {cleanedText && (
+        <Box className="kiwi-answer" sx={proseSx}>
+          <Markdown
+            children={cleanedText}
+            remarkPlugins={[remarkMath]}
+            rehypePlugins={[rehypeKatex]}
+            components={{
+              p({ children, node }) {
+                const cjk = isCjkDominant(hastText(node as HastNode));
+                return (
+                  <p
+                    data-script={cjk ? "cjk" : undefined}
+                    lang={cjk ? "zh-Hans" : undefined}
+                    style={cjk ? { lineHeight: "var(--leading-base-cjk)", maxWidth: "var(--tutor-message-measure-cjk)" } : undefined}
+                  >
+                    {children}
+                  </p>
+                );
+              },
+              pre({ node }) {
+                const codeNode = (node as HastNode | undefined)?.children?.find((child) => child.tagName === "code");
+                const className = codeNode?.properties?.className;
+                const classes = Array.isArray(className) ? className.map(String) : [];
+                const language = /language-(\w+)/.exec(classes.join(" "))?.[1] ?? "text";
+                const code = hastText(codeNode).replace(/\n$/, "");
+                if (language === "latex") {
+                  const math = code.trim();
+                  return math.startsWith("$") && math.endsWith("$") ? (
+                    <InlineMath math={math.slice(1, -1)} />
+                  ) : (
+                    <BlockMath math={code} />
+                  );
                 }
-                return <BlockMath math={children} />;
-              }
-            }
-            return match ? (
-              <Card>
-                <CardHeader
-                  title={match[1] || ""}
-                  action={
-                    <ButtonGroup variant="contained" aria-label="Basic button group">
-                      <ImportCodeButton importCode={importCode}>
-                        {children}
-                      </ImportCodeButton>
-                      <CopyButton>{children}</CopyButton>
-                    </ButtonGroup>
-                  }
-                />
-                <SyntaxHighlighter
-                  {...cleanRest}
-                  PreTag="div"
-                  children={String(children).replace(/\n$/, "")}
-                  language={match[1]}
-                  style={tomorrow}
-                />
-              </Card>
-            ) : (
-              <code {...cleanRest} className={className}>
-                {children}
-              </code>
-            );
-          },
-        }}
-      />
-    </Typography>
+                return <CodeBlock code={code} language={language} importCode={importCode} />;
+              },
+            }}
+          />
+        </Box>
       )}
     </>
   );
 };
-
 
 interface RetryProps {
   handleSendRetryMessage: (message: ChatMessage) => void;
   message: ChatMessage;
 }
 
-const Retry: React.FC<RetryProps> = ({ handleSendRetryMessage, message }) => (
-  <Box className="retry">
-    <Grid
-      container
-      sx={{
-        alignItems: "flex-start",
-        margin: "1em 0"
-      }}>
-      <Grid size="grow">
-        <Typography>
-          {message.content || "Something went wrong. Please try again."}
-        </Typography>
-      </Grid>
-      <Grid size="grow">
-        <Button
-          variant="contained"
-          onClick={() => handleSendRetryMessage(message)}
-          startIcon={<ReplayIcon />}
-        >
-          Retry
-        </Button>
-      </Grid>
-    </Grid>
-  </Box>
-);
-
-/** The assistant's 32px avatar — shared by message rows and the step chain. */
-const BotAvatar: React.FC = () => (
+/** An error row: the cross icon, what happened and how to retry, on the error surface, with a secondary Retry. */
+const ErrorRow: React.FC<RetryProps> = ({ handleSendRetryMessage, message }) => (
   <Box
+    role="alert"
+    className="retry"
     sx={{
-      width: 32,
-      height: 32,
       display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "primary.main",
-      borderRadius: "50%",
+      gap: "var(--space-3)",
+      p: "var(--space-3)",
+      borderRadius: "var(--radius-control)",
+      bgcolor: "var(--tutor-message-error-fill)",
+      color: "var(--tutor-message-error-text)",
+      fontSize: "var(--text-sm)",
+      lineHeight: "var(--leading-sm)",
     }}
   >
-    <SmartToyIcon sx={{ color: "white", fontSize: 20 }} />
+    <ErrorIcon aria-hidden sx={{ fontSize: "var(--alert-icon-size)", color: "var(--tutor-message-error-icon)", flexShrink: 0 }} />
+    <Box sx={{ minWidth: 0 }}>
+      <Box>{message.content || "Kiwi couldn't answer. The server didn't respond as expected. Try again."}</Box>
+      <Button variant="outlined" onClick={() => handleSendRetryMessage(message)} sx={{ mt: "var(--space-2)" }}>
+        Retry
+      </Button>
+    </Box>
   </Box>
 );
 
-const renderChatMessages = (
-  chatMessages: ChatMessage[],
-  handleSendRetryMessage: (message: ChatMessage) => void,
-  messageEndRef: RefObject<HTMLDivElement>,
-  importCode: (code: string) => void,
-  getPdfById: (pdfId: string) => Promise<any>,
-  context: React.ContextType<typeof ChatContext>, // Add context as a parameter
-  user: User | null // Add user as a parameter
-) => {
-  const renderOne = (
-    message: ChatMessage,
-    index: number,
-    leading?: React.ReactNode,
-  ) => {
-    const jumpToPage = (page: number) => context.pdfNavigationRef?.current?.(page);
-    const setCurrentPDFID = context.setCurrentPDFID;
-    const currentPDFID = context.currentPDFID;
-    const setPdfContent = context.setPdfContent;
+interface RenderOptions {
+  handleSendRetryMessage: (message: ChatMessage) => void;
+  importCode: (code: string) => void;
+  getPdfById: (pdfId: string) => Promise<any>;
+  context: React.ContextType<typeof ChatContext>;
+  statusLine?: StatusLineState | null;
+  motion: boolean;
+  onStatusLineGone?: (turn: number) => void;
+}
 
+/** The words of the line for the turn's newest row: a running step, the tool in use, the streaming text, or the wait verb. */
+const lineLabelFor = (message: ChatMessage, steps: AgentStep[], answerNumber: number) => {
+  const running = steps.find((step) => step.status === "running");
+  if (running) return stepLabelFor(stepLabel(running.toolName));
+  const { toolName, cleanedText } = message.typing
+    ? { toolName: null, cleanedText: "" }
+    : extractToolInfo(message.content || "");
+  const tool = message.toolExecution?.status === "running" ? message.toolExecution.toolName : toolName;
+  if (tool && !cleanedText) return `Using ${getDisplayName(tool)}…`;
+  if (cleanedText) return STREAM_LABEL;
+  return waitVerbFor(answerNumber);
+};
+
+const renderChatMessages = (chatMessages: ChatMessage[], options: RenderOptions) => {
+  const { handleSendRetryMessage, importCode, getPdfById, context, statusLine, motion, onStatusLineGone } = options;
+  let lastAiIndex = -1;
+  chatMessages.forEach((message, index) => {
+    if (message.isAi) lastAiIndex = index;
+  });
+
+  const renderCitations = (message: ChatMessage) => {
+    const jumpToPage = (page: number) => context.pdfNavigationRef?.current?.(page);
+    const { setCurrentPDFID, currentPDFID, setPdfContent } = context;
+    if (!message.citations?.length) return null;
+    return [...message.citations]
+      .sort((a, b) => a.pageNumber - b.pageNumber)
+      .map((citation, idx) => (
+        <ButtonBase
+          key={idx}
+          className="cite"
+          onClick={async () => {
+            if (currentPDFID && setCurrentPDFID && setPdfContent && citation.pdfID !== currentPDFID) {
+              setCurrentPDFID(citation.pdfID);
+              setPdfContent("");
+              const pdf = await getPdfById(citation.pdfID);
+              setPdfContent(pdf.documentContent);
+              setTimeout(() => {
+                if (jumpToPage) jumpToPage(citation.pageNumber - 1);
+              }, 300);
+            } else if (jumpToPage) {
+              jumpToPage(citation.pageNumber - 1);
+            }
+          }}
+          sx={{
+            position: "relative",
+            fontSize: "var(--text-xs)",
+            lineHeight: "var(--tutor-message-toolbar-line)",
+            fontVariantNumeric: "tabular-nums",
+            color: "var(--tutor-message-citation)",
+            textDecoration: "underline",
+            textUnderlineOffset: "2px",
+            "&:hover": { textDecorationThickness: "var(--border-width-underline-hover)" },
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              width: "max(100%, var(--tutor-message-citation-hit))",
+              height: "max(100%, var(--tutor-message-citation-hit))",
+              transform: "translate(-50%, -50%)",
+            },
+          }}
+        >
+          [Page {citation.pageNumber}]
+        </ButtonBase>
+      ));
+  };
+
+  const renderTutorRow = (message: ChatMessage, key: React.Key, leading: ReactNode, steps: AgentStep[], hostsLine: boolean) => {
+    const line = hostsLine && statusLine ? statusLine : null;
+    const flying = !!line && line.complete;
+    // The line owns this row through the flight and fade. Mount the controls
+    // only after onGone removes it, so they cannot flash during the handover.
+    const showToolbar = !message.typing && !line;
+    const citations = showToolbar ? renderCitations(message) : null;
+    const feedback = showToolbar && message.uniqueId ? <Feedback index={message.uniqueId} /> : null;
+
+    return (
+      <Box key={key} className="tutor-row" sx={{ maxWidth: "var(--tutor-message-measure)" }}>
+        {leading}
+        {message.typing ? null : renderText(message.content, importCode, message.toolExecution)}
+        {line || citations || feedback ? (
+          <Box
+            sx={{
+              position: "relative",
+              display: "flex",
+              alignItems: "flex-start",
+              flexWrap: "wrap",
+              gap: "var(--space-2)",
+              minHeight: "var(--tutor-message-toolbar-line)",
+              mt: message.typing && !leading ? 0 : "var(--tutor-message-block-gap)",
+              color: "var(--text-secondary)",
+            }}
+          >
+            {line ? (
+              <KiwiStatusLine
+                key={line.turn}
+                label={flying ? "" : lineLabelFor(message, steps, line.answerNumber)}
+                complete={line.complete}
+                startedAt={line.startedAt}
+                motion={motion}
+                onGone={() => onStatusLineGone?.(line.turn)}
+              />
+            ) : null}
+            {/* The feedback buttons open the row (the user's decision of 2026-10-19).
+                Kiwi flies off from that spot, so they wait for it, as the citations do. */}
+            {feedback}
+            {citations}
+          </Box>
+        ) : null}
+      </Box>
+    );
+  };
+
+  const renderOne = (message: ChatMessage, index: number, leading?: ReactNode, steps: AgentStep[] = [], hostsLine = false) => {
     if (message.error) {
       return (
-        <Box key={index}>
-          <Paper elevation={3}>
-            <Grid container sx={{
-              alignItems: "flex-start"
-            }}>
-              <Grid
-                size={1}
-                sx={{
-                  margin: "1em 0",
-                  padding: 1
-                }}>
-                <Box
-                  sx={{
-                    width: 32,
-                    height: 32,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: 'error.main',
-                    borderRadius: '50%',
-                  }}
-                >
-                  <AndroidIcon sx={{ color: 'white', fontSize: 20 }} />
-                </Box>
-              </Grid>
-              <Grid id={message.uniqueId || undefined} size={11}>
-                <Retry handleSendRetryMessage={handleSendRetryMessage} message={message} />
-              </Grid>
-            </Grid>
-            <Box ref={messageEndRef} />
-          </Paper>
+        <Box key={index} id={message.uniqueId || undefined} sx={{ maxWidth: "var(--tutor-message-measure)" }}>
+          <ErrorRow handleSendRetryMessage={handleSendRetryMessage} message={message} />
         </Box>
       );
     }
 
-    // Bot message: aligned to left, no border, transparent background, bot icon
-    if (message.isAi) {
-      return (
-        <Box
-          key={index}
-          sx={{
-            display: "flex",
-            alignItems: "flex-start",
-            mb: 1
-          }}>
-          <Grid container spacing={1} sx={{
-            alignItems: "flex-start"
-          }}>
-            <Grid>
-              <BotAvatar />
-            </Grid>
-            <Grid size="grow">
-              <Paper
-                elevation={0}
-                sx={{
-                  backgroundColor: "transparent",
-                  border: "none",
-                  p: 1,
-                }}
-              >
-                {leading}
-                {message.typing ? <Loader /> : renderText(message.content, importCode, message.toolExecution)}
-                {message.citations &&
-                  message.citations.length > 0 && (
-                    <Box>
-                      {message.citations
-                        .sort((a, b) => a.pageNumber - b.pageNumber)
-                        .map((citation, idx) => (
-                          <Button
-                            key={idx}
-                            variant="text"
-                            onClick={async () => {
-                              if (
-                                currentPDFID &&
-                                setCurrentPDFID &&
-                                setPdfContent &&
-                                citation.pdfID !== currentPDFID
-                              ) {
-                                setCurrentPDFID(citation.pdfID);
-                                setPdfContent("");
-                                const pdf = await getPdfById(citation.pdfID);
-                                setPdfContent(pdf.documentContent);
-                                setTimeout(() => {
-                                  if (jumpToPage)
-                                    jumpToPage(citation.pageNumber - 1);
-                                }, 300);
-                              } else {
-                                if (jumpToPage) jumpToPage(citation.pageNumber - 1);
-                              }
-                              console.log(citation.pdfID, citation.pageNumber);
-                            }}
-                          >
-                            {"["}Page {citation.pageNumber}]
-                          </Button>
-                        ))}
-                    </Box>
-                  )}
-                {!message.typing && message.isAi && message.uniqueId && (
-                  <Feedback index={message.uniqueId} />
-                )}
-              </Paper>
-            </Grid>
-          </Grid>
-          <Box ref={messageEndRef} />
-        </Box>
-      );
-    }
+    if (message.isAi) return renderTutorRow(message, index, leading, steps, hostsLine);
 
-    // User message: aligned to right, with user icon, plain text (no bubble)
+    // The student's question: right-aligned and a step larger, in a bubble (the
+    // user's decision of 2026-10-19); Kiwi's answers stay on the sheet without one.
+    const cjk = /[㐀-鿿]/.test(message.content);
     return (
       <Box
         key={index}
+        className="user-row"
         sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "flex-start",
-          mb: 1
-        }}>
-        <Grid
-          container
-          spacing={1}
-          sx={{
-            alignItems: "center",
-            justifyContent: "flex-end"
-          }}>
-          <Grid size="grow" sx={{
-            textAlign: "right"
-          }}>
-            <Paper
-              elevation={0}
-              sx={{
-                backgroundColor: "transparent",
-                border: "none",
-                p: 1,
-              }}
-            >
-              {message.typing ? <Loader /> : renderText(message.content, importCode, message.toolExecution)}
-              {message.citations &&
-                message.citations.length > 0 && (
-                  <Box>
-                    {message.citations
-                      .sort((a, b) => a.pageNumber - b.pageNumber)
-                      .map((citation, idx) => (
-                        <Button
-                          key={idx}
-                          variant="text"
-                          onClick={async () => {
-                            if (
-                              currentPDFID &&
-                              setCurrentPDFID &&
-                              setPdfContent &&
-                              citation.pdfID !== currentPDFID
-                            ) {
-                              setCurrentPDFID(citation.pdfID);
-                              setPdfContent("");
-                              const pdf = await getPdfById(citation.pdfID);
-                              setPdfContent(pdf.documentContent);
-                              setTimeout(() => {
-                                if (jumpToPage) jumpToPage(citation.pageNumber - 1);
-                              }, 300);
-                            } else {
-                              if (jumpToPage) jumpToPage(citation.pageNumber - 1);
-                            }
-                            console.log(citation.pdfID, citation.pageNumber);
-                          }}
-                        >
-                          {"["}Page {citation.pageNumber}
-                        </Button>
-                      ))}
-                  </Box>
-                )}
-            </Paper>
-          </Grid>
-          <Grid>
-            <Box
-              sx={{
-                width: 32,
-                height: 32,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'primary.main',
-                borderRadius: '50%',
-              }}
-            >
-              <PersonIcon sx={{ color: 'white', fontSize: 20 }} />
-            </Box>
-          </Grid>
-        </Grid>
-        <Box ref={messageEndRef} />
+          alignSelf: "flex-end",
+          maxWidth: "min(85%, var(--tutor-message-measure))",
+          px: "var(--space-3)",
+          py: "var(--space-2)",
+          borderRadius: "var(--radius-sheet)",
+          // WHY: there is no bubble token yet. surface-active (neutral 4 light,
+          // 5 dark) clears the panel sheet by 1.16:1 and 1.23:1; surface-hover
+          // fades to 1.11:1 in dark.
+          bgcolor: "var(--surface-active)",
+          overflowWrap: "anywhere",
+          fontSize: "var(--text-lg)",
+          lineHeight: cjk ? "var(--leading-lg-cjk)" : "var(--leading-lg)",
+          color: "var(--text)",
+          "& p": { lineHeight: "inherit" },
+        }}
+      >
+        {renderText(message.content, importCode, message.toolExecution)}
       </Box>
     );
   };
@@ -523,11 +474,9 @@ const renderChatMessages = (
     if (!agentStepOf(message)) {
       // Steps recorded by ChatCore are authoritative and outlive the narration
       // bubble they came from, so a message carrying them renders its own chain:
-      // one avatar, chain on top, answer underneath.
+      // chain on top, answer underneath.
       const steps = message.agentSteps ?? [];
-      nodes.push(
-        steps.length ? renderOne(message, i, chainFor(steps, i)) : renderOne(message, i),
-      );
+      nodes.push(renderOne(message, i, steps.length ? chainFor(steps, i) : undefined, steps, i === lastAiIndex));
       i += 1;
       continue;
     }
@@ -552,6 +501,7 @@ const renderChatMessages = (
     // A loader right after the run is this turn's next step starting, not a
     // bubble of its own.
     const running = !!next?.typing;
+    const loaderIndex = running ? i : -1;
     if (running) {
       i += 1;
       bubbleSteps[bubbleSteps.length - 1] = {
@@ -566,28 +516,14 @@ const renderChatMessages = (
       answer && answer.isAi && !answer.error && !answer.typing && !agentStepOf(answer);
 
     if (answersThisChain) {
-      nodes.push(renderOne(answer, i, chain));
+      nodes.push(renderOne(answer, i, chain, bubbleSteps, i === lastAiIndex));
       i += 1;
     } else {
+      // The chain alone: a turn still working through its steps.
+      const host = running ? (chatMessages[loaderIndex] as ChatMessage) : chatMessages[i - 1];
+      const hostsLine = lastAiIndex >= startIndex && lastAiIndex < i;
       nodes.push(
-        <Box
-          key={`agent-chain-row-${startIndex}`}
-          sx={{
-            display: "flex",
-            alignItems: "flex-start",
-            mb: 1
-          }}>
-          <Grid container spacing={1} sx={{
-            alignItems: "flex-start"
-          }}>
-            <Grid>
-              <BotAvatar />
-            </Grid>
-            <Grid size="grow">
-              <Box sx={{ p: 1 }}>{chain}</Box>
-            </Grid>
-          </Grid>
-        </Box>,
+        renderTutorRow({ ...host, typing: true }, `agent-chain-row-${startIndex}`, chain, bubbleSteps, hostsLine)
       );
     }
   }
@@ -599,6 +535,12 @@ interface ChatMessagesProps {
   handleSendRetryMessage: (message: ChatMessage) => void;
   messageEndRef: RefObject<HTMLDivElement>;
   importCode: (code: string) => void;
+  /** The status line of the turn in flight, if any. */
+  statusLine?: StatusLineState | null;
+  /** Every motion level allows Kiwi to move. */
+  motion?: boolean;
+  /** Called when the status line has gone after its turn completed. */
+  onStatusLineGone?: (turn: number) => void;
 }
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
@@ -606,9 +548,11 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   handleSendRetryMessage,
   messageEndRef,
   importCode,
+  statusLine = null,
+  motion = false,
+  onStatusLineGone,
 }) => {
-  const { user } = useAuth(); //  Call hooks at the component level
-  const context = useContext(ChatContext); //  Call hooks at the component level
+  const context = useContext(ChatContext);
   const pdfCache = React.useRef(new Map<string, any>());
 
   const getPdfById = React.useCallback(async (pdfId: string) => {
@@ -633,31 +577,41 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     }
   }, [chatMessages, messageEndRef]);
 
-  const initialMessages = [
-    {
-      isAi: true,
-      content: "Welcome to Kiwi! How can I help you?",
-      //content: "Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?   Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?   Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?   Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you? Welcome to Kiwi! How can I help you?",
-      error: false,
-    },
-  ];
-
-  const allMessages = initialMessages.concat(chatMessages);
-
   return (
-    <Stack spacing={1} sx={{
-      padding: 1
-    }}>
-      {renderChatMessages(
-        allMessages,
+    <Box
+      data-density="comfortable"
+      className="kiwi-ruled"
+      sx={{
+        minHeight: "100%",
+        boxSizing: "border-box",
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--tutor-message-message-gap)",
+        p: { xs: "var(--space-5) var(--space-4) var(--space-5) var(--space-3)", sm: "var(--space-5) var(--space-4) var(--space-5) var(--space-reading-gutter)" },
+        color: "var(--tutor-message-text)",
+        fontSize: "var(--type-body-size)",
+        lineHeight: "var(--type-body-leading)",
+      }}
+    >
+      {chatMessages.length === 0 ? (
+        <Box className="welcome">
+          <KiwiLogo size="var(--companion-slot-inline)" />
+          <Typography sx={{ mt: "var(--space-5)" }}>{WELCOME}</Typography>
+        </Box>
+      ) : (
+        <Typography className="welcome">{WELCOME}</Typography>
+      )}
+      {renderChatMessages(chatMessages, {
         handleSendRetryMessage,
-        messageEndRef,
         importCode,
         getPdfById,
-        context, // Pass context as an argument
-        user // Pass user as an argument
-      )}
-    </Stack>
+        context,
+        statusLine,
+        motion,
+        onStatusLineGone,
+      })}
+      <Box ref={messageEndRef} />
+    </Box>
   );
 };
 

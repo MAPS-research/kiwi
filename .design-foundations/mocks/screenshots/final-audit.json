@@ -1,0 +1,3926 @@
+{
+ "date": "2026-10-18",
+ "tokens": "61048c1f1a0f1f8e",
+ "chrome": "Chrome/155.0.8059.85",
+ "renders": {
+  "sign-in.light": {
+   "theme": "light",
+   "tokens": 1305,
+   "colours": {
+    "allowed": 55,
+    "checked": 106,
+    "bad": [],
+    "badCount": 0
+   },
+   "images": [
+    {
+     "src": "../assets/brand/kiwi-mark.svg",
+     "ok": true
+    }
+   ],
+   "background": [
+    {
+     "u": ".design-foundations/mocks/assets/mascot/stills/idle.192.webp",
+     "ok": true
+    }
+   ],
+   "montserrat": [
+    {
+     "inWordmark": true,
+     "tag": "p",
+     "text": "Kiwi"
+    },
+    {
+     "inWordmark": true,
+     "tag": "span",
+     "text": "Kiwi"
+    }
+   ],
+   "facesLoaded": [
+    "Source Sans 3 normal 200 900",
+    "Montserrat italic 100 900"
+   ],
+   "paper": [],
+   "logo": [
+    {
+     "color": "rgb(0, 0, 0)",
+     "token": "--logo-on-light"
+    }
+   ],
+   "mascot": [
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/stills/idle.192.webp",
+     "size": "96px"
+    }
+   ],
+   "contrast": {
+    "n": 10,
+    "min": 5.31,
+    "fails": [],
+    "failCount": 0
+   },
+   "strip": [],
+   "stripClip": [],
+   "avatars": [],
+   "peeks": [],
+   "grips": [],
+   "fields": [
+    {
+     "tag": "input",
+     "box": "456x44",
+     "input": "456x44",
+     "hitShare": 1
+    },
+    {
+     "tag": "input",
+     "box": "456x44",
+     "input": "456x44",
+     "hitShare": 1
+    }
+   ],
+   "menuGroups": [],
+   "scrollWidth": 1440,
+   "clientWidth": 1440,
+   "failedRequests": [],
+   "consoleErrors": [],
+   "axe": {
+    "version": "4.12.1",
+    "violations": []
+   },
+   "fullHeight": 900,
+   "scroll1280": 1280,
+   "shots": [
+    "final-sign-in.light.1440x900.png",
+    "final-sign-in.light.1440.full.png",
+    "final-sign-in.light.1280x800.png"
+   ]
+  },
+  "sign-in.dark": {
+   "theme": "dark",
+   "tokens": 1305,
+   "colours": {
+    "allowed": 58,
+    "checked": 106,
+    "bad": [],
+    "badCount": 0
+   },
+   "images": [
+    {
+     "src": "../assets/brand/kiwi-mark.svg",
+     "ok": true
+    }
+   ],
+   "background": [
+    {
+     "u": ".design-foundations/mocks/assets/mascot/stills/idle.192.webp",
+     "ok": true
+    }
+   ],
+   "montserrat": [
+    {
+     "inWordmark": true,
+     "tag": "p",
+     "text": "Kiwi"
+    },
+    {
+     "inWordmark": true,
+     "tag": "span",
+     "text": "Kiwi"
+    }
+   ],
+   "facesLoaded": [
+    "Source Sans 3 normal 200 900",
+    "Montserrat italic 100 900"
+   ],
+   "paper": [],
+   "logo": [
+    {
+     "color": "rgb(255, 255, 255)",
+     "token": "--logo-on-dark"
+    }
+   ],
+   "mascot": [
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/stills/idle.192.webp",
+     "size": "96px"
+    }
+   ],
+   "contrast": {
+    "n": 10,
+    "min": 7.92,
+    "fails": [],
+    "failCount": 0
+   },
+   "strip": [],
+   "stripClip": [],
+   "avatars": [],
+   "peeks": [],
+   "grips": [],
+   "fields": [
+    {
+     "tag": "input",
+     "box": "456x44",
+     "input": "456x44",
+     "hitShare": 1
+    },
+    {
+     "tag": "input",
+     "box": "456x44",
+     "input": "456x44",
+     "hitShare": 1
+    }
+   ],
+   "menuGroups": [],
+   "scrollWidth": 1440,
+   "clientWidth": 1440,
+   "failedRequests": [],
+   "consoleErrors": [],
+   "axe": {
+    "version": "4.12.1",
+    "violations": []
+   },
+   "fullHeight": 900,
+   "scroll1280": 1280,
+   "shots": [
+    "final-sign-in.dark.1440x900.png",
+    "final-sign-in.dark.1440.full.png",
+    "final-sign-in.dark.1280x800.png"
+   ]
+  },
+  "course-list.light": {
+   "theme": "light",
+   "tokens": 1305,
+   "colours": {
+    "allowed": 55,
+    "checked": 118,
+    "bad": [],
+    "badCount": 0
+   },
+   "images": [
+    {
+     "src": "../assets/brand/kiwi-mark.svg",
+     "ok": true
+    },
+    {
+     "src": "../assets/covers/intro-to-cs.webp",
+     "ok": true
+    },
+    {
+     "src": "../assets/covers/machine-learning.webp",
+     "ok": true
+    }
+   ],
+   "background": [
+    {
+     "u": ".design-foundations/mocks/assets/mascot/stills/idle.128.webp",
+     "ok": true
+    }
+   ],
+   "montserrat": [],
+   "facesLoaded": [
+    "Source Sans 3 normal 200 900"
+   ],
+   "paper": [],
+   "logo": [
+    {
+     "color": "rgb(0, 0, 0)",
+     "token": "--logo-on-light"
+    }
+   ],
+   "mascot": [
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/stills/idle.128.webp",
+     "size": "64px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/stills/idle.128.webp",
+     "size": "64px"
+    }
+   ],
+   "contrast": {
+    "n": 10,
+    "min": 5.7,
+    "fails": [],
+    "failCount": 0
+   },
+   "strip": [],
+   "stripClip": [],
+   "avatars": [],
+   "peeks": [],
+   "grips": [],
+   "fields": [],
+   "menuGroups": [],
+   "scrollWidth": 1440,
+   "clientWidth": 1440,
+   "failedRequests": [],
+   "consoleErrors": [],
+   "axe": {
+    "version": "4.12.1",
+    "violations": []
+   },
+   "fullHeight": 900,
+   "scroll1280": 1280,
+   "shots": [
+    "final-course-list.light.1440x900.png",
+    "final-course-list.light.1440.full.png",
+    "final-course-list.light.1280x800.png"
+   ]
+  },
+  "course-list.dark": {
+   "theme": "dark",
+   "tokens": 1305,
+   "colours": {
+    "allowed": 58,
+    "checked": 118,
+    "bad": [],
+    "badCount": 0
+   },
+   "images": [
+    {
+     "src": "../assets/brand/kiwi-mark.svg",
+     "ok": true
+    },
+    {
+     "src": "../assets/covers/intro-to-cs.webp",
+     "ok": true
+    },
+    {
+     "src": "../assets/covers/machine-learning.webp",
+     "ok": true
+    }
+   ],
+   "background": [
+    {
+     "u": ".design-foundations/mocks/assets/mascot/stills/idle.128.webp",
+     "ok": true
+    }
+   ],
+   "montserrat": [],
+   "facesLoaded": [
+    "Source Sans 3 normal 200 900"
+   ],
+   "paper": [],
+   "logo": [
+    {
+     "color": "rgb(255, 255, 255)",
+     "token": "--logo-on-dark"
+    }
+   ],
+   "mascot": [
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/stills/idle.128.webp",
+     "size": "64px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/stills/idle.128.webp",
+     "size": "64px"
+    }
+   ],
+   "contrast": {
+    "n": 10,
+    "min": 7.92,
+    "fails": [],
+    "failCount": 0
+   },
+   "strip": [],
+   "stripClip": [],
+   "avatars": [],
+   "peeks": [],
+   "grips": [],
+   "fields": [],
+   "menuGroups": [],
+   "scrollWidth": 1440,
+   "clientWidth": 1440,
+   "failedRequests": [],
+   "consoleErrors": [],
+   "axe": {
+    "version": "4.12.1",
+    "violations": []
+   },
+   "fullHeight": 900,
+   "scroll1280": 1280,
+   "shots": [
+    "final-course-list.dark.1440x900.png",
+    "final-course-list.dark.1440.full.png",
+    "final-course-list.dark.1280x800.png"
+   ]
+  },
+  "chat.light": {
+   "theme": "light",
+   "tokens": 1305,
+   "colours": {
+    "allowed": 55,
+    "checked": 2681,
+    "bad": [],
+    "badCount": 0
+   },
+   "images": [
+    {
+     "src": "../assets/brand/kiwi-mark.svg",
+     "ok": true
+    },
+    {
+     "src": "../assets/paper/lecture-3-page-3.webp",
+     "ok": true
+    },
+    {
+     "src": "../assets/paper/lecture-3-page-4.webp",
+     "ok": true
+    }
+   ],
+   "background": [
+    {
+     "u": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "ok": true
+    },
+    {
+     "u": ".design-foundations/mocks/assets/mascot/atlas/full-walk.64.webp",
+     "ok": true
+    },
+    {
+     "u": ".design-foundations/mocks/assets/mascot/atlas/full-walk.128.webp",
+     "ok": true
+    },
+    {
+     "u": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.64.webp",
+     "ok": true
+    },
+    {
+     "u": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.128.webp",
+     "ok": true
+    },
+    {
+     "u": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.96.webp",
+     "ok": true
+    },
+    {
+     "u": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "ok": true
+    },
+    {
+     "u": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.64.webp",
+     "ok": true
+    },
+    {
+     "u": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.128.webp",
+     "ok": true
+    }
+   ],
+   "montserrat": [],
+   "facesLoaded": [
+    "Source Sans 3 normal 200 900"
+   ],
+   "paper": [
+    {
+     "bg": "rgb(255, 255, 255)",
+     "imgOpacity": "1",
+     "frame": "rgb(198, 195, 187)"
+    },
+    {
+     "bg": "rgb(255, 255, 255)",
+     "imgOpacity": "1",
+     "frame": "rgb(198, 195, 187)"
+    }
+   ],
+   "logo": [
+    {
+     "color": "rgb(0, 0, 0)",
+     "token": "--logo-on-light"
+    }
+   ],
+   "mascot": [
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "8",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "3",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "7",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "10",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "13",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "16",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "20",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "19",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "4",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "12",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "3",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "7",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "10",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "13",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "16",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "20",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.96.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "3",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "7",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "10",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "13",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "16",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "20",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "10",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.96.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "20",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "16",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "13",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "10",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "7",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "3",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-wave-bow",
+     "cell": "8",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-wave-bow",
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-wave-bow",
+     "cell": "2",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-wave-bow",
+     "cell": "4",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-wave-bow",
+     "cell": "6",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-wave-bow",
+     "cell": "8",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-wave-bow",
+     "cell": "10",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-wave-bow",
+     "cell": "12",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-wave-bow",
+     "cell": "14",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.64.webp",
+     "size": "32px"
+    }
+   ],
+   "contrast": {
+    "n": 192,
+    "min": 4.9,
+    "fails": [],
+    "failCount": 0
+   },
+   "strip": [
+    {
+     "state": "idle",
+     "step": "idle",
+     "drawings": [],
+     "newest": null,
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "walk",
+     "step": "send",
+     "drawings": [],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-walk",
+      "cell": "0"
+     },
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "walk",
+     "step": "run",
+     "drawings": [
+      "full-walk:0",
+      "full-walk:3",
+      "full-walk:7",
+      "full-walk:10",
+      "full-walk:13",
+      "full-walk:16",
+      "full-walk:20",
+      "full-walk:23"
+     ],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-walk",
+      "cell": "8"
+     },
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "speaking",
+     "step": "first token",
+     "drawings": [],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-walk",
+      "cell": "19"
+     },
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "speaking",
+     "step": "streaming",
+     "drawings": [],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-walk",
+      "cell": "4"
+     },
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "hop",
+     "step": "complete",
+     "drawings": [],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-hop-flight",
+      "cell": "0"
+     },
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "hop",
+     "step": "flight",
+     "drawings": [
+      "full-hop-flight:0",
+      "full-hop-flight:3",
+      "full-hop-flight:7",
+      "full-hop-flight:10",
+      "full-hop-flight:13",
+      "full-hop-flight:16",
+      "full-hop-flight:20",
+      "full-hop-flight:23"
+     ],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-hop-flight",
+      "cell": "12"
+     },
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "hop",
+     "step": "landed",
+     "drawings": [],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-hop-flight",
+      "cell": "23"
+     },
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "idle",
+     "step": "idle",
+     "drawings": [],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-hop-flight",
+      "cell": "23"
+     },
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "peek",
+     "step": null,
+     "drawings": [
+      "stamp-peek:0",
+      "stamp-peek:3",
+      "stamp-peek:7",
+      "stamp-peek:10",
+      "stamp-peek:13",
+      "stamp-peek:16",
+      "stamp-peek:20",
+      "stamp-peek:23"
+     ],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-hop-flight",
+      "cell": "23"
+     },
+     "olderStill": true,
+     "peek": true
+    },
+    {
+     "state": "retract",
+     "step": null,
+     "drawings": [
+      "stamp-peek:23",
+      "stamp-peek:20",
+      "stamp-peek:16",
+      "stamp-peek:13",
+      "stamp-peek:10",
+      "stamp-peek:7",
+      "stamp-peek:3",
+      "stamp-peek:0"
+     ],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-hop-flight",
+      "cell": "23"
+     },
+     "olderStill": true,
+     "peek": true
+    },
+    {
+     "state": "wave",
+     "step": null,
+     "drawings": [
+      "full-wave-bow:0",
+      "full-wave-bow:2",
+      "full-wave-bow:4",
+      "full-wave-bow:6",
+      "full-wave-bow:8",
+      "full-wave-bow:10",
+      "full-wave-bow:12",
+      "full-wave-bow:14"
+     ],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-wave-bow",
+      "cell": "8"
+     },
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "error",
+     "step": null,
+     "drawings": [],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-hop-flight",
+      "cell": "23"
+     },
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "offline",
+     "step": null,
+     "drawings": [],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-hop-flight",
+      "cell": "23"
+     },
+     "olderStill": true,
+     "peek": false
+    }
+   ],
+   "stripClip": [
+    {
+     "state": "idle",
+     "step": "idle",
+     "controls": 2,
+     "clipped": []
+    },
+    {
+     "state": "walk",
+     "step": "send",
+     "controls": 2,
+     "clipped": []
+    },
+    {
+     "state": "walk",
+     "step": "run",
+     "controls": 2,
+     "clipped": []
+    },
+    {
+     "state": "speaking",
+     "step": "first token",
+     "controls": 2,
+     "clipped": []
+    },
+    {
+     "state": "speaking",
+     "step": "streaming",
+     "controls": 2,
+     "clipped": []
+    },
+    {
+     "state": "hop",
+     "step": "complete",
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "hop",
+     "step": "flight",
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "hop",
+     "step": "landed",
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "idle",
+     "step": "idle",
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "peek",
+     "step": null,
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "retract",
+     "step": null,
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "wave",
+     "step": null,
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "error",
+     "step": null,
+     "controls": 3,
+     "clipped": []
+    },
+    {
+     "state": "offline",
+     "step": null,
+     "controls": 2,
+     "clipped": []
+    }
+   ],
+   "avatars": [
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-walk.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-walk.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-walk.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-walk.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-hop-flight.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-hop-flight.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-hop-flight.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-hop-flight.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-hop-flight.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-hop-flight.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-wave-bow.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-hop-flight.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-hop-flight.64.webp"
+    }
+   ],
+   "peeks": [
+    {
+     "rightDelta": 0,
+     "bottomDelta": 0,
+     "size": 48
+    },
+    {
+     "rightDelta": 0,
+     "bottomDelta": 0,
+     "size": 48
+    }
+   ],
+   "grips": [
+    {
+     "name": "Resize chat panel",
+     "role": "separator",
+     "tabindex": "0",
+     "bar": "rgb(101, 99, 92)",
+     "size": "4px x 48px",
+     "contrastLeft": 5.31,
+     "contrastRight": 5.7
+    }
+   ],
+   "fields": [
+    {
+     "tag": "textarea",
+     "box": "335x56",
+     "input": "335x56",
+     "hitShare": 1
+    }
+   ],
+   "menuGroups": [
+    {
+     "label": "Theme",
+     "items": [
+      {
+       "role": "menuitemradio",
+       "checked": "false",
+       "name": "Match device"
+      },
+      {
+       "role": "menuitemradio",
+       "checked": "true",
+       "name": "Light"
+      },
+      {
+       "role": "menuitemradio",
+       "checked": "false",
+       "name": "Dark"
+      }
+     ]
+    },
+    {
+     "label": "Kiwi animation",
+     "items": [
+      {
+       "role": "menuitemcheckbox",
+       "checked": "true",
+       "name": "Kiwi animation"
+      }
+     ]
+    }
+   ],
+   "scrollWidth": 1440,
+   "clientWidth": 1440,
+   "failedRequests": [],
+   "consoleErrors": [],
+   "axe": {
+    "version": "4.12.1",
+    "violations": []
+   },
+   "fullHeight": 3896,
+   "scroll1280": 1280,
+   "shots": [
+    "final-chat.light.1440x900.png",
+    "final-chat.light.1440.full.png",
+    "final-chat.light.1280x800.png"
+   ]
+  },
+  "chat.dark": {
+   "theme": "dark",
+   "tokens": 1305,
+   "colours": {
+    "allowed": 58,
+    "checked": 2681,
+    "bad": [],
+    "badCount": 0
+   },
+   "images": [
+    {
+     "src": "../assets/brand/kiwi-mark.svg",
+     "ok": true
+    },
+    {
+     "src": "../assets/paper/lecture-3-page-3.webp",
+     "ok": true
+    },
+    {
+     "src": "../assets/paper/lecture-3-page-4.webp",
+     "ok": true
+    }
+   ],
+   "background": [
+    {
+     "u": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "ok": true
+    },
+    {
+     "u": ".design-foundations/mocks/assets/mascot/atlas/full-walk.64.webp",
+     "ok": true
+    },
+    {
+     "u": ".design-foundations/mocks/assets/mascot/atlas/full-walk.128.webp",
+     "ok": true
+    },
+    {
+     "u": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.64.webp",
+     "ok": true
+    },
+    {
+     "u": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.128.webp",
+     "ok": true
+    },
+    {
+     "u": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.96.webp",
+     "ok": true
+    },
+    {
+     "u": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "ok": true
+    },
+    {
+     "u": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.64.webp",
+     "ok": true
+    },
+    {
+     "u": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.128.webp",
+     "ok": true
+    }
+   ],
+   "montserrat": [],
+   "facesLoaded": [
+    "Source Sans 3 normal 200 900"
+   ],
+   "paper": [
+    {
+     "bg": "rgb(255, 255, 255)",
+     "imgOpacity": "0.92",
+     "frame": "rgb(75, 73, 66)"
+    },
+    {
+     "bg": "rgb(255, 255, 255)",
+     "imgOpacity": "0.92",
+     "frame": "rgb(75, 73, 66)"
+    }
+   ],
+   "logo": [
+    {
+     "color": "rgb(255, 255, 255)",
+     "token": "--logo-on-dark"
+    }
+   ],
+   "mascot": [
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "8",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "3",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "7",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "10",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "13",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "16",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "20",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "19",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-walk",
+     "cell": "4",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-walk.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "12",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "3",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "7",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "10",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "13",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "16",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "20",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.96.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "3",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "7",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "10",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "13",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "16",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "20",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "10",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.96.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "20",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "16",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "13",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "10",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "7",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "3",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "stamp-peek",
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/stamp-peek.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-wave-bow",
+     "cell": "8",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-wave-bow",
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-wave-bow",
+     "cell": "2",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-wave-bow",
+     "cell": "4",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-wave-bow",
+     "cell": "6",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-wave-bow",
+     "cell": "8",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-wave-bow",
+     "cell": "10",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-wave-bow",
+     "cell": "12",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-wave-bow",
+     "cell": "14",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-wave-bow.128.webp",
+     "size": "48px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/stills/stand.64.webp",
+     "size": "32px"
+    },
+    {
+     "kind": "cell",
+     "state": null,
+     "atlas": "full-hop-flight",
+     "cell": "23",
+     "url": ".design-foundations/mocks/assets/mascot/atlas/full-hop-flight.64.webp",
+     "size": "32px"
+    }
+   ],
+   "contrast": {
+    "n": 192,
+    "min": 6.39,
+    "fails": [],
+    "failCount": 0
+   },
+   "strip": [
+    {
+     "state": "idle",
+     "step": "idle",
+     "drawings": [],
+     "newest": null,
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "walk",
+     "step": "send",
+     "drawings": [],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-walk",
+      "cell": "0"
+     },
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "walk",
+     "step": "run",
+     "drawings": [
+      "full-walk:0",
+      "full-walk:3",
+      "full-walk:7",
+      "full-walk:10",
+      "full-walk:13",
+      "full-walk:16",
+      "full-walk:20",
+      "full-walk:23"
+     ],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-walk",
+      "cell": "8"
+     },
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "speaking",
+     "step": "first token",
+     "drawings": [],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-walk",
+      "cell": "19"
+     },
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "speaking",
+     "step": "streaming",
+     "drawings": [],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-walk",
+      "cell": "4"
+     },
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "hop",
+     "step": "complete",
+     "drawings": [],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-hop-flight",
+      "cell": "0"
+     },
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "hop",
+     "step": "flight",
+     "drawings": [
+      "full-hop-flight:0",
+      "full-hop-flight:3",
+      "full-hop-flight:7",
+      "full-hop-flight:10",
+      "full-hop-flight:13",
+      "full-hop-flight:16",
+      "full-hop-flight:20",
+      "full-hop-flight:23"
+     ],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-hop-flight",
+      "cell": "12"
+     },
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "hop",
+     "step": "landed",
+     "drawings": [],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-hop-flight",
+      "cell": "23"
+     },
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "idle",
+     "step": "idle",
+     "drawings": [],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-hop-flight",
+      "cell": "23"
+     },
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "peek",
+     "step": null,
+     "drawings": [
+      "stamp-peek:0",
+      "stamp-peek:3",
+      "stamp-peek:7",
+      "stamp-peek:10",
+      "stamp-peek:13",
+      "stamp-peek:16",
+      "stamp-peek:20",
+      "stamp-peek:23"
+     ],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-hop-flight",
+      "cell": "23"
+     },
+     "olderStill": true,
+     "peek": true
+    },
+    {
+     "state": "retract",
+     "step": null,
+     "drawings": [
+      "stamp-peek:23",
+      "stamp-peek:20",
+      "stamp-peek:16",
+      "stamp-peek:13",
+      "stamp-peek:10",
+      "stamp-peek:7",
+      "stamp-peek:3",
+      "stamp-peek:0"
+     ],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-hop-flight",
+      "cell": "23"
+     },
+     "olderStill": true,
+     "peek": true
+    },
+    {
+     "state": "wave",
+     "step": null,
+     "drawings": [
+      "full-wave-bow:0",
+      "full-wave-bow:2",
+      "full-wave-bow:4",
+      "full-wave-bow:6",
+      "full-wave-bow:8",
+      "full-wave-bow:10",
+      "full-wave-bow:12",
+      "full-wave-bow:14"
+     ],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-wave-bow",
+      "cell": "8"
+     },
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "error",
+     "step": null,
+     "drawings": [],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-hop-flight",
+      "cell": "23"
+     },
+     "olderStill": true,
+     "peek": false
+    },
+    {
+     "state": "offline",
+     "step": null,
+     "drawings": [],
+     "newest": {
+      "kind": "cell",
+      "atlas": "full-hop-flight",
+      "cell": "23"
+     },
+     "olderStill": true,
+     "peek": false
+    }
+   ],
+   "stripClip": [
+    {
+     "state": "idle",
+     "step": "idle",
+     "controls": 2,
+     "clipped": []
+    },
+    {
+     "state": "walk",
+     "step": "send",
+     "controls": 2,
+     "clipped": []
+    },
+    {
+     "state": "walk",
+     "step": "run",
+     "controls": 2,
+     "clipped": []
+    },
+    {
+     "state": "speaking",
+     "step": "first token",
+     "controls": 2,
+     "clipped": []
+    },
+    {
+     "state": "speaking",
+     "step": "streaming",
+     "controls": 2,
+     "clipped": []
+    },
+    {
+     "state": "hop",
+     "step": "complete",
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "hop",
+     "step": "flight",
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "hop",
+     "step": "landed",
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "idle",
+     "step": "idle",
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "peek",
+     "step": null,
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "retract",
+     "step": null,
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "wave",
+     "step": null,
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "error",
+     "step": null,
+     "controls": 3,
+     "clipped": []
+    },
+    {
+     "state": "offline",
+     "step": null,
+     "controls": 2,
+     "clipped": []
+    }
+   ],
+   "avatars": [
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-walk.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-walk.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-walk.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-walk.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-hop-flight.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-hop-flight.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-hop-flight.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-hop-flight.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-hop-flight.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-hop-flight.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-wave-bow.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-hop-flight.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/stills/stand.64.webp"
+    },
+    {
+     "left": "4.4933%",
+     "top": "7.887%",
+     "width": "78.9811%",
+     "image": "mascot/atlas/full-hop-flight.64.webp"
+    }
+   ],
+   "peeks": [
+    {
+     "rightDelta": 0,
+     "bottomDelta": 0,
+     "size": 48
+    },
+    {
+     "rightDelta": 0,
+     "bottomDelta": 0,
+     "size": 48
+    }
+   ],
+   "grips": [
+    {
+     "name": "Resize chat panel",
+     "role": "separator",
+     "tabindex": "0",
+     "bar": "rgb(185, 183, 176)",
+     "size": "4px x 48px",
+     "contrastLeft": 8.74,
+     "contrastRight": 7.92
+    }
+   ],
+   "fields": [
+    {
+     "tag": "textarea",
+     "box": "335x56",
+     "input": "335x56",
+     "hitShare": 1
+    }
+   ],
+   "menuGroups": [
+    {
+     "label": "Theme",
+     "items": [
+      {
+       "role": "menuitemradio",
+       "checked": "false",
+       "name": "Match device"
+      },
+      {
+       "role": "menuitemradio",
+       "checked": "false",
+       "name": "Light"
+      },
+      {
+       "role": "menuitemradio",
+       "checked": "true",
+       "name": "Dark"
+      }
+     ]
+    },
+    {
+     "label": "Kiwi animation",
+     "items": [
+      {
+       "role": "menuitemcheckbox",
+       "checked": "true",
+       "name": "Kiwi animation"
+      }
+     ]
+    }
+   ],
+   "scrollWidth": 1440,
+   "clientWidth": 1440,
+   "failedRequests": [],
+   "consoleErrors": [],
+   "axe": {
+    "version": "4.12.1",
+    "violations": []
+   },
+   "fullHeight": 3896,
+   "scroll1280": 1280,
+   "shots": [
+    "final-chat.dark.1440x900.png",
+    "final-chat.dark.1440.full.png",
+    "final-chat.dark.1280x800.png"
+   ]
+  },
+  "code.light": {
+   "theme": "light",
+   "tokens": 1305,
+   "colours": {
+    "allowed": 55,
+    "checked": 298,
+    "bad": [],
+    "badCount": 0
+   },
+   "images": [
+    {
+     "src": "../assets/brand/kiwi-mark.svg",
+     "ok": true
+    }
+   ],
+   "background": [],
+   "montserrat": [],
+   "facesLoaded": [
+    "Source Sans 3 normal 200 900"
+   ],
+   "paper": [],
+   "logo": [
+    {
+     "color": "rgb(0, 0, 0)",
+     "token": "--logo-on-light"
+    }
+   ],
+   "mascot": [],
+   "contrast": {
+    "n": 62,
+    "min": 4.76,
+    "fails": [],
+    "failCount": 0
+   },
+   "strip": [],
+   "stripClip": [],
+   "avatars": [],
+   "peeks": [],
+   "grips": [
+    {
+     "name": "Resize editor",
+     "role": "separator",
+     "tabindex": "0",
+     "bar": "rgb(101, 99, 92)",
+     "size": "4px x 48px",
+     "contrastLeft": 5.7,
+     "contrastRight": 5.31
+    }
+   ],
+   "fields": [],
+   "menuGroups": [],
+   "scrollWidth": 1440,
+   "clientWidth": 1440,
+   "failedRequests": [],
+   "consoleErrors": [],
+   "axe": {
+    "version": "4.12.1",
+    "violations": []
+   },
+   "fullHeight": 900,
+   "scroll1280": 1280,
+   "shots": [
+    "final-code.light.1440x900.png",
+    "final-code.light.1440.full.png",
+    "final-code.light.1280x800.png"
+   ]
+  },
+  "code.dark": {
+   "theme": "dark",
+   "tokens": 1305,
+   "colours": {
+    "allowed": 58,
+    "checked": 298,
+    "bad": [],
+    "badCount": 0
+   },
+   "images": [
+    {
+     "src": "../assets/brand/kiwi-mark.svg",
+     "ok": true
+    }
+   ],
+   "background": [],
+   "montserrat": [],
+   "facesLoaded": [
+    "Source Sans 3 normal 200 900"
+   ],
+   "paper": [],
+   "logo": [
+    {
+     "color": "rgb(255, 255, 255)",
+     "token": "--logo-on-dark"
+    }
+   ],
+   "mascot": [],
+   "contrast": {
+    "n": 62,
+    "min": 6.39,
+    "fails": [],
+    "failCount": 0
+   },
+   "strip": [],
+   "stripClip": [],
+   "avatars": [],
+   "peeks": [],
+   "grips": [
+    {
+     "name": "Resize editor",
+     "role": "separator",
+     "tabindex": "0",
+     "bar": "rgb(185, 183, 176)",
+     "size": "4px x 48px",
+     "contrastLeft": 7.92,
+     "contrastRight": 8.74
+    }
+   ],
+   "fields": [],
+   "menuGroups": [],
+   "scrollWidth": 1440,
+   "clientWidth": 1440,
+   "failedRequests": [],
+   "consoleErrors": [],
+   "axe": {
+    "version": "4.12.1",
+    "violations": []
+   },
+   "fullHeight": 900,
+   "scroll1280": 1280,
+   "shots": [
+    "final-code.dark.1440x900.png",
+    "final-code.dark.1440.full.png",
+    "final-code.dark.1280x800.png"
+   ]
+  },
+  "enroll-students.light": {
+   "theme": "light",
+   "tokens": 1305,
+   "colours": {
+    "allowed": 55,
+    "checked": 749,
+    "bad": [],
+    "badCount": 0
+   },
+   "images": [
+    {
+     "src": "../assets/brand/kiwi-mark.svg",
+     "ok": true
+    }
+   ],
+   "background": [],
+   "montserrat": [],
+   "facesLoaded": [
+    "Source Sans 3 normal 200 900"
+   ],
+   "paper": [],
+   "logo": [
+    {
+     "color": "rgb(0, 0, 0)",
+     "token": "--logo-on-light"
+    }
+   ],
+   "mascot": [],
+   "contrast": {
+    "n": 72,
+    "min": 5.05,
+    "fails": [],
+    "failCount": 0
+   },
+   "strip": [],
+   "stripClip": [],
+   "avatars": [],
+   "peeks": [],
+   "grips": [],
+   "fields": [
+    {
+     "tag": "textarea",
+     "box": "852x94",
+     "input": "852x94",
+     "hitShare": 1
+    },
+    {
+     "tag": "input",
+     "box": "260x36",
+     "input": "260x36",
+     "hitShare": 1
+    }
+   ],
+   "menuGroups": [],
+   "scrollWidth": 1440,
+   "clientWidth": 1440,
+   "failedRequests": [],
+   "consoleErrors": [],
+   "axe": {
+    "version": "4.12.1",
+    "violations": []
+   },
+   "fullHeight": 1031,
+   "scroll1280": 1280,
+   "shots": [
+    "final-enroll-students.light.1440x900.png",
+    "final-enroll-students.light.1440.full.png",
+    "final-enroll-students.light.1280x800.png"
+   ]
+  },
+  "enroll-students.dark": {
+   "theme": "dark",
+   "tokens": 1305,
+   "colours": {
+    "allowed": 58,
+    "checked": 749,
+    "bad": [],
+    "badCount": 0
+   },
+   "images": [
+    {
+     "src": "../assets/brand/kiwi-mark.svg",
+     "ok": true
+    }
+   ],
+   "background": [],
+   "montserrat": [],
+   "facesLoaded": [
+    "Source Sans 3 normal 200 900"
+   ],
+   "paper": [],
+   "logo": [
+    {
+     "color": "rgb(255, 255, 255)",
+     "token": "--logo-on-dark"
+    }
+   ],
+   "mascot": [],
+   "contrast": {
+    "n": 72,
+    "min": 7.6,
+    "fails": [],
+    "failCount": 0
+   },
+   "strip": [],
+   "stripClip": [],
+   "avatars": [],
+   "peeks": [],
+   "grips": [],
+   "fields": [
+    {
+     "tag": "textarea",
+     "box": "852x94",
+     "input": "852x94",
+     "hitShare": 1
+    },
+    {
+     "tag": "input",
+     "box": "260x36",
+     "input": "260x36",
+     "hitShare": 1
+    }
+   ],
+   "menuGroups": [],
+   "scrollWidth": 1440,
+   "clientWidth": 1440,
+   "failedRequests": [],
+   "consoleErrors": [],
+   "axe": {
+    "version": "4.12.1",
+    "violations": []
+   },
+   "fullHeight": 1031,
+   "scroll1280": 1280,
+   "shots": [
+    "final-enroll-students.dark.1440x900.png",
+    "final-enroll-students.dark.1440.full.png",
+    "final-enroll-students.dark.1280x800.png"
+   ]
+  },
+  "edit-class.light": {
+   "theme": "light",
+   "tokens": 1305,
+   "colours": {
+    "allowed": 55,
+    "checked": 371,
+    "bad": [],
+    "badCount": 0
+   },
+   "images": [
+    {
+     "src": "../assets/brand/kiwi-mark.svg",
+     "ok": true
+    }
+   ],
+   "background": [
+    {
+     "u": ".design-foundations/mocks/assets/mascot/stills/idle.128.webp",
+     "ok": true
+    }
+   ],
+   "montserrat": [],
+   "facesLoaded": [
+    "Source Sans 3 normal 200 900"
+   ],
+   "paper": [],
+   "logo": [
+    {
+     "color": "rgb(0, 0, 0)",
+     "token": "--logo-on-light"
+    }
+   ],
+   "mascot": [
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/stills/idle.128.webp",
+     "size": "64px"
+    }
+   ],
+   "contrast": {
+    "n": 46,
+    "min": 5.16,
+    "fails": [],
+    "failCount": 0
+   },
+   "strip": [],
+   "stripClip": [],
+   "avatars": [],
+   "peeks": [],
+   "grips": [],
+   "fields": [
+    {
+     "tag": "input",
+     "box": "578x36",
+     "input": "578x36",
+     "hitShare": 1
+    },
+    {
+     "tag": "input",
+     "box": "281x36",
+     "input": "281x36",
+     "hitShare": 1
+    },
+    {
+     "tag": "input",
+     "box": "281x36",
+     "input": "281x36",
+     "hitShare": 1
+    },
+    {
+     "tag": "textarea",
+     "box": "578x74",
+     "input": "578x74",
+     "hitShare": 1
+    },
+    {
+     "tag": "textarea",
+     "box": "578x94",
+     "input": "578x94",
+     "hitShare": 1
+    }
+   ],
+   "menuGroups": [],
+   "scrollWidth": 1440,
+   "clientWidth": 1440,
+   "failedRequests": [],
+   "consoleErrors": [],
+   "axe": {
+    "version": "4.12.1",
+    "violations": []
+   },
+   "fullHeight": 924,
+   "scroll1280": 1280,
+   "shots": [
+    "final-edit-class.light.1440x900.png",
+    "final-edit-class.light.1440.full.png",
+    "final-edit-class.light.1280x800.png"
+   ]
+  },
+  "edit-class.dark": {
+   "theme": "dark",
+   "tokens": 1305,
+   "colours": {
+    "allowed": 58,
+    "checked": 371,
+    "bad": [],
+    "badCount": 0
+   },
+   "images": [
+    {
+     "src": "../assets/brand/kiwi-mark.svg",
+     "ok": true
+    }
+   ],
+   "background": [
+    {
+     "u": ".design-foundations/mocks/assets/mascot/stills/idle.128.webp",
+     "ok": true
+    }
+   ],
+   "montserrat": [],
+   "facesLoaded": [
+    "Source Sans 3 normal 200 900"
+   ],
+   "paper": [],
+   "logo": [
+    {
+     "color": "rgb(255, 255, 255)",
+     "token": "--logo-on-dark"
+    }
+   ],
+   "mascot": [
+    {
+     "kind": "still",
+     "state": "idle",
+     "atlas": null,
+     "cell": "0",
+     "url": ".design-foundations/mocks/assets/mascot/stills/idle.128.webp",
+     "size": "64px"
+    }
+   ],
+   "contrast": {
+    "n": 46,
+    "min": 7.92,
+    "fails": [],
+    "failCount": 0
+   },
+   "strip": [],
+   "stripClip": [],
+   "avatars": [],
+   "peeks": [],
+   "grips": [],
+   "fields": [
+    {
+     "tag": "input",
+     "box": "578x36",
+     "input": "578x36",
+     "hitShare": 1
+    },
+    {
+     "tag": "input",
+     "box": "281x36",
+     "input": "281x36",
+     "hitShare": 1
+    },
+    {
+     "tag": "input",
+     "box": "281x36",
+     "input": "281x36",
+     "hitShare": 1
+    },
+    {
+     "tag": "textarea",
+     "box": "578x74",
+     "input": "578x74",
+     "hitShare": 1
+    },
+    {
+     "tag": "textarea",
+     "box": "578x94",
+     "input": "578x94",
+     "hitShare": 1
+    }
+   ],
+   "menuGroups": [],
+   "scrollWidth": 1440,
+   "clientWidth": 1440,
+   "failedRequests": [],
+   "consoleErrors": [],
+   "axe": {
+    "version": "4.12.1",
+    "violations": []
+   },
+   "fullHeight": 924,
+   "scroll1280": 1280,
+   "shots": [
+    "final-edit-class.dark.1440x900.png",
+    "final-edit-class.dark.1440.full.png",
+    "final-edit-class.dark.1280x800.png"
+   ]
+  }
+ },
+ "phone": {
+  "sign-in.light": {
+   "shot": "final-sign-in.light.390x844.png",
+   "full": "final-sign-in.light.390.full.png",
+   "fullHeight": 844,
+   "coarse": true,
+   "hoverNone": true,
+   "controls": 4,
+   "under44": [],
+   "covered": 0,
+   "scrollWidth": 390,
+   "innerWidth": 390,
+   "colours": {
+    "checked": 102,
+    "badCount": 0,
+    "bad": []
+   },
+   "fields": [
+    {
+     "tag": "input",
+     "box": "346x44",
+     "input": "346x44",
+     "hitShare": 1
+    },
+    {
+     "tag": "input",
+     "box": "346x44",
+     "input": "346x44",
+     "hitShare": 1
+    }
+   ],
+   "peeks": [],
+   "stripClip": [],
+   "contrastMin": 5.31,
+   "contrastFails": [],
+   "failedRequests": [],
+   "consoleErrors": []
+  },
+  "course-list.light": {
+   "shot": "final-course-list.light.390x844.png",
+   "full": "final-course-list.light.390.full.png",
+   "fullHeight": 1320,
+   "coarse": true,
+   "hoverNone": true,
+   "controls": 8,
+   "under44": [],
+   "covered": 0,
+   "scrollWidth": 390,
+   "innerWidth": 390,
+   "colours": {
+    "checked": 118,
+    "badCount": 0,
+    "bad": []
+   },
+   "fields": [],
+   "peeks": [],
+   "stripClip": [],
+   "contrastMin": 5.7,
+   "contrastFails": [],
+   "failedRequests": [],
+   "consoleErrors": []
+  },
+  "chat.light": {
+   "shot": "final-chat.light.390x844.png",
+   "full": "final-chat.light.390.full.png",
+   "fullHeight": 8942,
+   "coarse": true,
+   "hoverNone": true,
+   "controls": 16,
+   "under44": [],
+   "covered": 0,
+   "scrollWidth": 390,
+   "innerWidth": 390,
+   "colours": {
+    "checked": 2676,
+    "badCount": 0,
+    "bad": []
+   },
+   "fields": [
+    {
+     "tag": "textarea",
+     "box": "314x56",
+     "input": "314x56",
+     "hitShare": 1
+    }
+   ],
+   "peeks": [
+    {
+     "rightDelta": 0,
+     "bottomDelta": 0,
+     "size": 48
+    },
+    {
+     "rightDelta": 0,
+     "bottomDelta": 0,
+     "size": 48
+    }
+   ],
+   "stripClip": [
+    {
+     "state": "idle",
+     "step": "idle",
+     "controls": 2,
+     "clipped": []
+    },
+    {
+     "state": "walk",
+     "step": "send",
+     "controls": 2,
+     "clipped": []
+    },
+    {
+     "state": "walk",
+     "step": "run",
+     "controls": 2,
+     "clipped": []
+    },
+    {
+     "state": "speaking",
+     "step": "first token",
+     "controls": 2,
+     "clipped": []
+    },
+    {
+     "state": "speaking",
+     "step": "streaming",
+     "controls": 2,
+     "clipped": []
+    },
+    {
+     "state": "hop",
+     "step": "complete",
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "hop",
+     "step": "flight",
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "hop",
+     "step": "landed",
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "idle",
+     "step": "idle",
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "peek",
+     "step": null,
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "retract",
+     "step": null,
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "wave",
+     "step": null,
+     "controls": 7,
+     "clipped": []
+    },
+    {
+     "state": "error",
+     "step": null,
+     "controls": 3,
+     "clipped": []
+    },
+    {
+     "state": "offline",
+     "step": null,
+     "controls": 2,
+     "clipped": []
+    }
+   ],
+   "contrastMin": 5.31,
+   "contrastFails": [],
+   "failedRequests": [],
+   "consoleErrors": []
+  },
+  "code.light": {
+   "shot": "final-code.light.390x844.png",
+   "full": "final-code.light.390.full.png",
+   "fullHeight": 844,
+   "coarse": true,
+   "hoverNone": true,
+   "controls": 16,
+   "under44": [],
+   "covered": 0,
+   "scrollWidth": 390,
+   "innerWidth": 390,
+   "colours": {
+    "checked": 296,
+    "badCount": 0,
+    "bad": []
+   },
+   "fields": [],
+   "peeks": [],
+   "stripClip": [],
+   "contrastMin": 4.76,
+   "contrastFails": [],
+   "failedRequests": [],
+   "consoleErrors": []
+  }
+ },
+ "static": {
+  "sign-in.light": {
+   "literals": 0,
+   "sample": [],
+   "tokenBlock": true
+  },
+  "sign-in.dark": {
+   "literals": 0,
+   "sample": [],
+   "tokenBlock": true
+  },
+  "course-list.light": {
+   "literals": 0,
+   "sample": [],
+   "tokenBlock": true
+  },
+  "course-list.dark": {
+   "literals": 0,
+   "sample": [],
+   "tokenBlock": true
+  },
+  "chat.light": {
+   "literals": 0,
+   "sample": [],
+   "tokenBlock": true
+  },
+  "chat.dark": {
+   "literals": 0,
+   "sample": [],
+   "tokenBlock": true
+  },
+  "code.light": {
+   "literals": 0,
+   "sample": [],
+   "tokenBlock": true
+  },
+  "code.dark": {
+   "literals": 0,
+   "sample": [],
+   "tokenBlock": true
+  },
+  "enroll-students.light": {
+   "literals": 0,
+   "sample": [],
+   "tokenBlock": true
+  },
+  "enroll-students.dark": {
+   "literals": 0,
+   "sample": [],
+   "tokenBlock": true
+  },
+  "edit-class.light": {
+   "literals": 0,
+   "sample": [],
+   "tokenBlock": true
+  },
+  "edit-class.dark": {
+   "literals": 0,
+   "sample": [],
+   "tokenBlock": true
+  }
+ },
+ "summary": {
+  "DW-7.1": {
+   "renders": 12,
+   "failedRequests": 0,
+   "consoleErrors": 0,
+   "imagesFailed": 0,
+   "shots": 44
+  },
+  "DW-7.2": {
+   "staticLiterals": 0,
+   "runtimeChecked": 11838,
+   "runtimeOffToken": 0
+  },
+  "DW-7.3": {
+   "final-sign-in.light.390x844.png": {
+    "coarse": true,
+    "scrollWidth": 390,
+    "controls": 4,
+    "under44": 0
+   },
+   "final-course-list.light.390x844.png": {
+    "coarse": true,
+    "scrollWidth": 390,
+    "controls": 8,
+    "under44": 0
+   },
+   "final-chat.light.390x844.png": {
+    "coarse": true,
+    "scrollWidth": 390,
+    "controls": 16,
+    "under44": 0
+   },
+   "final-code.light.390x844.png": {
+    "coarse": true,
+    "scrollWidth": 390,
+    "controls": 16,
+    "under44": 0
+   }
+  },
+  "DW-7.4": {
+   "states": [
+    "idle",
+    "walk",
+    "speaking",
+    "hop",
+    "peek",
+    "retract",
+    "wave",
+    "error",
+    "offline"
+   ],
+   "sequence": [
+    "idle",
+    "send",
+    "run",
+    "first token",
+    "streaming",
+    "complete",
+    "flight",
+    "landed",
+    "idle"
+   ],
+   "menuGroups": [
+    "Theme",
+    "Kiwi animation"
+   ],
+   "avatars": {
+    "checked": 58,
+    "sharedFraming": 58,
+    "offFraming": [],
+    "notFullBody": 0,
+    "notFullBodySample": []
+   }
+  },
+  "DW-7.7": {
+   "unmatchedStrings": 0,
+   "montserratOutsideWordmark": 0,
+   "mascotFilesNotPhase4": 0,
+   "mascotBytesMismatch": 0,
+   "darkPaper": [
+    {
+     "bg": "rgb(255, 255, 255)",
+     "imgOpacity": "0.92",
+     "frame": "rgb(75, 73, 66)"
+    },
+    {
+     "bg": "rgb(255, 255, 255)",
+     "imgOpacity": "0.92",
+     "frame": "rgb(75, 73, 66)"
+    }
+   ],
+   "logo": {
+    "light --logo-on-light": "rgb(0, 0, 0)",
+    "dark --logo-on-dark": "rgb(255, 255, 255)"
+   }
+  },
+  "contrast": {
+   "min": 4.76,
+   "below": 0
+  },
+  "stripClip": {
+   "frames": 42,
+   "controls": 192,
+   "clipped": []
+  },
+  "peek": {
+   "exhibits": 6,
+   "unanchored": 0,
+   "maxRightDelta": 0,
+   "maxBottomDelta": 0
+  },
+  "grips": {
+   "chat.light Resize chat panel": "rgb(101, 99, 92) 4px x 48px; 5.31:1 and 5.7:1 against its two sides",
+   "chat.dark Resize chat panel": "rgb(185, 183, 176) 4px x 48px; 8.74:1 and 7.92:1 against its two sides",
+   "code.light Resize editor": "rgb(101, 99, 92) 4px x 48px; 5.7:1 and 5.31:1 against its two sides",
+   "code.dark Resize editor": "rgb(185, 183, 176) 4px x 48px; 7.92:1 and 8.74:1 against its two sides"
+  },
+  "fields": {
+   "checked": 23,
+   "minHitShare": 1,
+   "inputSmallerThanBox": 0,
+   "phoneFieldHits": [
+    "121x44",
+    "121x44",
+    "121x57"
+   ]
+  },
+  "axe": {
+   "version": "4.12.1",
+   "violations": 0,
+   "byRule": []
+  }
+ },
+ "strings": {
+  "sign-in.light": {
+   "textNodes": 11,
+   "byKind": {
+    "ui": 11
+   },
+   "unmatched": [],
+   "attributes": 4,
+   "attributesUnmatched": []
+  },
+  "sign-in.dark": {
+   "textNodes": 11,
+   "byKind": {
+    "ui": 11
+   },
+   "unmatched": [],
+   "attributes": 4,
+   "attributesUnmatched": []
+  },
+  "course-list.light": {
+   "textNodes": 10,
+   "byKind": {
+    "ui": 7,
+    "content": 3
+   },
+   "unmatched": [],
+   "attributes": 11,
+   "attributesUnmatched": []
+  },
+  "course-list.dark": {
+   "textNodes": 10,
+   "byKind": {
+    "ui": 7,
+    "content": 3
+   },
+   "unmatched": [],
+   "attributes": 11,
+   "attributesUnmatched": []
+  },
+  "chat.light": {
+   "textNodes": 210,
+   "byKind": {
+    "ui": 64,
+    "content": 85,
+    "annotation": 76
+   },
+   "unmatched": [],
+   "attributes": 319,
+   "attributesUnmatched": []
+  },
+  "chat.dark": {
+   "textNodes": 210,
+   "byKind": {
+    "ui": 64,
+    "content": 85,
+    "annotation": 76
+   },
+   "unmatched": [],
+   "attributes": 319,
+   "attributesUnmatched": []
+  },
+  "code.light": {
+   "textNodes": 68,
+   "byKind": {
+    "ui": 38,
+    "content": 30,
+    "annotation": 4
+   },
+   "unmatched": [],
+   "attributes": 15,
+   "attributesUnmatched": []
+  },
+  "code.dark": {
+   "textNodes": 68,
+   "byKind": {
+    "ui": 38,
+    "content": 30,
+    "annotation": 4
+   },
+   "unmatched": [],
+   "attributes": 15,
+   "attributesUnmatched": []
+  },
+  "enroll-students.light": {
+   "textNodes": 72,
+   "byKind": {
+    "ui": 71,
+    "content": 1
+   },
+   "unmatched": [],
+   "attributes": 31,
+   "attributesUnmatched": []
+  },
+  "enroll-students.dark": {
+   "textNodes": 72,
+   "byKind": {
+    "ui": 71,
+    "content": 1
+   },
+   "unmatched": [],
+   "attributes": 31,
+   "attributesUnmatched": []
+  },
+  "edit-class.light": {
+   "textNodes": 46,
+   "byKind": {
+    "ui": 43,
+    "content": 3
+   },
+   "unmatched": [],
+   "attributes": 15,
+   "attributesUnmatched": []
+  },
+  "edit-class.dark": {
+   "textNodes": 46,
+   "byKind": {
+    "ui": 43,
+    "content": 3
+   },
+   "unmatched": [],
+   "attributes": 15,
+   "attributesUnmatched": []
+  },
+  "sign-in.light@390": {
+   "textNodes": 10,
+   "byKind": {
+    "ui": 10
+   },
+   "unmatched": [],
+   "attributes": 4,
+   "attributesUnmatched": []
+  },
+  "course-list.light@390": {
+   "textNodes": 10,
+   "byKind": {
+    "ui": 7,
+    "content": 3
+   },
+   "unmatched": [],
+   "attributes": 11,
+   "attributesUnmatched": []
+  },
+  "chat.light@390": {
+   "textNodes": 190,
+   "byKind": {
+    "ui": 51,
+    "content": 78,
+    "annotation": 76
+   },
+   "unmatched": [],
+   "attributes": 319,
+   "attributesUnmatched": []
+  },
+  "code.light@390": {
+   "textNodes": 68,
+   "byKind": {
+    "ui": 38,
+    "content": 30,
+    "annotation": 4
+   },
+   "unmatched": [],
+   "attributes": 15,
+   "attributesUnmatched": []
+  }
+ },
+ "mascotFiles": [
+  {
+   "file": "mascot/stills/idle.192.webp",
+   "phase4": true,
+   "bytes": 14776,
+   "sha256": "cf7d06b8641a8834",
+   "inventoryBytes": 14776
+  },
+  {
+   "file": "mascot/stills/idle.128.webp",
+   "phase4": true,
+   "bytes": 8130,
+   "sha256": "67442f9022cc12e6",
+   "inventoryBytes": 8130
+  },
+  {
+   "file": "mascot/stills/stand.64.webp",
+   "phase4": true,
+   "bytes": 1920,
+   "sha256": "d3979e8d58e27a4f",
+   "inventoryBytes": 1920
+  },
+  {
+   "file": "mascot/atlas/full-walk.64.webp",
+   "phase4": true,
+   "bytes": 34942,
+   "sha256": "beae5b53776818eb",
+   "inventoryBytes": 34942
+  },
+  {
+   "file": "mascot/atlas/full-walk.128.webp",
+   "phase4": true,
+   "bytes": 109236,
+   "sha256": "a76f1da7f22abf97",
+   "inventoryBytes": 109236
+  },
+  {
+   "file": "mascot/atlas/full-hop-flight.64.webp",
+   "phase4": true,
+   "bytes": 34622,
+   "sha256": "7d5df234bae31d5c",
+   "inventoryBytes": 34622
+  },
+  {
+   "file": "mascot/atlas/full-hop-flight.128.webp",
+   "phase4": true,
+   "bytes": 107870,
+   "sha256": "27d720c5d904e704",
+   "inventoryBytes": 107870
+  },
+  {
+   "file": "mascot/atlas/stamp-peek.96.webp",
+   "phase4": true,
+   "bytes": 60786,
+   "sha256": "bd8bafb6915d233b",
+   "inventoryBytes": 60786
+  },
+  {
+   "file": "mascot/atlas/stamp-peek.128.webp",
+   "phase4": true,
+   "bytes": 100186,
+   "sha256": "924623ee21ebbb8d",
+   "inventoryBytes": 100186
+  },
+  {
+   "file": "mascot/atlas/full-wave-bow.64.webp",
+   "phase4": true,
+   "bytes": 34430,
+   "sha256": "d0c10201d830e849",
+   "inventoryBytes": 34430
+  },
+  {
+   "file": "mascot/atlas/full-wave-bow.128.webp",
+   "phase4": true,
+   "bytes": 107118,
+   "sha256": "2c722b73620406c8",
+   "inventoryBytes": 107118
+  }
+ ]
+}

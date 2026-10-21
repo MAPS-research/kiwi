@@ -188,7 +188,7 @@ export const StandaloneTopTokenUsers = React.forwardRef<StandaloneTopTokenUsersH
             <Card
                 variant="outlined"
                 aria-busy={loadingTopUsers}
-                sx={{ minHeight: { xs: 652, lg: 332 }, borderRadius: 2, boxShadow: "none" }}
+                sx={{ minHeight: { xs: 652, lg: 332 } }}
             >
                 <CardContent sx={{ p: 1, '&:last-child': { pb: 1 } }}>
                     {loadingTopUsers ? (
@@ -202,7 +202,7 @@ export const StandaloneTopTokenUsers = React.forwardRef<StandaloneTopTokenUsersH
                             }}
                         >
                             {Array.from({ length: 10 }, (_, index) => (
-                                <Skeleton key={index} variant="rounded" height={60} sx={{ borderRadius: 1.5 }} />
+                                <Skeleton key={index} variant="rounded" height={60} sx={{ borderRadius: "var(--radius-small)" }} />
                             ))}
                         </Box>
                     ) : topUsers.length > 0 ? (
@@ -237,7 +237,7 @@ export const StandaloneTopTokenUsers = React.forwardRef<StandaloneTopTokenUsersH
                                         py: 1.25,
                                         minHeight: 60,
                                         minWidth: 0,
-                                        borderRadius: 1.5,
+                                        borderRadius: "var(--radius-small)",
                                         '&:hover': { backgroundColor: 'action.hover' },
                                     }}
                                     onClick={() => openDetail(user.userId, user.email)}
@@ -249,7 +249,8 @@ export const StandaloneTopTokenUsers = React.forwardRef<StandaloneTopTokenUsersH
                                             display: 'grid',
                                             placeItems: 'center',
                                             width: 28,
-                                            fontWeight: 700
+                                            fontWeight: 600,
+                                            fontVariantNumeric: "tabular-nums",
                                         }}>
                                         {index + 1}
                                     </Typography>
@@ -310,7 +311,7 @@ export const StandaloneTopTokenUsers = React.forwardRef<StandaloneTopTokenUsersH
                                     >
                                         {formatNumber(user.tokensUsed)} tokens
                                     </Typography>
-                                    <ChevronRightOutlinedIcon sx={{ color: 'text.disabled', fontSize: 20 }} />
+                                    <ChevronRightOutlinedIcon sx={{ color: 'var(--icon-default)', fontSize: 20 }} />
                                 </ListItemButton>
                                 </ListItem>
                             ))}
@@ -361,7 +362,7 @@ export const StandaloneTopTokenUsers = React.forwardRef<StandaloneTopTokenUsersH
                     {loadingDetails ? (
                         <Stack spacing={1} sx={{ px: { xs: 2, sm: 0 }, py: { xs: 2, sm: 0 }, minHeight: 280 }}>
                             {Array.from({ length: 6 }, (_, index) => (
-                                <Skeleton key={index} variant="rounded" height={40} sx={{ borderRadius: 1 }} />
+                                <Skeleton key={index} variant="rounded" height={40} sx={{ borderRadius: "var(--radius-small)" }} />
                             ))}
                         </Stack>
                     ) : details.length > 0 ? (
@@ -489,7 +490,7 @@ export const StandaloneTopTokenUsers = React.forwardRef<StandaloneTopTokenUsersH
                                                 {formatNumber(getInteractionCount(s))} interactions
                                             </Typography>
                                         </TableCell>
-                                        <TableCell align="right">{formatNumber(s.tokensUsed)}</TableCell>
+                                        <TableCell align="right" sx={{ fontVariantNumeric: "tabular-nums" }}>{formatNumber(s.tokensUsed)}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { SessionActivity } from './interface.tsx';
 import { AnalyticsChartTooltip } from './AnalyticsChartTooltip.tsx';
-import { useAnalyticsChartAnimation } from './chartAnimation.ts';
+import { CHART_SLICE_GAP, useChartTokens } from './chartTokens.ts';
 
 interface EngineData {
     engine: string;
@@ -83,13 +83,13 @@ export const StandaloneUserEngine: React.FC<StandaloneUserEngineProps> = ({
     loading = false
 }) => {
     const theme = useTheme();
-    const chartAnimation = useAnalyticsChartAnimation();
-    const chartColors = theme.palette.chart;
+    // Categories take the fixed slot order; "Unknown" is always the neutral.
+    const chartColors = useChartTokens();
     const engineColors = useMemo(() => ({
         openai: chartColors.series1,
         qwen: chartColors.series2,
-        unknown: chartColors.series5,
-    }), [chartColors]);
+        unknown: chartColors.other,
+    }), [chartColors.series1, chartColors.series2, chartColors.other]);
 
     // Generate chart data from real data only
     const chartData = useMemo(() => {
@@ -113,7 +113,6 @@ export const StandaloneUserEngine: React.FC<StandaloneUserEngineProps> = ({
                 <AnalyticsChartTooltip
                     title={`${data.engine}: ${data.percentage}%`}
                     value={`Usage: ${data.usage} requests`}
-                    valueColor={data.color}
                 />
             );
         }
@@ -128,11 +127,6 @@ export const StandaloneUserEngine: React.FC<StandaloneUserEngineProps> = ({
             width: '100%',
             height: '100%',
             minHeight: 340,
-            backgroundColor: "background.paper",
-            boxShadow: "none",
-            borderRadius: 2,
-            border: "1px solid",
-            borderColor: "divider"
         }}>
             <CardContent sx={{ p: 2.5, '&:last-child': { pb: 2.5 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <Box sx={{ mb: 1.5 }}>
@@ -162,28 +156,27 @@ export const StandaloneUserEngine: React.FC<StandaloneUserEngineProps> = ({
                             </Box>
                         ) : hasData ? (
                             <ResponsiveContainer width="100%" height="100%">
-                                <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
+                                <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }} accessibilityLayer={false}>
+                                    {/* Square slices; a 2 px gap in the plot colour separates them. */}
                                     <Pie
-                                        {...chartAnimation}
+                                        isAnimationActive={false}
                                         data={chartData}
                                         dataKey="usage"
                                         nameKey="engine"
                                         innerRadius={44}
                                         outerRadius={66}
-                                        paddingAngle={3}
-                                        cornerRadius={4}
-                                        stroke={theme.palette.background.paper}
-                                        strokeWidth={3}
+                                        stroke={chartColors.plot}
+                                        strokeWidth={CHART_SLICE_GAP}
                                     >
                                         {chartData.map((entry, index) => (
                                             <Cell key={`cell-${index}`} fill={entry.color} />
                                         ))}
                                     </Pie>
-                                    <Tooltip content={<CustomTooltip />} offset={12} />
+                                    <Tooltip content={<CustomTooltip />} offset={12} isAnimationActive={false} />
                                     <text x="50%" y="47%" textAnchor="middle" dominantBaseline="middle" fill={theme.palette.text.primary} fontSize="20" fontWeight="600">
                                         {totalUsage.toLocaleString()}
                                     </text>
-                                    <text x="50%" y="57%" textAnchor="middle" dominantBaseline="middle" fill={theme.palette.text.secondary} fontSize="12">
+                                    <text x="50%" y="57%" textAnchor="middle" dominantBaseline="middle" fill={chartColors.tickText} fontSize="12">
                                         requests
                                     </text>
                                 </PieChart>
@@ -219,12 +212,13 @@ export const StandaloneUserEngine: React.FC<StandaloneUserEngineProps> = ({
                                         sx={{
                                             width: 10,
                                             height: 10,
-                                            borderRadius: '50%',
+                                            // A legend key is square, like the marks it keys.
+                                            borderRadius: 0,
                                             backgroundColor: item.color,
                                             flexShrink: 0
                                         }}
                                     />
-                                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                    <Typography variant="body2">
                                         {item.engine}
                                     </Typography>
                                     <Typography variant="body2" sx={{

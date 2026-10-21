@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="28" height="28" fill="currentColor" aria-hidden="true" focusable="false">
+  <!-- Launcher glyph (companion.slot.launcher, 28 px on the 56 px --accent-solid disc, drawn in --accent-on-solid): the companion's portrait as a
+       one-colour silhouette with a filled speech bubble, so the disc reads as "chat with Kiwi" at 1x (Phase 4 review F6). One path in currentColor,
+       no mask and no colour literal (review A-13): the body, bill and wing are the Portrait() paths of NYUSH-ML/kiwi-ui@fbb4db8
+       src/components/KiwiMascot/KiwiArtwork.tsx, scaled to 78 % and set bottom-left, all wound one way; the two eyes are subpaths wound the other
+       way, so the nonzero fill rule leaves them unfilled and the disc shows through (evenodd would also cut holes where the bill and wing overlap
+       the body). The bubble is plain iconography, not mascot art. -->
+  <path fill-rule="nonzero" d="M17.94 150.44C20.28 134.84 29.64 126.26 30.42 111.44C25.74 98.18 25.74 83.36 31.2 70.1C38.22 53.72 52.26 48.26 64.74 49.04C82.68 48.26 99.06 61.52 101.4 77.9C102.96 91.16 99.06 103.64 93.6 114.56C95.94 129.38 106.86 137.96 107.64 150.44ZM69.42 84.14C72.54 81.02 76.44 82.58 79.56 85.7C92.82 97.4 108.42 118.46 118.56 137.18C120.9 142.64 117.78 144.2 113.88 139.52C100.62 124.7 85.8 108.32 68.64 95.06C63.96 91.94 64.74 87.26 69.42 84.14ZM31.98 138.74C26.52 141.86 19.5 138.74 15.6 129.38C10.92 117.68 14.82 110.66 26.52 122.36ZM52.49 88.04A4.91 4.91 0 1 0 42.67 88.04A4.91 4.91 0 1 0 52.49 88.04ZM87.73 72.01A2.96 4.21 -24 1 0 82.31 74.43A2.96 4.21 -24 1 0 87.73 72.01ZM104 18h34a12 12 0 0 1 12 12v16a12 12 0 0 1-12 12h-18l-14 12 2-12h-4a12 12 0 0 1-12-12V30a12 12 0 0 1 12-12z"/>
+</svg>

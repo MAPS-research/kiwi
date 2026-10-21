@@ -10,32 +10,27 @@ import {
   Box,
   Chip,
   Alert,
-  CircularProgress,
+  AlertTitle,
   List,
   ListItem,
   ListItemText,
   Divider,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Paper,
   Tabs,
   Tab,
 } from '@mui/material';
 import {
   EmailOutlined as EmailIcon,
-  PersonAddOutlined as PersonAddIcon,
-  GroupOutlined as GroupIcon,
 } from '@mui/icons-material';
 import { emailApiClient } from '../../utils/api.ts';
 import { SendTemplatedEmailDtoTemplateEnum } from '../../services/models/SendTemplatedEmailDto.ts';
 import { renderTemplate } from '../Email/TemplatedEmailForm.tsx';
+import StatusChip from '../StatusChip/StatusChip.tsx';
+import { countNoun } from '../AdminPage/countNoun.ts';
 
 interface EnrolledUser {
   id: string;
   email: string;
-  role: 'admin' | 'student' | 'professor';
+  role: 'admin' | 'student' | 'professor' | 'instructor';
   status: 'active' | 'pending';
   userId?: string;
 }
@@ -48,6 +43,50 @@ interface EmailSelectedUsersDialogProps {
   className?: string;
   onSuccess: () => void;
 }
+
+/** A recipient's role chip and status chip words. */
+const roleLabel = (role: EnrolledUser['role']) =>
+  role === 'admin' ? 'Admin' : role === 'professor' || role === 'instructor' ? 'Instructor' : 'Student';
+
+/**
+ * The email preview is paper (DESIGN.md, Paper stays paper): the templated HTML
+ * keeps its own rendering on the white page, framed by a hairline that follows
+ * the mode, and in dark mode the page is dimmed to 92 % rather than recoloured.
+ */
+const PreviewFrame = ({ html, title, height }: { html: string; title: string; height: number }) => (
+  // The frame follows the mode; the page inside it is paper, square like a PDF page.
+  <Box sx={{ height, border: '1px solid var(--paper-frame)', borderRadius: 0, overflow: 'hidden' }}>
+    <Box sx={{ height: '100%', bgcolor: 'var(--on-paper-page)', opacity: 'var(--opacity-paper-dim)' }}>
+      <Box
+        component="iframe"
+        srcDoc={html}
+        title={title}
+        sx={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+      />
+    </Box>
+  </Box>
+);
+
+/** The plain-text part of the email is text the app draws, so it follows the mode like a code block. */
+const PlainTextPreview = ({ text }: { text: string }) => (
+  <Box
+    sx={{
+      height: 300,
+      overflow: 'auto',
+      p: 'var(--space-4)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--radius-control)',
+      bgcolor: 'background.paper',
+      color: 'text.primary',
+      whiteSpace: 'pre-wrap',
+      fontFamily: 'var(--type-code-family)',
+      fontSize: 'var(--type-code-size)',
+      lineHeight: 'var(--type-code-leading)',
+    }}
+  >
+    {text}
+  </Box>
+);
 
 export const EmailSelectedUsersDialog: React.FC<EmailSelectedUsersDialogProps> = ({
   open,
@@ -67,6 +106,7 @@ export const EmailSelectedUsersDialog: React.FC<EmailSelectedUsersDialogProps> =
   // Separate users by status
   const pendingUsers = selectedUsers.filter(user => user.status === 'pending');
   const activeUsers = selectedUsers.filter(user => user.status === 'active');
+  const classLabel = className || `class ${classId}`;
 
   // Generate email previews
   const generateWelcomePreview = () => {
@@ -76,9 +116,9 @@ export const EmailSelectedUsersDialog: React.FC<EmailSelectedUsersDialogProps> =
       });
     } catch (error) {
       return {
-        subject: 'Access granted for Kiwi',
-        html: '<p>Preview will be generated...</p>',
-        text: 'Preview will be generated...',
+        subject: 'You can now sign in to Kiwi',
+        html: '<p>The preview appears here.</p>',
+        text: 'The preview appears here.',
       };
     }
   };
@@ -93,8 +133,8 @@ export const EmailSelectedUsersDialog: React.FC<EmailSelectedUsersDialogProps> =
     } catch (error) {
       return {
         subject: `Class Announcement: ${className || classId}`,
-        html: '<p>Preview will be generated as you fill in the form...</p>',
-        text: 'Preview will be generated as you fill in the form...',
+        html: '<p>The preview appears as you fill in the form.</p>',
+        text: 'The preview appears as you fill in the form.',
       };
     }
   };
@@ -103,25 +143,23 @@ export const EmailSelectedUsersDialog: React.FC<EmailSelectedUsersDialogProps> =
   React.useEffect(() => {
     if (pendingUsers.length > 0 && activeUsers.length === 0) {
       setEmailType('welcome');
-      setSubject(`Access granted for Kiwi`);
-      setMessage('This will use the standard welcome email template.');
+      setSubject('You can now sign in to Kiwi');
+      setMessage('This uses the standard welcome email.');
     } else if (activeUsers.length > 0 && pendingUsers.length === 0) {
       setEmailType('announcement');
       setSubject(`Class Announcement: ${className || classId}`);
-      setMessage(`You have been added to ${className || `class ${classId}`}. 
-
-You can now access all class materials and discussions.
-
-If you have any questions, please contact your instructor.`);
+      setMessage(`You've been added to ${classLabel} on Kiwi. It's already in your classes at ${window.location.origin}.`);
     } else {
       // Mixed selection
       setEmailType('announcement');
-      setSubject(`Class Enrollment Notification`);
-      setMessage(`You have been enrolled in ${className || `class ${classId}`}.`);
+      setSubject(`You've been added to ${classLabel} on Kiwi`);
+      setMessage(`You've been added to ${classLabel} on Kiwi.`);
     }
   }, [pendingUsers.length, activeUsers.length, className, classId]);
 
   const handleSend = async () => {
+    // Busy: the button says "Sending…" and ignores presses until the sends settle.
+    if (sending) return;
     setSending(true);
     setError(null);
 
@@ -175,65 +213,74 @@ If you have any questions, please contact your instructor.`);
         onClose();
       } else {
         const failedTypes = results.filter(r => !r.success).map(r => r.type);
-        setError(`Failed to send emails to: ${failedTypes.join(', ')} users`);
+        setError(
+          `Couldn't send emails to ${failedTypes.join(', ')} users. The server didn't respond as expected. Your changes are still in the form. Check the email audit before you send again.`
+        );
       }
     } catch (err: any) {
       console.error('Error sending emails:', err);
-      setError(err.message || 'Failed to send emails');
+      // The library's own text is never shown; this sentence is the whole message.
+      setError(
+        "Couldn't send the emails. The server didn't respond as expected. Your changes are still in the form. Check the email audit before you send again."
+      );
     } finally {
       setSending(false);
     }
   };
 
+  const sendUnavailable =
+    // For pure announcement (only active users) - require message only (className is automatic)
+    (emailType === 'announcement' && activeUsers.length > 0 && pendingUsers.length === 0 && !message) ||
+    // For mixed selection (both pending and active) - require message for active users
+    (pendingUsers.length > 0 && activeUsers.length > 0 && !message) ||
+    // For pure welcome (only pending users) - no validation needed as template is predefined
+    (emailType === 'welcome' && pendingUsers.length === 0);
+
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 1
-          }}>
-          <EmailIcon color="primary" />
-          <Typography variant="h6">Send Email to Selected Users</Typography>
-        </Box>
+    // The dialog renders in a portal, outside the admin area: it keeps the page's compact density.
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth data-density="compact">
+      <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+        <EmailIcon color="primary" aria-hidden />
+        Email selected users
       </DialogTitle>
       <DialogContent>
-        <Box sx={{ mt: 2 }}>
+        <Box>
           {/* User Summary */}
-          <Alert severity="info" sx={{ mb: 3 }}>
-            <Typography variant="body2" component="div">
-              Sending to <strong>{selectedUsers.length}</strong> selected user(s):
-              {pendingUsers.length > 0 && (
-                <Box component="span" sx={{ ml: 1 }}>
-                  <Chip
-                    icon={<PersonAddIcon />}
-                    label={`${pendingUsers.length} pending`}
-                    size="small"
-                    color="info"
-                    sx={{ ml: 1 }}
-                  />
+          <Alert severity="info" role="note" sx={{ mb: 'var(--space-5)' }}>
+            <Box
+              component="span"
+              sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-2)' }}
+            >
+              <span>
+                Sending to{' '}
+                <Box component="strong" sx={{ fontWeight: 'var(--weight-semibold)' }}>
+                  {countNoun(selectedUsers.length, 'selected user')}
                 </Box>
+                :
+              </span>
+              {pendingUsers.length > 0 && (
+                <StatusChip kind="info" label={`${pendingUsers.length} pending`} />
               )}
               {activeUsers.length > 0 && (
-                <Box component="span" sx={{ ml: 1 }}>
-                  <Chip
-                    icon={<GroupIcon />}
-                    label={`${activeUsers.length} active`}
-                    size="small"
-                    color="success"
-                    sx={{ ml: 1 }}
-                  />
-                </Box>
+                <StatusChip kind="success" label={`${activeUsers.length} active`} />
               )}
-            </Typography>
+            </Box>
           </Alert>
 
           {/* Recipients List */}
-          <Typography variant="subtitle2" gutterBottom>
+          <Typography variant="subtitle2" component="h3" sx={{ mb: 'var(--space-2)' }}>
             Recipients:
           </Typography>
-          <Box sx={{ maxHeight: 150, overflowY: 'auto', mb: 3, bgcolor: 'grey.50', p: 1, borderRadius: 1 }}>
+          <Box
+            sx={{
+              maxHeight: 150,
+              overflowY: 'auto',
+              mb: 'var(--space-5)',
+              bgcolor: 'action.hover',
+              px: 'var(--space-2)',
+              borderRadius: 'var(--radius-control)',
+            }}
+          >
             <List dense>
               {selectedUsers.map((user, index) => (
                 <React.Fragment key={user.id}>
@@ -244,25 +291,22 @@ If you have any questions, please contact your instructor.`);
                       secondary={
                         <Box
                           sx={{
-                            display: "flex",
-                            gap: 1,
-                            alignItems: "center"
-                          }}>
-                          <Chip
-                            label={user.status}
-                            size="small"
-                            color={user.status === 'active' ? 'success' : 'info'}
+                            display: 'flex',
+                            gap: 'var(--space-2)',
+                            alignItems: 'center',
+                            mt: 'var(--space-1)',
+                          }}
+                        >
+                          <StatusChip
+                            kind={user.status === 'active' ? 'success' : 'info'}
+                            label={user.status === 'active' ? 'Active' : 'Pending'}
                           />
-                          <Chip
-                            label={user.role}
-                            size="small"
-                            variant="outlined"
-                          />
+                          <Chip label={roleLabel(user.role)} />
                         </Box>
                       }
                     />
                   </ListItem>
-                  {index < selectedUsers.length - 1 && <Divider />}
+                  {index < selectedUsers.length - 1 && <Divider component="li" />}
                 </React.Fragment>
               ))}
             </List>
@@ -270,124 +314,97 @@ If you have any questions, please contact your instructor.`);
 
           {/* Email Form */}
           {emailType === 'welcome' && pendingUsers.length > 0 && activeUsers.length === 0 ? (
-            <Alert severity="info" sx={{ mt: 2, mb: 2 }}>
-              <Typography variant="body2">
-                <strong>Welcome Email Template:</strong> Pending users will receive the standard welcome email with access instructions. No custom message needed.
-              </Typography>
+            <Alert severity="info" role="note" sx={{ mb: 'var(--space-4)' }}>
+              <AlertTitle>Welcome email</AlertTitle>
+              Pending users get the standard welcome email with sign-in instructions. You don't need to write a message.
             </Alert>
           ) : pendingUsers.length > 0 && activeUsers.length > 0 ? (
-            <Alert severity="warning" sx={{ mt: 2, mb: 2 }}>
-              <Typography variant="body2">
-                <strong>Mixed Selection:</strong> Pending users will receive welcome emails, while active users will receive the class announcement below.
-              </Typography>
+            <Alert severity="warning" role="note" sx={{ mb: 'var(--space-4)' }}>
+              <AlertTitle>Mixed selection</AlertTitle>
+              Pending users get the welcome email. Active users get the announcement below.
             </Alert>
           ) : null}
 
           {(emailType === 'announcement' || (pendingUsers.length > 0 && activeUsers.length > 0)) && (
-            <>
+            <Box sx={{ display: 'grid', gap: 'var(--space-stack)' }}>
               <TextField
                 fullWidth
-                label="Class Name (for subject line)"
+                label="Class name (for the subject line)"
                 value={className || classId}
                 onChange={(e) => setSubject(e.target.value)}
-                margin="normal"
-                required
-                disabled
-                helperText={`Email subject will be: "Class Announcement: ${className || classId}"`}
+                slotProps={{ input: { readOnly: true } }}
+                helperText={`The subject will be "Class announcement: ${className || classId}".`}
               />
 
-              <TextField
-                fullWidth
-                label="Announcement Message"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                margin="normal"
-                multiline
-                rows={6}
-                required
-                helperText="This message will be sent using the class announcement template"
-              />
-            </>
+              {/* The message is a reading surface: comfortable inside the compact dialog. */}
+              <Box data-density="comfortable">
+                <TextField
+                  fullWidth
+                  label="Announcement message"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  multiline
+                  rows={6}
+                  required
+                  helperText="Sent with the class announcement template."
+                />
+              </Box>
+            </Box>
           )}
 
           {/* Email Preview */}
           {(pendingUsers.length > 0 || activeUsers.length > 0) && (
-            <Paper sx={{ p: 2, bgcolor: 'grey.50', mt: 3 }}>
-              <Typography variant="h6" gutterBottom>
-                Email Preview
+            <Box
+              sx={{
+                p: 'var(--space-4)',
+                mt: 'var(--space-5)',
+                bgcolor: 'action.hover',
+                borderRadius: 'var(--radius-control)',
+              }}
+            >
+              <Typography variant="subtitle1" component="h3" sx={{ mb: 'var(--space-2)' }}>
+                Email preview
               </Typography>
-              <Divider sx={{ mb: 2 }} />
+              <Divider sx={{ mb: 'var(--space-4)' }} />
 
               {pendingUsers.length > 0 && activeUsers.length > 0 ? (
                 // Mixed selection - show both previews
                 <>
-                  <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                    Welcome Email (for {pendingUsers.length} pending users):
+                  <Typography variant="subtitle2" component="h4" sx={{ mb: 'var(--space-2)' }}>
+                    Welcome email (for {countNoun(pendingUsers.length, 'pending user')}):
                   </Typography>
-                  <Box sx={{ mb: 3 }}>
+                  <Box sx={{ mb: 'var(--space-5)' }}>
                     <Typography
                       variant="body2"
                       sx={{
                         color: "text.secondary",
-                        mb: 1
+                        mb: 'var(--space-2)'
                       }}>
                       Subject: {generateWelcomePreview().subject}
                     </Typography>
-                    <Box
-                      sx={{
-                        border: 1,
-                        borderColor: 'divider',
-                        borderRadius: 1,
-                        bgcolor: 'white',
-                        height: 200,
-                        overflow: 'hidden',
-                      }}
-                    >
-                      <iframe
-                        srcDoc={generateWelcomePreview().html}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          border: 'none',
-                          display: 'block',
-                        }}
-                        title="Welcome Email Preview"
-                      />
-                    </Box>
+                    <PreviewFrame
+                      html={generateWelcomePreview().html}
+                      title="Welcome email preview"
+                      height={200}
+                    />
                   </Box>
 
-                  <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                    Class Announcement (for {activeUsers.length} active users):
+                  <Typography variant="subtitle2" component="h4" sx={{ mb: 'var(--space-2)' }}>
+                    Class announcement (for {countNoun(activeUsers.length, 'active user')}):
                   </Typography>
                   <Typography
                     variant="body2"
                     sx={{
                       color: "text.secondary",
-                      mb: 1
+                      mb: 'var(--space-2)'
                     }}>
                     Subject: {generateAnnouncementPreview().subject}
                   </Typography>
-                  <Box
-                    sx={{
-                      border: 1,
-                      borderColor: 'divider',
-                      borderRadius: 1,
-                      bgcolor: 'white',
-                      height: 200,
-                      overflow: 'hidden',
-                    }}
-                  >
-                    <iframe
-                      srcDoc={generateAnnouncementPreview().html}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        border: 'none',
-                        display: 'block',
-                      }}
-                      title="Announcement Email Preview"
-                    />
-                  </Box>
+                  <PreviewFrame
+                    html={generateAnnouncementPreview().html}
+                    title="Announcement email preview"
+                    height={200}
+                  />
                 </>
               ) : pendingUsers.length > 0 ? (
                 // Only pending users - show welcome preview
@@ -396,55 +413,24 @@ If you have any questions, please contact your instructor.`);
                     variant="body2"
                     sx={{
                       color: "text.secondary",
-                      mb: 1
+                      mb: 'var(--space-2)'
                     }}>
                     Subject: {generateWelcomePreview().subject}
                   </Typography>
-                  <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
+                  <Box sx={{ borderBottom: '1px solid var(--border-subtle)', mb: 'var(--space-4)' }}>
                     <Tabs value={previewTab} onChange={(e, newValue) => setPreviewTab(newValue)}>
-                      <Tab label="HTML Preview" />
-                      <Tab label="Plain Text" />
+                      <Tab label="HTML preview" />
+                      <Tab label="Plain text" />
                     </Tabs>
                   </Box>
                   {previewTab === 0 ? (
-                    <Box
-                      sx={{
-                        border: 1,
-                        borderColor: 'divider',
-                        borderRadius: 1,
-                        bgcolor: 'white',
-                        height: 300,
-                        overflow: 'hidden',
-                      }}
-                    >
-                      <iframe
-                        srcDoc={generateWelcomePreview().html}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          border: 'none',
-                          display: 'block',
-                        }}
-                        title="Welcome Email Preview"
-                      />
-                    </Box>
+                    <PreviewFrame
+                      html={generateWelcomePreview().html}
+                      title="Welcome email preview"
+                      height={300}
+                    />
                   ) : (
-                    <Box
-                      sx={{
-                        border: 1,
-                        borderColor: 'divider',
-                        borderRadius: 1,
-                        p: 2,
-                        bgcolor: 'white',
-                        height: 300,
-                        overflow: 'auto',
-                        whiteSpace: 'pre-wrap',
-                        fontFamily: 'monospace',
-                        fontSize: '0.875rem',
-                      }}
-                    >
-                      {generateWelcomePreview().text}
-                    </Box>
+                    <PlainTextPreview text={generateWelcomePreview().text} />
                   )}
                 </>
               ) : (
@@ -454,63 +440,32 @@ If you have any questions, please contact your instructor.`);
                     variant="body2"
                     sx={{
                       color: "text.secondary",
-                      mb: 1
+                      mb: 'var(--space-2)'
                     }}>
                     Subject: {generateAnnouncementPreview().subject}
                   </Typography>
-                  <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
+                  <Box sx={{ borderBottom: '1px solid var(--border-subtle)', mb: 'var(--space-4)' }}>
                     <Tabs value={previewTab} onChange={(e, newValue) => setPreviewTab(newValue)}>
-                      <Tab label="HTML Preview" />
-                      <Tab label="Plain Text" />
+                      <Tab label="HTML preview" />
+                      <Tab label="Plain text" />
                     </Tabs>
                   </Box>
                   {previewTab === 0 ? (
-                    <Box
-                      sx={{
-                        border: 1,
-                        borderColor: 'divider',
-                        borderRadius: 1,
-                        bgcolor: 'white',
-                        height: 300,
-                        overflow: 'hidden',
-                      }}
-                    >
-                      <iframe
-                        srcDoc={generateAnnouncementPreview().html}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          border: 'none',
-                          display: 'block',
-                        }}
-                        title="Announcement Email Preview"
-                      />
-                    </Box>
+                    <PreviewFrame
+                      html={generateAnnouncementPreview().html}
+                      title="Announcement email preview"
+                      height={300}
+                    />
                   ) : (
-                    <Box
-                      sx={{
-                        border: 1,
-                        borderColor: 'divider',
-                        borderRadius: 1,
-                        p: 2,
-                        bgcolor: 'white',
-                        height: 300,
-                        overflow: 'auto',
-                        whiteSpace: 'pre-wrap',
-                        fontFamily: 'monospace',
-                        fontSize: '0.875rem',
-                      }}
-                    >
-                      {generateAnnouncementPreview().text}
-                    </Box>
+                    <PlainTextPreview text={generateAnnouncementPreview().text} />
                   )}
                 </>
               )}
-            </Paper>
+            </Box>
           )}
 
           {error && (
-            <Alert severity="error" sx={{ mt: 2 }}>
+            <Alert severity="error" sx={{ mt: 'var(--space-4)' }}>
               {error}
             </Alert>
           )}
@@ -523,18 +478,11 @@ If you have any questions, please contact your instructor.`);
         <Button
           onClick={handleSend}
           variant="contained"
-          disabled={
-            sending ||
-            // For pure announcement (only active users) - require message only (className is automatic)
-            (emailType === 'announcement' && activeUsers.length > 0 && pendingUsers.length === 0 && !message) ||
-            // For mixed selection (both pending and active) - require message for active users
-            (pendingUsers.length > 0 && activeUsers.length > 0 && !message) ||
-            // For pure welcome (only pending users) - no validation needed as template is predefined
-            (emailType === 'welcome' && pendingUsers.length === 0)
-          }
-          startIcon={sending ? <CircularProgress size={20} /> : <EmailIcon />}
+          aria-busy={sending || undefined}
+          disabled={!sending && sendUnavailable}
+          startIcon={<EmailIcon />}
         >
-          {sending ? 'Sending...' : 'Send Email'}
+          {sending ? 'Sending…' : 'Send email'}
         </Button>
       </DialogActions>
     </Dialog>

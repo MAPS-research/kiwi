@@ -62,23 +62,23 @@ describe("AgentStepChain", () => {
   it("summarises a finished turn and starts collapsed", () => {
     render(<AgentStepChain steps={steps} running={false} />);
     expect(screen.getByText("3 steps")).toBeInTheDocument();
-    expect(screen.queryByText("Reading the sitemap")).not.toBeInTheDocument();
+    expect(screen.queryByText("Checking the page list")).not.toBeInTheDocument();
   });
 
   it("expands and collapses on click", () => {
     render(<AgentStepChain steps={steps} running={false} />);
-    fireEvent.click(screen.getByRole("button", { name: /show agent steps/i }));
-    expect(screen.getByText("Reading the sitemap")).toBeInTheDocument();
-    expect(screen.getByText("Navigating")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Show Kiwi's steps" }));
+    expect(screen.getByText("Checking the page list")).toBeInTheDocument();
+    expect(screen.getByText("Opening a page for you")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: /hide agent steps/i }));
-    expect(screen.getByRole("button", { name: /show agent steps/i })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Hide Kiwi's steps" }));
+    expect(screen.getByRole("button", { name: "Show Kiwi's steps" })).toBeInTheDocument();
   });
 
   it("opens itself while the turn is still running", () => {
     render(<AgentStepChain steps={steps} running />);
     expect(screen.getByText("Working…")).toBeInTheDocument();
-    expect(screen.getByText("Reading the sitemap")).toBeInTheDocument();
+    expect(screen.getByText("Checking the page list")).toBeInTheDocument();
   });
 
   it("folds a repeated tool into one row and flags it as stuck", () => {
@@ -88,7 +88,7 @@ describe("AgentStepChain", () => {
       { toolName: "get_sitemap", status: "complete" },
     ];
     render(<AgentStepChain steps={looping} running={false} />);
-    fireEvent.click(screen.getByRole("button", { name: /show agent steps/i }));
+    fireEvent.click(screen.getByRole("button", { name: "Show Kiwi's steps" }));
     expect(screen.getByText("×3")).toBeInTheDocument();
     expect(screen.getByText(/may be stuck/i)).toBeInTheDocument();
   });
@@ -100,7 +100,7 @@ describe("AgentStepChain", () => {
         running={false}
       />,
     );
-    fireEvent.click(screen.getByRole("button", { name: /show agent steps/i }));
+    fireEvent.click(screen.getByRole("button", { name: "Show Kiwi's steps" }));
     expect(screen.getByText("Opening analytics.")).toBeInTheDocument();
   });
 });
@@ -140,6 +140,12 @@ describe("foldAgentStep", () => {
     steps = foldAgentStep(steps, "Here are the analytics.", "stop");
     expect(steps).toHaveLength(1);
     expect(steps[0].status).toBe("complete");
+  });
+
+  it("completes the running step once the answer text begins, so the line can say it is writing", () => {
+    let steps = foldAgentStep([], "Using rag_search...");
+    steps = foldAgentStep(steps, "Here's a practical workflow for cleaning a messy survey");
+    expect(steps.map((s) => [s.toolName, s.status])).toEqual([["rag_search", "complete"]]);
   });
 
   it("leaves the list alone for frames that carry no tool call", () => {

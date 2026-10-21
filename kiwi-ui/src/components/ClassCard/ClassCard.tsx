@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
-import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material";
-import { alpha } from "@mui/material/styles";
+import { Box, Card, Typography } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import KiwiWordmark from "../Brand/KiwiWordmark.tsx";
+import KiwiLogo from "../Brand/KiwiLogo.tsx";
 
 export const CLASS_CARD_HEIGHT = 252;
 export const CLASS_CARD_MEDIA_HEIGHT = 152;
-export const CLASS_CARD_CONTENT_OVERLAP = 16;
-export const CLASS_CARD_CONTENT_HOVER_OVERLAP = 28;
 
 export interface SharedClassCardProps {
   title?: string;
@@ -18,6 +15,13 @@ export interface SharedClassCardProps {
   hoverable?: boolean;
 }
 
+/**
+ * The class card (JOURNEY S-01, block 3; the Stage 1 preview's `a.class-card`):
+ * a 252 px sheet with a 152 px cover, the class image or, without one, Kiwi's
+ * logo at 64 px on a flat tile, then the title (two lines at most) and the
+ * instructor (one line). A link card or a hoverable preview tints its body on
+ * hover and takes the one focus frame on its own border.
+ */
 const SharedClassCard = ({
   title,
   instructor,
@@ -27,202 +31,124 @@ const SharedClassCard = ({
   hoverable = false,
 }: SharedClassCardProps) => {
   const [imageFailed, setImageFailed] = useState(false);
-  const resolvedTitle = title?.trim() || "Unnamed class";
-  const resolvedInstructor = instructor?.trim() || "Instructor TBD";
-  const canHover = Boolean(to || hoverable);
-  const isStandaloneHoverable = !to && canHover;
+  const resolvedTitle = title?.trim() || "Untitled class";
+  const resolvedInstructor = instructor?.trim() || "No instructor listed";
+  const interactive = Boolean(to || hoverable);
   const showImage = Boolean(imageUrl) && !imageFailed;
 
   useEffect(() => {
     setImageFailed(false);
   }, [imageUrl]);
 
-  const card = (
-    <Card
-      variant="outlined"
-      tabIndex={isStandaloneHoverable ? 0 : undefined}
-      sx={{
-        width: "100%",
-        height: CLASS_CARD_HEIGHT,
-        display: "flex",
-        flexDirection: "column",
-        overflow: "hidden",
-        borderRadius: 3,
-        borderColor: "divider",
-        boxShadow: "none",
-        bgcolor: "grey.100",
-        ...(canHover && {
-          ...(to && { cursor: "pointer" }),
-          "&:hover": {
-            "& .class-card-content": {
-              mt: `-${CLASS_CARD_CONTENT_HOVER_OVERLAP}px`,
-            },
-          },
-        }),
-        ...(isStandaloneHoverable && {
-          "&:focus-visible": {
-            outline: "2px solid",
-            outlineColor: "primary.main",
-            outlineOffset: -2,
-            "& .class-card-content": {
-              mt: `-${CLASS_CARD_CONTENT_HOVER_OVERLAP}px`,
-            },
-          },
-        }),
-      }}
-    >
+  const cardSx = {
+    width: "100%",
+    height: CLASS_CARD_HEIGHT,
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden",
+    textDecoration: "none",
+    color: "var(--text)",
+    ...(interactive && {
+      "&:hover .class-card-body": { backgroundColor: "var(--surface-hover)" },
+      // One frame on focus (DESIGN.md, Components; the theme's rule for a bordered
+      // control): the card recolours its own border, the second pixel drawn inward.
+      "&:focus-visible": {
+        outline: "none",
+        borderColor: "var(--panel-focus-border)",
+        boxShadow: "inset 0 0 0 1px var(--panel-focus-border)",
+        // Forced colours drop the shadow and repaint the border, so the frame becomes the system ring.
+        "@media (forced-colors: active)": {
+          outline: "var(--border-width-focus) solid Highlight",
+          outlineOffset: "calc(-1 * var(--border-width-focus))",
+          boxShadow: "none",
+        },
+      },
+    }),
+  } as const;
+
+  const content = (
+    <>
       <Box
         data-testid="class-card-media"
         sx={{
-          position: "relative",
+          flex: "none",
           height: CLASS_CARD_MEDIA_HEIGHT,
-          flexShrink: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          display: "grid",
+          placeItems: "center",
           overflow: "hidden",
-          background: (theme) =>
-            `linear-gradient(135deg, ${theme.palette.grey[100]} 0%, ${theme.palette.grey[300]} 100%)`,
+          backgroundColor: "var(--surface-hover)",
+          borderBottom: "1px solid var(--border-subtle)",
         }}
       >
         {showImage ? (
-          <>
-            <CardMedia
-              component="img"
-              data-testid="class-card-image"
-              image={imageUrl!}
-              alt={`${resolvedTitle} cover`}
-              loading="lazy"
-              onError={() => setImageFailed(true)}
-              sx={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
-            <Box
-              aria-hidden="true"
-              data-testid="class-card-image-gradient"
-              sx={{
-                position: "absolute",
-                inset: 0,
-                pointerEvents: "none",
-                background: (theme) =>
-                  `linear-gradient(180deg, transparent 80%, ${alpha(theme.palette.grey[100], 0.1)} 90%, ${alpha(theme.palette.grey[100], 0.42)} 100%)`,
-              }}
-            />
-          </>
-        ) : (
           <Box
-            data-testid="class-card-image-fallback"
-            sx={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background: (theme) =>
-                `linear-gradient(135deg, ${theme.palette.grey[100]} 0%, ${theme.palette.grey[300]} 100%)`,
-            }}
-          >
-            <KiwiWordmark
-              aria-hidden="true"
-              data-testid="class-card-placeholder-wordmark"
-              sx={{
-                color: "grey.500",
-                opacity: 0.5,
-                fontSize: "3.25rem",
-                lineHeight: 1,
-                userSelect: "none",
-              }}
-            />
-          </Box>
+            component="img"
+            data-testid="class-card-image"
+            src={imageUrl!}
+            alt=""
+            loading="lazy"
+            onError={() => setImageFailed(true)}
+            sx={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }}
+          />
+        ) : (
+          <KiwiLogo size="var(--companion-slot-inline)" />
         )}
       </Box>
 
-      <CardContent
-        className="class-card-content"
+      <Box
+        className="class-card-body"
         data-testid="class-card-content"
         sx={{
-          position: "relative",
-          zIndex: 1,
-          flexGrow: 1,
+          flex: "1 1 auto",
           minHeight: 0,
-          mt: `-${CLASS_CARD_CONTENT_OVERLAP}px`,
-          p: 2.5,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          gap: 0.75,
-          borderRadius: "16px 16px 0 0",
-          bgcolor: (theme) => alpha(theme.palette.background.paper, 0.84),
-          backdropFilter: "blur(14px) saturate(120%)",
-          WebkitBackdropFilter: "blur(14px) saturate(120%)",
-          transition: (theme) =>
-            theme.transitions.create("margin-top", {
-              duration: theme.transitions.duration.shorter,
-            }),
-          "@media (prefers-reduced-transparency: reduce)": {
-            bgcolor: "background.paper",
-            backdropFilter: "none",
-            WebkitBackdropFilter: "none",
-          },
-          "@media (prefers-reduced-motion: reduce)": {
-            transition: "none",
-          },
-          "&:last-child": { pb: 2.5 },
+          padding: "var(--space-3) var(--space-4) var(--space-4)",
         }}
       >
         <Typography
-          variant="h6"
+          component="span"
+          variant="subtitle1"
           title={resolvedTitle}
           sx={{
-            color: "text.primary",
-            fontSize: "1.05rem",
-            fontWeight: 600,
-            lineHeight: 1.35,
             display: "-webkit-box",
             WebkitBoxOrient: "vertical",
             WebkitLineClamp: 2,
-            overflow: "hidden"
-          }}>
+            overflow: "hidden",
+            color: "var(--text)",
+          }}
+        >
           {resolvedTitle}
         </Typography>
-
         <Typography
+          component="span"
           variant="body2"
           noWrap
           title={resolvedInstructor}
-          sx={{
-            color: "text.secondary"
-          }}
+          sx={{ display: "block", mt: "var(--space-1)", color: "var(--text-secondary)" }}
         >
           {resolvedInstructor}
         </Typography>
-      </CardContent>
-    </Card>
+      </Box>
+    </>
   );
 
-  if (!to) {
-    return <Box sx={{ width: "100%" }}>{card}</Box>;
+  if (to) {
+    return (
+      <Card
+        component={RouterLink}
+        to={to}
+        state={routeState}
+        aria-label={`Open ${resolvedTitle}`}
+        sx={cardSx}
+      >
+        {content}
+      </Card>
+    );
   }
 
   return (
-    <Box
-      component={RouterLink}
-      to={to}
-      state={routeState}
-      aria-label={`Open ${resolvedTitle}`}
-      sx={{
-        width: "100%",
-        display: "block",
-        textDecoration: "none",
-        borderRadius: 3,
-        "&:focus-visible": {
-          outline: "2px solid",
-          outlineColor: "primary.main",
-          outlineOffset: 2,
-        },
-      }}
-    >
-      {card}
-    </Box>
+    <Card tabIndex={hoverable ? 0 : undefined} sx={cardSx}>
+      {content}
+    </Card>
   );
 };
 

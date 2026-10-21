@@ -26,7 +26,7 @@ const TypographyOverview = () => {
   return (
     <Stack spacing={5} sx={{ p: 2, maxWidth: 960 }}>
       <Box>
-        <Typography variant="h4" sx={{ fontWeight: 700 }}>
+        <Typography variant="h4" sx={{ fontWeight: 600 }}>
           Typography
         </Typography>
         <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary', maxWidth: 760 }}>
@@ -42,15 +42,15 @@ const TypographyOverview = () => {
           Font family
         </Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Montserrat — the only typeface for ordinary UI. It is self-hosted from the{' '}
-          <Box component="code">@fontsource-variable/montserrat</Box> package via{' '}
-          <Box component="code">src/fonts/montserrat.css</Box>, so nothing is fetched from Google Fonts at
-          runtime. <Box component="code">sans-serif</Box> is only a generic fallback for glyphs Montserrat does not
-          cover (e.g. CJK).
+          Source Sans 3: the typeface for ordinary UI (kiwi-ui/DESIGN.md, Type). It is self-hosted from the{' '}
+          <Box component="code">@fontsource-variable/source-sans-3</Box> package via{' '}
+          <Box component="code">src/fonts/source-sans-3.css</Box>, so nothing is fetched from Google Fonts at
+          runtime. The stack is the <Box component="code">--font-ui</Box> token: PingFang SC, Hiragino Sans GB,
+          Microsoft YaHei and Noto Sans CJK SC carry Chinese text. Montserrat is the KiwiWordmark's face only.
         </Typography>
         <Box
           component="code"
-          sx={{ display: 'block', mt: 1.5, p: 2, bgcolor: 'grey.100', borderRadius: 1, overflowWrap: 'anywhere' }}
+          sx={{ display: 'block', mt: 1.5, p: 2, bgcolor: 'action.hover', borderRadius: 'var(--radius-control)', overflowWrap: 'anywhere' }}
         >
           {theme.typography.fontFamily}
         </Box>
@@ -105,18 +105,16 @@ const TypographyOverview = () => {
           Font weights
         </Typography>
         <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
-          Montserrat is loaded as a variable font, so every weight below comes from one file per subset.
+          Source Sans 3 is loaded as a variable font, upright and italic. The UI uses two weights, 400 and 600,
+          and the true italic 400; <Box component="code">font-synthesis: none</Box> keeps the browser from faking any
+          other.
         </Typography>
         <Stack spacing={1.5}>
-          <Typography sx={{ fontWeight: 'fontWeightLight' }}>Light — {theme.typography.fontWeightLight}</Typography>
           <Typography sx={{ fontWeight: 'fontWeightRegular' }}>
             Regular — {theme.typography.fontWeightRegular}
           </Typography>
-          <Typography sx={{ fontWeight: 'fontWeightMedium' }}>
-            Medium — {theme.typography.fontWeightMedium}
-          </Typography>
-          <Typography sx={{ fontWeight: 600 }}>Semi bold — 600</Typography>
-          <Typography sx={{ fontWeight: 'fontWeightBold' }}>Bold — {theme.typography.fontWeightBold}</Typography>
+          <Typography sx={{ fontWeight: 600 }}>Semibold — 600</Typography>
+          <Typography sx={{ fontStyle: 'italic' }}>Italic — 400</Typography>
         </Stack>
       </Box>
 

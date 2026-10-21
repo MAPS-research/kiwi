@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import {
-    AreaChart,
-    Area,
+    LineChart,
+    Line,
     XAxis,
     YAxis,
     CartesianGrid,
@@ -27,8 +27,8 @@ import {
     getKeyTimeTicks,
     MAX_MOBILE_ANALYTICS_X_AXIS_TICKS,
 } from "./chartXAxis.ts";
+import { useChartTokens } from "./chartTokens.ts";
 import { buildAnalyticsActivitySeries } from "./activityTimeSeries.ts";
-import { useAnalyticsChartAnimation } from "./chartAnimation.ts";
 
 interface StandaloneUserActivityProps {
     realDataSessions?: SessionActivity[];
@@ -49,8 +49,9 @@ export const StandaloneUserActivity: React.FC<StandaloneUserActivityProps> = ({
 }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const chartColor = theme.palette.chart.series1;
-    const chartAnimation = useAnalyticsChartAnimation();
+    // One series: the accent hue of every single-series chart (DESIGN.md § Chart tokens).
+    const chart = useChartTokens();
+    const chartColor = chart.series1;
 
     // A fixed compact height keeps the chart's visual density consistent;
     // longer ranges add horizontal data points rather than needing more height.
@@ -84,7 +85,6 @@ export const StandaloneUserActivity: React.FC<StandaloneUserActivityProps> = ({
                         ? `Time: ${formatAnalyticsTimeTooltip(label)}`
                         : `Date: ${formatAnalyticsDateTick(label)}`}
                     value={`Active users: ${payload[0].value}`}
-                    valueColor={chartColor}
                 />
             );
         }
@@ -92,14 +92,7 @@ export const StandaloneUserActivity: React.FC<StandaloneUserActivityProps> = ({
     };
 
     return (
-        <Card sx={{
-            height: chartHeight,
-            backgroundColor: "background.paper",
-            boxShadow: "none",
-            borderRadius: 2,
-            border: "1px solid",
-            borderColor: "divider"
-        }}>
+        <Card sx={{ height: chartHeight }}>
             <CardContent sx={{
                 p: 2.5,
                 '&:last-child': { pb: 2.5 },
@@ -126,26 +119,24 @@ export const StandaloneUserActivity: React.FC<StandaloneUserActivityProps> = ({
                 {/* Chart or Loading */}
                 {loading ? (
                     <Box sx={{ flex: 1, minHeight: 0 }}>
-                        <Skeleton variant="rounded" width="100%" height="100%" sx={{ borderRadius: 1.5 }} />
+                        <Skeleton variant="rounded" width="100%" height="100%" />
                     </Box>
                 ) : (
                     <Box sx={{ flex: 1, minHeight: 0, width: '100%' }}>
                       <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={chartData} margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
-                            <defs>
-                                <linearGradient id="colorUserLoginStandalone" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor={chartColor} stopOpacity={0.3} />
-                                    <stop offset="95%" stopColor={chartColor} stopOpacity={0.05} />
-                                </linearGradient>
-                            </defs>
-                            <CartesianGrid vertical={false} strokeDasharray="3 3" stroke={theme.palette.divider} />
+                        <LineChart
+                            data={chartData}
+                            margin={{ top: 8, right: 8, bottom: 8, left: 8 }}
+                            accessibilityLayer={false}
+                        >
+                            <CartesianGrid vertical={false} stroke={chart.grid} />
                             <XAxis
                                 dataKey="timestamp"
                                 type="number"
                                 domain={['dataMin', 'dataMax']}
-                                axisLine={false}
+                                axisLine={{ stroke: chart.baseline }}
                                 tickLine={false}
-                                tick={{ fontSize: 12, fill: theme.palette.text.secondary }}
+                                tick={chart.tick}
                                 height={28}
                                 tickMargin={8}
                                 ticks={xAxisTicks}
@@ -157,27 +148,34 @@ export const StandaloneUserActivity: React.FC<StandaloneUserActivityProps> = ({
                             <YAxis
                                 axisLine={false}
                                 tickLine={false}
-                                tick={{ fontSize: 12, fill: theme.palette.text.secondary }}
+                                tick={chart.tick}
                                 width={32}
                                 tickMargin={4}
+                                allowDecimals={false}
+                                domain={[0, 'auto']}
                             />
-                            <Tooltip content={<CustomTooltip />} offset={12} />
-                            <Area
-                                {...chartAnimation}
-                                type="monotone"
+                            <Tooltip
+                                content={<CustomTooltip />}
+                                offset={12}
+                                isAnimationActive={false}
+                                cursor={{ stroke: chart.baseline, strokeWidth: 1 }}
+                            />
+                            {/* No smoothing and no area wash: a 2 px straight-segment line. */}
+                            <Line
+                                isAnimationActive={false}
+                                type="linear"
                                 dataKey="userLogins"
                                 stroke={chartColor}
-                                strokeWidth={2.5}
-                                fill="url(#colorUserLoginStandalone)"
+                                strokeWidth={2}
                                 dot={false}
                                 activeDot={{
                                     r: 4,
-                                    stroke: chartColor,
-                                    strokeWidth: 0,
+                                    stroke: chart.plot,
+                                    strokeWidth: 2,
                                     fill: chartColor,
                                 }}
                             />
-                        </AreaChart>
+                        </LineChart>
                       </ResponsiveContainer>
                     </Box>
                 )}

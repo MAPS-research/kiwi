@@ -1,0 +1,1007 @@
+[
+ {
+  "id": "S-01",
+  "name": "Course list",
+  "route": "/",
+  "file": "src/pages/Courses.tsx",
+  "kept": [
+   "Open {title} (the card link's name)"
+  ],
+  "note": "The hero's three alt texts (\"Decorative green, blue and violet gradient\") go with the carousel (the Phase 3 hand-off); a decorative image takes an empty alt. The headline drops the username because it is the part of the email before \"@\" and reads as an ID.",
+  "rows": [
+   {
+    "o": "Welcome to {BRAND_LABEL}, {username}!",
+    "n": "Your classes",
+    "k": "heading",
+    "refs": "TD-02",
+    "t": "The headline now names the page and what is on it (Richards: the reader's need); no exclamation mark, no ID-like name. `{BRAND_LABEL}` and `{username}` are dropped: the page does not greet.",
+    "m": "Welcome to ${BRAND_LABEL}",
+    "f": "src/components/HeroCarousel/HeroCarousel.tsx"
+   },
+   [
+    "Class",
+    "Untitled class",
+    "label",
+    "SF-07",
+    "One fallback for a class with no name; the two files used different ones.",
+    "|| \"Class\""
+   ],
+   [
+    "TBD",
+    "No instructor listed",
+    "label",
+    "SF-07",
+    "\"TBD\" is a placeholder, not a statement; this says what the card knows.",
+    "|| \"TBD\""
+   ],
+   [
+    "Unnamed class",
+    "Untitled class",
+    "label",
+    "SF-07",
+    "",
+    "Unnamed class",
+    "src/components/ClassCard/ClassCard.tsx"
+   ],
+   [
+    "Instructor TBD",
+    "No instructor listed",
+    "label",
+    "SF-07",
+    "",
+    "Instructor TBD",
+    "src/components/ClassCard/ClassCard.tsx"
+   ],
+   [
+    "",
+    "No classes yet",
+    "heading",
+    "SF-07",
+    "The empty state the page lacked: the heading of the empty-state frame (the mascot sits above it).",
+    "<ResponsiveGrid"
+   ],
+   [
+    "",
+    "Your instructor or an administrator adds you to a class. It will appear here when they do.",
+    "new",
+    "SF-07",
+    "Says who acts and when, because a student has no button to press (the no-action variant). It names both people who may enrol a student under the access model the user decided on 2026-10-16: on `fix/access-control` the class menu shows Enroll Students to a class's assigned instructors (LC-7). Ships with or after that merge, like S-05.06: until then the class menu hides Enroll Students from instructors (`admin/ClassLayout.tsx:41`, `admin/ClassLayout.tsx:155`), so the sentence would name someone the product does not yet offer the page to (C16).",
+    "<ResponsiveGrid",
+    "",
+    "C12, C16"
+   ],
+   {
+    "k": "error",
+    "o": "",
+    "what": "Couldn't load your classes.",
+    "c": "unknown",
+    "fix": "Select Retry.",
+    "m": "Error fetching courses:",
+    "refs": "SF-07",
+    "t": "The load error was console-only, so a failure looked like an empty list; the frame's error state now says what failed."
+   },
+   {
+    "o": "Welcome to {BRAND_LABEL}!",
+    "n": "Your classes",
+    "k": "heading",
+    "refs": "TD-02",
+    "t": "The headline when the user has no name to greet (`userName` is empty): the same text as S-01.01, so the page reads one way whether or not the greeting had a name. `{BRAND_LABEL}` is dropped with the greeting, as in S-01.01, whose note says why the page does not greet.",
+    "m": "Welcome to ${BRAND_LABEL}",
+    "f": "src/components/HeroCarousel/HeroCarousel.tsx"
+   }
+  ]
+ },
+ {
+  "id": "S-02",
+  "name": "Materials",
+  "route": "/:classID",
+  "file": "src/components/Chat/PDFComponent.tsx",
+  "kept": [
+   "Lecture",
+   "Recitation",
+   "Summary {n}",
+   "Close",
+   "Loading page… (the viewer library's own text)"
+  ],
+  "note": "The \"In context\" chip on the toolbar is the shared string DS.14. Pin glyphs are drawn by the design system (an SVG, not an emoji).",
+  "rows": [
+   [
+    "Class materials",
+    "Show class materials",
+    "tooltip",
+    "SF-34",
+    "The rail button had only a native title; it opens the drawer, and the name now says so.",
+    "title=\"Class materials\""
+   ],
+   [
+    "Class Materials",
+    "Class materials",
+    "heading",
+    "",
+    "",
+    "Class Materials"
+   ],
+   {
+    "o": "No documents",
+    "n": "No lectures yet",
+    "k": "empty",
+    "refs": "SF-33",
+    "t": "When the drawer's group is Lectures (the next row is Recitations; both sit on PDFComponent.tsx:526). Names what is missing in the selected group, instead of a bare \"No documents\". A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23).",
+    "m": "No documents",
+    "r": "C12,C5"
+   },
+   [
+    "Loading your class lectures...",
+    "Loading your materials…",
+    "status",
+    "SF-33",
+    "The class has lectures and recitations; the line also stayed forever on an empty class, which the next row fixes.",
+    "Loading your class lectures...",
+    "src/components/PDFViewer/PDFViewerForStudent.tsx"
+   ],
+   [
+    "",
+    "No materials yet. Your instructor hasn't added any to this class.",
+    "new",
+    "SF-33",
+    "The empty state that replaces the endless loading line; says who acts.",
+    "Loading your class lectures...",
+    "src/components/PDFViewer/PDFViewerForStudent.tsx"
+   ],
+   {
+    "k": "error",
+    "o": "Couldn't load this PDF. This can happen on a slow or unstable network connection.",
+    "what": "Couldn't load this PDF.",
+    "c": "net",
+    "why": "Your connection may be slow or unstable.",
+    "fix": "Check it, then select Retry.",
+    "m": "Couldn't load this PDF. This can happen on a slow",
+    "f": "src/components/PDFViewer/PDFViewerForStudent.tsx",
+    "t": "The message already gave a cause; it now gives the fix too and names the button."
+   },
+   [
+    "Professor added {n} summary",
+    "Your instructor added {n: count summary}",
+    "status",
+    "",
+    "\"Instructor\" is the one word for the role. The helper writes the noun by the count, 1 summary or 2 summaries (C4); the source already picks it (`PDFViewerForStudent.tsx:489`).",
+    "Professor added",
+    "src/components/PDFViewer/PDFViewerForStudent.tsx",
+    "C6, C4"
+   ],
+   [
+    "Read",
+    "Read summary",
+    "button",
+    "",
+    "A verb alone does not say what is read; plural: \"Read summaries\".",
+    "Read </Button> <IconButton",
+    "src/components/PDFViewer/PDFViewerForStudent.tsx"
+   ],
+   [
+    "previous page",
+    "Previous page",
+    "aria",
+    "SF-34",
+    "",
+    "aria-label=\"previous page\"",
+    "src/components/PDFViewer/PDFViewerForStudent.tsx"
+   ],
+   [
+    "next page",
+    "Next page",
+    "aria",
+    "SF-34",
+    "",
+    "aria-label=\"next page\"",
+    "src/components/PDFViewer/PDFViewerForStudent.tsx"
+   ],
+   [
+    "zoom out",
+    "Zoom out",
+    "aria",
+    "SF-34",
+    "",
+    "aria-label=\"zoom out\"",
+    "src/components/PDFViewer/PDFViewerForStudent.tsx"
+   ],
+   [
+    "zoom in",
+    "Zoom in",
+    "aria",
+    "SF-34",
+    "",
+    "aria-label=\"zoom in\"",
+    "src/components/PDFViewer/PDFViewerForStudent.tsx"
+   ],
+   [
+    "fullscreen",
+    "Fullscreen",
+    "aria",
+    "SF-34",
+    "",
+    "aria-label=\"fullscreen\"",
+    "src/components/PDFViewer/PDFViewerForStudent.tsx"
+   ],
+   [
+    "Document Summaries",
+    "Document summaries",
+    "heading",
+    "",
+    "",
+    "Document Summaries",
+    "src/components/PDFViewer/PDFViewerForStudent.tsx"
+   ],
+   [
+    "Loading class...",
+    "Loading class…",
+    "status",
+    "",
+    "The fallback line, unreachable in practice, takes the same ellipsis as the rest.",
+    "Loading class...",
+    "src/pages/ClassChat.tsx"
+   ],
+   {
+    "k": "empty",
+    "o": "No summaries available for this document.",
+    "n": "No summaries available for this document",
+    "m": "No summaries available for this document.",
+    "r": "C12,C5",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23).",
+    "f": "src/components/PDFViewer/PDFViewerForStudent.tsx"
+   },
+   {
+    "k": "empty",
+    "o": "No documents",
+    "n": "No recitations yet",
+    "m": "No documents",
+    "f": "src/components/Chat/PDFComponent.tsx",
+    "r": "C12,C5",
+    "t": "When the drawer's group is Recitations (the row above is Lectures; both sit on PDFComponent.tsx:526). A one-clause line that reports a state takes no full stop (C5, DS.23)."
+   },
+   {
+    "k": "format",
+    "o": "– / –",
+    "n": "— / —",
+    "m": "\"– / –\"",
+    "f": "src/components/PDFViewer/PDFViewerForStudent.tsx",
+    "x": [
+     "em dash"
+    ],
+    "r": "C5,C6",
+    "t": "The page indicator shows two en dashes while the document has no pages yet (`:576`); the one glyph for an empty value is the em dash (DS.53), written once for each of the two values, so the same meaning reads the same on every page (C6)."
+   },
+   {
+    "k": "aria",
+    "o": "",
+    "n": "No value",
+    "m": "\"– / –\"",
+    "f": "src/components/PDFViewer/PDFViewerForStudent.tsx",
+    "r": "C5",
+    "t": "The page indicator's glyphs take the accessible name \"No value\" (DS.54)."
+   }
+  ]
+ },
+ {
+  "id": "S-03",
+  "name": "Scratchpad (code space)",
+  "route": "/:classID/code",
+  "file": "src/components/CodeInterpreter/IDE.tsx",
+  "kept": [
+   "Output will appear here.",
+   "Name",
+   "Preview",
+   "Python (the language option)",
+   "Save code's file chips"
+  ],
+  "note": "Python tracebacks and R console text are the student's own program output, not Kiwi copy; they are shown as typed. \"Code Space\" is also the key that selects the first tab (`ClassIDE.tsx`, `FileTabs.tsx`, `IDE.tsx`), so the label and the key change together. The two prompts from `input()` calls are the student's own.",
+  "rows": [
+   [
+    "Code Space",
+    "Code",
+    "label",
+    "TD-16",
+    "The first file tab is where the student types code; the other tabs are uploaded files. The page name is the Scratchpad tab above it.",
+    "\"Code Space\"",
+    [
+     "src/pages/ClassIDE.tsx",
+     "src/components/CodeInterpreter/FileTabs.tsx",
+     "src/components/CodeInterpreter/IDE.tsx"
+    ]
+   ],
+   [
+    "Upload",
+    "Upload files",
+    "button",
+    "",
+    "Verb + object.",
+    "Upload\n",
+    "src/components/CodeInterpreter/FileTabs.tsx"
+   ],
+   [
+    "basic tabs example",
+    "Open files",
+    "aria",
+    "",
+    "The tab list's name was a library example string.",
+    "aria-label=\"basic tabs example\"",
+    "src/components/CodeInterpreter/FileTabs.tsx"
+   ],
+   [
+    "resize editor",
+    "Resize editor",
+    "aria",
+    "",
+    "",
+    "aria-label=\"resize editor\"",
+    "src/pages/ClassIDE.tsx"
+   ],
+   [
+    "R Language",
+    "R",
+    "label",
+    "",
+    "The language caption: the name, as the \"Python\" option beside it.",
+    "\"R Language\""
+   ],
+   [
+    "Vars ({n})",
+    "Variables ({n})",
+    "label",
+    "",
+    "No abbreviation in a tab.",
+    "Vars (${variables.length})"
+   ],
+   [
+    "",
+    "Run code",
+    "aria",
+    "",
+    "The run icon had no name or tooltip.",
+    "<PlayArrow"
+   ],
+   [
+    "",
+    "Upload files",
+    "aria",
+    "",
+    "The upload icon had no name or tooltip.",
+    "<FileUpload />"
+   ],
+   [
+    "Move to Chat",
+    "Open in chat",
+    "button",
+    "TD-16",
+    "The button opens the chat with the code and output prefilled and unsent; \"Move\" suggested the code leaves the editor.",
+    "Move to Chat"
+   ],
+   [
+    "Check Answer",
+    "Ask Kiwi to check",
+    "button",
+    "TD-16",
+    "It checks nothing itself; it asks Kiwi to (SF-36: the label promised more than it does).",
+    "Check Answer"
+   ],
+   [
+    "Save Code",
+    "Save code",
+    "button",
+    "TD-16",
+    "",
+    "Save Code"
+   ],
+   [
+    "Code executed and files updated.",
+    "Running your code…",
+    "status",
+    "SF-36",
+    "The notice appears at the click, before the run ends, so it must say what is true then.",
+    "Code executed and files updated."
+   ],
+   {
+    "k": "error",
+    "o": "File is no longer available. Please re-upload.",
+    "what": "This file is no longer available.",
+    "c": "missing",
+    "why": "Uploaded files are cleared when you leave the scratchpad.",
+    "fix": "Upload it again.",
+    "m": "File is no longer available. Please re-upload.",
+    "t": "Says why the file went and what to do, without \"please\"."
+   },
+   {
+    "k": "error",
+    "o": "This file type is not supported.",
+    "what": "This file can't be opened here.",
+    "c": "input",
+    "why": "The editor opens text files only.",
+    "fix": "Open a text file instead.",
+    "m": "This file type is not supported."
+   },
+   {
+    "k": "error",
+    "o": "Package installation/loading is not supported in the browser R environment. Only base packages are available.",
+    "what": "Couldn't load that package.",
+    "c": "input",
+    "why": "R in the browser includes base packages only.",
+    "fix": "Use base R functions instead.",
+    "m": "Package installation/loading is not supported",
+    "f": "src/components/CodeInterpreter/WebR.tsx",
+    "t": "Plain words for a limit the student can work around."
+   },
+   [
+    "The file {name}",
+    "{name}",
+    "tooltip",
+    "",
+    "The tooltip said what it names twice (\"The file\"); the name is enough.",
+    "The file ${name}",
+    "src/components/CodeInterpreter/FileTabs.tsx"
+   ],
+   {
+    "k": "body",
+    "o": "Available files to download:{names}",
+    "n": "Available files to download:{names}",
+    "keep": true,
+    "at": "src/components/CodeInterpreter/FileTabs.tsx:122 (inside a commented-out block)",
+    "t": "The native prompt is commented out in the source, so this string is shown nowhere; the row only holds its id."
+   },
+   {
+    "k": "empty",
+    "o": "No plots generated.",
+    "n": "No plots generated",
+    "m": "No plots generated.",
+    "r": "C12,C5",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23)."
+   },
+   {
+    "k": "empty",
+    "o": "No variables.",
+    "n": "No variables",
+    "m": "No variables.",
+    "r": "C12,C5",
+    "t": "A one-clause line that reports a state takes no full stop, like the empty-state heading (C5, DS.23)."
+   }
+  ]
+ },
+ {
+  "id": "S-04",
+  "name": "Kiwi App (student host frame)",
+  "route": "/:classID/app/:appSlug",
+  "file": "src/pages/ClassAppPage.tsx",
+  "kept": [],
+  "note": "Only the host frame's words are in scope; the embedded app's own text is not (G5). The bridge replies sent to the app (\"unknown op\", \"no class context yet\") are developer-facing messages to the app's code, not interface text.",
+  "rows": [
+   [
+    "Loading app...",
+    "Loading app…",
+    "status",
+    "",
+    "",
+    "Loading app..."
+   ],
+   {
+    "k": "error",
+    "o": "Missing class ID or app slug",
+    "what": "Couldn't open this app.",
+    "c": "missing",
+    "why": "The link is missing the class or the app.",
+    "fix": "Open the app from its tab in your class.",
+    "m": "Missing class ID or app slug",
+    "t": "\"Slug\" is developer vocabulary."
+   },
+   {
+    "k": "error",
+    "o": "App \"{appSlug}\" is not enabled for this class",
+    "what": "Couldn't open {appSlug}.",
+    "c": "denied",
+    "why": "It isn't turned on for this class.",
+    "fix": "Ask your instructor to turn it on.",
+    "m": "is not enabled for this class"
+   },
+   {
+    "k": "error",
+    "o": "App not found",
+    "what": "Couldn't open this app.",
+    "c": "missing",
+    "why": "The app wasn't found.",
+    "fix": "Go back to your class and try its tab again.",
+    "m": "App not found"
+   },
+   {
+    "k": "error",
+    "o": "Failed to load app",
+    "what": "Couldn't open this app.",
+    "c": "unknown",
+    "m": "Failed to load app"
+   },
+   {
+    "k": "error",
+    "o": "Failed to load {appName}",
+    "what": "Couldn't load {appName}.",
+    "c": "unknown",
+    "m": "Failed to load ${appName}",
+    "f": "src/pages/ClassAppView.tsx"
+   },
+   [
+    "Loading {appName}...",
+    "Loading {appName}…",
+    "status",
+    "",
+    "",
+    "Loading {appName}...",
+    "src/pages/ClassAppView.tsx"
+   ]
+  ]
+ },
+ {
+  "id": "S-05",
+  "name": "Sign-in",
+  "route": "/login",
+  "file": "src/pages/Login.tsx",
+  "kept": [
+   "Email",
+   "Password",
+   "Show password",
+   "Hide password",
+   "Signing in…",
+   "Continue with Google"
+  ],
+  "note": "The aside's tagline and sub-line are SR-5. The three error rows after the generic one (S-05.04, S-05.05 and S-05.16) are for the implementation's status mapping: today every failure shows the one generic message.",
+  "rows": [
+   [
+    "Welcome back to",
+    "Sign in to",
+    "heading",
+    "TD-02",
+    "The display line states the task (Richards); the wordmark follows it. No greeting that assumes a returning user.",
+    "Welcome back to"
+   ],
+   [
+    "Continue learning with AI-powered support.",
+    "Use the email address linked to your Kiwi account.",
+    "helper",
+    "TD-20",
+    "Says what to enter instead of a claim about the product (C16).",
+    "Continue learning with AI-powered support."
+   ],
+   {
+    "k": "error",
+    "o": "Login failed. Please check your credentials and try again.",
+    "what": "Couldn't sign you in.",
+    "c": "unknown",
+    "fix": "Try again, or ask your administrator if it keeps happening.",
+    "m": "Login failed. Please check your credentials and try again.",
+    "t": "The fallback only. It ships together with the status mapping (S-05.04 for a refused sign-in, S-05.05 for no response, S-05.16 for a server error), never alone: without the mapping a wrong password would be told that the server did not respond as expected, a cause the page does not know. It states the one cause the page can always state, the closed generic line (§ Errors), for a failure that matches no mapping row, and a fix that fits a cause nobody knows: try again, then ask the administrator if it keeps happening. The hint to check the email and password stays in S-05.04, where the response says the credentials were refused."
+   },
+   {
+    "k": "error",
+    "o": "",
+    "what": "Couldn't sign you in.",
+    "c": "denied",
+    "why": "That email and password don't match.",
+    "fix": "Check both and try again, or ask your administrator to reset your password.",
+    "m": "Login failed. Please check your credentials and try again.",
+    "t": "For the implementation: the wording when the response is a refused sign-in. It says what happened first, like its siblings S-05.03, S-05.05 and S-05.16 (the alert is a form-level message, `Login.tsx:161-166`, not a field's error state, so the input-error form does not apply), then the cause the page can state for a refused sign-in, then what to do. Ships with S-05.03 and the rest of the status mapping, so that S-05.03 is only what is left for a failure no mapping row matches."
+   },
+   {
+    "k": "error",
+    "o": "",
+    "what": "Couldn't sign you in.",
+    "c": "net",
+    "m": "Login failed. Please check your credentials and try again.",
+    "t": "For the implementation: the wording when no response arrived."
+   },
+   {
+    "k": "error",
+    "o": "Your session has expired. Please log in again.",
+    "what": "You've been signed out.",
+    "c": "expired",
+    "m": "Your session has expired. Please log in again.",
+    "t": "Ships with or after the access-control merge (branch `fix/access-control`): there a signed-in user who may not do something gets a 403 and the web client keeps the sign-in on a 403 (defect B2). Until that merges, a refused permission also lands here with this text, so \"Your sign-in has expired\" would be wrong for it. A refused permission uses the no-permission copy (DS.29, DS.30) or the page's own `denied` error.",
+    "refs": "B2"
+   },
+   [
+    "Login",
+    "Sign in",
+    "button",
+    "TD-02",
+    "One verb pair: sign in and sign out.",
+    "\"Login\""
+   ],
+   [
+    "OR",
+    "or",
+    "label",
+    "TD-16",
+    "Capitals typed into the string. Two test lines query it: `Login.test.tsx:123` (`getByText(\"OR\")`, with Google sign-in on) fails after the change, and `Login.test.tsx:106` (`queryByText(\"OR\")` is absent in the password-only case) would pass vacuously, because a query for the old capitals finds nothing in the new text. The pair must discriminate: `queryByText(\"or\")` absent in the default case (:106) and `getByText(\"or\")` present with Google sign-in on (:123), and `queryByText(\"OR\")` absent in both, which proves the capitals are gone. The divider is a conjunction between two controls, so it stays lowercase (the C1 first-letter lint is waived for it).",
+    "OR </Divider>",
+    "",
+    "",
+    [
+     "lowercase letter (or)"
+    ]
+   ],
+   {
+    "k": "button",
+    "o": "Login with Google",
+    "n": "Sign in with Google",
+    "m": "\"Login\" : \"Register\"} with Google",
+    "f": "src/components/GoogleLoginButton/GoogleLoginButton.tsx",
+    "ax": "the text is a conditional, \"Login\" or \"Register\" and then \" with Google\", drawn on this line"
+   },
+   {
+    "k": "button",
+    "o": "Register with Google",
+    "n": "Sign up with Google",
+    "m": "\"Login\" : \"Register\"} with Google",
+    "f": "src/components/GoogleLoginButton/GoogleLoginButton.tsx",
+    "ax": "the text is a conditional, \"Login\" or \"Register\" and then \" with Google\", drawn on this line"
+   },
+   [
+    "Don't have an account?",
+    "New to Kiwi?",
+    "body",
+    "",
+    "",
+    "Don't have an account?"
+   ],
+   [
+    "Create one",
+    "Create an account",
+    "button",
+    "",
+    "Link text that makes sense out of context (Redish).",
+    "Create one"
+   ],
+   [
+    "Need an account? Ask your administrator.",
+    "New to Kiwi? Ask your administrator for an account.",
+    "body",
+    "",
+    "Says who acts and for what.",
+    "Need an account? Ask your administrator."
+   ],
+   {
+    "k": "error",
+    "o": "No sign-in method is enabled. Unset VITE_DISABLE_PASSWORD_LOGIN or set VITE_ENABLE_GOOGLE_LOGIN=true.",
+    "what": "Sign-in isn't available right now.",
+    "c": "missing",
+    "why": "No sign-in method is turned on for this site.",
+    "fix": "Contact {SUPPORT_EMAIL}, or ask an administrator.",
+    "refs": "SF-06",
+    "m": "No sign-in method is enabled.",
+    "t": "The variable names were developer instructions; they belong in the deployment docs. With a support address configured (C17); the next variant is for the default, an empty address.",
+    "r": "C9,C17"
+   },
+   {
+    "k": "error",
+    "o": "No sign-in method is enabled. Unset VITE_DISABLE_PASSWORD_LOGIN or set VITE_ENABLE_GOOGLE_LOGIN=true.",
+    "what": "Sign-in isn't available right now.",
+    "c": "missing",
+    "why": "No sign-in method is turned on for this site.",
+    "fix": "Ask an administrator.",
+    "refs": "SF-06",
+    "m": "No sign-in method is enabled.",
+    "t": "Variant for SUPPORT_EMAIL = \"\" (the default): the sentence names no address (C17); S-05.14 is the variant with an address.",
+    "r": "C9,C17"
+   },
+   {
+    "k": "error",
+    "o": "",
+    "what": "Couldn't sign you in.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "fix": "Try again in a moment.",
+    "m": "Login failed. Please check your credentials and try again.",
+    "t": "For the implementation: the wording when the response is a server error (a 5xx), with the status as a support reference (§ Errors 3)."
+   }
+  ]
+ },
+ {
+  "id": "S-06",
+  "name": "Register",
+  "route": "/register",
+  "file": "src/pages/Register.tsx",
+  "kept": [
+   "Sign up with your Google account.",
+   "Accounts are created by your administrator.",
+   "Contact {SUPPORT_EMAIL} to request one.",
+   "Already have an account?"
+  ],
+  "rows": [
+   [
+    "Create your account",
+    "Create an account",
+    "heading",
+    "",
+    "The same words as the sign-in link that leads here (C6).",
+    "Create your account"
+   ],
+   [
+    "Log in",
+    "Sign in",
+    "button",
+    "",
+    "",
+    "Log in"
+   ]
+  ]
+ },
+ {
+  "id": "S-07",
+  "name": "Google sign-in callback",
+  "route": "/auth/callback",
+  "file": "src/pages/GoogleRedirectHandler.tsx",
+  "kept": [],
+  "note": "The two failures are native `alert()` dialogs; Stage 1 cannot restyle them, so only their words change.",
+  "rows": [
+   [
+    "Loading...",
+    "Signing you in…",
+    "status",
+    "SF-02",
+    "Says what is happening instead of a bare \"Loading\".",
+    "Loading..."
+   ],
+   {
+    "k": "error",
+    "o": "Cannot get email from Google account. Please contact {SUPPORT_EMAIL}.",
+    "what": "Couldn't sign you in with Google.",
+    "c": "input",
+    "why": "The email address wasn't available from this account.",
+    "fix": "Try a different Google account, or contact {SUPPORT_EMAIL}.",
+    "m": "Cannot get email from Google account.",
+    "refs": "SF-02",
+    "t": "The variant for a configured support address (C17): the source builds this text from its first sentence and, when `SUPPORT_EMAIL` is set, \" Please contact {SUPPORT_EMAIL}.\" (`GoogleRedirectHandler.tsx:57`), so this row's Old is the whole text of that reading and S-07.04's is the reading without it. The page cannot tell whether Google withheld the address or the response left it out (`GoogleRedirectHandler.tsx:27`, `:35`), so the cause line says only that it was not available.",
+    "r": "C9,C17"
+   },
+   {
+    "k": "error",
+    "o": "Login failed. Please contact {SUPPORT_EMAIL}.",
+    "what": "Couldn't sign you in with Google.",
+    "c": "unknown",
+    "fix": "Try again, or contact {SUPPORT_EMAIL} if it keeps happening.",
+    "m": "Login failed.",
+    "refs": "SF-02",
+    "t": "The variant for a configured support address (C17): the source builds this text from \"Login failed.\" and, when `SUPPORT_EMAIL` is set, \" Please contact {SUPPORT_EMAIL}.\" (`GoogleRedirectHandler.tsx:64`), so this row's Old is the whole text of that reading and S-07.05's is the reading without it.",
+    "r": "C9,C17"
+   },
+   {
+    "k": "error",
+    "o": "Cannot get email from Google account.",
+    "what": "Couldn't sign you in with Google.",
+    "c": "input",
+    "why": "The email address wasn't available from this account.",
+    "fix": "Try a different Google account.",
+    "refs": "SF-02",
+    "t": "The variant for the default, an empty support address (C17): the source's template stops after its first sentence when `SUPPORT_EMAIL` is empty (`GoogleRedirectHandler.tsx:57`), so no address is named, and this row's Old is that sentence. `GoogleRedirectHandler.test.tsx:167` asserts it, so the test changes with the words. The cause line is S-07.02's.",
+    "r": "C9,C17"
+   },
+   {
+    "k": "error",
+    "o": "Login failed.",
+    "what": "Couldn't sign you in with Google.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "refs": "SF-02",
+    "t": "The variant for the default, an empty support address (C17): the source's template stops after \"Login failed.\" when `SUPPORT_EMAIL` is empty (`GoogleRedirectHandler.tsx:64`), so no address is named, and this row's Old is that text. `GoogleRedirectHandler.test.tsx:183` and `:201` assert it with `alert('Login failed.')`, so both tests change with the words.",
+    "r": "C9,C17"
+   }
+  ]
+ },
+ {
+  "id": "S-08",
+  "name": "MCP OAuth authorize",
+  "route": "/authorize",
+  "file": "src/pages/MCPAuthorize.tsx",
+  "kept": [
+   "Password",
+   "Cancel",
+   "Signed in as: {username}"
+  ],
+  "note": "The page never names the requesting app (SF-41, a flow change outside Stage 1), so the consent wording says what is being granted and when to continue, and does not claim to know the app.",
+  "rows": [
+   [
+    "Invalid Authorization Request",
+    "This request isn't valid",
+    "heading",
+    "",
+    "Names the problem in the reader's terms.",
+    "Invalid Authorization Request"
+   ],
+   [
+    "This page is only accessible during an OAuth authorization flow.",
+    "This page opens only when an app asks to connect to your Kiwi account. Start the connection again from the app.",
+    "body",
+    "",
+    "Plain words, then the way forward.",
+    "This page is only accessible during an OAuth authorization flow."
+   ],
+   [
+    "Authorize Application",
+    "Allow access to your account?",
+    "heading",
+    "SF-41",
+    "A confirmation states what will happen (C11); \"Application\" named nothing.",
+    "Authorize Application"
+   ],
+   [
+    "An application is requesting access to your account.",
+    "An app is asking to use your Kiwi account. Continue only if you started this request from an app you trust.",
+    "body",
+    "SF-41",
+    "Consequence first and a safety cue, because the page cannot name the app.",
+    "An application is requesting access to your account."
+   ],
+   [
+    "Authorize",
+    "Allow access",
+    "cbutton",
+    "SF-41",
+    "The confirming button repeats what is granted.",
+    "Authorize\n"
+   ],
+   [
+    "Sign in to authorize the application to access your account.",
+    "Sign in to allow an app to use your Kiwi account.",
+    "body",
+    "",
+    "",
+    "Sign in to authorize the application to access your account."
+   ],
+   [
+    "Your Email",
+    "Email",
+    "label",
+    "",
+    "",
+    "Your Email"
+   ],
+   [
+    "Login & Authorize",
+    "Sign in and allow access",
+    "button",
+    "",
+    "One verb pair; and, not &.",
+    "Login & Authorize"
+   ],
+   {
+    "k": "button",
+    "o": "Login with Google",
+    "n": "Sign in with Google",
+    "m": "\"Login\" : \"Register\"} with Google",
+    "f": "src/components/GoogleLoginButton/GoogleLoginButton.tsx",
+    "ax": "the text is a conditional, \"Login\" or \"Register\" and then \" with Google\", drawn on this line"
+   },
+   {
+    "k": "error",
+    "o": "Authorization failed",
+    "what": "Couldn't allow access.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "err instanceof Error ? err.message : \"Authorization failed\"",
+    "br": "dev",
+    "t": "The page shows `err.message` before this fallback, the library's text: never shown (C16), so this sentence is the whole message. The page is an MCP page: the cause line names Kiwi's server, so it cannot be read as the MCP client or the MCP server (§ Errors, the MCP pages).",
+    "r": "C9,C16",
+    "v": "mcp"
+   }
+  ]
+ },
+ {
+  "id": "S-09",
+  "name": "Consent",
+  "route": "/consent",
+  "file": "src/pages/Consent.tsx",
+  "kept": [
+   "Today's date",
+   "I agree to participate"
+  ],
+  "rows": [
+   [
+    "Consent Form",
+    "Consent form",
+    "heading",
+    "SF-05",
+    "",
+    "Consent Form"
+   ],
+   [
+    "Please read the document below and accept to continue.",
+    "Read the document below, then agree to continue.",
+    "body",
+    "SF-05",
+    "No \"please\"; one clear order of steps.",
+    "Please read the document below and accept to continue."
+   ],
+   [
+    "Submit",
+    "Agree and continue",
+    "cbutton",
+    "SF-05",
+    "The button names what the student is agreeing to do (Yifrah).",
+    "Submit"
+   ],
+   [
+    "",
+    "Select \"I agree to participate\" to continue.",
+    "helper",
+    "SF-05",
+    "The disabled-reason line the button lacked: it names the control that unlocks it.",
+    "disabled="
+   ],
+   {
+    "k": "error",
+    "o": "",
+    "what": "Couldn't record your agreement.",
+    "c": "unknown",
+    "refs": "SF-05",
+    "m": "console.error",
+    "t": "A failed submit was console-only, so the student saw nothing."
+   },
+   {
+    "k": "error",
+    "o": "Couldn't load this PDF.",
+    "what": "Couldn't load this PDF.",
+    "c": "unknown",
+    "m": "Couldn't load this PDF.",
+    "f": "src/components/PDFViewer/PDFViewer.tsx",
+    "t": "The shared viewer's error (also on A-18 and A-24): it now says why and what to do."
+   },
+   {
+    "k": "format",
+    "o": "type=\"date\"",
+    "n": "DateTimeField (date): 17 Oct 2026",
+    "m": "type=\"date\"",
+    "f": "src/pages/Consent.tsx",
+    "dt": "date",
+    "r": "C3",
+    "refs": "TD-24",
+    "t": "A native date input draws the browser's locale (month first under en-US, \"2026/10/14\" or \"12月31日\" elsewhere) and cannot be reformatted; the DateTimeField shows and reads one format whatever the browser (C3, `§ Dates, times and numbers › The date control`). Today's date on the consent form."
+   }
+  ]
+ },
+ {
+  "id": "S-10",
+  "name": "Not found",
+  "route": "*",
+  "file": "src/App.tsx",
+  "kept": [],
+  "note": "The mascot (the standing bird) sits above the heading; the rest is these four strings. Inserted under the plan's never-dead-end constraint (an error or a not-found page always gives a way on, Yifrah): the two way-back controls, \"Go to your classes\" and \"Sign in\", are links to routes that already exist (`/` for a signed-in visitor, `/login` for a signed-out one), so they add no route and no region. They are the one piece of navigation this page gains, and the Stage 1 hooks line above (\"no region, route or navigation may be added\") is read as no new destination.",
+  "rows": [
+   [
+    "Not found",
+    "Page not found",
+    "heading",
+    "SF-10",
+    "A heading that names the situation.",
+    "Not found"
+   ],
+   [
+    "",
+    "The address may be mistyped, or the page may have moved.",
+    "new",
+    "SF-10",
+    "Not-found pattern: what happened, the likely why, without blame.",
+    "Not found"
+   ],
+   [
+    "",
+    "Go to your classes",
+    "button",
+    "SF-10",
+    "The way back, for a signed-in visitor.",
+    "Not found"
+   ],
+   [
+    "",
+    "Sign in",
+    "button",
+    "SF-10",
+    "The way back for a signed-out visitor, who would be sent to sign-in anyway.",
+    "Not found"
+   ]
+  ]
+ }
+]

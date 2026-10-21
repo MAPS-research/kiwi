@@ -670,7 +670,7 @@ export const WebhookManagement: React.FC = () => {
         <DialogContent>
           <Alert severity="warning" sx={{ mb: 2 }}>
             <Typography variant="body2">
-              <strong>Note:</strong> Webhook creation may fail due to a backend configuration issue.
+              <strong style={{ fontWeight: "var(--weight-semibold)" }}>Note:</strong> Webhook creation may fail due to a backend configuration issue.
               The webhook service needs to be updated to properly associate webhooks with authenticated users.
             </Typography>
           </Alert>
@@ -892,7 +892,7 @@ export const WebhookManagement: React.FC = () => {
                 slotProps={{
                   input: {
                     readOnly: true,
-                    style: { fontFamily: 'monospace', fontSize: '12px' },
+                    style: { fontFamily: 'var(--font-mono)', fontSize: '12px' },
                     endAdornment: (
                       <InputAdornment position="end">
                         <IconButton
@@ -1005,7 +1005,7 @@ export const WebhookManagement: React.FC = () => {
                 slotProps={{
                   input: {
                     readOnly: true,
-                    style: { fontFamily: 'monospace', fontSize: '12px' },
+                    style: { fontFamily: 'var(--font-mono)', fontSize: '12px' },
                     endAdornment: (
                       <InputAdornment position="end">
                         <IconButton
@@ -1117,7 +1117,7 @@ export const WebhookManagement: React.FC = () => {
                   {deliveryHistory.map((delivery) => (
                     <TableRow key={delivery.id}>
                       <TableCell>
-                        <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                        <Typography variant="body2" sx={{ fontFamily: 'var(--font-mono)' }}>
                           {delivery.id.substring(0, 8)}...
                         </Typography>
                       </TableCell>
@@ -1230,7 +1230,7 @@ export const WebhookManagement: React.FC = () => {
                       <Typography
                         variant="body2"
                         sx={{
-                          fontFamily: 'monospace',
+                          fontFamily: 'var(--font-mono)',
                           fontSize: '0.875rem',
                           maxWidth: '300px',
                           overflow: 'hidden',
@@ -1305,7 +1305,7 @@ export const WebhookManagement: React.FC = () => {
                             <Alert severity="warning" sx={{ flexGrow: 1, width: '100%' }}>
                               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                                 <Typography variant="caption" sx={{
-                                  fontWeight: "bold"
+                                  fontWeight: 600
                                 }}>
                                   New Token Created - Copy Now!
                                 </Typography>
@@ -1320,7 +1320,7 @@ export const WebhookManagement: React.FC = () => {
                                     slotProps={{
                                       input: {
                                         readOnly: true,
-                                        style: { fontFamily: 'monospace', fontSize: '12px' },
+                                        style: { fontFamily: 'var(--font-mono)', fontSize: '12px' },
                                         endAdornment: (
                                           <InputAdornment position="end">
                                             <IconButton

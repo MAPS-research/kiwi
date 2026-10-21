@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import PDFComponent from "../components/Chat/PDFComponent.tsx";
 import { ChatContext } from "./ClassLayout.tsx";
 import { useGlobalChat } from "../context/GlobalChatContext.tsx";
@@ -55,8 +55,10 @@ export const ClassChat: React.FC = () => {
 
   if (!myClass) {
     return (
-      <Box sx={{ p: 4 }}>
-        <h2>Loading class...</h2>
+      <Box role="status" sx={{ p: "var(--space-6)" }}>
+        <Typography variant="body2" sx={{ color: "var(--in-progress-text)" }}>
+          Loading class…
+        </Typography>
       </Box>
     );
   }

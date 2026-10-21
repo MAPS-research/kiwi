@@ -6,20 +6,22 @@ import {
   Alert,
   Box,
   Button,
-  CircularProgress,
-  Divider,
   FormControlLabel,
-  Snackbar,
-  Stack,
+  SvgIcon,
   Switch,
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useId, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ClassCard from "../../components/ClassCard/ClassCard.tsx";
 import apiClient from "../../utils/api.ts";
-import { AdminPage, AdminPageHeader } from "../../components/AdminPage/index.ts";
+import {
+  AdminFormSection,
+  AdminPage,
+  AdminPageHeader,
+  AdminToast,
+} from "../../components/AdminPage/index.ts";
 
 interface ClassMetadata {
   className: string;
@@ -34,14 +36,28 @@ interface ClassMetadata {
   };
 }
 
+const PAGE_TITLE = "Edit class";
+const PAGE_DESCRIPTION = "Update the class details, cover image and instructions for Kiwi.";
+
+/** Labels sit above the fields and carry no asterisk; the inputs stay required for assistive technology. */
+const REQUIRED_LABEL = { inputLabel: { required: false } } as const;
+
+/** The static dashed ring of the neutral in-progress status, beside its words (never a spinner). */
+const InProgressRing = () => (
+  <SvgIcon aria-hidden viewBox="0 0 16 16" sx={{ fontSize: "var(--size-icon-sm)" }}>
+    <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="2.4 2" />
+  </SvgIcon>
+);
+
 export const ClassEdit: React.FC = () => {
   const { classID } = useParams<{ classID: string }>();
   const navigate = useNavigate();
+  const previewHeadingId = useId();
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [savedToastOpen, setSavedToastOpen] = useState(false);
 
   const [metadata, setMetadata] = useState<ClassMetadata>({
     className: "",
@@ -99,7 +115,7 @@ export const ClassEdit: React.FC = () => {
         }
       } catch (error) {
         console.error("Error fetching class data:", error);
-        setError("Failed to load class data. Please try again.");
+        setError("Couldn't load the class. The server didn't respond as expected. Reload the page to try again.");
       } finally {
         setLoading(false);
       }
@@ -120,14 +136,17 @@ export const ClassEdit: React.FC = () => {
         }
       } catch (error) {
         console.error("Error uploading document", error);
-        setError("Failed to upload image. Please try again.");
+        setError(
+          "Couldn't upload the cover image. The server didn't respond as expected. Your changes are still in the form. Try again, or choose a different image."
+        );
       }
     }
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!classID) return;
+    // Busy: Save says "Saving…" and ignores presses until the request settles.
+    if (!classID || saving) return;
 
     try {
       setSaving(true);
@@ -164,13 +183,15 @@ export const ClassEdit: React.FC = () => {
         },
       });
 
-      setSuccessMessage("Class metadata updated successfully!");
+      setSavedToastOpen(true);
       setTimeout(() => {
         navigate(`/admin/class/${classID}`);
       }, 1500);
     } catch (error) {
       console.error("Error updating class metadata:", error);
-      setError("Failed to update class metadata. Please try again.");
+      setError(
+        "Couldn't save the class. The server didn't respond as expected. Your changes are still in the form. Check the details and try again."
+      );
     } finally {
       setSaving(false);
     }
@@ -195,19 +216,22 @@ export const ClassEdit: React.FC = () => {
   if (loading) {
     return (
       <AdminPage maxWidth="lg">
-        <AdminPageHeader
-          title="Edit Class"
-          description="Update course details, imagery, and assistant behavior."
-        />
+        <AdminPageHeader title={PAGE_TITLE} description={PAGE_DESCRIPTION} />
         <Box
           role="status"
           aria-live="polite"
-          sx={{ display: "flex", alignItems: "center", gap: 1.5, py: 4 }}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--space-2)",
+            py: "var(--space-5)",
+            color: "var(--in-progress-text)",
+          }}
         >
-          <CircularProgress size={24} />
-          <Typography sx={{
-            color: "text.secondary"
-          }}>Loading class data...</Typography>
+          <InProgressRing />
+          <Typography variant="body2" sx={{ color: "inherit" }}>
+            Loading class details…
+          </Typography>
         </Box>
       </AdminPage>
     );
@@ -215,128 +239,88 @@ export const ClassEdit: React.FC = () => {
 
   return (
     <AdminPage maxWidth="lg">
-      <AdminPageHeader
-        title="Edit Class"
-        description="Update course details, imagery, and assistant behavior."
-      />
+      <AdminPageHeader title={PAGE_TITLE} description={PAGE_DESCRIPTION} />
 
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
+        <Alert severity="error" sx={{ mb: "var(--space-5)" }}>
           {error}
         </Alert>
       )}
 
-      <Box component="form" onSubmit={handleSubmit} noValidate>
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: { xs: "minmax(0, 1fr)", lg: "minmax(0, 1fr) 320px" },
-            gap: { xs: 5, lg: 7 },
-            alignItems: "start",
-          }}
-        >
-          <Box data-testid="class-form-column" sx={{ minWidth: 0 }}>
-            <Box
-              component="section"
-              aria-labelledby="basic-information-heading"
-              sx={{
-                display: "grid",
-                gridTemplateColumns: { xs: "minmax(0, 1fr)", md: "190px minmax(0, 1fr)" },
-                gap: { xs: 2, md: 4 },
-                pb: 4,
-              }}
+      {/* The form frame: one column, and from 1200 px the form beside a 320 px preview. */}
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        noValidate
+        sx={{
+          display: "grid",
+          gridTemplateColumns: { xs: "minmax(0, 1fr)", lg: "minmax(0, 1fr) 320px" },
+          gap: "var(--space-6)",
+          alignItems: "start",
+        }}
+      >
+        <Box data-testid="class-form-column" sx={{ minWidth: 0 }}>
+          {/* Sections on the canvas: a rule above the group and one under each section. */}
+          <Box sx={{ borderTop: "1px solid var(--border-subtle)" }}>
+            <AdminFormSection
+              title="Basic information"
+              description="The details shown to students and instructors."
             >
-              <Box>
-                <Typography
-                  id="basic-information-heading"
-                  component="h2"
-                  variant="subtitle1"
-                  sx={{ fontWeight: 600 }}
-                >
-                  Basic information
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "text.secondary",
-                    mt: 0.5
-                  }}>
-                  The details shown to students and instructors.
-                </Typography>
-              </Box>
-
-              <Stack spacing={2.5}>
+              <Box sx={{ display: "grid", gap: "var(--space-stack)" }}>
                 <TextField
                   fullWidth
                   required
-                  label="Class Name"
+                  label="Class name"
                   value={metadata.className}
                   onChange={(e) => setMetadata(prev => ({ ...prev, className: e.target.value }))}
+                  slotProps={REQUIRED_LABEL}
                 />
-                <TextField
-                  fullWidth
-                  required
-                  label="Professor Name"
-                  value={metadata.professorName}
-                  onChange={(e) => setMetadata(prev => ({ ...prev, professorName: e.target.value }))}
-                />
-                <TextField
-                  fullWidth
-                  required
-                  type="email"
-                  label="Professor Email"
-                  autoComplete="email"
-                  value={metadata.professorEmail}
-                  onChange={(e) => setMetadata(prev => ({ ...prev, professorEmail: e.target.value }))}
-                />
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: { xs: "minmax(0, 1fr)", md: "minmax(0, 1fr) minmax(0, 1fr)" },
+                    gap: "var(--space-stack)",
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    required
+                    label="Instructor name"
+                    value={metadata.professorName}
+                    onChange={(e) => setMetadata(prev => ({ ...prev, professorName: e.target.value }))}
+                    slotProps={REQUIRED_LABEL}
+                  />
+                  <TextField
+                    fullWidth
+                    required
+                    type="email"
+                    label="Instructor email"
+                    autoComplete="email"
+                    value={metadata.professorEmail}
+                    onChange={(e) => setMetadata(prev => ({ ...prev, professorEmail: e.target.value }))}
+                    slotProps={REQUIRED_LABEL}
+                  />
+                </Box>
                 <TextField
                   fullWidth
                   label="Description"
                   value={metadata.description}
                   onChange={(e) => setMetadata(prev => ({ ...prev, description: e.target.value }))}
                   multiline
-                  rows={4}
+                  rows={3}
                 />
-              </Stack>
-            </Box>
-
-            <Divider />
-
-            <Box
-              component="section"
-              aria-labelledby="course-image-heading"
-              sx={{
-                display: "grid",
-                gridTemplateColumns: { xs: "minmax(0, 1fr)", md: "190px minmax(0, 1fr)" },
-                gap: { xs: 2, md: 4 },
-                py: 4,
-              }}
-            >
-              <Box>
-                <Typography
-                  id="course-image-heading"
-                  component="h2"
-                  variant="subtitle1"
-                  sx={{ fontWeight: 600 }}
-                >
-                  Course image
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "text.secondary",
-                    mt: 0.5
-                  }}>
-                  Used as the cover image on the class card.
-                </Typography>
               </Box>
+            </AdminFormSection>
 
-              <Box>
+            <AdminFormSection
+              title="Cover image"
+              description="Used as the cover image on the class card."
+            >
+              <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "var(--space-3)" }}>
                 <Button
                   component="label"
                   variant="outlined"
                   startIcon={<CloudUploadIcon />}
-                  sx={{ textTransform: "none" }}
                 >
                   {snippetImageUrl ? "Replace image" : "Upload image"}
                   <input
@@ -346,51 +330,20 @@ export const ClassEdit: React.FC = () => {
                     onChange={handleDocumentUpload}
                   />
                 </Button>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "text.secondary",
-                    mt: 1
-                  }}>
+                <Typography variant="caption" sx={{ color: "text.secondary" }}>
                   PNG, JPG, JPEG, or WebP. The preview updates after upload.
                 </Typography>
               </Box>
-            </Box>
+            </AdminFormSection>
 
-            <Divider />
-
-            <Box
-              component="section"
-              aria-labelledby="system-prompts-heading"
-              sx={{
-                display: "grid",
-                gridTemplateColumns: { xs: "minmax(0, 1fr)", md: "190px minmax(0, 1fr)" },
-                gap: { xs: 2, md: 4 },
-                py: 4,
-              }}
+            <AdminFormSection
+              title="Class-specific instructions"
+              description="Added to Kiwi's built-in instructions in every chat for this class."
             >
-              <Box>
-                <Typography
-                  id="system-prompts-heading"
-                  component="h2"
-                  variant="subtitle1"
-                  sx={{ fontWeight: 600 }}
-                >
-                  Class-specific instructions
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "text.secondary",
-                    mt: 0.5
-                  }}>
-                  Added to Kiwi&apos;s built-in instructions in every chat for this class.
-                </Typography>
-              </Box>
-
-              <Box sx={{ minWidth: 0 }}>
+              <Box sx={{ display: "grid", gap: "var(--space-stack)", justifyItems: "start" }}>
+                {/* A selection control: the theme draws it with the selection tint, never a status colour. */}
                 <FormControlLabel
-                  sx={{ m: 0, mb: hasCustomSystemPrompts ? 2.5 : 0 }}
+                  sx={{ m: 0, columnGap: "var(--space-3)" }}
                   control={
                     <Switch
                       checked={hasCustomSystemPrompts}
@@ -398,117 +351,89 @@ export const ClassEdit: React.FC = () => {
                     />
                   }
                   label="Add class-specific instructions"
+                  slotProps={{ typography: { variant: "subtitle2" } }}
                 />
 
                 {hasCustomSystemPrompts ? (
-                  <Stack spacing={2.5}>
-                    <TextField
-                      fullWidth
-                      label="Instructions"
-                      value={metadata.systemPrompts?.defaultSystemMessage || ""}
-                      onChange={(e) => setMetadata(prev => ({
-                        ...prev,
-                        systemPrompts: {
-                          ...prev.systemPrompts,
-                          defaultSystemMessage: e.target.value,
-                        },
-                      }))}
-                      multiline
-                      rows={6}
-                      helperText="Appended after Kiwi's built-in teaching and tool guidance. While an experiment is active, its variant's instructions are used instead."
-                    />
-                  </Stack>
+                  <TextField
+                    fullWidth
+                    label="Instructions"
+                    value={metadata.systemPrompts?.defaultSystemMessage || ""}
+                    onChange={(e) => setMetadata(prev => ({
+                      ...prev,
+                      systemPrompts: {
+                        ...prev.systemPrompts,
+                        defaultSystemMessage: e.target.value,
+                      },
+                    }))}
+                    multiline
+                    rows={4}
+                    helperText="Appended after Kiwi's built-in teaching and tool guidance. While an experiment is active, its variant's instructions are used instead."
+                  />
                 ) : (
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: "text.secondary",
-                      mt: 1
-                    }}>
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
                     Kiwi uses only its built-in instructions for this class.
                   </Typography>
                 )}
               </Box>
-            </Box>
-
-            <Divider />
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: { xs: "column-reverse", sm: "row" },
-                gap: 1.5,
-                justifyContent: "flex-end",
-                pt: 3,
-                "& .MuiButton-root": { minHeight: 44 },
-              }}
-            >
-              <Button
-                variant="outlined"
-                onClick={() => navigate(classManagementPath)}
-                disabled={saving}
-                sx={{ textTransform: "none" }}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                variant="contained"
-                startIcon={<SaveIcon />}
-                disabled={saving}
-                sx={{ textTransform: "none" }}
-              >
-                {saving ? "Saving..." : "Save Changes"}
-              </Button>
-            </Box>
+            </AdminFormSection>
           </Box>
 
+          {/* Actions: right-aligned, the tertiary Cancel and the page's one filled primary. */}
           <Box
-            component="aside"
-            data-testid="class-preview-column"
-            aria-labelledby="class-preview-heading"
-            sx={{ position: { lg: "sticky" }, top: { lg: 24 }, minWidth: 0 }}
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "flex-end",
+              gap: "var(--space-inline)",
+              pt: "var(--space-5)",
+            }}
           >
-            <Typography
-              id="class-preview-heading"
-              component="h2"
-              variant="subtitle1"
-              sx={{ fontWeight: 600 }}
+            <Button
+              variant="text"
+              onClick={() => navigate(classManagementPath)}
+              disabled={saving}
             >
-              Class preview
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{
-                color: "text.secondary",
-                mt: 0.5,
-                mb: 2
-              }}>
-              This is how the class appears in the class list.
-            </Typography>
-            <ClassCard
-              title={metadata.className}
-              instructor={metadata.professorName}
-              imageUrl={snippetImageUrl}
-              hoverable
-            />
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              startIcon={<SaveIcon />}
+              aria-busy={saving || undefined}
+            >
+              {saving ? "Saving…" : "Save changes"}
+            </Button>
           </Box>
+        </Box>
+
+        <Box
+          component="aside"
+          data-testid="class-preview-column"
+          aria-labelledby={previewHeadingId}
+          sx={{ position: { lg: "sticky" }, top: { lg: "var(--space-5)" }, minWidth: 0 }}
+        >
+          <Typography id={previewHeadingId} component="h2" variant="subtitle1" sx={{ mb: "var(--space-1)" }}>
+            Class preview
+          </Typography>
+          <Typography variant="body2" sx={{ color: "text.secondary", mb: "var(--space-3)" }}>
+            This is how the class appears in the class list.
+          </Typography>
+          <ClassCard
+            title={metadata.className}
+            instructor={metadata.professorName}
+            imageUrl={snippetImageUrl}
+            hoverable
+          />
         </Box>
       </Box>
 
-      <Snackbar
-        open={!!successMessage}
-        autoHideDuration={3000}
-        onClose={() => setSuccessMessage(null)}
-      >
-        <Alert
-          elevation={6}
-          variant="filled"
-          onClose={() => setSuccessMessage(null)}
-          severity="success"
-        >
-          {successMessage}
-        </Alert>
-      </Snackbar>
+      <AdminToast
+        open={savedToastOpen}
+        severity="success"
+        message="Class saved"
+        onClose={() => setSavedToastOpen(false)}
+      />
     </AdminPage>
   );
 };

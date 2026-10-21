@@ -1,0 +1,30 @@
+/* Preview only: the global chat panel's four modes (SR-6: snap docks and narrows the page; side and modal float over a
+   backdrop; fullscreen covers; below 600 px it is always fullscreen), and the few states the scripted demo adds.
+   Tokens only, like mock.css. */
+.chat-host { position: fixed; inset: 0; z-index: var(--z-chat-panel); display: none; }
+.chat-host.open { display: block; }
+.chat-host[hidden] { display: none; }
+.chat-host > .chat { height: 100%; border-left: 0; }
+@media (min-width: 600px) {
+  .chat-host.snap, .chat-host.side { left: auto; width: var(--panel-w, var(--size-chat-side)); }
+  .chat-host.snap > .chat > .chat-grip, .chat-host.side > .chat > .chat-grip { display: block; }
+  .chat-host.snap > .chat, .chat-host.side > .chat { border-left: 1px solid var(--border); }
+  .chat-host.side { box-shadow: var(--shadow-2); }
+  .chat-host.modal { inset: 10vh auto auto 50%; width: min(900px, 100% - 2 * var(--space-popup-margin)); height: 80vh; transform: translateX(-50%); box-shadow: var(--shadow-2); }
+  .chat-host.modal > .chat { border: 1px solid var(--border); border-radius: var(--radius-sheet); overflow: hidden; }
+  body.panel-snap #app { margin-right: var(--panel-w, var(--size-chat-side)); }
+}
+.panel-backdrop { position: fixed; inset: 0; z-index: calc(var(--z-chat-panel) - 1); background: var(--backdrop); }
+.panel-backdrop[hidden], .launcher[hidden], .menu[hidden], .drawer[hidden], [hidden] { display: none; }
+.screen { height: 100vh; }
+@media (max-width: 599.98px) { body.panel-open #app { visibility: hidden; } } /* below sm the open panel is fullscreen and covers the page */
+.history { padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--border-subtle); }
+.copied { position: absolute; top: calc(100% + var(--space-1)); right: 0; padding: var(--space-1) var(--space-2); background: var(--surface); color: var(--status-success-text); border: 1px solid var(--border); border-radius: var(--radius-control); box-shadow: var(--shadow-1); font-family: var(--type-caption-family); font-size: var(--type-caption-size); line-height: var(--type-caption-leading); white-space: nowrap; }
+.code-actions { position: relative; }
+.empty-inline { padding-top: var(--space-2); }
+.empty-inline .kiwi { display: block; margin-bottom: var(--space-5); }
+.paper { width: min(100%, calc(640px * var(--paper-zoom, 1))); }
+.file-empty { padding: var(--space-2) var(--space-4); }
+.table .no-match td { color: var(--text-secondary); white-space: normal; }
+.instr-off { margin: 0; font-size: var(--text-sm); line-height: var(--leading-sm); }
+.toast.info > .ic { color: var(--toast-icon); }

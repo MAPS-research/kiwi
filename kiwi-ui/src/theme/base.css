@@ -1,0 +1,101 @@
+/*
+ * Global rules of the Stage 1 design system (kiwi-ui/DESIGN.md: Type; Design
+ * system > Components; Generation spec, the MuiCssBaseline row). Every value is a
+ * design token from ./generated/kiwi-ui.tokens.css; component looks live in
+ * src/Theme.ts.
+ */
+
+html {
+  /* No faux bold or italic: every face the UI uses is a real file. */
+  font-synthesis: none;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-leading);
+  color: var(--text);
+  background: var(--background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+}
+
+/* The system keeps two weights: the browser's bold (700) is the semibold here. */
+b,
+strong {
+  font-weight: var(--weight-semibold);
+}
+
+/*
+ * Focus is one frame. A control with no border (a text or icon button, a link, a
+ * tab, a row, a menu item) takes one 2 px ring, its only frame. A control with a
+ * border never takes it: the theme recolours that border instead, so text fields
+ * keep their outline off here and show focus on their own edge.
+ */
+:focus-visible {
+  outline: var(--border-width-focus) solid var(--focus-ring);
+  outline-offset: var(--size-focus-offset);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+}
+
+@media (forced-colors: active) {
+  :focus-visible {
+    outline-color: Highlight;
+  }
+
+  [aria-disabled="true"] {
+    color: GrayText;
+    border-color: GrayText;
+  }
+}
+
+/* A disabled control stays focusable (aria-disabled) and says so to the pointer. */
+[aria-disabled="true"],
+[aria-disabled="true"] * {
+  cursor: not-allowed;
+}
+
+/* The text dots rest as a static ellipsis under reduced motion, never a frozen frame. */
+@media (prefers-reduced-motion: reduce) {
+  [data-dots]::after {
+    animation: none;
+    content: "…";
+  }
+}
+
+/*
+ * CJK has no italic: emphasis inside a CJK-dominant block renders upright at 600,
+ * never slanted and never in the link colour. Blocks are marked data-script="cjk"
+ * where more than half of their non-space characters are CJK.
+ */
+[data-script="cjk"] em,
+[data-script="cjk"] i {
+  font-style: normal;
+  font-weight: var(--weight-semibold);
+}
+
+/*
+ * The ruler (DESIGN.md, Signature move): a 1 px rule down the left edge of a
+ * reading column Kiwi draws, painted as the region's own background, with no DOM
+ * node and no ticks. The gradient is declared here, at the use site, so it takes
+ * the --border-strong of the colour mode its region sits in.
+ */
+.kiwi-ruled {
+  background-image: linear-gradient(var(--border-strong), var(--border-strong));
+  background-position: 0 0;
+  background-size: 1px 100%;
+  background-repeat: no-repeat;
+}

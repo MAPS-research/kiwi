@@ -14,6 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import * as React from "react";
+import StatusChip from "../../components/StatusChip/StatusChip.tsx";
 import type { StaffDocument, StaffMaterial } from "../../services/index.ts";
 import { MaterialSlot } from "./MaterialSlots.tsx";
 import type { DocumentRoleValue } from "./materialsStaging.ts";
@@ -51,35 +52,19 @@ const SummaryChips: React.FC<{ material: StaffMaterial }> = ({ material }) => {
         alignItems: "center",
         flexWrap: "wrap"
       }}>
+      {/* Status chips carry their shape icon; in progress is the neutral status. */}
       {issues
         .filter((issue) => issue !== "processing")
         .map((issue) => (
-          <Chip
-            key={issue}
-            size="small"
-            color="error"
-            variant="outlined"
-            label={ISSUE_LABELS[issue]}
-            // The only styling kept from the heavier pass: at 12px regular
-            // these read as hairlines.
-            sx={{ fontWeight: 600 }}
-          />
+          <StatusChip key={issue} size="small" kind="error" label={ISSUE_LABELS[issue]} />
         ))}
       {issues.includes("processing") && (
-        <Chip
-          size="small"
-          color="info"
-          variant="outlined"
-          label="processing"
-          sx={{ fontWeight: 600 }}
-        />
+        <StatusChip size="small" kind="neutral" label="processing" />
       )}
       {references > 0 && (
         <Chip
           size="small"
-          variant="outlined"
           label={`${references} reference${references > 1 ? "s" : ""}`}
-          sx={{ fontWeight: 600 }}
         />
       )}
     </Stack>
@@ -145,9 +130,9 @@ export const MaterialRow: React.FC<MaterialRowProps> = ({
         <ExpandIcon
           fontSize="small"
           sx={{
-            color: "text.secondary",
+            color: "var(--icon-default)",
             transform: expanded ? "rotate(0deg)" : "rotate(-90deg)",
-            transition: "transform 120ms",
+            transition: "transform var(--motion-micro) var(--motion-ease-toggle)",
             flexShrink: 0,
           }}
         />

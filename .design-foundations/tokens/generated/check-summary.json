@@ -1,0 +1,161 @@
+{
+ "date": "2026-10-19",
+ "source": {
+  "version": "2.0.0",
+  "sha256": "051772c4039b",
+  "commit": "588b654"
+ },
+ "result": "PASS",
+ "failures": 0,
+ "components": 20,
+ "aliasOk": 126,
+ "aliasBad": 0,
+ "stateGroups": 25,
+ "stateSpecs": 200,
+ "contrast": {
+  "pass": 446,
+  "fail": 0,
+  "informational": 38
+ },
+ "tier": {
+  "refs": 942,
+  "violations": 0
+ },
+ "literals": {
+  "marked": 6,
+  "unmarked": 0,
+  "outsideGlobal": 0,
+  "banned": 0
+ },
+ "public": {
+  "pinned": 143,
+  "unmapped": 0,
+  "notEmitted": 0,
+  "counts": {
+   "kept": 52,
+   "deprecated": 41,
+   "repointed": 50,
+   "added": 26
+  },
+  "classes": {
+   "pinned": 89,
+   "missing": 0,
+   "emitted": 98
+  },
+  "keyframes": {
+   "pinned": 3,
+   "missing": 0,
+   "emitted": 4
+  },
+  "deprecatedClasses": 18,
+  "deprecationViolations": 0
+ },
+ "cues": {
+  "variants": 12,
+  "assertions": 20,
+  "failures": 0
+ },
+ "frozen": {
+  "n": 4,
+  "drifted": 0
+ },
+ "chart": {
+  "series": 10,
+  "failures": 0,
+  "measured": {
+   "light": {
+    "target": 0.56,
+    "spread": 0.13,
+    "minContrast": 3.02,
+    "minCvd": 8.14,
+    "minCvdKind": "protanopia",
+    "minCvdPair": [
+     1,
+     3
+    ],
+    "minAdjacentCvd": 14.78,
+    "minNormal": 15.26,
+    "minNormalPair": [
+     1,
+     2
+    ],
+    "other": {
+     "hex": "#77746d",
+     "minContrast": 4.1,
+     "minCvdToSeries": 4.66
+    }
+   },
+   "dark": {
+    "target": 0.634,
+    "spread": 0.135,
+    "minContrast": 3.06,
+    "minCvd": 8.16,
+    "minCvdKind": "deuteranopia",
+    "minCvdPair": [
+     1,
+     3
+    ],
+    "minAdjacentCvd": 16.45,
+    "minNormal": 15.37,
+    "minNormalPair": [
+     1,
+     4
+    ],
+    "other": {
+     "hex": "#8d8b83",
+     "minContrast": 4.22,
+     "minCvdToSeries": 5.57
+    }
+   }
+  }
+ },
+ "editorSelection": {
+  "assertions": 23,
+  "failures": 0
+ },
+ "motionGuard": {
+  "moving": 4,
+  "guarded": 4
+ },
+ "muiGrey": {
+  "keys": 32,
+  "mismatches": 0
+ },
+ "companionBacking": {
+  "assertions": 39,
+  "failures": 0,
+  "pixelAssets": 109,
+  "pixelFailures": 0
+ },
+ "provenance": {
+  "values": 83,
+  "given": 19,
+  "derived": 38,
+  "kept": 26,
+  "failures": 0
+ },
+ "scrim": {
+  "assertions": 1,
+  "failures": 0
+ },
+ "oneFrame": {
+  "assertions": 112,
+  "failures": 0
+ },
+ "publicStates": {
+  "rules": 56,
+  "failures": 0,
+  "sameRole": 49,
+  "sharedRole": 7,
+  "valueOnly": 0,
+  "plantsCaught": 2,
+  "plants": 2
+ },
+ "densityDeltas": 30,
+ "descriptions": {
+  "tokens": 1271,
+  "described": 247,
+  "groups": 330,
+  "groupsDescribed": 285
+ }
+}

@@ -1,0 +1,1102 @@
+{
+ "repo": "NYUSH-ML/kiwi-ui",
+ "branch": "kiwi-icon",
+ "commit": "fbb4db85f90aeda3a1250c8e9c8aa2d7473e2e11",
+ "amended": "2026-10-18",
+ "runtime": [
+  {
+   "atlas": "full-hop-flight",
+   "file": "public/kiwi-mascot/frames-v3/full-hop-flight.webp",
+   "bytes": 564972,
+   "px": [
+    1536,
+    1024
+   ],
+   "sha256": "d0514dadca7db547318ec799ac94427cf034224ff040014c6560e77b205ab85b"
+  },
+  {
+   "atlas": "full-walk",
+   "file": "public/kiwi-mascot/frames-v3/full-walk.webp",
+   "bytes": 571354,
+   "px": [
+    1536,
+    1024
+   ],
+   "sha256": "aa6589578d81fd1b07085d9193139000279bfc4ce42bf54bcd58d159ae4519f6"
+  },
+  {
+   "atlas": "full-wave-bow",
+   "file": "public/kiwi-mascot/frames-v3/full-wave-bow.webp",
+   "bytes": 496314,
+   "px": [
+    1536,
+    1024
+   ],
+   "sha256": "2c7ab49db2f3152d7cdd9efb1514aa0c7c2167cd03b955985af319906c838daa"
+  },
+  {
+   "atlas": "portrait-blink",
+   "file": "public/kiwi-mascot/frames-v3/portrait-blink.webp",
+   "bytes": 688748,
+   "px": [
+    1536,
+    1024
+   ],
+   "sha256": "b192e2a85a1d2a3d3282fb6d8eda728135cf33eff9050554ed6a425283272e77"
+  },
+  {
+   "atlas": "portrait-doze",
+   "file": "public/kiwi-mascot/frames-v3/portrait-doze.webp",
+   "bytes": 595390,
+   "px": [
+    1536,
+    1024
+   ],
+   "sha256": "ef6c6eb5097617fc4ca40dc23aa0a0df2403ab531b28939755ce6a3fadb4db1f"
+  },
+  {
+   "atlas": "portrait-nod-sleep",
+   "file": "public/kiwi-mascot/frames-v3/portrait-nod-sleep.webp",
+   "bytes": 599782,
+   "px": [
+    1536,
+    1024
+   ],
+   "sha256": "c8979c6155c0f62a40a76e8a0ed1278cd3a42f6bb29740c175925a2efc01b304"
+  },
+  {
+   "atlas": "portrait-turn",
+   "file": "public/kiwi-mascot/frames-v3/portrait-turn.webp",
+   "bytes": 597534,
+   "px": [
+    1536,
+    1024
+   ],
+   "sha256": "1304ec61676eb4683f5751b9bc6268d181b31192695d436d40b6c9b736b3c0b3"
+  },
+  {
+   "atlas": "stamp-peek",
+   "file": "public/kiwi-mascot/frames-v3/stamp-peek.webp",
+   "bytes": 343046,
+   "px": [
+    1536,
+    1024
+   ],
+   "sha256": "61a6b5e434bf9aa892301ff609c261f2e5627a188b17561310c8edc861302d30"
+  }
+ ],
+ "stillsKey": "stem names the files (still-<stem>.png, stills/<stem>.<px>.webp). placement says who shows the drawing: avatar (stand, the tutor avatar in every state it rests on, and the welcome frame), page (idle, error and walk: the page placements outside the chat panel, never the avatar) or inspection (wave, peek and retract: the companion sheet). state repeats stem for the tools that key on it; it names a file, and only stand is an avatar still.",
+ "stills": [
+  {
+   "stem": "stand",
+   "placement": "avatar",
+   "avatarStill": true,
+   "state": "stand",
+   "drawing": "stand",
+   "atlas": "full-hop-flight",
+   "cell": 23,
+   "use": "the tutor avatar at rest, in every state, before an atlas has loaded and with motion off (once full-hop-flight has loaded the avatar rests on that atlas's cell 23, the same drawing), and the welcome frame",
+   "file": "still-stand.png",
+   "bytes": 32165,
+   "sized": {
+    "128": 5250,
+    "64": 1920
+   },
+   "ink": {
+    "framing": "shared",
+    "canvasBox": [
+     48,
+     61,
+     249,
+     221
+    ],
+    "slotFractions": {
+     "left": 0.193,
+     "top": 0.2671,
+     "right": 0.8131,
+     "bottom": 0.7607
+    }
+   },
+   "pixels": {
+    "128": {
+     "solidPixels": 2810,
+     "forestPixels": 2614,
+     "tanPixels": 160,
+     "forestLightest": "#5d725f",
+     "forestDarkest": "#092b15",
+     "tanLightest": "#fff4e7"
+    },
+    "64": {
+     "solidPixels": 701,
+     "forestPixels": 653,
+     "tanPixels": 38,
+     "forestLightest": "#5a6748",
+     "forestDarkest": "#0f321b",
+     "tanLightest": "#debf9a"
+    }
+   }
+  },
+  {
+   "stem": "idle",
+   "placement": "page",
+   "avatarStill": false,
+   "state": "idle",
+   "drawing": "idle",
+   "atlas": "portrait-blink",
+   "cell": 0,
+   "use": "the page placements' portrait: sign-in and register, the empty states, S-08 views B and C, the class-card fallback",
+   "file": "still-idle.png",
+   "bytes": 40170,
+   "sized": {
+    "192": 14776,
+    "128": 8130
+   },
+   "ink": {
+    "framing": "own",
+    "canvasBox": [
+     14,
+     52,
+     243,
+     234
+    ],
+    "slotFractions": {
+     "left": 0.1529,
+     "top": 0.2282,
+     "right": 0.8563,
+     "bottom": 0.7872
+    }
+   },
+   "pixels": {
+    "192": {
+     "solidPixels": 14550,
+     "forestPixels": 13065,
+     "tanPixels": 1178,
+     "forestLightest": "#627260",
+     "forestDarkest": "#0c2e1a",
+     "tanLightest": "#fcf5e7"
+    },
+    "128": {
+     "solidPixels": 6471,
+     "forestPixels": 5804,
+     "tanPixels": 521,
+     "forestLightest": "#627866",
+     "forestDarkest": "#13301c",
+     "tanLightest": "#fcf5e6"
+    }
+   }
+  },
+  {
+   "stem": "error",
+   "placement": "page",
+   "avatarStill": false,
+   "state": "error",
+   "drawing": "error",
+   "atlas": "portrait-nod-sleep",
+   "cell": 8,
+   "use": "the page-level error frame and S-08 view A",
+   "file": "still-error.png",
+   "bytes": 28652,
+   "sized": {
+    "192": 11988,
+    "128": 6326
+   },
+   "ink": {
+    "framing": "own",
+    "canvasBox": [
+     24,
+     96,
+     219,
+     234
+    ],
+    "slotFractions": {
+     "left": 0.1529,
+     "top": 0.3492,
+     "right": 0.7855,
+     "bottom": 0.7968
+    }
+   },
+   "pixels": {
+    "192": {
+     "solidPixels": 10339,
+     "forestPixels": 9333,
+     "tanPixels": 893,
+     "forestLightest": "#627762",
+     "forestDarkest": "#11311d",
+     "tanLightest": "#fff7e9"
+    },
+    "128": {
+     "solidPixels": 4594,
+     "forestPixels": 4145,
+     "tanPixels": 395,
+     "forestLightest": "#61735e",
+     "forestDarkest": "#16321e",
+     "tanLightest": "#fff8ed"
+    }
+   }
+  },
+  {
+   "stem": "walk",
+   "placement": "page",
+   "avatarStill": false,
+   "state": "walk",
+   "drawing": "walk",
+   "atlas": "full-walk",
+   "cell": 0,
+   "use": "not found",
+   "file": "still-walk.png",
+   "bytes": 32795,
+   "sized": {
+    "192": 10028,
+    "128": 5140
+   },
+   "ink": {
+    "framing": "own",
+    "canvasBox": [
+     46,
+     68,
+     250,
+     230
+    ],
+    "slotFractions": {
+     "left": 0.1563,
+     "top": 0.2182,
+     "right": 0.8574,
+     "bottom": 0.7749
+    }
+   },
+   "pixels": {
+    "192": {
+     "solidPixels": 6677,
+     "forestPixels": 6262,
+     "tanPixels": 344,
+     "forestLightest": "#5a715c",
+     "forestDarkest": "#052514",
+     "tanLightest": "#f3ece0"
+    },
+    "128": {
+     "solidPixels": 2966,
+     "forestPixels": 2781,
+     "tanPixels": 152,
+     "forestLightest": "#54634a",
+     "forestDarkest": "#062616",
+     "tanLightest": "#f9f1e5"
+    }
+   }
+  },
+  {
+   "stem": "wave",
+   "placement": "inspection",
+   "avatarStill": false,
+   "state": "wave",
+   "drawing": "wave",
+   "atlas": "full-wave-bow",
+   "cell": 8,
+   "use": "inspection: the like reaction with the wing at its highest",
+   "file": "still-wave.png",
+   "bytes": 30951,
+   "sized": {
+    "192": 10536,
+    "128": 5474,
+    "64": 1974
+   },
+   "ink": {
+    "framing": "shared",
+    "canvasBox": [
+     60,
+     64,
+     229,
+     234
+    ],
+    "slotFractions": {
+     "left": 0.23,
+     "top": 0.2763,
+     "right": 0.7514,
+     "bottom": 0.8008
+    }
+   },
+   "pixels": {
+    "192": {
+     "solidPixels": 6803,
+     "forestPixels": 6432,
+     "tanPixels": 283,
+     "forestLightest": "#5c6f5f",
+     "forestDarkest": "#0e2b19",
+     "tanLightest": "#dac2a2"
+    },
+    "128": {
+     "solidPixels": 3031,
+     "forestPixels": 2863,
+     "tanPixels": 127,
+     "forestLightest": "#516955",
+     "forestDarkest": "#112e1a",
+     "tanLightest": "#e3c7a8"
+    },
+    "64": {
+     "solidPixels": 756,
+     "forestPixels": 713,
+     "tanPixels": 30,
+     "forestLightest": "#485d4b",
+     "forestDarkest": "#142f1a",
+     "tanLightest": "#e2c8a7"
+    }
+   }
+  },
+  {
+   "stem": "peek",
+   "placement": "inspection",
+   "avatarStill": false,
+   "state": "peek",
+   "drawing": "peek",
+   "atlas": "stamp-peek",
+   "cell": 23,
+   "use": "inspection: the composer peek fully out",
+   "file": "still-peek.png",
+   "bytes": 20058,
+   "sized": {
+    "192": 9346,
+    "128": 5006,
+    "64": 1964
+   },
+   "ink": {
+    "framing": "own",
+    "canvasBox": [
+     110,
+     68,
+     222,
+     232
+    ],
+    "slotFractions": {
+     "left": 0.3438,
+     "top": 0.1797,
+     "right": 0.7812,
+     "bottom": 0.8203
+    }
+   },
+   "pixels": {
+    "192": {
+     "solidPixels": 8387,
+     "forestPixels": 7448,
+     "tanPixels": 747,
+     "forestLightest": "#627061",
+     "forestDarkest": "#0a2213",
+     "tanLightest": "#fff8ef"
+    },
+    "128": {
+     "solidPixels": 3745,
+     "forestPixels": 3322,
+     "tanPixels": 316,
+     "forestLightest": "#5f7060",
+     "forestDarkest": "#0a2314",
+     "tanLightest": "#fff8ed"
+    },
+    "64": {
+     "solidPixels": 924,
+     "forestPixels": 812,
+     "tanPixels": 74,
+     "forestLightest": "#5d6d5d",
+     "forestDarkest": "#0a2312",
+     "tanLightest": "#fff5e9"
+    }
+   }
+  },
+  {
+   "stem": "retract",
+   "placement": "inspection",
+   "avatarStill": false,
+   "state": "retract",
+   "drawing": "retract",
+   "atlas": "stamp-peek",
+   "cell": 0,
+   "use": "inspection: the composer peek's beak tip",
+   "file": "still-retract.png",
+   "bytes": 16662,
+   "sized": {
+    "192": 5466,
+    "128": 3128,
+    "64": 1230
+   },
+   "ink": {
+    "framing": "own",
+    "canvasBox": [
+     126,
+     68,
+     222,
+     208
+    ],
+    "slotFractions": {
+     "left": 0.4062,
+     "top": 0.1797,
+     "right": 0.7812,
+     "bottom": 0.7266
+    }
+   },
+   "pixels": {
+    "192": {
+     "solidPixels": 2742,
+     "forestPixels": 2048,
+     "tanPixels": 618,
+     "forestLightest": "#606d59",
+     "forestDarkest": "#051f0b",
+     "tanLightest": "#fff7ec"
+    },
+    "128": {
+     "solidPixels": 1220,
+     "forestPixels": 910,
+     "tanPixels": 271,
+     "forestLightest": "#5f6d60",
+     "forestDarkest": "#0a2212",
+     "tanLightest": "#f9f1e5"
+    },
+    "64": {
+     "solidPixels": 303,
+     "forestPixels": 224,
+     "tanPixels": 64,
+     "forestLightest": "#5d6d5e",
+     "forestDarkest": "#0c2514",
+     "tanLightest": "#fcf5ea"
+    }
+   }
+  }
+ ],
+ "atlases": [
+  {
+   "atlas": "full-walk",
+   "cell": 64,
+   "file": "atlas/full-walk.64.webp",
+   "bytes": 34942,
+   "use": "avatar",
+   "pixels": {
+    "solidPixels": 17696,
+    "forestPixels": 16562,
+    "tanPixels": 898,
+    "forestLightest": "#5f7767",
+    "forestDarkest": "#072614",
+    "tanLightest": "#fdf6eb"
+   }
+  },
+  {
+   "atlas": "full-walk",
+   "cell": 128,
+   "file": "atlas/full-walk.128.webp",
+   "bytes": 109236,
+   "use": "stage"
+  },
+  {
+   "atlas": "full-hop-flight",
+   "cell": 64,
+   "file": "atlas/full-hop-flight.64.webp",
+   "bytes": 34622,
+   "use": "avatar",
+   "pixels": {
+    "solidPixels": 17075,
+    "forestPixels": 15926,
+    "tanPixels": 908,
+    "forestLightest": "#627b65",
+    "forestDarkest": "#072a11",
+    "tanLightest": "#fff8eb"
+   }
+  },
+  {
+   "atlas": "full-hop-flight",
+   "cell": 128,
+   "file": "atlas/full-hop-flight.128.webp",
+   "bytes": 107870,
+   "use": "stage"
+  },
+  {
+   "atlas": "full-wave-bow",
+   "cell": 64,
+   "file": "atlas/full-wave-bow.64.webp",
+   "bytes": 34430,
+   "use": "avatar",
+   "pixels": {
+    "solidPixels": 16689,
+    "forestPixels": 15655,
+    "tanPixels": 754,
+    "forestLightest": "#627768",
+    "forestDarkest": "#0f2a18",
+    "tanLightest": "#e2c8a7"
+   }
+  },
+  {
+   "atlas": "full-wave-bow",
+   "cell": 128,
+   "file": "atlas/full-wave-bow.128.webp",
+   "bytes": 107118,
+   "use": "stage"
+  },
+  {
+   "atlas": "stamp-peek",
+   "cell": 96,
+   "file": "atlas/stamp-peek.96.webp",
+   "bytes": 60786,
+   "use": "peek",
+   "pixels": {
+    "solidPixels": 36034,
+    "forestPixels": 31093,
+    "tanPixels": 3914,
+    "forestLightest": "#5f7565",
+    "forestDarkest": "#071e0f",
+    "tanLightest": "#fff8ef"
+   }
+  },
+  {
+   "atlas": "stamp-peek",
+   "cell": 128,
+   "file": "atlas/stamp-peek.128.webp",
+   "bytes": 100186,
+   "use": "stage"
+  },
+  {
+   "atlas": "portrait-nod-sleep",
+   "cell": 128,
+   "file": "atlas/portrait-nod-sleep.128.webp",
+   "bytes": 163452,
+   "use": "evidence"
+  },
+  {
+   "atlas": "portrait-doze",
+   "cell": 128,
+   "file": "atlas/portrait-doze.128.webp",
+   "bytes": 175252,
+   "use": "evidence"
+  }
+ ],
+ "glyphBytes": 1752,
+ "glyph": {
+  "bodyArea": 11466.4,
+  "billArea": 1290.6,
+  "wingArea": -432.8,
+  "eyeSweep": 0,
+  "reversedToMatchBody": [
+   "wing"
+  ]
+ },
+ "peekWall": {
+  "column": 222,
+  "fractionOfCanvas": 0.8672,
+  "frameLeftPercent": 13.28
+ },
+ "framing": {
+  "full-hop-flight": {
+   "cx": 146.5,
+   "cy": 126,
+   "scale": 0.83003190847445
+  },
+  "full-walk": {
+   "cx": 146,
+   "cy": 150,
+   "scale": 0.8798355627014727
+  },
+  "full-wave-bow": {
+   "cx": 151,
+   "cy": 157.5,
+   "scale": 0.9277835265599006
+  },
+  "portrait-blink": {
+   "cx": 127,
+   "cy": 140.5,
+   "scale": 0.7862688297336701
+  },
+  "portrait-doze": {
+   "cx": 125.5,
+   "cy": 145,
+   "scale": 0.8484632115135211
+  },
+  "portrait-nod-sleep": {
+   "cx": 131,
+   "cy": 142.5,
+   "scale": 0.8304032920387532
+  },
+  "portrait-turn": {
+   "cx": 125.5,
+   "cy": 139,
+   "scale": 0.8160039448611324
+  },
+  "stamp-peek": {
+   "cx": 150,
+   "cy": 150,
+   "scale": 1
+  },
+  "shared": {
+   "cx": 147.5,
+   "cy": 136.5,
+   "scale": 0.7898110064875182
+  }
+ },
+ "avatar": {
+  "atlases": [
+   "full-walk",
+   "full-hop-flight",
+   "full-wave-bow"
+  ],
+  "states": {
+   "idle": {
+    "clip": null,
+    "still": "stand"
+   },
+   "walk": {
+    "clip": "full-walk 0->23 at 2 ticks, loop (2.0 s), from cell 0 at send; one clock for the whole turn",
+    "still": "stand"
+   },
+   "speaking": {
+    "clip": "the walk loop, continuing (no restart, no cut at the first token)",
+    "still": "stand"
+   },
+   "hop": {
+    "clip": "full-hop-flight 0->23 at 1 tick, hold 23 x 4 (1.17 s), entered at the next tick from the current walk drawing; ends on the standing still",
+    "still": "stand"
+   },
+   "wave": {
+    "clip": "full-wave-bow 0->14 at 3 ticks, hold 14 x 6 (2.13 s), then the standing still",
+    "still": "stand"
+   },
+   "error": {
+    "clip": null,
+    "still": "stand"
+   },
+   "offline": {
+    "clip": null,
+    "still": "stand"
+   }
+  },
+  "restSource": {
+   "drawing": "full-hop-flight 23 in the shared framing",
+   "fromAtlas": "full-hop-flight's cell 23, drawn exactly as the hop draws its cells (the same image, size and position), whenever that atlas has loaded and motion is on: the landing then changes no pixel",
+   "fromStill": "stills/stand.64.webp before any atlas has loaded (the first paint, a page with history) and with motion off",
+   "kept": "chosen when the avatar comes to rest and kept while it rests, so nothing changes when an atlas finishes loading or motion is switched off",
+   "why": "the browser resamples a separate still and an atlas cell differently, so the two sources differ by a fraction of a pixel at the edges (the companion sheet measures it: screenshots/companion-sheet.audit.json, landingRendered)"
+  },
+  "sharedFraming": {
+   "unionBounds": [
+    41,
+    22,
+    254,
+    251
+   ],
+   "cx": 147.5,
+   "cy": 136.5,
+   "radius": 149.098960425618,
+   "scale": 0.7898110064875182,
+   "leftPercent": 4.493311149644946,
+   "topPercent": 7.887030318145996,
+   "sizePercent": 78.98110064875182,
+   "over": "all 72 drawings of full-walk, full-hop-flight, full-wave-bow"
+  },
+  "framingRuleReproducesFramingTs": {
+   "full-hop-flight": true,
+   "full-walk": true,
+   "full-wave-bow": true,
+   "portrait-blink": true,
+   "portrait-doze": true,
+   "portrait-nod-sleep": true,
+   "portrait-turn": true,
+   "stamp-peek": true
+  },
+  "geometry32": {
+   "slot": 32,
+   "threshold": "alpha >= 128",
+   "framing": "shared",
+   "stand": {
+    "box": [
+     6.37,
+     8.74,
+     25.72,
+     24.14
+    ],
+    "width": 19.35,
+    "height": 15.4,
+    "boxCentre": [
+     16.05,
+     16.44
+    ],
+    "centroid": [
+     13.57,
+     16.86
+    ]
+   },
+   "restingStates": {
+    "idle": "stand",
+    "walk": "stand",
+    "speaking": "stand",
+    "hop": "stand",
+    "wave": "stand",
+    "error": "stand",
+    "offline": "stand"
+   },
+   "walkLoop": {
+    "left": [
+     5.78,
+     6.67
+    ],
+    "top": [
+     9.14,
+     9.63
+    ],
+    "right": [
+     25.63,
+     25.92
+    ],
+    "bottom": [
+     24.84,
+     25.53
+    ],
+    "centroidX": [
+     13.37,
+     13.69
+    ],
+    "centroidY": [
+     16.93,
+     17.38
+    ]
+   },
+   "hopClip": {
+    "left": [
+     5.88,
+     6.87
+    ],
+    "top": [
+     4.89,
+     10.13
+    ],
+    "right": [
+     25.43,
+     26.02
+    ],
+    "bottom": [
+     21.48,
+     25.03
+    ],
+    "centroidX": [
+     13.29,
+     14.06
+    ],
+    "centroidY": [
+     13.73,
+     17.84
+    ]
+   },
+   "waveClip": {
+    "left": [
+     6.57,
+     7.95
+    ],
+    "top": [
+     9.04,
+     11.11
+    ],
+    "right": [
+     23.75,
+     24.74
+    ],
+    "bottom": [
+     25.43,
+     25.43
+    ],
+    "centroidX": [
+     13.17,
+     13.94
+    ],
+    "centroidY": [
+     16.61,
+     17.7
+    ]
+   },
+   "handovers": {
+    "send: stand -> full-walk 0": {
+     "boxEdge": 0.89,
+     "boxCentre": 0.79,
+     "centroid": 0.37
+    },
+    "completion: full-walk n -> full-hop-flight 0 (worst over the 24 walk drawings)": {
+     "boxEdge": 1.09,
+     "boxCentre": 0.64,
+     "centroid": 0.46
+    },
+    "landing: full-hop-flight 23 -> stand": {
+     "boxEdge": 0.0,
+     "boxCentre": 0.0,
+     "centroid": 0.0
+    },
+    "like: stand -> full-wave-bow 0": {
+     "boxEdge": 1.67,
+     "boxCentre": 1.44,
+     "centroid": 0.83
+    },
+    "wave ends: full-wave-bow 14 -> stand": {
+     "boxEdge": 1.78,
+     "boxCentre": 1.53,
+     "centroid": 0.62
+    },
+    "hop 0 vs stand": {
+     "boxEdge": 0.6,
+     "boxCentre": 0.45,
+     "centroid": 0.28
+    },
+    "run vs stand (worst over the 24 walk drawings)": {
+     "boxEdge": 1.39,
+     "boxCentre": 1.09,
+     "centroid": 0.52
+    },
+    "wave vs stand (worst over cells 0 to 14)": {
+     "boxEdge": 2.37,
+     "boxCentre": 1.83,
+     "centroid": 0.84
+    }
+   },
+   "flightRise": 3.13,
+   "beforeAmendment": {
+    "note": "the 2026-10-17 avatar's resting drawings, each in its own atlas's framing (framing.ts)",
+    "figures": {
+     "idle": {
+      "box": [
+       5.19,
+       7.5,
+       27.2,
+       24.99
+      ],
+      "width": 22.02,
+      "height": 17.49,
+      "boxCentre": [
+       16.2,
+       16.25
+      ],
+      "centroid": [
+       15.3,
+       17.34
+      ],
+      "atlas": "portrait-blink",
+      "cell": 0
+     },
+     "walk": {
+      "box": [
+       5.22,
+       7.2,
+       27.22,
+       24.58
+      ],
+      "width": 22.0,
+      "height": 17.38,
+      "boxCentre": [
+       16.22,
+       15.89
+      ],
+      "centroid": [
+       13.26,
+       15.89
+      ],
+      "atlas": "full-walk",
+      "cell": 0
+     },
+     "speaking": {
+      "box": [
+       5.2,
+       7.64,
+       26.48,
+       25.29
+      ],
+      "width": 21.28,
+      "height": 17.65,
+      "boxCentre": [
+       15.84,
+       16.47
+      ],
+      "centroid": [
+       15.19,
+       17.49
+      ],
+      "atlas": "portrait-nod-sleep",
+      "cell": 0
+     },
+     "hop": {
+      "box": [
+       5.99,
+       9.46,
+       26.32,
+       25.65
+      ],
+      "width": 20.34,
+      "height": 16.19,
+      "boxCentre": [
+       16.16,
+       17.56
+      ],
+      "centroid": [
+       13.55,
+       17.99
+      ],
+      "atlas": "full-hop-flight",
+      "cell": 23
+     },
+     "wave": {
+      "box": [
+       5.68,
+       5.39,
+       24.81,
+       24.64
+      ],
+      "width": 19.14,
+      "height": 19.25,
+      "boxCentre": [
+       15.25,
+       15.01
+      ],
+      "centroid": [
+       12.34,
+       14.28
+      ],
+      "atlas": "full-wave-bow",
+      "cell": 8
+     },
+     "error": {
+      "box": [
+       5.1,
+       11.48,
+       24.93,
+       25.29
+      ],
+      "width": 19.83,
+      "height": 13.81,
+      "boxCentre": [
+       15.01,
+       18.39
+      ],
+      "centroid": [
+       15.64,
+       19.4
+      ],
+      "atlas": "portrait-nod-sleep",
+      "cell": 8
+     },
+     "offline": {
+      "box": [
+       5.02,
+       8.36,
+       26.34,
+       25.23
+      ],
+      "width": 21.32,
+      "height": 16.86,
+      "boxCentre": [
+       15.68,
+       16.8
+      ],
+      "centroid": [
+       15.1,
+       17.79
+      ],
+      "atlas": "portrait-doze",
+      "cell": 23
+     }
+    }
+   }
+  }
+ },
+ "beforeFirstAnswer": {
+  "atlases64": 69564,
+  "standStill128": 5250,
+  "standStill64": 1920,
+  "total": 76734,
+  "withPeek96": 137520
+ },
+ "shipped": {
+  "atlases64": 103994,
+  "peek96": 60786,
+  "stillsBytes": 63558,
+  "stillsList": "64 px: stand; 128 px: stand, idle, error, walk; 192 px: idle, walk, error",
+  "glyph": 1752,
+  "total": 230090
+ },
+ "was": {
+  "beforeFirstAnswer": 131544,
+  "withPeek96": 192330,
+  "shipped": 339988
+ },
+ "retired": [
+  {
+   "file": "atlas/portrait-nod-sleep.64.webp",
+   "why": "the speaking dip and the error droop (portrait) left the avatar",
+   "status": "deleted"
+  },
+  {
+   "file": "atlas/portrait-doze.64.webp",
+   "why": "the offline doze (portrait) left the avatar",
+   "status": "deleted"
+  },
+  {
+   "file": "stills/idle.64.webp",
+   "why": "the 32 px avatar rests on stills/stand.64.webp; the page placements load the portrait at 128 and 192 only",
+   "status": "deleted"
+  },
+  {
+   "file": "stills/walk.64.webp",
+   "why": "the avatar's motion-off still is the standing still; not found loads walk at 128 and 192 only",
+   "status": "deleted"
+  },
+  {
+   "file": "stills/error.64.webp",
+   "why": "the avatar's error still is the standing still; the page error frame loads error at 128 and 192 only",
+   "status": "deleted"
+  },
+  {
+   "file": "stills/speaking.64.webp",
+   "why": "speaking is the walk loop; its still is the standing still",
+   "status": "deleted"
+  },
+  {
+   "file": "stills/speaking.128.webp",
+   "why": "as above",
+   "status": "deleted"
+  },
+  {
+   "file": "stills/speaking.192.webp",
+   "why": "as above",
+   "status": "deleted"
+  },
+  {
+   "file": "still-speaking.png",
+   "why": "as above",
+   "status": "deleted"
+  },
+  {
+   "file": "stills/offline.64.webp",
+   "why": "offline rests on the standing still",
+   "status": "deleted"
+  },
+  {
+   "file": "stills/offline.128.webp",
+   "why": "as above",
+   "status": "deleted"
+  },
+  {
+   "file": "stills/offline.192.webp",
+   "why": "as above",
+   "status": "deleted"
+  },
+  {
+   "file": "still-offline.png",
+   "why": "as above",
+   "status": "deleted"
+  },
+  {
+   "file": "stills/hop.64.webp",
+   "why": "the same drawing as stills/stand.64.webp (full-hop-flight 23)",
+   "status": "deleted"
+  },
+  {
+   "file": "stills/hop.128.webp",
+   "why": "the same drawing as stills/stand.128.webp",
+   "status": "deleted"
+  },
+  {
+   "file": "stills/hop.192.webp",
+   "why": "the same drawing, at a size no placement loads",
+   "status": "deleted"
+  },
+  {
+   "file": "still-hop.png",
+   "why": "the same drawing as still-stand.png",
+   "status": "deleted"
+  }
+ ]
+}

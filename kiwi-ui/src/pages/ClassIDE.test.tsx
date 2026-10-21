@@ -8,7 +8,7 @@ import ClassIDE from "./ClassIDE.tsx";
  * Tests for the localStorage persistence added to the Code tab (ClassIDE).
  * IDECode is persisted per class (key `ideState_${classId}`) so it survives a
  * remount (tab-switch) and a refresh. Uploaded-file buffers are intentionally
- * NOT persisted, so file tabs reset to [Code Space] on remount.
+ * NOT persisted, so file tabs reset to [Code] on remount.
  */
 
 // Mock the pending-code / global-chat surface so ClassIDE can mount without a
@@ -42,10 +42,11 @@ vi.mock("../context/GlobalChatContext.tsx", () => ({
 // component would.
 vi.mock("../components/CodeInterpreter/CodeInterpreter.tsx", () => ({
   CodeInterpreter: ({ onLanguageChange }: { onLanguageChange?: (lang: "python" | "r") => void }) => {
-    const { IDECode, setIDEOutputCode } = useContext(IDEContext);
+    const { IDECode, setIDEOutputCode, IDETabs } = useContext(IDEContext);
     return (
       <div>
         <div data-testid="ide-code">{IDECode}</div>
+        <div data-testid="first-tab">{IDETabs[0].label}</div>
         <button data-testid="set-output" onClick={() => setIDEOutputCode("42\n")} />
         <button data-testid="switch-to-r" onClick={() => onLanguageChange?.("r")} />
       </div>
@@ -185,5 +186,25 @@ describe("ClassIDE app context for the AI chat", () => {
 
     renderClassIDE("class-1");
     expect(lastAppContext()).toBeUndefined();
+  });
+});
+
+describe("ClassIDE page frame", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    globalChatState.pendingCode = undefined;
+    installMemoryLocalStorage();
+  });
+
+  it("opens with one file tab, Code (the tab's label and its key)", () => {
+    renderClassIDE("class-1");
+    expect(screen.getByTestId("first-tab").textContent).toBe("Code");
+  });
+
+  it("names the column's resize grip Resize editor", () => {
+    renderClassIDE("class-1");
+    // hidden: the grip is shown from 900 px only, and jsdom applies the base rule.
+    const grip = screen.getByRole("separator", { name: "Resize editor", hidden: true });
+    expect(grip).toHaveAttribute("aria-orientation", "vertical");
   });
 });

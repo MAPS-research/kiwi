@@ -1,0 +1,793 @@
+{
+ "lookups": {
+  "feature": {
+   "title": "Feature flags",
+   "intro": "The flag select, the assignments tables and the edit-expiration sentence on A-06 and A-15 draw a feature by its label. What each flag does is read from the backend, not guessed.",
+   "values": [
+    {
+     "raw": "QwenModel",
+     "label": "Qwen model",
+     "what": "The flag for the Qwen model; an experiment grants it to its participants (`experiment/experiment.service.ts:609`)."
+    },
+    {
+     "raw": "TokenLimit",
+     "label": "No usage limit",
+     "what": "Removes the usage limit for the class or user. The flag exempts; it does not set a limit, so \"Usage limit\" would say the opposite."
+    },
+    {
+     "raw": "RLanguageClass",
+     "label": "R in the scratchpad",
+     "what": "Shows R beside Python in the scratchpad (`ClassIDE.tsx:134`); a class flag applies to that class, a user flag to every class."
+    }
+   ]
+  },
+  "engine": {
+   "title": "Models",
+   "table": false,
+   "intro": "The model names table above is the lookup; the rows list both ids at each place that draws one.",
+   "values": [
+    {
+     "raw": "openai",
+     "label": "ChatGPT",
+     "what": ""
+    },
+    {
+     "raw": "qwen",
+     "label": "Qwen",
+     "what": ""
+    }
+   ]
+  },
+  "account-status": {
+   "title": "Account status",
+   "intro": "An email recipient's status chip (`user.status`).",
+   "values": [
+    {
+     "raw": "active",
+     "label": "Active",
+     "what": "The person has an account."
+    },
+    {
+     "raw": "pending",
+     "label": "Pending",
+     "what": "Enrolled in a class by email, with no account yet: the pending enrollment (`class/class.service.ts:228`) takes effect when the person first signs in (`webhooks/webhook-event.service.ts:323`)."
+    }
+   ]
+  },
+  "role": {
+   "title": "Role",
+   "intro": "A person's role as a chip, a line under their email or a role chip on an app screen (`user.role`, an app screen's allowed roles). \"Professor\" is never drawn (terminology: instructor).",
+   "values": [
+    {
+     "raw": "admin",
+     "label": "Admin",
+     "what": ""
+    },
+    {
+     "raw": "user",
+     "label": "User",
+     "what": "An account that is neither an instructor nor an admin (the users page's role filter and role select)."
+    },
+    {
+     "raw": "student",
+     "label": "Student",
+     "what": ""
+    },
+    {
+     "raw": "professor",
+     "label": "Instructor",
+     "what": "What a class enrollment calls an instructor of that class (`auth.guard.ts:124`); the roster, the recipient lists and the email dialog show it (`ClassEnroll.tsx:389`)."
+    },
+    {
+     "raw": "instructor",
+     "label": "Instructor",
+     "what": ""
+    },
+    {
+     "raw": "ta",
+     "label": "Teaching assistant",
+     "what": ""
+    }
+   ]
+  },
+  "registration-result": {
+   "title": "Account creation result",
+   "intro": "The Status column of the results table under \"Create password accounts\" (`result.status`). Each row's own message is the Error column.",
+   "values": [
+    {
+     "raw": "success",
+     "label": "Created",
+     "what": ""
+    },
+    {
+     "raw": "error",
+     "label": "Not created",
+     "what": "The Error column says why."
+    },
+    {
+     "raw": "pending",
+     "label": "Waiting",
+     "what": "Not tried yet; the rows are tried one after another."
+    }
+   ]
+  },
+  "delivery-status": {
+   "title": "Webhook delivery status",
+   "intro": "The Status column of a webhook's delivery history (`delivery.status`).",
+   "values": [
+    {
+     "raw": "pending",
+     "label": "Pending",
+     "what": ""
+    },
+    {
+     "raw": "success",
+     "label": "Delivered",
+     "what": ""
+    },
+    {
+     "raw": "failed",
+     "label": "Not delivered",
+     "what": ""
+    }
+   ]
+  },
+  "event-status": {
+   "title": "Webhook event status",
+   "intro": "The status chip in an event's details (`event.status`).",
+   "values": [
+    {
+     "raw": "pending",
+     "label": "Pending",
+     "what": "Waiting for an approver."
+    },
+    {
+     "raw": "approved",
+     "label": "Approved",
+     "what": ""
+    },
+    {
+     "raw": "rejected",
+     "label": "Rejected",
+     "what": "Final: an event that is not pending cannot be approved or rejected again (`webhooks/webhook-event.service.ts:178`)."
+    },
+    {
+     "raw": "executed",
+     "label": "Done",
+     "what": "The approved action ran."
+    },
+    {
+     "raw": "failed",
+     "label": "Not run",
+     "what": "The approved action did not run."
+    }
+   ]
+  },
+  "audit-action": {
+   "title": "Audit action",
+   "intro": "The Action column of the audit history and details (`audit.action`).",
+   "values": [
+    {
+     "raw": "approved",
+     "label": "Approved",
+     "what": ""
+    },
+    {
+     "raw": "rejected",
+     "label": "Rejected",
+     "what": ""
+    }
+   ]
+  },
+  "placement": {
+   "title": "App screen placement",
+   "intro": "Where a registered app's screen is shown, in the registry's screens table (`ui.placement`).",
+   "values": [
+    {
+     "raw": "class-tab",
+     "label": "Class tab",
+     "what": ""
+    },
+    {
+     "raw": "admin-panel",
+     "label": "Admin panel",
+     "what": ""
+    },
+    {
+     "raw": "class-admin-panel",
+     "label": "Class admin panel",
+     "what": ""
+    },
+    {
+     "raw": "modal",
+     "label": "Modal",
+     "what": ""
+    },
+    {
+     "raw": "dashboard-widget",
+     "label": "Dashboard widget",
+     "what": ""
+    }
+   ]
+  },
+  "category": {
+   "title": "App category",
+   "intro": "A registered app's category chip (`app.category`). The category is the app's own text, so a value not listed is drawn as written.",
+   "values": [
+    {
+     "raw": "coding",
+     "label": "Coding",
+     "what": ""
+    },
+    {
+     "raw": "quiz",
+     "label": "Quiz",
+     "what": ""
+    },
+    {
+     "raw": "analytics",
+     "label": "Analytics",
+     "what": ""
+    }
+   ]
+  },
+  "experiment-status": {
+   "title": "Experiment status",
+   "intro": "An experiment's status where the student chat's experiment picker lists it (`experiment.status`); the experiments pages already use these labels (`experimentUi.tsx`).",
+   "values": [
+    {
+     "raw": "draft",
+     "label": "Draft",
+     "what": ""
+    },
+    {
+     "raw": "active",
+     "label": "Active",
+     "what": ""
+    },
+    {
+     "raw": "completed",
+     "label": "Completed",
+     "what": ""
+    }
+   ]
+  },
+  "class": {
+   "title": "A class",
+   "dynamic": true,
+   "shown": "the class's name (`classControllerGetById(...).className`, the read `AdminLayout.tsx:340` already makes)",
+   "fallback": "Untitled class",
+   "intro": "A class id is a UUID. Wherever a page draws one, it draws the class's name instead, in a select, a chip, a table cell or a sentence; a class with no name reads \"Untitled class\" (SR-1.11), never its id."
+  },
+  "user": {
+   "title": "A user",
+   "dynamic": true,
+   "shown": "the user's email address (the Users page's own column)",
+   "fallback": "Unknown user",
+   "intro": "A user id is a UUID. A table cell or sentence that names a user draws the email address; a user who cannot be read reads \"Unknown user\", never the id."
+  },
+  "activity": {
+   "title": "Webhook state",
+   "intro": "A webhook's state chip in the webhooks table (`webhook.isActive`).",
+   "values": [
+    {
+     "raw": "active",
+     "label": "Active",
+     "what": "The webhook receives events."
+    },
+    {
+     "raw": "inactive",
+     "label": "Inactive",
+     "what": "The webhook is switched off."
+    }
+   ]
+  },
+  "webhook": {
+   "title": "A webhook",
+   "dynamic": true,
+   "shown": "its address, the URL the admin entered",
+   "fallback": "this webhook",
+   "intro": "A webhook id is a UUID. A subtitle or sentence that names a webhook draws its address; a column or row labelled \"Webhook ID\" is the one place the id itself is drawn (an admin copies it)."
+  }
+ },
+ "exempt": [
+  {
+   "file": "src/components/Analytics/StandaloneUserActivity.tsx",
+   "reason": "word",
+   "sites": [
+    {
+     "expr": "series.granularity === \"hour\" ? \"hour\" : \"day\"",
+     "line": 121
+    },
+    {
+     "expr": "\"hour\"",
+     "line": 121
+    },
+    {
+     "expr": "\"day\"",
+     "line": 121
+    }
+   ]
+  },
+  {
+   "file": "src/components/Analytics/StandaloneDailySessions.tsx",
+   "reason": "word",
+   "sites": [
+    {
+     "expr": "series.granularity === \"hour\" ? \"hour\" : \"day\"",
+     "line": 121
+    },
+    {
+     "expr": "\"hour\"",
+     "line": 121
+    },
+    {
+     "expr": "\"day\"",
+     "line": 121
+    }
+   ]
+  },
+  {
+   "file": "src/components/Analytics/StandaloneUserEngine.tsx",
+   "reason": "mapped",
+   "sites": [
+    {
+     "expr": "item.engine",
+     "line": 228
+    }
+   ]
+  },
+  {
+   "file": "src/components/Analytics/StandaloneTopTokenUsers.tsx",
+   "reason": "caption",
+   "sites": [
+    {
+     "expr": "user.userId",
+     "line": 263
+    },
+    {
+     "expr": "user.userId",
+     "line": 273
+    }
+   ]
+  },
+  {
+   "file": "src/components/Analytics/StandaloneTopTokenUsers.tsx",
+   "reason": "labelled",
+   "sites": [
+    {
+     "expr": "session.id",
+     "line": 401
+    },
+    {
+     "expr": "session.id",
+     "line": 403
+    },
+    {
+     "expr": "s.id",
+     "line": 481
+    },
+    {
+     "expr": "s.id",
+     "line": 481
+    }
+   ]
+  },
+  {
+   "file": "src/components/PDFViewer/PdfSearch.tsx",
+   "reason": "text",
+   "sites": [
+    {
+     "expr": "status",
+     "line": 85
+    }
+   ]
+  },
+  {
+   "file": "src/pages/admin/AnnotateDocument.tsx",
+   "reason": "display",
+   "sites": [
+    {
+     "expr": "chunk.type",
+     "line": 1628
+    }
+   ]
+  },
+  {
+   "file": "src/pages/admin/AnnotateDocument.tsx",
+   "reason": "labelled",
+   "sites": [
+    {
+     "expr": "documentData.id",
+     "line": 1671
+    }
+   ]
+  },
+  {
+   "file": "src/pages/admin/experiments/ExperimentDetail.tsx",
+   "reason": "chosen",
+   "sites": [
+    {
+     "expr": "v.key",
+     "line": 275
+    }
+   ]
+  },
+  {
+   "file": "src/pages/admin/experiments/ExperimentDetail.tsx",
+   "reason": "word",
+   "sites": [
+    {
+     "expr": "\"students\"",
+     "line": 298
+    },
+    {
+     "expr": "\"chats\"",
+     "line": 301
+    }
+   ]
+  },
+  {
+   "file": "src/pages/ClassAppPage.tsx",
+   "reason": "address",
+   "sites": [
+    {
+     "expr": "appSlug",
+     "line": 102
+    }
+   ]
+  },
+  {
+   "file": "src/pages/admin/UserManagement.tsx",
+   "reason": "word",
+   "sites": [
+    {
+     "expr": "newStatus === 'enabled' ? 'enabled' : 'disabled'",
+     "line": 474
+    },
+    {
+     "expr": "\"enabled\"",
+     "line": 474
+    },
+    {
+     "expr": "\"disabled\"",
+     "line": 474
+    }
+   ]
+  },
+  {
+   "file": "src/pages/admin/UserManagement.tsx",
+   "reason": "display",
+   "sites": [
+    {
+     "expr": "permission",
+     "line": 1270
+    }
+   ]
+  },
+  {
+   "file": "src/pages/admin/WebhookManagement.tsx",
+   "reason": "event",
+   "sites": [
+    {
+     "expr": "testResponse.event",
+     "line": 806
+    },
+    {
+     "expr": "delivery.eventType",
+     "line": 1124
+    }
+   ]
+  },
+  {
+   "file": "src/pages/admin/WebhookManagement.tsx",
+   "reason": "labelled",
+   "sites": [
+    {
+     "expr": "selectedWebhook.id",
+     "line": 975
+    },
+    {
+     "expr": "selectedWebhook.id",
+     "line": 1080
+    },
+    {
+     "expr": "webhook.id",
+     "line": 1227
+    }
+   ]
+  },
+  {
+   "file": "src/pages/admin/WebhookEventApprovals.tsx",
+   "reason": "event",
+   "sites": [
+    {
+     "expr": "\"user.enroll\"",
+     "line": 627
+    },
+    {
+     "expr": "event.eventType",
+     "line": 743
+    },
+    {
+     "expr": "selectedEvent.eventType",
+     "line": 962
+    }
+   ]
+  },
+  {
+   "file": "src/pages/admin/WebhookEventApprovals.tsx",
+   "reason": "labelled",
+   "sites": [
+    {
+     "expr": "selectedEvent.id",
+     "line": 950
+    },
+    {
+     "expr": "selectedEvent.webhookId",
+     "line": 975
+    },
+    {
+     "expr": "selectedAudit.id",
+     "line": 1045
+    },
+    {
+     "expr": "selectedAudit.webhookEventId",
+     "line": 1055
+    }
+   ]
+  },
+  {
+   "file": "src/components/ClassAnalytics/ChatBrowser.tsx",
+   "reason": "word",
+   "sites": [
+    {
+     "expr": "mode === \"student\" ? \"student\" : \"page\"",
+     "line": 101
+    },
+    {
+     "expr": "\"student\"",
+     "line": 101
+    },
+    {
+     "expr": "\"page\"",
+     "line": 101
+    }
+   ]
+  },
+  {
+   "file": "src/components/MCP/MCPServerDialog.tsx",
+   "reason": "text",
+   "sites": [
+    {
+     "expr": "errors.clientId",
+     "line": 739
+    }
+   ]
+  },
+  {
+   "file": "src/pages/admin/ClassMCPSettings.tsx",
+   "reason": "word",
+   "sites": [
+    {
+     "expr": "updated.isEnabled ? \"enabled\" : \"disabled\"",
+     "line": 395
+    },
+    {
+     "expr": "\"enabled\"",
+     "line": 395
+    },
+    {
+     "expr": "\"disabled\"",
+     "line": 395
+    },
+    {
+     "expr": "enabled ? \"enabled\" : \"disabled\"",
+     "line": 416
+    },
+    {
+     "expr": "\"enabled\"",
+     "line": 416
+    },
+    {
+     "expr": "\"disabled\"",
+     "line": 416
+    }
+   ]
+  },
+  {
+   "file": "src/pages/admin/ClassKiwiAppsSettings.tsx",
+   "reason": "chosen",
+   "sites": [
+    {
+     "expr": "app.slug",
+     "line": 484
+    },
+    {
+     "expr": "app.slug",
+     "line": 595
+    },
+    {
+     "expr": "scope",
+     "line": 704
+    }
+   ]
+  },
+  {
+   "file": "src/pages/admin/KiwiAppsAdmin.tsx",
+   "reason": "chosen",
+   "sites": [
+    {
+     "expr": "slug",
+     "line": 296
+    },
+    {
+     "expr": "slug",
+     "line": 469
+    },
+    {
+     "expr": "entry.slug",
+     "line": 676
+    },
+    {
+     "expr": "app.slug",
+     "line": 841
+    },
+    {
+     "expr": "scope",
+     "line": 1038
+    },
+    {
+     "expr": "scope",
+     "line": 1063
+    },
+    {
+     "expr": "scope",
+     "line": 1387
+    },
+    {
+     "expr": "createdSlug",
+     "line": 1436
+    },
+    {
+     "expr": "scope",
+     "line": 1573
+    },
+    {
+     "expr": "entryToDelete?.slug",
+     "line": 1614
+    }
+   ]
+  },
+  {
+   "file": "src/pages/admin/KiwiAppsAdmin.tsx",
+   "reason": "asis",
+   "sites": [
+    {
+     "expr": "status",
+     "line": 557
+    }
+   ]
+  },
+  {
+   "file": "src/pages/admin/KiwiAppsAdmin.tsx",
+   "reason": "word",
+   "sites": [
+    {
+     "expr": "\"unknown\"",
+     "line": 1186
+    }
+   ]
+  },
+  {
+   "file": "src/pages/admin/AdminAppPage.tsx",
+   "reason": "address",
+   "sites": [
+    {
+     "expr": "appSlug",
+     "line": 79
+    }
+   ]
+  },
+  {
+   "file": "src/components/Chat/ExperimentCompare.tsx",
+   "reason": "chosen",
+   "sites": [
+    {
+     "expr": "variant.key",
+     "line": 84
+    }
+   ]
+  },
+  {
+   "file": "src/components/Chat/ChatCore.tsx",
+   "reason": "chosen",
+   "sites": [
+    {
+     "expr": "variant.key",
+     "line": 1328
+    }
+   ]
+  },
+  {
+   "file": "src/components/ClassAnalytics/ChatBrowser.tsx",
+   "reason": "anonymous",
+   "sites": [
+    {
+     "expr": "(group.key ?? \"s?\").toUpperCase()",
+     "line": 184
+    }
+   ]
+  },
+  {
+   "file": "src/pages/admin/MCPServerManagement.tsx",
+   "reason": "acronym",
+   "sites": [
+    {
+     "expr": "server.transport.toUpperCase()",
+     "line": 387
+    }
+   ]
+  },
+  {
+   "file": "src/pages/admin/ClassMCPSettings.tsx",
+   "reason": "acronym",
+   "sites": [
+    {
+     "expr": "assignment.mcpServer.transport.toUpperCase()",
+     "line": 578
+    },
+    {
+     "expr": "server.transport.toUpperCase()",
+     "line": 725
+    }
+   ]
+  },
+  {
+   "file": "src/pages/admin/MaterialSlots.tsx",
+   "reason": "word",
+   "sites": [
+    {
+     "expr": "label.toLowerCase()",
+     "line": 146
+    }
+   ]
+  },
+  {
+   "file": "src/pages/admin/KiwiAppsAdmin.tsx",
+   "reason": "registered",
+   "sites": [
+    {
+     "expr": "ui.uiSlug",
+     "line": 930
+    },
+    {
+     "expr": "prompt.promptId",
+     "line": 1156
+    }
+   ]
+  }
+ ],
+ "reasons": {
+  "labelled": "labelled as an id (\"Webhook ID\", \"Event ID\", \"Audit ID\", \"Session ID\", \"ID:\"): the id is the content, and an admin copies it to find the record",
+  "caption": "the caption under a user's email: it keeps a row identifiable when the email is empty",
+  "chosen": "an identifier the admin chose or typed (an app's identifier, a scope, a variant key): it is the name the admin knows it by",
+  "event": "an event name is the API's identifier: an admin subscribes to it by name in the Events field",
+  "word": "a word inside a sentence or beside a number (a count's noun, hour or day, enabled or disabled): the sentence has its own rows",
+  "text": "a message or a status sentence, not an identifier",
+  "display": "already display text (a permission's name, a chunk's type)",
+  "mapped": "already a label: the mapping rows A-03.24 and A-03.25 name the legend entries",
+  "asis": "the value as written for an unknown value: an id that is not listed is never hidden",
+  "address": "the app's identifier as the page's own address spells it: the person asked for that page by it, and an app that is not enabled has no name to show",
+  "anonymous": "a code designed to be read: the analytics numbers a class's students anonymously (s3 for Student 3) and the badge shows the number",
+  "acronym": "an acronym drawn in capitals (HTTP, SSE): the guide spells acronyms as they are",
+  "registered": "an identifier the app's developer registered and the admin reads (a screen's slug, a prompt's id): the app and the admin know the item by it, and it is the name the app's own documentation uses"
+ },
+ "batches": [
+  {
+   "file": "src/pages/admin/UserManagement.tsx",
+   "line": 120,
+   "why": "a read: the loop loads each class's details for the registration form, changes nothing, and leaves out a class it cannot read without a message to word; the failure of the list itself is A-11.30. Whether the form should say that some classes are missing is a Stage 2 question (it needs a place to say it)."
+  }
+ ]
+}

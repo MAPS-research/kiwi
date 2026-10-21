@@ -6,8 +6,8 @@ import { describe, expect, it } from 'vitest';
 /**
  * `montserrat.css` re-declares the faces shipped by `@fontsource-variable/montserrat`
  * under the plain family name `Montserrat` (the package calls them
- * `Montserrat Variable`), so every font stack in the app can be literally
- * `'Montserrat', sans-serif`.
+ * `Montserrat Variable`), the name the `--font-wordmark` token uses. Montserrat is
+ * the KiwiWordmark's face only; the UI is Source Sans 3 (`source-sans-3.test.ts`).
  *
  * That copy is the cost of the rename, and a stale copy fails quietly — a dropped
  * subset just falls back to `sans-serif` for those glyphs. These tests pin it to the

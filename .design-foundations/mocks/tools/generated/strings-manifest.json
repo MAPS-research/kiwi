@@ -1,0 +1,2277 @@
+{
+ "tokens": "61048c1f1a0f1f8e",
+ "strings": [
+  {
+   "text": "[Page 3]",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "SR-6"
+    }
+   ]
+  },
+  {
+   "text": "# Lecture 3 exercise: the average income, with missing answers",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "0",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion clip table (cell index)"
+    }
+   ]
+  },
+  {
+   "text": "10",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion clip table (cell index)"
+    }
+   ]
+  },
+  {
+   "text": "100%",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "12",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion clip table (cell index)"
+    }
+   ]
+  },
+  {
+   "text": "13",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion clip table (cell index)"
+    }
+   ]
+  },
+  {
+   "text": "14",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion clip table (cell index)"
+    }
+   ]
+  },
+  {
+   "text": "16",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion clip table (cell index)"
+    }
+   ]
+  },
+  {
+   "text": "19",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion clip table (cell index)"
+    }
+   ]
+  },
+  {
+   "text": "2",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion clip table (cell index)"
+    }
+   ]
+  },
+  {
+   "text": "2.0 s loop",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "2.13 s",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "2.33 s",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "20",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion clip table (cell index)"
+    }
+   ]
+  },
+  {
+   "text": "23",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion clip table (cell index)"
+    }
+   ]
+  },
+  {
+   "text": "3",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion clip table (cell index)"
+    }
+   ]
+  },
+  {
+   "text": "3 / 12",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "4",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion clip table (cell index)"
+    }
+   ]
+  },
+  {
+   "text": "6",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion clip table (cell index)"
+    }
+   ]
+  },
+  {
+   "text": "7",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion clip table (cell index)"
+    }
+   ]
+  },
+  {
+   "text": "8",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion clip table (cell index)"
+    }
+   ]
+  },
+  {
+   "text": "About Kiwi",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "SR-5"
+    }
+   ]
+  },
+  {
+   "text": "Active",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "Add class-specific instructions",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "A-13"
+    }
+   ]
+  },
+  {
+   "text": "Add students, review pending enrollments, and manage the class roster.",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "Added to Kiwi's built-in instructions in every chat for this class.",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "A-13"
+    }
+   ]
+  },
+  {
+   "text": "Admin",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "Answered: 4 of 6\nMean income: 48,362",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "App registry",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-3.08"
+    }
+   ]
+  },
+  {
+   "text": "Appended after Kiwi's built-in teaching and tool guidance. While an experiment is active, its variant's instructions are used instead.",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "A-13"
+    }
+   ]
+  },
+  {
+   "text": "Ask a question, or type / for commands",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-6.02"
+    }
+   ]
+  },
+  {
+   "text": "Ask about your class materials or your code.",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-5.01"
+    },
+    {
+     "kind": "index",
+     "ref": "SR-6.01"
+    }
+   ]
+  },
+  {
+   "text": "Ask Kiwi to check",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-03.10"
+    }
+   ]
+  },
+  {
+   "text": "Basic information",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "A-13"
+    }
+   ]
+  },
+  {
+   "text": "Can I fill them in with the median?",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Cancel",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "A-13"
+    }
+   ]
+  },
+  {
+   "text": "cell 8, the wing at its highest",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "Chat history",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "SR-6"
+    }
+   ]
+  },
+  {
+   "text": "Class analytics",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-3.16"
+    }
+   ]
+  },
+  {
+   "text": "Class apps",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-3.13"
+    }
+   ]
+  },
+  {
+   "text": "Class email",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-3.15"
+    }
+   ]
+  },
+  {
+   "text": "Class flags",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-3.11"
+    }
+   ]
+  },
+  {
+   "text": "Class materials",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-02.02"
+    }
+   ]
+  },
+  {
+   "text": "Class MCP and tools",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-3.12"
+    }
+   ]
+  },
+  {
+   "text": "Class name",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "A-13.03"
+    }
+   ]
+  },
+  {
+   "text": "Class preview",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "A-13"
+    }
+   ]
+  },
+  {
+   "text": "Class roster",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "A-16.05"
+    }
+   ]
+  },
+  {
+   "text": "Class-specific instructions",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "A-13"
+    }
+   ]
+  },
+  {
+   "text": "Classes",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "SR-3"
+    }
+   ]
+  },
+  {
+   "text": "Close",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "S-02"
+    }
+   ]
+  },
+  {
+   "text": "Close chat",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-6.34"
+    }
+   ]
+  },
+  {
+   "text": "Code",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-03.01"
+    }
+   ]
+  },
+  {
+   "text": "Code actions",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-6.64"
+    }
+   ]
+  },
+  {
+   "text": "Collapse admin navigation",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "SR-3"
+    }
+   ]
+  },
+  {
+   "text": "complete",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "Copy code",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "DS.12"
+    }
+   ]
+  },
+  {
+   "text": "Cover image",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "A-13.06"
+    }
+   ]
+  },
+  {
+   "text": "Current chat",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-6.05"
+    }
+   ]
+  },
+  {
+   "text": "daniel.kim@example.edu",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Dark",
+   "sources": [
+    {
+     "kind": "design",
+     "ref": "DS.03"
+    }
+   ]
+  },
+  {
+   "text": "Data Structures",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Description",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "A-13"
+    }
+   ]
+  },
+  {
+   "text": "Display settings",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "DS.01"
+    }
+   ]
+  },
+  {
+   "text": "Dr. Lena Hartmann",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Dr. Tomás Ortega",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Edit class",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-3.10"
+    },
+    {
+     "kind": "index",
+     "ref": "A-13.01"
+    }
+   ]
+  },
+  {
+   "text": "elena.popescu@example.edu",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Email",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "S-05"
+    },
+    {
+     "kind": "kept",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "Email addresses",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "A-16.02"
+    }
+   ]
+  },
+  {
+   "text": "Email audit",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-3.05"
+    }
+   ]
+  },
+  {
+   "text": "Email selected (2)",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "A-16.07"
+    }
+   ]
+  },
+  {
+   "text": "Enroll students",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-3.14"
+    },
+    {
+     "kind": "index",
+     "ref": "A-16.01"
+    },
+    {
+     "kind": "index",
+     "ref": "A-16.04"
+    }
+   ]
+  },
+  {
+   "text": "entered at the next tick after completion",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "error",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "Experiments",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "SR-3"
+    }
+   ]
+  },
+  {
+   "text": "first token",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "Flag this answer",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "SR-6"
+    }
+   ]
+  },
+  {
+   "text": "flight",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "flight 9-16",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "from cell 0 at the send",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "full-hop-flight",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "full-walk",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "full-wave-bow",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "Fullscreen",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-02.13"
+    },
+    {
+     "kind": "index",
+     "ref": "SR-6.32"
+    }
+   ]
+  },
+  {
+   "text": "grace.adeyemi@example.edu",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Help students reach the answer with a question or a hint before you give it. Use the lecture slides as the main source and cite the page.",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Here n counts only the values that are present. Lecture 3 walks through both checks.",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "hop",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "idle",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "Import to scratchpad",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-6.40"
+    }
+   ]
+  },
+  {
+   "text": "In R, mean() returns NA as soon as one value in the vector is missing. R doesn't guess what the missing value was, so it reports the average as unknown too.",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "incomes = [42000, None, 51500, 38750, None, 61200]",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Instructions",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "A-13"
+    }
+   ]
+  },
+  {
+   "text": "Instructor",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "A-16.11"
+    }
+   ]
+  },
+  {
+   "text": "Instructor email",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "A-13.05"
+    }
+   ]
+  },
+  {
+   "text": "Instructor name",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "A-13.04"
+    }
+   ]
+  },
+  {
+   "text": "Introduction to Computer Science",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "it lands on 23, the standing still",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "it.services@example.edu",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "jordan.lee.teaching-assistant-coordinator@example.edu",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Kiwi",
+   "sources": [
+    {
+     "kind": "branding",
+     "ref": "KiwiWordmark"
+    },
+    {
+     "kind": "branding",
+     "ref": "INSTITUTION_NAME default"
+    }
+   ]
+  },
+  {
+   "text": "Kiwi animation",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "DS.04"
+    }
+   ]
+  },
+  {
+   "text": "Kiwi chat",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-6.26"
+    }
+   ]
+  },
+  {
+   "text": "Kiwi couldn't finish answering. The server didn't respond as expected. Try again.",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-6.21"
+    }
+   ]
+  },
+  {
+   "text": "Kiwi is an AI tutor for your classes.",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-5.03"
+    }
+   ]
+  },
+  {
+   "text": "Kiwi is answering. Select Stop to interrupt.",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "DS.07"
+    }
+   ]
+  },
+  {
+   "text": "known = [x for x in incomes if x is not None]",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "landed",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "Lecture",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "S-02"
+    }
+   ]
+  },
+  {
+   "text": "Lecture 1 · Course overview.pdf",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Lecture 2 · Sampling.pdf",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Lecture 3 · Missing data.pdf",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Lecture 3 walks through both checks.",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Lecture 4 · Regression.pdf",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "lena.hartmann@example.edu",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Light",
+   "sources": [
+    {
+     "kind": "design",
+     "ref": "DS.03"
+    }
+   ]
+  },
+  {
+   "text": "Machine Learning Foundations",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Managing enrollment for class: Statistics for the Social Sciences",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "Match device",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "DS.03"
+    }
+   ]
+  },
+  {
+   "text": "Materials",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "SR-2"
+    },
+    {
+     "kind": "kept",
+     "ref": "SR-3"
+    }
+   ]
+  },
+  {
+   "text": "maya.goldberg@example.edu",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "MCP servers",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-3.07"
+    }
+   ]
+  },
+  {
+   "text": "mean_income = sum(known) / len(known)",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "mean(income, na.rm = TRUE)",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Methods for describing survey data and testing claims about it, with weekly labs in R and Python.",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "New chat",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "SR-6"
+    }
+   ]
+  },
+  {
+   "text": "New to Kiwi? Ask your administrator for an account.",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-05.13"
+    }
+   ]
+  },
+  {
+   "text": "Next page",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-02.10"
+    }
+   ]
+  },
+  {
+   "text": "No instructor listed",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-01.03"
+    }
+   ]
+  },
+  {
+   "text": "no restart and no cut at the first token",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "noah.fischer@example.edu\namara.osei@example.edu",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "offline",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "omar.haddad@example.edu",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "One address per line. Anyone without an account is added as pending.",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "A-16.03"
+    }
+   ]
+  },
+  {
+   "text": "Only the newest tutor message's avatar animates; older avatars hold their still.",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "Open Data Structures",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "S-01"
+    }
+   ]
+  },
+  {
+   "text": "Open files",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-03.03"
+    }
+   ]
+  },
+  {
+   "text": "Open in chat",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-03.09"
+    }
+   ]
+  },
+  {
+   "text": "Open Introduction to Computer Science",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "S-01"
+    }
+   ]
+  },
+  {
+   "text": "Open Kiwi chat",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-6.37"
+    },
+    {
+     "kind": "index",
+     "ref": "SR-6.36"
+    }
+   ]
+  },
+  {
+   "text": "Open Machine Learning Foundations",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "S-01"
+    }
+   ]
+  },
+  {
+   "text": "Open navigation menu",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-1.01"
+    }
+   ]
+  },
+  {
+   "text": "Open Statistics for the Social Sciences",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "S-01"
+    }
+   ]
+  },
+  {
+   "text": "Output",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "S-03"
+    }
+   ]
+  },
+  {
+   "text": "Password",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "S-05"
+    }
+   ]
+  },
+  {
+   "text": "Paused while you're offline",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "CP.11"
+    }
+   ]
+  },
+  {
+   "text": "peek",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "Pending",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "PNG, JPG, JPEG, or WebP. The preview updates after upload.",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "A-13"
+    }
+   ]
+  },
+  {
+   "text": "Previous page",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-02.09"
+    }
+   ]
+  },
+  {
+   "text": "print(f\"Answered: {len(known)} of {len(incomes)}\")",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "print(f\"Mean income: {mean_income:,.0f}\")",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "priya.nair@example.edu",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Prof. Aiko Mori",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Recitation",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "S-02"
+    }
+   ]
+  },
+  {
+   "text": "Regenerate answer",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-6.38"
+    }
+   ]
+  },
+  {
+   "text": "Regenerating answers isn't available yet.",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "DS.09"
+    }
+   ]
+  },
+  {
+   "text": "Remove selected (2)",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "A-16.08"
+    }
+   ]
+  },
+  {
+   "text": "Resize chat panel",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-6.35"
+    }
+   ]
+  },
+  {
+   "text": "Resize editor",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-03.04"
+    }
+   ]
+  },
+  {
+   "text": "retract",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "Retry",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "DS.18"
+    }
+   ]
+  },
+  {
+   "text": "Role",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "Roster: 12 users (10 active, 2 pending)",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "A-16.06"
+    }
+   ]
+  },
+  {
+   "text": "run",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "Run code",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-03.07"
+    }
+   ]
+  },
+  {
+   "text": "Save changes",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "A-13.07"
+    }
+   ]
+  },
+  {
+   "text": "Save code",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-03.11"
+    }
+   ]
+  },
+  {
+   "text": "Scratchpad",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "SR-2"
+    }
+   ]
+  },
+  {
+   "text": "Search by email",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "A-16.10"
+    }
+   ]
+  },
+  {
+   "text": "Select all rows",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "Select daniel.kim@example.edu",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "Select elena.popescu@example.edu",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "Select grace.adeyemi@example.edu",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "Select it.services@example.edu",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "Select jordan.lee.teaching-assistant-coordinator@example.edu",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "Select lena.hartmann@example.edu",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "Select maya.goldberg@example.edu",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "Select omar.haddad@example.edu",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "Select priya.nair@example.edu",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "Select sofia.rossi@example.edu",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "Select tom.nguyen@example.edu",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "Select wei.zhang@example.edu",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "send",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "Send message",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-6.03"
+    }
+   ]
+  },
+  {
+   "text": "Share answer",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "SR-6"
+    }
+   ]
+  },
+  {
+   "text": "Shared with Kiwi",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "DS.11"
+    }
+   ]
+  },
+  {
+   "text": "Sharing answers isn't available yet.",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "DS.10"
+    }
+   ]
+  },
+  {
+   "text": "Show as modal",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-6.27"
+    }
+   ]
+  },
+  {
+   "text": "Show as side panel",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-6.29"
+    }
+   ]
+  },
+  {
+   "text": "Show class materials",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-02.01"
+    }
+   ]
+  },
+  {
+   "text": "Show password",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "S-05"
+    }
+   ]
+  },
+  {
+   "text": "Sign in",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-05.07"
+    }
+   ]
+  },
+  {
+   "text": "Sign in to",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-05.01"
+    }
+   ]
+  },
+  {
+   "text": "Sign out",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-1.05"
+    }
+   ]
+  },
+  {
+   "text": "Snap to side",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-6.31"
+    }
+   ]
+  },
+  {
+   "text": "sofia.rossi@example.edu",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "speaking",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "stamp-peek",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "Statistics for the Social Sciences",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Status",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "Stop",
+   "sources": [
+    {
+     "kind": "design",
+     "ref": "DS.08"
+    }
+   ]
+  },
+  {
+   "text": "Stop answering",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "DS.08"
+    }
+   ]
+  },
+  {
+   "text": "streaming",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "Student",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "A-16"
+    }
+   ]
+  },
+  {
+   "text": "survey.csv",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Switch class. Current: Statistics for the Social Sciences",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-1.06"
+    }
+   ]
+  },
+  {
+   "text": "Switch to student view",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-1.02"
+    }
+   ]
+  },
+  {
+   "text": "System analytics",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-3.03"
+    }
+   ]
+  },
+  {
+   "text": "System email",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-3.04"
+    }
+   ]
+  },
+  {
+   "text": "System flags",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-3.06"
+    }
+   ]
+  },
+  {
+   "text": "the chat avatar sequence",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "The details shown to students and instructors.",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "A-13"
+    }
+   ]
+  },
+  {
+   "text": "The nine states",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "the run cuts to the standing still",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "the same drawing: no cut",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "the same loop: no change in the drawing",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "the standing still",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "Theme",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "DS.02"
+    }
+   ]
+  },
+  {
+   "text": "Then",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Then dropping them can bias the average. Compare the people who",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Then dropping them can bias the average. Compare the people who answered with those who didn't, on age or region, before you decide.",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Thinking…",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-6.69"
+    }
+   ]
+  },
+  {
+   "text": "This is how the class appears in the class list.",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "A-13"
+    }
+   ]
+  },
+  {
+   "text": "Thumbs down",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "SR-6"
+    }
+   ]
+  },
+  {
+   "text": "Thumbs up",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "SR-6"
+    }
+   ]
+  },
+  {
+   "text": "To average only the values you have, pass na.rm = TRUE:",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "tom.nguyen@example.edu",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Update the class details, cover image and instructions for Kiwi.",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "A-13.13"
+    }
+   ]
+  },
+  {
+   "text": "Upload files",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-03.02"
+    },
+    {
+     "kind": "index",
+     "ref": "S-03.08"
+    }
+   ]
+  },
+  {
+   "text": "Upload image",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "A-13"
+    }
+   ]
+  },
+  {
+   "text": "Use the email address linked to your Kiwi account.",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-05.02"
+    }
+   ]
+  },
+  {
+   "text": "Used as the cover image on the class card.",
+   "sources": [
+    {
+     "kind": "as-is",
+     "ref": "A-13"
+    }
+   ]
+  },
+  {
+   "text": "Users",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-3.02"
+    }
+   ]
+  },
+  {
+   "text": "walk",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "wave",
+   "sources": [
+    {
+     "kind": "annotation",
+     "ref": "DESIGN.md § Companion"
+    }
+   ]
+  },
+  {
+   "text": "Webhook approvals",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "SR-3.09"
+    }
+   ]
+  },
+  {
+   "text": "Webhooks",
+   "sources": [
+    {
+     "kind": "kept",
+     "ref": "SR-3"
+    }
+   ]
+  },
+  {
+   "text": "wei.zhang@example.edu",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "What if the missing values are not random?",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "Why does mean() return NA for my income column? 我已经检查过数据了。",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "x¯=1n∑i=1nxi",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  },
+  {
+   "text": "You're offline. Waiting for your connection.",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "CP.10"
+    }
+   ]
+  },
+  {
+   "text": "Your classes",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-01.01"
+    }
+   ]
+  },
+  {
+   "text": "Zoom in",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-02.12"
+    }
+   ]
+  },
+  {
+   "text": "Zoom out",
+   "sources": [
+    {
+     "kind": "index",
+     "ref": "S-02.11"
+    }
+   ]
+  },
+  {
+   "text": "在删除缺失值之前，先检查两件事：缺失了多少，以及它们是否随机缺失。如果收入较低的受访者更常跳过这个问题，删除缺失值之后的平均值就会偏高。",
+   "sources": [
+    {
+     "kind": "content",
+     "ref": "demo data"
+    }
+   ]
+  }
+ ]
+}

@@ -131,13 +131,6 @@ export const Classes: React.FC = () => {
               color="primary"
               startIcon={<AddIcon />}
               onClick={() => setAddClassDialogOpen(true)}
-              sx={{
-                borderRadius: 2,
-                textTransform: 'none',
-                fontWeight: 600,
-                px: 3,
-                py: 1
-              }}
             >
               {CREATE_NEW_CLASS_LABEL}
             </Button>
@@ -167,15 +160,13 @@ export const Classes: React.FC = () => {
           slotProps={{
             input: {
               sx: {
-                height: 44,
-                borderRadius: 3,
                 '& .MuiOutlinedInput-input': {
                   typography: 'body2',
                 },
               },
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon fontSize="small" sx={{ color: 'text.secondary' }} />
+                  <SearchIcon fontSize="small" sx={{ color: 'var(--icon-default)' }} />
                 </InputAdornment>
               )
             }
@@ -211,7 +202,7 @@ export const Classes: React.FC = () => {
           }
         >
           <Typography variant="body2" component="span">
-            <strong>Error Loading Classes:</strong> {error}
+            <strong style={{ fontWeight: "var(--weight-semibold)" }}>Error Loading Classes:</strong> {error}
           </Typography>
         </Alert>
       </Collapse>
@@ -232,7 +223,7 @@ export const Classes: React.FC = () => {
                   variant="rectangular"
                   animation="wave"
                   height={CLASS_CARD_HEIGHT}
-                  sx={{ borderRadius: "12px" }}
+                  sx={{ borderRadius: "var(--radius-sheet)" }}
                 />
               </Grid>
             ))}
@@ -273,7 +264,7 @@ export const Classes: React.FC = () => {
                 <EmptySchoolIcon 
                   sx={{ 
                     fontSize: 120, 
-                    color: 'text.disabled',
+                    color: 'var(--icon-default)',
                     mb: 3 
                   }} 
                 />
@@ -299,13 +290,6 @@ export const Classes: React.FC = () => {
                     color="primary"
                     startIcon={<AddIcon />}
                     onClick={() => setAddClassDialogOpen(true)}
-                    sx={{
-                      borderRadius: 2,
-                      textTransform: 'none',
-                      fontWeight: 600,
-                      px: 3,
-                      py: 1
-                    }}
                   >
                     Create First Class
                   </Button>

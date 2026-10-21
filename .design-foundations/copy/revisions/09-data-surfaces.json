@@ -1,0 +1,492 @@
+[
+ {
+  "id": "P6-A-03",
+  "phase": 6,
+  "page": "A-03",
+  "name": "System analytics (data surfaces)",
+  "route": "/admin/analytics",
+  "file": "src/pages/admin/Analytics.tsx",
+  "note": "Phase 6 (kiwi-ui/DESIGN.md § Chart tokens): the four chart tick formats the Phase 5 hand-off names (chartXAxis.ts:50, :80, :85, :91), each chart's range line (the unit, the bucket and the period, under the chart's title), the text summary of each chart (the figure's caption and accessible description), the KPI tiles' third line (the baseline, or that there is none) and the token table's unit header. When a chart's series is empty the empty-state line of Phase 5 (A-03.21, A-03.26, A-03.28) is the figure's whole text and no summary is drawn. The six preset rows give `{range}` its sentence form, and the bracketed-dates row gives a preset's range line its dates; every summary writes the period after \"for\", which reads the same for a preset, a custom range and a single day. Every donut slice carries its name as a direct label, and User duration is in hours throughout. Two format rows supersede a Phase 5 row at one line each: A-03.52 at the table cell and A-03.22 at the User duration legend.",
+  "rows": [
+   {
+    "k": "format",
+    "o": "date.toLocaleDateString(\"en-US\", { month: \"short\", day: \"numeric\", })",
+    "n": "1 Oct",
+    "f": "src/components/Analytics/chartXAxis.ts",
+    "r": "C3",
+    "t": "The daily X-axis tick (`formatAnalyticsDateTick`, chartXAxis.ts:50): day first and the month from the fixed table, with no locale argument. The year is left out because the chart's range line states it, which `§ Dates, times and numbers` allows for a tick where the axis names the year."
+   },
+   {
+    "k": "format",
+    "o": "date.toLocaleDateString(\"en-US\", { month: \"short\", day: \"numeric\" })",
+    "n": "1 Oct",
+    "f": "src/components/Analytics/chartXAxis.ts",
+    "r": "C3",
+    "t": "The hourly axis's midnight tick (`formatAnalyticsTimeTick`, chartXAxis.ts:80): the date, written as the daily tick is; the other hours read HH:mm."
+   },
+   {
+    "k": "format",
+    "o": "date.toLocaleTimeString(\"en-US\", options).replace(/\\s/g, \"\").toLowerCase()",
+    "n": "14:05",
+    "f": "src/components/Analytics/chartXAxis.ts",
+    "r": "C3",
+    "t": "The hourly tick (chartXAxis.ts:85): HH:mm on the 24-hour clock, the minutes always written (the old form drew `2pm` and `2:05pm`)."
+   },
+   {
+    "k": "format",
+    "o": "date.toLocaleString(\"en-US\", { month: \"short\", day: \"numeric\", hour: \"numeric\", minute: \"2-digit\", })",
+    "n": "1 Oct 2026, 14:05",
+    "f": "src/components/Analytics/chartXAxis.ts",
+    "r": "C3",
+    "t": "The chart tooltip's time (`formatAnalyticsTimeTooltip`, chartXAxis.ts:91): the full date and time, one format (C3)."
+   },
+   {
+    "k": "label",
+    "o": "Unique active users",
+    "n": "No earlier period to compare",
+    "r": "C16, C6",
+    "t": "The tile's third line is its baseline or trend (`§ Chart tokens › KPI tiles`). The analytics API returns the chosen range only, so there is no earlier period to compare, and the line says so instead of implying one (C16). The description it replaces repeated the label (C6)."
+   },
+   {
+    "k": "label",
+    "o": "Total user sessions",
+    "n": "No earlier period to compare",
+    "r": "C16, C6",
+    "t": "The Sessions tile's third line: no earlier period in the data, so none is claimed (C16); the old description repeated the label (C6)."
+   },
+   {
+    "k": "label",
+    "o": "Total recorded user actions",
+    "n": "No earlier period to compare",
+    "r": "C16, C6",
+    "t": "The Interactions tile's third line: no earlier period in the data (C16); the old description repeated the label (C6)."
+   },
+   {
+    "k": "label",
+    "o": "Mean active time per session",
+    "n": "No earlier period to compare",
+    "r": "C16, C6",
+    "t": "The Average session tile's third line: no earlier period in the data (C16). The label already says average and the value carries the unit (`{n} min`, A-03.22), so the description is not needed (C6)."
+   },
+   {
+    "k": "label",
+    "o": "Unique users active each hour",
+    "n": "Users per hour, {range}",
+    "m": "Unique users active each",
+    "f": "src/components/Analytics/StandaloneUserActivity.tsx",
+    "r": "C3",
+    "t": "The chart's second line states the unit, the bucket and the period (`§ Chart tokens › Encoding rules`): `{range}` is a custom range as its dates (A-03.43, `D MMM – D MMM YYYY`; a single day as its date, `D MMM YYYY`) or a preset in its sentence form (the preset rows of this group) with its dates in brackets after it (the bracketed-dates row of this group), so the line always states its days and its year, which the X ticks leave out (\"Users per hour, 17 Oct 2026\"; \"Users per hour, the last 24 hours (6 Oct – 7 Oct 2026)\"). The hourly reading of the template at StandaloneUserActivity.tsx:121; the next row is the daily one."
+   },
+   {
+    "k": "label",
+    "o": "Unique users active each day",
+    "n": "Users per day, {range}",
+    "m": "Unique users active each",
+    "f": "src/components/Analytics/StandaloneUserActivity.tsx",
+    "r": "C3",
+    "t": "The daily reading of the template at StandaloneUserActivity.tsx:121 (the previous row is the hourly one); `{range}` as in the previous row: \"Users per day, the last 7 days (1 Oct – 7 Oct 2026)\" for a preset, \"Users per day, 1 Oct – 7 Oct 2026\" for a custom range."
+   },
+   {
+    "k": "label",
+    "o": "Sessions started each hour",
+    "n": "Sessions per hour, {range}",
+    "m": "Sessions started each",
+    "f": "src/components/Analytics/StandaloneDailySessions.tsx",
+    "r": "C3",
+    "t": "The sessions chart's second line, the hourly reading of the template at StandaloneDailySessions.tsx:121: `{range}` is a custom range as its dates (A-03.43, `D MMM – D MMM YYYY`; a single day as its date, `D MMM YYYY`) or a preset in its sentence form (the preset rows of this group) with its dates in brackets after it (the bracketed-dates row of this group), so the line always states its days and its year, which the X ticks leave out (\"Sessions per hour, 17 Oct 2026\")."
+   },
+   {
+    "k": "label",
+    "o": "Sessions started each day",
+    "n": "Sessions per day, {range}",
+    "m": "Sessions started each",
+    "f": "src/components/Analytics/StandaloneDailySessions.tsx",
+    "r": "C3",
+    "t": "The daily reading of the same template (StandaloneDailySessions.tsx:121); `{range}` as in the previous row."
+   },
+   {
+    "k": "label",
+    "o": "Interactions grouped by action type",
+    "n": "Interactions by action, {range}",
+    "f": "src/components/Analytics/StandaloneTopActions.tsx",
+    "r": "C3",
+    "t": "The Top actions chart's second line: the unit (interactions), the grouping and the period; `{range}` is a custom range as its dates (A-03.43, `D MMM – D MMM YYYY`; a single day as its date, `D MMM YYYY`) or a preset in its sentence form (the preset rows of this group) with its dates in brackets after it (the bracketed-dates row of this group), so the line always states its days and its year, which the X ticks leave out."
+   },
+   {
+    "k": "label",
+    "o": "Estimated active time by activity",
+    "n": "Estimated active time by activity, {range}",
+    "f": "src/components/Analytics/StandaloneUserDuration.tsx",
+    "r": "C3, C16",
+    "t": "The User duration chart's second line gains the period (`{range}` as in the rows above: a custom range as its dates, a preset with its dates in brackets); \"Estimated\" stays, because the minutes are an estimate (chat actions × 2 and code actions × 5, StandaloneUserDuration.tsx:48-55) and the chart may not claim a measurement (C16)."
+   },
+   {
+    "k": "label",
+    "o": "Model usage distribution",
+    "n": "Requests by model, {range}",
+    "f": "src/components/Analytics/StandaloneUserEngine.tsx",
+    "r": "C3, C6",
+    "t": "The Model choice chart's second line: the unit the legend already uses (requests, A-03.53), the grouping and the period (C3; `{range}` as in the rows above); \"usage\" and \"distribution\" went (C6)."
+   },
+   {
+    "k": "label",
+    "o": "IDE",
+    "n": "Scratchpad",
+    "ln": 63,
+    "f": "src/components/Analytics/StandaloneUserDuration.tsx",
+    "r": "C6",
+    "t": "The User duration legend's second activity (StandaloneUserDuration.tsx:63) is the student code page, which the interface calls the scratchpad (`§ Terminology`; A-03.16 already drops IDE from Code runs)."
+   },
+   {
+    "k": "label",
+    "o": "Usage",
+    "n": "Interactions",
+    "ln": 458,
+    "f": "src/components/Analytics/StandaloneTopTokenUsers.tsx",
+    "r": "C6",
+    "t": "The Token usage detail table's fourth column (StandaloneTopTokenUsers.tsx:458) counts interactions, as its cells say (A-03.52); the header names the unit (C6; `§ Chart tokens › Tables`). The Tokens header already does."
+   },
+   {
+    "k": "body",
+    "o": "",
+    "n": "Active users for {range}: {total: count different user} in all; the busiest hour, {peakAt: D MMM YYYY, HH:mm}, had {peak: count user}.",
+    "at": "src/components/Analytics/StandaloneUserActivity.tsx:134 (the figure's caption and accessible description; new text)",
+    "r": "C16, C4, C3",
+    "sum": true,
+    "t": "The text summary of the hourly active-users chart (`§ Chart tokens › Text summaries`): the key figure first, the period stated, then the peak, all computed from the drawn series (StandaloneUserActivity.tsx:134); no trend claim the data cannot back (C16). The period follows \"for\", which reads with every form of `{range}` (\"for the last 24 hours\", \"for 6 Oct – 7 Oct 2026\", \"for 17 Oct 2026\", where \"in 17 Oct 2026\" would not), so one template serves a preset, a custom range and a single day; a preset's dates are on the range line above the plot and are not repeated here. `{total}` is the range's unique users (the Active users tile): \"different users\", because a user active on several days counts once and the figure is not the sum of the bars, `{peak}` the largest bucket and `{peakAt}` its start."
+   },
+   {
+    "k": "body",
+    "o": "",
+    "n": "Active users for {range}: {total: count different user} in all; the busiest day, {peakAt: D MMM YYYY}, had {peak: count user}.",
+    "at": "src/components/Analytics/StandaloneUserActivity.tsx:134 (the figure's caption and accessible description; new text)",
+    "r": "C16, C4, C3",
+    "sum": true,
+    "t": "The daily reading of the active-users summary (the previous row is the hourly one): the bucket is a day, and the period follows \"for\" as there. The total counts different users, as in the hourly reading."
+   },
+   {
+    "k": "body",
+    "o": "",
+    "n": "Sessions for {range}: {total: count session} in all; the busiest hour, {peakAt: D MMM YYYY, HH:mm}, had {peak: count session}.",
+    "at": "src/components/Analytics/StandaloneDailySessions.tsx:134 (the figure's caption and accessible description; new text)",
+    "r": "C16, C4, C3",
+    "sum": true,
+    "t": "The text summary of the hourly sessions chart, from the drawn series (StandaloneDailySessions.tsx:134): `{total}` is the Sessions tile's count. The period follows \"for\", which reads with every form of `{range}` (\"for the last 24 hours\", \"for 6 Oct – 7 Oct 2026\", \"for 17 Oct 2026\", where \"in 17 Oct 2026\" would not), so one template serves a preset, a custom range and a single day; a preset's dates are on the range line above the plot and are not repeated here."
+   },
+   {
+    "k": "body",
+    "o": "",
+    "n": "Sessions for {range}: {total: count session} in all; the busiest day, {peakAt: D MMM YYYY}, had {peak: count session}.",
+    "at": "src/components/Analytics/StandaloneDailySessions.tsx:134 (the figure's caption and accessible description; new text)",
+    "r": "C16, C4, C3",
+    "sum": true,
+    "t": "The daily reading of the sessions summary; the period follows \"for\" as in the hourly reading."
+   },
+   {
+    "k": "body",
+    "o": "",
+    "n": "Interactions for {range}: {total: count interaction} in all; {top} was the most common, with {topCount} ({topShare}%).",
+    "at": "src/components/Analytics/StandaloneTopActions.tsx:196 (the figure's caption and accessible description; new text)",
+    "r": "C16, C4",
+    "sum": true,
+    "t": "The text summary of the Top actions chart, from its six counts (StandaloneTopActions.tsx:196): `{top}` is the largest action's name as the axis writes it (A-03.08 to A-03.13), `{topCount}` its count and `{topShare}` its share, rounded to a whole percent. The period follows \"for\" (a preset, a custom range or a single day)."
+   },
+   {
+    "k": "body",
+    "o": "",
+    "n": "Estimated active time for {range}: about {hours: count hour}, {chatShare}% in chat and {codeShare}% in the scratchpad.",
+    "at": "src/components/Analytics/StandaloneUserDuration.tsx:206 (the figure's caption and accessible description; new text)",
+    "r": "C16, C4",
+    "sum": true,
+    "t": "The text summary of the User duration donut (StandaloneUserDuration.tsx:206): it says estimated and about, because the minutes are an estimate from action counts (C16); `{hours}` is the centre figure, in hours to two significant figures like every figure on this chart (the hours rows of this group: \"about 33 hours\", never \"about 32.9\"), and the shares are the slices' direct labels. The period follows \"for\" (a preset, a custom range or a single day)."
+   },
+   {
+    "k": "body",
+    "o": "",
+    "n": "Requests for {range}: {total: count request} in all; {top} handled {topShare}%.",
+    "at": "src/components/Analytics/StandaloneUserEngine.tsx:165 (the figure's caption and accessible description; new text)",
+    "r": "C16, C4",
+    "sum": true,
+    "t": "The text summary of the Model choice donut (StandaloneUserEngine.tsx:165): `{top}` is the model's display name (A-03.24, A-03.25), `{topShare}` its share of the requests. The period follows \"for\" (a preset, a custom range or a single day)."
+   },
+   {
+    "k": "format",
+    "o": "{n} interactions",
+    "n": "{n}",
+    "m": "} interactions",
+    "ln": 489,
+    "f": "src/components/Analytics/StandaloneTopTokenUsers.tsx",
+    "r": "C4",
+    "t": "Supersedes A-03.52's New at this line only (the Token usage detail table's cell, StandaloneTopTokenUsers.tsx:489): the unit has one place per column (`§ Chart tokens › Tables`), and the header now names it (Interactions, the row above), so the cell is the numeral alone, right-aligned and tabular. The narrow-screen list (StandaloneTopTokenUsers.tsx:433) keeps A-03.52's form, because a list has no header."
+   },
+   {
+    "k": "label",
+    "o": "",
+    "n": "the last 24 hours",
+    "at": "src/components/Analytics/analyticsDateRangePresets.ts:116 (the preset's sentence form; new text)",
+    "r": "C1, C3",
+    "x": [
+     "begins with a lowercase letter"
+    ],
+    "t": "The sentence form of the preset A-03.33, used wherever `{range}` is written into a line or a sentence: a chart's range line, with the preset's dates in brackets after it (\"Users per hour, the last 24 hours (6 Oct – 7 Oct 2026)\", the bracketed-dates row), and a text summary, after \"for\" (\"Active users for the last 24 hours: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start."
+   },
+   {
+    "k": "label",
+    "o": "",
+    "n": "the last 7 days",
+    "at": "src/components/Analytics/analyticsDateRangePresets.ts:129 (the preset's sentence form; new text)",
+    "r": "C1, C3",
+    "x": [
+     "begins with a lowercase letter"
+    ],
+    "t": "The sentence form of the preset A-03.34, used wherever `{range}` is written into a line or a sentence: a chart's range line, with the preset's dates in brackets after it (\"Users per day, the last 7 days (1 Oct – 7 Oct 2026)\", the bracketed-dates row), and a text summary, after \"for\" (\"Active users for the last 7 days: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start."
+   },
+   {
+    "k": "label",
+    "o": "",
+    "n": "the last 30 days",
+    "at": "src/components/Analytics/analyticsDateRangePresets.ts:131 (the preset's sentence form; new text)",
+    "r": "C1, C3",
+    "x": [
+     "begins with a lowercase letter"
+    ],
+    "t": "The sentence form of the preset A-03.38, used wherever `{range}` is written into a line or a sentence: a chart's range line, with the preset's dates in brackets after it (\"Users per day, the last 30 days (8 Sep – 7 Oct 2026)\", the bracketed-dates row), and a text summary, after \"for\" (\"Active users for the last 30 days: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start."
+   },
+   {
+    "k": "label",
+    "o": "",
+    "n": "the last 3 months",
+    "at": "src/components/Analytics/analyticsDateRangePresets.ts:133 (the preset's sentence form; new text)",
+    "r": "C1, C3",
+    "x": [
+     "begins with a lowercase letter"
+    ],
+    "t": "The sentence form of the preset A-03.35, used wherever `{range}` is written into a line or a sentence: a chart's range line, with the preset's dates in brackets after it (\"Users per day, the last 3 months (7 Jul – 7 Oct 2026)\", the bracketed-dates row), and a text summary, after \"for\" (\"Active users for the last 3 months: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start."
+   },
+   {
+    "k": "label",
+    "o": "",
+    "n": "the last 6 months",
+    "at": "src/components/Analytics/analyticsDateRangePresets.ts:135 (the preset's sentence form; new text)",
+    "r": "C1, C3",
+    "x": [
+     "begins with a lowercase letter"
+    ],
+    "t": "The sentence form of the preset A-03.39, used wherever `{range}` is written into a line or a sentence: a chart's range line, with the preset's dates in brackets after it (\"Users per day, the last 6 months (7 Apr – 7 Oct 2026)\", the bracketed-dates row), and a text summary, after \"for\" (\"Active users for the last 6 months: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start."
+   },
+   {
+    "k": "label",
+    "o": "",
+    "n": "the last 12 months",
+    "at": "src/components/Analytics/analyticsDateRangePresets.ts:137 (the preset's sentence form; new text)",
+    "r": "C1, C3",
+    "x": [
+     "begins with a lowercase letter"
+    ],
+    "t": "The sentence form of the preset A-03.40, used wherever `{range}` is written into a line or a sentence: a chart's range line, with the preset's dates in brackets after it (\"Users per day, the last 12 months (7 Oct 2025 – 7 Oct 2026)\", the bracketed-dates row), and a text summary, after \"for\" (\"Active users for the last 12 months: …\"); the period button keeps the preset's own label. It begins lowercase because it never stands alone (C1): the written exemption covers the lowercase start."
+   },
+   {
+    "k": "label",
+    "o": "",
+    "n": "({dates})",
+    "at": "src/components/Analytics/StandaloneUserActivity.tsx:121 (after a preset's sentence form in each chart's range line; new text)",
+    "r": "C3",
+    "t": "A preset's range line gives the preset's dates in brackets after its sentence form (\"Users per day, the last 7 days (1 Oct – 7 Oct 2026)\"): the X ticks leave the year out because the range line states it, and a relative period alone states neither the days nor the year once the page is shared or printed (`§ Chart tokens › Encoding rules`). `{dates}` is the preset's first and last day in the range format of A-03.43 (`D MMM – D MMM YYYY`, the year written twice when the years differ: \"the last 12 months (7 Oct 2025 – 7 Oct 2026)\"); the last 24 hours give their two calendar days (\"6 Oct – 7 Oct 2026\"). Every range line on the page takes it (StandaloneUserActivity.tsx:121, StandaloneDailySessions.tsx:121, StandaloneTopActions.tsx:183, StandaloneUserDuration.tsx:175, StandaloneUserEngine.tsx:145); a custom range is already its dates and adds nothing, and the summaries do not repeat them."
+   },
+   {
+    "k": "label",
+    "o": "",
+    "n": "{name} {share}%",
+    "at": "src/components/Analytics/StandaloneUserEngine.tsx:166 (each slice's direct label; new text)",
+    "r": "C4",
+    "t": "Each donut slice's direct label (`§ Chart tokens › Encoding rules › Donuts`): its name as the legend writes it (ChatGPT, Qwen, Unknown, A-03.24 and A-03.25; Chat and Scratchpad, P6-A-03.16) over its share, a whole percent, outside the ring beside the slice and joined to a thin slice by a leader. It names every slice in words, so no slice is told by colour alone (WCAG 1.4.1): under colour-vision simulation ChatGPT (`--chart-1`) and Unknown (`--chart-other`) are only 4.66 apart (light, protanopia). The User duration donut takes the same label (StandaloneUserDuration.tsx:207); the shares leave the legends, which keep the values with their units."
+   },
+   {
+    "k": "format",
+    "o": "item.duration.toLocaleString() min",
+    "n": "about {hours: count hour}",
+    "m": "toLocaleString()} min",
+    "ln": 304,
+    "f": "src/components/Analytics/StandaloneUserDuration.tsx",
+    "r": "C4",
+    "t": "Supersedes A-03.22's New at this line only (the User duration legend's value, StandaloneUserDuration.tsx:304): the chart has one unit, the hour (`§ Chart tokens › Encoding rules › Donuts`), so the legend gives each activity's estimate in hours, to two significant figures like the centre, where it gave minutes beside a centre in hours. It says about, as the summary does: the hours are rounded from an estimate whose minutes also give the shares, so \"about 20 hours\" (62%) and \"about 13 hours\" (38%) agree with \"33 hours\" within the rounding, where bare figures would not (20 of 33 is 61%). It begins lowercase because it follows the activity's name in the legend (\"Chat about 20 hours\") and never stands alone (C1): the written exemption covers the lowercase start. Its share moves to the slice's direct label (the slice-label row).",
+    "x": [
+     "begins with a lowercase letter"
+    ]
+   },
+   {
+    "k": "format",
+    "o": "(totalDuration / 60).toFixed(1)",
+    "n": "33",
+    "m": "/ 60).toFixed(1)",
+    "ln": [
+     117,
+     130
+    ],
+    "f": "src/components/Analytics/StandaloneUserDuration.tsx",
+    "r": "C4, C16",
+    "t": "The User duration figure in hours, to two significant figures (\"33\" for 32.9 hours, \"4.5\", \"0.33\": never more digits, and never 0 for a part that is not 0), in place of one decimal (\"32.9\"), which claims a precision the estimate does not have (C16: the minutes are action counts times 2 and 5, StandaloneUserDuration.tsx:48-51). Two sites: the centre total (StandaloneUserDuration.tsx:130, drawn over its noun, \"hours\", or \"hour\" when the figure is 1) and the tooltip's figure (StandaloneUserDuration.tsx:117, which A-03.49 writes as \"Duration: {hours: count hour}\"). The legend (the row above) and the summary (P6-A-03.23) read the same figure."
+   }
+  ]
+ },
+ {
+  "id": "P6-A-18",
+  "phase": 6,
+  "page": "A-18",
+  "name": "Class analytics (data surfaces)",
+  "route": "/admin/class/:classID/professor-analytics",
+  "file": "src/components/ClassAnalytics/ClassAnalytics.tsx",
+  "note": "Phase 6 (kiwi-ui/DESIGN.md § Chart tokens): the KPI tiles' third line (the Questions tile's week-on-week trend, one row per direction, the denominator where the value is a ratio, or that there is no earlier period), the intent chart's direct label (its share: the chart draws no value axis) and its bars' tooltip (the count), and the text summaries of the intent chart and the topic bars, each in its unscoped and its lecture-scoped reading. The four scope lines state what each chart covers, because the page has no date range.",
+  "rows": [
+   {
+    "k": "label",
+    "o": "",
+    "n": "Last full week: {m: count question}, up from {previous} the week before",
+    "at": "src/components/ClassAnalytics/ClassAnalytics.tsx:429 (the Questions tile's third line; new text)",
+    "r": "C4, C3",
+    "t": "The Questions tile's third line (`§ Chart tokens › KPI tiles`): a week-on-week trend from the weekly series the page already fetches and never draws (`weeklyActivity`, classAnalyticsApi.ts:20), so the tile carries a trend and not just context. This reading shows when the last full week had more questions than the week before (`{m}` > `{previous}`); the other directions are P6-A-18.17 (down) and P6-A-18.18 (the same). The weeks are the backend's UTC Mondays (`date_trunc('week')` over the class's chat questions, ../kiwi/src/analytics/class-analytics.service.ts:177-183, sent as the UTC instant of Monday 00:00 by `toISOString()`): the last full week is the latest Monday-to-Sunday week that has ended in UTC, and the week before is the Monday seven days earlier; a week missing from the series counts as 0, because the GROUP BY returns no row for a week without questions. The comparison is drawn only when the week before falls on or after the series' first week; otherwise, with an empty series, and while a lecture is chosen (the value is then that lecture's count and the series the whole class's), the line is \"No earlier period to compare\" (the tile rows below). The line takes the Phase 3 tile's direction glyph in its own colour (`--kpi-tile-trend`), hidden from assistive technology: the words state the direction, so neither the glyph nor a colour carries it. No percentage: a change between small counts reads larger than it is, and a week from 0 has none."
+   },
+   {
+    "k": "label",
+    "o": "",
+    "n": "No earlier period to compare",
+    "at": "src/components/ClassAnalytics/ClassAnalytics.tsx:437 (the Active students tile's third line; new text)",
+    "r": "C16",
+    "t": "The Active students tile's third line: the class analytics API returns totals only, so no earlier period exists to compare and the line says so (C16)."
+   },
+   {
+    "k": "label",
+    "o": "",
+    "n": "No earlier period to compare",
+    "at": "src/components/ClassAnalytics/ClassAnalytics.tsx:445 (the Topics tile's third line; new text)",
+    "r": "C16",
+    "t": "The Topics tile's third line: no earlier period in the data (C16)."
+   },
+   {
+    "k": "label",
+    "o": "",
+    "n": "No earlier period to compare",
+    "at": "src/components/ClassAnalytics/ClassAnalytics.tsx:453 (the Last activity tile's third line, shown when a lecture is chosen; new text)",
+    "r": "C16",
+    "t": "The scoped tile's third line: its value is a date (A-18.04) and nothing earlier is fetched to compare it with (C16)."
+   },
+   {
+    "k": "format",
+    "o": "${activeLectures}/${overview?.lectureCount ?? 0}",
+    "n": "{active}",
+    "f": "src/components/ClassAnalytics/ClassAnalytics.tsx",
+    "r": "C4",
+    "t": "The Active lectures tile's value (ClassAnalytics.tsx:459) drew `3/12`. The value is the count, `1,234` (C4), and the denominator moves to the tile's third line (the next row), which is the baseline the ratio carries."
+   },
+   {
+    "k": "label",
+    "o": "",
+    "n": "Of {total: count lecture} in the class",
+    "at": "src/components/ClassAnalytics/ClassAnalytics.tsx:459 (the Active lectures tile's third line; new text)",
+    "r": "C4",
+    "t": "The Active lectures tile's third line: the denominator of the ratio the value used to draw (`§ Chart tokens › KPI tiles`), with the noun written by the helper (C4)."
+   },
+   {
+    "k": "format",
+    "o": "${intent.label} · ${intent.questionCount} (${Math.round(share)}%)",
+    "n": "{n: count question}",
+    "m": "${intent.label} · ${intent.questionCount}",
+    "f": "src/components/ClassAnalytics/IntentsPanel.tsx",
+    "r": "C4",
+    "t": "Each intent bar's tooltip, on hover and on focus (IntentsPanel.tsx:80): the count its share stands for, with its unit by the helper (\"71 questions\"). The bar's button already shows the intent's name and its share (the next row), so the tooltip no longer repeats them, and it never gates: the cards below carry every count (IntentsPanel.tsx:177). The row holds the id the chart's value-axis title had until the follow-up after review round 2 dropped the axis (the labels are the values, `§ Chart tokens › Encoding rules`)."
+   },
+   {
+    "k": "label",
+    "o": "",
+    "n": "{share}%",
+    "at": "src/components/ClassAnalytics/IntentsPanel.tsx:85 (the direct label at each bar's end; new text)",
+    "r": "C4",
+    "t": "Each intent bar's direct label: its share of the analyzed questions, a whole percent. The bar's length is that share, and no value axis is drawn (the labels are the values, as on Top actions; `§ Chart tokens › Encoding rules`), so the label and the length say one thing; the counts are in the cards below (IntentsPanel.tsx:177) and the summary."
+   },
+   {
+    "k": "body",
+    "o": "",
+    "n": "Student intent: {total: count question} analyzed; {top} is the largest intent, with {topCount} ({topShare}%).",
+    "at": "src/components/ClassAnalytics/IntentsPanel.tsx:26 (the figure's caption and accessible description; new text)",
+    "r": "C16, C4",
+    "sum": true,
+    "t": "The text summary of the intent chart for the whole class: the key figure first, then the largest intent by name (`{top}` is the backend's label, as the axis writes it), its count and its share; no claim beyond the counts (C16). The next row is the lecture-scoped reading."
+   },
+   {
+    "k": "body",
+    "o": "",
+    "n": "Student intent in this lecture: {total: count question} analyzed; {top} is the largest intent, with {topCount} ({topShare}%).",
+    "at": "src/components/ClassAnalytics/IntentsPanel.tsx:26 (the figure's caption and accessible description; new text)",
+    "r": "C16, C4",
+    "sum": true,
+    "t": "The lecture-scoped reading of the intent summary (`scopeLecture` is set, ClassAnalytics.tsx:468-472)."
+   },
+   {
+    "k": "body",
+    "o": "",
+    "n": "Topics: {n: count topic} in all; {top} has the most, with {topCount: count question}.",
+    "at": "src/components/ClassAnalytics/TopicsPanel.tsx:47 (the figure's caption and accessible description; new text)",
+    "r": "C16, C4",
+    "sum": true,
+    "t": "The text summary of the topic bars for the whole class: the number of topics first, then the top topic by name with its count and unit; the footer's counts (A-18.30) stay. The next row is the lecture-scoped reading."
+   },
+   {
+    "k": "body",
+    "o": "",
+    "n": "Topics in this lecture: {n: count topic} in all; {top} has the most, with {topCount: count question}.",
+    "at": "src/components/ClassAnalytics/TopicsPanel.tsx:47 (the figure's caption and accessible description; new text)",
+    "r": "C16, C4",
+    "sum": true,
+    "t": "The lecture-scoped reading of the topic summary (`lectureName` is set, TopicsPanel.tsx:68-70)."
+   },
+   {
+    "k": "label",
+    "o": "",
+    "n": "Questions by intent, all time",
+    "at": "src/components/ClassAnalytics/IntentsPanel.tsx:49 (a scope line under the helper; new text)",
+    "r": "C3",
+    "t": "The intent chart's scope line (`§ Chart tokens › Encoding rules`: the range stated): Class analytics has no date range, so the line says what the chart covers, every question so far. The next row is the lecture-scoped reading."
+   },
+   {
+    "k": "label",
+    "o": "",
+    "n": "Questions by intent in this lecture, all time",
+    "at": "src/components/ClassAnalytics/IntentsPanel.tsx:49 (a scope line under the helper; new text)",
+    "r": "C3",
+    "t": "The intent chart's scope line when a lecture is chosen (`scopeLecture` is set, ClassAnalytics.tsx:468-472)."
+   },
+   {
+    "k": "label",
+    "o": "",
+    "n": "Questions by topic, all time",
+    "at": "src/components/ClassAnalytics/TopicsPanel.tsx:68 (a scope line under the helper; new text)",
+    "r": "C3",
+    "t": "The topic bars' scope line: every question so far, no date range on this page. The next row is the lecture-scoped reading."
+   },
+   {
+    "k": "label",
+    "o": "",
+    "n": "Questions by topic in this lecture, all time",
+    "at": "src/components/ClassAnalytics/TopicsPanel.tsx:68 (a scope line under the helper; new text)",
+    "r": "C3",
+    "t": "The topic bars' scope line when a lecture is chosen (`lectureName` is set, TopicsPanel.tsx:68-70)."
+   },
+   {
+    "k": "label",
+    "o": "",
+    "n": "Last full week: {m: count question}, down from {previous} the week before",
+    "at": "src/components/ClassAnalytics/ClassAnalytics.tsx:429 (the Questions tile's third line when the last full week had fewer questions than the week before; new text)",
+    "r": "C4",
+    "t": "The Questions tile's trend when the last full week had fewer questions than the week before (`{m}` < `{previous}`), with the down glyph; otherwise as P6-A-18.01, which states the weeks, the zero-filled gaps and when the line says that there is no earlier period. A week with no question reads \"Last full week: 0 questions, down from 9 the week before\"."
+   },
+   {
+    "k": "label",
+    "o": "",
+    "n": "Last full week: {m: count question}, the same as the week before",
+    "at": "src/components/ClassAnalytics/ClassAnalytics.tsx:429 (the Questions tile's third line when the last full week had as many questions as the week before; new text)",
+    "r": "C4",
+    "t": "The Questions tile's trend when the two weeks had the same count (`{m}` equals the week before's), with the level glyph; otherwise as P6-A-18.01."
+   }
+  ]
+ }
+]

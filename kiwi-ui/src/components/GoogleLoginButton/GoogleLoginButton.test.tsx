@@ -39,14 +39,16 @@ describe('GoogleLoginButton', () => {
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
-  it('displays login text when mode is login', () => {
+  it('displays sign-in text when mode is login', () => {
     renderWithTheme(<GoogleLoginButton mode="login" />);
-    expect(screen.getByText('Login with Google')).toBeInTheDocument();
+    expect(screen.getByText('Sign in with Google')).toBeInTheDocument();
+    expect(screen.queryByText('Login with Google')).not.toBeInTheDocument();
   });
 
-  it('displays register text when mode is register', () => {
+  it('displays sign-up text when mode is register', () => {
     renderWithTheme(<GoogleLoginButton mode="register" />);
-    expect(screen.getByText('Register with Google')).toBeInTheDocument();
+    expect(screen.getByText('Sign up with Google')).toBeInTheDocument();
+    expect(screen.queryByText('Register with Google')).not.toBeInTheDocument();
   });
 
   it('redirects to backend auth URL on click', () => {
@@ -100,8 +102,11 @@ describe('GoogleLoginButton', () => {
   it('supports the neutral Google-branded appearance', () => {
     renderWithTheme(<GoogleLoginButton mode="login" appearance="neutral" />);
 
-    expect(screen.getByRole('button', { name: 'Continue with Google' })).toHaveClass('MuiButton-outlined');
+    const button = screen.getByRole('button', { name: 'Continue with Google' });
+    expect(button).toHaveClass('MuiButton-outlined');
+    expect(button.querySelector('.MuiButton-startIcon svg')).toHaveAttribute('aria-hidden', 'true');
   });
+
 
   it('has contained variant styling', () => {
     renderWithTheme(<GoogleLoginButton mode="login" />);
@@ -120,12 +125,11 @@ describe('GoogleLoginButton', () => {
     // The actual computed styles would be applied by Material-UI
   });
 
-  it('has uppercase text transformation', () => {
+  it('writes its label in sentence case', () => {
     renderWithTheme(<GoogleLoginButton mode="login" />);
     
     const button = screen.getByRole('button');
-    // The text transform is applied via CSS, we can verify the text content
-    expect(button).toHaveTextContent('Login with Google');
+    expect(button).toHaveTextContent('Sign in with Google');
   });
 
   it('handles different frontend origins', () => {
@@ -158,7 +162,7 @@ describe('GoogleLoginButton', () => {
     modes.forEach(mode => {
       const { unmount } = renderWithTheme(<GoogleLoginButton mode={mode} />);
       
-      const expectedText = mode === 'login' ? 'Login with Google' : 'Register with Google';
+      const expectedText = mode === 'login' ? 'Sign in with Google' : 'Sign up with Google';
       expect(screen.getByText(expectedText)).toBeInTheDocument();
       
       unmount();

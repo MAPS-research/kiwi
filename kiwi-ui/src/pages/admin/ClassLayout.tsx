@@ -33,14 +33,14 @@ const allMenuItems: Array<{
   hideForInstructor?: boolean;
   requiresInstructorPermission?: 'canManageMaterials' | 'canViewAnalytics';
 }> = [
-  { label: "Edit Class", path: "edit-metadata", icon: PenSquare },
+  { label: "Edit class", path: "edit-metadata", icon: PenSquare },
   { label: "Materials", path: "manage-materials", icon: FileText, requiresInstructorPermission: 'canManageMaterials' },
-  { label: "Class Flags", path: "feature-flags", hideForInstructor: true, icon: Flag },
-  { label: "Class MCP & Tools", path: "mcp-settings", hideForInstructor: true, icon: Puzzle },
-  { label: "Class Apps", path: "kiwi-apps", hideForInstructor: true, icon: Blocks },
-  { label: "Enroll Students", path: "enroll-students", hideForInstructor: true, icon: UserPlus },
-  { label: "Class Email", path: "send-emails", hideForInstructor: true, icon: Mail },
-  { label: "Class Analytics", path: "professor-analytics", icon: StackedBarChartOutlinedIcon, requiresInstructorPermission: 'canViewAnalytics' },
+  { label: "Class flags", path: "feature-flags", hideForInstructor: true, icon: Flag },
+  { label: "Class MCP and tools", path: "mcp-settings", hideForInstructor: true, icon: Puzzle },
+  { label: "Class apps", path: "kiwi-apps", hideForInstructor: true, icon: Blocks },
+  { label: "Enroll students", path: "enroll-students", hideForInstructor: true, icon: UserPlus },
+  { label: "Class email", path: "send-emails", hideForInstructor: true, icon: Mail },
+  { label: "Class analytics", path: "professor-analytics", icon: StackedBarChartOutlinedIcon, requiresInstructorPermission: 'canViewAnalytics' },
   { label: "Experiments", path: "experiments", icon: ExperimentIcon },
 ];
 
