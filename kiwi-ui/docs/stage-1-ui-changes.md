@@ -13,7 +13,7 @@ The design itself is in [DESIGN.md](../DESIGN.md) and
 | Part | Commits | Where |
 |---|---|---|
 | Design documents: brief, page specs, tokens, voice and copy, the Kiwi companion, chart tokens, mocks and the clickable preview | 22: `ef65c1d` … `588b654`, and `3f18307` (merged in `a9a7694`) | `.design-foundations/`, `kiwi-ui/DESIGN.md`, `kiwi-ui/JOURNEY.md` |
-| The UI built on those documents | 36: `c9cc9d2` … `c2b9c75` | `kiwi-ui/` |
+| The UI built on those documents | 40: `c9cc9d2` … `c2b9c75`, then `3272447`, `05262f4`, `1b3f288` and `6ee9f15` | `kiwi-ui/` |
 
 The design documents come from the design branch
 `feature/kiwi-ui-stage-1-design`.
@@ -86,6 +86,13 @@ The design documents come from the design branch
 
 - Sign-in, the class list and the top bar. The top bar is 52 px including its
   hairline; on the right are Display, the view switch and Sign out.
+- On sign-in, the aside's empty middle is a gallery of the learning tools
+  kiwiai.org shows (Materials, Flashcard, Exercise, Demo, Podcast and
+  Analytics), one at a time: a small picture drawn from the tokens, then the
+  tool's name and one sentence. Previous and Next wrap at both ends, nothing
+  turns by itself, and a link opens kiwiai.org in a new tab. The aside is no
+  longer a sheet, so the slide is its one card. Below 900 px the gallery is
+  hidden (`6ee9f15`).
 - The materials page and the student class bar.
 - The code page.
 - The admin shell, Enroll students and Edit class. The roster now shows an
@@ -111,6 +118,12 @@ The design documents come from the design branch
   the browser in the side panel and the modal, in light and dark and at
   375 px. With the chat open, the materials drawer still responded to
   clicks, and the toolbar appeared about 1.4 s after the answer completed.
+- At `6ee9f15`, all 885 tests in 95 files pass, `npm run build` succeeds and
+  `npm run tokens:check` finds the token copies in sync. The sign-in gallery
+  was checked in the browser from 900 to 1920 px wide and 680 to 1080 px
+  tall: no picture is clipped, and the page is no taller than before. It was
+  also checked in dark mode, from the keyboard, and at 390 px, where it is
+  hidden.
 
 ## Where it differs from the preview
 
@@ -132,6 +145,11 @@ The design documents come from the design branch
   - no backdrop sits behind the modal or the side panel, so clicking
     outside no longer closes the chat (Escape and Close chat still do), and
     DESIGN.md's backdrop rule no longer applies to the chat.
+- One decision of 2026-11-03 differs from the preview: the sign-in aside is
+  no longer a sheet with an empty middle. It shows the kiwiai.org
+  learning-tool gallery, and the gallery's slide is the aside's one card. The
+  site's Scratchpad is left out, because "scratchpad" names the code tab in
+  this app.
 - Collapse and Accordion open at once. DESIGN.md allows a
   `grid-template-rows` animation, which is not built yet.
 - Smaller gaps, noted when each page was built:
