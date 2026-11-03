@@ -1,6 +1,8 @@
 import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import AuthLayout from './AuthLayout.tsx';
+import { LEARNING_TOOLS } from './LearningToolGallery.tsx';
 
 const theme = createTheme();
 
@@ -154,6 +156,83 @@ describe('AuthLayout', () => {
       expect(computed(wordmark).color).toBe('var(--accent-text)');
       expect(screen.getByText('Ask about your class materials or your code.')).toBeInTheDocument();
       expect(screen.queryByText(/Learn deeply/)).not.toBeInTheDocument();
+    });
+
+    it('shows the kiwiai.org learning tools one at a time and wraps at both ends', async () => {
+      const user = userEvent.setup();
+      renderWithTheme(
+        <AuthLayout variant="split">
+          <div>Login content</div>
+        </AuthLayout>
+      );
+
+      const aside = screen.getByRole('complementary', { name: 'About Kiwi' });
+      const gallery = within(aside).getByRole('region', { name: 'Learning tools built on Kiwi' });
+      expect(gallery).toHaveAttribute('aria-roledescription', 'carousel');
+      const slide = () => within(gallery).getByRole('group');
+
+      expect(within(gallery).getAllByRole('group')).toHaveLength(1);
+      expect(slide()).toHaveAttribute('aria-roledescription', 'slide');
+      expect(slide()).toHaveAttribute('aria-label', `1 of ${LEARNING_TOOLS.length}`);
+      expect(within(slide()).getByText('Materials')).toBeInTheDocument();
+
+      await user.click(within(gallery).getByRole('button', { name: 'Show next tool' }));
+      expect(slide()).toHaveAttribute('aria-label', `2 of ${LEARNING_TOOLS.length}`);
+      expect(within(slide()).getByText('Flashcard')).toBeInTheDocument();
+      expect(within(gallery).queryByText('Materials')).not.toBeInTheDocument();
+
+      // Back past the first tool lands on the last one.
+      await user.click(within(gallery).getByRole('button', { name: 'Show previous tool' }));
+      await user.click(within(gallery).getByRole('button', { name: 'Show previous tool' }));
+      expect(slide()).toHaveAttribute('aria-label', `${LEARNING_TOOLS.length} of ${LEARNING_TOOLS.length}`);
+      expect(within(slide()).getByText('Analytics')).toBeInTheDocument();
+    });
+
+    it('reads a new slide out politely and keeps its picture from assistive technology', () => {
+      renderWithTheme(
+        <AuthLayout variant="split">
+          <div>Login content</div>
+        </AuthLayout>
+      );
+
+      const slide = within(screen.getByRole('complementary', { name: 'About Kiwi' })).getByRole('group');
+      expect(slide.parentElement).toHaveAttribute('aria-live', 'polite');
+      expect(slide.firstElementChild).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    it('draws the slide as the one sheet, so the aside has no edge of its own', () => {
+      renderWithTheme(
+        <AuthLayout variant="split">
+          <div>Login content</div>
+        </AuthLayout>
+      );
+
+      const aside = screen.getByRole('complementary', { name: 'About Kiwi' });
+      const slide = within(aside).getByRole('group');
+      expect(computed(slide).borderRadius).toBe('var(--radius-sheet)');
+      // jsdom leaves media queries out of computed style, so read the aside's own rules,
+      // the md one included, from the emitted CSS.
+      const css = [...document.querySelectorAll('style')].map((style) => style.textContent ?? '').join('\n');
+      const asideRules = [...aside.classList]
+        .filter((name) => name.startsWith('css-'))
+        .flatMap((name) => [...css.matchAll(new RegExp(`\\.${name}\\{([^}]*)\\}`, 'g'))].map((match) => match[1]));
+      expect(asideRules.length).toBeGreaterThan(1);
+      expect(asideRules.join(';')).not.toMatch(/(^|;)(border|border-radius|background-color):/);
+    });
+
+    it('links to kiwiai.org in a new tab, and says so', () => {
+      renderWithTheme(
+        <AuthLayout variant="split">
+          <div>Login content</div>
+        </AuthLayout>
+      );
+
+      const link = within(screen.getByRole('complementary', { name: 'About Kiwi' })).getByRole('link', {
+        name: 'More on kiwiai.org (opens in a new tab)',
+      });
+      expect(link).toHaveAttribute('href', 'https://kiwiai.org/');
+      expect(link).toHaveAttribute('target', '_blank');
+      expect(link).toHaveAttribute('rel', 'noopener noreferrer');
     });
 
     it("leads the narrow layout with Kiwi's logo, inside the main landmark", () => {

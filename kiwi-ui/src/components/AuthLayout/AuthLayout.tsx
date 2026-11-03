@@ -4,6 +4,7 @@ import { Box, Container, Typography } from "@mui/material";
 import InstitutionLogo from "../Brand/InstitutionLogo.tsx";
 import { INSTITUTION_NAME, institutionConfigured } from "../../config/branding";
 import KiwiWordmark from "../Brand/KiwiWordmark.tsx";
+import LearningToolGallery from "./LearningToolGallery.tsx";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -17,11 +18,14 @@ const READING_GUTTER = { xs: "var(--space-3)", sm: "var(--space-reading-gutter)"
  * The auth shell (JOURNEY SR-5).
  *
  * `split` (sign-in S-05, register S-06; the Stage 1 preview's `main.signin`):
- * from 900 px the aside is a sheet holding one ruled column, the wordmark at
- * the top and what Kiwi does at the bottom, beside the form column; below
- * 900 px there is one column: Kiwi's logo, the form, then the aside's two
- * lines on their own ruler, without the sheet or the wordmark. The page's
- * children are the form column's ruled reading column.
+ * from 900 px the aside is one ruled column on the canvas, beside the form
+ * column: the wordmark at the top, a gallery of the kiwiai.org learning tools
+ * in the middle (one sheet, one tool at a time) and what Kiwi does at the
+ * bottom. The gallery's sheet is the only one, so the aside draws none of its
+ * own (no card inside a card). Below 900 px there is one column: Kiwi's logo,
+ * the form, then the aside's two lines on their own ruler, without the
+ * wordmark or the gallery. The page's children are the form column's ruled
+ * reading column.
  *
  * `centered` (S-08): the children on the canvas, centred.
  */
@@ -57,12 +61,9 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, variant = "centered" 
             boxSizing: "border-box",
             display: "flex",
             mt: { xs: "var(--space-6)", md: 0 },
-            // The sheet appears with the second column.
+            // The column's height and inset appear with the second column.
             minHeight: { md: 640 },
             p: { md: "var(--space-7) var(--space-7) var(--space-7) var(--space-6)" },
-            bgcolor: { md: "background.paper" },
-            border: { md: "1px solid var(--border)" },
-            borderRadius: { md: "var(--radius-sheet)" },
           }}
         >
           <Box
@@ -91,6 +92,8 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, variant = "centered" 
                 }}
               />
             </Box>
+
+            <LearningToolGallery />
 
             <Box sx={{ maxWidth: "30ch" }}>
               <Typography component="p" variant="h4">
