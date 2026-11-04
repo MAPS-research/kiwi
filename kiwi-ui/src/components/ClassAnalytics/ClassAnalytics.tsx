@@ -30,7 +30,7 @@ import { IntentsPanel } from "./IntentsPanel.tsx";
 import { PdfPageDialog } from "./PdfPageDialog.tsx";
 import { QuestionListDialog } from "./QuestionListDialog.tsx";
 import { TopicsPanel } from "./TopicsPanel.tsx";
-import { intentStyleOf, mono, tokens } from "./tokens.ts";
+import { numeric, tokens, typeRole } from "./tokens.ts";
 import { AdminPage, AdminPageHeader } from "../AdminPage/index.ts";
 
 const POLL_INTERVAL_MS = 3000;
@@ -43,7 +43,7 @@ const OverviewMetricCard: React.FC<{
 }> = ({ label, value, icon, loading = false }) => (
   <Paper
     variant="outlined"
-    sx={{ p: 2.5, height: 104, boxSizing: "border-box", borderRadius: 2 }}
+    sx={{ p: 2.5, height: 104, boxSizing: "border-box", borderRadius: "var(--kpi-tile-radius)" }}
   >
     <Stack
       direction="row"
@@ -57,9 +57,9 @@ const OverviewMetricCard: React.FC<{
           variant="body2"
           noWrap
           sx={{
-            color: "text.secondary",
+            ...typeRole("label"),
+            color: "var(--kpi-tile-label)",
             height: 20,
-            lineHeight: "20px"
           }}>
           {label}
         </Typography>
@@ -75,9 +75,11 @@ const OverviewMetricCard: React.FC<{
                 maxWidth: "100%",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
-                fontWeight: 600,
-                lineHeight: "44px",
-                letterSpacing: "-0.02em",
+                fontSize: "var(--type-kpi-value-size)",
+                lineHeight: "var(--type-kpi-value-leading)",
+                fontWeight: "var(--type-kpi-value-weight)",
+                ...numeric,
+                color: "var(--kpi-tile-value)",
               }}
             >
               {value}
@@ -91,7 +93,8 @@ const OverviewMetricCard: React.FC<{
           placeItems: "center",
           width: 40,
           height: 40,
-          color: "primary.main",
+          // One colour rule for KPI icons on both analytics pages.
+          color: "var(--kpi-tile-icon)",
           flexShrink: 0,
         }}
       >
@@ -230,7 +233,7 @@ export const ClassAnalytics: React.FC = () => {
   if (!classId) {
     return (
       <Box sx={{ p: { xs: 2, md: 3 } }}>
-        <Typography sx={{ color: tokens.slate }}>
+        <Typography sx={{ ...typeRole("small"), color: tokens.slate }}>
           Open analytics from a class page to see its data.
         </Typography>
       </Box>
@@ -270,7 +273,7 @@ export const ClassAnalytics: React.FC = () => {
                   sx={{ display: "flex", alignItems: "center", gap: 1, minWidth: 0 }}
                 >
                   <MenuBookIcon
-                    sx={{ fontSize: 17, color: tokens.violet, flexShrink: 0 }}
+                    sx={{ fontSize: 17, color: tokens.icon, flexShrink: 0 }}
                   />
                   <Box
                     component="span"
@@ -278,7 +281,6 @@ export const ClassAnalytics: React.FC = () => {
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       whiteSpace: "nowrap",
-                      fontWeight: 600,
                     }}
                   >
                     {value === "all"
@@ -287,24 +289,10 @@ export const ClassAnalytics: React.FC = () => {
                   </Box>
                 </Box>
               )}
+              // The theme draws the field (its edge, hover and one-frame focus) and the menu sheet.
               sx={{
                 minWidth: 250,
                 maxWidth: 380,
-                borderRadius: 2.5,
-                backgroundColor: tokens.paper,
-                fontSize: 13.5,
-                color: tokens.ink,
-                boxShadow: "0 1px 2px rgba(26, 21, 35, 0.05)",
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: tokens.line,
-                },
-                "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: tokens.violetTrack,
-                },
-                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: tokens.violet,
-                  borderWidth: 1,
-                },
               }}
               MenuProps={{
                 slotProps: {
@@ -312,19 +300,10 @@ export const ClassAnalytics: React.FC = () => {
                     sx: {
                       mt: 0.5,
                       maxHeight: 380,
-                      borderRadius: 2.5,
-                      border: `1px solid ${tokens.line}`,
-                      boxShadow: "0 12px 32px rgba(26, 21, 35, 0.12)",
                       "& .MuiMenuItem-root": {
-                        fontSize: 13.5,
-                        borderRadius: 1.5,
+                        borderRadius: "var(--radius-small)",
                         mx: 0.75,
                         my: 0.25,
-                        "&:hover": { backgroundColor: tokens.hover },
-                        "&.Mui-selected": {
-                          backgroundColor: tokens.violetSoft,
-                          "&:hover": { backgroundColor: tokens.violetTrack },
-                        },
                       },
                     },
                   },
@@ -354,17 +333,14 @@ export const ClassAnalytics: React.FC = () => {
                   <Box
                     component="span"
                     sx={{
-                      fontFamily: mono,
-                      fontSize: 12,
-                      fontWeight: 600,
+                      ...typeRole("caption"),
+                      ...numeric,
+                      fontWeight: "var(--type-weight-emphasis)",
                       color:
-                        lecture.questionCount > 0 ? tokens.violet : tokens.faint,
+                        lecture.questionCount > 0 ? tokens.ink : tokens.slate,
                       marginLeft: "auto",
-                      backgroundColor:
-                        lecture.questionCount > 0
-                          ? tokens.violetSoft
-                          : tokens.graySoft,
-                      borderRadius: 1,
+                      backgroundColor: "var(--chip-role-fill)",
+                      borderRadius: "var(--radius-small)",
                       px: 0.75,
                       py: 0.1,
                     }}
@@ -376,7 +352,7 @@ export const ClassAnalytics: React.FC = () => {
             </Select>
           </FormControl>
           {topics?.updatedAt && !topics.generating && (
-            <Typography sx={{ fontSize: 12, color: tokens.faint }}>
+            <Typography sx={{ ...typeRole("caption"), color: tokens.slate }}>
             Topics updated {new Date(topics.updatedAt).toLocaleString()}
             {topics.pendingNewQuestions > 0 &&
               ` · ${topics.pendingNewQuestions} new questions pending`}
@@ -389,23 +365,22 @@ export const ClassAnalytics: React.FC = () => {
       {overviewError ? (
         <Box
           sx={{
-            border: `1px solid ${tokens.line}`,
-            borderRadius: 3,
+            border: `1px solid ${tokens.edge}`,
+            borderRadius: "var(--radius-sheet)",
             backgroundColor: tokens.paper,
             p: 4,
             textAlign: "center",
           }}
         >
-          <Typography sx={{ color: tokens.red, fontSize: 14, mb: 1 }}>
+          <Typography sx={{ color: tokens.error, ...typeRole("small"), mb: 1 }}>
             {overviewError}
           </Typography>
           <Typography
             component="button"
             onClick={loadOverview}
             sx={{
-              color: tokens.violet,
-              fontSize: 14,
-              fontWeight: 600,
+              color: tokens.accentText,
+              ...typeRole("label"),
               background: "none",
               border: "none",
               cursor: "pointer",
@@ -519,7 +494,6 @@ export const ClassAnalytics: React.FC = () => {
               }${scopeLecture ? " in this lecture" : ""}`
             : undefined
         }
-        accentColor={openIntent ? intentStyleOf(openIntent.id).color : undefined}
         fetchQuestions={intentQuestionsFetcher}
         lectureNameByPdfId={lectureNameByPdfId}
         onPageClick={handlePageClick}

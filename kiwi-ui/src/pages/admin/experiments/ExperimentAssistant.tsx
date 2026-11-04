@@ -1,5 +1,5 @@
 import {
-  AutoAwesomeOutlined as Sparkles,
+  ChatBubbleOutlineOutlined as ChatGlyph,
   CloseOutlined as CloseIcon,
   SendOutlined as Send,
 } from "@mui/icons-material";
@@ -14,8 +14,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { alpha } from "@mui/material/styles";
-import { AnimatePresence, motion } from "framer-motion";
+import { keyframes } from "@mui/material/styles";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
@@ -23,18 +23,33 @@ import {
   ExperimentConfig,
   experimentApi,
 } from "../../../utils/experimentApi.ts";
-import { VIOLET, violetGradient } from "./experimentUi.tsx";
+// Motion inside the locked budget (kiwi-ui/DESIGN.md § Motion): opacity and
+// transform only, the standard 220 ms entry and a 20 % shorter exit, no spring.
+const ENTER = { duration: 0.22, ease: [0.16, 1, 0.3, 1] as const };
+const EXIT = { duration: 0.176, ease: [0.7, 0, 0.84, 0] as const };
 
-/** Three bouncing dots for the "assistant is thinking" state. */
+const dotPulse = keyframes`
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+`;
+
+/** Three pulsing dots for the "assistant is thinking" state (opacity only; still under reduced motion). */
 const TypingDots: React.FC = () => (
   <Box sx={{ display: "flex", gap: 0.6, px: 1, py: 1.5 }}>
     {[0, 1, 2].map((i) => (
       <Box
         key={i}
-        component={motion.span}
-        animate={{ y: [0, -4, 0], opacity: [0.4, 1, 0.4] }}
-        transition={{ duration: 0.9, repeat: Infinity, delay: i * 0.15 }}
-        sx={{ width: 7, height: 7, borderRadius: "50%", bgcolor: alpha(VIOLET, 0.6) }}
+        component="span"
+        sx={{
+          width: 7,
+          height: 7,
+          borderRadius: "50%",
+          bgcolor: "var(--in-progress-text)",
+          opacity: 0.4,
+          animation: `${dotPulse} 900ms var(--motion-ease-toggle) infinite`,
+          animationDelay: `${i * 150}ms`,
+          "@media (prefers-reduced-motion: reduce)": { animation: "none", opacity: 1 },
+        }}
       />
     ))}
   </Box>
@@ -145,6 +160,10 @@ const ExperimentAssistant: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { classID } = useParams<{ classID: string }>();
+  // Under reduced motion the launcher and the panel appear in place.
+  const reduceMotion = useReducedMotion();
+  const enter = reduceMotion ? { duration: 0 } : ENTER;
+  const exit = reduceMotion ? { duration: 0 } : EXIT;
 
   // Switching to a DIFFERENT class starts a fresh assistant session (the
   // conversation about class A shouldn't leak into class B). Runs before the
@@ -421,34 +440,41 @@ const ExperimentAssistant: React.FC = () => {
               setOpen(true);
             }}
             onPointerDown={startFabDrag}
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            whileHover={{ scale: 1.06 }}
-            whileTap={{ scale: 0.94 }}
-            transition={{ type: "spring", stiffness: 400, damping: 22 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1, transition: enter }}
+            exit={{ opacity: 0, transition: exit }}
+            whileTap={reduceMotion ? undefined : { scale: 0.98, transition: { duration: 0.15 } }}
             aria-label="open experiment assistant"
+            // The floating launcher (DESIGN.md § The floating chat launcher): the
+            // filled control's Soft sage disc, its 1 px edge and --shadow-2.
             sx={{
               position: "fixed",
               left: fabPos.x,
               top: fabPos.y,
-              zIndex: 1250,
+              zIndex: "var(--z-assistant)",
               width: FAB_SIZE,
               height: FAB_SIZE,
+              p: 0,
               borderRadius: "50%",
               cursor: "grab",
               touchAction: "none",
-              color: VIOLET,
+              color: "var(--launcher-icon)",
               display: "grid",
               placeItems: "center",
-              background: "#fff",
-              border: `2px solid ${VIOLET}`,
-              boxShadow: `0 6px 18px ${alpha(VIOLET, 0.2)}`,
-              "&:hover": { background: alpha(VIOLET, 0.06) },
-              "&:active": { cursor: "grabbing" },
+              bgcolor: "var(--launcher-fill)",
+              border: "1px solid var(--launcher-border)",
+              boxShadow: "var(--launcher-shadow)",
+              "&:hover": { bgcolor: "var(--launcher-hover-fill)" },
+              "&:active": { cursor: "grabbing", bgcolor: "var(--launcher-active-fill)" },
+              // Bordered: focus recolours its own edge and keeps the launcher's shadow.
+              "&:focus-visible": {
+                outline: "none",
+                borderColor: "var(--launcher-focus-border)",
+                boxShadow: "inset 0 0 0 1px var(--launcher-focus-border), var(--launcher-shadow)",
+              },
             }}
           >
-            <Sparkles sx={{ fontSize: 24 }} />
+            <ChatGlyph sx={{ fontSize: "var(--launcher-icon-size)" }} />
           </Box>
         )}
       </AnimatePresence>
@@ -458,11 +484,11 @@ const ExperimentAssistant: React.FC = () => {
         {open && (
           <Paper
             component={motion.div}
-            initial={{ opacity: 0, y: 24, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 24, scale: 0.96 }}
-            transition={{ type: "spring", stiffness: 320, damping: 30 }}
-            elevation={12}
+            initial={{ opacity: 0, y: reduceMotion ? 0 : 8 }}
+            animate={{ opacity: 1, y: 0, transition: enter }}
+            exit={{ opacity: 0, y: reduceMotion ? 0 : 8, transition: exit }}
+            elevation={0}
+            // A floating panel: the sheet, its hairline edge and --shadow-2.
             sx={{
               position: "fixed",
               left: panelRect.x,
@@ -474,13 +500,14 @@ const ExperimentAssistant: React.FC = () => {
               minHeight: Math.min(MIN_PANEL_HEIGHT, getViewport().height - EDGE_GAP * 2),
               display: "flex",
               flexDirection: "column",
-              zIndex: 1250,
-              borderRadius: 5,
+              zIndex: "var(--z-assistant)",
+              borderRadius: "var(--radius-sheet)",
               overflow: "hidden",
-              border: `1px solid ${alpha(VIOLET, 0.12)}`,
+              border: "1px solid var(--border)",
+              boxShadow: "var(--shadow-2)",
             }}
           >
-            {/* Header */}
+            {/* Header: a plain sheet with a hairline under it */}
             <Box
               sx={{
                 px: 2,
@@ -488,36 +515,36 @@ const ExperimentAssistant: React.FC = () => {
                 display: "flex",
                 alignItems: "center",
                 gap: 1.5,
-                color: "#fff",
-                background: violetGradient,
+                color: "text.primary",
+                borderBottom: "1px solid var(--border-subtle)",
                 cursor: "move",
                 userSelect: "none",
                 touchAction: "none",
               }}
               onPointerDown={startDrag}
             >
-              <Avatar sx={{ bgcolor: alpha("#fff", 0.2), width: 38, height: 38 }}>
-                <Sparkles sx={{ fontSize: 20 }} />
+              <Avatar sx={{ width: 38, height: 38 }}>
+                <ChatGlyph sx={{ fontSize: 20, color: "var(--icon-default)" }} />
               </Avatar>
               <Box sx={{ flexGrow: 1, minWidth: 0 }}>
                 <Typography
                   sx={{
-                    fontWeight: 700,
+                    fontWeight: 600,
                     lineHeight: 1.2
                   }}>
                   Experiment Assistant
                 </Typography>
-                <Typography variant="caption" sx={{ opacity: 0.85 }}>
+                <Typography variant="caption" sx={{ color: "text.secondary" }}>
                   Describe it · I'll draft the config
                 </Typography>
               </Box>
-              <IconButton size="small" onClick={() => setOpen(false)} sx={{ color: "#fff" }}>
+              <IconButton size="small" onClick={() => setOpen(false)}>
                 <CloseIcon fontSize="small" />
               </IconButton>
             </Box>
 
             {/* Messages */}
-            <Box ref={scrollRef} sx={{ flexGrow: 1, overflowY: "auto", p: 2, bgcolor: alpha(VIOLET, 0.02) }}>
+            <Box ref={scrollRef} sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
               {messages.length === 0 && (
                 <Box sx={{ textAlign: "center", mt: 3, px: 1 }}>
                   <Box
@@ -529,10 +556,10 @@ const ExperimentAssistant: React.FC = () => {
                       placeItems: "center",
                       mx: "auto",
                       mb: 1.5,
-                      background: alpha(VIOLET, 0.08),
+                      bgcolor: "action.hover",
                     }}
                   >
-                    <Sparkles sx={{ fontSize: 26, color: VIOLET }} />
+                    <ChatGlyph sx={{ fontSize: 26, color: "var(--icon-default)" }} />
                   </Box>
                   <Typography variant="body2" sx={{
                     color: "text.secondary"
@@ -548,34 +575,28 @@ const ExperimentAssistant: React.FC = () => {
               )}
               <Stack spacing={1.25}>
                 {messages.map((m, i) => (
+                  // Messages appear as they arrive, unanimated (a reading surface).
                   <Box
                     key={i}
-                    component={motion.div}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.25 }}
                     sx={{
                       alignSelf: m.role === "user" ? "flex-end" : "flex-start",
-                      background: m.role === "user" ? violetGradient : "#fff",
-                      color: m.role === "user" ? "#fff" : "text.primary",
+                      bgcolor: m.role === "user" ? "var(--surface-active)" : "action.hover",
+                      color: "text.primary",
                       px: 1.75,
                       py: 1.25,
-                      borderRadius: 2.5,
-                      borderTopRightRadius: m.role === "user" ? 4 : 20,
-                      borderTopLeftRadius: m.role === "user" ? 20 : 4,
+                      borderRadius: "var(--radius-sheet)",
+                      borderTopRightRadius: m.role === "user" ? "var(--radius-small)" : "var(--radius-sheet)",
+                      borderTopLeftRadius: m.role === "user" ? "var(--radius-sheet)" : "var(--radius-small)",
                       maxWidth: "88%",
                       whiteSpace: "pre-wrap",
-                      fontSize: 14,
-                      lineHeight: 1.5,
-                      boxShadow: m.role === "user" ? "none" : `0 2px 8px ${alpha("#000", 0.06)}`,
-                      border: m.role === "user" ? "none" : `1px solid ${alpha(VIOLET, 0.08)}`,
+                      typography: "body2",
                     }}
                   >
                     {m.content}
                   </Box>
                 ))}
                 {loading && (
-                  <Box sx={{ alignSelf: "flex-start", bgcolor: "#fff", borderRadius: 2.5, border: `1px solid ${alpha(VIOLET, 0.08)}` }}>
+                  <Box sx={{ alignSelf: "flex-start", bgcolor: "action.hover", borderRadius: "var(--radius-sheet)" }}>
                     <TypingDots />
                   </Box>
                 )}
@@ -584,12 +605,18 @@ const ExperimentAssistant: React.FC = () => {
 
             {/* Last draft JSON */}
             {lastConfig && (
-              <Box sx={{ borderTop: `1px solid ${alpha(VIOLET, 0.1)}` }}>
+              <Box sx={{ borderTop: "1px solid var(--border-subtle)" }}>
                 <Button
                   size="small"
                   fullWidth
                   onClick={() => setShowJson((s) => !s)}
-                  sx={{ justifyContent: "space-between", textTransform: "none", px: 2, color: VIOLET, fontWeight: 600 }}
+                  sx={{
+                    justifyContent: "space-between",
+                    px: 2,
+                    borderRadius: 0,
+                    // The panel clips its edges, so the ring is drawn inside the button.
+                    "&.Mui-focusVisible, &:focus-visible": { outlineOffset: "calc(-1 * var(--size-focus-ring))" },
+                  }}
                 >
                   {showJson ? "Hide" : "View"} last draft JSON
                 </Button>
@@ -601,8 +628,10 @@ const ExperimentAssistant: React.FC = () => {
                       p: 1.5,
                       maxHeight: 200,
                       overflow: "auto",
-                      bgcolor: alpha(VIOLET, 0.03),
-                      fontSize: 11,
+                      bgcolor: "action.hover",
+                      color: "text.primary",
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "var(--type-caption-size)",
                       whiteSpace: "pre-wrap",
                       wordBreak: "break-word",
                     }}
@@ -614,7 +643,7 @@ const ExperimentAssistant: React.FC = () => {
             )}
 
             {/* Composer */}
-            <Box sx={{ p: 1.25, display: "flex", gap: 1, alignItems: "flex-end", borderTop: `1px solid ${alpha(VIOLET, 0.1)}` }}>
+            <Box sx={{ p: 1.25, display: "flex", gap: 1, alignItems: "flex-end", borderTop: "1px solid var(--border-subtle)" }}>
               <TextField
                 size="small"
                 fullWidth
@@ -629,18 +658,30 @@ const ExperimentAssistant: React.FC = () => {
                 }}
                 multiline
                 maxRows={4}
-                sx={{ "& .MuiOutlinedInput-root": { borderRadius: 3.5 } }}
               />
               <IconButton
                 onClick={send}
                 disabled={loading || !input.trim()}
+                // Send is the filled control: the primary's fill, edge and label colour.
                 sx={{
-                  color: "#fff",
-                  background: violetGradient,
+                  color: "var(--button-primary-text)",
+                  bgcolor: "var(--button-primary-fill)",
+                  border: "1px solid var(--button-primary-border)",
                   width: 40,
                   height: 40,
-                  "&:hover": { opacity: 0.9 },
-                  "&.Mui-disabled": { background: alpha(VIOLET, 0.25), color: "#fff" },
+                  "&:hover": { bgcolor: "var(--button-primary-hover-fill)", color: "var(--button-primary-hover-text)" },
+                  "&:active": { bgcolor: "var(--button-primary-active-fill)" },
+                  // Bordered: focus recolours its own edge (one frame).
+                  "&.Mui-focusVisible, &:focus-visible": {
+                    outline: "none",
+                    borderColor: "var(--button-primary-focus-border)",
+                    boxShadow: "inset 0 0 0 1px var(--button-primary-focus-border)",
+                  },
+                  "&.Mui-disabled": {
+                    bgcolor: "var(--button-primary-disabled-fill)",
+                    color: "var(--button-primary-disabled-text)",
+                    borderColor: "var(--button-primary-disabled-border)",
+                  },
                 }}
               >
                 <Send sx={{ fontSize: 18 }} />
@@ -665,8 +706,8 @@ const ExperimentAssistant: React.FC = () => {
                   bottom: 6,
                   width: 10,
                   height: 10,
-                  borderRight: `2px solid ${alpha(VIOLET, 0.45)}`,
-                  borderBottom: `2px solid ${alpha(VIOLET, 0.45)}`,
+                  borderRight: "2px solid var(--border-interactive)",
+                  borderBottom: "2px solid var(--border-interactive)",
                 },
               }}
             />

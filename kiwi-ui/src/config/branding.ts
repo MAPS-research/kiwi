@@ -94,3 +94,23 @@ export function passwordLoginEnabled(): boolean {
 export function googleLoginEnabled(): boolean {
   return import.meta.env.VITE_ENABLE_GOOGLE_LOGIN === "true";
 }
+
+/**
+ * Dark mode ships behind a build-time switch (the Stage 1 brief, G3): until a
+ * deployment sets VITE_ENABLE_DARK_MODE=true the app is always light and the
+ * Display menu offers no Theme group.
+ */
+export function darkModeEnabled(): boolean {
+  return import.meta.env.VITE_ENABLE_DARK_MODE === "true";
+}
+
+/**
+ * Kiwi's animation in the chat status line ships behind a build-time switch
+ * (the Stage 1 brief, G14), the first of three levels: the deployment, then the
+ * device's reduced-motion setting, then the Display menu's Kiwi animation switch.
+ * Off here means the status line shows Kiwi standing still and the Display menu
+ * hides the switch.
+ */
+export function mascotMotionEnabled(): boolean {
+  return import.meta.env.VITE_ENABLE_MASCOT_MOTION === "true";
+}

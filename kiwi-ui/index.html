@@ -9,7 +9,28 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/manifest.webmanifest" />
-  <meta name="theme-color" content="#3f7d58" />
+  <!-- The browser chrome reads these before any stylesheet: --surface per scheme (kiwi-ui/DESIGN.md, Raw-colour guard). -->
+  <meta name="theme-color" content="#fdfbfb" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#22221f" media="(prefers-color-scheme: dark)" />
+  <script>
+    // Sets the colour scheme before the first paint, so a dark page never flashes
+    // light. MUI's provider sets the same attribute from the same stored choice
+    // once React mounts (src/theme/displayPreferences.tsx, THEME_MODE_STORAGE_KEY).
+    (function () {
+      var mode = "light";
+      if ("%VITE_ENABLE_DARK_MODE%" === "true") {
+        try {
+          mode = window.localStorage.getItem("kiwi-theme-mode") || "system";
+        } catch (error) {
+          mode = "system"; // storage is blocked: follow the device
+        }
+        if (mode === "system") {
+          mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+      }
+      document.documentElement.setAttribute("data-theme", mode === "dark" ? "dark" : "light");
+    })();
+  </script>
 </head>
 
 <body>

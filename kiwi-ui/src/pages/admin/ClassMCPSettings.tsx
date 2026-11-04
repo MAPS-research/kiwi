@@ -422,19 +422,6 @@ export const ClassMCPSettings: React.FC = () => {
     }
   };
 
-  const getTransportChipColor = (transport: string) => {
-    switch (transport) {
-      case "http":
-        return "primary";
-      case "sse":
-        return "secondary";
-      case "stdio":
-        return "default";
-      default:
-        return "default";
-    }
-  };
-
   // Get unassigned global servers for the modal
   const getUnassignedServers = () => {
     const assignedIds = new Set(assignedServers.map((s) => s.mcpServerId));
@@ -561,7 +548,7 @@ export const ClassMCPSettings: React.FC = () => {
                   <TableRow key={assignment.id}>
                     <TableCell>
                       <Typography variant="body2" sx={{
-                        fontWeight: 500
+                        fontWeight: 600
                       }}>
                         {assignment.displayName || assignment.mcpServer.name}
                       </Typography>
@@ -577,7 +564,6 @@ export const ClassMCPSettings: React.FC = () => {
                       <Chip
                         label={assignment.mcpServer.transport.toUpperCase()}
                         size="small"
-                        color={getTransportChipColor(assignment.mcpServer.transport)}
                       />
                     </TableCell>
                     <TableCell>
@@ -724,7 +710,6 @@ export const ClassMCPSettings: React.FC = () => {
                           <Chip
                             label={server.transport.toUpperCase()}
                             size="small"
-                            color={getTransportChipColor(server.transport)}
                           />
                           {!server.isActive && (
                             <Chip label="Inactive" size="small" color="default" />

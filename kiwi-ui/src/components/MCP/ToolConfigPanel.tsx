@@ -31,19 +31,6 @@ export const ToolConfigPanel: React.FC<ToolConfigPanelProps> = ({
   onToolToggle,
   onRefresh,
 }) => {
-  const getToolTypeColor = (toolType: string) => {
-    switch (toolType) {
-      case "RAG":
-        return "primary";
-      case "CodeInterpreter":
-        return "secondary";
-      case "MCP":
-        return "warning";
-      default:
-        return "default";
-    }
-  };
-
   const getToolTypeLabel = (toolType: string) => {
     switch (toolType) {
       case "RAG":
@@ -131,7 +118,7 @@ export const ToolConfigPanel: React.FC<ToolConfigPanelProps> = ({
 
     return (
       <Box sx={{ mb: 4 }}>
-        <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 500 }}>
+        <Typography variant="subtitle1" gutterBottom>
           {title}
         </Typography>
         <TableContainer component={Paper} variant="outlined">
@@ -152,7 +139,7 @@ export const ToolConfigPanel: React.FC<ToolConfigPanelProps> = ({
                   <TableRow key={tool.id}>
                     <TableCell>
                       <Typography variant="body2" sx={{
-                        fontWeight: 500
+                        fontWeight: 600
                       }}>
                         {tool.toolName}
                       </Typography>
@@ -165,10 +152,10 @@ export const ToolConfigPanel: React.FC<ToolConfigPanelProps> = ({
                       )}
                     </TableCell>
                     <TableCell>
+                      {/* A category is a neutral role chip: no hue, no status colour. */}
                       <Chip
                         label={getToolTypeLabel(tool.toolType)}
                         size="small"
-                        color={getToolTypeColor(tool.toolType) as any}
                       />
                     </TableCell>
                     <TableCell>
@@ -179,7 +166,6 @@ export const ToolConfigPanel: React.FC<ToolConfigPanelProps> = ({
                               key={ct}
                               label={ct}
                               size="small"
-                              variant="outlined"
                             />
                           ))
                         ) : (
@@ -192,7 +178,7 @@ export const ToolConfigPanel: React.FC<ToolConfigPanelProps> = ({
                       </Box>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2">{tool.priority}</Typography>
+                      <Typography variant="body2" sx={{ fontVariantNumeric: "tabular-nums" }}>{tool.priority}</Typography>
                     </TableCell>
                     <TableCell align="right">
                       <Tooltip

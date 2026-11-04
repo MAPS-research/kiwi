@@ -133,7 +133,7 @@ export const MaterialSlot: React.FC<SlotProps> = ({
             // A recitation with no answer key is the state this whole redesign
             // exists to make visible: the tutor is answering from the questions.
             color={
-              role === "REFERENCE" ? "text.secondary" : "error.main"
+              role === "REFERENCE" ? "text.secondary" : "var(--status-error-text)"
             }
           >
             {emptyCopy ?? "None"}

@@ -3,36 +3,40 @@ import { Paper } from "@mui/material";
 
 interface FormCardProps {
   children: React.ReactNode;
+  /**
+   * "glass" and "solid" both draw the sheet now: the glass card on a photo is
+   * retired (DESIGN.md, Hand-off: MUI grey and common; TD-19, SF-63). "plain"
+   * draws no surface of its own.
+   */
   appearance?: "glass" | "solid" | "plain";
 }
 
+/**
+ * The card a centred auth page (S-08) sits in: a sheet on the canvas with a
+ * 1 px edge and the 8 px sheet radius; inline, so it casts no shadow.
+ */
 const FormCard: React.FC<FormCardProps> = ({ children, appearance = "glass" }) => {
-  const isSolid = appearance === "solid";
   const isPlain = appearance === "plain";
 
   return (
     <Paper
       component="main"
-      elevation={isPlain ? 0 : isSolid ? 6 : 12}
+      elevation={0}
       sx={{
         width: "100%",
         maxWidth: isPlain ? 420 : "none",
-        py: isPlain ? 0 : { xs: 4, sm: 5 },
-        px: isPlain ? 0 : { xs: 3, sm: 5 },
-        borderRadius: isPlain ? 0 : { xs: 3, sm: 4 },
-        border: isSolid ? "1px solid rgba(255, 255, 255, 0.72)" : "none",
-        bgcolor: isPlain ? "transparent" : isSolid ? "rgba(255, 255, 255, 0.96)" : "rgba(255, 255, 255, 0.2)",
-        backdropFilter: isPlain ? "none" : isSolid ? "blur(20px)" : "blur(12px)",
-        boxShadow: isPlain
-          ? "none"
-          : isSolid
-          ? "0 24px 64px rgba(27, 10, 38, 0.28)"
-          : 3,
-        color: isPlain || isSolid ? "text.primary" : "common.white",
+        boxSizing: "border-box",
+        py: isPlain ? 0 : "var(--space-6)",
+        px: isPlain ? 0 : { xs: "var(--space-5)", sm: "var(--space-6)" },
+        borderRadius: isPlain ? 0 : "var(--radius-sheet)",
+        border: isPlain ? "none" : "1px solid var(--border)",
+        bgcolor: isPlain ? "transparent" : "background.paper",
+        boxShadow: "none",
+        color: "text.primary",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: isPlain || isSolid ? 0 : 2,
+        gap: isPlain ? 0 : "var(--space-4)",
       }}
     >
       {children}

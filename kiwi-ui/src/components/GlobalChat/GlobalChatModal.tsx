@@ -5,7 +5,6 @@ import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import ViewSidebarIcon from '@mui/icons-material/ViewSidebar';
 import WebAssetIcon from '@mui/icons-material/WebAsset';
 import {
-  Backdrop,
   Box,
   IconButton,
   Paper,
@@ -15,10 +14,10 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useId, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { ChatDisplayMode } from '../../context/GlobalChatContext.tsx';
-import { useGlobalChat } from '../../context/GlobalChatContext.tsx';
+import { MAX_PANEL_WIDTH, MIN_PANEL_WIDTH, useGlobalChat } from '../../context/GlobalChatContext.tsx';
 import type { NavigationAction } from '../../services/models/NavigationAction.ts';
 import ChatCore from '../Chat/ChatCore.tsx';
 import { TOP_NAV_HEIGHT } from '../TopNav/TopNav.tsx';
@@ -115,6 +114,30 @@ export const GlobalChatModal: React.FC = () => {
 
   // On mobile, always use fullscreen
   const effectiveMode = isMobile ? 'fullscreen' : displayMode;
+  const titleId = useId();
+
+  // Opening the panel takes the student to its composer, as a dialog takes focus on open
+  // (DESIGN.md, Dialogs). Only an open that happens now moves focus: a panel that is
+  // already open when the page loads, or stays open across a navigation, does not.
+  const panelRef = useRef<HTMLElement | null>(null);
+  const wasOpenRef = useRef(isOpen);
+  useEffect(() => {
+    const opened = isOpen && !wasOpenRef.current;
+    wasOpenRef.current = isOpen;
+    if (!opened) return undefined;
+    const timer = window.setTimeout(() => {
+      panelRef.current?.querySelector<HTMLTextAreaElement>('textarea')?.focus();
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [isOpen]);
+
+  /** Closes the panel and hands focus back to the launcher (it reappears once the panel has gone). */
+  const closePanel = useCallback(() => {
+    closeChat();
+    window.setTimeout(() => {
+      document.querySelector<HTMLElement>('[data-kiwi-launcher]')?.focus();
+    }, 0);
+  }, [closeChat]);
 
   // Drag-to-resize for snap/sidepanel modes: the handle on the panel's left
   // edge captures the pointer and maps cursor X to panel width. Same pointer-
@@ -138,7 +161,31 @@ export const GlobalChatModal: React.FC = () => {
     setIsResizingPanel(false);
   }, [setIsResizingPanel]);
 
+  // The separator also moves by keyboard: arrows 16 px (64 with Shift), Home
+  // and End to the limits. The panel sits on the right, so ArrowLeft widens it;
+  // setPanelWidth clamps to the 320-800 px range.
+  const handleResizeKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    const step = e.shiftKey ? 64 : 16;
+    const next =
+      e.key === 'ArrowLeft' ? Math.min(panelWidth + step, window.innerWidth - MIN_CONTENT_WIDTH)
+        : e.key === 'ArrowRight' ? panelWidth - step
+          : e.key === 'Home' ? MIN_PANEL_WIDTH
+            : e.key === 'End' ? Math.min(MAX_PANEL_WIDTH, window.innerWidth - MIN_CONTENT_WIDTH)
+              : null;
+    if (next === null) return;
+    e.preventDefault();
+    setPanelWidth(next);
+  }, [panelWidth, setPanelWidth]);
+
   const isResizableMode = effectiveMode === 'snap' || effectiveMode === 'sidepanel';
+
+  // Only opacity and transform move: the panel fades and travels 8 px (side and
+  // modal) or scales from 0.98 (fullscreen); exits are shorter than entries.
+  const motion = isResizingPanel
+    ? 'none'
+    : isOpen
+      ? 'opacity var(--motion-standard) var(--motion-ease-enter), transform var(--motion-standard) var(--motion-ease-enter), visibility 0s'
+      : 'opacity var(--motion-exit) var(--motion-ease-exit), transform var(--motion-exit) var(--motion-ease-exit), visibility 0s linear var(--motion-exit)';
 
   // Compute container styles based on mode
   const getContainerStyles = () => {
@@ -147,18 +194,16 @@ export const GlobalChatModal: React.FC = () => {
       display: 'flex',
       flexDirection: 'column' as const,
       zIndex: theme.zIndex.modal,
-      bgcolor: 'background.paper',
-      // No transition while dragging the resize handle, so the panel tracks
-      // the cursor instead of easing toward it.
-      transition: isResizingPanel
-        ? 'none'
-        : theme.transitions.create(['transform', 'width', 'height', 'top', 'left', 'right', 'bottom', 'border-radius'], {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
+      bgcolor: 'var(--surface)',
+      color: 'var(--text)',
+      backgroundImage: 'none',
+      transition: motion,
+      opacity: isOpen ? 1 : 0,
+      visibility: isOpen ? 'visible' as const : 'hidden' as const,
     };
 
     if (effectiveMode === 'snap') {
+      // Docked: it meets the viewport's square edge and casts no shadow.
       return {
         ...baseStyles,
         top: 0,
@@ -168,10 +213,9 @@ export const GlobalChatModal: React.FC = () => {
         maxWidth: '100vw',
         height: '100vh',
         borderRadius: 0,
-        borderLeft: `1px solid ${theme.palette.divider}`,
+        borderLeft: '1px solid var(--border)',
         boxShadow: 'none',
-        transform: isOpen ? 'translateX(0)' : `translateX(${panelWidth}px)`,
-        visibility: isOpen ? 'visible' as const : 'hidden' as const,
+        transform: isOpen ? 'translateX(0)' : 'translateX(8px)',
       };
     }
 
@@ -185,9 +229,8 @@ export const GlobalChatModal: React.FC = () => {
         width: '100vw',
         height: '100vh',
         borderRadius: 0,
-        transform: isOpen ? 'scale(1)' : 'scale(0.95)',
-        opacity: isOpen ? 1 : 0,
-        visibility: isOpen ? 'visible' as const : 'hidden' as const,
+        boxShadow: 'none',
+        transform: isOpen ? 'scale(1)' : 'scale(0.98)',
       };
     }
 
@@ -201,9 +244,9 @@ export const GlobalChatModal: React.FC = () => {
         maxWidth: '100vw',
         height: '100vh',
         borderRadius: 0,
-        boxShadow: theme.shadows[8],
-        transform: isOpen ? 'translateX(0)' : `translateX(${panelWidth}px)`,
-        visibility: isOpen ? 'visible' as const : 'hidden' as const,
+        borderLeft: '1px solid var(--border)',
+        boxShadow: 'var(--shadow-2)',
+        transform: isOpen ? 'translateX(0)' : 'translateX(8px)',
       };
     }
 
@@ -212,143 +255,145 @@ export const GlobalChatModal: React.FC = () => {
       ...baseStyles,
       top: '50%',
       left: '50%',
-      width: '100%',
-      maxWidth: 900,
+      width: 'min(900px, calc(100% - 24px))',
       height: '80vh',
       maxHeight: '80vh',
-      borderRadius: 2,
-      boxShadow: theme.shadows[24],
-      transform: isOpen ? 'translate(-50%, -50%) scale(1)' : 'translate(-50%, -50%) scale(0.95)',
-      opacity: isOpen ? 1 : 0,
-      visibility: isOpen ? 'visible' as const : 'hidden' as const,
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--radius-sheet)',
+      boxShadow: 'var(--shadow-2)',
+      transform: isOpen ? 'translate(-50%, -50%)' : 'translate(-50%, calc(-50% + 8px))',
     };
   };
+
+  const modeButton = (mode: ChatDisplayMode, label: string, icon: React.ReactNode) => (
+    <Tooltip title={label}>
+      <IconButton aria-label={label} aria-pressed={displayMode === mode} onClick={() => handleSetMode(mode)}>
+        {icon}
+      </IconButton>
+    </Tooltip>
+  );
 
   // Header with mode toggle buttons
   const renderHeader = () => (
     <Box
+      data-density="compact"
       sx={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        px: 2,
+        pl: 2,
+        pr: 1,
         // Match TopNav so the divider lines up in snap/sidepanel modes.
         height: TOP_NAV_HEIGHT,
-        borderBottom: 1,
-        borderColor: 'divider',
+        boxSizing: 'border-box',
+        borderBottom: '1px solid var(--border-subtle)',
         flexShrink: 0,
-        bgcolor: 'background.paper',
       }}
     >
-      <Typography variant="h6" component="span" sx={{ ml: 0.7 }}>
-        Kiwi Chat
+      <Typography
+        id={titleId}
+        component="h2"
+        sx={{
+          m: 0,
+          fontFamily: 'var(--type-section-title-family)',
+          fontSize: 'var(--type-section-title-size)',
+          lineHeight: 'var(--type-section-title-leading)',
+          fontWeight: 'var(--type-section-title-weight)',
+          color: 'var(--text)',
+        }}
+      >
+        Kiwi chat
       </Typography>
-      <Box>
-        <Tooltip title="Modal view">
-          <IconButton
-            aria-label="modal view"
-            onClick={() => handleSetMode('modal')}
-            color={displayMode === 'modal' ? 'primary' : 'default'}
-            size="small"
-            sx={{ mr: 0.5 }}
-          >
-            <WebAssetIcon />
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)' }}>
+        {!isMobile && (
+          <>
+            {modeButton('modal', 'Show as modal', <WebAssetIcon />)}
+            {modeButton('sidepanel', 'Show as side panel', <ViewSidebarIcon />)}
+            {modeButton('snap', 'Snap to side', <DockIcon />)}
+            <Tooltip title={displayMode === 'fullscreen' ? 'Exit fullscreen' : 'Fullscreen'}>
+              <IconButton
+                aria-label={displayMode === 'fullscreen' ? 'Exit fullscreen' : 'Fullscreen'}
+                onClick={() => handleSetMode(displayMode === 'fullscreen' ? 'modal' : 'fullscreen')}
+              >
+                {displayMode === 'fullscreen' ? <FullscreenExitIcon /> : <FullscreenIcon />}
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
+        <Tooltip title="Close chat">
+          <IconButton aria-label="Close chat" onClick={closePanel}>
+            <CloseIcon />
           </IconButton>
         </Tooltip>
-        <Tooltip title="Side panel">
-          <IconButton
-            aria-label="side panel view"
-            onClick={() => handleSetMode('sidepanel')}
-            color={displayMode === 'sidepanel' ? 'primary' : 'default'}
-            size="small"
-            sx={{ mr: 0.5 }}
-          >
-            <ViewSidebarIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Snap to side">
-          <IconButton
-            aria-label="snap to side"
-            onClick={() => handleSetMode('snap')}
-            color={displayMode === 'snap' ? 'primary' : 'default'}
-            size="small"
-            sx={{ mr: 0.5 }}
-          >
-            <DockIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title={displayMode === 'fullscreen' ? "Exit fullscreen" : "Fullscreen"}>
-          <IconButton
-            aria-label={displayMode === 'fullscreen' ? "exit fullscreen" : "fullscreen view"}
-            onClick={() => handleSetMode(displayMode === 'fullscreen' ? 'modal' : 'fullscreen')}
-            color={displayMode === 'fullscreen' ? 'primary' : 'default'}
-            size="small"
-            sx={{ mr: 1 }}
-          >
-            {displayMode === 'fullscreen' ? <FullscreenExitIcon /> : <FullscreenIcon />}
-          </IconButton>
-        </Tooltip>
-        <IconButton aria-label="close" onClick={closeChat}>
-          <CloseIcon />
-        </IconButton>
       </Box>
     </Box>
   );
 
   return (
     <Portal>
-      {/* Backdrop - shown for modal and sidepanel modes */}
-      <Backdrop
-        open={isOpen && effectiveMode !== 'fullscreen' && effectiveMode !== 'snap'}
-        onClick={closeChat}
-        sx={{
-          zIndex: theme.zIndex.modal - 1,
-          backgroundColor: effectiveMode === 'sidepanel'
-            ? 'rgba(0, 0, 0, 0.3)'
-            : 'rgba(0, 0, 0, 0.5)',
-        }}
-      />
+      {/* No backdrop in any mode: students read the PDF while they ask, so the page
+          behind keeps its colours and stays usable (the user's decision of
+          2026-10-19). Escape and Close chat still close the panel. */}
 
       {/* Single container that changes shape based on mode */}
       <Paper
-        elevation={effectiveMode === 'modal' ? 24 : 8}
+        component="aside"
+        ref={panelRef}
+        aria-labelledby={titleId}
+        elevation={0}
         sx={getContainerStyles()}
+        onKeyDown={(e: React.KeyboardEvent) => {
+          // Escape inside the panel closes it and returns focus to the launcher.
+          // The composer stops an answer on Escape first and keeps the key to itself.
+          if (e.key === 'Escape' && isOpen && !e.defaultPrevented) closePanel();
+        }}
       >
         {/* Drag handle on the left edge to resize the panel (snap/sidepanel) */}
         {isResizableMode && (
           <Box
+            role="separator"
+            aria-orientation="vertical"
+            aria-label="Resize chat panel"
+            aria-valuemin={MIN_PANEL_WIDTH}
+            aria-valuemax={MAX_PANEL_WIDTH}
+            aria-valuenow={Math.round(panelWidth)}
+            tabIndex={0}
             onPointerDown={handleResizePointerDown}
             onPointerMove={handleResizePointerMove}
             onPointerUp={handleResizePointerUp}
-            aria-label="resize chat panel"
+            onKeyDown={handleResizeKeyDown}
             sx={{
+              // Centred on the panel's left border; the bar is the ::before, and
+              // keyboard focus outlines the bar rather than the 14 px hit strip.
               position: 'absolute',
               top: 0,
-              left: -7,
-              width: 14,
-              height: '100%',
+              bottom: 0,
+              left: 'calc(-1 * var(--border-width-interactive) / 2)',
+              transform: 'translateX(-50%)',
+              width: '14px',
               cursor: 'col-resize',
               touchAction: 'none',
               zIndex: 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              '&:hover .resize-grip, &:active .resize-grip': {
-                bgcolor: 'primary.main',
+              '@media (pointer: coarse)': { width: 'var(--size-hit-control)' },
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                width: '4px',
+                height: '48px',
+                transform: 'translate(-50%, -50%)',
+                borderRadius: 'var(--radius-control)',
+                backgroundColor: 'var(--border-interactive)',
+              },
+              '&:hover::before, &:active::before': { backgroundColor: 'var(--accent-solid)' },
+              '&:focus-visible': { outline: 0 },
+              '&:focus-visible::before': {
+                outline: 'var(--border-width-focus) solid var(--focus-ring)',
+                outlineOffset: 'var(--size-focus-offset)',
               },
             }}
-          >
-            <Box
-              className="resize-grip"
-              sx={{
-                width: 4,
-                height: 48,
-                borderRadius: 2,
-                bgcolor: 'divider',
-                transition: 'background-color 0.15s',
-              }}
-            />
-          </Box>
+          />
         )}
         {renderHeader()}
         <Box

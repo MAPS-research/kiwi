@@ -62,6 +62,7 @@ const renderWithProviders = (component: React.ReactElement) => {
   );
 };
 
+const pageHeading = () => screen.getByRole("heading", { level: 1, name: "Edit class" });
 
 describe("ClassEdit", () => {
   beforeEach(() => {
@@ -73,16 +74,19 @@ describe("ClassEdit", () => {
 
   it("renders without crashing", async () => {
     renderWithProviders(<ClassEdit />);
-    
+
     await waitFor(() => {
-      expect(screen.getByText("Edit Class")).toBeInTheDocument();
+      expect(pageHeading()).toBeInTheDocument();
     });
+    expect(
+      screen.getByText("Update the class details, cover image and instructions for Kiwi.")
+    ).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Back to Class" })).not.toBeInTheDocument();
   });
 
   it("loads and displays class data", async () => {
     renderWithProviders(<ClassEdit />);
-    
+
     await waitFor(() => {
       expect(screen.getByDisplayValue("Test Class")).toBeInTheDocument();
       expect(screen.getByDisplayValue("Dr. Test")).toBeInTheDocument();
@@ -91,41 +95,67 @@ describe("ClassEdit", () => {
     });
   });
 
+  it("labels the fields above them, in the class's own words, without typed asterisks", async () => {
+    renderWithProviders(<ClassEdit />);
+
+    await waitFor(() => {
+      expect(screen.getByDisplayValue("Test Class")).toBeInTheDocument();
+    });
+
+    const className = screen.getByRole("textbox", { name: "Class name" });
+    expect(className).toHaveValue("Test Class");
+    expect(className).toBeRequired();
+    expect(screen.getByRole("textbox", { name: "Instructor name" })).toHaveValue("Dr. Test");
+    expect(screen.getByRole("textbox", { name: "Instructor email" })).toHaveValue("test.professor@example.edu");
+    expect(screen.queryByText("*")).not.toBeInTheDocument();
+  });
+
+  it("frames the form as sections named by their titles", async () => {
+    renderWithProviders(<ClassEdit />);
+
+    await waitFor(() => {
+      expect(screen.getByDisplayValue("Test Class")).toBeInTheDocument();
+    });
+
+    expect(screen.getByRole("region", { name: "Basic information" })).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Cover image" })).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Class-specific instructions" })).toBeInTheDocument();
+    expect(screen.getByText("Used as the cover image on the class card.")).toBeInTheDocument();
+  });
+
   it("shows a live ClassCard preview without section cards", async () => {
-    const { container } = renderWithProviders(<ClassEdit />);
+    renderWithProviders(<ClassEdit />);
 
     await waitFor(() => {
       expect(screen.getByText("Class preview")).toBeInTheDocument();
       expect(screen.getByText("Test Class")).toBeInTheDocument();
       expect(screen.getByText("Dr. Test")).toBeInTheDocument();
-      const previewCard = screen.getByText("Test Class").closest<HTMLElement>(".MuiCard-root");
-      expect(
-        within(previewCard!).queryByText("test.professor@example.edu"),
-      ).not.toBeInTheDocument();
-      expect(
-        within(previewCard!).queryByText("A test class description"),
-      ).not.toBeInTheDocument();
     });
 
-    expect(container.querySelectorAll(".MuiCard-root")).toHaveLength(1);
-    expect(container.querySelector(".MuiCard-root")).toHaveAttribute("tabindex", "0");
     const formColumn = screen.getByTestId("class-form-column");
     const previewColumn = screen.getByTestId("class-preview-column");
+    // The card shows the name and the instructor, not the email or the description.
+    expect(within(previewColumn).getByText("Test Class")).toBeInTheDocument();
+    expect(within(previewColumn).getByText("Dr. Test")).toBeInTheDocument();
+    expect(within(previewColumn).queryByText("test.professor@example.edu")).not.toBeInTheDocument();
+    expect(within(previewColumn).queryByText("A test class description")).not.toBeInTheDocument();
+    // The form's sections sit on the canvas: no card or panel around them.
+    expect(formColumn.querySelector(".MuiCard-root, .MuiPaper-root")).toBeNull();
     expect(within(formColumn).getByRole("button", { name: "Cancel" })).toBeInTheDocument();
-    expect(within(formColumn).getByRole("button", { name: "Save Changes" })).toBeInTheDocument();
-    expect(within(previewColumn).getByText("Class preview")).toBeInTheDocument();
+    expect(within(formColumn).getByRole("button", { name: "Save changes" })).toBeInTheDocument();
+    expect(within(previewColumn).getByText("This is how the class appears in the class list.")).toBeInTheDocument();
     expect(within(previewColumn).queryByRole("button")).not.toBeInTheDocument();
 
     fireEvent.change(screen.getByLabelText(/class name/i), {
       target: { value: "Updated Class" },
     });
 
-    expect(screen.getByText("Updated Class")).toBeInTheDocument();
+    expect(within(previewColumn).getByText("Updated Class")).toBeInTheDocument();
   });
 
   it("shows the class-specific instructions when set", async () => {
     renderWithProviders(<ClassEdit />);
-    
+
     await waitFor(() => {
       expect(screen.getByLabelText("Instructions")).toHaveValue("Test default message");
     });
@@ -143,7 +173,7 @@ describe("ClassEdit", () => {
 
   it("handles form submission", async () => {
     renderWithProviders(<ClassEdit />);
-    
+
     await waitFor(() => {
       expect(screen.getByDisplayValue("Test Class")).toBeInTheDocument();
     });
@@ -170,13 +200,58 @@ describe("ClassEdit", () => {
         },
       });
     });
+    expect(await screen.findByText("Class saved")).toBeInTheDocument();
+  });
+
+  it("marks Save as busy while the class saves and ignores a second press", async () => {
+    let resolveSave: (value: unknown) => void = () => undefined;
+    mockApiClient.classControllerUpdateMetadata.mockImplementation(
+      () => new Promise((resolve) => {
+        resolveSave = resolve;
+      }) as never
+    );
+
+    renderWithProviders(<ClassEdit />);
+
+    await waitFor(() => {
+      expect(screen.getByDisplayValue("Test Class")).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Save changes" }));
+
+    const busy = await screen.findByRole("button", { name: "Saving…" });
+    expect(busy).toHaveAttribute("aria-busy", "true");
+    fireEvent.click(busy);
+    expect(mockApiClient.classControllerUpdateMetadata).toHaveBeenCalledTimes(1);
+
+    resolveSave({ classId: "test-class-123" });
+    expect(await screen.findByText("Class saved")).toBeInTheDocument();
+  });
+
+  it("keeps the form and says so when the class cannot be saved", async () => {
+    mockApiClient.classControllerUpdateMetadata.mockRejectedValue(new Error("API Error"));
+
+    renderWithProviders(<ClassEdit />);
+
+    await waitFor(() => {
+      expect(screen.getByDisplayValue("Test Class")).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Save changes" }));
+
+    expect(
+      await screen.findByText(
+        "Couldn't save the class. The server didn't respond as expected. Your changes are still in the form. Check the details and try again."
+      )
+    ).toBeInTheDocument();
+    expect(screen.getByDisplayValue("Test Class")).toBeInTheDocument();
   });
 
   it("navigates back when cancel is clicked", async () => {
     renderWithProviders(<ClassEdit />);
-    
+
     await waitFor(() => {
-      expect(screen.getByText("Edit Class")).toBeInTheDocument();
+      expect(pageHeading()).toBeInTheDocument();
     });
 
     const cancelButton = screen.getByRole("button", { name: /cancel/i });
@@ -188,7 +263,7 @@ describe("ClassEdit", () => {
 
   it("allows toggling system prompts on and off", async () => {
     renderWithProviders(<ClassEdit />);
-    
+
     await waitFor(() => {
       expect(screen.getByDisplayValue("Test default message")).toBeInTheDocument();
     });
@@ -199,24 +274,28 @@ describe("ClassEdit", () => {
     await waitFor(() => {
       expect(screen.queryByDisplayValue("Test default message")).not.toBeInTheDocument();
     });
+    expect(screen.getByText("Kiwi uses only its built-in instructions for this class.")).toBeInTheDocument();
   });
 
   it("handles API errors gracefully", async () => {
     mockApiClient.classControllerGetByIdComplete.mockRejectedValue(new Error("API Error"));
-    
+
     renderWithProviders(<ClassEdit />);
-    
+
     await waitFor(() => {
-      expect(screen.getByText("Failed to load class data. Please try again.")).toBeInTheDocument();
+      expect(
+        screen.getByText("Couldn't load the class. The server didn't respond as expected. Reload the page to try again.")
+      ).toBeInTheDocument();
     });
   });
 
   it("shows loading state initially", () => {
     mockApiClient.classControllerGetByIdComplete.mockImplementation(() => new Promise(() => {})); // Never resolves
-    
+
     renderWithProviders(<ClassEdit />);
-    
-    expect(screen.getByText("Loading class data...")).toBeInTheDocument();
+
+    expect(screen.getByRole("status")).toHaveTextContent("Loading class details…");
+    expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
   });
 
   it("handles class data without system prompts", async () => {
@@ -231,9 +310,9 @@ describe("ClassEdit", () => {
       },
     };
     mockApiClient.classControllerGetByIdComplete.mockResolvedValue(classDataWithoutPrompts);
-    
+
     renderWithProviders(<ClassEdit />);
-    
+
     await waitFor(() => {
       expect(screen.getByDisplayValue("Test Class")).toBeInTheDocument();
     });

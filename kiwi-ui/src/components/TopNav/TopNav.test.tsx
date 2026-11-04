@@ -1,63 +1,84 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { BrowserRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import TopNav from './TopNav.tsx';
 
+type TestUser = { systemRole?: string; isAdmin?: boolean } | null;
+
+const auth = vi.hoisted(() => ({ user: null as TestUser }));
+
+vi.mock('../../auth/AuthContext.tsx', () => ({
+  useAuth: () => ({ user: auth.user }),
+}));
+
 const theme = createTheme();
 
-const renderWithProviders = (component: React.ReactElement) => {
+const renderWithProviders = (component: React.ReactElement, path = '/') => {
   return render(
-    <BrowserRouter>
+    <MemoryRouter initialEntries={[path]}>
       <ThemeProvider theme={theme}>
         {component}
       </ThemeProvider>
-    </BrowserRouter>
+    </MemoryRouter>
   );
 };
 
+const classOptions = [
+  { id: 'cs-101', label: 'Introduction to Computer Science' },
+  { id: 'math-201', label: 'Discrete Mathematics' },
+];
+
 describe('TopNav', () => {
-  it('renders without crashing', () => {
+  afterEach(() => {
+    auth.user = null;
+  });
+
+  it('renders the logo as one image named Kiwi', () => {
     renderWithProviders(<TopNav />);
     expect(screen.getByRole('img', { name: 'Kiwi' })).toBeInTheDocument();
   });
 
-  it('displays institution logo with correct link', () => {
+  it('links the logo to the course list on student routes', () => {
     renderWithProviders(<TopNav />);
     const logo = screen.getByRole('img', { name: 'Kiwi' });
     expect(logo.closest('a')).toHaveAttribute('href', '/');
   });
 
-  it('displays the logout icon with a tooltip', async () => {
+  it('links the logo to the admin area on admin routes', () => {
+    renderWithProviders(<TopNav />, '/admin/classes');
+    const logo = screen.getByRole('img', { name: 'Kiwi' });
+    expect(logo.closest('a')).toHaveAttribute('href', '/admin');
+  });
+
+  it('shows the 28 px logo with "Kiwi" beside it', () => {
+    const { container } = renderWithProviders(<TopNav />);
+    const logo = screen.getByRole('img', { name: 'Kiwi' });
+
+    expect(logo).toHaveTextContent('Kiwi');
+    expect(container.querySelector('img')).toHaveAttribute('src', '/assets/images/kiwi-mark.svg');
+    expect(container.querySelector('img')).toHaveStyle({ width: '28px', height: '28px' });
+    expect(logo.closest('a')).toHaveStyle({ display: 'inline-flex', textDecoration: 'none' });
+  });
+
+  it('displays the sign-out icon with a tooltip', async () => {
     const user = userEvent.setup();
     renderWithProviders(<TopNav />);
-    const logoutButton = screen.getByRole('link', { name: 'Logout' });
-    expect(logoutButton).toBeInTheDocument();
-    expect(logoutButton).toHaveAttribute('href', '/logout');
+    const signOut = screen.getByRole('link', { name: 'Sign out' });
+    expect(signOut).toHaveAttribute('href', '/logout');
+    expect(screen.queryByRole('link', { name: 'Logout' })).not.toBeInTheDocument();
 
-    await user.hover(logoutButton);
-    expect(await screen.findByRole('tooltip')).toHaveTextContent('Logout');
+    await user.hover(signOut);
+    expect(await screen.findByRole('tooltip')).toHaveTextContent('Sign out');
   });
 
-  it('has proper navigation bar structure', () => {
-    const { container } = renderWithProviders(<TopNav />);
-    const navbar = container.querySelector('[role="navigation"], .MuiBox-root');
+  it('is comfortable on student routes and compact on admin routes', () => {
+    const { container, unmount } = renderWithProviders(<TopNav />);
+    expect(container.querySelector('header')).toHaveAttribute('data-density', 'comfortable');
+    unmount();
 
-    expect(navbar || container.firstChild).toBeInTheDocument();
-  });
-
-  it('has correct logo container dimensions', () => {
-    renderWithProviders(<TopNav />);
-    const logoImg = screen.getByRole('img', { name: 'Kiwi' });
-    const logoLink = logoImg.closest('a');
-
-    expect(logoImg).toHaveStyle({ width: '144px', height: '32px' });
-
-    expect(logoLink).toHaveStyle({
-      display: 'flex',
-      textDecoration: 'none',
-      alignItems: 'center'
-    });
+    const admin = renderWithProviders(<TopNav />, '/admin/classes');
+    expect(admin.container.querySelector('header')).toHaveAttribute('data-density', 'compact');
   });
 
   it('shows class context beside the logo with a short divider', () => {
@@ -68,28 +89,24 @@ describe('TopNav', () => {
     const divider = screen.getByTestId('top-nav-context-divider');
 
     expect(logo.closest('a')?.nextElementSibling).toBe(divider);
-    expect(divider).toHaveStyle({ width: '1px', height: '24px' });
+    expect(divider).toHaveAttribute('aria-hidden', 'true');
+    expect(divider).toHaveStyle({ width: '1px' });
     expect(className).toHaveAttribute('title', 'Introduction to Computer Science');
   });
 
-  it('left-aligns the logo in a fixed brand area aligned with the sidebar', () => {
+  it('keeps the class context next to the logo even when a brand area width is passed', () => {
     renderWithProviders(
-      <TopNav
-        brandAreaWidth={220}
-        contextLabel="Introduction to Computer Science"
-      />,
+      <TopNav brandAreaWidth={220} contextLabel="Introduction to Computer Science" />,
     );
 
-    const logo = screen.getByRole('img', { name: 'Kiwi' });
-    const logoLink = logo.closest('a');
-    const divider = screen.getByTestId('top-nav-context-divider');
+    const logoLink = screen.getByRole('img', { name: 'Kiwi' }).closest('a');
+    expect(logoLink).not.toHaveStyle({ width: '220px' });
+    expect(logoLink?.nextElementSibling).toBe(screen.getByTestId('top-nav-context-divider'));
+  });
 
-    expect(logoLink).toHaveStyle({
-      width: '220px',
-      justifyContent: 'flex-start',
-      paddingLeft: '16px',
-    });
-    expect(divider).toHaveStyle({ marginLeft: '0px' });
+  it('shows a loading placeholder while the class name loads', () => {
+    renderWithProviders(<TopNav contextLoading />);
+    expect(screen.getByLabelText('Loading class name')).toBeInTheDocument();
   });
 
   it('searches and switches classes from the context dropdown', async () => {
@@ -100,19 +117,17 @@ describe('TopNav', () => {
       <TopNav
         contextLabel="Introduction to Computer Science"
         selectedClassId="cs-101"
-        classOptions={[
-          { id: 'cs-101', label: 'Introduction to Computer Science' },
-          { id: 'math-201', label: 'Discrete Mathematics' },
-        ]}
+        classOptions={classOptions}
         onClassChange={onClassChange}
       />,
     );
 
     const switcher = screen.getByRole('button', {
-      name: 'Switch class scope. Current selection: Introduction to Computer Science',
+      name: 'Switch class. Current: Introduction to Computer Science',
     });
     await user.click(switcher);
     const search = screen.getByRole('textbox', { name: 'Search classes' });
+    expect(search).toHaveAttribute('placeholder', 'Search classes');
     expect(
       screen.getByRole('option', { name: /Introduction to Computer Science/ }),
     ).toHaveAttribute('aria-selected', 'true');
@@ -130,16 +145,13 @@ describe('TopNav', () => {
       <TopNav
         contextLabel="Introduction to Computer Science"
         selectedClassId="cs-101"
-        classOptions={[
-          { id: 'cs-101', label: 'Introduction to Computer Science' },
-          { id: 'math-201', label: 'Discrete Mathematics' },
-        ]}
+        classOptions={classOptions}
         onClassChange={vi.fn()}
       />,
     );
 
     const switcher = screen.getByRole('button', {
-      name: 'Switch class scope. Current selection: Introduction to Computer Science',
+      name: 'Switch class. Current: Introduction to Computer Science',
     });
     await user.click(switcher);
     expect(screen.getByRole('textbox', { name: 'Search classes' })).toHaveFocus();
@@ -156,20 +168,75 @@ describe('TopNav', () => {
     expect(switcher).toHaveFocus();
   });
 
-  it('logout button has an accessible icon target', () => {
-    renderWithProviders(<TopNav />);
-    const logoutButton = screen.getByRole('link', { name: 'Logout' });
+  it('offers the create action in the switcher to admins only', async () => {
+    const user = userEvent.setup();
+    auth.user = { systemRole: 'admin' };
+    renderWithProviders(
+      <TopNav
+        contextLabel="Introduction to Computer Science"
+        selectedClassId="cs-101"
+        classOptions={classOptions}
+        onClassChange={vi.fn()}
+      />,
+      '/admin/class/cs-101',
+    );
 
-    expect(logoutButton).toHaveStyle({
-      width: '44px',
-      height: '44px',
-    });
+    await user.click(screen.getByRole('button', { name: /^Switch class\. Current:/ }));
+    expect(screen.getByRole('button', { name: 'Create class' })).toBeInTheDocument();
   });
 
-  it('has responsive design elements', () => {
+  it('names the view switch in sentence case for admins on student routes', () => {
+    auth.user = { systemRole: 'admin' };
     renderWithProviders(<TopNav />);
-    // Test that key elements are present for responsive design
-    expect(screen.getByRole('img', { name: 'Kiwi' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Logout' })).toBeInTheDocument();
+
+    expect(screen.getByRole('button', { name: 'Switch to Admin view' })).toBeInTheDocument();
+  });
+
+  it('names the view switch for instructors on student routes', () => {
+    auth.user = { systemRole: 'instructor' };
+    renderWithProviders(<TopNav />);
+
+    expect(screen.getByRole('button', { name: 'Switch to Instructor view' })).toBeInTheDocument();
+  });
+
+  it('orders the right group as the preview does: Display settings, the view switch, Sign out', () => {
+    // Display settings shows when the deployment offers a theme choice.
+    vi.stubEnv('VITE_ENABLE_DARK_MODE', 'true');
+    auth.user = { systemRole: 'instructor' };
+    renderWithProviders(<TopNav />, '/admin/classes');
+
+    const names = ['Display settings', 'Switch to student view', 'Sign out'];
+    const [display, view, signOut] = names.map((name) => screen.getByRole(name === 'Sign out' ? 'link' : 'button', { name }));
+    expect(display.compareDocumentPosition(view) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(view.compareDocumentPosition(signOut) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    vi.unstubAllEnvs();
+  });
+
+  it('offers the student view on admin routes', () => {
+    auth.user = { systemRole: 'instructor' };
+    renderWithProviders(<TopNav />, '/admin/classes');
+
+    expect(screen.getByRole('button', { name: 'Switch to student view' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Switch to Instructor view/ })).not.toBeInTheDocument();
+  });
+
+  it('hides the view switch from students', () => {
+    renderWithProviders(<TopNav />);
+    expect(screen.queryByRole('button', { name: /^Switch to / })).not.toBeInTheDocument();
+  });
+
+  it('opens the navigation drawer from the menu button on admin routes', async () => {
+    const user = userEvent.setup();
+    const onMenuToggle = vi.fn();
+    renderWithProviders(<TopNav onMenuToggle={onMenuToggle} />, '/admin/classes');
+
+    await user.click(screen.getByRole('button', { name: 'Open navigation menu' }));
+    expect(onMenuToggle).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole('button', { name: 'Toggle navigation menu' })).not.toBeInTheDocument();
+  });
+
+  it('has no navigation menu button on student routes', () => {
+    renderWithProviders(<TopNav onMenuToggle={vi.fn()} />);
+    expect(screen.queryByRole('button', { name: 'Open navigation menu' })).not.toBeInTheDocument();
   });
 });

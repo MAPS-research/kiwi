@@ -27,7 +27,7 @@ describe('ResponsiveGrid', () => {
     expect(screen.getByTestId('child-3')).toBeInTheDocument();
   });
 
-  it('applies default minWidth of 310px', () => {
+  it('applies default minWidth of 310px, capped at the container width', () => {
     const { container } = render(
       <ResponsiveGrid>
         <div>Content</div>
@@ -36,7 +36,7 @@ describe('ResponsiveGrid', () => {
 
     const gridContainer = container.firstChild;
     expect(gridContainer).toHaveStyle({
-      gridTemplateColumns: 'repeat(auto-fill, minmax(310px, 1fr))'
+      gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 310px), 1fr))'
     });
   });
 
@@ -49,7 +49,7 @@ describe('ResponsiveGrid', () => {
 
     const gridContainer = container.firstChild;
     expect(gridContainer).toHaveStyle({
-      gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))'
+      gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 250px), 1fr))'
     });
   });
 

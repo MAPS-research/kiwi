@@ -41,7 +41,25 @@ it("allows another search after a text-loading failure", async () => {
     target: { value: "missing" },
   });
   fireEvent.click(screen.getByRole("button", { name: "Find" }));
-  await screen.findByText("Search failed. Try again.");
+  await screen.findByText(
+    "Couldn't search this PDF. The server didn't respond as expected. Try again.",
+  );
   fireEvent.click(screen.getByRole("button", { name: "Find" }));
   await screen.findByText("No matches");
+});
+it("names one matching page in the singular", async () => {
+  const getPage = vi.fn(async () => ({
+    getTextContent: async () => ({ items: [{ str: "unique words" }] }),
+  }));
+  render(
+    <PdfSearch
+      pdf={{ numPages: 1, getPage } as unknown as PdfDocument}
+      onSelect={vi.fn()}
+    />,
+  );
+  fireEvent.change(screen.getByLabelText("Search PDF"), {
+    target: { value: "unique" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Find" }));
+  expect(await screen.findByRole("status")).toHaveTextContent("1 matching page");
 });

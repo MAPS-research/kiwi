@@ -84,6 +84,10 @@ The [documentation index](docs/README.md) covers administration and a
 production checklist, [how prompts work](docs/prompts.md), learning
 experiments, the MCP server, building Kiwi Apps, and backend development.
 
+The UI's design system is in [`kiwi-ui/DESIGN.md`](kiwi-ui/DESIGN.md). To try
+colour changes live on the Kiwi screens before proposing them, open the
+[palette tuner](.design-foundations/palette-tuner/README.md).
+
 ## Configuring Kiwi for your institution
 
 Institution name, logo, support address, SSO email domain

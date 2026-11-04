@@ -1,0 +1,127 @@
+{
+ "about": "Every place that asks the person to confirm, and the rows that carry its words. check-copy.mjs (H16) finds the places with the TypeScript compiler: a Dialog whose title asks a question or starts with a destructive verb or whose confirm button is coloured, the shared DeleteConfirmDialog, and a native confirm(). It fails on a place that is not listed here, on a listed place that is gone, and on a place whose rows do not say whether the action can be undone or how to get it back (C11: the consequence, then permanence, then the way out). The title is a question: a title row's New ends with a question mark, a native confirm's body opens with one, and a kept title (no row) already ends with one in the source.",
+ "dialogs": [
+  {
+   "key": "src/pages/admin/WebhookEventApprovals.tsx:Confirm Approval",
+   "titles": [
+    "A-10.17",
+    "A-10.44"
+   ],
+   "rows": [
+    "A-10.19",
+    "A-10.20",
+    "A-10.21",
+    "A-10.55"
+   ],
+   "what": "Approve one event or the selected events: the action runs, the approval is final, the enrollment can be removed on the class's enroll page."
+  },
+  {
+   "key": "src/pages/admin/WebhookEventApprovals.tsx:Confirm Rejection",
+   "titles": [
+    "A-10.18",
+    "A-10.45"
+   ],
+   "rows": [
+    "A-10.22",
+    "A-10.46"
+   ],
+   "what": "Reject one event or the selected events: the rejection is final."
+  },
+  {
+   "key": "src/pages/admin/WebhookManagement.tsx:Confirm Delete",
+   "titles": [
+    "A-09.08"
+   ],
+   "rows": [
+    "A-09.09"
+   ],
+   "what": "Delete a webhook."
+  },
+  {
+   "key": "src/pages/admin/WebhookManagement.tsx:Regenerate API Token",
+   "titles": [
+    "A-09.15"
+   ],
+   "rows": [
+    "A-09.16",
+    "A-09.78"
+   ],
+   "what": "Replace a webhook's API token: the old one is deleted first and cannot be restored."
+  },
+  {
+   "key": "src/pages/admin/WebhookManagement.tsx:confirm()",
+   "titles": [],
+   "rows": [
+    "A-09.36"
+   ],
+   "what": "Delete an API token (native confirm)."
+  },
+  {
+   "key": "src/pages/admin/KiwiAppsAdmin.tsx:Remove from Whitelist",
+   "titles": [
+    "A-08.36"
+   ],
+   "rows": [
+    "A-08.37"
+   ],
+   "what": "Remove an allowlist entry: deleted outright, the secret goes with it, a new entry takes a new secret."
+  },
+  {
+   "key": "src/pages/admin/KiwiAppsAdmin.tsx:confirm()",
+   "titles": [],
+   "rows": [
+    "A-08.40"
+   ],
+   "what": "Unregister an app (native confirm): deleted with its screens, prompts and class settings."
+  },
+  {
+   "key": "src/pages/admin/ClassKiwiAppsSettings.tsx:Disable App",
+   "titles": [
+    "A-23.18"
+   ],
+   "rows": [
+    "A-23.19"
+   ],
+   "what": "Disable an app for a class: switched off, and it can be enabled again with its settings."
+  },
+  {
+   "key": "src/pages/admin/MCPServerManagement.tsx:Delete MCP Server",
+   "titles": [
+    "A-07.12"
+   ],
+   "rows": [
+    "A-07.13",
+    "A-07.14",
+    "A-07.85"
+   ],
+   "what": "Delete an MCP server (DeleteConfirmDialog): deleted outright with its class assignments."
+  },
+  {
+   "key": "src/pages/admin/ClassMCPSettings.tsx:Unassign MCP Server",
+   "titles": [
+    "A-22.13"
+   ],
+   "rows": [
+    "A-22.14"
+   ],
+   "what": "Unassign an MCP server from a class (DeleteConfirmDialog): it stays in the registry and can be assigned again."
+  },
+  {
+   "key": "src/pages/admin/Materials.tsx:Replace this file?",
+   "titles": [],
+   "rows": [
+    "A-14.24"
+   ],
+   "what": "Replace a document's file: the old file is deleted once the new one is saved."
+  },
+  {
+   "key": "src/pages/admin/Materials.tsx:Delete this material? / Delete this file?",
+   "titles": [],
+   "rows": [
+    "A-14.25",
+    "A-14.26"
+   ],
+   "what": "Delete a material (archived, no screen restores it) or a file (removed permanently)."
+  }
+ ]
+}

@@ -1,55 +1,52 @@
-// Visual tokens for the class analytics page. Pure white surfaces with a
-// restrained set of deep, low-saturation accent hues. The violet accent remains the
-// primary accent; the other hues carry semantic meaning (intent categories,
-// stat icons) — color encodes information, never decoration.
+// Style roles of the class analytics page, re-pointed at the Stage 1 design
+// tokens (kiwi-ui/DESIGN.md § Design system and § Chart tokens). Every value is a
+// CSS custom property, so the page follows data-theme and data-density.
+//
+// Retired: the violet accent, the seven intent hues, the amber and red literals
+// and the monospace counts. Text wears the text tokens; the intent and topic bars
+// are one series in --chart-1 (the category is in the label, never in the hue);
+// status text uses the status tokens; counts use the UI face with tabular figures.
 
 export const tokens = {
-  ink: "#1a1523", // primary text
-  slate: "#64748b", // secondary text
-  faint: "#94a3b8", // tertiary text, timestamps
-  line: "#eceaf1", // hairline borders
-  canvas: "#ffffff", // page background
-  paper: "#ffffff", // panels
-  hover: "#faf9fc", // row hover wash
-
-  violet: "#5b3a8c", // primary accent
-  violetInk: "#43066b",
-  violetSoft: "#f6f0fb",
-  violetTrack: "#ece2f6",
-
-  // Accent hues — deep and muted, consistent lightness
-  indigo: "#3b5bdb",
-  indigoSoft: "#edf2ff",
-  teal: "#0b7285",
-  tealSoft: "#e3fafc",
-  orange: "#d9480f",
-  orangeSoft: "#fff4e6",
-  rose: "#c2255c",
-  roseSoft: "#fff0f6",
-  grape: "#7048e8",
-  grapeSoft: "#f3f0ff",
-  gray: "#495057",
-  graySoft: "#f1f3f5",
-
-  green: "#2b8a3e",
-  greenSoft: "#ebfbee",
-  amber: "#946300", // "generating" status text
-  red: "#c92a2a", // errors
+  ink: "var(--text)", // primary text
+  slate: "var(--text-secondary)", // secondary text, timestamps
+  rule: "var(--border-subtle)", // rules between sections and rows
+  edge: "var(--border)", // a panel's hairline
+  paper: "var(--surface)", // panels
+  hover: "var(--surface-hover)", // row hover
+  accentText: "var(--accent-text)", // accent text and links
+  icon: "var(--icon-default)",
+  bar: "var(--chart-1)", // the one series colour of the intent and topic bars
+  inProgress: "var(--in-progress-text)", // "analyzing" notes
+  error: "var(--status-error-text)", // errors
 } as const;
 
-export const mono =
-  '"SF Mono", "Roboto Mono", Consolas, "Liberation Mono", monospace';
+/** Counts and figures: the UI face with tabular numerals (the monospace counts are retired). */
+export const numeric = { fontVariantNumeric: "tabular-nums" } as const;
 
-/** Color assignment for the fixed intent taxonomy (ids from the backend). */
-export const intentStyles: Record<string, { color: string; soft: string }> = {
-  concept: { color: tokens.indigo, soft: tokens.indigoSoft },
-  "answer-seeking": { color: tokens.rose, soft: tokens.roseSoft },
-  guidance: { color: tokens.teal, soft: tokens.tealSoft },
-  debugging: { color: tokens.orange, soft: tokens.orangeSoft },
-  logistics: { color: tokens.gray, soft: tokens.graySoft },
-  exploration: { color: tokens.grape, soft: tokens.grapeSoft },
-  other: { color: "#868e96", soft: tokens.graySoft },
-};
+type TypeRole = "body" | "label" | "caption" | "group-title";
 
-export const intentStyleOf = (id: string) =>
-  intentStyles[id] ?? intentStyles.other;
+const role = (name: TypeRole) => ({
+  fontFamily: `var(--type-${name}-family)`,
+  fontSize: `var(--type-${name}-size)`,
+  lineHeight: `var(--type-${name}-leading)`,
+  fontWeight: `var(--type-${name}-weight)`,
+});
+
+const ROLES = {
+  /** Reading text (questions, stored answers): 16/24, or 14/20 inside a compact region. */
+  body: role("body"),
+  /** Chrome text: 14/20 400 in every density (the theme's body2). */
+  small: {
+    fontFamily: "var(--font-ui)",
+    fontSize: "var(--text-sm)",
+    lineHeight: "var(--leading-sm)",
+    fontWeight: "var(--weight-regular)",
+  },
+  label: role("label"),
+  caption: role("caption"),
+  "group-title": role("group-title"),
+} as const;
+
+/** A type role of the scale as `sx` properties (`--type-<role>-*`). */
+export const typeRole = (name: keyof typeof ROLES) => ROLES[name];

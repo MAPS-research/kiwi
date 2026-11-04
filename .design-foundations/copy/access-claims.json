@@ -1,0 +1,213 @@
+{
+ "about": "Every New string that says who can act (an administrator, an instructor: \"Only an administrator can…\", \"Ask your instructor…\", \"An administrator assigns…\") is a claim about the product's access model. The model is the user's decision of 2026-10-16, built on the branch fix/access-control (docs/logic-changes.md: LC-2 and LC-7), not today's menus and guards. Each claim below names its rows, who it names, what that person does, the facts that back it (a sentence quoted from that page, or a cite of code that holds on both sides of the merge) and its effect: confirmed (true under the model and today), fixed (a row that followed today's menu and was reworded) or gated (true once the branch merges, so the row ships with or after it, like S-05.06). check-copy.mjs (D13) finds the rows by their wording, fails on one that no claim lists and on a claim whose row no longer says it, reads the quotes against the page when it can, and resolves the cites.",
+ "page": "docs/logic-changes.md",
+ "branch": "fix/access-control",
+ "facts": {
+  "admin-gets": {
+   "lc": "LC-7",
+   "quote": "Admins get the page; anyone else gets a no-permission state with a way back to the class list."
+  },
+  "admin-pages": {
+   "lc": "LC-7",
+   "quote": "System Analytics, System Email, Email Audit, System Flags, New Class, Webhooks, Webhook Approvals, MCP Servers, the App Registry and User Management"
+  },
+  "menu-staff": {
+   "lc": "LC-7",
+   "quote": "they see Enroll Students and Class Email only when assigned to the class (`classInstructorOnly`); Class Apps is no longer hidden"
+  },
+  "apps-open": {
+   "lc": "LC-7",
+   "quote": "Instructors assigned to a class see and can open Class Apps, Enroll Students and Class Email for it."
+  },
+  "materials-perm": {
+   "lc": "LC-7",
+   "quote": "Materials and Class Analytics still need their instructor permission"
+  },
+  "apps-guard": {
+   "cite": "`kiwi-app/kiwi-app.controller.ts:383-388` and `kiwi-app/kiwi-app.controller.ts:411-418`: the class-app routes that turn an app on and off are behind `InstructorClassGuard`, which admits whoever can manage the class"
+  },
+  "assign-admin": {
+   "cite": "`instructor-class/instructor-class.controller.ts:33-35` and `instructor-class/instructor-class.controller.ts:58-60`: assigning an instructor to a class and changing the instructor's permissions are behind `AdminGuard`"
+  },
+  "register-admin": {
+   "cite": "`auth/auth.controller.ts:51-53` and `auth/auth.controller.ts:62-64`: creating a password account and resetting a password are behind `AdminGuard`"
+  },
+  "quota-config": {
+   "cite": "`common/llm/llm.token-usage.guard.ts:31-34` and `common/llm/llm.token-usage.guard.ts:50-54`: the usage limit is a deployment setting (`LLM_TOKEN_LIMIT`) with an exemption flag, and no class or instructor control sets it"
+  }
+ },
+ "claims": [
+  {
+   "id": "enrol",
+   "rows": [
+    "S-01.07"
+   ],
+   "who": "the class's instructor, or an administrator",
+   "says": "adds a student to a class",
+   "facts": [
+    "menu-staff"
+   ],
+   "effect": "gated",
+   "why": "On the branch the class menu shows Enroll Students to a class's assigned instructors (LC-7). Today the menu hides it from instructors, so the sentence ships with or after the merge, like S-05.06."
+  },
+  {
+   "id": "apps-student",
+   "rows": [
+    "S-04.03"
+   ],
+   "who": "the class's instructor",
+   "says": "turns an app on for the class",
+   "facts": [
+    "apps-open",
+    "apps-guard",
+    "menu-staff"
+   ],
+   "effect": "confirmed",
+   "why": "An instructor assigned to the class may open Class Apps (LC-7), and the class-app routes admit whoever can manage the class on both sides of the merge."
+  },
+  {
+   "id": "apps-staff",
+   "rows": [
+    "A-12.10"
+   ],
+   "who": "an administrator, or an instructor of the class",
+   "says": "turns an app on for the class",
+   "facts": [
+    "apps-open",
+    "apps-guard"
+   ],
+   "effect": "fixed",
+   "why": "The row told every non-admin to ask an administrator, which followed today's menu (Class Apps hidden from instructors) and said that only an administrator could. It now names both; the host frame shows its button to an assigned instructor too (hand-off)."
+  },
+  {
+   "id": "assign",
+   "rows": [
+    "A-01.14",
+    "SR-1.10"
+   ],
+   "who": "an administrator",
+   "says": "assigns classes to instructors",
+   "facts": [
+    "assign-admin",
+    "admin-pages"
+   ],
+   "effect": "confirmed",
+   "why": "Assigning an instructor is behind AdminGuard and the Users page is admin-only, today and on the branch."
+  },
+  {
+   "id": "materials",
+   "rows": [
+    "S-02.05",
+    "S-02.07"
+   ],
+   "who": "the class's instructor",
+   "says": "adds materials and summaries",
+   "facts": [
+    "materials-perm"
+   ],
+   "effect": "confirmed",
+   "why": "An instructor adds materials and summaries when the instructor permission allows it; the merge does not change that."
+  },
+  {
+   "id": "accounts",
+   "rows": [
+    "S-05.04",
+    "S-05.13"
+   ],
+   "who": "an administrator",
+   "says": "creates an account and resets a password",
+   "facts": [
+    "register-admin"
+   ],
+   "effect": "confirmed",
+   "why": "Creating a password account and resetting a password are behind AdminGuard, and the Users page is admin-only."
+  },
+  {
+   "id": "signin-setup",
+   "rows": [
+    "S-05.14",
+    "S-05.15"
+   ],
+   "who": "an administrator",
+   "says": "can be asked to turn on a sign-in method",
+   "facts": [
+    "admin-gets"
+   ],
+   "effect": "confirmed",
+   "why": "An instruction to ask, not a claim that a page does it: an administrator can do whatever any other role can, so the person to ask is never wrong."
+  },
+  {
+   "id": "signin-help",
+   "rows": [
+    "S-05.03"
+   ],
+   "who": "an administrator",
+   "says": "can be asked when a sign-in keeps failing",
+   "facts": [
+    "admin-gets"
+   ],
+   "effect": "confirmed",
+   "why": "An instruction to ask, not a claim that a page does it: an administrator can do whatever any other role can, so the person to ask is never wrong."
+  },
+  {
+   "id": "access",
+   "rows": [
+    "SR-6.18",
+    "SR-6.60",
+    "DS.30",
+    "DS.33",
+    "CP.08"
+   ],
+   "who": "an administrator",
+   "says": "gives access",
+   "facts": [
+    "admin-gets"
+   ],
+   "effect": "confirmed",
+   "why": "The pages and features a refused person cannot use are open to administrators, who see every entry."
+  },
+  {
+   "id": "model-setup",
+   "rows": [
+    "SR-7.06"
+   ],
+   "who": "an administrator",
+   "says": "sets up the chat model",
+   "facts": [
+    "admin-gets"
+   ],
+   "effect": "confirmed",
+   "why": "An instruction to ask the person who runs the deployment, which is an administrator in the product's own word."
+  },
+  {
+   "id": "quota",
+   "rows": [
+    "SR-6.17",
+    "CP.07"
+   ],
+   "who": "the instructor, or an administrator",
+   "says": "can be asked about the usage limit",
+   "facts": [
+    "quota-config",
+    "admin-pages"
+   ],
+   "effect": "confirmed",
+   "why": "The line asks the student to raise it with a person; it does not say that either can change it. The limit and its exemption are deployment settings (System flags is admin-only), so it holds on both sides of the merge."
+  },
+  {
+   "id": "patterns",
+   "rows": [
+    "DS.15",
+    "DS.38"
+   ],
+   "who": "an administrator",
+   "says": "removes an instructor; changes a read-only control",
+   "facts": [
+    "assign-admin",
+    "admin-pages"
+   ],
+   "effect": "confirmed",
+   "why": "Design-system patterns for a disabled row and a read-only control; no screen draws them today. They hold where the control is admin-only: instructors are assigned and changed by an administrator, and the system pages are admin-only."
+  }
+ ]
+}

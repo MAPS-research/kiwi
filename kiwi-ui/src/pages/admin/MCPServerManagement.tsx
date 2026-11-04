@@ -248,19 +248,6 @@ export const MCPServerManagement: React.FC = () => {
     }
   };
 
-  const getTransportChipColor = (transport: string) => {
-    switch (transport) {
-      case "http":
-        return "primary";
-      case "sse":
-        return "secondary";
-      case "stdio":
-        return "default";
-      default:
-        return "default";
-    }
-  };
-
   // Build delete confirmation message with class count warning
   const getDeleteMessage = () => {
     if (!serverToDelete) return "";
@@ -370,7 +357,7 @@ export const MCPServerManagement: React.FC = () => {
                 <TableRow key={server.id}>
                   <TableCell>
                     <Typography variant="body2" sx={{
-                      fontWeight: 500
+                      fontWeight: 600
                     }}>
                       {server.name}
                     </Typography>
@@ -386,7 +373,6 @@ export const MCPServerManagement: React.FC = () => {
                     <Chip
                       label={server.transport.toUpperCase()}
                       size="small"
-                      color={getTransportChipColor(server.transport)}
                     />
                   </TableCell>
                   <TableCell>

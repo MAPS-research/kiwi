@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kiwi UI; Phase 2 candidates (five dealt hands · hue 156 · muted)</title>
+  <!-- Phase 2 candidate comparison sheet · Plan: .design-foundations/plans/2026-10-16-kiwi-ui-stage-1.md · Dispatch: up to the user's pick (UPDATE_PLAN round-trip). -->
+  <!-- A token specimen (plan Lock-scope carve-out 2), not a page mock. Every UI colour below is a palette.mjs output read from :root / [data-theme="dark"]; the only literal colours are the mascot artwork's own flat palette (brief G11, allowlisted). -->
+  <!-- Tokens: run A `palette.mjs --seed 156 --chroma muted --harmony mono` → --accent-*; run B `palette.mjs --seed 95 --chroma muted --harmony mono` → --neutral-* and --paper-1..4 (its accent steps 1–4); run C `palette.mjs --seed 156 --chroma balanced --harmony mono` → --error/success/warning/info-3/9/11. All three exit 0. -->
+  <!-- Fonts: the five candidate faces load from Google Fonts (display=swap). If a face does not load, its stack falls back to the G7 CJK fonts and the badge beside the specimen says so. Sheet chrome uses the system face so no candidate is favoured. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Fira+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ===================== TOKENS (palette.mjs output, spliced) ===================== */
+    :root {
+      /* run B · seed 95 muted · neutral ramp (cream/tan-tinted) */
+      --neutral-1: #fdfdfc; --neutral-2: #f9f9f7; --neutral-3: #f1f0ed; --neutral-4: #e9e8e4;
+      --neutral-5: #dfded8; --neutral-6: #d4d2cb; --neutral-7: #c6c3bb; --neutral-8: #adaba1;
+      --neutral-9: #bbb7ab; --neutral-10: #a8a599; --neutral-11: #65635c; --neutral-12: #2f2e2a;
+      /* run A · seed 156 muted · accent ramp (pinned) */
+      --accent-1: #fafefb; --accent-2: #f4fbf6; --accent-3: #e6f5eb; --accent-4: #d9eee0;
+      --accent-5: #c9e7d3; --accent-6: #b7ddc4; --accent-7: #a2d1b2; --accent-8: #82ba96;
+      --accent-9: #84ca9e; --accent-10: #74b68d; --accent-11: #486d56; --accent-12: #203327;
+      --accent-on-solid: #06100a;
+      /* run B · seed 95 muted · accent steps 1–4 as the paper (canvas) ramp */
+      --paper-1: #fefdf9; --paper-2: #faf9f3; --paper-3: #f4f1e4; --paper-4: #ede8d5;
+      /* run C · seed 156 balanced · functional 3/9/11 (G1) */
+      --error-3: #ffebe9; --error-9: #e1524f; --error-11: #974843;
+      --success-3: #e0f8e0; --success-9: #5ad664; --success-11: #337437;
+      --warning-3: #f9f0dd; --warning-9: #dbb155; --warning-11: #76602f;
+      --info-3: #e3f3ff; --info-9: #5baee5; --info-11: #3d6886;
+
+      /* ---- roles proposed for the lock (light): forest-led ---- */
+      --role-fill: var(--accent-12); --role-fill-hover: var(--accent-11); --role-on-fill: var(--neutral-1);
+      --role-link: var(--accent-11); --role-text: var(--neutral-12); --role-text-2: var(--neutral-11);
+      --role-rule: var(--neutral-6); --role-rule-2: var(--neutral-7);
+      --role-boundary: var(--neutral-11); --role-focus: var(--accent-11);
+      --role-tint: var(--accent-3); --role-code-bg: var(--neutral-3);
+      --role-canvas: var(--paper-3); --role-sheet: var(--paper-2); /* candidates override */
+
+      /* ---- type scale (DW-2.5 draft) ---- */
+      --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 1rem; --text-lg: 1.125rem;
+      --text-xl: 1.25rem; --text-2xl: 1.5rem; --text-3xl: 1.875rem; --text-4xl: 2.25rem;
+      --lead-body: 1.5; --lead-cjk: 1.75; --lead-head: 1.25; --lead-chrome: 1.4;
+      --cjk: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+      --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      --font-chrome: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --radius: 4px; --w-head: 600;
+    }
+    [data-theme="dark"] {
+      --neutral-1: #131312; --neutral-2: #1a1918; --neutral-3: #232220; --neutral-4: #2b2a27;
+      --neutral-5: #33322e; --neutral-6: #3d3c36; --neutral-7: #4b4942; --neutral-8: #636057;
+      --neutral-9: #bbb7ab; --neutral-10: #cecbbe; --neutral-11: #b9b7b0; --neutral-12: #e9e8e3;
+      --accent-1: #111312; --accent-2: #161b18; --accent-3: #1a251e; --accent-4: #1e2f24;
+      --accent-5: #203929; --accent-6: #234430; --accent-7: #29533a; --accent-8: #386e4e;
+      --accent-9: #84ca9e; --accent-10: #9addb2; --accent-11: #9bc3a8; --accent-12: #d7efdf;
+      --accent-on-solid: #06100a;
+      --paper-1: #131310; --paper-2: #1b1915; --paper-3: #252218; --paper-4: #2e2a1b;
+      --error-3: #331a18; --error-9: #e1524f; --error-11: #f49c95;
+      --success-3: #152715; --success-9: #5ad664; --success-11: #88cb8a;
+      --warning-3: #282113; --warning-9: #dbb155; --warning-11: #cdb482;
+      --info-3: #17242d; --info-9: #5baee5; --info-11: #90bedf;
+
+      /* ---- roles (dark): sage-led ---- */
+      --role-fill: var(--accent-9); --role-fill-hover: var(--accent-10); --role-on-fill: var(--accent-on-solid);
+      --role-link: var(--accent-11); --role-text: var(--neutral-12); --role-text-2: var(--neutral-11);
+      --role-rule: var(--neutral-6); --role-rule-2: var(--neutral-7);
+      --role-boundary: var(--neutral-11); --role-focus: var(--accent-9);
+      --role-tint: var(--accent-3); --role-code-bg: var(--neutral-3);
+      --role-canvas: var(--paper-2); --role-sheet: var(--paper-3); /* sheets are the lighter step in both modes */
+      color-scheme: dark;
+    }
+
+    /* ===================== SHEET CHROME (system face, deliberately neutral) ===================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { background: var(--neutral-1); }
+    body { font-family: var(--font-chrome); color: var(--neutral-12); font-size: 14px; line-height: 1.5; padding: 32px 40px 80px; max-width: 1400px; margin: 0 auto; }
+    h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.2; }
+    h2 { font-size: 20px; font-weight: 600; line-height: 1.25; margin-bottom: 8px; }
+    h3 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--neutral-11); margin-bottom: 8px; }
+    p { margin-bottom: 8px; }
+    code, kbd { font-family: var(--font-mono); font-size: 0.92em; background: var(--neutral-3); padding: 1px 4px; border-radius: 3px; }
+    a { color: var(--accent-11); }
+    .meta { color: var(--neutral-11); font-size: 13px; }
+    .lede { max-width: 92ch; }
+    header.sheet { border-bottom: 1px solid var(--neutral-6); padding-bottom: 20px; margin-bottom: 28px; }
+    header.sheet .pins { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 12px 0; font-size: 13px; }
+    header.sheet .pins span b { font-weight: 600; }
+    table { border-collapse: collapse; width: 100%; font-size: 13px; }
+    th, td { text-align: left; padding: 5px 10px 5px 0; border-bottom: 1px solid var(--neutral-5); vertical-align: top; }
+    th { font-weight: 600; color: var(--neutral-11); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+    td.num { font-variant-numeric: tabular-nums; }
+    .pass { color: var(--success-11); font-weight: 600; }
+    .fail { color: var(--error-11); font-weight: 600; }
+    .note { color: var(--neutral-11); }
+    .rejected td { color: var(--neutral-11); }
+
+    /* shared section */
+    #shared { margin-bottom: 40px; }
+    #shared .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 40px; }
+    .ramp { display: grid; grid-template-columns: 110px repeat(12, 1fr); gap: 3px; align-items: stretch; margin-bottom: 6px; }
+    .ramp .lbl { font-size: 12px; color: var(--neutral-11); align-self: center; }
+    .ramp .cell { height: 34px; border-radius: 3px; position: relative; border: 1px solid rgba(0,0,0,0); }
+    .ramp .cell span { position: absolute; left: 3px; bottom: 2px; font-size: 9px; font-family: var(--font-mono); opacity: .85; }
+    .ramp.compact .cell { height: 16px; } .ramp.compact .cell span { display: none; }
+    .ramp.compact { grid-template-columns: 74px repeat(12, 1fr); gap: 2px; margin-bottom: 3px; }
+    .ramp.compact .lbl { font-size: 11px; }
+    .fn-row { display: grid; grid-template-columns: 110px repeat(4, 1fr); gap: 6px; margin-bottom: 6px; }
+    .fn-row .lbl { font-size: 12px; color: var(--neutral-11); align-self: center; }
+    .fn { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; }
+    .fn .cell { height: 34px; border-radius: 3px; position: relative; } .fn .cell span { position: absolute; left: 3px; bottom: 2px; font-size: 9px; font-family: var(--font-mono); }
+    .dark-strip { background: var(--neutral-1); padding: 10px 12px; border-radius: 6px; }
+    .light-strip { background: var(--neutral-2); padding: 10px 12px; border-radius: 6px; border: 1px solid var(--neutral-5); }
+
+    /* candidate sections */
+    .cand { border-top: 2px solid var(--neutral-12); padding-top: 20px; margin-bottom: 56px; }
+    .cand-head { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: start; margin-bottom: 18px; }
+    .cand-head .idx { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--neutral-11); }
+    .cand-head h2 { font-size: 30px; letter-spacing: -0.01em; margin: 2px 0 4px; }
+    .cand-head .hand { font-size: 13px; color: var(--neutral-11); }
+    .cand-head .hand b { color: var(--neutral-12); font-weight: 600; }
+    .cand-body { display: grid; grid-template-columns: 372px minmax(0, 1fr); gap: 32px; }
+    .spec { font-size: 13px; }
+    .spec dt { font-family: var(--font-mono); font-size: 11px; letter-spacing: .04em; color: var(--neutral-11); margin-top: 10px; }
+    .spec dd { margin-top: 1px; }
+    .spec dd.sentence { font-style: italic; color: var(--neutral-11); }
+    .verdict { margin-top: 16px; border-left: 3px solid var(--neutral-7); padding: 2px 0 2px 12px; font-size: 13px; }
+    .verdict p { margin-bottom: 6px; } .verdict b { font-weight: 600; }
+    .where { margin-top: 12px; font-size: 13px; color: var(--neutral-11); }
+    .pixels > * + * { margin-top: 18px; }
+    .pixels h3 { margin-bottom: 6px; }
+    .swatches { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .roles { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; border-radius: 6px; }
+    .chip { font-family: var(--font-mono); font-size: 11px; padding: 6px 8px; border-radius: 4px; min-width: 96px; line-height: 1.3; }
+    .chip small { display: block; opacity: .8; font-size: 10px; }
+    .status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+    .status i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .status-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px 10px 0; }
+    .ratio { font-weight: 400; opacity: .85; }
+
+    /* ===================== TYPE SPECIMEN (candidate face) ===================== */
+    .specimen { font-family: var(--font-ui); background: var(--role-sheet); color: var(--role-text); border: 1px solid var(--role-rule); border-radius: var(--radius); padding: 22px 26px 18px; position: relative; }
+    .specimen .badge { position: absolute; top: 10px; right: 12px; font: 11px var(--font-mono); color: var(--role-text-2); background: var(--role-canvas); padding: 3px 8px; border-radius: 3px; border: 1px solid var(--role-rule); }
+    .specimen .h { font-size: var(--text-2xl); font-weight: var(--w-head); line-height: var(--lead-head); letter-spacing: var(--track-head, 0); margin-bottom: 6px; }
+    .specimen .deck { font-size: var(--text-lg); line-height: 1.45; color: var(--role-text-2); margin-bottom: 12px; }
+    .specimen .body { font-size: var(--text-base); line-height: var(--lead-body); max-width: 68ch; margin-bottom: 10px; }
+    .specimen .cjk { font-size: var(--text-base); line-height: var(--lead-cjk); max-width: 40em; margin-bottom: 10px; }
+    .specimen .ital { font-size: var(--text-base); font-style: italic; line-height: var(--lead-body); margin-bottom: 10px; }
+    .specimen .nums { font-size: var(--text-base); font-variant-numeric: tabular-nums; line-height: var(--lead-body); display: grid; grid-template-columns: max-content max-content max-content; gap: 0 28px; margin-bottom: 10px; }
+    .specimen .nums span { text-align: right; }
+    .specimen .nums .lab { text-align: left; color: var(--role-text-2); font-size: var(--text-sm); }
+    .specimen .small { font-size: var(--text-sm); line-height: var(--lead-chrome); color: var(--role-text-2); }
+    .specimen .xs { font-size: var(--text-xs); line-height: var(--lead-chrome); color: var(--role-text-2); margin-top: 4px; }
+    .specimen .stack { font: 11px/1.4 var(--font-mono); color: var(--role-text-2); margin-top: 12px; border-top: 1px solid var(--role-rule); padding-top: 8px; }
+
+    /* ===================== CHAT SAMPLE (template, cloned light + dark) ===================== */
+    .samples { display: grid; grid-template-columns: repeat(2, minmax(380px, 1fr)); gap: 20px; }
+    .sample { background: var(--role-canvas); color: var(--role-text); font-family: var(--font-ui); padding: 22px; border-radius: 6px; border: 1px solid var(--role-rule); }
+    .sample .mode { font: 11px var(--font-mono); color: var(--role-text-2); margin-bottom: 10px; display: flex; justify-content: space-between; }
+    .panel { position: relative; background: var(--role-sheet); border: 1px solid var(--role-rule); border-radius: var(--radius); overflow: hidden; width: 100%; max-width: 440px; }
+    .ruler { display: none; }
+    .p-head { display: flex; align-items: center; justify-content: space-between; height: 52px; padding: 0 16px; border-bottom: 1px solid var(--role-rule); }
+    .p-title { font-size: var(--text-sm); font-weight: var(--w-head); letter-spacing: var(--track-head, 0); }
+    .p-icons { display: inline-flex; gap: 10px; }
+    .p-icons i { width: 12px; height: 12px; border: 1.5px solid var(--role-text-2); border-radius: 2px; display: inline-block; }
+    .p-icons i:last-child { border-radius: 50%; }
+    .p-session { font-size: var(--text-xs); color: var(--role-text-2); padding: 10px 16px; border-bottom: 1px solid var(--role-rule); line-height: var(--lead-chrome); }
+    .p-msgs { padding: 8px 0 4px; }
+    .msg { padding: 10px 16px; }
+    .msg p { font-size: var(--text-base); line-height: var(--lead-body); }
+    .msg-student { text-align: right; padding-left: 64px; }
+    .msg-student p { display: inline-block; text-align: left; max-width: 100%; }
+    .msg-tutor { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; align-items: start; }
+    .avatar { width: 32px; height: 32px; border-radius: 24%; flex: none; display: block; }
+    .tutor-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+    .answer p.cjk { line-height: var(--lead-cjk); }
+    .answer p + p, .answer pre + p { margin-top: 8px; }
+    .code { position: relative; font-family: var(--font-mono); font-size: var(--text-sm); line-height: 1.5; background: var(--role-code-bg); color: var(--role-text); padding: 10px 12px; padding-right: 60px; border-radius: calc(var(--radius) * .6); margin-top: 10px; white-space: pre-wrap; word-break: break-word; }
+    .code .lit { color: var(--role-link); }
+    .code .copy { position: absolute; top: 6px; right: 6px; font: 600 var(--text-xs) var(--font-ui); color: var(--role-link); background: var(--role-sheet); border: 1px solid var(--role-boundary); border-radius: calc(var(--radius) * .6); padding: 3px 8px; cursor: default; }
+    .corner { display: none; }
+    .margin { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: var(--text-xs); color: var(--role-text-2); }
+    .cite { color: var(--role-link); text-decoration: underline; text-underline-offset: 2px; font-size: var(--text-xs); font-variant-numeric: tabular-nums; }
+    .fb { display: inline-flex; gap: 6px; }
+    .fb i { width: 22px; height: 22px; border: 1px solid var(--role-boundary); border-radius: 50%; display: inline-grid; place-items: center; font: 600 11px/1 var(--font-ui); color: var(--role-text-2); font-style: normal; }
+    .p-composer { display: flex; gap: 8px; padding: 12px 16px 16px; border-top: 1px solid var(--role-rule); align-items: stretch; }
+    .input { flex: 1; min-height: 40px; border: 1px solid var(--role-boundary); border-radius: var(--radius); padding: 10px 12px; color: var(--role-text-2); font-size: var(--text-sm); line-height: var(--lead-chrome); background: var(--role-sheet); }
+    .send { background: var(--role-fill); color: var(--role-on-fill); border: 0; border-radius: var(--radius); padding: 0 16px; font: 600 var(--text-sm) var(--font-ui); cursor: default; }
+    .send:hover { background: var(--role-fill-hover); }
+
+    /* ---------- C1 Ruled Folio: Editorial Minimalism × Editorial Spread · baseline ruler ---------- */
+    #c1 { --font-ui: "Source Sans 3", var(--cjk); --radius: 2px; --w-head: 600; --track-head: -0.01em; --role-canvas: var(--paper-3); --role-sheet: var(--paper-2); }
+    #c1 [data-theme="dark"] { --role-canvas: var(--paper-2); --role-sheet: var(--paper-3); }
+    #c1 .panel { box-shadow: none; }
+    #c1 .ruler { display: block; position: absolute; left: 0; top: 0; bottom: 0; width: 12px; z-index: 1;
+      background:
+        linear-gradient(var(--neutral-8), var(--neutral-8)) 0 0 / 1px 100% no-repeat,
+        repeating-linear-gradient(to bottom, var(--neutral-8) 0 1px, transparent 1px 24px) 0 0 / 7px 100% no-repeat; }
+    #c1 .p-head, #c1 .p-session, #c1 .msg, #c1 .p-composer { padding-left: 24px; }
+    #c1 .p-title { font-size: var(--text-xl); font-weight: 600; }
+    #c1 .msg p, #c1 .code, #c1 .p-session { line-height: 24px; }
+    #c1 .msg-student p { font-size: var(--text-lg); font-weight: 400; }
+    #c1 .code { border-radius: 0; border-left: 2px solid var(--neutral-8); background: transparent; padding-left: 12px; }
+
+    /* ---------- C2 Soft Margin: Soft Futurism × Marginalia · box-drawing borders ---------- */
+    #c2 { --font-ui: "Nunito Sans", var(--cjk); --radius: 16px; --w-head: 700; --role-canvas: var(--paper-2); --role-sheet: var(--neutral-1); }
+    #c2 [data-theme="dark"] { --role-canvas: var(--paper-2); --role-sheet: var(--neutral-3); }
+    #c2 .panel { border: 0; box-shadow: 0 1px 2px color-mix(in oklab, var(--accent-on-solid) 10%, transparent), 0 18px 44px -18px color-mix(in oklab, var(--accent-on-solid) 32%, transparent); }
+    #c2 .input, #c2 .send, #c2 .copy { border-radius: 10px; }
+    #c2 .tutor-body { grid-template-columns: minmax(0, 1fr) 84px; gap: 14px; }
+    #c2 .margin { position: relative; flex-direction: column; align-items: flex-start; padding-left: 14px; font-size: var(--text-xs); }
+    #c2 .margin::before { content: "│\A│\A│\A│\A│\A│\A│\A│\A│\A│\A│\A│\A│\A│"; white-space: pre; position: absolute; left: 0; top: -2px; bottom: 0; overflow: hidden; font: 12px/11px var(--font-mono); color: var(--role-rule-2); }
+    #c2 .code { background: transparent; padding: 12px 14px; padding-right: 64px; border-radius: 0; }
+    #c2 .corner { display: block; position: absolute; font: 14px/1 var(--font-mono); color: var(--role-text-2); }
+    #c2 .corner.tl { top: 0; left: 0; } #c2 .corner.tr { top: 0; right: 0; } #c2 .corner.bl { bottom: 0; left: 0; } #c2 .corner.br { bottom: 0; right: 0; }
+    #c2 .code::before { content: ""; position: absolute; left: 8px; right: 8px; top: 6px; border-top: 1px dashed var(--role-rule-2); }
+    #c2 .code::after { content: ""; position: absolute; left: 8px; right: 8px; bottom: 6px; border-top: 1px dashed var(--role-rule-2); }
+    #c2 .code .copy { top: 10px; right: 12px; }
+
+    /* ---------- C3 Herbarium Sheet: Organic / Natural × Monolith Center · baseline ruler ---------- */
+    #c3 { --font-ui: "Alegreya Sans", var(--cjk); --radius: 10px; --w-head: 700; --role-canvas: var(--paper-3); --role-sheet: var(--paper-2); }
+    #c3 [data-theme="dark"] { --role-canvas: var(--paper-2); --role-sheet: var(--paper-3); }
+    #c3 .panel { border: 0; }
+    #c3 .p-head { justify-content: center; height: 64px; border-bottom: 0; }
+    #c3 .p-icons { position: absolute; right: 18px; top: 26px; }
+    #c3 .p-title { font-size: var(--text-lg); }
+    #c3 .p-session { text-align: center; border-bottom: 0; }
+    #c3 .msg { padding: 14px 28px; }
+    #c3 .ruler { display: block; position: absolute; left: 14px; top: 64px; bottom: 76px; width: 0; border-left: 1px dotted var(--neutral-8); }
+    #c3 .code { background: var(--role-canvas); }
+    #c3 .p-composer { border-top: 0; padding: 8px 28px 22px; }
+    #c3 .input { background: var(--role-canvas); border-color: var(--role-boundary); }
+
+    /* ---------- C4 Open Quote: Warm Editorial × Poster Bleed · oversize punctuation ---------- */
+    #c4 { --font-ui: "Fira Sans", var(--cjk); --radius: 10px; --w-head: 500; --role-canvas: var(--paper-3); --role-sheet: var(--paper-2); }
+    #c4 [data-theme="dark"] { --role-canvas: var(--paper-2); --role-sheet: var(--paper-3); }
+    #c4 .panel { border: 0; box-shadow: 0 10px 28px -14px color-mix(in oklab, var(--accent-on-solid) 28%, transparent); }
+    #c4 .p-head { background: var(--paper-4); height: 76px; align-items: flex-end; padding-bottom: 10px; border-bottom: 0; }
+    #c4 .p-title { font-size: var(--text-2xl); font-weight: 500; }
+    #c4 .p-icons { align-self: flex-start; margin-top: 14px; }
+    #c4 .msg-student { padding-top: 22px; }
+    #c4 .msg-student p { position: relative; padding-left: 30px; }
+    #c4 .msg-student p::before { content: "\201C"; position: absolute; left: -6px; top: -16px; font-size: 64px; line-height: 1; font-weight: 700; color: var(--role-link); opacity: .42; }
+    #c4 .send { border-radius: 999px; padding: 0 18px; }
+    #c4 .input { border-radius: 999px; padding-left: 16px; }
+
+    /* ---------- C5 Set Square: Swiss / International × Swiss Modular · hard offset shadow ---------- */
+    #c5 { --font-ui: "IBM Plex Sans", var(--cjk); --radius: 0; --w-head: 600; --track-head: -0.015em; --role-canvas: var(--paper-2); --role-sheet: var(--neutral-1); }
+    #c5 [data-theme="dark"] { --role-canvas: var(--paper-2); --role-sheet: var(--neutral-3); }
+    #c5 .panel { border: 1px solid var(--role-rule-2); }
+    #c5 .p-head { height: 48px; }
+    #c5 .msg { padding: 8px 16px; }
+    #c5 .input, #c5 .send, #c5 .copy, #c5 .fb i { box-shadow: 2px 2px 0 var(--role-boundary); }
+    #c5 .send:active, #c5 .copy:active { transform: translate(2px, 2px); box-shadow: none; }
+    #c5 .fb i { border-radius: 0; }
+    #c5 .code { border-left: 3px solid var(--role-text); background: transparent; border-radius: 0; padding-left: 12px; }
+    #c5 .specimen .h, #c5 .p-title { letter-spacing: -0.015em; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+    }
+    @media (max-width: 1180px) {
+      .cand-body { grid-template-columns: 1fr; }
+      .samples { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Mascot artwork (kiwi-ui/public/favicon.svg, idle icon pose), exact colours per G11. Decorative here. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <clipPath id="kiwi-clip"><rect width="160" height="160" rx="35"/></clipPath>
+      <symbol id="kiwi-avatar" viewBox="0 0 160 160">
+        <rect width="160" height="160" rx="35" fill="#92ae70"/>
+        <g clip-path="url(#kiwi-clip)">
+          <path fill="#234631" d="M-12 160V92C4 99 12 83 20 72C33 54 50 47 66 51C87 56 101 74 99 91C98 107 80 118 80 133L82 170Z"/>
+          <path fill="#234631" d="M25 73C33 51 51 45 68 51C86 56 100 73 99 89C98 108 78 121 58 114C40 108 23 94 25 73Z"/>
+          <path fill="#ccbd99" d="M97 68L146 56C151 55 153 59 148 62L103 77C98 79 95 73 97 68Z"/>
+          <circle fill="#f5f4e8" cx="76" cy="78" r="5.5"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
+  <template id="chat-tpl">
+    <div class="panel">
+      <div class="ruler" aria-hidden="true"></div>
+      <header class="p-head">
+        <span class="p-title">Kiwi Chat</span>
+        <span class="p-icons" aria-hidden="true"><i></i><i></i><i></i></span>
+      </header>
+      <div class="p-session">Current session · 3 messages</div>
+      <div class="p-msgs">
+        <div class="msg msg-student">
+          <p>Why does my loss go up after a few steps of gradient descent? 学习率是不是太大了？</p>
+        </div>
+        <div class="msg msg-tutor">
+          <svg class="avatar" aria-hidden="true" focusable="false"><use href="#kiwi-avatar"/></svg>
+          <div class="tutor-body">
+            <div class="answer">
+              <p>Most likely, yes. When the learning rate is too large, every step overshoots the minimum and the loss climbs instead of settling. Try a tenth of the current value and watch the first 50 steps:</p>
+              <pre class="code"><span class="corner tl">┌</span><span class="corner tr">┐</span><code>optimizer = torch.optim.SGD(model.parameters(), lr=<span class="lit">0.01</span>)</code><span class="copy">Copy</span><span class="corner bl">└</span><span class="corner br">┘</span></pre>
+              <p class="cjk">如果 50 步之后损失仍在上升，再检查一次梯度的符号和数据的尺度。</p>
+            </div>
+            <aside class="margin">
+              <a class="cite" href="#">[Page 12]</a>
+              <span class="fb" aria-hidden="true"><i>+</i><i>−</i><i>!</i></span>
+            </aside>
+          </div>
+        </div>
+      </div>
+      <footer class="p-composer">
+        <div class="input">Ask Kiwi…</div>
+        <button class="send" type="button">Send</button>
+      </footer>
+    </div>
+  </template>
+
+  <header class="sheet">
+    <p class="meta">Kiwi UI refresh · Stage 1 · Phase 2; Design DNA and light/dark tokens · 2026-10-16 · comparison sheet for the pick (UPDATE_PLAN round-trip)</p>
+    <h1>Five dealt hands on the pinned hue</h1>
+    <div class="pins">
+      <span><b>Pins (user law):</b> hue 156 (mascot forest, measured) · chroma muted · one humanist sans · Montserrat only in the wordmark · light and dark · cream-family canvas · quiet shell, one living companion</span>
+    </div>
+    <p class="lede">Hue and chroma are pinned, so <b>the colour tokens are the same on all five candidates</b>; accent, neutral and functional ramps come from three recorded <code>palette.mjs</code> runs (seed 156 muted → accent; seed 95 muted → cream/tan-tinted neutrals and the paper canvas steps; seed 156 balanced → functional colours, so success is more chromatic than primary, G1). What you are choosing between is the <b>family and composition stance</b>, the <b>type face</b>, the <b>motion vocabulary</b> and the <b>signature move</b>, plus small differences in how deep the cream canvas goes and how sheets sit on it. Colour roles follow contrast, not habit: in light mode the filled control is <b>forest</b> (<code>--accent-12</code>; palette.mjs's own solid <code>--accent-9</code> is sage at L 0.78 and measures 1.7:1 against cream, below the 3:1 boundary rule), in dark mode it is <b>sage</b> (<code>--accent-9</code>). Links are <code>--accent-11</code> in both modes.</p>
+    <p class="lede meta">Dealer: <code>dealer.mjs --project kiwi-ui --date 2026-10-16 --used .design-foundations/used-dna.json --pin hue=156 --pin chroma=muted</code> (deal 0) and the same with <code>--reroll 1</code> (deal 1). Both deals are in the ledger. Hands whose family cannot serve the pinned feel (brand-only register; colour and type axes nullified by the pins; layout/motion against the Feel) were re-dealt on the record, never edited: deal 0; Retro-Futurist × Monolith Center, Playful Geometric × Fractured Grid, Cinematic Dark × Poster Bleed; deal 1; Cinematic Dark × Marginalia, Art Deco / Luxury × Frieze Bands. The five below are unedited dealt hands with their seed and hand index.</p>
+    <p class="lede meta" id="font-report">Fonts: checking…</p>
+  </header>
+
+  <section id="shared" aria-labelledby="shared-h">
+    <h2 id="shared-h">Shared tokens (identical on every candidate)</h2>
+    <div class="grid">
+      <div>
+        <h3>Light</h3>
+        <div class="light-strip" id="ramps-light"></div>
+      </div>
+      <div>
+        <h3>Dark</h3>
+        <div class="dark-strip" data-theme="dark" id="ramps-dark"></div>
+      </div>
+      <div>
+        <h3>Contrast; light (computed live from the tokens above)</h3>
+        <table id="pairs-light"><thead><tr><th>Pair</th><th>Hex</th><th>Ratio</th><th>Target</th><th></th></tr></thead><tbody></tbody></table>
+      </div>
+      <div>
+        <h3>Contrast; dark</h3>
+        <table id="pairs-dark"><thead><tr><th>Pair</th><th>Hex</th><th>Ratio</th><th>Target</th><th></th></tr></thead><tbody></tbody></table>
+      </div>
+    </div>
+    <p class="meta" id="g1-line" style="margin-top:14px"></p>
+    <p class="meta">palette.mjs's own reports: 12/12 PASS for each of the three runs (exit 0). The functional text pairs it does not report (<code>-11</code> on <code>neutral-2</code> and on its own <code>-3</code>) are computed in the tables above, both modes. Rows marked <span class="fail">FAIL</span> are palette.mjs defaults the proposed roles do not use for that purpose (dividers stay decorative; the light fill is forest, not sage); they are shown so the role decisions are checkable.</p>
+  </section>
+
+  <!-- ============================ CANDIDATE 1 ============================ -->
+  <section class="cand" id="c1" aria-labelledby="c1-h">
+    <div class="cand-head">
+      <div>
+        <div class="idx">Candidate 1 · deal 0, hand 2</div>
+        <h2 id="c1-h">Ruled Folio</h2>
+        <div class="hand"><b>Editorial Minimalism</b> × <b>Editorial Spread</b> (variance 7) · signature <b>baseline-ruler</b> · face <b>Source Sans 3</b> · seed <code>kiwi-ui|2026-10-16|0|pin:chroma=muted,hue=156</code></div>
+      </div>
+      <div class="hand">Recommended</div>
+    </div>
+    <div class="cand-body">
+      <aside>
+        <dl class="spec">
+          <dt>GROUNDING</dt><dd>LaTeX's <code>article</code> class: hierarchy by size and vertical space alone, no colour, no boxes + the Kindle Paperwhite page: a measure-locked column with one hairline progress rule and nothing else</dd>
+          <dd class="sentence">The collision gives a reading surface a student already trusts from course PDFs, with exactly one visible rule to hold the eye; fit for answers that mix prose, math, code and citations.</dd>
+          <dt>TYPE</dt><dd>Source Sans 3 over Source Sans 3: one humanist family, 400/600 only, loose leading; its sibling Source Han Sans is Noto Sans CJK SC, so the G7 stack is a designed pairing</dd>
+          <dt>COLOR</dt><dd>seed green 156 (pinned) · warm paper canvas (<code>--paper-3</code>) with lighter paper sheets (<code>--paper-2</code>); dark: canvas <code>--paper-2</code>, sheets <code>--paper-3</code> · mono harmony · swatches <code>#203327</code> <code>#84ca9e</code> <code>#f4f1e4</code></dd>
+          <dt>COMPOSITION</dt><dd>&lt;dealt&gt;: Editorial Minimalism × Editorial Spread, dial 7 · justification: the display scale lives where Stage 1 allows it (sign-in, empty states, the course-list header); everywhere else hairline rules replace cards and the ruled column carries the hierarchy</dd>
+          <dt>MOTION</dt><dd>almost none: opacity/transform 150 ms micro, 220 ms standard, ease-out-expo; exits ease-in; nothing moves on reading surfaces or on scroll</dd>
+          <dt>REGISTER</dt><dd>calm structure · expressive at: sign-in (display type 3xl–4xl + mascot), empty and not-found states (display type + mascot), the chat companion (mascot only)</dd>
+          <dt>DNA</dt><dd>Editorial Minimalism base + type voice from Warm Editorial (a humanist sans body in place of the serif) · dominant: composition (the ruled reading column)</dd>
+          <dt>SIGNATURE</dt><dd>A visible baseline ruler runs down one edge and content demonstrably sits on it: a 1 px rule with ticks every 24 px along the chat and reading columns; text sits on a 24 px baseline grid</dd>
+        </dl>
+        <div class="verdict">
+          <p><b>Strongest:</b> the only hand whose family is a Sage primary <i>and</i> matches the content pressure (long-form reading); hairline rules make Fable 5's dominant tell (nested cards) structurally unreachable; Source Sans 3 ↔ Noto Sans CJK SC answers G7 by design.</p>
+          <p><b>Weakest:</b> Editorial Spread's oversized display type has almost no room in Stage 1 (no region moves); it survives only on sign-in, empty states and the course-list header, so the composition identity rests on the ruler and the rules.</p>
+          <p><b>Tells:</b> none hit. Nearest generic cluster: the warm-paper reading app (Readwise / Matter); the ruler and the forest fill keep it off that centre. The cream + serif + terracotta cluster is one serif away → Never.</p>
+        </div>
+        <p class="where"><b>Where the stance lives in Stage 1:</b> display type on sign-in, empty states and the course-list header; the ruler on chat and reading columns; hairlines everywhere else. Admin tables keep the hairline structure.</p>
+      </aside>
+      <div class="pixels">
+        <div><h3>Ramps (shared)</h3><div class="ramps"></div></div>
+        <div><h3>Swatches in role</h3><div class="swatches"></div></div>
+        <div>
+          <h3>Type specimen; Source Sans 3 + CJK stack</h3>
+          <div class="specimen">
+            <span class="badge">font: checking…</span>
+            <div class="h">Gradient descent, step by step</div>
+            <div class="deck">A tutor that reads the course with you — 一位和你一起读课件的助教</div>
+            <p class="body">Students read long answers that mix prose, math, code and citations. The measure stays between 60 and 75 characters where the width allows, and the leading opens up when a block turns Chinese.</p>
+            <p class="cjk">学习率太大时，每一步都会越过最低点，损失反而上升。先把它调到原来的十分之一，观察前 50 步的变化，再决定是否继续调整。</p>
+            <p class="ital">Authentic italic — the face carries its own, not a slanted roman. 真正的斜体，而不是倾斜的正体。</p>
+            <div class="nums"><span class="lab">Tabular figures</span><span>1,024</span><span>14:30</span><span class="lab">right-aligned in tables</span><span>16,384</span><span>2026-10-16</span><span class="lab">counts stay in columns</span><span>207</span><span>18:45</span></div>
+            <p class="small">Secondary text at 14 px · Materials · Scratchpad · Enroll students · 课程材料</p>
+            <p class="xs">Labels at 12 px · Current session · 3 messages · [Page 12]</p>
+            <p class="stack">font-family: "Source Sans 3", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif</p>
+          </div>
+        </div>
+        <div><h3>Chat sample; light and dark</h3>
+          <div class="samples">
+            <div class="sample" data-mode="light"><div class="mode"><span>light · canvas --paper-3 · sheet --paper-2</span><span>fill --accent-12</span></div></div>
+            <div class="sample" data-mode="dark" data-theme="dark"><div class="mode"><span>dark · canvas --paper-2 · sheet --paper-3</span><span>fill --accent-9</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CANDIDATE 2 ============================ -->
+  <section class="cand" id="c2" aria-labelledby="c2-h">
+    <div class="cand-head">
+      <div>
+        <div class="idx">Candidate 2 · deal 0, hand 3</div>
+        <h2 id="c2-h">Soft Margin</h2>
+        <div class="hand"><b>Soft Futurism</b> × <b>Marginalia</b> (variance 5) · signature <b>box-drawing-borders</b> · face <b>Nunito Sans</b> · seed <code>kiwi-ui|2026-10-16|0|pin:chroma=muted,hue=156</code></div>
+      </div>
+      <div class="hand">Runner-up</div>
+    </div>
+    <div class="cand-body">
+      <aside>
+        <dl class="spec">
+          <dt>GROUNDING</dt><dd>Edward Tufte's sidenotes in <i>Beautiful Evidence</i>: the margin as working space beside the text, not footnotes below it + Things 3 (Cultured Code): calm layered white sheets, generous radius, one accent</dd>
+          <dd class="sentence">Citations and feedback get a home beside the answer instead of under it, on sheets that float the way the chat panel already does.</dd>
+          <dt>TYPE</dt><dd>Nunito Sans over Nunito Sans: soft terminals without rounding into a toy; weights 400/700; the "neutral-but-warm" sans the family asks for, minus Instrument Sans (overused list)</dd>
+          <dt>COLOR</dt><dd>seed green 156 (pinned) · pale cream atmosphere (<code>--paper-2</code>) with floating white sheets (<code>--neutral-1</code>); dark: canvas <code>--paper-2</code>, sheets <code>--neutral-3</code> · mono harmony · forest-tinted soft shadow via <code>color-mix</code> on <code>--accent-on-solid</code> · swatches <code>#203327</code> <code>#84ca9e</code> <code>#faf9f3</code></dd>
+          <dt>COMPOSITION</dt><dd>&lt;dealt&gt;: Soft Futurism × Marginalia, dial 5 · justification: the chat answer gains an active margin for "[Page N]" and feedback; the admin two-column forms (Class settings) already are column + margin, so the stance fits what the tour praised</dd>
+          <dt>MOTION</dt><dd>fluid: 120 ms micro, 320 ms standard, 420 ms for layer order (panel scale 0.97→1 + fade), ease-out-expo; toggles ease-in-out; the margin fades in after the answer</dd>
+          <dt>REGISTER</dt><dd>calm structure · expressive at: the chat panel's arrival (layer motion), sign-in (one floating sheet + mascot), empty and not-found states (mascot on a sheet)</dd>
+          <dt>DNA</dt><dd>Soft Futurism base + color strategy from Editorial Minimalism (warm paper and one muted accent instead of a tinted atmosphere) · dominant: composition (the working margin)</dd>
+          <dt>SIGNATURE</dt><dd>Tables and rules use box-drawing characters as borders: code blocks and tables are framed by ┌ ┐ └ ┘ corner glyphs; the margin's rule is drawn in │</dd>
+        </dl>
+        <div class="verdict">
+          <p><b>Strongest:</b> Marginalia gives citations and feedback a real home beside the answer and matches the two-column admin forms the tour already praised; the only hand that uses the chat's unused width.</p>
+          <p><b>Weakest:</b> the family's depth axis (blur, translucency) is forbidden by the brief, so Soft Futurism runs on radius, one soft shadow and layer motion alone; 16 px radius on dense admin tables reads consumer-app; box-drawing glyphs in a sans UI are a terminal gesture that must stay on code blocks and the margin rule.</p>
+          <p><b>Tells:</b> glassmorphism is the family's named ⚠; avoided by value (no <code>backdrop-filter</code>) and guarded in Never. Nearest cluster: calm-productivity (Things 3 itself); the margin apparatus is the difference.</p>
+        </div>
+        <p class="where"><b>Where the stance lives in Stage 1:</b> chat answers (citations and feedback in the margin), Class settings and the other two-column admin forms, the PDF annotation sidebar. Tables keep square corners inside the sheet.</p>
+      </aside>
+      <div class="pixels">
+        <div><h3>Ramps (shared)</h3><div class="ramps"></div></div>
+        <div><h3>Swatches in role</h3><div class="swatches"></div></div>
+        <div>
+          <h3>Type specimen; Nunito Sans + CJK stack</h3>
+          <div class="specimen">
+            <span class="badge">font: checking…</span>
+            <div class="h">Gradient descent, step by step</div>
+            <div class="deck">A tutor that reads the course with you — 一位和你一起读课件的助教</div>
+            <p class="body">Students read long answers that mix prose, math, code and citations. The measure stays between 60 and 75 characters where the width allows, and the leading opens up when a block turns Chinese.</p>
+            <p class="cjk">学习率太大时，每一步都会越过最低点，损失反而上升。先把它调到原来的十分之一，观察前 50 步的变化，再决定是否继续调整。</p>
+            <p class="ital">Authentic italic — the face carries its own, not a slanted roman. 真正的斜体，而不是倾斜的正体。</p>
+            <div class="nums"><span class="lab">Tabular figures</span><span>1,024</span><span>14:30</span><span class="lab">right-aligned in tables</span><span>16,384</span><span>2026-10-16</span><span class="lab">counts stay in columns</span><span>207</span><span>18:45</span></div>
+            <p class="small">Secondary text at 14 px · Materials · Scratchpad · Enroll students · 课程材料</p>
+            <p class="xs">Labels at 12 px · Current session · 3 messages · [Page 12]</p>
+            <p class="stack">font-family: "Nunito Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif</p>
+          </div>
+        </div>
+        <div><h3>Chat sample; light and dark</h3>
+          <div class="samples">
+            <div class="sample" data-mode="light"><div class="mode"><span>light · canvas --paper-2 · sheet --neutral-1</span><span>fill --accent-12</span></div></div>
+            <div class="sample" data-mode="dark" data-theme="dark"><div class="mode"><span>dark · canvas --paper-2 · sheet --neutral-3</span><span>fill --accent-9</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CANDIDATE 3 ============================ -->
+  <section class="cand" id="c3" aria-labelledby="c3-h">
+    <div class="cand-head">
+      <div>
+        <div class="idx">Candidate 3 · deal 1, hand 2</div>
+        <h2 id="c3-h">Herbarium Sheet</h2>
+        <div class="hand"><b>Organic / Natural</b> × <b>Monolith Center</b> (variance 1) · signature <b>baseline-ruler</b> (also dealt to candidate 1) · face <b>Alegreya Sans</b> · seed <code>kiwi-ui|2026-10-16|1|pin:chroma=muted,hue=156</code></div>
+      </div>
+    </div>
+    <div class="cand-body">
+      <aside>
+        <dl class="spec">
+          <dt>GROUNDING</dt><dd>Kew Herbarium specimen sheets: one pressed specimen centred on cream paper, a small typed label in the corner + Muji packaging (Kenya Hara): unbleached-paper neutrals, one word of type, no decoration</dd>
+          <dd class="sentence">The mascot becomes the single centred specimen on the moments that can carry it, and everything else is a quiet label on unbleached paper.</dd>
+          <dt>TYPE</dt><dd>Alegreya Sans over Alegreya Sans: a calligraphic humanist drawn for literature; weights 400/700; it carries the organic feel alone now that the family's serif body is pinned out</dd>
+          <dt>COLOR</dt><dd>seed green 156 (pinned) · unbleached canvas (<code>--paper-3</code>) with paper sheets (<code>--paper-2</code>), tonal: no borders, no shadows; dark: canvas <code>--paper-2</code>, sheets <code>--paper-3</code> · mono harmony · swatches <code>#203327</code> <code>#84ca9e</code> <code>#f4f1e4</code></dd>
+          <dt>COMPOSITION</dt><dd>&lt;dealt&gt;: Organic / Natural × Monolith Center, dial 1 · justification: the empty states, sign-in and not-found pages get one centred mass (the mascot) with everything else caption-rank; inside dense pages the stance becomes "one focus per region" (the next step, nothing competing)</dd>
+          <dt>MOTION</dt><dd>slow and material: 150 ms micro, 320 ms standard, one 450 ms settle (scale 0.96→1, ease-in-out) for the centred mass on empty states and sign-in; tool chrome never above 150 ms</dd>
+          <dt>REGISTER</dt><dd>calm structure · expressive at: empty states (the specimen), sign-in (the specimen), not-found (the specimen); the chat companion stays a 32 px label-rank avatar</dd>
+          <dt>DNA</dt><dd>Organic / Natural base + type voice from Warm Editorial (humanist sans in place of the humanist serif) · dominant: colour (moss and cream naturals: the family's home ground)</dd>
+          <dt>SIGNATURE</dt><dd>A visible baseline ruler runs down one edge and content demonstrably sits on it: a dotted stem along the left of reading columns and the centre axis of the specimen moments</dd>
+        </dl>
+        <div class="verdict">
+          <p><b>Strongest:</b> the palette is the family's home ground (hues 90–180 at low chroma, warm off-white, moss dark); the most "Kiwi" direction without effort; Monolith Center gives the mascot moments a single-focus stage.</p>
+          <p><b>Weakest:</b> Monolith Center fights dense admin tables and the three-pane class page, where it can only be a per-region "one focus" rule; the family's type axis is pinned out, so Alegreya Sans carries the organic feel alone; its slow motion must be capped for tool chrome. Shares its dealt signature with Ruled Folio.</p>
+          <p><b>Tells:</b> none hit; texture/grain and blob masks are the family's decoration temptations → Never. Nearest cluster: the earthy wellness app (sage + cream + rounded); the lack of texture and the ruler keep it academic.</p>
+        </div>
+        <p class="where"><b>Where the stance lives in Stage 1:</b> the no-classes and no-conversation empty states, the class-card fallback, sign-in and not-found (one centred mascot, label-rank copy); elsewhere one focus per region and tonal sheets without borders.</p>
+      </aside>
+      <div class="pixels">
+        <div><h3>Ramps (shared)</h3><div class="ramps"></div></div>
+        <div><h3>Swatches in role</h3><div class="swatches"></div></div>
+        <div>
+          <h3>Type specimen; Alegreya Sans + CJK stack</h3>
+          <div class="specimen">
+            <span class="badge">font: checking…</span>
+            <div class="h">Gradient descent, step by step</div>
+            <div class="deck">A tutor that reads the course with you — 一位和你一起读课件的助教</div>
+            <p class="body">Students read long answers that mix prose, math, code and citations. The measure stays between 60 and 75 characters where the width allows, and the leading opens up when a block turns Chinese.</p>
+            <p class="cjk">学习率太大时，每一步都会越过最低点，损失反而上升。先把它调到原来的十分之一，观察前 50 步的变化，再决定是否继续调整。</p>
+            <p class="ital">Authentic italic — the face carries its own, not a slanted roman. 真正的斜体，而不是倾斜的正体。</p>
+            <div class="nums"><span class="lab">Tabular figures</span><span>1,024</span><span>14:30</span><span class="lab">right-aligned in tables</span><span>16,384</span><span>2026-10-16</span><span class="lab">counts stay in columns</span><span>207</span><span>18:45</span></div>
+            <p class="small">Secondary text at 14 px · Materials · Scratchpad · Enroll students · 课程材料</p>
+            <p class="xs">Labels at 12 px · Current session · 3 messages · [Page 12]</p>
+            <p class="stack">font-family: "Alegreya Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif</p>
+          </div>
+        </div>
+        <div><h3>Chat sample; light and dark</h3>
+          <div class="samples">
+            <div class="sample" data-mode="light"><div class="mode"><span>light · canvas --paper-3 · sheet --paper-2 (tonal)</span><span>fill --accent-12</span></div></div>
+            <div class="sample" data-mode="dark" data-theme="dark"><div class="mode"><span>dark · canvas --paper-2 · sheet --paper-3 (tonal)</span><span>fill --accent-9</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CANDIDATE 4 ============================ -->
+  <section class="cand" id="c4" aria-labelledby="c4-h">
+    <div class="cand-head">
+      <div>
+        <div class="idx">Candidate 4 · deal 1, hand 3</div>
+        <h2 id="c4-h">Open Quote</h2>
+        <div class="hand"><b>Warm Editorial</b> × <b>Poster Bleed</b> (variance 8) · signature <b>oversize-punctuation</b> · face <b>Fira Sans</b> · seed <code>kiwi-ui|2026-10-16|1|pin:chroma=muted,hue=156</code></div>
+      </div>
+    </div>
+    <div class="cand-body">
+      <aside>
+        <dl class="spec">
+          <dt>GROUNDING</dt><dd>A Moleskine notebook: cream paper, rounded corners, tactile restraint + Saul Bass's 1955 poster for <i>The Man with the Golden Arm</i>: one cut-paper figure fills the sheet, the title sits small in a corner</dd>
+          <dd class="sentence">Warm paper and soft corners for the student's hands, and one place; the auth panel and the not-found page; where the mascot fills the sheet and the words step aside.</dd>
+          <dt>TYPE</dt><dd>Fira Sans over Fira Sans: the FF Meta lineage: warm, legible at small sizes, 16 weights with true italics; weights 400/500/600</dd>
+          <dt>COLOR</dt><dd>seed green 156 (pinned) · warm paper canvas (<code>--paper-3</code>) with paper sheets (<code>--paper-2</code>) and a deeper paper band (<code>--paper-4</code>) as the bleed ground; dark: canvas <code>--paper-2</code>, sheets <code>--paper-3</code>, band <code>--paper-4</code> · mono harmony · tan-warm shadow via <code>color-mix</code> · swatches <code>#203327</code> <code>#84ca9e</code> <code>#ede8d5</code></dd>
+          <dt>COMPOSITION</dt><dd>&lt;dealt&gt;: Warm Editorial × Poster Bleed, dial 8 · justification: the auth split already has a full-height image panel and the not-found route is free to restyle: the mascot bleeds there at poster scale; everywhere else the stance collapses to a ground band with copy pinned to its edge</dd>
+          <dt>MOTION</dt><dd>gentle: 150 ms micro, 300 ms standard with an 8 px y-translate on panels and dialogs, ease-out-expo; the display quotation mark fades with its message; the bleed panel is static</dd>
+          <dt>REGISTER</dt><dd>calm structure · expressive at: sign-in (the bleed), not-found (the bleed), the chat companion (the mascot and the display quotation mark on the student's question)</dd>
+          <dt>DNA</dt><dd>Warm Editorial base + motion vocabulary from Editorial Minimalism (the family's reveals cut back to state changes) · dominant: type voice (Fira Sans's warmth and the display punctuation)</dd>
+          <dt>SIGNATURE</dt><dd>Pull quotes and brackets set at display scale act as structural elements: the student's question opens with a 64 px quotation mark in the link colour at 42 % opacity; empty states bracket the mascot in display-scale [ ]</dd>
+        </dl>
+        <div class="verdict">
+          <p><b>Strongest:</b> Warm Editorial is a Caregiver primary whose body type <i>is</i> a humanist sans; warm paper and moderate radius give student surfaces warmth without decoration; the display quotation mark is the most memorable single move of the five.</p>
+          <p><b>Weakest:</b> Poster Bleed is hostile to a reading and admin product; in Stage 1 it lives only on the auth panel and the not-found page, elsewhere collapsing to a header band and edge-pinned copy; the quotation mark must stay in one place or it becomes decoration.</p>
+          <p><b>Tells:</b> one cell from the banned cream + serif + terracotta home cell (Warm Editorial × Editorial Spread). The sans pin and the forest hue keep it out; any serif accent or clay tint brings it back → Never. Nearest cluster: the small-press cookbook look.</p>
+        </div>
+        <p class="where"><b>Where the stance lives in Stage 1:</b> the auth split's image panel and the not-found page (the bleed); the chat header as a paper band with the title pinned to its edge; the quotation mark on the student's question only.</p>
+      </aside>
+      <div class="pixels">
+        <div><h3>Ramps (shared)</h3><div class="ramps"></div></div>
+        <div><h3>Swatches in role</h3><div class="swatches"></div></div>
+        <div>
+          <h3>Type specimen; Fira Sans + CJK stack</h3>
+          <div class="specimen">
+            <span class="badge">font: checking…</span>
+            <div class="h">Gradient descent, step by step</div>
+            <div class="deck">A tutor that reads the course with you — 一位和你一起读课件的助教</div>
+            <p class="body">Students read long answers that mix prose, math, code and citations. The measure stays between 60 and 75 characters where the width allows, and the leading opens up when a block turns Chinese.</p>
+            <p class="cjk">学习率太大时，每一步都会越过最低点，损失反而上升。先把它调到原来的十分之一，观察前 50 步的变化，再决定是否继续调整。</p>
+            <p class="ital">Authentic italic — the face carries its own, not a slanted roman. 真正的斜体，而不是倾斜的正体。</p>
+            <div class="nums"><span class="lab">Tabular figures</span><span>1,024</span><span>14:30</span><span class="lab">right-aligned in tables</span><span>16,384</span><span>2026-10-16</span><span class="lab">counts stay in columns</span><span>207</span><span>18:45</span></div>
+            <p class="small">Secondary text at 14 px · Materials · Scratchpad · Enroll students · 课程材料</p>
+            <p class="xs">Labels at 12 px · Current session · 3 messages · [Page 12]</p>
+            <p class="stack">font-family: "Fira Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif</p>
+          </div>
+        </div>
+        <div><h3>Chat sample; light and dark</h3>
+          <div class="samples">
+            <div class="sample" data-mode="light"><div class="mode"><span>light · canvas --paper-3 · sheet --paper-2 · band --paper-4</span><span>fill --accent-12</span></div></div>
+            <div class="sample" data-mode="dark" data-theme="dark"><div class="mode"><span>dark · canvas --paper-2 · sheet --paper-3 · band --paper-4</span><span>fill --accent-9</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CANDIDATE 5 ============================ -->
+  <section class="cand" id="c5" aria-labelledby="c5-h">
+    <div class="cand-head">
+      <div>
+        <div class="idx">Candidate 5 · deal 1, hand 5</div>
+        <h2 id="c5-h">Set Square</h2>
+        <div class="hand"><b>Swiss / International</b> × <b>Swiss Modular</b> (variance 3) · signature <b>hard-offset-shadow</b> · face <b>IBM Plex Sans</b> · seed <code>kiwi-ui|2026-10-16|1|pin:chroma=muted,hue=156</code></div>
+      </div>
+    </div>
+    <div class="cand-body">
+      <aside>
+        <dl class="spec">
+          <dt>GROUNDING</dt><dd>Massimo Vignelli's 1970s New York City subway signage (Unimark): a flush-left grid where colour is only the line's identity + Hans Hilfiker's Swiss railway clock: one red element on a monochrome dial, the second hand's pause as the only motion</dd>
+          <dd class="sentence">Colour carries meaning only and motion happens once, on purpose; the brief's own rules, set on an 8 px module grid that dense admin pages can live on.</dd>
+          <dt>TYPE</dt><dd>IBM Plex Sans over IBM Plex Sans: a grotesque with humanist traits (open apertures, modulated stroke), the only way Swiss discipline and the humanist pin meet; weights 400/500/600; exemplary tabular figures</dd>
+          <dt>COLOR</dt><dd>seed green 156 (pinned) · light cream canvas (<code>--paper-2</code>) with white sheets (<code>--neutral-1</code>) separated by hairlines, no containers; dark: canvas <code>--paper-2</code>, sheets <code>--neutral-3</code> · mono harmony · no shadows except the signature's hard offset · swatches <code>#203327</code> <code>#84ca9e</code> <code>#faf9f3</code></dd>
+          <dt>COMPOSITION</dt><dd>&lt;dealt&gt;: Swiss / International × Swiss Modular, dial 3 · justification: every page keeps its regions and gains one module grid (8 px), hairline dividers and flush-left rag-right; admin tables are its home and student pages hold the same grid at comfortable density</dd>
+          <dt>MOTION</dt><dd>instant: 100 ms micro, 150 ms standard, no orchestration; linear or sharp ease-out; only state changes move (press, toggle, selection); no entrances anywhere</dd>
+          <dt>REGISTER</dt><dd>calm structure · expressive at: the chat companion (mascot), sign-in (one display line on the grid + mascot), empty and not-found states (mascot on the grid): modest amplitude throughout</dd>
+          <dt>DNA</dt><dd>Swiss / International base + type voice from Data-Dense Professional (compact sans with mandatory tabular numerals) · dominant: composition (the module grid)</dd>
+          <dt>SIGNATURE</dt><dd>All interactive elements share one hard offset shadow that shifts on press: a 2 px × 2 px offset in the boundary colour on buttons, inputs and chips; on press the element moves into it and the shadow disappears</dd>
+        </dl>
+        <div class="verdict">
+          <p><b>Strongest:</b> Vignelli's "colour is information" is the brief's own rule and Swiss Modular suits ~25 dense admin pages; the 100–150 ms budget is the most honest tool-chrome motion of the five; Plex's tabular figures are exemplary.</p>
+          <p><b>Weakest:</b> the humanist pin removes the grotesque that makes Swiss Swiss; Plex is a hybrid, so the type voice sits between two structures; zero radius and no shadows run cold for the Caregiver side; the dealt hard-offset shadow is Neo-Brutalist in origin and sits against "borders before shadows"; the likeliest converge-time swap.</p>
+          <p><b>Tells:</b> none hit by value. Nearest cluster: the flat hairline dashboard (Vercel / Linear); the forest fill, cream canvas and Plex keep distance, but this is the candidate closest to a generic centre.</p>
+        </div>
+        <p class="where"><b>Where the stance lives in Stage 1:</b> everywhere; the 8 px module grid, hairline dividers, flush-left type; admin tables are its home; the hard offset on every control.</p>
+      </aside>
+      <div class="pixels">
+        <div><h3>Ramps (shared)</h3><div class="ramps"></div></div>
+        <div><h3>Swatches in role</h3><div class="swatches"></div></div>
+        <div>
+          <h3>Type specimen; IBM Plex Sans + CJK stack</h3>
+          <div class="specimen">
+            <span class="badge">font: checking…</span>
+            <div class="h">Gradient descent, step by step</div>
+            <div class="deck">A tutor that reads the course with you — 一位和你一起读课件的助教</div>
+            <p class="body">Students read long answers that mix prose, math, code and citations. The measure stays between 60 and 75 characters where the width allows, and the leading opens up when a block turns Chinese.</p>
+            <p class="cjk">学习率太大时，每一步都会越过最低点，损失反而上升。先把它调到原来的十分之一，观察前 50 步的变化，再决定是否继续调整。</p>
+            <p class="ital">Authentic italic — the face carries its own, not a slanted roman. 真正的斜体，而不是倾斜的正体。</p>
+            <div class="nums"><span class="lab">Tabular figures</span><span>1,024</span><span>14:30</span><span class="lab">right-aligned in tables</span><span>16,384</span><span>2026-10-16</span><span class="lab">counts stay in columns</span><span>207</span><span>18:45</span></div>
+            <p class="small">Secondary text at 14 px · Materials · Scratchpad · Enroll students · 课程材料</p>
+            <p class="xs">Labels at 12 px · Current session · 3 messages · [Page 12]</p>
+            <p class="stack">font-family: "IBM Plex Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif</p>
+          </div>
+        </div>
+        <div><h3>Chat sample; light and dark</h3>
+          <div class="samples">
+            <div class="sample" data-mode="light"><div class="mode"><span>light · canvas --paper-2 · sheet --neutral-1 · hairlines</span><span>fill --accent-12</span></div></div>
+            <div class="sample" data-mode="dark" data-theme="dark"><div class="mode"><span>dark · canvas --paper-2 · sheet --neutral-3 · hairlines</span><span>fill --accent-9</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="meta">
+    <p>Choosing: pick one by name, ask for a synthesis (one or two axes borrowed, one axis dominant; composition is not swappable, it is a re-deal), or say none fit and why. Swaps that stay legal on a pick: the face (any of the five, or one you name), the signature (another deck move or your own), hue or chroma (a re-run of <code>palette.mjs</code>). After the pick: <code>kiwi-ui/DESIGN.md</code> is locked and the swatch sheet <code>.design-foundations/mocks/swatch-sheet.html</code> is built for the pixel confirmation.</p>
+    <p>Mascot artwork: <code>kiwi-ui/public/favicon.svg</code>, exact colours (G11). The mascot's states and motion are Phase 4; it is still here on purpose.</p>
+  </footer>
+
+  <script>
+    (function () {
+      // ---- colour helpers (WCAG 2.x + OKLab, same math as palette.mjs) ----
+      const hexToRgb = (h) => { h = h.trim().replace('#', ''); if (h.length === 3) h = h.split('').map((c) => c + c).join(''); return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16) / 255); };
+      const lum = (rgb) => { const [r, g, b] = rgb.map((c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4))); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+      const ratio = (a, b) => { const [x, y] = [lum(hexToRgb(a)), lum(hexToRgb(b))].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+      const oklch = (hex) => {
+        const lin = hexToRgb(hex).map((x) => (x <= 0.04045 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4)));
+        const l = 0.4122214708 * lin[0] + 0.5363325363 * lin[1] + 0.0514459929 * lin[2];
+        const m = 0.2119034982 * lin[0] + 0.6806995451 * lin[1] + 0.1073969566 * lin[2];
+        const s = 0.0883024619 * lin[0] + 0.2817188376 * lin[1] + 0.6299787005 * lin[2];
+        const l_ = Math.cbrt(l), m_ = Math.cbrt(m), s_ = Math.cbrt(s);
+        const L = 0.2104542553 * l_ + 0.793617785 * m_ - 0.0040720468 * s_;
+        const a = 1.9779984951 * l_ - 2.428592205 * m_ + 0.4505937099 * s_;
+        const bb = 0.0259040371 * l_ + 0.7827717662 * m_ - 0.808675766 * s_;
+        let H = (Math.atan2(bb, a) * 180) / Math.PI; if (H < 0) H += 360;
+        return { L, C: Math.hypot(a, bb), H };
+      };
+      const tok = (el, name) => getComputedStyle(el).getPropertyValue(name).trim();
+      const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
+
+      const lightProbe = document.documentElement;
+      const darkProbe = document.getElementById('ramps-dark');
+
+      // ---- ramps ----
+      function rampRow(scope, label, prefix, compact) {
+        const row = el('div', 'ramp' + (compact ? ' compact' : ''));
+        row.appendChild(el('div', 'lbl', label));
+        for (let i = 1; i <= 12; i++) {
+          const v = tok(scope, `--${prefix}-${i}`);
+          const c = el('div', 'cell'); c.style.background = v; c.title = `--${prefix}-${i}: ${v}`;
+          const s = el('span', '', String(i)); s.style.color = ratio(v, '#000000') > ratio(v, '#ffffff') ? '#000' : '#fff'; c.appendChild(s);
+          row.appendChild(c);
+        }
+        return row;
+      }
+      function paperRow(scope, compact) {
+        const row = el('div', 'ramp' + (compact ? ' compact' : ''));
+        row.appendChild(el('div', 'lbl', 'paper 1–4'));
+        for (let i = 1; i <= 4; i++) {
+          const v = tok(scope, `--paper-${i}`);
+          const c = el('div', 'cell'); c.style.background = v; c.title = `--paper-${i}: ${v}`; c.style.gridColumn = 'span 3';
+          const s = el('span', '', `paper-${i}`); s.style.color = ratio(v, '#000000') > ratio(v, '#ffffff') ? '#000' : '#fff'; c.appendChild(s);
+          row.appendChild(c);
+        }
+        return row;
+      }
+      function fnRow(scope, compact) {
+        const row = el('div', 'fn-row');
+        if (compact) row.style.gridTemplateColumns = '74px repeat(4, 1fr)';
+        row.appendChild(el('div', 'lbl', 'functional 3 · 9 · 11'));
+        for (const f of ['error', 'success', 'warning', 'info']) {
+          const g = el('div', 'fn');
+          for (const s of [3, 9, 11]) {
+            const v = tok(scope, `--${f}-${s}`);
+            const c = el('div', 'cell'); c.style.background = v; c.title = `--${f}-${s}: ${v}`; if (compact) c.style.height = '16px';
+            if (!compact) { const sp = el('span', '', `${f[0]}${s}`); sp.style.color = ratio(v, '#000000') > ratio(v, '#ffffff') ? '#000' : '#fff'; c.appendChild(sp); }
+            g.appendChild(c);
+          }
+          row.appendChild(g);
+        }
+        return row;
+      }
+      function buildRamps(target, scope, compact) {
+        target.appendChild(rampRow(scope, 'accent (h156)', 'accent', compact));
+        target.appendChild(rampRow(scope, 'neutral (h95)', 'neutral', compact));
+        target.appendChild(paperRow(scope, compact));
+        target.appendChild(fnRow(scope, compact));
+      }
+      buildRamps(document.getElementById('ramps-light'), lightProbe, false);
+      buildRamps(darkProbe, darkProbe, false);
+
+      // ---- contrast tables (shared) ----
+      const PAIRS = (mode) => {
+        const canvas = mode === 'light' ? '--paper-3' : '--paper-2';
+        const canvasAlt = mode === 'light' ? '--paper-2' : null;
+        const sheet = mode === 'light' ? '--paper-2' : '--paper-3';
+        const fill = mode === 'light' ? '--accent-12' : '--accent-9';
+        const onFill = mode === 'light' ? '--neutral-1' : '--accent-on-solid';
+        const rows = [
+          ['text  neutral-12 on canvas', '--neutral-12', canvas, 7, 'body text (AAA by construction)'],
+          ['secondary  neutral-11 on canvas', '--neutral-11', canvas, 4.5, ''],
+          ['link  accent-11 on canvas', '--accent-11', canvas, 4.5, 'links / accent text'],
+          ['link  accent-11 on sheet', '--accent-11', sheet, 4.5, ''],
+          [`fill  ${fill.slice(2)} boundary vs canvas`, fill, canvas, 3, mode === 'light' ? 'forest fill (proposed)' : 'sage fill (proposed)'],
+          [`on-fill  ${onFill.slice(2)} on ${fill.slice(2)}`, onFill, fill, 4.5, 'button label'],
+          ['boundary  neutral-11 vs canvas', '--neutral-11', canvas, 3, 'inputs / focus (proposed interactive boundary)'],
+          ['focus  ' + (mode === 'light' ? 'accent-11' : 'accent-9') + ' vs canvas', mode === 'light' ? '--accent-11' : '--accent-9', canvas, 3, 'focus ring'],
+          ['divider  neutral-6 vs canvas', '--neutral-6', canvas, 3, 'decorative hairline: fails by design, never an interactive boundary'],
+          ['palette.mjs solid  accent-9 vs canvas', '--accent-9', canvas, 3, mode === 'light' ? 'why the light fill is forest, not --accent-9' : 'passes in dark, hence sage-led dark'],
+        ];
+        if (canvasAlt) rows.splice(1, 0, ['text  neutral-12 on paper-2 (alt canvas)', '--neutral-12', canvasAlt, 7, 'candidates 2 and 5']);
+        for (const f of ['error', 'success', 'warning', 'info']) {
+          rows.push([`${f}-11 on neutral-2`, `--${f}-11`, '--neutral-2', 4.5, 'DW-2.3 explicit pair']);
+          rows.push([`${f}-11 on ${f}-3`, `--${f}-11`, `--${f}-3`, 4.5, 'DW-2.3 explicit pair']);
+          rows.push([`${f}-11 on canvas`, `--${f}-11`, canvas, 4.5, '']);
+          rows.push([`${f}-9 vs canvas`, `--${f}-9`, canvas, 3, 'status fill/dot beside an icon and label (G1), not a lone boundary']);
+        }
+        return rows;
+      };
+      function fillTable(tableId, scope, mode) {
+        const tbody = document.querySelector(`#${tableId} tbody`);
+        for (const [label, fg, bg, target, note] of PAIRS(mode)) {
+          const a = tok(scope, fg), b = tok(scope, bg); const r = ratio(a, b); const ok = r >= target;
+          const tr = el('tr');
+          tr.appendChild(el('td', '', label));
+          const sw = el('td', 'num'); const chip = el('span', 'chip', `${fg.slice(2)} / ${bg.slice(2)}`); chip.style.background = b; chip.style.color = a; chip.style.minWidth = '0'; chip.style.padding = '2px 6px'; sw.appendChild(chip); tr.appendChild(sw);
+          tr.appendChild(el('td', 'num', r.toFixed(2) + ':1'));
+          tr.appendChild(el('td', 'num', `≥ ${target}`));
+          const st = el('td'); st.appendChild(el('span', ok ? 'pass' : 'fail', ok ? 'PASS' : 'FAIL')); if (note) st.appendChild(el('span', 'note', ' ' + note)); tr.appendChild(st);
+          tbody.appendChild(tr);
+        }
+      }
+      fillTable('pairs-light', lightProbe, 'light');
+      fillTable('pairs-dark', darkProbe, 'dark');
+
+      // ---- G1 line ----
+      (function () {
+        const s9 = tok(lightProbe, '--success-9'), a9 = tok(lightProbe, '--accent-9'), a12 = tok(lightProbe, '--accent-12');
+        const o = (h) => { const x = oklch(h); return `${h} (L ${x.L.toFixed(3)} C ${x.C.toFixed(3)} H ${x.H.toFixed(1)})`; };
+        const S = oklch(s9), A9 = oklch(a9), A12 = oklch(a12);
+        document.getElementById('g1-line').textContent =
+          `G1; success vs primary: --success-9 ${o(s9)} · dark fill --accent-9 ${o(a9)} → ${(S.C / A9.C).toFixed(1)}× the chroma · light fill --accent-12 ${o(a12)} → ${(S.C / A12.C).toFixed(1)}× · hue offset ${(A9.H - S.H).toFixed(1)}°. Holds in both modes.`;
+      })();
+
+      // ---- per-candidate: ramps, swatches in role, chat samples ----
+      const tpl = document.getElementById('chat-tpl');
+      const ROLES = [
+        ['canvas', '--role-canvas'], ['sheet', '--role-sheet'], ['text', '--role-text'], ['text-2', '--role-text-2'],
+        ['link', '--role-link'], ['fill', '--role-fill'], ['on-fill', '--role-on-fill'], ['boundary', '--role-boundary'], ['divider', '--role-rule'], ['focus', '--role-focus'],
+      ];
+      document.querySelectorAll('.cand').forEach((cand) => {
+        const dark = cand.querySelector('.sample[data-theme="dark"]');
+        // clone the chat sample into both modes
+        cand.querySelectorAll('.sample').forEach((slot) => slot.appendChild(tpl.content.cloneNode(true)));
+        // compact ramps
+        const ramps = cand.querySelector('.ramps');
+        const L = el('div', 'light-strip'); buildRamps(L, cand, true);
+        const D = el('div', 'dark-strip'); D.setAttribute('data-theme', 'dark'); buildRamps(D, dark, true);
+        const wrap = el('div', 'swatches'); wrap.appendChild(L); wrap.appendChild(D); ramps.appendChild(wrap);
+        // swatches in role
+        const sw = cand.querySelector('.swatches');
+        for (const [mode, scope] of [['light', cand], ['dark', dark]]) {
+          const box = el('div', mode === 'light' ? 'light-strip' : 'dark-strip'); if (mode === 'dark') box.setAttribute('data-theme', 'dark');
+          const canvas = tok(scope, '--role-canvas');
+          box.style.background = canvas;
+          const roles = el('div', 'roles');
+          for (const [name, v] of ROLES) {
+            const hex = tok(scope, v);
+            const chip = el('div', 'chip');
+            const isText = ['text', 'text-2', 'link', 'boundary', 'focus', 'divider'].includes(name);
+            if (name === 'on-fill') { chip.style.background = tok(scope, '--role-fill'); chip.style.color = hex; chip.textContent = `${name} ${hex}`; chip.appendChild(el('small', '', `${ratio(hex, tok(scope, '--role-fill')).toFixed(2)}:1 on fill`)); }
+            else if (name === 'fill') { chip.style.background = hex; chip.style.color = tok(scope, '--role-on-fill'); chip.textContent = `${name} ${hex}`; chip.appendChild(el('small', '', `${ratio(hex, canvas).toFixed(2)}:1 boundary vs canvas`)); }
+            else if (isText) { chip.style.background = tok(scope, '--role-sheet'); chip.style.color = hex; chip.style.border = `1px solid ${hex}`; chip.textContent = `${name} ${hex}`; chip.appendChild(el('small', '', `${ratio(hex, tok(scope, '--role-sheet')).toFixed(2)}:1 on sheet`)); }
+            else { chip.style.background = hex; chip.style.color = tok(scope, '--role-text'); chip.style.border = `1px solid ${tok(scope, '--role-rule')}`; chip.textContent = `${name} ${hex}`; }
+            roles.appendChild(chip);
+          }
+          box.appendChild(roles);
+          const st = el('div', 'status-row');
+          for (const [f, label] of [['success', 'Registered'], ['warning', 'Pending'], ['error', 'Failed'], ['info', 'Approved · 12']]) {
+            const chip = el('span', 'status'); chip.style.background = tok(scope, `--${f}-3`); chip.style.color = tok(scope, `--${f}-11`);
+            const dot = el('i'); dot.style.background = tok(scope, `--${f}-9`); chip.appendChild(dot);
+            chip.appendChild(document.createTextNode(label));
+            const r = el('span', 'ratio', ` ${ratio(tok(scope, `--${f}-11`), tok(scope, `--${f}-3`)).toFixed(1)}:1`); chip.appendChild(r);
+            st.appendChild(chip);
+          }
+          box.appendChild(st);
+          sw.appendChild(box);
+        }
+      });
+
+      // ---- font loading report ----
+      const FACES = { c1: 'Source Sans 3', c2: 'Nunito Sans', c3: 'Alegreya Sans', c4: 'Fira Sans', c5: 'IBM Plex Sans' };
+      function widthProbe(family) {
+        const span = el('span'); span.textContent = 'mmmmmmmmmmwwwwwwwwwwiiiiiiiiii0123456789'; span.style.cssText = 'position:absolute;left:-9999px;font-size:48px;white-space:nowrap';
+        span.style.fontFamily = 'monospace'; document.body.appendChild(span); const base = span.getBoundingClientRect().width;
+        span.style.fontFamily = `"${family}", monospace`; const w = span.getBoundingClientRect().width; span.remove();
+        return Math.abs(w - base) > 1;
+      }
+      function report() {
+        const lines = [];
+        for (const [id, fam] of Object.entries(FACES)) {
+          const faces = [...document.fonts].filter((f) => f.family.replace(/["']/g, '') === fam);
+          const loaded = faces.some((f) => f.status === 'loaded');
+          const rendering = widthProbe(fam);
+          const ok = loaded && rendering;
+          const txt = ok ? `${fam}: loaded` : faces.length ? `${fam}: ${faces.map((f) => f.status).includes('error') ? 'failed to load' : 'not loaded'}; specimen shows the fallback stack` : `${fam}: stylesheet not loaded; specimen shows the fallback stack`;
+          lines.push(txt);
+          const badge = document.querySelector(`#${id} .specimen .badge`); if (badge) badge.textContent = ok ? `font: ${fam} loaded` : `font: FALLBACK (${fam} did not load)`;
+        }
+        document.getElementById('font-report').textContent = 'Fonts (Google Fonts, display=swap): ' + lines.join(' · ') + '. Fallbacks are the G7 CJK stack, so a fallback specimen still shows the mixed-script line, just not the candidate face.';
+        document.documentElement.dataset.docHeight = String(document.documentElement.scrollHeight);
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => setTimeout(report, 150)); else setTimeout(report, 1500);
+    })();
+  </script>
+</body>
+</html>

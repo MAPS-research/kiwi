@@ -10,7 +10,7 @@ import {
 import { ChevronRightOutlined as ChevronRightIcon } from "@mui/icons-material";
 import { ChatGroup, classAnalyticsApi } from "../../utils/classAnalyticsApi.ts";
 import { ChatDetailDialog } from "./ChatDetailDialog.tsx";
-import { mono, tokens } from "./tokens.ts";
+import { numeric, tokens, typeRole } from "./tokens.ts";
 
 interface ChatBrowserProps {
   classId: string;
@@ -61,8 +61,8 @@ export const ChatBrowser: React.FC<ChatBrowserProps> = ({
   return (
     <Box
       sx={{
-        border: `1px solid ${tokens.line}`,
-        borderRadius: 3,
+        border: `1px solid ${tokens.edge}`,
+        borderRadius: "var(--radius-sheet)",
         backgroundColor: tokens.paper,
         display: "flex",
         flexDirection: "column",
@@ -76,7 +76,7 @@ export const ChatBrowser: React.FC<ChatBrowserProps> = ({
           px: 3,
           pt: 2.25,
           pb: 1.5,
-          borderBottom: `1px solid ${tokens.line}`,
+          borderBottom: `1px solid ${tokens.rule}`,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -86,18 +86,10 @@ export const ChatBrowser: React.FC<ChatBrowserProps> = ({
         }}
       >
         <Box>
-          <Typography
-            sx={{
-              fontSize: 11,
-              fontWeight: 700,
-              letterSpacing: "0.12em",
-              color: tokens.slate,
-              textTransform: "uppercase",
-            }}
-          >
+          <Typography sx={{ ...typeRole("group-title"), color: tokens.ink }}>
             Student chats
           </Typography>
-          <Typography sx={{ fontSize: 13, color: tokens.faint, mt: 0.25 }}>
+          <Typography sx={{ ...typeRole("small"), color: tokens.slate, mt: 0.25 }}>
             Open a {mode === "student" ? "student" : "page"} to read the full
             conversation
           </Typography>
@@ -108,18 +100,21 @@ export const ChatBrowser: React.FC<ChatBrowserProps> = ({
           value={mode}
           onChange={(_, value) => value && setMode(value)}
           sx={{
+            // A segmented control: the interactive edge; the selected half is the selection tint.
             "& .MuiToggleButton-root": {
               px: 1.5,
               py: 0.5,
-              fontSize: 13,
+              ...typeRole("label"),
+              fontWeight: "var(--type-weight-regular)",
               textTransform: "none",
-              color: tokens.slate,
-              borderColor: tokens.line,
+              color: tokens.ink,
+              borderColor: "var(--border-interactive)",
+              "&:hover": { backgroundColor: tokens.hover },
               "&.Mui-selected": {
-                backgroundColor: tokens.violetSoft,
-                color: tokens.violetInk,
-                fontWeight: 600,
-                "&:hover": { backgroundColor: tokens.violetTrack },
+                backgroundColor: "var(--selection-bg)",
+                color: "var(--selection-text)",
+                fontWeight: "var(--type-weight-emphasis)",
+                "&:hover": { backgroundColor: "var(--selection-bg)" },
               },
             },
           }}
@@ -138,7 +133,7 @@ export const ChatBrowser: React.FC<ChatBrowserProps> = ({
             ))}
           </Box>
         ) : groups.length === 0 ? (
-          <Typography sx={{ px: 3, py: 4, fontSize: 14, color: tokens.slate }}>
+          <Typography sx={{ px: 3, py: 4, ...typeRole("small"), color: tokens.slate }}>
             No chats yet{lectureId ? " for this lecture" : ""}.
           </Typography>
         ) : (
@@ -154,12 +149,11 @@ export const ChatBrowser: React.FC<ChatBrowserProps> = ({
                 alignItems: "center",
                 gap: 1.5,
                 textAlign: "left",
-                borderBottom: `1px solid ${tokens.line}`,
-                transition: "background-color 120ms ease",
+                borderBottom: `1px solid ${tokens.rule}`,
                 "&:hover": { backgroundColor: tokens.hover },
-                "&.Mui-focusVisible": {
-                  outline: `2px solid ${tokens.violet}`,
-                  outlineOffset: -2,
+                // The global ring, drawn inside the scrolling list so it is never clipped.
+                "&:focus-visible, &.Mui-focusVisible": {
+                  outlineOffset: "calc(-1 * var(--size-focus-ring))",
                 },
               }}
             >
@@ -168,15 +162,16 @@ export const ChatBrowser: React.FC<ChatBrowserProps> = ({
                 sx={{
                   width: 36,
                   height: 36,
-                  borderRadius: mode === "student" ? "50%" : 1.5,
-                  backgroundColor: tokens.violetSoft,
-                  color: tokens.violetInk,
+                  // A student is an avatar (a true circle); a page is a small square tile.
+                  borderRadius: mode === "student" ? "50%" : "var(--radius-small)",
+                  backgroundColor: "var(--surface-active)",
+                  color: tokens.ink,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontFamily: mono,
-                  fontSize: 12.5,
-                  fontWeight: 700,
+                  ...typeRole("caption"),
+                  ...numeric,
+                  fontWeight: "var(--type-weight-emphasis)",
                   flexShrink: 0,
                 }}
               >
@@ -188,8 +183,7 @@ export const ChatBrowser: React.FC<ChatBrowserProps> = ({
               <Box sx={{ flex: 1, minWidth: 0 }}>
                 <Typography
                   sx={{
-                    fontSize: 14,
-                    fontWeight: 600,
+                    ...typeRole("label"),
                     color: tokens.ink,
                     whiteSpace: "nowrap",
                     overflow: "hidden",
@@ -202,8 +196,8 @@ export const ChatBrowser: React.FC<ChatBrowserProps> = ({
                 </Typography>
                 <Typography
                   sx={{
-                    fontSize: 12,
-                    color: tokens.faint,
+                    ...typeRole("caption"),
+                    color: tokens.slate,
                     whiteSpace: "nowrap",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
@@ -221,17 +215,16 @@ export const ChatBrowser: React.FC<ChatBrowserProps> = ({
 
               <Typography
                 sx={{
-                  fontFamily: mono,
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: tokens.violet,
+                  ...typeRole("label"),
+                  ...numeric,
+                  color: tokens.ink,
                   flexShrink: 0,
                 }}
               >
                 {group.questionCount}
               </Typography>
               <ChevronRightIcon
-                sx={{ fontSize: 18, color: tokens.faint, flexShrink: 0 }}
+                sx={{ fontSize: 18, color: tokens.icon, flexShrink: 0 }}
               />
             </ButtonBase>
           ))

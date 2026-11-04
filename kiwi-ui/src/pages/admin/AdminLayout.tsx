@@ -54,43 +54,43 @@ const allSidebarItems = [
     roles: ["admin", "instructor"],
   },
   {
-    label: "User Management",
+    label: "Users",
     path: "/admin/user-management",
     icon: <UserManagementIcon />,
     roles: ["admin"],
   },
   {
-    label: "System Analytics",
+    label: "System analytics",
     path: "/admin/analytics",
     icon: <StackedBarChartOutlinedIcon />,
     roles: ["admin"],
   },
   {
-    label: "System Email",
+    label: "System email",
     path: "/admin/email",
     icon: <EmailIcon />,
     roles: ["admin"],
   },
   {
-    label: "Email Audit",
+    label: "Email audit",
     path: "/admin/email-audit",
     icon: <EmailAuditIcon />,
     roles: ["admin"],
   },
   {
-    label: "System Flags",
+    label: "System flags",
     path: "/admin/feature-flags",
     icon: <FlagIcon />,
     roles: ["admin"],
   },
   {
-    label: "MCP Server Registry",
+    label: "MCP servers",
     path: "/admin/mcp-servers",
     icon: <McpServersIcon />,
     roles: ["admin"],
   },
   {
-    label: "App Registry",
+    label: "App registry",
     path: "/admin/kiwi-apps",
     icon: <AppsIcon />,
     roles: ["admin"],
@@ -102,7 +102,7 @@ const allSidebarItems = [
     roles: ["admin"],
   },
   {
-    label: "Webhook Approvals",
+    label: "Webhook approvals",
     path: "/admin/webhooks/approvals",
     icon: <ApprovalIcon />,
     roles: ["admin"],
@@ -116,51 +116,52 @@ interface AdminAppItem {
   uiSlug?: string;
 }
 
+// The top bar's brand area lines up with the open rail (--size-sidebar, 220 px).
 const ADMIN_SIDEBAR_WIDTH = TOP_NAV_BRAND_AREA_WIDTH;
 
+/** The rail while the role loads: one skeleton row per entry, on the sidebar-item geometry. */
 const AdminSidebarSkeleton = () => (
   <Box
     component="aside"
     aria-label="Loading admin navigation"
     aria-busy="true"
     sx={{
-      width: ADMIN_SIDEBAR_WIDTH,
+      width: "var(--size-sidebar)",
       flexShrink: 0,
       bgcolor: "background.paper",
-      borderRight: "1px solid",
-      borderColor: "divider",
+      borderRight: "1px solid var(--border)",
       display: "flex",
       flexDirection: "column",
       overflow: "hidden",
     }}
   >
-    <Box sx={{ flexGrow: 1, py: 1 }}>
+    <Box sx={{ flexGrow: 1, py: "var(--space-2)" }}>
       {Array.from({ length: allSidebarItems.length }).map((_, index) => (
         <Box
           key={index}
           sx={{
-            minHeight: 44,
-            mx: 1,
-            px: 1,
+            minHeight: "var(--sidebar-item-height)",
+            mx: "var(--sidebar-item-margin-x)",
+            px: "var(--sidebar-item-padding-x)",
             display: "flex",
             alignItems: "center",
-            gap: 1.5,
+            gap: "var(--sidebar-item-gap)",
           }}
         >
-          <Box
-            sx={{
-              width: 24,
-              flexShrink: 0,
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <Skeleton variant="circular" width={20} height={20} />
-          </Box>
           <Skeleton
             variant="rounded"
+            sx={{
+              flexShrink: 0,
+              width: "var(--sidebar-item-icon-size)",
+              height: "var(--sidebar-item-icon-size)",
+              borderRadius: "var(--radius-small)",
+            }}
+          />
+          {/* A text line is square: a radius would round it into a pill. */}
+          <Skeleton
+            variant="text"
             width={index % 3 === 0 ? 112 : index % 3 === 1 ? 136 : 96}
-            height={16}
+            sx={{ fontSize: "var(--type-label-size)" }}
           />
         </Box>
       ))}
@@ -169,12 +170,20 @@ const AdminSidebarSkeleton = () => (
     <Box
       sx={{
         flexShrink: 0,
-        borderTop: "1px solid",
-        borderColor: "divider",
-        p: 1,
+        display: "flex",
+        justifyContent: "flex-end",
+        borderTop: "1px solid var(--border-subtle)",
+        p: "var(--space-2)",
       }}
     >
-      <Skeleton variant="circular" width={40} height={40} />
+      <Skeleton
+        variant="rounded"
+        sx={{
+          width: "var(--icon-button-size)",
+          height: "var(--icon-button-size)",
+          borderRadius: "var(--icon-button-radius)",
+        }}
+      />
     </Box>
   </Box>
 );
@@ -342,7 +351,7 @@ const AdminLayout: React.FC = () => {
               });
               return {
                 id: classInfo.id,
-                label: classInfo.className || "Unnamed class",
+                label: classInfo.className || "Untitled class",
               };
             } catch (error) {
               console.warn(
@@ -461,7 +470,7 @@ const AdminLayout: React.FC = () => {
           const isClassesItem = item.path === "/admin/classes";
           return {
             key: item.path,
-            label: isClassesItem && userRole === "instructor" ? "My Classes" : item.label,
+            label: isClassesItem && userRole === "instructor" ? "Your classes" : item.label,
             icon: item.icon,
             selected: location.pathname === item.path,
             active: isClassesItem && classNavigationExpanded,
@@ -513,7 +522,9 @@ const AdminLayout: React.FC = () => {
 
   return (
     <AdminNavigationContext.Provider value={adminNavigationContextValue}>
+      {/* The whole admin area is compact; reading regions inside set their own density. */}
       <Box
+        data-density="compact"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -537,7 +548,7 @@ const AdminLayout: React.FC = () => {
               : classNavigationExpanded
               ? classNavigation?.className ||
                 (classNavigation && !classNavigation.classNameLoading
-                  ? "Unnamed class"
+                  ? "Untitled class"
                   : undefined)
               : selectedClassId
                 ? classOptions.find((option) => option.id === selectedClassId)
@@ -568,8 +579,8 @@ const AdminLayout: React.FC = () => {
           onClassChange={canSelectClassScope ? handleClassChange : undefined}
           classEmptyLabel={
             userRole === "instructor"
-              ? "No assigned classes"
-              : "No classes found"
+              ? "No classes assigned to you yet. An administrator assigns them."
+              : "No classes yet"
           }
         />
 
@@ -590,10 +601,9 @@ const AdminLayout: React.FC = () => {
             <NavigationSidebar
               ariaLabel="Admin navigation"
               open={drawerOpen}
-              width={ADMIN_SIDEBAR_WIDTH}
               footer={
                 <Box
-                  sx={{ display: "flex", justifyContent: "flex-start", p: 1 }}
+                  sx={{ display: "flex", justifyContent: "flex-end", p: "var(--space-2)" }}
                 >
                   <IconButton
                     onClick={toggleDrawer}
@@ -625,17 +635,18 @@ const AdminLayout: React.FC = () => {
                 paper: {
                   sx: {
                     top: TOP_NAV_HEIGHT,
-                    width: 260,
+                    width: "var(--size-sidebar-drawer)",
                     height: `calc(100% - ${TOP_NAV_HEIGHT}px)`,
                   },
                 },
               }}
             >
-              <Box sx={{ display: "flex", height: "100%", minHeight: 0 }}>
+              {/* The drawer renders in a portal, outside the compact root: restate the density. */}
+              <Box data-density="compact" sx={{ display: "flex", height: "100%", minHeight: 0 }}>
                 <NavigationSidebar
                   ariaLabel="Admin navigation"
                   open
-                  width={260}
+                  width="var(--size-sidebar-drawer)"
                   sections={sidebarSections}
                 />
               </Box>
@@ -653,7 +664,8 @@ const AdminLayout: React.FC = () => {
               ml: shouldShowSidebar ? 0 : 0,
               overflow: "auto",
               height: `calc(100vh - ${TOP_NAV_HEIGHT}px)`,
-              bgcolor: "grey.50",
+              // The canvas: pages are rules and sections on it, panels are sheets on it.
+              bgcolor: "background.default",
             }}
           >
             <Outlet />

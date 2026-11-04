@@ -1,0 +1,406 @@
+{
+ "about": "Every action in the source that removes, deactivates, disables or revokes something (a call to a generated client method whose name says so, or a DELETE request), what the backend does when it runs (hard: the row is deleted; soft: a flag is set and the item stays; archive: a lifecycle is set and nothing shows it; state: a switch with its own verb), and the New rows that carry its words. check-copy.mjs (D12) fails on a call that is not listed, on a listed call the source no longer has, on a backend cite that does not show what the entry says it does, on a soft action whose rows say delete, remove or permanent (the copy says what the product does, C16), on an archive that has no reason, and on a New row with a removal word that no entry or `other` line accounts for.",
+ "actions": [
+  {
+   "id": "webhook-deactivate",
+   "what": "the webhook's Delete: the dialog's button and the row's control",
+   "effect": "soft",
+   "calls": [
+    [
+     "src/pages/admin/WebhookManagement.tsx",
+     "webhooksControllerRemove"
+    ]
+   ],
+   "backend": "webhooks/webhooks.service.ts:173-177",
+   "evidence": "isActive:\\s*false",
+   "rows": [
+    "A-09.08",
+    "A-09.09",
+    "A-09.10",
+    "A-09.42",
+    "A-09.59",
+    "A-09.73",
+    "A-09.82",
+    "A-09.87"
+   ],
+   "verb": "Deactivate",
+   "button": "A-09.10",
+   "visible": "the Inactive tab lists it and the Edit dialog's Status select turns it on again",
+   "visibleCite": "webhooks/webhooks.service.ts:73-98",
+   "visibleEvidence": "where:\\s*\\{\\s*userId\\s*\\}"
+  },
+  {
+   "id": "api-token-delete",
+   "what": "the API token's own Delete token control",
+   "effect": "hard",
+   "calls": [
+    [
+     "src/pages/admin/WebhookManagement.tsx",
+     "apiTokensControllerRemove"
+    ]
+   ],
+   "backend": "api-tokens/api-tokens.service.ts:153-168",
+   "evidence": "deleteApiToken",
+   "rows": [
+    "A-09.36",
+    "A-09.44",
+    "A-09.62"
+   ]
+  },
+  {
+   "id": "api-token-regenerate",
+   "what": "Regenerate token: the old token is deleted, then a new one is created",
+   "effect": "hard",
+   "calls": [
+    [
+     "src/pages/admin/WebhookManagement.tsx",
+     "apiTokensControllerRemove"
+    ]
+   ],
+   "backend": "api-tokens/api-tokens.service.ts:153-168",
+   "evidence": "deleteApiToken",
+   "rows": [
+    "A-09.63"
+   ]
+  },
+  {
+   "id": "mcp-server-delete",
+   "what": "Delete MCP server",
+   "effect": "hard",
+   "calls": [
+    [
+     "src/pages/admin/MCPServerManagement.tsx",
+     "mcpAdminControllerDeleteMcpServer"
+    ]
+   ],
+   "backend": "mcp/mcp.service.ts:164-197",
+   "evidence": "mcpServer\\.delete",
+   "rows": [
+    "A-07.11",
+    "A-07.12",
+    "A-07.13",
+    "A-07.14",
+    "A-07.15",
+    "A-07.21",
+    "A-07.25",
+    "A-07.68",
+    "A-07.85"
+   ]
+  },
+  {
+   "id": "mcp-unassign",
+   "what": "Unassign MCP server from a class (the single control)",
+   "effect": "hard",
+   "calls": [
+    [
+     "src/pages/admin/ClassMCPSettings.tsx",
+     "mcpAdminControllerRemoveServerFromClass"
+    ]
+   ],
+   "backend": "mcp/mcp.service.ts:584-615",
+   "evidence": "classMcpServer\\.delete\\(",
+   "rows": [
+    "A-22.12",
+    "A-22.13",
+    "A-22.14",
+    "A-22.15",
+    "A-22.32",
+    "A-22.40",
+    "A-22.49"
+   ]
+  },
+  {
+   "id": "mcp-unassign-bulk",
+   "what": "Unchecking an MCP server in the assignment dialog unassigns it",
+   "effect": "hard",
+   "calls": [
+    [
+     "src/pages/admin/ClassMCPSettings.tsx",
+     "mcpAdminControllerRemoveServerFromClass"
+    ]
+   ],
+   "backend": "mcp/mcp.service.ts:584-615",
+   "evidence": "classMcpServer\\.delete\\(",
+   "rows": [
+    "A-22.19"
+   ]
+  },
+  {
+   "id": "allowlist-entry-remove",
+   "what": "Remove an entry from the allowlist",
+   "effect": "hard",
+   "calls": [
+    [
+     "src/pages/admin/KiwiAppsAdmin.tsx",
+     "kiwiAppControllerDeleteWhitelistEntry"
+    ]
+   ],
+   "backend": "kiwi-app/kiwi-app.service.ts:134-146",
+   "evidence": "kiwiAppWhitelist\\.delete",
+   "rows": [
+    "A-08.36",
+    "A-08.37",
+    "A-08.38",
+    "A-08.39",
+    "A-08.48",
+    "A-08.51"
+   ]
+  },
+  {
+   "id": "app-unregister",
+   "what": "Unregister an app",
+   "effect": "hard",
+   "calls": [
+    [
+     "src/pages/admin/KiwiAppsAdmin.tsx",
+     "kiwiAppControllerDeleteApp"
+    ]
+   ],
+   "backend": "kiwi-app/kiwi-app.service.ts:419-432",
+   "evidence": "kiwiApp\\.delete\\(",
+   "rows": [
+    "A-08.40",
+    "A-08.49",
+    "A-08.61"
+   ]
+  },
+  {
+   "id": "prompt-revoke",
+   "what": "Revoke an app's approved prompt: its own verb, a state the chip shows (Revoked)",
+   "effect": "state",
+   "calls": [
+    [
+     "src/pages/admin/KiwiAppsAdmin.tsx",
+     "kiwiAppControllerRevokePrompt"
+    ]
+   ],
+   "backend": "kiwi-app/kiwi-app.service.ts:731-756",
+   "evidence": "isActive:\\s*false",
+   "rows": [
+    "A-08.45",
+    "A-08.53"
+   ]
+  },
+  {
+   "id": "class-app-disable",
+   "what": "Disable an app for a class: set disabled, with its settings kept",
+   "effect": "state",
+   "calls": [
+    [
+     "src/pages/admin/ClassKiwiAppsSettings.tsx",
+     "classKiwiAppControllerDisableClassApp"
+    ]
+   ],
+   "backend": "kiwi-app/kiwi-app.service.ts:650-663",
+   "evidence": "isEnabled:\\s*false",
+   "rows": [
+    "A-23.06",
+    "A-23.18",
+    "A-23.20",
+    "A-23.21",
+    "A-23.24",
+    "A-23.29"
+   ]
+  },
+  {
+   "id": "class-app-disable-bulk",
+   "what": "Unchecking an app in the enable dialog disables it",
+   "effect": "state",
+   "calls": [
+    [
+     "src/pages/admin/ClassKiwiAppsSettings.tsx",
+     "classKiwiAppControllerDisableClassApp"
+    ]
+   ],
+   "backend": "kiwi-app/kiwi-app.service.ts:650-663",
+   "evidence": "isEnabled:\\s*false",
+   "rows": [
+    "A-23.12"
+   ]
+  },
+  {
+   "id": "roster-remove",
+   "what": "Remove users from a class's roster (the enrollment goes, the account stays)",
+   "effect": "hard",
+   "calls": [
+    [
+     "src/pages/admin/ClassEnroll.tsx",
+     "classControllerDelete"
+    ]
+   ],
+   "backend": "class/class.service.ts:366-396",
+   "evidence": "deleteEnrollment",
+   "rows": [
+    "A-16.08",
+    "A-16.09",
+    "A-16.15",
+    "A-16.19",
+    "A-10.55"
+   ]
+  },
+  {
+   "id": "roster-remove-pending",
+   "what": "Remove pending enrollments from the roster",
+   "effect": "hard",
+   "calls": [
+    [
+     "src/pages/admin/ClassEnroll.tsx",
+     "classControllerDeletePendingUsers"
+    ]
+   ],
+   "backend": "class/class.service.ts:140-165",
+   "evidence": "deletePendingEnrollment",
+   "rows": []
+  },
+  {
+   "id": "material-delete",
+   "what": "Delete material: the code archives it, and no list shows an archived material and nothing restores it, so the person sees a delete",
+   "effect": "archive",
+   "calls": [
+    [
+     "src/pages/admin/Materials.tsx",
+     "materialControllerDelete"
+    ]
+   ],
+   "backend": "class/material/material.service.ts:73-84",
+   "evidence": "lifecycle:\\s*'ARCHIVED'",
+   "rows": [
+    "A-14.10",
+    "A-14.25",
+    "A-14.08"
+   ],
+   "visible": "gone from the staff list and from every student's view, with no way back in the product",
+   "visibleCite": "class/material/material.service.ts:98",
+   "visibleEvidence": "lifecycle:\\s*\\{\\s*not:\\s*'ARCHIVED'\\s*\\}",
+   "why": "the code archives, but the person can neither see it nor restore it, so Delete is what the page does; A-14.25 says what is kept (the chat history). If an archive list is ever added, relabel in one change."
+  },
+  {
+   "id": "file-delete",
+   "what": "Delete file: its comments, summaries, search index, row and stored file",
+   "effect": "hard",
+   "calls": [
+    [
+     "src/pages/admin/Materials.tsx",
+     "documentControllerDelete"
+    ]
+   ],
+   "backend": "common/database/document.service.ts:73-80",
+   "evidence": "document\\.delete\\(",
+   "rows": [
+    "A-14.22",
+    "A-14.26",
+    "A-14.08"
+   ]
+  },
+  {
+   "id": "file-replace",
+   "what": "Replace file: the old stored file is deleted and the index is built again",
+   "effect": "hard",
+   "calls": [],
+   "backend": "document/document.service.ts:285-325",
+   "evidence": "deleteFile",
+   "rows": [
+    "A-14.24"
+   ],
+   "note": "the call is `documentControllerReplaceFile`, an upload, so it is not a removal call the scan reads"
+  },
+  {
+   "id": "comment-delete",
+   "what": "Delete a comment (a DELETE request from the annotation page)",
+   "effect": "hard",
+   "calls": [
+    [
+     "src/pages/admin/AnnotateDocument.tsx",
+     "fetch DELETE"
+    ]
+   ],
+   "backend": "document/document.service.ts:1407-1428",
+   "evidence": "deleteDocumentComment\\(",
+   "rows": [
+    "A-24.08"
+   ]
+  },
+  {
+   "id": "summary-delete",
+   "what": "Delete a summary (a DELETE request from the annotation page)",
+   "effect": "hard",
+   "calls": [
+    [
+     "src/pages/admin/AnnotateDocument.tsx",
+     "fetch DELETE"
+    ]
+   ],
+   "backend": "document/document.service.ts:1706-1727",
+   "evidence": "deleteDocumentSummary\\(",
+   "rows": [
+    "A-24.31"
+   ]
+  },
+  {
+   "id": "chunk-delete",
+   "what": "Delete a chunk from a document's text pieces",
+   "effect": "hard",
+   "calls": [
+    [
+     "src/pages/admin/AnnotateDocument.tsx",
+     "documentControllerDeleteChunkViaPost"
+    ]
+   ],
+   "backend": "document/document.service.ts:1020-1043",
+   "evidence": "chunks:\\s*updatedChunks",
+   "rows": []
+  },
+  {
+   "id": "embeddings-remove",
+   "what": "An orphaned pipeline helper removes a document's embeddings (no route imports the file: SF-09)",
+   "effect": "client",
+   "calls": [
+    [
+     "src/utils/documentPipeline.ts",
+     "documentControllerRemoveEmbed"
+    ]
+   ],
+   "backend": "document/document.service.ts:768-786",
+   "evidence": "removeEmbeddingsForDocument",
+   "rows": [],
+   "scope": "out",
+   "note": "`utils/documentPipeline.ts` is on the orphan list of § Scope, so its words are out of scope"
+  },
+  {
+   "id": "widget-state-delete",
+   "what": "An embedded app clears its saved state (the app bridge, out of scope)",
+   "effect": "client",
+   "calls": [
+    [
+     "src/apps/bridge/usePersistedWidgetState.ts",
+     "widgetControllerDeleteWidgetState"
+    ]
+   ],
+   "backend": "common/database/document.service.ts:73-80",
+   "evidence": "document\\.delete\\(",
+   "rows": [],
+   "scope": "out",
+   "note": "embedded app content is out of scope (G5); the backend cite is only a placeholder for the schema"
+  }
+ ],
+ "other": {
+  "A-07.45": "a field of the MCP server form (Active), saved through the update call",
+  "A-07.87": "a field of the MCP server form (Active), saved through the update call",
+  "A-10.19": "an approval is a one-way status change: only a pending event can be approved (`webhooks/webhook-event.service.ts:178`)",
+  "A-10.20": "the same, for several events",
+  "A-10.22": "a rejection is a one-way status change (`webhooks/webhook-event.service.ts:247`)",
+  "A-10.46": "the same, for several events",
+  "A-11.58": "the allowlist entry's access switched off: a status, saved through the update call",
+  "A-16.21": "the typed list of addresses on the Enroll page, edited by the person (client only)",
+  "A-19.15": "Turn off experiment sets the status to completed (`experiment/experiment.service.ts:600-607`); the controller has no delete route",
+  "A-21.12": "the same button on the experiment's own page",
+  "A-20.08": "a variant removed from the form before it is saved (client only)",
+  "A-20.49": "the JSON export leaves out the member lists (client only)",
+  "A-22.28": "the tool switch: a setting (`isEnabled`), saved through the update call",
+  "A-22.48": "the same switch, its toast",
+  "A-22.51": "the server's class switch: a setting (`isEnabled`)",
+  "DS.15": "a design-system reason for a control the product does not have today (the Phase 3 placeholder)",
+  "DS.32": "the confirmation pattern's placeholder",
+  "DS.34": "the app-wide not-found alert, for any resource"
+ }
+}

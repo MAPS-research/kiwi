@@ -20,7 +20,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import type { SxProps, Theme } from "@mui/material/styles";
-import { alpha } from "@mui/material/styles";
 import {
   CalendarMonthOutlined,
   ChevronLeft,
@@ -280,13 +279,10 @@ export const DateTimeRangePicker = ({
         slotProps={{
           paper: {
             sx: {
+              // The theme draws the popover sheet: hairline edge, sheet radius, --shadow-1.
               width: { xs: "calc(100vw - 24px)", sm: popoverWidth },
               maxWidth: popoverWidth,
               mt: 0.75,
-              border: 1,
-              borderColor: "divider",
-              borderRadius: 2.5,
-              boxShadow: "0 12px 32px rgba(15, 23, 42, 0.12)",
               overflow: "hidden",
             },
           },
@@ -357,20 +353,25 @@ export const DateTimeRangePicker = ({
                   role="gridcell"
                   aria-selected={selected}
                   sx={{
+                    position: "relative",
                     display: "grid",
                     placeItems: "center",
                     minWidth: 0,
                     height: 36,
-                    background: (theme) => {
-                      const rangeColor = alpha(theme.palette.primary.main, 0.12);
-                      if (dayDisabled || (isStart && isEnd)) return "transparent";
-                      if (isStart) {
-                        return `linear-gradient(to right, transparent 0 50%, ${rangeColor} 50% 100%)`;
-                      }
-                      if (isEnd) {
-                        return `linear-gradient(to right, ${rangeColor} 0 50%, transparent 50% 100%)`;
-                      }
-                      return inRange ? rangeColor : "transparent";
+                    // The range band in the selection tint: a flat fill behind the days,
+                    // from the middle of the start day to the middle of the end day.
+                    "&::before": {
+                      content: '""',
+                      position: "absolute",
+                      top: 0,
+                      bottom: 0,
+                      left: isStart ? "50%" : 0,
+                      right: isEnd ? "50%" : 0,
+                      bgcolor: "var(--selection-bg)",
+                      display:
+                        !dayDisabled && !(isStart && isEnd) && (isStart || isEnd || inRange)
+                          ? "block"
+                          : "none",
                     },
                   }}
                 >
@@ -395,21 +396,27 @@ export const DateTimeRangePicker = ({
                       aspectRatio: "1 / 1",
                       flex: "0 0 36px",
                       p: 0,
-                      borderRadius: 1.5,
+                      borderRadius: "var(--radius-small)",
                       ...COMPACT_POPUP_TYPOGRAPHY.primary,
+                      // A selected end is the filled cell: the Soft sage fill, its 1 px
+                      // edge and the label on the fill (DESIGN.md, the grey and common hand-off).
                       color: selected
-                        ? "common.white"
+                        ? "var(--accent-on-solid)"
                         : isSameMonth(day, visibleMonth)
                           ? "text.primary"
-                          : "text.disabled",
-                      bgcolor: selected ? "primary.main" : "transparent",
+                          : "text.secondary",
+                      bgcolor: selected ? "var(--accent-solid)" : "transparent",
+                      border: "1px solid",
+                      borderColor: selected ? "var(--accent-solid-border)" : "transparent",
+                      boxShadow: "none",
                       "&:hover": {
-                        bgcolor: selected ? "primary.dark" : "action.hover",
+                        bgcolor: selected ? "var(--accent-solid-hover)" : "action.hover",
                       },
-                      "&.Mui-focusVisible": {
-                        outline: "2px solid",
-                        outlineColor: "primary.main",
-                        outlineOffset: 1,
+                      // Bordered: focus recolours the day's own edge (one frame).
+                      "&.Mui-focusVisible, &:focus-visible": {
+                        outline: "none",
+                        borderColor: "var(--focus-ring)",
+                        boxShadow: "inset 0 0 0 1px var(--focus-ring)",
                       },
                     }}
                   >
@@ -504,14 +511,7 @@ export const DateTimeRangePicker = ({
               onClick={applyDraft}
               sx={{
                 minHeight: 38,
-                color: "primary.main",
-                borderColor: "primary.main",
                 ...COMPACT_POPUP_TYPOGRAPHY.primary,
-                "&:hover": {
-                  color: "primary.dark",
-                  borderColor: "primary.dark",
-                  bgcolor: (theme) => alpha(theme.palette.primary.main, 0.04),
-                },
               }}
             >
               {labels.apply}

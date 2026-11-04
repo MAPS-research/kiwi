@@ -54,8 +54,9 @@ class WidgetErrorBoundary extends Component<
           sx={{
             p: 3,
             textAlign: 'center',
-            bgcolor: 'error.light',
-            color: 'error.contrastText',
+            // The error status surface and its text (DESIGN.md § Functional colour usage).
+            bgcolor: 'var(--status-error-surface)',
+            color: 'var(--status-error-text)',
           }}
         >
           <ErrorIcon sx={{ fontSize: 48, mb: 2 }} />
@@ -229,8 +230,10 @@ function getLayoutStyles(position?: WidgetPosition): Record<string, unknown> {
         zIndex: 1300,
         maxWidth: '90vw',
         maxHeight: '90vh',
-        boxShadow: 24,
-        borderRadius: 2,
+        // A floating sheet: hairline edge, sheet radius, --shadow-2.
+        border: '1px solid var(--border)',
+        boxShadow: 'var(--shadow-2)',
+        borderRadius: 'var(--radius-sheet)',
         bgcolor: 'background.paper',
       };
     case 'fullscreen':

@@ -1,33 +1,35 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useId, useRef, useState } from "react";
 import { Document, Page } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import "./setupPdfWorker.ts";
 import { ChatContext } from "../../pages/ClassLayout.tsx";
-import theme from "../../Theme.ts";
 import {
+  Alert,
+  Badge,
   Box,
   Button,
-  CircularProgress,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Divider,
   IconButton,
+  Link,
   Paper,
+  Skeleton,
   Stack,
+  SvgIcon,
+  Tooltip,
   Typography,
-  Badge,
 } from "@mui/material";
 import {
   ZoomOut as ZoomOutIcon,
   ZoomIn as ZoomInIcon,
   CropFree as CropFreeIcon,
-  MenuBook as MenuBookIcon,
+  MenuBookOutlined as MenuBookIcon,
   Close as CloseIcon,
-  Info as InfoIcon,
-  Refresh as RefreshIcon,
   NavigateBefore as NavigateBeforeIcon,
   NavigateNext as NavigateNextIcon,
 } from "@mui/icons-material";
@@ -77,14 +79,154 @@ interface PDFViewerProps {
 const ZOOM_STEP = 0.2;
 const MIN_SCALE = 0.5;
 const MAX_SCALE = 3;
+// The paper's hairline frame (px, each side), counted when fitting a page.
+const PAPER_FRAME = 1;
 
-// Toolbar control styling (Materials Page Redesign): quiet grey buttons with a
-// soft lilac hover.
-const toolbarButtonSx = {
-  color: "#55555E",
-  borderRadius: "4px",
-  "&:hover": { bgcolor: "#F3F1F7" },
+const LOADING_MATERIALS = "Loading your materials…";
+const LOAD_ERROR =
+  "Couldn't load this PDF. Your connection may be slow or unstable. Check it, then select Retry.";
+// The stated reasons of the toolbar's unavailable controls (DESIGN.md shared strings).
+const FIRST_PAGE_REASON = "This is the first page.";
+const LAST_PAGE_REASON = "This is the last page.";
+const SMALLEST_ZOOM_REASON = "This is the smallest zoom.";
+const LOADING_REASON = "These controls are unavailable while the document loads.";
+
+/** "1 summary", "2 summaries": the count with its noun. */
+const countOf = (count: number, one: string, many: string) =>
+  `${count} ${count === 1 ? one : many}`;
+
+// Read by assistive technology, not drawn.
+const visuallyHiddenSx = {
+  position: "absolute",
+  width: "1px",
+  height: "1px",
+  p: 0,
+  m: "-1px",
+  overflow: "hidden",
+  clip: "rect(0 0 0 0)",
+  whiteSpace: "nowrap",
+  border: 0,
+} as const;
+
+// The PDF bar (DESIGN.md, The PDF viewer): tool chrome on the sheet with its
+// bottom rule. It wraps rather than overflow on a very narrow viewer.
+const pdfBarSx = {
+  flex: "none",
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "center",
+  columnGap: "var(--icon-button-row-gap)",
+  minHeight: "var(--pdf-toolbar-height)",
+  pl: "var(--space-4)",
+  pr: "var(--space-2)",
+  bgcolor: "var(--pdf-toolbar-fill)",
+  borderBottom: "1px solid var(--pdf-toolbar-rule)",
+} as const;
+
+// Page and zoom labels: caption, tabular figures, so the buttons do not shift.
+const barLabelSx = {
+  flex: "none",
+  color: "var(--pdf-toolbar-label)",
+  fontVariantNumeric: "tabular-nums",
+  whiteSpace: "nowrap",
+  textAlign: "center",
+} as const;
+
+/** A 1 px divider between the bar's button groups. */
+const BarDivider = () => (
+  <Box
+    component="span"
+    aria-hidden
+    sx={{
+      flex: "none",
+      width: "1px",
+      height: "var(--pdf-toolbar-divider-height)",
+      mx: "var(--space-1)",
+      bgcolor: "var(--pdf-toolbar-divider)",
+    }}
+  />
+);
+
+/**
+ * A toolbar icon button. When its action is unavailable it stays focusable
+ * (aria-disabled), does nothing, and its tooltip states why; the reason is
+ * also its description for assistive technology.
+ */
+const BarButton = ({
+  label,
+  reason,
+  onClick,
+  children,
+}: {
+  label: string;
+  reason?: string;
+  onClick: () => void;
+  children: React.ReactElement;
+}) => {
+  const reasonId = useId();
+  return (
+    <>
+      <Tooltip title={reason ?? label}>
+        <IconButton
+          aria-label={label}
+          aria-disabled={reason ? "true" : undefined}
+          aria-describedby={reason ? reasonId : undefined}
+          onClick={reason ? undefined : onClick}
+          sx={{ flex: "none" }}
+        >
+          {children}
+        </IconButton>
+      </Tooltip>
+      {reason && (
+        <Box component="span" id={reasonId} hidden>
+          {reason}
+        </Box>
+      )}
+    </>
+  );
 };
+
+/** The design system's speech-bubble glyph for comment pins: an SVG, never an emoji. */
+const PinGlyph = () => (
+  <SvgIcon viewBox="0 0 16 16" aria-hidden sx={{ fontSize: "var(--pdf-toolbar-pin-glyph)" }}>
+    <path
+      d="M2.5 3.5h11v7h-6l-3 2.5v-2.5h-2z"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.6}
+      strokeLinejoin="round"
+    />
+  </SvgIcon>
+);
+
+// A comment pin: a mark on the paper, so its colours never follow the mode (G5)
+// and it dims with the page; 24 px drawn, a 44 px hit area on coarse pointers.
+const pinSx = {
+  position: "absolute",
+  left: 0,
+  top: 0,
+  transform: "translate(-50%, -50%)",
+  width: "var(--pdf-toolbar-pin)",
+  height: "var(--pdf-toolbar-pin)",
+  borderRadius: "50%",
+  bgcolor: "var(--pdf-toolbar-variant-pin-visible-fill)",
+  color: "var(--pdf-toolbar-variant-pin-visible-glyph)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  opacity: "var(--pdf-toolbar-paper-dim)",
+  pointerEvents: "auto",
+  cursor: "pointer",
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    left: "50%",
+    top: "50%",
+    width: "max(100%, var(--pdf-toolbar-pin-hit))",
+    height: "max(100%, var(--pdf-toolbar-pin-hit))",
+    transform: "translate(-50%, -50%)",
+  },
+} as const;
 
 export const PDFViewerForStudents: React.FC<PDFViewerProps> = ({
   pdfFile,
@@ -164,9 +306,13 @@ export const PDFViewerForStudents: React.FC<PDFViewerProps> = ({
     const el = containerRef.current;
     if (!el) return;
     const update = () => {
-      // Account for the 20px padding around the page stack plus breathing room.
-      setPageWidth(el.clientWidth - 48);
-      setContainerHeight(el.clientHeight - 48);
+      // The page fits inside the canvas padding (a density token) and its own
+      // hairline frame.
+      const style = getComputedStyle(el);
+      const padX = (parseFloat(style.paddingLeft) || 0) + (parseFloat(style.paddingRight) || 0);
+      const padY = (parseFloat(style.paddingTop) || 0) + (parseFloat(style.paddingBottom) || 0);
+      setPageWidth(el.clientWidth - padX - 2 * PAPER_FRAME);
+      setContainerHeight(el.clientHeight - padY - 2 * PAPER_FRAME);
     };
     update();
     const ro = new ResizeObserver(update);
@@ -359,52 +505,35 @@ export const PDFViewerForStudents: React.FC<PDFViewerProps> = ({
                   zIndex: isActive ? 11 : 3,
                 }}
               >
-                <div
-                  onClick={(e) => handleToggleComment(comment.id, isActive, e)}
-                  style={{
-                    position: "absolute",
-                    left: 0,
-                    top: 0,
-                    transform: "translate(-50%, -50%)",
-                    width: 24,
-                    height: 24,
-                    borderRadius: "50%",
-                    backgroundColor: "#1976d2",
-                    color: "#fff",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: isActive
-                      ? "0 4px 12px rgba(25, 118, 210, 0.6)"
-                      : "0 2px 6px rgba(25, 118, 210, 0.3)",
-                    pointerEvents: "auto",
-                    fontSize: 12,
-                    cursor: "pointer",
-                    transition: "transform 0.2s ease",
-                  }}
+                <Box
+                  data-testid="comment-pin"
+                  onClick={(e: React.MouseEvent) => handleToggleComment(comment.id, isActive, e)}
+                  sx={pinSx}
                 >
-                  💬
-                </div>
+                  <PinGlyph />
+                </Box>
                 {isActive && (
+                  // The opened comment is chrome floating over the paper: it
+                  // follows the mode, with the popover's hairline and shadow.
                   <Paper
-                    elevation={4}
                     sx={{
                       position: "absolute",
                       left: "50%",
-                      top: "calc(100% + 12px)",
+                      top: "calc(100% + var(--space-3))",
                       transform: "translateX(-50%)",
                       width: 280,
                       maxWidth: "90vw",
-                      p: 2,
+                      p: "var(--space-4)",
                       zIndex: 11,
-                      backgroundColor: "background.paper",
+                      border: "1px solid var(--border)",
+                      boxShadow: "var(--shadow-1)",
                     }}
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
                     }}
                   >
-                    <Typography variant="body2" sx={{ whiteSpace: "pre-wrap", lineHeight: 1.6 }}>
+                    <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
                       {comment.text}
                     </Typography>
                   </Paper>
@@ -425,7 +554,20 @@ export const PDFViewerForStudents: React.FC<PDFViewerProps> = ({
   if (!studentMode) return null;
 
   if (!pdfFile) {
-    return <p>Loading your class lectures...</p>;
+    return (
+      <Box
+        role="status"
+        sx={{
+          height: "100%",
+          p: "var(--pdf-toolbar-canvas-padding)",
+          bgcolor: "var(--pdf-toolbar-canvas)",
+        }}
+      >
+        <Typography variant="body2" sx={{ color: "var(--pdf-toolbar-loading-label)" }}>
+          {LOADING_MATERIALS}
+        </Typography>
+      </Box>
+    );
   }
 
   const renderError = (
@@ -436,186 +578,198 @@ export const PDFViewerForStudents: React.FC<PDFViewerProps> = ({
         alignItems: "center",
         justifyContent: "center",
         height: "100%",
-        gap: 2,
-        p: 3,
+        gap: "var(--space-4)",
+        p: "var(--space-5)",
       }}
     >
-      <Typography color="error" sx={{ maxWidth: 420, textAlign: "center" }}>
-        Couldn&apos;t load this PDF. This can happen on a slow or unstable network
-        connection.
-      </Typography>
-      <Button variant="contained" startIcon={<RefreshIcon />} onClick={retry}>
+      <Alert severity="error" sx={{ maxWidth: 480 }}>
+        {LOAD_ERROR}
+      </Alert>
+      <Button variant="outlined" onClick={retry}>
         Retry
       </Button>
     </Box>
   );
 
+  // While the document loads, a skeleton page holds the canvas (no spinner).
   const loader = (
-    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
-      <CircularProgress />
+    <Box role="status" sx={{ display: "flex", justifyContent: "center" }}>
+      <Skeleton
+        variant="rectangular"
+        sx={{ width: "min(100%, 640px)", height: "auto", aspectRatio: "16 / 9" }}
+      />
+      <Box component="span" sx={visuallyHiddenSx}>
+        {LOADING_MATERIALS}
+      </Box>
     </Box>
   );
+
+  const loaded = numPages > 0;
+  const pageIndex = currentPDFPage ?? 0;
+  const previousReason = !loaded
+    ? LOADING_REASON
+    : pageIndex <= 0
+    ? FIRST_PAGE_REASON
+    : undefined;
+  const nextReason = !loaded
+    ? LOADING_REASON
+    : pageIndex >= numPages - 1
+    ? LAST_PAGE_REASON
+    : undefined;
+  const zoomOutReason = scale <= MIN_SCALE ? SMALLEST_ZOOM_REASON : undefined;
+  const summaryCount = documentSummaries.length;
 
   return (
     <Box
       className="fullscreen-container"
       sx={{ display: "flex", flexDirection: "column", height: "100%", position: "relative" }}
     >
-      {/* Document Summary Banner */}
-      {documentSummaries.length > 0 && showSummaryBanner && (
-        <Paper
-          elevation={6}
+      {/* Summary banner: an info alert floating at the top of the canvas */}
+      {summaryCount > 0 && showSummaryBanner && (
+        <Alert
+          severity="info"
+          role="status"
+          data-density="compact"
+          action={
+            <Box sx={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+              <Link
+                component="button"
+                type="button"
+                onClick={() => {
+                  setShowSummaryBanner(false);
+                  setIsSummaryDialogOpen(true);
+                }}
+                sx={{
+                  position: "relative",
+                  color: "var(--pdf-toolbar-variant-banner-action)",
+                  fontWeight: "var(--weight-semibold)",
+                  whiteSpace: "nowrap",
+                  textDecorationThickness: "var(--pdf-toolbar-banner-action-underline)",
+                  "&:hover": {
+                    textDecorationThickness: "var(--pdf-toolbar-banner-action-underline-hover)",
+                  },
+                  "&::before": {
+                    content: '""',
+                    position: "absolute",
+                    left: "50%",
+                    top: "50%",
+                    width: "max(100%, var(--pdf-toolbar-banner-action-hit))",
+                    height: "var(--pdf-toolbar-banner-action-hit)",
+                    transform: "translate(-50%, -50%)",
+                  },
+                }}
+              >
+                {summaryCount === 1 ? "Read summary" : "Read summaries"}
+              </Link>
+              <Tooltip title="Close">
+                <IconButton
+                  aria-label="Close"
+                  color="inherit"
+                  onClick={() => setShowSummaryBanner(false)}
+                >
+                  <CloseIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          }
           sx={{
             position: "absolute",
-            top: 16,
+            top: "calc(var(--pdf-toolbar-height) + var(--space-4))",
             left: "50%",
             transform: "translateX(-50%)",
-            zIndex: 1000,
-            maxWidth: "90%",
-            backgroundColor: "#1976d2",
-            color: "white",
-            display: "flex",
+            zIndex: 20,
+            width: "max-content",
+            maxWidth: "calc(100% - 2 * var(--space-4))",
             alignItems: "center",
-            gap: 1.5,
-            px: 2.5,
-            py: 1,
-            borderRadius: 2,
-            boxShadow: "0 4px 20px rgba(25, 118, 210, 0.4)",
+            boxShadow: "var(--pdf-toolbar-banner-shadow)",
           }}
         >
-          <InfoIcon sx={{ fontSize: 24 }} />
-          <Typography variant="body2" sx={{ fontWeight: 600, whiteSpace: "nowrap" }}>
-            Professor added {documentSummaries.length}{" "}
-            {documentSummaries.length === 1 ? "summary" : "summaries"}
-          </Typography>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => {
-              setShowSummaryBanner(false);
-              setIsSummaryDialogOpen(true);
-            }}
-            sx={{
-              backgroundColor: "white",
-              color: "#1976d2",
-              fontWeight: 600,
-              px: 2,
-              py: 0.5,
-              minWidth: "auto",
-              "&:hover": { backgroundColor: "#f5f5f5" },
-            }}
-          >
-            Read
-          </Button>
-          <IconButton
-            size="small"
-            onClick={() => setShowSummaryBanner(false)}
-            sx={{ color: "white", padding: 0.5, "&:hover": { backgroundColor: "rgba(255,255,255,0.1)" } }}
-          >
-            <CloseIcon fontSize="small" />
-          </IconButton>
-        </Paper>
+          {`Your instructor added ${countOf(summaryCount, "summary", "summaries")}`}
+        </Alert>
       )}
 
-      {documentSummaries.length > 0 && !showSummaryBanner && (
-        <IconButton
-          onClick={() => setShowSummaryBanner(true)}
-          sx={{
-            position: "absolute",
-            top: 16,
-            right: 80,
-            zIndex: 1000,
-            backgroundColor: "#1976d2",
-            color: "white",
-            "&:hover": { backgroundColor: "#1565c0" },
-            boxShadow: "0 2px 8px rgba(25, 118, 210, 0.3)",
-          }}
-        >
-          <Badge badgeContent={documentSummaries.length} color="error">
-            <MenuBookIcon />
-          </Badge>
-        </IconButton>
-      )}
-
-      {/* Viewer toolbar (Materials Page Redesign): filename, page nav, zoom, fullscreen */}
-      <Box
-        sx={{
-          height: 44,
-          flex: "none",
-          bgcolor: "#ffffff",
-          borderBottom: "1px solid #E5E1EB",
-          display: "flex",
-          alignItems: "center",
-          gap: 1,
-          px: 1.5,
-        }}
-      >
+      {/* PDF bar: file name, "Shared with Kiwi", page navigation, zoom, fullscreen */}
+      <Box data-density="compact" sx={pdfBarSx}>
         <Typography
+          component="span"
+          variant="subtitle2"
           noWrap
-          sx={{ flex: 1, minWidth: 0, fontSize: 13, fontWeight: 600, color: "#2A2A30" }}
+          sx={{ flex: "1 1 0%", minWidth: 0, color: "var(--pdf-toolbar-title)" }}
         >
           {fileName || ""}
         </Typography>
-        <Stack
-          direction="row"
-          spacing={0}
-          sx={{
-            alignItems: "center",
-            flex: "none",
-            color: "#55555E"
-          }}>
-          <IconButton
-            size="small"
-            sx={toolbarButtonSx}
-            onClick={() => goToPage((currentPDFPage ?? 0) - 1)}
-            aria-label="previous page"
-          >
-            <NavigateBeforeIcon fontSize="small" />
-          </IconButton>
-          <Typography sx={{ fontSize: 12, minWidth: 44, textAlign: "center" }}>
-            {numPages > 0 ? `${(currentPDFPage ?? 0) + 1} / ${numPages}` : "– / –"}
-          </Typography>
-          <IconButton
-            size="small"
-            sx={toolbarButtonSx}
-            onClick={() => goToPage((currentPDFPage ?? 0) + 1)}
-            aria-label="next page"
-          >
-            <NavigateNextIcon fontSize="small" />
-          </IconButton>
-          <Box sx={{ width: "1px", height: 18, bgcolor: "#E5E1EB", mx: 0.75 }} />
-          <IconButton
-            size="small"
-            sx={toolbarButtonSx}
-            onClick={() => setScale((s) => Math.max(s - ZOOM_STEP, MIN_SCALE))}
-            aria-label="zoom out"
-          >
-            <ZoomOutIcon fontSize="small" />
-          </IconButton>
-          <Typography sx={{ fontSize: 12, minWidth: 40, textAlign: "center" }}>
-            {Math.round(scale * 100)}%
-          </Typography>
-          <IconButton
-            size="small"
-            sx={toolbarButtonSx}
-            onClick={() => setScale((s) => Math.min(s + ZOOM_STEP, MAX_SCALE))}
-            aria-label="zoom in"
-          >
-            <ZoomInIcon fontSize="small" />
-          </IconButton>
-          <Box sx={{ width: "1px", height: 18, bgcolor: "#E5E1EB", mx: 0.75 }} />
-          <IconButton
-            size="small"
-            sx={toolbarButtonSx}
-            onClick={() => containerRef.current?.requestFullscreen?.()}
-            aria-label="fullscreen"
-          >
-            <CropFreeIcon fontSize="small" />
-          </IconButton>
-        </Stack>
+        {summaryCount > 0 && !showSummaryBanner && (
+          <Tooltip title="Document summaries">
+            <IconButton
+              aria-label="Document summaries"
+              onClick={() => setShowSummaryBanner(true)}
+              sx={{ flex: "none" }}
+            >
+              <Badge badgeContent={summaryCount} color="primary">
+                <MenuBookIcon />
+              </Badge>
+            </IconButton>
+          </Tooltip>
+        )}
+        {loaded && (
+          // The page outlined on the canvas is the one the chat can read.
+          <Chip
+            label="Shared with Kiwi"
+            sx={{
+              flex: "none",
+              display: { xs: "none", sm: "inline-flex" },
+              bgcolor: "var(--pdf-toolbar-success-chip)",
+              color: "var(--pdf-toolbar-success-chip-text)",
+            }}
+          />
+        )}
+        <BarDivider />
+        <BarButton
+          label="Previous page"
+          reason={previousReason}
+          onClick={() => goToPage(pageIndex - 1)}
+        >
+          <NavigateBeforeIcon />
+        </BarButton>
+        <Typography component="span" variant="caption" sx={{ ...barLabelSx, minWidth: 40 }}>
+          {loaded ? (
+            `${pageIndex + 1} / ${numPages}`
+          ) : (
+            <>
+              <span aria-hidden="true">— / —</span>
+              <Box component="span" sx={visuallyHiddenSx}>
+                No value
+              </Box>
+            </>
+          )}
+        </Typography>
+        <BarButton label="Next page" reason={nextReason} onClick={() => goToPage(pageIndex + 1)}>
+          <NavigateNextIcon />
+        </BarButton>
+        <BarDivider />
+        <BarButton
+          label="Zoom out"
+          reason={zoomOutReason}
+          onClick={() => setScale((s) => Math.max(s - ZOOM_STEP, MIN_SCALE))}
+        >
+          <ZoomOutIcon />
+        </BarButton>
+        <Typography component="span" variant="caption" sx={{ ...barLabelSx, minWidth: 36 }}>
+          {Math.round(scale * 100)}%
+        </Typography>
+        <BarButton
+          label="Zoom in"
+          onClick={() => setScale((s) => Math.min(s + ZOOM_STEP, MAX_SCALE))}
+        >
+          <ZoomInIcon />
+        </BarButton>
+        <BarDivider />
+        <BarButton label="Fullscreen" onClick={() => containerRef.current?.requestFullscreen?.()}>
+          <CropFreeIcon />
+        </BarButton>
       </Box>
 
-      {/* Scrollable viewer area */}
+      {/* Scrollable canvas: the paper on its hairline frame */}
       <Box
         ref={containerRef}
         onScroll={handleScroll}
@@ -624,8 +778,11 @@ export const PDFViewerForStudents: React.FC<PDFViewerProps> = ({
           minHeight: 0,
           position: "relative",
           overflow: "auto",
-          bgcolor: "#EDEBF1",
-          p: "20px",
+          bgcolor: "var(--pdf-toolbar-canvas)",
+          p: "var(--pdf-toolbar-canvas-padding)",
+          // Paper stays paper (G5): the page keeps its own rendering, dimmed in
+          // dark mode against glare; the frame around it follows the mode.
+          "& .react-pdf__Page": { opacity: "var(--pdf-toolbar-paper-dim)" },
         }}
       >
           {loadError ? (
@@ -650,53 +807,65 @@ export const PDFViewerForStudents: React.FC<PDFViewerProps> = ({
                 setLoadError(true);
               }}
             >
-              {Array.from({ length: numPages }, (_, index) => (
-                <div
-                  key={index}
-                  ref={(el) => {
-                    if (el) pageRefs.current.set(index, el);
-                    else pageRefs.current.delete(index);
-                  }}
-                  style={{
-                    position: "relative",
-                    margin: "0 auto 16px",
-                    width: "fit-content",
-                    background: "#ffffff",
-                    boxShadow: "0 1px 4px rgba(28,12,48,0.14)",
-                  }}
-                >
-                  <Page
-                    pageNumber={index + 1}
-                    // Fit a whole page to the container height by default (scale=1),
-                    // so it fits vertically instead of filling the width and
-                    // running tall. Fall back to width-fit until height is known.
-                    height={containerHeight > 0 ? containerHeight * scale : undefined}
-                    width={
-                      containerHeight > 0
-                        ? undefined
-                        : pageWidth > 0
-                        ? pageWidth * scale
-                        : undefined
-                    }
-                    renderTextLayer
-                    renderAnnotationLayer
-                  />
-                  {/* Current-page marker — kept so the user can see which page
-                      the AI currently has context for. */}
+              {Array.from({ length: numPages }, (_, index) => {
+                // The page the chat has in context: its own 1 px edge becomes a
+                // 2 px frame (the extra pixel inward), neutral, never a brand colour.
+                const inContext = index === currentPDFPage;
+                return (
                   <div
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      border: index === currentPDFPage ? `2px solid ${theme.palette.primary.main}` : "none",
-                      pointerEvents: "none",
+                    key={index}
+                    ref={(el) => {
+                      if (el) pageRefs.current.set(index, el);
+                      else pageRefs.current.delete(index);
                     }}
-                  />
-                  {/* Comment pins overlay */}
-                  <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-                    {renderCommentPins(index)}
+                    aria-current={inContext ? "true" : undefined}
+                    style={{
+                      position: "relative",
+                      width: "fit-content",
+                      margin: "0 auto var(--space-4)",
+                      border: `${PAPER_FRAME}px solid ${
+                        inContext
+                          ? "var(--pdf-toolbar-variant-page-current-outline)"
+                          : "var(--pdf-toolbar-frame)"
+                      }`,
+                      // Paper is content: forced colours leave it and its marks alone.
+                      forcedColorAdjust: "none",
+                    }}
+                  >
+                    <Page
+                      pageNumber={index + 1}
+                      // Fit a whole page to the container height by default (scale=1),
+                      // so it fits vertically instead of filling the width and
+                      // running tall. Fall back to width-fit until height is known.
+                      height={containerHeight > 0 ? containerHeight * scale : undefined}
+                      width={
+                        containerHeight > 0
+                          ? undefined
+                          : pageWidth > 0
+                          ? pageWidth * scale
+                          : undefined
+                      }
+                      renderTextLayer
+                      renderAnnotationLayer
+                    />
+                    {inContext && (
+                      <div
+                        aria-hidden="true"
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          pointerEvents: "none",
+                          boxShadow: `inset 0 0 0 calc(var(--pdf-toolbar-page-outline) - ${PAPER_FRAME}px) var(--pdf-toolbar-variant-page-current-outline)`,
+                        }}
+                      />
+                    )}
+                    {/* Comment pins overlay */}
+                    <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+                      {renderCommentPins(index)}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </Document>
           )}
       </Box>
@@ -707,73 +876,66 @@ export const PDFViewerForStudents: React.FC<PDFViewerProps> = ({
         onClose={() => setIsSummaryDialogOpen(false)}
         maxWidth="md"
         fullWidth
-        slotProps={{
-          paper: { sx: { borderRadius: 2 } }
-        }}
       >
-        <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1, backgroundColor: "#f5f5f5" }}>
-          <MenuBookIcon color="primary" />
-          <Typography variant="h6">Document Summaries</Typography>
+        <DialogTitle sx={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+          <MenuBookIcon color="primary" aria-hidden />
+          <Box component="span" sx={{ flex: "1 1 auto", minWidth: 0 }}>
+            Document summaries
+          </Box>
           <Typography
+            component="span"
             variant="body2"
-            sx={{
-              color: "text.secondary",
-              ml: "auto"
-            }}>
-            {documentSummaries.length} {documentSummaries.length === 1 ? "summary" : "summaries"}
+            sx={{ color: "text.secondary", fontVariantNumeric: "tabular-nums" }}
+          >
+            {countOf(summaryCount, "summary", "summaries")}
           </Typography>
         </DialogTitle>
         <DialogContent dividers>
-          {documentSummaries.length === 0 ? (
+          {summaryCount === 0 ? (
             <Typography
               variant="body2"
               sx={{
                 color: "text.secondary",
                 textAlign: "center",
-                py: 3
-              }}>
-              No summaries available for this document.
+                py: "var(--space-5)",
+              }}
+            >
+              No summaries available for this document
             </Typography>
           ) : (
-            <Stack spacing={3}>
+            <Stack spacing="var(--space-5)" divider={<Divider />} sx={{ py: "var(--space-2)" }}>
               {documentSummaries.map((summary, index) => (
                 <Box key={summary.id}>
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      p: 3,
-                      backgroundColor: "rgba(25, 118, 210, 0.03)",
-                      border: "1px solid rgba(25, 118, 210, 0.1)",
-                      borderRadius: 2,
-                    }}
+                  <Typography
+                    component="h3"
+                    variant="subtitle1"
+                    sx={{ mb: "var(--space-2)", color: "text.primary" }}
                   >
-                    <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: "#1976d2" }}>
-                      Summary {index + 1}
+                    Summary {index + 1}
+                  </Typography>
+                  <Typography variant="body1" sx={{ whiteSpace: "pre-wrap", mb: "var(--space-2)" }}>
+                    {summary.content}
+                  </Typography>
+                  {summary.author && (
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: "text.secondary",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "var(--space-1)",
+                      }}
+                    >
+                      <strong>Added by:</strong> {summary.author.name || summary.author.email}
                     </Typography>
-                    <Typography variant="body1" sx={{ whiteSpace: "pre-wrap", lineHeight: 1.8, mb: 2 }}>
-                      {summary.content}
-                    </Typography>
-                    {summary.author && (
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          color: "text.secondary",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 0.5
-                        }}>
-                        <strong>Added by:</strong> {summary.author.name || summary.author.email}
-                      </Typography>
-                    )}
-                  </Paper>
-                  {index < documentSummaries.length - 1 && <Divider sx={{ my: 1 }} />}
+                  )}
                 </Box>
               ))}
             </Stack>
           )}
         </DialogContent>
-        <DialogActions sx={{ p: 2, backgroundColor: "#f5f5f5" }}>
-          <Button onClick={() => setIsSummaryDialogOpen(false)} variant="contained" sx={{ px: 4 }}>
+        <DialogActions>
+          <Button onClick={() => setIsSummaryDialogOpen(false)} variant="contained">
             Close
           </Button>
         </DialogActions>

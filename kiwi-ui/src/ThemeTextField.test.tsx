@@ -13,39 +13,41 @@ describe("global TextField theme", () => {
       position: "static",
       transform: "none",
       transition: "none",
-      fontSize: "0.875rem",
+      fontSize: "var(--type-label-size)",
+      marginBottom: "var(--field-label-gap)",
     });
     expect(theme.components?.MuiOutlinedInput?.defaultProps?.notched).toBe(false);
     expect(theme.components?.MuiOutlinedInput?.styleOverrides?.root).toMatchObject({
-      borderRadius: 8,
-      minHeight: 44,
+      "& .MuiOutlinedInput-notchedOutline": { top: 0 },
+      "& .MuiOutlinedInput-notchedOutline legend": { display: "none" },
+    });
+  });
+
+  it("sizes fields from the density tokens, so one theme serves both densities", () => {
+    expect(theme.components?.MuiOutlinedInput?.styleOverrides?.root).toMatchObject({
+      borderRadius: "var(--field-radius)",
+      minHeight: "var(--field-height)",
       alignItems: "center",
       "&:not(.MuiInputBase-multiline) .MuiOutlinedInput-input": {
-        padding: "0 14px",
-        fontSize: "0.875rem",
-        height: "20px",
-        lineHeight: "20px",
-      },
-      "&.MuiInputBase-sizeSmall": {
-        minHeight: 38,
-      },
-      "&.MuiInputBase-sizeSmall:not(.MuiInputBase-multiline) .MuiOutlinedInput-input": {
-        padding: "0 12px",
+        padding: "var(--field-padding-y) var(--field-padding-x)",
+        height: "var(--type-control-leading)",
+        lineHeight: "var(--type-control-leading)",
       },
       "&.MuiInputBase-multiline": {
-        padding: "12px 14px",
+        padding: "var(--field-padding-y) var(--field-padding-x)",
       },
-      "&.MuiInputBase-multiline .MuiOutlinedInput-input": {
-        padding: 0,
-        fontSize: "0.875rem",
-        height: "auto",
-        lineHeight: "20px",
+    });
+  });
+
+  it("shows focus as one frame: the field's own edge at 2 px, error kept when focused", () => {
+    expect(theme.components?.MuiOutlinedInput?.styleOverrides?.root).toMatchObject({
+      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        borderColor: "var(--field-focus-border)",
+        borderWidth: "var(--border-width-focus)",
       },
-      "& .MuiOutlinedInput-notchedOutline": {
-        top: 0,
-      },
-      "& .MuiOutlinedInput-notchedOutline legend": {
-        display: "none",
+      "&.Mui-error.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        borderColor: "var(--status-error-text)",
+        borderWidth: "var(--border-width-focus)",
       },
     });
   });

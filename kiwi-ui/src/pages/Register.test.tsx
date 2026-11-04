@@ -11,22 +11,6 @@ vi.mock("../components/AuthLayout/AuthLayout.tsx", () => ({
   ),
 }));
 
-vi.mock("../components/FormCard/FormCard.tsx", () => ({
-  default: ({ children, appearance }: { children: React.ReactNode; appearance?: string }) => (
-    <main data-testid="form-card" data-appearance={appearance}>
-      {children}
-    </main>
-  ),
-}));
-
-vi.mock("../components/Brand/InstitutionLogo.tsx", () => ({
-  default: ({ width, height }: { width?: number; height?: number }) => (
-    <div data-testid="institution-logo" data-width={width} data-height={height}>
-      Kiwi
-    </div>
-  ),
-}));
-
 vi.mock("../components/GoogleLoginButton/GoogleLoginButton.tsx", () => ({
   GoogleLoginButton: ({ mode, appearance }: { mode: string; appearance?: string }) => (
     <button data-testid="google-register-button" data-mode={mode} data-appearance={appearance}>
@@ -51,13 +35,14 @@ describe("Register Page", () => {
     vi.unstubAllEnvs();
   });
 
-  it("renders inside the split auth layout", () => {
-    renderRegister();
+  it("renders inside the split auth layout, in the sign-in frame", () => {
+    const { container } = renderRegister();
 
     expect(screen.getByTestId("auth-layout")).toHaveAttribute("data-variant", "split");
-    expect(screen.getByTestId("form-card")).toHaveAttribute("data-appearance", "plain");
-    expect(screen.getByTestId("institution-logo")).toHaveAttribute("data-width", "124");
-    expect(screen.getByRole("heading", { name: "Create your account" })).toBeInTheDocument();
+    expect(container.querySelector('img[src="/assets/images/kiwi-mark.svg"]')).toHaveAttribute("alt", "");
+    const heading = screen.getByRole("heading", { level: 1, name: "Create an account" });
+    expect(heading).toHaveClass("MuiTypography-display");
+    expect(screen.queryByRole("heading", { name: "Create your account" })).not.toBeInTheDocument();
   });
 
   it("explains that administrators create accounts by default", () => {
@@ -83,9 +68,11 @@ describe("Register Page", () => {
     expect(screen.getByTestId("google-register-button")).toHaveAttribute("data-appearance", "neutral");
   });
 
-  it("links back to login", () => {
+  it("links back to sign-in", () => {
     renderRegister();
 
-    expect(screen.getByRole("link", { name: "Log in" })).toHaveAttribute("href", "/login");
+    expect(screen.getByRole("link", { name: "Sign in" })).toHaveAttribute("href", "/login");
+    expect(screen.queryByRole("link", { name: "Log in" })).not.toBeInTheDocument();
+    expect(screen.getByText(/Already have an account\?/)).toBeInTheDocument();
   });
 });

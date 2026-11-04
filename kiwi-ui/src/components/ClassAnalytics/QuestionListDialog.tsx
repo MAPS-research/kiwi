@@ -10,14 +10,14 @@ import {
 } from "@mui/material";
 import { CloseOutlined as CloseIcon } from "@mui/icons-material";
 import { TopicQuestion } from "../../utils/classAnalyticsApi.ts";
-import { mono, tokens } from "./tokens.ts";
+import { numeric, tokens, typeRole } from "./tokens.ts";
 
 interface QuestionListDialogProps {
   open: boolean;
   onClose: () => void;
   title: string;
   subtitle?: string;
-  /** Accent used for the header underline; defaults to the theme violet. */
+  /** The key square before the title; the intent and topic bars' one series colour by default. */
   accentColor?: string;
   fetchQuestions: (() => Promise<TopicQuestion[]>) | null;
   lectureNameByPdfId: Map<string, string>;
@@ -30,7 +30,7 @@ export const QuestionListDialog: React.FC<QuestionListDialogProps> = ({
   onClose,
   title,
   subtitle,
-  accentColor = tokens.violet,
+  accentColor = tokens.bar,
   fetchQuestions,
   lectureNameByPdfId,
   onPageClick,
@@ -66,13 +66,11 @@ export const QuestionListDialog: React.FC<QuestionListDialogProps> = ({
       onClose={onClose}
       maxWidth="md"
       fullWidth
+      // The theme draws the dialog sheet: hairline edge, sheet radius, --shadow-2.
       slotProps={{
         paper: {
           sx: {
-            borderRadius: 3,
-            border: `1px solid ${tokens.line}`,
             maxHeight: "80vh",
-            boxShadow: "0 24px 64px rgba(26, 21, 35, 0.18)",
           },
         }
       }}
@@ -81,7 +79,7 @@ export const QuestionListDialog: React.FC<QuestionListDialogProps> = ({
         sx={{
           px: 3,
           py: 2,
-          borderBottom: `1px solid ${tokens.line}`,
+          borderBottom: `1px solid ${tokens.rule}`,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -89,19 +87,19 @@ export const QuestionListDialog: React.FC<QuestionListDialogProps> = ({
       >
         <Box sx={{ minWidth: 0 }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* A legend key: square, like the bars it keys. */}
             <Box
               sx={{
                 width: 10,
                 height: 10,
-                borderRadius: "3px",
+                borderRadius: 0,
                 backgroundColor: accentColor,
                 flexShrink: 0,
               }}
             />
             <Typography
               sx={{
-                fontWeight: 700,
-                fontSize: 16,
+                ...typeRole("group-title"),
                 color: tokens.ink,
                 whiteSpace: "nowrap",
                 overflow: "hidden",
@@ -111,7 +109,7 @@ export const QuestionListDialog: React.FC<QuestionListDialogProps> = ({
               {title}
             </Typography>
           </Box>
-          <Typography sx={{ fontSize: 13, color: tokens.slate, mt: 0.25 }}>
+          <Typography sx={{ ...typeRole("small"), ...numeric, color: tokens.slate, mt: 0.25 }}>
             {subtitle ??
               `${questions.length} ${questions.length === 1 ? "question" : "questions"}`}
           </Typography>
@@ -124,11 +122,11 @@ export const QuestionListDialog: React.FC<QuestionListDialogProps> = ({
       <DialogContent sx={{ p: 0 }}>
         {loading && (
           <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
-            <CircularProgress size={28} sx={{ color: accentColor }} />
+            <CircularProgress size={28} />
           </Box>
         )}
         {!loading && error && (
-          <Typography sx={{ p: 3, color: tokens.red, fontSize: 14 }}>
+          <Typography sx={{ p: 3, color: tokens.error, ...typeRole("small") }}>
             {error}
           </Typography>
         )}
@@ -140,13 +138,13 @@ export const QuestionListDialog: React.FC<QuestionListDialogProps> = ({
               sx={{
                 px: 3,
                 py: 1.75,
-                borderBottom: `1px solid ${tokens.line}`,
+                borderBottom: `1px solid ${tokens.rule}`,
                 "&:last-child": { borderBottom: "none" },
                 "&:hover": { backgroundColor: tokens.hover },
               }}
             >
               <Typography
-                sx={{ fontSize: 14, color: tokens.ink, whiteSpace: "pre-wrap" }}
+                sx={{ ...typeRole("body"), color: tokens.ink, whiteSpace: "pre-wrap" }}
               >
                 {q.question}
               </Typography>
@@ -160,7 +158,7 @@ export const QuestionListDialog: React.FC<QuestionListDialogProps> = ({
                 }}
               >
                 <Typography
-                  sx={{ fontSize: 12, color: tokens.slate, fontWeight: 600 }}
+                  sx={{ ...typeRole("caption"), color: tokens.slate, fontWeight: "var(--type-weight-emphasis)" }}
                 >
                   {q.student}
                 </Typography>
@@ -175,22 +173,20 @@ export const QuestionListDialog: React.FC<QuestionListDialogProps> = ({
                     }
                     sx={{
                       height: 20,
-                      fontSize: 11,
-                      fontFamily: mono,
-                      backgroundColor: tokens.violetTrack,
-                      color: tokens.violetInk,
+                      ...typeRole("caption"),
+                      ...numeric,
                       maxWidth: 260,
                     }}
                   />
                 )}
-                <Typography sx={{ fontSize: 12, color: tokens.faint }}>
+                <Typography sx={{ ...typeRole("caption"), ...numeric, color: tokens.slate }}>
                   {new Date(q.timestamp).toLocaleString()}
                 </Typography>
               </Box>
             </Box>
           ))}
         {!loading && !error && questions.length === 0 && (
-          <Typography sx={{ p: 3, color: tokens.slate, fontSize: 14 }}>
+          <Typography sx={{ p: 3, color: tokens.slate, ...typeRole("small") }}>
             No questions here.
           </Typography>
         )}

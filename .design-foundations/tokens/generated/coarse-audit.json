@@ -1,0 +1,422 @@
+{
+ "date": "2026-10-19",
+ "sheet": ".design-foundations/mocks/component-sheet.html",
+ "pointerCoarse": true,
+ "hoverNone": true,
+ "groups": {
+  "icon button · comfortable": {
+   "n": 90,
+   "reach44": 90,
+   "minHit": 44,
+   "drawn": [
+    "44x44",
+    "28x28"
+   ]
+  },
+  "icon button · compact": {
+   "n": 418,
+   "reach44": 418,
+   "minHit": 44,
+   "drawn": [
+    "36x36"
+   ]
+  },
+  "feedback toolbar button · comfortable": {
+   "n": 120,
+   "reach44": 120,
+   "minHit": 44,
+   "drawn": [
+    "28x28"
+   ]
+  },
+  "filter chip · comfortable": {
+   "n": 18,
+   "reach44": 18,
+   "minHit": 45,
+   "drawn": [
+    "74x32",
+    "98x32",
+    "62x32"
+   ]
+  },
+  "filter chip · compact": {
+   "n": 26,
+   "reach44": 26,
+   "minHit": 45,
+   "drawn": [
+    "74x28",
+    "98x28",
+    "62x28"
+   ]
+  },
+  "switch · comfortable": {
+   "n": 34,
+   "reach44": 34,
+   "minHit": 45,
+   "drawn": [
+    "36x20"
+   ]
+  },
+  "switch · compact": {
+   "n": 34,
+   "reach44": 34,
+   "minHit": 45,
+   "drawn": [
+    "36x20"
+   ]
+  },
+  "checkbox / radio · comfortable": {
+   "n": 24,
+   "reach44": 24,
+   "minHit": 45,
+   "drawn": [
+    "18x18"
+   ]
+  },
+  "checkbox / radio · compact": {
+   "n": 24,
+   "reach44": 24,
+   "minHit": 45,
+   "drawn": [
+    "18x18"
+   ]
+  },
+  "table checkbox (in a row or the header) · comfortable": {
+   "n": 48,
+   "reach44": 48,
+   "minHit": 44,
+   "drawn": [
+    "18x18"
+   ]
+  },
+  "table checkbox (in a row or the header) · compact": {
+   "n": 48,
+   "reach44": 0,
+   "minHit": 36,
+   "drawn": [
+    "18x18"
+   ]
+  },
+  "menu item · comfortable": {
+   "n": 62,
+   "reach44": 62,
+   "minHit": 44,
+   "drawn": [
+    "238x44"
+   ]
+  },
+  "menu item · compact": {
+   "n": 62,
+   "reach44": 62,
+   "minHit": 44,
+   "drawn": [
+    "238x44"
+   ]
+  },
+  "text action (alert, toast, banner) · comfortable": {
+   "n": 54,
+   "reach44": 54,
+   "minHit": 45,
+   "drawn": [
+    "37x22",
+    "33x20",
+    "46x20",
+    "94x22",
+    "35x22"
+   ]
+  },
+  "text action (alert, toast, banner) · compact": {
+   "n": 54,
+   "reach44": 54,
+   "minHit": 45,
+   "drawn": [
+    "33x20",
+    "46x20",
+    "82x20",
+    "30x20"
+   ]
+  },
+  "citation · comfortable": {
+   "n": 24,
+   "reach44": 24,
+   "minHit": 45,
+   "drawn": [
+    "46x28"
+   ]
+  },
+  "button · comfortable": {
+   "n": 134,
+   "reach44": 134,
+   "minHit": 45,
+   "drawn": [
+    "95x44",
+    "105x44",
+    "99x44",
+    "102x44",
+    "172x44",
+    "162x44"
+   ]
+  },
+  "button · compact": {
+   "n": 146,
+   "reach44": 146,
+   "minHit": 44,
+   "drawn": [
+    "87x36",
+    "97x36",
+    "91x36",
+    "94x36",
+    "164x36",
+    "154x36"
+   ]
+  },
+  "composer Send / Stop (inside the box) · compact": {
+   "n": 36,
+   "reach44": 36,
+   "minHit": 45,
+   "drawn": [
+    "32x32"
+   ]
+  },
+  "tab · comfortable": {
+   "n": 58,
+   "reach44": 58,
+   "minHit": 45,
+   "drawn": [
+    "87x44",
+    "100x44",
+    "91x44",
+    "122x44",
+    "124x44"
+   ]
+  },
+  "tab · compact": {
+   "n": 58,
+   "reach44": 58,
+   "minHit": 45,
+   "drawn": [
+    "79x36",
+    "92x36",
+    "83x36",
+    "114x36",
+    "116x36"
+   ]
+  },
+  "drawer file row (S-02) · compact": {
+   "n": 12,
+   "reach44": 12,
+   "minHit": 44,
+   "drawn": [
+    "230x36"
+   ]
+  },
+  "comment pin (on the paper) · comfortable": {
+   "n": 4,
+   "reach44": 4,
+   "minHit": 45,
+   "drawn": [
+    "24x24"
+   ]
+  },
+  "comment pin (on the paper) · compact": {
+   "n": 4,
+   "reach44": 4,
+   "minHit": 45,
+   "drawn": [
+    "24x24"
+   ]
+  },
+  "sidebar row (admin) · comfortable": {
+   "n": 64,
+   "reach44": 60,
+   "minHit": 36,
+   "drawn": [
+    "203x44",
+    "203x92",
+    "203x48",
+    "203x36",
+    "55x44"
+   ]
+  },
+  "sidebar row (admin) · compact": {
+   "n": 64,
+   "reach44": 2,
+   "minHit": 36,
+   "drawn": [
+    "203x36",
+    "203x72",
+    "203x40",
+    "55x36"
+   ]
+  },
+  "table row · comfortable": {
+   "n": 92,
+   "reach44": 92,
+   "minHit": 52,
+   "drawn": [
+    "1328x52",
+    "676x52"
+   ]
+  },
+  "table row · compact": {
+   "n": 92,
+   "reach44": 0,
+   "minHit": 36,
+   "drawn": [
+    "1328x36",
+    "624x36"
+   ]
+  },
+  "table link cell (admin) · comfortable": {
+   "n": 56,
+   "reach44": 0,
+   "minHit": 23,
+   "drawn": [
+    "47x22",
+    "70x22"
+   ]
+  },
+  "table link cell (admin) · compact": {
+   "n": 56,
+   "reach44": 0,
+   "minHit": 20,
+   "drawn": [
+    "41x20",
+    "61x20"
+   ]
+  },
+  "inline prose link (WCAG 2.5.8 inline exception) · comfortable": {
+   "n": 24,
+   "reach44": 0,
+   "minHit": 23,
+   "drawn": [
+    "86x22"
+   ]
+  },
+  "launcher · comfortable": {
+   "n": 10,
+   "reach44": 10,
+   "minHit": 57,
+   "drawn": [
+    "56x56"
+   ]
+  },
+  "launcher · compact": {
+   "n": 10,
+   "reach44": 10,
+   "minHit": 57,
+   "drawn": [
+    "56x56"
+   ]
+  },
+  "field · comfortable": {
+   "n": 20,
+   "reach44": 20,
+   "minHit": 45,
+   "drawn": [
+    "280x44",
+    "280x92"
+   ]
+  },
+  "field · compact": {
+   "n": 20,
+   "reach44": 20,
+   "minHit": 45,
+   "drawn": [
+    "280x36",
+    "280x76"
+   ]
+  },
+  "page / search field · comfortable": {
+   "n": 2,
+   "reach44": 2,
+   "minHit": 44,
+   "drawn": [
+    "56x44"
+   ]
+  },
+  "page / search field · compact": {
+   "n": 18,
+   "reach44": 18,
+   "minHit": 44,
+   "drawn": [
+    "56x36",
+    "120x36"
+   ]
+  }
+ },
+ "named": [
+  [
+   "compact tab (Materials)",
+   80,
+   45
+  ],
+  [
+   "Find (Find)",
+   65,
+   45
+  ],
+  [
+   "Next match (Next match)",
+   81,
+   45
+  ],
+  [
+   "Send (Send message)",
+   45,
+   45
+  ],
+  [
+   "search field (Search PDF)",
+   81,
+   45
+  ],
+  [
+   "drawer file row (Lecture 3 · Regression.pdf)",
+   81,
+   44
+  ],
+  [
+   "comment pin (Comment, visible to students)",
+   45,
+   45
+  ],
+  [
+   "hidden comment pin (Comment, hidden from students)",
+   45,
+   45
+  ]
+ ],
+ "clipped": 12,
+ "clippedWhat": [
+  "tab · comfortable",
+  "tab · compact"
+ ],
+ "total": 2120,
+ "reach44": 1778,
+ "emuToolbarPitch": 44,
+ "frames": {
+  "exhibits": 120,
+  "frames": 52,
+  "rings": 56,
+  "doubled": 0,
+  "notHighlight": 0,
+  "highlight": null,
+  "fails": []
+ },
+ "audit": {
+  "browserPointerCoarse": true,
+  "fineToolbarPitchUnderCoarse": 44,
+  "fineToolbarHitUnderCoarse": 44,
+  "scrollWidth": 1440,
+  "clientWidth": 1440,
+  "cue": {
+   "checked": 260,
+   "missing": 0
+  },
+  "disabled": {
+   "checked": 184,
+   "missing": 0
+  }
+ }
+}

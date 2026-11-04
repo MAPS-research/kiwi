@@ -1,74 +1,17 @@
+import { useEffect, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Alert, Box, Divider, Link, Stack, Typography } from '@mui/material';
-import theme from '../../src/Theme.ts';
-import materialDesign2014 from '../../src/theme/material-design-2014.json' with { type: 'json' };
+import { Alert, Box, Divider, Stack, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import designSystem from '../design-system/catalog.json' with { type: 'json' };
+
+// Every value on these pages is read, never restated: the semantic roles from the
+// current MUI theme (useTheme(), so the dark scheme shows its own values), the ramps
+// from the token custom properties on the document, and the external contract from
+// the public stylesheet itself.
 
 const colorsContract = designSystem.foundations.colors;
 
 type Colors = Record<string, string>;
-type MaterialColor = Record<string, string>;
-
-const {
-  amber,
-  blue,
-  blueGrey,
-  brown,
-  cyan,
-  deepOrange,
-  deepPurple,
-  green,
-  grey,
-  indigo,
-  lightBlue,
-  lightGreen,
-  lime,
-  orange,
-  pink,
-  purple,
-  red,
-  teal,
-  yellow,
-} = materialDesign2014.palettes;
-
-const materialShadeOrder = [
-  '50',
-  '100',
-  '200',
-  '300',
-  '400',
-  '500',
-  '600',
-  '700',
-  '800',
-  '900',
-  'A100',
-  'A200',
-  'A400',
-  'A700',
-] as const;
-
-const material2014Palettes: Array<{ name: string; importName: string; colors: MaterialColor }> = [
-  { name: 'Red', importName: 'red', colors: red },
-  { name: 'Pink', importName: 'pink', colors: pink },
-  { name: 'Purple', importName: 'purple', colors: purple },
-  { name: 'Deep Purple', importName: 'deepPurple', colors: deepPurple },
-  { name: 'Indigo', importName: 'indigo', colors: indigo },
-  { name: 'Blue', importName: 'blue', colors: blue },
-  { name: 'Light Blue', importName: 'lightBlue', colors: lightBlue },
-  { name: 'Cyan', importName: 'cyan', colors: cyan },
-  { name: 'Teal', importName: 'teal', colors: teal },
-  { name: 'Green', importName: 'green', colors: green },
-  { name: 'Light Green', importName: 'lightGreen', colors: lightGreen },
-  { name: 'Lime', importName: 'lime', colors: lime },
-  { name: 'Yellow', importName: 'yellow', colors: yellow },
-  { name: 'Amber', importName: 'amber', colors: amber },
-  { name: 'Orange', importName: 'orange', colors: orange },
-  { name: 'Deep Orange', importName: 'deepOrange', colors: deepOrange },
-  { name: 'Brown', importName: 'brown', colors: brown },
-  { name: 'Grey', importName: 'grey', colors: grey },
-  { name: 'Blue Grey', importName: 'blueGrey', colors: blueGrey },
-];
 
 const Swatch = ({ name, value }: { name: string; value: string }) => (
   <Stack spacing={0.5} sx={{ width: 152 }}>
@@ -76,15 +19,15 @@ const Swatch = ({ name, value }: { name: string; value: string }) => (
       sx={{
         width: 64,
         height: 64,
-        borderRadius: 1,
+        borderRadius: 'var(--radius-small)',
         bgcolor: value,
-        border: '1px solid rgba(0,0,0,0.12)',
+        border: '1px solid var(--border)',
       }}
     />
     <Typography variant="caption" sx={{ fontWeight: 600, overflowWrap: 'anywhere' }}>
       {name}
     </Typography>
-    <Typography variant="caption" sx={{ color: 'text.secondary', fontFamily: 'monospace' }}>
+    <Typography variant="caption" sx={{ color: 'text.secondary', fontFamily: 'var(--font-mono)' }}>
       {value}
     </Typography>
   </Stack>
@@ -92,60 +35,14 @@ const Swatch = ({ name, value }: { name: string; value: string }) => (
 
 const Group = ({ title, colors }: { title: string; colors: Colors }) => (
   <Box>
-    <Typography variant="subtitle1" sx={{ mb: 1.5, fontWeight: 600 }}>
+    <Typography variant="subtitle1" sx={{ mb: 1.5 }}>
       {title}
     </Typography>
-    <Stack direction="row" spacing={2} useFlexGap sx={{
-      flexWrap: "wrap"
-    }}>
+    <Stack direction="row" spacing={2} useFlexGap sx={{ flexWrap: 'wrap' }}>
       {Object.entries(colors).map(([name, value]) => (
         <Swatch key={name} name={name} value={value} />
       ))}
     </Stack>
-  </Box>
-);
-
-const MaterialPaletteCard = ({ name, importName, colors }: (typeof material2014Palettes)[number]) => (
-  <Box
-    component="section"
-    aria-label={`${name} palette`}
-    sx={{ overflow: 'hidden', border: 1, borderColor: 'divider', borderRadius: 2, bgcolor: 'background.paper' }}
-  >
-    <Box sx={{ px: 2, py: 1.5 }}>
-      <Typography component="h3" variant="subtitle1" sx={{ fontWeight: 700 }}>
-        {name}
-      </Typography>
-      <Typography variant="caption" sx={{ color: 'text.secondary', fontFamily: 'monospace' }}>
-        {importName}
-      </Typography>
-    </Box>
-    {materialShadeOrder.map((shade) => {
-      const value = colors[shade];
-
-      if (typeof value !== 'string') return null;
-
-      return (
-        <Box
-          key={shade}
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            gap: 2,
-            px: 1.5,
-            py: 0.75,
-            bgcolor: value,
-            color: theme.palette.getContrastText(value),
-          }}
-        >
-          <Typography variant="caption" sx={{ color: 'inherit', fontWeight: shade === '500' ? 800 : 600 }}>
-            {shade}
-          </Typography>
-          <Typography variant="caption" sx={{ color: 'inherit', fontFamily: 'monospace' }}>
-            {value}
-          </Typography>
-        </Box>
-      );
-    })}
   </Box>
 );
 
@@ -156,10 +53,10 @@ const Code = ({ children }: { children: string }) => (
       display: 'block',
       mt: 1.5,
       p: 1.5,
-      bgcolor: 'grey.100',
-      borderRadius: 1,
-      fontFamily: 'monospace',
-      fontSize: 13,
+      bgcolor: 'action.hover',
+      borderRadius: 'var(--radius-control)',
+      fontFamily: 'var(--type-code-family)',
+      fontSize: 'var(--type-code-size)',
       whiteSpace: 'pre-wrap',
     }}
   >
@@ -179,7 +76,7 @@ const SectionIntro = ({
   example: string;
 }) => (
   <Box>
-    <Typography variant="h5" sx={{ mb: 0.5, fontWeight: 700 }}>
+    <Typography variant="h5" sx={{ mb: 0.5 }}>
       {title}
     </Typography>
     <Typography variant="body2" sx={{ color: 'text.secondary' }}>
@@ -193,207 +90,200 @@ const SectionIntro = ({
 );
 
 const ProjectThemeColors = () => {
-  const { primary, secondary, success, warning, error, info, chart, text, background, action, divider, grey: themeGrey } =
-    theme.palette;
+  const { palette } = useTheme();
+  const { primary, secondary, success, warning, error, info, chart, text, background, action, divider } = palette;
 
   return (
     <Stack spacing={4} sx={{ p: 2 }}>
       <SectionIntro
-        title="Project theme colors — Material 2014 by default"
-        source="src/Theme.ts → theme.palette"
-        example={'<Button color="primary" />\n<Box sx={{ color: \'text.secondary\', bgcolor: \'background.paper\' }} />'}
+        title="Project theme colors"
+        source="src/Theme.ts → theme.palette (generated from the design tokens)"
+        example={'<Button variant="contained" />\n<Box sx={{ color: "text.secondary", bgcolor: "background.paper", borderColor: "var(--border)" }} />'}
       >
-        Kiwi UI maps its semantic MUI theme entirely to the 2014 Material Design palettes. Use semantic paths in
-        product code; the hue and shade shown here explain the mapping, but are not component-level tokens.
+        The palette is generated from the Stage 1 design tokens for the current color scheme. Product code reads a
+        token as <Box component="code">var(--…)</Box> or one of the mapped roles; these swatches show the values the
+        theme holds right now.
       </SectionIntro>
 
-      <Alert severity="success">
-        Default hierarchy: Purple for primary actions, Pink for secondary emphasis, and Material semantic hues for
-        status.
-      </Alert>
-
       <Group
-        title="Core actions — Material Purple and Pink"
+        title="Controls"
         colors={{
-          'primary.light · purple.500': primary.light,
-          'primary.main · purple.700': primary.main,
-          'primary.dark · purple.900': primary.dark,
-          'secondary.light · pink.500': secondary.light,
-          'secondary.main · pink.700': secondary.main,
-          'secondary.dark · pink.900': secondary.dark,
+          'primary.main · the filled control': primary.main,
+          'primary.dark · its hover fill': primary.dark,
+          'primary.contrastText · the label on the fill': primary.contrastText,
+          'secondary.main · the interactive edge': secondary.main,
         }}
       />
       <Group
-        title="Semantic status — Material Green, Orange, Red, and Blue"
+        title="Status surfaces and text"
         colors={{
-          'success.main · green.800': success.main,
-          'warning.main · orange.800': warning.main,
-          'error.main · red.700': error.main,
-          'info.main · blue.700': info.main,
+          'success.light': success.light,
+          'success.main': success.main,
+          'warning.light': warning.light,
+          'warning.main': warning.main,
+          'error.light': error.light,
+          'error.main': error.main,
+          'info.light': info.light,
+          'info.main': info.main,
         }}
       />
       <Group
-        title="Chart series — Shared five-color palette"
+        title="Chart"
         colors={{
-          'chart.series1 · #9C27B0': chart.series1,
-          'chart.series2 · #EC0A85': chart.series2,
-          'chart.series3 · #FF5A4E': chart.series3,
-          'chart.series4 · #FFA600': chart.series4,
-          'chart.series5 · grey.500': chart.series5,
+          'chart.series1': chart.series1,
+          'chart.series2': chart.series2,
+          'chart.series3': chart.series3,
+          'chart.series4': chart.series4,
+          'chart.series5': chart.series5,
+          'chart.other': chart.other,
+          'chart.grid': chart.grid,
+          'chart.baseline': chart.baseline,
+          'chart.tickText': chart.tickText,
+          'chart.plot': chart.plot,
         }}
       />
       <Group
-        title="Contrast text"
+        title="Text, surfaces and rules"
         colors={{
-          'primary.contrastText': primary.contrastText,
-          'secondary.contrastText': secondary.contrastText,
-          'success.contrastText': success.contrastText,
-          'warning.contrastText': warning.contrastText,
-          'error.contrastText': error.contrastText,
-          'info.contrastText': info.contrastText,
-        }}
-      />
-      <Group
-        title="Text, surfaces, and divider — Material Grey"
-        colors={{
-          'text.primary · grey.900': text.primary,
-          'text.secondary · grey.700': text.secondary,
-          'text.disabled · grey.500': text.disabled,
-          'background.default · grey.50': background.default,
-          'background.paper': background.paper,
-          'divider · grey.300': divider,
-        }}
-      />
-      <Group
-        title="Action states — Purple-derived"
-        colors={{
-          'action.active': action.active,
-          'action.hover': action.hover,
-          'action.selected': action.selected,
-          'action.disabled': action.disabled,
-          'action.disabledBackground': action.disabledBackground,
-          'action.focus': action.focus,
-        }}
-      />
-      <Group
-        title="Material Grey scale"
-        colors={{
-          'grey.50': themeGrey[50],
-          'grey.100': themeGrey[100],
-          'grey.200': themeGrey[200],
-          'grey.300': themeGrey[300],
-          'grey.400': themeGrey[400],
-          'grey.500': themeGrey[500],
-          'grey.600': themeGrey[600],
-          'grey.700': themeGrey[700],
-          'grey.800': themeGrey[800],
-          'grey.900': themeGrey[900],
+          'text.primary': text.primary,
+          'text.secondary': text.secondary,
+          'background.default · the canvas': background.default,
+          'background.paper · the sheet': background.paper,
+          'divider · the hairline': divider,
+          'action.hover · the hover step': action.hover,
+          'action.selected · the selection tint': action.selected,
         }}
       />
     </Stack>
   );
 };
 
-const Material2014PaletteLibrary = () => (
-  <Stack spacing={3} sx={{ p: 2 }}>
-    <SectionIntro
-      title="2014 Material Design palette library"
-      source="src/theme/material-design-2014.json"
-      example={
-        "import material2014 from './theme/material-design-2014.json';\n\nconst selected = material2014.palettes.purple['700'];"
-      }
-    >
-      This project-local JSON preserves the complete MUI-provided 2014 palettes. Use it to select or extend a semantic
-      role, then expose that role through the theme. Do not scatter raw hue/shade references across product components.
-    </SectionIntro>
-    <Alert severity="info">
-      MUI source:{' '}
-      <Link href="https://mui.com/material-ui/customization/color/#2014-material-design-color-palettes">
-        2014 Material Design color palettes
-      </Link>
-      . The 500 row is the canonical main shade; accent rows use the A prefix.
-    </Alert>
-    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 2 }}>
-      {material2014Palettes.map((palette) => (
-        <MaterialPaletteCard key={palette.importName} {...palette} />
-      ))}
-    </Box>
-  </Stack>
+/** Reads design-token custom properties from the document, again whenever the scheme changes. */
+const useTokenValues = (names: readonly string[]): Colors => {
+  const { palette } = useTheme();
+  const [values, setValues] = useState<Colors>({});
+  useEffect(() => {
+    const style = getComputedStyle(document.documentElement);
+    setValues(Object.fromEntries(names.map((name) => [name, style.getPropertyValue(name).trim()])));
+  }, [names, palette.mode]);
+  return values;
+};
+
+const steps = Array.from({ length: 12 }, (_, index) => index + 1);
+const NEUTRAL_RAMP = steps.map((step) => `--neutral-${step}`);
+const ACCENT_RAMP = steps.map((step) => `--accent-${step}`);
+const STATUS_STEPS = ['success', 'warning', 'error', 'info'].flatMap((kind) =>
+  [3, 9, 11].map((step) => `--${kind}-${step}`),
 );
 
-const externalThemeColors = {
-  '--kiwi-primary': purple['700'],
-  '--kiwi-primary-light': purple['500'],
-  '--kiwi-primary-dark': purple['900'],
-  '--kiwi-primary-contrast': '#ffffff',
-  '--kiwi-secondary': pink['700'],
-  '--kiwi-secondary-light': pink['500'],
-  '--kiwi-secondary-dark': pink['900'],
-  '--kiwi-secondary-contrast': '#ffffff',
+const TokenRamps = () => {
+  const neutral = useTokenValues(NEUTRAL_RAMP);
+  const accent = useTokenValues(ACCENT_RAMP);
+  const status = useTokenValues(STATUS_STEPS);
+
+  return (
+    <Stack spacing={3} sx={{ p: 2 }}>
+      <SectionIntro
+        title="Token ramps"
+        source="src/theme/generated/kiwi-ui.tokens.css → :root and [data-theme]"
+        example={'.my-part {\n  background: var(--surface);\n  color: var(--text-secondary);\n  border: 1px solid var(--border-subtle);\n}'}
+      >
+        The ramps the semantic tokens are drawn from. Product code uses the semantic tokens (
+        <Box component="code">--surface</Box>, <Box component="code">--text</Box>,{' '}
+        <Box component="code">--border-interactive</Box>, …), never a ramp step directly.
+      </SectionIntro>
+      <Group title="Neutral" colors={neutral} />
+      <Group title="Accent" colors={accent} />
+      <Group title="Status (surface 3, dot 9, text 11)" colors={status} />
+    </Stack>
+  );
 };
 
-const externalSemanticColors = {
-  '--kiwi-success': green['800'],
-  '--kiwi-warning': orange['800'],
-  '--kiwi-error': red['700'],
-  '--kiwi-info': blue['700'],
+/** The `--kiwi-*` colors of the public stylesheet, fetched as it is served to external apps. */
+const useExternalTokens = () => {
+  const [tokens, setTokens] = useState<Colors | null>(null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch('kiwi-design-tokens.css')
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.text();
+      })
+      .then((css) => {
+        if (cancelled) return;
+        const colors: Colors = {};
+        for (const [, name, value] of css.matchAll(/(--kiwi-[a-z0-9-]+)\s*:\s*([^;]+);/g)) {
+          if (/^(#|rgba?\(|hsla?\()/.test(value.trim())) colors[name] = value.trim();
+        }
+        setTokens(colors);
+      })
+      .catch((reason: unknown) => {
+        console.error('Could not read kiwi-design-tokens.css', reason);
+        if (!cancelled) setFailed(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return { tokens, failed };
 };
 
-const externalSurfaceColors = {
-  '--kiwi-bg-default': grey['50'],
-  '--kiwi-bg-paper': '#ffffff',
-  '--kiwi-bg-hover': 'rgba(123, 31, 162, 0.04)',
-  '--kiwi-bg-selected': 'rgba(123, 31, 162, 0.08)',
-  '--kiwi-text-primary': grey['900'],
-  '--kiwi-text-secondary': grey['700'],
-  '--kiwi-border-default': grey['300'],
+const pick = (tokens: Colors, pattern: RegExp): Colors =>
+  Object.fromEntries(Object.entries(tokens).filter(([name]) => pattern.test(name)));
+
+const ExternalDesignTokens = () => {
+  const { tokens, failed } = useExternalTokens();
+
+  return (
+    <Stack spacing={4} sx={{ p: 2 }}>
+      <SectionIntro
+        title="Kiwi Design Tokens — external Kiwi Apps only"
+        source="public/kiwi-design-tokens.css → :root CSS custom properties"
+        example={
+          '<link rel="stylesheet" href="https://<kiwi-domain>/kiwi-design-tokens.css">\n\n.external-card {\n  color: var(--kiwi-text-primary);\n  background: var(--kiwi-bg-paper);\n}'
+        }
+      >
+        This is the CSS contract for applications outside the main Kiwi project, read from the stylesheet as it is
+        served, so the swatches are exactly what an external app receives. React components inside Kiwi UI use the
+        design tokens instead.
+      </SectionIntro>
+
+      {failed && <Alert severity="error">The stylesheet could not be read.</Alert>}
+      {tokens && (
+        <>
+          <Group title="External core theme tokens" colors={pick(tokens, /^--kiwi-(primary|secondary)/)} />
+          <Group title="External semantic tokens" colors={pick(tokens, /^--kiwi-(success|warning|error|info)/)} />
+          <Group title="External surface, text, and border tokens" colors={pick(tokens, /^--kiwi-(bg|text|border)/)} />
+        </>
+      )}
+    </Stack>
+  );
 };
-
-const ExternalDesignTokens = () => (
-  <Stack spacing={4} sx={{ p: 2 }}>
-    <SectionIntro
-      title="Kiwi Design Tokens — external Kiwi Apps only"
-      source="public/kiwi-design-tokens.css → :root CSS custom properties"
-      example={
-        '<link rel="stylesheet" href="https://<kiwi-domain>/kiwi-design-tokens.css">\n\n.external-card {\n  color: var(--kiwi-text-primary);\n  background: var(--kiwi-bg-paper);\n}'
-      }
-    >
-      This is the CSS contract for applications outside the main Kiwi project. Its default semantic tokens mirror the
-      Material 2014 MUI theme. React components inside Kiwi UI should continue to use MUI theme paths instead.
-    </SectionIntro>
-
-    <Alert severity="info">
-      The external semantic contract mirrors <Box component="code">src/Theme.ts</Box> and must stay in sync when a
-      theme role changes.
-    </Alert>
-
-    <Group title="External core theme tokens" colors={externalThemeColors} />
-    <Group title="External semantic tokens" colors={externalSemanticColors} />
-    <Group title="External surface, text, and border tokens" colors={externalSurfaceColors} />
-  </Stack>
-);
 
 const ColorsOverview = () => (
   <Stack spacing={3} sx={{ p: 2, maxWidth: 840 }}>
-    <Typography variant="h4" sx={{ fontWeight: 700 }}>
-      Colors: Material first
-    </Typography>
+    <Typography variant="h4">Colors: the design tokens</Typography>
     <Typography>
-      The 2014 Material Design palettes are Kiwi's primary color foundation. Semantic MUI roles are the application
-      contract, and external Kiwi Apps receive matching CSS variables.
+      Every color in Kiwi UI is a design token. The MUI theme is generated from the same tokens, and external Kiwi
+      Apps receive a matching CSS contract.
     </Typography>
     <Divider />
     <Box>
-      <Typography variant="h6">1. Build product UI with semantic roles</Typography>
+      <Typography variant="h6">1. Build product UI with token roles</Typography>
       <Typography variant="body2" sx={{ mt: 0.5 }}>
-        Use <Box component="code">primary.main</Box>, <Box component="code">error.main</Box>,{' '}
-        <Box component="code">text.secondary</Box>, and related paths from <Box component="code">src/Theme.ts</Box>.
+        Write <Box component="code">var(--…)</Box> in <Box component="code">sx</Box>, or use the mapped roles{' '}
+        <Box component="code">text.primary</Box>, <Box component="code">text.secondary</Box>,{' '}
+        <Box component="code">background.default</Box>, <Box component="code">background.paper</Box>,{' '}
+        <Box component="code">divider</Box> and <Box component="code">action.hover</Box>.
       </Typography>
     </Box>
     <Box>
-      <Typography variant="h6">2. Choose new roles from Material 2014</Typography>
+      <Typography variant="h6">2. Never type a color literal</Typography>
       <Typography variant="body2" sx={{ mt: 0.5 }}>
-        Review the complete hue and shade library, then map the chosen value to a semantic theme or feature token.
+        A new role is added to the design tokens and generated, so it follows the color scheme and the density.
       </Typography>
     </Box>
   </Stack>
@@ -410,8 +300,6 @@ const meta = {
 > **Scope: Kiwi Design System.** ${colorsContract.summary}
 
 ${colorsContract.rules.map((item) => `- ${item}`).join('\n')}
-
-Sources: [MUI 2014 Material Design color palettes](https://mui.com/material-ui/customization/color/#2014-material-design-color-palettes).
         `,
       },
     },
@@ -428,9 +316,9 @@ export const ThemePalette: Story = {
   render: () => <ProjectThemeColors />,
 };
 
-export const MaterialPalettes: Story = {
-  name: '2. 2014 Material Palettes',
-  render: () => <Material2014PaletteLibrary />,
+export const TokenRampsStory: Story = {
+  name: '2. Token Ramps',
+  render: () => <TokenRamps />,
 };
 
 export const ExternalTokens: Story = {

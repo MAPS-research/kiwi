@@ -66,29 +66,29 @@ import {
   AdminPageHeader,
 } from "../../components/AdminPage/index.ts";
 
-// Map event types to icons and colors
+// Map event types to icons; the chip stays neutral (a type is a category, never a status hue)
 const getEventTypeDetails = (eventType: string) => {
   switch (eventType) {
     case "user.created":
-      return { icon: <PersonAddIcon />, color: "primary" };
+      return { icon: <PersonAddIcon /> };
     case "user.updated":
-      return { icon: <PersonIcon />, color: "info" };
+      return { icon: <PersonIcon /> };
     case "user.enroll":
-      return { icon: <SchoolIcon />, color: "success" };
+      return { icon: <SchoolIcon /> };
     case "class.created":
-      return { icon: <SchoolIcon />, color: "primary" };
+      return { icon: <SchoolIcon /> };
     case "class.enrollment":
-      return { icon: <AssignmentIcon />, color: "success" };
+      return { icon: <AssignmentIcon /> };
     case "interaction.created":
-      return { icon: <AssignmentIcon />, color: "info" };
+      return { icon: <AssignmentIcon /> };
     case "document.uploaded":
-      return { icon: <DescriptionIcon />, color: "secondary" };
+      return { icon: <DescriptionIcon /> };
     case "test.event":
-      return { icon: <ScienceIcon />, color: "warning" };
+      return { icon: <ScienceIcon /> };
     case "*":
-      return { icon: <StarIcon />, color: "default" };
+      return { icon: <StarIcon /> };
     default:
-      return { icon: <StarIcon />, color: "default" };
+      return { icon: <StarIcon /> };
   }
 };
 
@@ -630,7 +630,7 @@ export const WebhookEventApprovals: React.FC = () => {
 
       {/* Bulk Actions - only show for pending tab */}
       {selectedEvents.size > 0 && tabValue === 0 && (
-        <AdminFormSurface sx={{ p: 2, mb: 2, borderColor: "primary.light" }}>
+        <AdminFormSurface sx={{ p: 2, mb: 2 }}>
           <Box sx={{ display: "flex", gap: 1.5, alignItems: "center", flexWrap: "wrap" }}>
             <Typography variant="subtitle1">
               {selectedEvents.size} event(s) selected
@@ -679,7 +679,7 @@ export const WebhookEventApprovals: React.FC = () => {
               </Box>
             ) : pendingEvents.length === 0 ? (
               <Box sx={{ textAlign: "center", py: 8 }}>
-                <CheckCircleIcon sx={{ fontSize: 64, color: "success.main", mb: 2 }} />
+                <CheckCircleIcon sx={{ fontSize: 64, color: "var(--icon-default)", mb: 2 }} />
                 <Typography variant="h6" sx={{
                   color: "text.secondary"
                 }}>
@@ -741,14 +741,13 @@ export const WebhookEventApprovals: React.FC = () => {
                               <Chip
                                 icon={eventDetails.icon}
                                 label={event.eventType}
-                                color={eventDetails.color as any}
                                 size="small"
                               />
                             </TableCell>
                             <TableCell>
                               <Typography
                                 variant="body2"
-                                sx={{ fontFamily: "monospace", fontSize: "0.875rem" }}
+                                sx={{ fontFamily: "var(--font-mono)", fontSize: "0.875rem" }}
                               >
                                 {event.webhookId.substring(0, 8)}...
                               </Typography>
@@ -758,7 +757,7 @@ export const WebhookEventApprovals: React.FC = () => {
                                 <Typography
                                   variant="body2"
                                   sx={{
-                                    fontFamily: "monospace",
+                                    fontFamily: "var(--font-mono)",
                                     fontSize: "0.75rem",
                                     maxWidth: "300px",
                                     overflow: "hidden",
@@ -872,7 +871,7 @@ export const WebhookEventApprovals: React.FC = () => {
                           <TableCell>
                             <Typography
                               variant="body2"
-                              sx={{ fontFamily: "monospace", fontSize: "0.875rem" }}
+                              sx={{ fontFamily: "var(--font-mono)", fontSize: "0.875rem" }}
                             >
                               {audit.webhookEventId.substring(0, 8)}...
                             </Typography>
@@ -946,7 +945,7 @@ export const WebhookEventApprovals: React.FC = () => {
                       }}>
                         Event ID
                       </Typography>
-                      <Typography variant="body2" sx={{ fontFamily: "monospace" }}>
+                      <Typography variant="body2" sx={{ fontFamily: "var(--font-mono)" }}>
                         {selectedEvent.id}
                       </Typography>
                     </Box>
@@ -960,7 +959,6 @@ export const WebhookEventApprovals: React.FC = () => {
                         <Chip
                           icon={getEventTypeDetails(selectedEvent.eventType).icon}
                           label={selectedEvent.eventType}
-                          color={getEventTypeDetails(selectedEvent.eventType).color as any}
                           size="small"
                         />
                       </Box>
@@ -971,7 +969,7 @@ export const WebhookEventApprovals: React.FC = () => {
                       }}>
                         Webhook ID
                       </Typography>
-                      <Typography variant="body2" sx={{ fontFamily: "monospace" }}>
+                      <Typography variant="body2" sx={{ fontFamily: "var(--font-mono)" }}>
                         {selectedEvent.webhookId}
                       </Typography>
                     </Box>
@@ -1013,12 +1011,12 @@ export const WebhookEventApprovals: React.FC = () => {
                     variant="outlined"
                     sx={{
                       p: 2,
-                      backgroundColor: "grey.100",
+                      backgroundColor: "action.hover",
                       maxHeight: "400px",
                       overflow: "auto",
                     }}
                   >
-                    <pre style={{ margin: 0, fontFamily: "monospace", fontSize: "0.875rem" }}>
+                    <pre style={{ margin: 0, fontFamily: "var(--font-mono)", fontSize: "0.875rem" }}>
                       {JSON.stringify(selectedEvent.payload, null, 2)}
                     </pre>
                   </Paper>
@@ -1041,7 +1039,7 @@ export const WebhookEventApprovals: React.FC = () => {
                       }}>
                         Audit ID
                       </Typography>
-                      <Typography variant="body2" sx={{ fontFamily: "monospace" }}>
+                      <Typography variant="body2" sx={{ fontFamily: "var(--font-mono)" }}>
                         {selectedAudit.id}
                       </Typography>
                     </Box>
@@ -1051,7 +1049,7 @@ export const WebhookEventApprovals: React.FC = () => {
                       }}>
                         Event ID
                       </Typography>
-                      <Typography variant="body2" sx={{ fontFamily: "monospace" }}>
+                      <Typography variant="body2" sx={{ fontFamily: "var(--font-mono)" }}>
                         {selectedAudit.webhookEventId}
                       </Typography>
                     </Box>
@@ -1116,12 +1114,12 @@ export const WebhookEventApprovals: React.FC = () => {
                       variant="outlined"
                       sx={{
                         p: 2,
-                        backgroundColor: "grey.100",
+                        backgroundColor: "action.hover",
                         maxHeight: "400px",
                         overflow: "auto",
                       }}
                     >
-                      <pre style={{ margin: 0, fontFamily: "monospace", fontSize: "0.875rem" }}>
+                      <pre style={{ margin: 0, fontFamily: "var(--font-mono)", fontSize: "0.875rem" }}>
                         {JSON.stringify(selectedAudit.metadata, null, 2)}
                       </pre>
                     </Paper>

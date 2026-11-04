@@ -61,7 +61,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
 }) => (
   <Paper
     variant="outlined"
-    sx={{ p: 2.5, height: 132, boxSizing: "border-box", borderRadius: 2 }}
+    sx={{ p: 2.5, height: 132, boxSizing: "border-box", borderRadius: "var(--kpi-tile-radius)" }}
   >
     <Stack
       direction="row"
@@ -74,9 +74,11 @@ const MetricCard: React.FC<MetricCardProps> = ({
         <Typography
           variant="body2"
           sx={{
-            color: "text.secondary",
+            fontSize: "var(--type-label-size)",
+            lineHeight: "var(--type-label-leading)",
+            fontWeight: "var(--type-label-weight)",
+            color: "var(--kpi-tile-label)",
             height: 20,
-            lineHeight: "20px"
           }}>
           {label}
         </Typography>
@@ -86,7 +88,13 @@ const MetricCard: React.FC<MetricCardProps> = ({
           ) : (
             <Typography
               variant="h4"
-              sx={{ fontWeight: 600, lineHeight: "44px", letterSpacing: "-0.02em" }}
+              sx={{
+                fontSize: "var(--type-kpi-value-size)",
+                lineHeight: "var(--type-kpi-value-leading)",
+                fontWeight: "var(--type-kpi-value-weight)",
+                fontVariantNumeric: "tabular-nums",
+                color: "var(--kpi-tile-value)",
+              }}
             >
               {value}
             </Typography>
@@ -110,7 +118,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
           placeItems: "center",
           width: 40,
           height: 40,
-          color: "text.secondary",
+          color: "var(--kpi-tile-icon)",
           flexShrink: 0,
         }}
       >

@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
+import { createKiwiTheme } from '../../Theme.ts';
 import ChatField from './ChatField.tsx';
 
 // Mock ChatCommands component
@@ -24,42 +25,25 @@ vi.mock('@floating-ui/react', () => ({
   offset: vi.fn(),
 }));
 
-const theme = createTheme({
-  palette: {
-    custom: {
-      border: '#ddd',
-      chatMessageBg: '#f0f0f0',
-    },
-  } as any,
-});
+const PLACEHOLDER = 'Ask a question, or type / for commands';
 
-const renderWithTheme = (component: React.ReactElement) => {
-  return render(<ThemeProvider theme={theme}>{component}</ThemeProvider>);
-};
+const renderWithTheme = (component: React.ReactElement) =>
+  render(<ThemeProvider theme={createKiwiTheme({ dark: false })}>{component}</ThemeProvider>);
 
 // Test wrapper component to provide formRef
 const TestWrapper = ({
-  Component,
   props,
+  onSubmit = (e: React.FormEvent) => e.preventDefault(),
 }: {
-  Component: React.FC<any>;
-  props: any;
+  props: Partial<React.ComponentProps<typeof ChatField>>;
+  onSubmit?: (e: React.FormEvent) => void;
 }) => {
-  const formRef = useRef<HTMLFormElement>(null);
+  const formRef = useRef<HTMLFormElement>(null!);
   return (
-    <div>
-      <form ref={formRef} onSubmit={(e) => e.preventDefault()}>
-        <button type="submit">Submit</button>
-      </form>
-      <Component {...props} formRef={formRef} />
-    </div>
+    <form ref={formRef} onSubmit={onSubmit}>
+      <ChatField botAnswering={false} setPrompt={vi.fn()} prompt="" {...props} formRef={formRef} />
+    </form>
   );
-};
-
-const defaultProps = {
-  botAnswering: false,
-  setPrompt: vi.fn(),
-  prompt: '',
 };
 
 describe('ChatField', () => {
@@ -67,155 +51,126 @@ describe('ChatField', () => {
     vi.clearAllMocks();
   });
 
-  it('renders without crashing', () => {
-    renderWithTheme(<TestWrapper Component={ChatField} props={defaultProps} />);
-    expect(screen.getByPlaceholderText(/Ask Kiwi/)).toBeInTheDocument();
+  it('shows the placeholder, which also names the box', () => {
+    renderWithTheme(<TestWrapper props={{}} />);
+
+    expect(screen.getByPlaceholderText(PLACEHOLDER)).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: PLACEHOLDER })).toBeInTheDocument();
   });
 
-  it('displays the placeholder text', () => {
-    renderWithTheme(<TestWrapper Component={ChatField} props={defaultProps} />);
-    expect(
-      screen.getByPlaceholderText(
-        'Ask Kiwi... You can type / to see available commands.'
-      )
-    ).toBeInTheDocument();
-  });
+  it('displays the current prompt value', () => {
+    renderWithTheme(<TestWrapper props={{ prompt: 'Test message' }} />);
 
-  it('displays current prompt value', () => {
-    renderWithTheme(
-      <TestWrapper
-        Component={ChatField}
-        props={{ ...defaultProps, prompt: 'Test message' }}
-      />
-    );
     expect(screen.getByDisplayValue('Test message')).toBeInTheDocument();
   });
 
   it('calls setPrompt when text changes', () => {
     const setPrompt = vi.fn();
-    renderWithTheme(
-      <TestWrapper
-        Component={ChatField}
-        props={{ ...defaultProps, setPrompt }}
-      />
-    );
+    renderWithTheme(<TestWrapper props={{ setPrompt }} />);
 
-    const textField = screen.getByPlaceholderText(/Ask Kiwi/);
-    fireEvent.change(textField, { target: { value: 'New message' } });
+    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDER), { target: { value: 'New message' } });
 
     expect(setPrompt).toHaveBeenCalledWith('New message');
   });
 
-  it('disables input when bot is answering', () => {
-    renderWithTheme(
-      <TestWrapper
-        Component={ChatField}
-        props={{ ...defaultProps, botAnswering: true }}
-      />
-    );
+  it('keeps Send in the box, faded while the box is empty', () => {
+    renderWithTheme(<TestWrapper props={{}} />);
 
-    const textField = screen.getByPlaceholderText(/Ask Kiwi/);
-    expect(textField).toBeDisabled();
+    const send = screen.getByRole('button', { name: 'Send message' });
+    expect(send).toHaveAttribute('aria-disabled', 'true');
+    expect(send).not.toBeDisabled();
+    expect(screen.getByTestId('chat-composer-box')).toContainElement(send);
   });
 
-  it('disables action buttons when bot is answering', () => {
-    renderWithTheme(
-      <TestWrapper
-        Component={ChatField}
-        props={{ ...defaultProps, botAnswering: true }}
-      />
-    );
+  it('sends with the Send button once there is text', () => {
+    const onSubmit = vi.fn((e: React.FormEvent) => e.preventDefault());
+    renderWithTheme(<TestWrapper props={{ prompt: 'Why is it NA?' }} onSubmit={onSubmit} />);
 
-    const sendButton = screen.getByTestId('SendIcon').closest('button');
+    const send = screen.getByRole('button', { name: 'Send message' });
+    expect(send).not.toHaveAttribute('aria-disabled');
+    fireEvent.click(send);
 
-    expect(sendButton).toBeDisabled();
+    expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 
-  it('renders action buttons', () => {
-    renderWithTheme(<TestWrapper Component={ChatField} props={defaultProps} />);
+  it('sends on Enter, keeps Shift+Enter for a new line, and sends nothing empty', () => {
+    const onSubmit = vi.fn((e: React.FormEvent) => e.preventDefault());
+    const { unmount } = renderWithTheme(<TestWrapper props={{ prompt: 'Hello' }} onSubmit={onSubmit} />);
 
-    expect(screen.getByTestId('SendIcon')).toBeInTheDocument();
+    fireEvent.keyDown(screen.getByPlaceholderText(PLACEHOLDER), { key: 'Enter', shiftKey: true });
+    expect(onSubmit).not.toHaveBeenCalled();
+    fireEvent.keyDown(screen.getByPlaceholderText(PLACEHOLDER), { key: 'Enter', shiftKey: false });
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    unmount();
+
+    renderWithTheme(<TestWrapper props={{ prompt: '   ' }} onSubmit={onSubmit} />);
+    fireEvent.keyDown(screen.getByPlaceholderText(PLACEHOLDER), { key: 'Enter', shiftKey: false });
+    expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 
-  it('handles send button click', () => {
-    const mockFormSubmit = vi.fn((e) => e.preventDefault());
-    const { container } = renderWithTheme(
-      <TestWrapper Component={ChatField} props={defaultProps} />
-    );
+  it('turns Send into Stop while Kiwi answers, with the reason under the box', () => {
+    const onStop = vi.fn();
+    renderWithTheme(<TestWrapper props={{ botAnswering: true, onStop, prompt: '' }} />);
 
-    // Mock form submission
-    const form = container.querySelector('form');
-    form?.addEventListener('submit', mockFormSubmit);
+    expect(screen.queryByRole('button', { name: 'Send message' })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Stop answering' }));
+    expect(onStop).toHaveBeenCalledTimes(1);
 
-    const sendButton = screen.getByTestId('SendIcon').closest('button');
-    fireEvent.click(sendButton!);
-
-    expect(mockFormSubmit).toHaveBeenCalled();
+    const box = screen.getByPlaceholderText(PLACEHOLDER);
+    expect(box).not.toBeDisabled();
+    expect(box).toHaveAttribute('readonly');
+    expect(box).toHaveAttribute('aria-disabled', 'true');
+    expect(box).toHaveAccessibleDescription('Kiwi is answering. Select Stop to interrupt.');
   });
 
-  it('handles Enter key press to send', () => {
-    renderWithTheme(<TestWrapper Component={ChatField} props={defaultProps} />);
+  it('stops the answer on Escape in the box', () => {
+    const onStop = vi.fn();
+    renderWithTheme(<TestWrapper props={{ botAnswering: true, onStop }} />);
 
-    const textField = screen.getByPlaceholderText(/Ask Kiwi/);
-    fireEvent.keyDown(textField, { key: 'Enter', shiftKey: false });
+    fireEvent.keyDown(screen.getByPlaceholderText(PLACEHOLDER), { key: 'Escape' });
 
-    // Should prevent default behavior and trigger form submission
-    // This is hard to test directly, but we can ensure the event was handled
-    expect(textField).toBeInTheDocument();
+    expect(onStop).toHaveBeenCalledTimes(1);
   });
 
-  it('allows Shift+Enter for new line', () => {
-    renderWithTheme(<TestWrapper Component={ChatField} props={defaultProps} />);
+  it('shows the commands menu when typing /', async () => {
+    renderWithTheme(<TestWrapper props={{}} />);
 
-    const textField = screen.getByPlaceholderText(/Ask Kiwi/);
-    fireEvent.keyDown(textField, { key: 'Enter', shiftKey: true });
-
-    // Should not prevent default, allowing new line
-    expect(textField).toBeInTheDocument();
-  });
-
-  it('shows commands menu when typing /', async () => {
-    renderWithTheme(<TestWrapper Component={ChatField} props={defaultProps} />);
-
-    const textField = screen.getByPlaceholderText(/Ask Kiwi/);
-    fireEvent.change(textField, { target: { value: '/', selectionEnd: 1 } });
+    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDER), { target: { value: '/', selectionEnd: 1 } });
 
     await waitFor(() => {
       expect(screen.getByTestId('chat-commands')).toBeVisible();
     });
   });
 
-  it('hides commands menu when not typing command', () => {
-    renderWithTheme(<TestWrapper Component={ChatField} props={defaultProps} />);
+  it('closes the commands menu on Escape and keeps the key from the chat panel', async () => {
+    const panelKeyDown = vi.fn();
+    renderWithTheme(
+      <div onKeyDown={panelKeyDown}>
+        <TestWrapper props={{}} />
+      </div>
+    );
 
-    const textField = screen.getByPlaceholderText(/Ask Kiwi/);
-    fireEvent.change(textField, { target: { value: 'regular text' } });
+    const box = screen.getByPlaceholderText(PLACEHOLDER);
+    fireEvent.change(box, { target: { value: '/', selectionEnd: 1 } });
+    await waitFor(() => expect(screen.getByTestId('chat-commands')).toBeVisible());
 
-    const chatCommands = screen.getByTestId('chat-commands');
-    expect(chatCommands).not.toBeVisible();
+    fireEvent.keyDown(box, { key: 'Escape' });
+
+    expect(screen.getByTestId('chat-commands')).not.toBeVisible();
+    expect(panelKeyDown).not.toHaveBeenCalled();
   });
 
-  it('has proper styling structure', () => {
-    renderWithTheme(<TestWrapper Component={ChatField} props={defaultProps} />);
+  it('hides the commands menu when not typing a command', () => {
+    renderWithTheme(<TestWrapper props={{}} />);
 
-    // Test that key elements are present with expected structure
-    const textField = screen.getByPlaceholderText(/Ask Kiwi/);
-    expect(textField).toBeInTheDocument();
+    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDER), { target: { value: 'regular text' } });
 
-    const sendButton = screen.getByTestId('SendIcon');
-    expect(sendButton).toBeInTheDocument();
+    expect(screen.getByTestId('chat-commands')).not.toBeVisible();
   });
 
-  it('uses multiline text field', () => {
-    renderWithTheme(<TestWrapper Component={ChatField} props={defaultProps} />);
+  it('uses a multiline text box', () => {
+    renderWithTheme(<TestWrapper props={{}} />);
 
-    const textField = screen
-      .getByPlaceholderText(/Ask Kiwi/)
-      .closest('.MuiTextField-root');
-    expect(textField).toHaveClass('MuiTextField-root');
-
-    // Should be multiline (textarea)
-    const textarea = screen.getByPlaceholderText(/Ask Kiwi/);
-    expect(textarea.tagName).toBe('TEXTAREA');
+    expect(screen.getByPlaceholderText(PLACEHOLDER).tagName).toBe('TEXTAREA');
   });
 });

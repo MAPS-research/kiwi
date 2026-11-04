@@ -1,0 +1,490 @@
+{
+  "_note": "Preview of createKiwiTheme(): MUI 9 createTheme input with cssVariables.colorSchemeSelector = 'data-theme' so MUI and the token CSS switch on one attribute. Density is not a theme instance: styleOverrides read the density-aware custom properties (var(--size-control), var(--space-inset-x), …) which [data-density] re-resolves.",
+  "cssVariables": {
+    "colorSchemeSelector": "data-theme",
+    "cssVarPrefix": "mui"
+  },
+  "colorSchemes": {
+    "light": {
+      "palette": {
+        "mode": "light",
+        "primary": {
+          "main": "#d0ddbd",
+          "dark": "#c7d6b1",
+          "light": "#23482e",
+          "contrastText": "#23482e",
+          "_note": "MUI contained hover uses primary.dark; text/outlined buttons and links are overridden to --accent-text"
+        },
+        "secondary": {
+          "main": "#85837e",
+          "dark": "#443c16",
+          "light": "#6a5f49",
+          "contrastText": "#fbfafa",
+          "_note": "neutral: the pink secondary is retired"
+        },
+        "error": {
+          "main": "#974843",
+          "light": "#ffebe9",
+          "dark": "#974843",
+          "contrastText": "#fbfafa",
+          "_dot": "#e1524f"
+        },
+        "success": {
+          "main": "#337437",
+          "light": "#e0f8e0",
+          "dark": "#337437",
+          "contrastText": "#fbfafa",
+          "_dot": "#5ad664"
+        },
+        "warning": {
+          "main": "#76602f",
+          "light": "#f9f0dd",
+          "dark": "#76602f",
+          "contrastText": "#fbfafa",
+          "_dot": "#dbb155"
+        },
+        "info": {
+          "main": "#3d6886",
+          "light": "#e3f3ff",
+          "dark": "#3d6886",
+          "contrastText": "#fbfafa",
+          "_dot": "#5baee5"
+        },
+        "text": {
+          "primary": "#443c16",
+          "secondary": "#6a5f49",
+          "disabled": "#6a5f49"
+        },
+        "background": {
+          "default": "#f6f4f3",
+          "paper": "#fdfbfb"
+        },
+        "divider": "#e5e3e1",
+        "action": {
+          "active": "#6a5f49",
+          "hover": "#f2f0ee",
+          "selected": "#e4ebd9",
+          "focus": "transparent",
+          "disabled": "#6a5f49",
+          "disabledBackground": "#eceae8",
+          "_note": "hover/selected are opaque tonal steps; focus is the outline ring, never a wash"
+        },
+        "common": {
+          "black": "#000000",
+          "white": "#ffffff",
+          "_note": "read only by InstitutionLogo (G2); the raw-colour guard allows palette.common in that file alone"
+        },
+        "grey": {
+          "50": "#fbfafa",
+          "100": "#f7f6f4",
+          "200": "#f2f0ee",
+          "300": "#e9e6e4",
+          "400": "#dddbd9",
+          "500": "#b1adaa",
+          "600": "#85837e",
+          "700": "#6a5f49",
+          "800": "#443c16",
+          "900": "#443c16",
+          "A100": "#f2f0ee",
+          "A200": "#e9e6e4",
+          "A400": "#b1adaa",
+          "A700": "#6a5f49",
+          "_note": "MUI's grey scale overridden with the locked neutral ramp per mode (50 → neutral-1, 100 → 2, 200 → 3, 300 → 5, 400 → 7, 500 → 8, 600 → 10, 700 → 11, 800 → 12, 900 → 12; A100 → 3, A200 → 5, A400 → 8, A700 → 11), so a stray grey.NN or palette.grey[...] still flips with data-theme; a safety net, not a role: migrate by role (page canvas → background.default; sunken band or table head → action.hover; hairline → divider; wordmark fallback → the mascot); the guard flags every grey.NN and palette.grey access"
+        },
+        "chart": {
+          "series1": "#2b774d",
+          "series2": "#0098af",
+          "series3": "#a64e00",
+          "series4": "#0064ad",
+          "series5": "#958b00",
+          "other": "#77746d",
+          "grid": "#e5e3e1",
+          "baseline": "#b1adaa",
+          "tickText": "#6a5f49",
+          "plot": "#fdfbfb",
+          "_note": "series1–5 are --chart-1…5 (categorical, fixed order, marks only: never text, never a status surface); other is --chart-other (Other and Unknown); grid, baseline, tickText and plot are the chart chrome roles (references to semantic tokens); no track is registered (the topic bars have none since the Phase 6 follow-up; the progress bar's track is --in-progress-track). Replaces Phase 3's interim stand-ins; Theme.ts's ChartPalette gains `other` and the chrome keys, and Theme.test.ts expects these values (§ Chart tokens › Hand-offs)"
+        },
+        "_kiwi": {
+          "focusRing": "#577d37",
+          "borderInteractive": "#85837e",
+          "border": "#dddbd9",
+          "borderStrong": "#b1adaa",
+          "shadowInk": "#23482e",
+          "backdrop": "rgba(35, 72, 46, 0.4)",
+          "shadow1": "0px 1px 2px 0px rgba(35, 72, 46, 0.14)",
+          "shadow2": "0px 1px 2px 0px rgba(35, 72, 46, 0.08), 0px 12px 32px -12px rgba(35, 72, 46, 0.26)",
+          "link": "#23482e",
+          "inProgressBar": "#85837e"
+        }
+      }
+    },
+    "dark": {
+      "palette": {
+        "mode": "dark",
+        "primary": {
+          "main": "#354225",
+          "dark": "#3f4d2d",
+          "light": "#b9cf9b",
+          "contrastText": "#efe4da",
+          "_note": "MUI contained hover uses primary.dark; text/outlined buttons and links are overridden to --accent-text"
+        },
+        "secondary": {
+          "main": "#83807b",
+          "dark": "#efe4da",
+          "light": "#d5c0a8",
+          "contrastText": "#131312",
+          "_note": "neutral: the pink secondary is retired"
+        },
+        "error": {
+          "main": "#f49c95",
+          "light": "#331a18",
+          "dark": "#f49c95",
+          "contrastText": "#131312",
+          "_dot": "#e1524f"
+        },
+        "success": {
+          "main": "#88cb8a",
+          "light": "#152715",
+          "dark": "#88cb8a",
+          "contrastText": "#131312",
+          "_dot": "#5ad664"
+        },
+        "warning": {
+          "main": "#cdb482",
+          "light": "#282113",
+          "dark": "#cdb482",
+          "contrastText": "#131312",
+          "_dot": "#dbb155"
+        },
+        "info": {
+          "main": "#90bedf",
+          "light": "#17242d",
+          "dark": "#90bedf",
+          "contrastText": "#131312",
+          "_dot": "#5baee5"
+        },
+        "text": {
+          "primary": "#efe4da",
+          "secondary": "#d5c0a8",
+          "disabled": "#d5c0a8"
+        },
+        "background": {
+          "default": "#191816",
+          "paper": "#22221f"
+        },
+        "divider": "#363533",
+        "action": {
+          "active": "#d5c0a8",
+          "hover": "#2a2a27",
+          "selected": "#2f3b22",
+          "focus": "transparent",
+          "disabled": "#d5c0a8",
+          "disabledBackground": "#33312f",
+          "_note": "hover/selected are opaque tonal steps; focus is the outline ring, never a wash"
+        },
+        "common": {
+          "black": "#000000",
+          "white": "#ffffff",
+          "_note": "read only by InstitutionLogo (G2); the raw-colour guard allows palette.common in that file alone"
+        },
+        "grey": {
+          "50": "#131312",
+          "100": "#1b1b19",
+          "200": "#242321",
+          "300": "#33312f",
+          "400": "#43423f",
+          "500": "#656360",
+          "600": "#83807b",
+          "700": "#d5c0a8",
+          "800": "#efe4da",
+          "900": "#efe4da",
+          "A100": "#242321",
+          "A200": "#33312f",
+          "A400": "#656360",
+          "A700": "#d5c0a8",
+          "_note": "MUI's grey scale overridden with the locked neutral ramp per mode (50 → neutral-1, 100 → 2, 200 → 3, 300 → 5, 400 → 7, 500 → 8, 600 → 10, 700 → 11, 800 → 12, 900 → 12; A100 → 3, A200 → 5, A400 → 8, A700 → 11), so a stray grey.NN or palette.grey[...] still flips with data-theme; a safety net, not a role: migrate by role (page canvas → background.default; sunken band or table head → action.hover; hairline → divider; wordmark fallback → the mascot); the guard flags every grey.NN and palette.grey access"
+        },
+        "chart": {
+          "series1": "#3f895e",
+          "series2": "#00b2cc",
+          "series3": "#b65a15",
+          "series4": "#3e7ab4",
+          "series5": "#a99d15",
+          "other": "#8d8b83",
+          "grid": "#363533",
+          "baseline": "#656360",
+          "tickText": "#d5c0a8",
+          "plot": "#22221f",
+          "_note": "series1–5 are --chart-1…5 (categorical, fixed order, marks only: never text, never a status surface); other is --chart-other (Other and Unknown); grid, baseline, tickText and plot are the chart chrome roles (references to semantic tokens); no track is registered (the topic bars have none since the Phase 6 follow-up; the progress bar's track is --in-progress-track). Replaces Phase 3's interim stand-ins; Theme.ts's ChartPalette gains `other` and the chrome keys, and Theme.test.ts expects these values (§ Chart tokens › Hand-offs)"
+        },
+        "_kiwi": {
+          "focusRing": "#b1c698",
+          "borderInteractive": "#83807b",
+          "border": "#43423f",
+          "borderStrong": "#656360",
+          "shadowInk": "#06100a",
+          "backdrop": "rgba(6, 16, 10, 0.6)",
+          "shadow1": "0px 1px 2px 0px rgba(6, 16, 10, 0.14)",
+          "shadow2": "0px 1px 2px 0px rgba(6, 16, 10, 0.08), 0px 12px 32px -12px rgba(6, 16, 10, 0.26)",
+          "link": "#b9cf9b",
+          "inProgressBar": "#83807b"
+        }
+      }
+    }
+  },
+  "shape": {
+    "borderRadius": 6,
+    "_note": "theme.shape.borderRadius in px: --radius-control, read from the token (the styleOverrides name the var() radii per component)"
+  },
+  "typography": {
+    "fontFamily": "\"Source Sans 3\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", \"Noto Sans CJK SC\", sans-serif",
+    "display": {
+      "fontSize": "2.25rem",
+      "lineHeight": "44px",
+      "fontWeight": 600,
+      "letterSpacing": "-0.01em"
+    },
+    "h1": {
+      "fontSize": "1.875rem",
+      "lineHeight": "36px",
+      "fontWeight": 600,
+      "letterSpacing": "-0.01em"
+    },
+    "h2": {
+      "fontSize": "1.5rem",
+      "lineHeight": "32px",
+      "fontWeight": 600,
+      "letterSpacing": "-0.01em"
+    },
+    "h3": {
+      "fontSize": "1.25rem",
+      "lineHeight": "28px",
+      "fontWeight": 600
+    },
+    "h4": {
+      "fontSize": "1.125rem",
+      "lineHeight": "28px",
+      "fontWeight": 400
+    },
+    "h5": {
+      "fontSize": "1rem",
+      "lineHeight": "24px",
+      "fontWeight": 600
+    },
+    "h6": {
+      "fontSize": "0.875rem",
+      "lineHeight": "20px",
+      "fontWeight": 600
+    },
+    "subtitle1": {
+      "fontSize": "1rem",
+      "lineHeight": "24px",
+      "fontWeight": 600
+    },
+    "subtitle2": {
+      "fontSize": "0.875rem",
+      "lineHeight": "20px",
+      "fontWeight": 600
+    },
+    "body1": {
+      "fontSize": "1rem",
+      "lineHeight": "24px",
+      "fontWeight": 400
+    },
+    "body2": {
+      "fontSize": "0.875rem",
+      "lineHeight": "20px",
+      "fontWeight": 400
+    },
+    "button": {
+      "fontSize": "0.875rem",
+      "lineHeight": "20px",
+      "fontWeight": 600,
+      "textTransform": "none"
+    },
+    "caption": {
+      "fontSize": "0.75rem",
+      "lineHeight": "16px",
+      "fontWeight": 400
+    },
+    "overline": {
+      "fontSize": "0.75rem",
+      "lineHeight": "16px",
+      "fontWeight": 600,
+      "textTransform": "none"
+    },
+    "_note": "h1 = --text-3xl (course-list header, large empty states); h2 = --text-2xl page headings (AdminPageHeader renders component=h1 variant=h2); display (custom variant) = --text-4xl, sign-in only. No CSS capitals anywhere."
+  },
+  "components": {
+    "_illustrative": "prose, not code: each entry names the custom properties the real styleOverrides read; every number inside the prose is interpolated from the token source at build time (26 values), so the preview cannot state a width the tokens do not hold",
+    "MuiCssBaseline": {
+      "styleOverrides": "@import the generated kiwi-ui.tokens.css; html { font-synthesis: none } ; :focus-visible on a control with no border (text buttons, icon buttons, links, tabs, list items, rows) { outline: 2px solid var(--focus-ring); outline-offset: 2px (-2px inside clipped rails, tab bars, rows and menus) }, its only frame; a control with a border never takes it: its own border becomes the frame (one frame, the 2026-10-19 decision: borderColor var(--focus-ring) + boxShadow inset 0 0 0 1px var(--focus-ring), so nothing shifts) ; @media (forced-colors: active) { :focus-visible { outline-color: Highlight; border-color: Highlight } } ; [aria-disabled='true'], [aria-disabled='true'] * { cursor: not-allowed } ; @media (forced-colors: active) { [aria-disabled='true'] { color: GrayText; border-color: GrayText } } (a disabled control never renders like an enabled one in high-contrast mode) ; after the locked reduced-motion block: @media (prefers-reduced-motion: reduce) { [data-dots]::after { animation: none; content: \"…\" } } (the text dots rest as a static ellipsis, never a frozen frame)"
+    },
+    "MuiButton": {
+      "defaultProps": {
+        "disableElevation": true
+      },
+      "styleOverrides": {
+        "root": "minHeight var(--size-control); padding 0 var(--space-inset-x); borderRadius var(--radius-control); font --type-button; whiteSpace nowrap; &:active { transform: scale(var(--button-press-scale)) } ; contained and outlined &.Mui-focusVisible { outline none; borderColor var(--focus-ring); boxShadow inset 0 0 0 1px var(--focus-ring) } (one frame: the border becomes the 2 px focus frame); text &.Mui-focusVisible the CssBaseline ring (it has no border) ; variant text/outlined color var(--accent-text); outlined borderColor var(--border-interactive), background var(--surface), &:hover background var(--accent-bg-subtle), &:active background var(--accent-bg-subtle-active) borderColor var(--button-secondary-active-border) (the ink edge); contained background var(--accent-solid) color var(--accent-on-solid) border 1px solid var(--button-primary-border) (the --accent-solid-border edge is the boundary: the Soft sage fill is a tint), &:hover background var(--accent-solid-hover), &:active background var(--accent-solid-active); &[aria-disabled='true'] (never the disabled prop) the faded state of its variant (the 2026-10-18 decision; not gated, WCAG exempts inactive controls): contained background var(--button-primary-disabled-fill) borderColor var(--button-primary-disabled-border) (a faint sage fill and edge), outlined background var(--button-secondary-disabled-fill) borderColor var(--button-secondary-disabled-border) (the sheet and the faint outline), text weight var(--type-weight-regular), each with color var(--button-{variant}-disabled-text) (a lower-luminance label); color=error outlined → the destructive variant (border/text var(--destructive-text), hover var(--destructive-bg-subtle)); contained error is not used"
+      }
+    },
+    "MuiIconButton": {
+      "styleOverrides": {
+        "root": "width/height var(--size-control-icon); color var(--icon-default); &:hover background var(--surface-hover) color var(--icon-hover); &[aria-disabled='true'] color var(--disabled-icon); [aria-pressed=true] background var(--selection-bg) color var(--selection-text)"
+      }
+    },
+    "MuiOutlinedInput": {
+      "defaultProps": {
+        "notched": false
+      },
+      "styleOverrides": {
+        "root": "minHeight var(--size-control); borderRadius var(--radius-control); background var(--surface); .MuiOutlinedInput-notchedOutline borderColor var(--border-interactive); &:hover notchedOutline borderColor var(--text); &.Mui-focused notchedOutline borderColor var(--focus-ring) borderWidth 2px (one frame: the edge becomes the focus frame, no outline; MUI draws the notched outline inside the box, so nothing shifts), &.Mui-focused.Mui-error notchedOutline borderColor var(--status-error-text) (the error stays visible at 2 px); &.Mui-error notchedOutline borderColor var(--status-error-text); &[aria-disabled='true'] background var(--disabled-surface); .MuiSelect-select paddingRight var(--field-select-padding-right)"
+      }
+    },
+    "MuiInputLabel": {
+      "defaultProps": {
+        "disableAnimation": true
+      },
+      "styleOverrides": {
+        "root": "position static; transform none; font --type-label; marginBottom var(--field-label-gap)"
+      }
+    },
+    "MuiFormHelperText": {
+      "styleOverrides": {
+        "root": "font --type-caption; color var(--text-secondary); &.Mui-error color var(--status-error-text); icon + text"
+      }
+    },
+    "MuiCheckbox": {
+      "styleOverrides": {
+        "root": "box var(--checkbox-size), corners var(--checkbox-radius) (6px); unchecked border 1px var(--border-interactive) (var(--checkbox-border-width)); &.Mui-focusVisible the box's border var(--focus-ring) + boxShadow inset 0 0 0 1px var(--focus-ring) (one frame, no ring around the box); &.Mui-checked fill var(--selection-bg) border/glyph var(--selection-text); hit area var(--checkbox-hit) through the centred ::before"
+      }
+    },
+    "MuiRadio": {
+      "styleOverrides": {
+        "root": "as MuiCheckbox"
+      }
+    },
+    "MuiSwitch": {
+      "styleOverrides": {
+        "root": "track var(--switch-track-width)×var(--switch-track-height), fill var(--switch-track) border 1px var(--switch-border), thumb var(--switch-thumb) fill var(--switch-thumb); &.Mui-checked track var(--switch-variant-on-track) border/thumb var(--switch-variant-on-border); thumb travel var(--motion-micro) var(--motion-ease-toggle); &.Mui-focusVisible the track's border var(--focus-ring) + boxShadow inset 0 0 0 1px var(--focus-ring) (one frame); track corners var(--switch-radius) (6px, --radius-control: a rounded rectangle, never a pill) and thumb corners var(--switch-thumb-radius) (6px, --radius-small: a rounded square on the 14 px thumb, never a circle); 50 % is for dot-like marks and convention-bound circles only, the plan's Decision Log"
+      }
+    },
+    "MuiChip": {
+      "styleOverrides": {
+        "root": "height var(--size-chip); borderRadius var(--radius-control); status: background var(--chip-status-variant-{k}-fill) color var(--chip-status-variant-{k}-text) + icon; filter (clickable): border var(--border-interactive) background var(--surface) color var(--text), &.Mui-focusVisible border var(--focus-ring) + boxShadow inset 0 0 0 1px var(--focus-ring) (one frame), [aria-pressed=true] background var(--selection-bg) color/border var(--selection-text) weight 600; role: background var(--surface-active) color var(--text) no border"
+      }
+    },
+    "MuiTabs": {
+      "styleOverrides": {
+        "indicator": "height var(--size-marker); background var(--selection-marker)"
+      }
+    },
+    "MuiTab": {
+      "styleOverrides": {
+        "root": "minHeight var(--size-tab); font --type-label (600 for all tabs); color var(--text-secondary); &.Mui-selected color var(--selection-text); &:hover background var(--surface-hover) color var(--text); textTransform none; whiteSpace nowrap; &[aria-disabled='true'] color var(--disabled-text) weight var(--type-weight-regular) with the lock glyph var(--tabs-disabled-glyph) in var(--disabled-icon) before the label, cursor not-allowed, kept in the roving order"
+      }
+    },
+    "MuiListItemButton": {
+      "styleOverrides": {
+        "root": "minHeight var(--size-nav-item); borderRadius var(--sidebar-item-radius) (6px); &:hover background var(--surface-hover); &.Mui-selected background var(--selection-bg) color var(--selection-text) + 2px inset marker var(--selection-marker) (var(--size-marker)); @media (forced-colors: active) &.Mui-selected outline 2px solid Highlight, outline-offset -2px"
+      }
+    },
+    "MuiPaper": {
+      "defaultProps": {
+        "elevation": 0
+      },
+      "styleOverrides": {
+        "root": "backgroundImage none; background var(--surface)",
+        "outlined": "border 1px var(--border); borderRadius var(--radius-sheet)"
+      }
+    },
+    "MuiCard": {
+      "defaultProps": {
+        "elevation": 0,
+        "variant": "outlined"
+      },
+      "styleOverrides": {
+        "root": "a panel: border 1px var(--border); borderRadius var(--radius-sheet); boxShadow none; never nested"
+      }
+    },
+    "MuiDialog": {
+      "styleOverrides": {
+        "paper": "border 1px var(--border); borderRadius var(--radius-sheet); boxShadow var(--shadow-2); maxWidth per --dialog-width-*",
+        "root": "backdrop background var(--backdrop); no blur"
+      }
+    },
+    "MuiMenu": {
+      "styleOverrides": {
+        "paper": "border 1px var(--border); boxShadow var(--shadow-1); borderRadius var(--display-menu-radius) (8px, the sheet radius: a menu is a floating sheet); minWidth var(--display-menu-min-width)"
+      }
+    },
+    "MuiMenuItem": {
+      "styleOverrides": {
+        "root": "minHeight var(--size-menu-item) (44px on pointer: coarse); font --type-popup-title; &:hover background var(--surface-hover); &.Mui-selected background var(--selection-bg) color var(--selection-text)"
+      }
+    },
+    "MuiTooltip": {
+      "styleOverrides": {
+        "tooltip": "background var(--surface); color var(--text); border 1px var(--border); boxShadow var(--toggletip-shadow); borderRadius var(--toggletip-radius); padding var(--toggletip-padding-y) var(--toggletip-padding-x); maxWidth var(--toggletip-max-width); font --type-caption; offset var(--toggletip-offset) from its control; as a toggletip (a disabled control's reason): opens on hover, focus and tap, Escape closes it without moving focus, the pointer can move onto it, it stays until dismissed (WCAG 1.4.13: dismissible, hoverable, persistent); aria-describedby links the text"
+      }
+    },
+    "MuiAlert": {
+      "styleOverrides": {
+        "root": "borderRadius var(--radius-control); border 0; standard{k}: background var(--status-{k}-surface) color var(--status-{k}-text), icon var(--status-{k}-text) shape icon (check/triangle/cross/i); action: the text-action pattern — color inherit, font-weight 600, text-decoration underline var(--alert-action-underline), &:hover var(--alert-action-underline-hover), &:focus-visible the ring, &:active var(--alert-action-underline-hover) + transform scale(var(--motion-press-scale)); the same rules style MuiSnackbarContent's action (var(--toast-action-underline*))"
+      }
+    },
+    "MuiSnackbarContent": {
+      "styleOverrides": {
+        "root": "background var(--surface); color var(--text); border 1px var(--border); borderRadius var(--toast-radius) (8px); boxShadow var(--shadow-1); width min(100% - 2 * var(--toast-edge-offset), var(--toast-max-width)) (at most 420px; the launcher's edge offset kept on narrow viewports)"
+      }
+    },
+    "MuiTableCell": {
+      "styleOverrides": {
+        "root": "padding var(--space-cell-y) var(--space-cell-x); borderBottom 1px var(--border-subtle); font --type-body (compact 0.875rem/20px); whiteSpace nowrap; textOverflow ellipsis",
+        "head": "color var(--text-secondary); font --type-label; borderBottom 1px var(--border)"
+      }
+    },
+    "MuiTableRow": {
+      "styleOverrides": {
+        "root": "height var(--size-row); &:hover background var(--surface-hover); &.Mui-selected background var(--selection-bg) + 2px inset marker (var(--size-marker)); @media (forced-colors: active) &.Mui-selected outline 2px solid Highlight"
+      }
+    },
+    "MuiDataGrid": {
+      "defaultProps": {
+        "density": "compact (admin) via data-density"
+      },
+      "styleOverrides": {
+        "root": "--DataGrid rowHeight/headerHeight var(--size-row); columnHeaders color var(--text-secondary) font --type-label background transparent; cell borderColor var(--border-subtle); row:hover var(--surface-hover); row.Mui-selected var(--selection-bg); cell:focus-within outline 2px solid var(--focus-ring) outline-offset -2px; loadingOverlay = skeleton rows; noRowsOverlay = the empty-state frame"
+      }
+    },
+    "MuiSkeleton": {
+      "styleOverrides": {
+        "root": "background var(--skeleton-base); wave highlight var(--skeleton-highlight), 1600ms (var(--motion-shimmer))"
+      }
+    },
+    "MuiLinearProgress": {
+      "styleOverrides": {
+        "root": "background var(--in-progress-track)",
+        "bar": "background var(--in-progress-bar)"
+      }
+    },
+    "MuiCircularProgress": {
+      "defaultProps": {
+        "_note": "avoided: progress is neutral text + dots; where a ring is unavoidable it is static and var(--in-progress-text)"
+      }
+    },
+    "MuiFab": {
+      "styleOverrides": {
+        "root": "the launcher: width/height var(--size-launcher); background var(--accent-solid); color var(--accent-on-solid); border 1px solid var(--launcher-border) (the --accent-solid-border edge); boxShadow var(--shadow-2); &:hover background var(--accent-solid-hover) boxShadow unchanged; &:active background var(--accent-solid-active); &.Mui-focusVisible borderColor var(--focus-ring) + boxShadow inset 0 0 0 1px var(--focus-ring), var(--shadow-2) (one frame: the edge becomes the 2 px focus frame)"
+      }
+    },
+    "MuiLink": {
+      "defaultProps": {
+        "underline": "always"
+      },
+      "styleOverrides": {
+        "root": "color var(--link); textUnderlineOffset clear of the descenders"
+      }
+    }
+  }
+}

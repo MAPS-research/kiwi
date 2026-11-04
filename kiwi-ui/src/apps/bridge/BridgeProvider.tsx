@@ -14,7 +14,7 @@ import React, {
   useCallback,
   type ReactNode,
 } from 'react';
-import { useTheme } from '@mui/material/styles';
+import { useColorMode } from '../../theme/useColorMode.ts';
 
 import {
   createKiwiAppBridge,
@@ -165,7 +165,7 @@ export const BridgeProvider: React.FC<BridgeProviderProps> = ({
   onToolCall: customToolCall,
   onToolCallStreaming: customToolCallStreaming,
 }) => {
-  const theme = useTheme();
+  const colorMode = useColorMode();
   const { findTool } = useAppRegistry();
 
   // Build execution context for ToolExecutor
@@ -311,7 +311,7 @@ export const BridgeProvider: React.FC<BridgeProviderProps> = ({
       userId,
       username,
       classId,
-      theme: theme.palette.mode,
+      theme: colorMode,
       initialState,
       toolInput,
       toolOutput,
@@ -338,7 +338,7 @@ export const BridgeProvider: React.FC<BridgeProviderProps> = ({
     userId,
     username,
     classId,
-    theme.palette.mode,
+    colorMode,
     toolInput,
     toolOutput,
     handleStateChange,

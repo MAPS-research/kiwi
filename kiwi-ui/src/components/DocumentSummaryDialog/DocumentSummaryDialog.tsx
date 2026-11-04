@@ -173,7 +173,8 @@ export const DocumentSummaryDialog: React.FC<DocumentSummaryDialogProps> = ({
       maxWidth="md"
       slotProps={{
         paper: {
-          sx: { borderRadius: 4, overflow: "hidden" },
+          // The theme draws the dialog sheet: hairline edge, sheet radius, --shadow-2.
+          sx: { overflow: "hidden" },
         }
       }}
     >
@@ -196,9 +197,8 @@ export const DocumentSummaryDialog: React.FC<DocumentSummaryDialogProps> = ({
             {sortedSummaries.length === 0 ? (
               <Box
                 sx={{
-                  border: "1px dashed",
-                  borderColor: "divider",
-                  borderRadius: 2,
+                  border: "1px dashed var(--border)",
+                  borderRadius: "var(--radius-sheet)",
                   p: 3,
                   textAlign: "center",
                 }}
@@ -337,9 +337,15 @@ export const DocumentSummaryDialog: React.FC<DocumentSummaryDialogProps> = ({
                   onClick={startAdd}
                   disabled={isSaving}
                   sx={{
-                    border: "1px dashed",
-                    borderColor: "primary.main",
+                    border: "1px dashed var(--border-interactive)",
                     borderRadius: "50%",
+                    // Bordered: focus turns its own edge into the 2 px frame (one frame).
+                    "&.Mui-focusVisible, &:focus-visible": {
+                      outline: "none",
+                      borderStyle: "solid",
+                      borderColor: "var(--focus-ring)",
+                      boxShadow: "inset 0 0 0 1px var(--focus-ring)",
+                    },
                   }}
                 >
                   <AddIcon />
@@ -350,11 +356,10 @@ export const DocumentSummaryDialog: React.FC<DocumentSummaryDialogProps> = ({
               <Box
                 sx={{
                   mt: 2,
-                  border: "1px solid",
-                  borderColor: "divider",
-                  borderRadius: 2,
+                  border: "1px solid var(--border)",
+                  borderRadius: "var(--radius-sheet)",
                   p: 2,
-                  backgroundColor: "rgba(25, 118, 210, 0.03)",
+                  bgcolor: "action.hover",
                 }}
               >
                 <Stack spacing={2}>

@@ -1,13 +1,17 @@
 import {
   Box,
   ButtonBase,
+  Chip,
   IconButton,
   Skeleton,
+  Tooltip,
   Typography,
 } from "@mui/material";
+import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
-import theme from "../../Theme.ts";
+import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
+import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
+import React, { useCallback, useContext, useEffect, useId, useRef, useState } from "react";
 
 // PDF page-change event (0-based current page). Kept local so this file does not
 // depend on the (removed) @react-pdf-viewer types.
@@ -18,6 +22,7 @@ import apiClient, { basePath } from "../../utils/api.ts";
 import { ChatContext } from "../../pages/ClassLayout.tsx";
 import { DocumentIdsForChat } from "../../services/index.ts";
 import { PDFViewerForStudents } from "../PDFViewer/PDFViewerForStudent.tsx";
+import EmptyState from "../EmptyState/EmptyState.tsx";
 import { useSaveInteraction } from "../../utils/useSaveInteraction.ts";
 import type { DocumentCommentPin } from "../../types/documentComments.ts";
 import { mapServerCommentToPin } from "../../utils/documentComments.ts";
@@ -62,14 +67,63 @@ function savePersistedPdf(classId: string | undefined, pdf: PersistedPdf): void 
 // the backend's type for lecture PDFs.
 type MaterialFilter = "class materials" | "recitation";
 
+// The drawer's two exclusive filter chips and the line each shows when its
+// group has no files.
+const MATERIAL_FILTERS: { label: string; value: MaterialFilter; empty: string }[] = [
+  { label: "Lecture", value: "class materials", empty: "No lectures yet" },
+  { label: "Recitation", value: "recitation", empty: "No recitations yet" },
+];
+
+// The rail and the drawer are a panel on the sheet (DESIGN.md, The PDF viewer:
+// variant rail).
+const railPanelSx = {
+  bgcolor: "var(--pdf-toolbar-variant-rail-fill)",
+  borderRight: "1px solid var(--pdf-toolbar-variant-rail-border)",
+} as const;
+
+// A file row in the drawer: 36 px drawn, a 44 px hit area on coarse pointers;
+// the open file is the selection tint, its text at 600 and a check glyph.
+const fileRowSx = {
+  position: "relative",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "flex-start",
+  gap: "var(--space-2)",
+  width: "calc(100% - 2 * var(--space-2))",
+  height: 36,
+  mx: "var(--space-2)",
+  px: "var(--space-3)",
+  borderRadius: "var(--radius-small)",
+  color: "var(--pdf-toolbar-variant-rail-text)",
+  typography: "body2",
+  textAlign: "left",
+  "& .MuiSvgIcon-root": { flex: "none", fontSize: "var(--size-icon-sm)" },
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    left: 0,
+    top: "50%",
+    width: "100%",
+    height: "max(100%, var(--pdf-toolbar-drawer-row-hit))",
+    transform: "translateY(-50%)",
+  },
+  "&:hover": { bgcolor: "var(--surface-hover)" },
+  "&[aria-current='true'], &[aria-current='true']:hover": {
+    bgcolor: "var(--selection-bg)",
+    color: "var(--selection-text)",
+    fontWeight: "var(--weight-semibold)",
+  },
+} as const;
+
 const PDFComponent: React.FC = () => {
   const [pdfList, setPdfList] = useState<DocumentIdsForChat[]>();
   // Which document type the sidebar drawer lists. Auto-select prefers the last
   // lecture, so that's the default until a selection (restore/user) says otherwise.
   const [materialFilter, setMaterialFilter] = useState<MaterialFilter>("class materials");
-  // Document drawer (Materials Page Redesign): overlays the viewer, toggled from
-  // the icon rail. Open by default so the file list is discoverable.
+  // Document drawer, toggled from the icon rail. Open by default so the file
+  // list is discoverable.
   const [drawerOpen, setDrawerOpen] = useState(true);
+  const drawerTitleId = useId();
   const { saveInteraction } = useSaveInteraction();
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const pdfCache = useRef(new Map<string, any>());
@@ -362,6 +416,11 @@ const PDFComponent: React.FC = () => {
   const drawerFiles = (pdfList ?? []).filter(
     (pdf) => pdf.materialType === materialFilter
   );
+  const activeFilter =
+    MATERIAL_FILTERS.find(({ value }) => value === materialFilter) ??
+    MATERIAL_FILTERS[0];
+  // The class has no documents at all: the viewer would otherwise wait forever.
+  const noMaterials = pdfList !== undefined && pdfList.length === 0;
 
   return (
     <Box
@@ -369,219 +428,211 @@ const PDFComponent: React.FC = () => {
         width: "100%",
         height: "100%",
         display: "flex",
+        position: "relative",
+        isolation: "isolate",
         overflow: "hidden",
       }}
     >
-      {/* Icon rail */}
+      {/* Icon rail: tool chrome, so compact; its one button shows the drawer. */}
       <Box
+        data-density="compact"
         sx={{
+          ...railPanelSx,
           width: 48,
           flex: "none",
-          bgcolor: "#FAF9FC",
-          borderRight: "1px solid #E5E1EB",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          py: 1,
-          gap: 0.5,
-          zIndex: 40,
+          pt: "var(--space-1)",
         }}
       >
-        <IconButton
-          onClick={() => setDrawerOpen((open) => !open)}
-          title="Class materials"
-          sx={{
-            width: 36,
-            height: 36,
-            borderRadius: "8px",
-            bgcolor: drawerOpen ? "#EFE8F6" : "transparent",
-            "&:hover": { bgcolor: "#EFE8F6" },
-          }}
-        >
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <path
-              d="M3 4.5C3 3.7 3.7 3 4.5 3H7L8.5 5H13.5C14.3 5 15 5.7 15 6.5V13.5C15 14.3 14.3 15 13.5 15H4.5C3.7 15 3 14.3 3 13.5V4.5Z"
-              stroke={drawerOpen ? theme.palette.primary.main : "#77777F"}
-              strokeWidth="1.5"
-            />
-          </svg>
-        </IconButton>
+        <Tooltip title="Show class materials" placement="right">
+          <IconButton
+            aria-label="Show class materials"
+            aria-pressed={drawerOpen}
+            onClick={() => setDrawerOpen((open) => !open)}
+          >
+            <FolderOutlinedIcon />
+          </IconButton>
+        </Tooltip>
       </Box>
 
-      {/* Viewer column (drawer overlays it) */}
-      <Box
-        sx={{
-          flex: 1,
-          minWidth: 0,
-          position: "relative",
-          display: "flex",
-          flexDirection: "column",
-          bgcolor: "#EDEBF1",
-        }}
-      >
-        {/* Document drawer (overlay) */}
-        {drawerOpen && (
+      {/* Document drawer: docked beside the viewer from lg; on narrower
+          screens it floats over the viewer so the paper keeps its width. */}
+      {drawerOpen && (
+        <Box
+          component="section"
+          aria-labelledby={drawerTitleId}
+          data-density="compact"
+          sx={{
+            ...railPanelSx,
+            width: 248,
+            flex: "none",
+            display: "flex",
+            flexDirection: "column",
+            minHeight: 0,
+            position: { xs: "absolute", lg: "static" },
+            top: 0,
+            bottom: 0,
+            left: 48,
+            zIndex: 1,
+            boxShadow: { xs: "var(--shadow-2)", lg: "none" },
+          }}
+        >
           <Box
             sx={{
-              position: "absolute",
-              left: 0,
-              top: 0,
-              bottom: 0,
-              width: 248,
-              bgcolor: "#ffffff",
-              borderRight: "1px solid #E5E1EB",
-              boxShadow: "8px 0 24px rgba(28,12,48,0.10)",
-              zIndex: 35,
+              flex: "none",
               display: "flex",
-              flexDirection: "column",
-              p: 1.5,
+              alignItems: "center",
+              height: "var(--size-toolbar-bar)",
+              pl: "var(--space-4)",
+              pr: "var(--space-1)",
+              borderBottom: "1px solid var(--border-subtle)",
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                px: "2px",
-                pb: 1.25,
-              }}
+            <Typography
+              id={drawerTitleId}
+              component="h2"
+              variant="subtitle2"
+              noWrap
+              sx={{ flex: "1 1 auto", minWidth: 0, color: "var(--pdf-toolbar-variant-rail-text)" }}
             >
-              <Typography
-                sx={{
-                  fontSize: 12,
-                  fontWeight: 700,
-                  letterSpacing: "0.6px",
-                  color: "#55555E",
-                }}
-              >
-                Class Materials
-              </Typography>
-              <IconButton
-                onClick={() => setDrawerOpen(false)}
-                size="small"
-                sx={{
-                  color: "#77777F",
-                  borderRadius: "4px",
-                  "&:hover": { bgcolor: "#F3F1F7" },
-                }}
-              >
-                <CloseIcon sx={{ fontSize: 14 }} />
+              Class materials
+            </Typography>
+            <Tooltip title="Close">
+              <IconButton aria-label="Close" onClick={() => setDrawerOpen(false)}>
+                <CloseIcon />
               </IconButton>
-            </Box>
+            </Tooltip>
+          </Box>
 
-            {/* Lecture / Recitation segmented switch */}
-            <Box
-              sx={{
-                display: "flex",
-                bgcolor: "#F3F1F7",
-                borderRadius: "8px",
-                p: "3px",
-                mb: 1.25,
-              }}
-            >
-              {(
-                [
-                  { label: "Lecture", value: "class materials" },
-                  { label: "Recitation", value: "recitation" },
-                ] as { label: string; value: MaterialFilter }[]
-              ).map(({ label, value }) => (
-                <ButtonBase
+          {/* Lecture / Recitation: two exclusive filter chips (toggle buttons) */}
+          <Box
+            sx={{
+              flex: "none",
+              display: "flex",
+              gap: "var(--space-2)",
+              px: "var(--space-4)",
+              py: "var(--space-3)",
+            }}
+          >
+            {MATERIAL_FILTERS.map(({ label, value }) => {
+              const pressed = materialFilter === value;
+              return (
+                <Chip
                   key={value}
+                  component="button"
+                  label={label}
+                  variant="outlined"
+                  color={pressed ? "primary" : "default"}
+                  aria-pressed={pressed}
                   onClick={() => setMaterialFilter(value)}
-                  sx={{
-                    flex: 1,
-                    borderRadius: "6px",
-                    py: "6px",
-                    fontSize: 12,
-                    fontWeight: 600,
-                    bgcolor: materialFilter === value ? "#ffffff" : "transparent",
-                    color: materialFilter === value ? "primary.main" : "#55555E",
-                  }}
-                >
-                  {label}
-                </ButtonBase>
-              ))}
-            </Box>
+                />
+              );
+            })}
+          </Box>
 
-            {/* File list */}
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "2px",
-                overflow: "auto",
-                flex: 1,
-              }}
-            >
-              {!pdfList ? (
-                <>
-                  <Skeleton />
-                  <Skeleton />
-                  <Skeleton />
-                </>
-              ) : drawerFiles.length === 0 ? (
-                <Typography
-                  sx={{ fontSize: 12, color: "#77777F", p: 1, textAlign: "center" }}
-                >
-                  No documents
-                </Typography>
-              ) : (
-                drawerFiles.map((pdf) => {
-                  const selected = pdf.id === selectedPDFID;
+          {/* File list */}
+          <Box sx={{ flex: "1 1 auto", minHeight: 0, overflowY: "auto", pb: "var(--space-3)" }}>
+            {!pdfList ? (
+              <Box sx={{ display: "grid", gap: "var(--space-1)", px: "var(--space-2)" }}>
+                <Skeleton variant="rounded" height={36} />
+                <Skeleton variant="rounded" height={36} />
+                <Skeleton variant="rounded" height={36} />
+              </Box>
+            ) : drawerFiles.length === 0 ? (
+              <Typography
+                variant="caption"
+                component="p"
+                sx={{ px: "var(--space-4)", py: "var(--space-2)", color: "text.secondary" }}
+              >
+                {activeFilter.empty}
+              </Typography>
+            ) : (
+              <Box
+                component="ul"
+                sx={{
+                  listStyle: "none",
+                  m: 0,
+                  p: 0,
+                  display: "grid",
+                  gap: "var(--pdf-toolbar-drawer-row-gap)",
+                }}
+              >
+                {drawerFiles.map((pdf) => {
+                  const current = pdf.id === selectedPDFID;
                   return (
-                    <ButtonBase
-                      key={pdf.id}
-                      onClick={() => handlePickPdf(pdf)}
-                      sx={{
-                        justifyContent: "space-between",
-                        gap: 1,
-                        px: 1.25,
-                        py: 1,
-                        fontSize: 12,
-                        borderRadius: "6px",
-                        textAlign: "left",
-                        bgcolor: selected ? "#EFE8F6" : "transparent",
-                        color: selected ? "primary.main" : "#2A2A30",
-                        "&:hover": { bgcolor: selected ? "#EFE8F6" : "#F3F1F7" },
-                      }}
-                    >
-                      <Box
-                        component="span"
-                        sx={{
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
+                    <li key={pdf.id}>
+                      <ButtonBase
+                        aria-current={current ? "true" : undefined}
+                        onClick={() => handlePickPdf(pdf)}
+                        sx={fileRowSx}
                       >
-                        {pdf.fileName}
-                      </Box>
-                      {selected && (
-                        <Box component="span" sx={{ color: "primary.main", flex: "none" }}>
-                          ✓
+                        <DescriptionOutlinedIcon aria-hidden />
+                        <Box
+                          component="span"
+                          sx={{
+                            flex: "1 1 auto",
+                            minWidth: 0,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {pdf.fileName}
                         </Box>
-                      )}
-                    </ButtonBase>
+                        {current && <CheckIcon aria-hidden />}
+                      </ButtonBase>
+                    </li>
                   );
-                })
-              )}
+                })}
+              </Box>
+            )}
+          </Box>
+        </Box>
+      )}
+
+      {/* PDF viewer (its own stacking context, under a floating drawer) */}
+      <Box
+        sx={{
+          flex: "1 1 auto",
+          minWidth: 0,
+          position: "relative",
+          zIndex: 0,
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {noMaterials ? (
+          <Box
+            sx={{
+              flex: "1 1 auto",
+              minHeight: 0,
+              overflowY: "auto",
+              p: "var(--pdf-toolbar-canvas-padding)",
+              bgcolor: "var(--pdf-toolbar-canvas)",
+            }}
+          >
+            <EmptyState
+              title="No materials yet"
+              description="Your instructor hasn't added any to this class."
+            />
+          </Box>
+        ) : (
+          <Box sx={{ flex: 1, minHeight: 0, position: "relative" }}>
+            <Box sx={{ position: "absolute", inset: 0, overflow: "hidden" }}>
+              <PDFViewerForStudents
+                pdfFile={pdfContent ?? ""}
+                fileName={selectedPdfName}
+                studentMode
+                onPageChangeCallback={onPageChangeCallback}
+                comments={pdfComments}
+                documentId={selectedPDFID}
+                initialPage={initialPage}
+              />
             </Box>
           </Box>
         )}
-
-        {/* PDF viewer */}
-        <Box sx={{ flex: 1, minHeight: 0, position: "relative" }}>
-          <Box sx={{ position: "absolute", inset: 0, overflow: "hidden" }}>
-            <PDFViewerForStudents
-              pdfFile={pdfContent ?? ""}
-              fileName={selectedPdfName}
-              studentMode
-              onPageChangeCallback={onPageChangeCallback}
-              comments={pdfComments}
-              documentId={selectedPDFID}
-              initialPage={initialPage}
-            />
-          </Box>
-        </Box>
       </Box>
     </Box>
   );

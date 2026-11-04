@@ -436,9 +436,9 @@ export const AdminAppView: React.FC<AdminAppViewProps> = ({
               mb: 2,
               display: 'grid',
               placeItems: 'center',
-              borderRadius: 2,
-              color: 'primary.main',
-              bgcolor: 'action.selected',
+              borderRadius: 'var(--radius-sheet)',
+              color: 'var(--icon-default)',
+              bgcolor: 'action.hover',
             }}
           >
             <AppsIcon aria-hidden="true" sx={{ fontSize: 30 }} />

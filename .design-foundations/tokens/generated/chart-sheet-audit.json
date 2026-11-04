@@ -1,0 +1,1191 @@
+{
+ "date": "2026-10-19",
+ "sheet": ".design-foundations/mocks/chart-sheet.html",
+ "chrome": "Chrome/155.0.8059.85",
+ "modes": {
+  "light": {
+   "mode": "light",
+   "plot": "#fdfbfb",
+   "series": [
+    "#2b774d",
+    "#0098af",
+    "#a64e00",
+    "#0064ad",
+    "#958b00",
+    "#77746d"
+   ],
+   "minCvd": 8.135591860714493,
+   "minAdjacentCvd": 14.784816675076565,
+   "minNormal": 15.257922582168534,
+   "minOtherCvd": 4.661691835568995,
+   "contrasts": [
+    4.8,
+    3.02,
+    4.98,
+    5.39,
+    3.09,
+    4.1
+   ],
+   "swatchCaptionMinContrast": 6.09,
+   "donuts": {
+    "svg-duration": {
+     "slices": [
+      {
+       "name": "Chat",
+       "token": "--chart-1",
+       "share": 62,
+       "thin": false
+      },
+      {
+       "name": "Scratchpad",
+       "token": "--chart-2",
+       "share": 38,
+       "thin": false
+      }
+     ],
+     "shareSum": 100,
+     "pairs": [
+      {
+       "pair": "Chat vs Scratchpad",
+       "protan": 16.05,
+       "deutan": 14.78,
+       "normal": 15.26
+      }
+     ],
+     "minCvd": 14.78
+    },
+    "svg-model": {
+     "slices": [
+      {
+       "name": "ChatGPT",
+       "token": "--chart-1",
+       "share": 66,
+       "thin": false
+      },
+      {
+       "name": "Qwen",
+       "token": "--chart-2",
+       "share": 31,
+       "thin": false
+      },
+      {
+       "name": "Unknown",
+       "token": "--chart-other",
+       "share": 3,
+       "thin": true
+      }
+     ],
+     "shareSum": 100,
+     "pairs": [
+      {
+       "pair": "ChatGPT vs Qwen",
+       "protan": 16.05,
+       "deutan": 14.78,
+       "normal": 15.26
+      },
+      {
+       "pair": "ChatGPT vs Unknown",
+       "protan": 4.66,
+       "deutan": 5.48,
+       "normal": 10.87
+      },
+      {
+       "pair": "Qwen vs Unknown",
+       "protan": 11.98,
+       "deutan": 9.76,
+       "normal": 13.33
+      }
+     ],
+     "minCvd": 4.66
+    }
+   },
+   "measure": {
+    "scale": {
+     "svg-daily": 1,
+     "svg-hourly": 1,
+     "svg-actions": 1,
+     "svg-duration": 1,
+     "svg-model": 1,
+     "svg-intents": 1,
+     "svg-sparse": 1
+    },
+    "maxBarPx": 24,
+    "linePx": 2,
+    "hairlinePx": 1,
+    "chartTextPx": [
+     12
+    ],
+    "donutCentrePx": [
+     20
+    ],
+    "tileIconPx": [
+     20,
+     20
+    ],
+    "tokenIconPx": 20,
+    "idTextWidth": 303.4,
+    "idCellWidth": 205,
+    "truncates": true,
+    "idCellPx": 14,
+    "idCellFamily": "ui-monospace, \"SF Mono\", Menlo, Consolas, \"PingFang SC\", \"Microsoft YaHei\", monospace",
+    "tipPx": 12,
+    "tipFamily": "ui-monospace, \"SF Mono\", Menlo, Consolas, \"PingFang SC\", \"Microsoft YaHei\", monospace",
+    "tipFaceIsCell": true,
+    "tipMaxWidth": "320px",
+    "tipBelowSpanPx": 8,
+    "tipPreopened": {
+     "display": "block",
+     "hit": "tip",
+     "visibleWidth": 278.1
+    },
+    "donuts": {
+     "svg-duration": {
+      "slices": [
+       "Chat",
+       "Scratchpad"
+      ],
+      "labels": [
+       "Chat 62%",
+       "Scratchpad 38%"
+      ],
+      "named": true,
+      "labelsInsideFigure": true,
+      "labelsInsideSvg": true,
+      "labelOverlaps": 0,
+      "labelsOverRing": 0,
+      "leaders": 0,
+      "legendShares": false
+     },
+     "svg-model": {
+      "slices": [
+       "ChatGPT",
+       "Qwen",
+       "Unknown"
+      ],
+      "labels": [
+       "ChatGPT 66%",
+       "Qwen 31%",
+       "Unknown 3%"
+      ],
+      "named": true,
+      "labelsInsideFigure": true,
+      "labelsInsideSvg": true,
+      "labelOverlaps": 0,
+      "labelsOverRing": 0,
+      "leaders": 1,
+      "legendShares": false
+     }
+    },
+    "hbars": {
+     "svg-actions": {
+      "gutterPx": 154,
+      "longestLabelPx": 145.5,
+      "spillPx": 0,
+      "valueTicks": 0,
+      "bars": 6,
+      "tipLabels": [
+       "612",
+       "318",
+       "201",
+       "64",
+       "51",
+       "38"
+      ]
+     },
+     "svg-intents": {
+      "gutterPx": 112,
+      "longestLabelPx": 103.5,
+      "spillPx": 0,
+      "valueTicks": 0,
+      "bars": 7,
+      "tipLabels": [
+       "33%",
+       "24%",
+       "18%",
+       "11%",
+       "7%",
+       "4%",
+       "3%"
+      ]
+     }
+    },
+    "hourlyTicks": {
+     "ticks": [
+      "17 Oct",
+      "06:00",
+      "12:00",
+      "18:00"
+     ],
+     "steps": [
+      6,
+      6,
+      6
+     ],
+     "gaps": [
+      158.1,
+      158.1,
+      158.1
+     ],
+     "oneRhythm": true,
+     "last": "18:00"
+    },
+    "peakLabels": {
+     "svg-daily": [
+      "21"
+     ],
+     "svg-hourly": [
+      "9"
+     ]
+    },
+    "figures": [
+     {
+      "name": "t1",
+      "nameOk": true,
+      "desc": "d1",
+      "descOk": true
+     },
+     {
+      "name": "t2",
+      "nameOk": true,
+      "desc": "d2",
+      "descOk": true
+     },
+     {
+      "name": "t3",
+      "nameOk": true,
+      "desc": "d3",
+      "descOk": true
+     },
+     {
+      "name": "t4",
+      "nameOk": true,
+      "desc": "d4",
+      "descOk": true
+     },
+     {
+      "name": "t5",
+      "nameOk": true,
+      "desc": "d5",
+      "descOk": true
+     },
+     {
+      "name": "t6",
+      "nameOk": true,
+      "desc": "d6",
+      "descOk": true
+     },
+     {
+      "name": "t7",
+      "nameOk": true,
+      "desc": "d7",
+      "descOk": true
+     },
+     {
+      "name": "t8",
+      "nameOk": true,
+      "desc": null,
+      "descOk": true
+     },
+     {
+      "name": "t9",
+      "nameOk": true,
+      "desc": "d9",
+      "descOk": true
+     }
+    ],
+    "svgNaming": [
+     {
+      "id": "svg-daily",
+      "hidden": true,
+      "named": false
+     },
+     {
+      "id": "svg-hourly",
+      "hidden": true,
+      "named": false
+     },
+     {
+      "id": "svg-actions",
+      "hidden": true,
+      "named": false
+     },
+     {
+      "id": "svg-duration",
+      "hidden": true,
+      "named": false
+     },
+     {
+      "id": "svg-model",
+      "hidden": true,
+      "named": false
+     },
+     {
+      "id": "svg-intents",
+      "hidden": true,
+      "named": false
+     },
+     {
+      "id": "svg-sparse",
+      "hidden": true,
+      "named": false
+     }
+    ],
+    "topicBars": {
+     "tracks": 0,
+     "bars": 5,
+     "worstRatioError": 0,
+     "leftEdges": [
+      745
+     ]
+    },
+    "progress": {
+     "bars": 0,
+     "alert": true
+    },
+    "demoTipOnTab2": {
+     "focusedRow2": true,
+     "demoTip": "none",
+     "underRow2Centre": "its own span",
+     "ringVisible": true
+    },
+    "escapeAtLoadThenHover": {
+     "demoTip": "none",
+     "dismissedSpans": 0,
+     "tipOnFirstHover": "block"
+    },
+    "tipHover": {
+     "display": "block",
+     "hit": "tip"
+    },
+    "tipFocus": {
+     "focusVisible": true,
+     "outline": "solid 2px",
+     "display": "none",
+     "hit": "main"
+    },
+    "ring": {
+     "outlineOffset": "-2px",
+     "outlineWidth": "2px",
+     "tipClearOfRingPx": -536
+    },
+    "tipEscape": {
+     "display": "none",
+     "focusKept": false,
+     "returnsOnNextFocus": "none"
+    },
+    "tipLong": {
+     "chars": 388,
+     "widthPx": 320,
+     "maxWidthPx": 320,
+     "lines": 10
+    },
+    "pointerPath": [
+     {
+      "row": 1,
+      "stepPx": 1,
+      "steps": 203,
+      "gapPx": 8,
+      "hiddenAt": [],
+      "openOnArrival": true
+     },
+     {
+      "row": 1,
+      "stepPx": 4,
+      "steps": 52,
+      "gapPx": 8,
+      "hiddenAt": [],
+      "openOnArrival": true
+     },
+     {
+      "row": 1,
+      "stepPx": 8,
+      "steps": 26,
+      "gapPx": 8,
+      "hiddenAt": [],
+      "openOnArrival": true
+     },
+     {
+      "row": 1,
+      "stepPx": 12,
+      "steps": 18,
+      "gapPx": 8,
+      "hiddenAt": [],
+      "openOnArrival": true
+     },
+     {
+      "row": 2,
+      "stepPx": 1,
+      "steps": 203,
+      "gapPx": 8,
+      "hiddenAt": [],
+      "openOnArrival": true
+     },
+     {
+      "row": 2,
+      "stepPx": 4,
+      "steps": 52,
+      "gapPx": 8,
+      "hiddenAt": [],
+      "openOnArrival": true
+     },
+     {
+      "row": 2,
+      "stepPx": 8,
+      "steps": 26,
+      "gapPx": 8,
+      "hiddenAt": [],
+      "openOnArrival": true
+     },
+     {
+      "row": 2,
+      "stepPx": 12,
+      "steps": 18,
+      "gapPx": 8,
+      "hiddenAt": [],
+      "openOnArrival": true
+     }
+    ],
+    "escapeThenTab": {
+     "afterEscape": "none",
+     "afterTab": "block",
+     "focused": true
+    },
+    "extra": {
+     "fullTable": {
+      "widthPx": 850,
+      "columnsPx": [
+       393,
+       136,
+       136,
+       97,
+       88
+      ],
+      "cellsCut": 0,
+      "tabStops": 0
+     },
+     "cutTable": {
+      "widthPx": 686,
+      "columnsPx": [
+       229,
+       136,
+       136,
+       97,
+       88
+      ],
+      "idsCut": 3,
+      "tabStops": 3
+     },
+     "trend": {
+      "text": "Last full week: 12 questions, up from 9 the week before",
+      "glyph": "up",
+      "glyphHidden": true,
+      "glyphColour": "rgb(106, 95, 73)",
+      "lineColour": "rgb(106, 95, 73)",
+      "sameColour": true,
+      "directionInWords": true
+     },
+     "nearEmpty": {
+      "valueTicks": 0,
+      "gridlines": 0,
+      "baseline": 1,
+      "labels": [
+       "2",
+       "1"
+      ]
+     },
+     "legend": {
+      "rowGap": "4px",
+      "columnGap": "16px",
+      "rows": 2,
+      "lineGapPx": 4
+     },
+     "durationLegend": [
+      "about 20 hours",
+      "about 13 hours"
+     ]
+    }
+   }
+  },
+  "dark": {
+   "mode": "dark",
+   "plot": "#22221f",
+   "series": [
+    "#3f895e",
+    "#00b2cc",
+    "#b65a15",
+    "#3e7ab4",
+    "#a99d15",
+    "#8d8b83"
+   ],
+   "minCvd": 8.163702128760033,
+   "minAdjacentCvd": 16.445222421473463,
+   "minNormal": 15.369006636425745,
+   "minOtherCvd": 5.5664837764338,
+   "contrasts": [
+    3.39,
+    5.65,
+    3.06,
+    3.19,
+    5.15,
+    4.22
+   ],
+   "swatchCaptionMinContrast": 9.06,
+   "donuts": {
+    "svg-duration": {
+     "slices": [
+      {
+       "name": "Chat",
+       "token": "--chart-1",
+       "share": 62,
+       "thin": false
+      },
+      {
+       "name": "Scratchpad",
+       "token": "--chart-2",
+       "share": 38,
+       "thin": false
+      }
+     ],
+     "shareSum": 100,
+     "pairs": [
+      {
+       "pair": "Chat vs Scratchpad",
+       "protan": 18.05,
+       "deutan": 16.45,
+       "normal": 16.98
+      }
+     ],
+     "minCvd": 16.45
+    },
+    "svg-model": {
+     "slices": [
+      {
+       "name": "ChatGPT",
+       "token": "--chart-1",
+       "share": 66,
+       "thin": false
+      },
+      {
+       "name": "Qwen",
+       "token": "--chart-2",
+       "share": 31,
+       "thin": false
+      },
+      {
+       "name": "Unknown",
+       "token": "--chart-other",
+       "share": 3,
+       "thin": true
+      }
+     ],
+     "shareSum": 100,
+     "pairs": [
+      {
+       "pair": "ChatGPT vs Qwen",
+       "protan": 18.05,
+       "deutan": 16.45,
+       "normal": 16.98
+      },
+      {
+       "pair": "ChatGPT vs Unknown",
+       "protan": 5.57,
+       "deutan": 6.98,
+       "normal": 11.52
+      },
+      {
+       "pair": "Qwen vs Unknown",
+       "protan": 12.66,
+       "deutan": 10.4,
+       "normal": 14.43
+      }
+     ],
+     "minCvd": 5.57
+    }
+   },
+   "measure": {
+    "scale": {
+     "svg-daily": 1,
+     "svg-hourly": 1,
+     "svg-actions": 1,
+     "svg-duration": 1,
+     "svg-model": 1,
+     "svg-intents": 1,
+     "svg-sparse": 1
+    },
+    "maxBarPx": 24,
+    "linePx": 2,
+    "hairlinePx": 1,
+    "chartTextPx": [
+     12
+    ],
+    "donutCentrePx": [
+     20
+    ],
+    "tileIconPx": [
+     20,
+     20
+    ],
+    "tokenIconPx": 20,
+    "idTextWidth": 303.4,
+    "idCellWidth": 205,
+    "truncates": true,
+    "idCellPx": 14,
+    "idCellFamily": "ui-monospace, \"SF Mono\", Menlo, Consolas, \"PingFang SC\", \"Microsoft YaHei\", monospace",
+    "tipPx": 12,
+    "tipFamily": "ui-monospace, \"SF Mono\", Menlo, Consolas, \"PingFang SC\", \"Microsoft YaHei\", monospace",
+    "tipFaceIsCell": true,
+    "tipMaxWidth": "320px",
+    "tipBelowSpanPx": 8,
+    "tipPreopened": {
+     "display": "block",
+     "hit": "tip",
+     "visibleWidth": 278.1
+    },
+    "donuts": {
+     "svg-duration": {
+      "slices": [
+       "Chat",
+       "Scratchpad"
+      ],
+      "labels": [
+       "Chat 62%",
+       "Scratchpad 38%"
+      ],
+      "named": true,
+      "labelsInsideFigure": true,
+      "labelsInsideSvg": true,
+      "labelOverlaps": 0,
+      "labelsOverRing": 0,
+      "leaders": 0,
+      "legendShares": false
+     },
+     "svg-model": {
+      "slices": [
+       "ChatGPT",
+       "Qwen",
+       "Unknown"
+      ],
+      "labels": [
+       "ChatGPT 66%",
+       "Qwen 31%",
+       "Unknown 3%"
+      ],
+      "named": true,
+      "labelsInsideFigure": true,
+      "labelsInsideSvg": true,
+      "labelOverlaps": 0,
+      "labelsOverRing": 0,
+      "leaders": 1,
+      "legendShares": false
+     }
+    },
+    "hbars": {
+     "svg-actions": {
+      "gutterPx": 154,
+      "longestLabelPx": 145.5,
+      "spillPx": 0,
+      "valueTicks": 0,
+      "bars": 6,
+      "tipLabels": [
+       "612",
+       "318",
+       "201",
+       "64",
+       "51",
+       "38"
+      ]
+     },
+     "svg-intents": {
+      "gutterPx": 112,
+      "longestLabelPx": 103.5,
+      "spillPx": 0,
+      "valueTicks": 0,
+      "bars": 7,
+      "tipLabels": [
+       "33%",
+       "24%",
+       "18%",
+       "11%",
+       "7%",
+       "4%",
+       "3%"
+      ]
+     }
+    },
+    "hourlyTicks": {
+     "ticks": [
+      "17 Oct",
+      "06:00",
+      "12:00",
+      "18:00"
+     ],
+     "steps": [
+      6,
+      6,
+      6
+     ],
+     "gaps": [
+      158.1,
+      158.1,
+      158.1
+     ],
+     "oneRhythm": true,
+     "last": "18:00"
+    },
+    "peakLabels": {
+     "svg-daily": [
+      "21"
+     ],
+     "svg-hourly": [
+      "9"
+     ]
+    },
+    "figures": [
+     {
+      "name": "t1",
+      "nameOk": true,
+      "desc": "d1",
+      "descOk": true
+     },
+     {
+      "name": "t2",
+      "nameOk": true,
+      "desc": "d2",
+      "descOk": true
+     },
+     {
+      "name": "t3",
+      "nameOk": true,
+      "desc": "d3",
+      "descOk": true
+     },
+     {
+      "name": "t4",
+      "nameOk": true,
+      "desc": "d4",
+      "descOk": true
+     },
+     {
+      "name": "t5",
+      "nameOk": true,
+      "desc": "d5",
+      "descOk": true
+     },
+     {
+      "name": "t6",
+      "nameOk": true,
+      "desc": "d6",
+      "descOk": true
+     },
+     {
+      "name": "t7",
+      "nameOk": true,
+      "desc": "d7",
+      "descOk": true
+     },
+     {
+      "name": "t8",
+      "nameOk": true,
+      "desc": null,
+      "descOk": true
+     },
+     {
+      "name": "t9",
+      "nameOk": true,
+      "desc": "d9",
+      "descOk": true
+     }
+    ],
+    "svgNaming": [
+     {
+      "id": "svg-daily",
+      "hidden": true,
+      "named": false
+     },
+     {
+      "id": "svg-hourly",
+      "hidden": true,
+      "named": false
+     },
+     {
+      "id": "svg-actions",
+      "hidden": true,
+      "named": false
+     },
+     {
+      "id": "svg-duration",
+      "hidden": true,
+      "named": false
+     },
+     {
+      "id": "svg-model",
+      "hidden": true,
+      "named": false
+     },
+     {
+      "id": "svg-intents",
+      "hidden": true,
+      "named": false
+     },
+     {
+      "id": "svg-sparse",
+      "hidden": true,
+      "named": false
+     }
+    ],
+    "topicBars": {
+     "tracks": 0,
+     "bars": 5,
+     "worstRatioError": 0,
+     "leftEdges": [
+      745
+     ]
+    },
+    "progress": {
+     "bars": 0,
+     "alert": true
+    },
+    "demoTipOnTab2": {
+     "focusedRow2": true,
+     "demoTip": "none",
+     "underRow2Centre": "its own span",
+     "ringVisible": true
+    },
+    "escapeAtLoadThenHover": {
+     "demoTip": "none",
+     "dismissedSpans": 0,
+     "tipOnFirstHover": "block"
+    },
+    "tipHover": {
+     "display": "block",
+     "hit": "tip"
+    },
+    "tipFocus": {
+     "focusVisible": true,
+     "outline": "solid 2px",
+     "display": "none",
+     "hit": "main"
+    },
+    "ring": {
+     "outlineOffset": "-2px",
+     "outlineWidth": "2px",
+     "tipClearOfRingPx": -536
+    },
+    "tipEscape": {
+     "display": "none",
+     "focusKept": false,
+     "returnsOnNextFocus": "none"
+    },
+    "tipLong": {
+     "chars": 388,
+     "widthPx": 320,
+     "maxWidthPx": 320,
+     "lines": 10
+    },
+    "pointerPath": [
+     {
+      "row": 1,
+      "stepPx": 1,
+      "steps": 203,
+      "gapPx": 8,
+      "hiddenAt": [],
+      "openOnArrival": true
+     },
+     {
+      "row": 1,
+      "stepPx": 4,
+      "steps": 52,
+      "gapPx": 8,
+      "hiddenAt": [],
+      "openOnArrival": true
+     },
+     {
+      "row": 1,
+      "stepPx": 8,
+      "steps": 26,
+      "gapPx": 8,
+      "hiddenAt": [],
+      "openOnArrival": true
+     },
+     {
+      "row": 1,
+      "stepPx": 12,
+      "steps": 18,
+      "gapPx": 8,
+      "hiddenAt": [],
+      "openOnArrival": true
+     },
+     {
+      "row": 2,
+      "stepPx": 1,
+      "steps": 203,
+      "gapPx": 8,
+      "hiddenAt": [],
+      "openOnArrival": true
+     },
+     {
+      "row": 2,
+      "stepPx": 4,
+      "steps": 52,
+      "gapPx": 8,
+      "hiddenAt": [],
+      "openOnArrival": true
+     },
+     {
+      "row": 2,
+      "stepPx": 8,
+      "steps": 26,
+      "gapPx": 8,
+      "hiddenAt": [],
+      "openOnArrival": true
+     },
+     {
+      "row": 2,
+      "stepPx": 12,
+      "steps": 18,
+      "gapPx": 8,
+      "hiddenAt": [],
+      "openOnArrival": true
+     }
+    ],
+    "escapeThenTab": {
+     "afterEscape": "none",
+     "afterTab": "block",
+     "focused": true
+    },
+    "extra": {
+     "fullTable": {
+      "widthPx": 850,
+      "columnsPx": [
+       393,
+       136,
+       136,
+       97,
+       88
+      ],
+      "cellsCut": 0,
+      "tabStops": 0
+     },
+     "cutTable": {
+      "widthPx": 686,
+      "columnsPx": [
+       229,
+       136,
+       136,
+       97,
+       88
+      ],
+      "idsCut": 3,
+      "tabStops": 3
+     },
+     "trend": {
+      "text": "Last full week: 12 questions, up from 9 the week before",
+      "glyph": "up",
+      "glyphHidden": true,
+      "glyphColour": "rgb(213, 192, 168)",
+      "lineColour": "rgb(213, 192, 168)",
+      "sameColour": true,
+      "directionInWords": true
+     },
+     "nearEmpty": {
+      "valueTicks": 0,
+      "gridlines": 0,
+      "baseline": 1,
+      "labels": [
+       "2",
+       "1"
+      ]
+     },
+     "legend": {
+      "rowGap": "4px",
+      "columnGap": "16px",
+      "rows": 2,
+      "lineGapPx": 4
+     },
+     "durationLegend": [
+      "about 20 hours",
+      "about 13 hours"
+     ]
+    }
+   }
+  }
+ },
+ "cvd": {
+  "light": {
+   "method": "Chrome Emulation.setEmulatedVisionDeficiency (DevTools › Rendering › Emulate vision deficiencies) on the sheet's series strip",
+   "files": [
+    "chart-sheet.cvd-none.png",
+    "chart-sheet.cvd-deuteranopia.png",
+    "chart-sheet.cvd-protanopia.png"
+   ],
+   "donutFiles": [
+    "chart-sheet.donuts.cvd-none.png",
+    "chart-sheet.donuts.cvd-deuteranopia.png",
+    "chart-sheet.donuts.cvd-protanopia.png"
+   ],
+   "donuts": {
+    "svg-duration": {
+     "slices": [
+      {
+       "name": "Chat",
+       "token": "--chart-1",
+       "share": 62,
+       "thin": false
+      },
+      {
+       "name": "Scratchpad",
+       "token": "--chart-2",
+       "share": 38,
+       "thin": false
+      }
+     ],
+     "shareSum": 100,
+     "pairs": [
+      {
+       "pair": "Chat vs Scratchpad",
+       "protan": 16.05,
+       "deutan": 14.78,
+       "normal": 15.26
+      }
+     ],
+     "minCvd": 14.78
+    },
+    "svg-model": {
+     "slices": [
+      {
+       "name": "ChatGPT",
+       "token": "--chart-1",
+       "share": 66,
+       "thin": false
+      },
+      {
+       "name": "Qwen",
+       "token": "--chart-2",
+       "share": 31,
+       "thin": false
+      },
+      {
+       "name": "Unknown",
+       "token": "--chart-other",
+       "share": 3,
+       "thin": true
+      }
+     ],
+     "shareSum": 100,
+     "pairs": [
+      {
+       "pair": "ChatGPT vs Qwen",
+       "protan": 16.05,
+       "deutan": 14.78,
+       "normal": 15.26
+      },
+      {
+       "pair": "ChatGPT vs Unknown",
+       "protan": 4.66,
+       "deutan": 5.48,
+       "normal": 10.87
+      },
+      {
+       "pair": "Qwen vs Unknown",
+       "protan": 11.98,
+       "deutan": 9.76,
+       "normal": 13.33
+      }
+     ],
+     "minCvd": 4.66
+    }
+   },
+   "minPairwiseDistanceAfterSimulation": 8.135591860714493,
+   "minAdjacent": 14.784816675076565,
+   "minNormal": 15.257922582168534
+  },
+  "dark": {
+   "method": "Chrome Emulation.setEmulatedVisionDeficiency (DevTools › Rendering › Emulate vision deficiencies) on the sheet's series strip",
+   "files": [
+    "chart-sheet.cvd-none.dark.png",
+    "chart-sheet.cvd-deuteranopia.dark.png",
+    "chart-sheet.cvd-protanopia.dark.png"
+   ],
+   "donutFiles": [
+    "chart-sheet.donuts.cvd-none.dark.png",
+    "chart-sheet.donuts.cvd-deuteranopia.dark.png",
+    "chart-sheet.donuts.cvd-protanopia.dark.png"
+   ],
+   "donuts": {
+    "svg-duration": {
+     "slices": [
+      {
+       "name": "Chat",
+       "token": "--chart-1",
+       "share": 62,
+       "thin": false
+      },
+      {
+       "name": "Scratchpad",
+       "token": "--chart-2",
+       "share": 38,
+       "thin": false
+      }
+     ],
+     "shareSum": 100,
+     "pairs": [
+      {
+       "pair": "Chat vs Scratchpad",
+       "protan": 18.05,
+       "deutan": 16.45,
+       "normal": 16.98
+      }
+     ],
+     "minCvd": 16.45
+    },
+    "svg-model": {
+     "slices": [
+      {
+       "name": "ChatGPT",
+       "token": "--chart-1",
+       "share": 66,
+       "thin": false
+      },
+      {
+       "name": "Qwen",
+       "token": "--chart-2",
+       "share": 31,
+       "thin": false
+      },
+      {
+       "name": "Unknown",
+       "token": "--chart-other",
+       "share": 3,
+       "thin": true
+      }
+     ],
+     "shareSum": 100,
+     "pairs": [
+      {
+       "pair": "ChatGPT vs Qwen",
+       "protan": 18.05,
+       "deutan": 16.45,
+       "normal": 16.98
+      },
+      {
+       "pair": "ChatGPT vs Unknown",
+       "protan": 5.57,
+       "deutan": 6.98,
+       "normal": 11.52
+      },
+      {
+       "pair": "Qwen vs Unknown",
+       "protan": 12.66,
+       "deutan": 10.4,
+       "normal": 14.43
+      }
+     ],
+     "minCvd": 5.57
+    }
+   },
+   "minPairwiseDistanceAfterSimulation": 8.163702128760033,
+   "minAdjacent": 16.445222421473463,
+   "minNormal": 15.369006636425745
+  }
+ }
+}

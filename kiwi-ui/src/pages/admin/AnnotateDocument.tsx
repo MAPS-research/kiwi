@@ -13,6 +13,7 @@ import { PDFViewer } from "../../components/PDFViewer/PDFViewer.tsx";
 import { Box, Button, MenuItem, Paper, TextField, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Chip } from "@mui/material";
 import EditIcon from '@mui/icons-material/EditOutlined';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import CommentPinIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import type { Chunk } from "../../services/index.ts";
 import ClickToSelect from "../../components/ClickToSelect/ClickToSelect.tsx";
 import {
@@ -645,10 +646,11 @@ export const AnnotateDocument: React.FC = () => {
                 <a
                   className="highlight-target"
                   key={highlight.id}
+                  // A chunk box on the paper: the mode-frozen on-paper marks (G5), square.
                   style={{
                     border: isSelected
-                      ? "2px solid #1976d2"
-                      : "1px solid red",
+                      ? "var(--pdf-toolbar-page-outline) solid var(--pdf-toolbar-variant-chunk-selected)"
+                      : "1px solid var(--pdf-toolbar-variant-chunk-box)",
                     position: "absolute",
                     display: "block",
                     left: `${highlight.selectionRegion.left}%`,
@@ -658,13 +660,9 @@ export const AnnotateDocument: React.FC = () => {
                     height: `${highlight.selectionRegion.height}%`,
                     minHeight: `${highlight.selectionRegion.height}%`,
                     zIndex: 1,
-                    boxShadow: isSelected
-                      ? "0 0 0 3px rgba(25,118,210,0.25)"
-                      : "none",
                     background: isSelected
-                      ? "rgba(25,118,210,0.08)"
+                      ? "var(--pdf-toolbar-variant-chunk-wash)"
                       : "transparent",
-                    borderRadius: 4,
                   }}
                   href={`#${highlight.id}`}
                   onClick={() => {
@@ -711,42 +709,43 @@ export const AnnotateDocument: React.FC = () => {
                 }
                 onPointerCancel={handleCommentPointerCancel}
                 title={comment.text} // Show comment text on hover
+                // A comment pin on the paper (DESIGN.md § The PDF viewer): a visible
+                // comment is the filled pin disc, a hidden one the page disc with a 2 px
+                // ring; the system's speech-bubble glyph, no shadow, no hover lift.
                 style={{
                   position: "absolute",
                   left: 0,
                   top: 0,
                   transform: "translate(-50%, -50%)",
-                  width: 24,
-                  height: 24,
+                  width: "var(--pdf-toolbar-pin)",
+                  height: "var(--pdf-toolbar-pin)",
+                  padding: 0,
                   borderRadius: "50%",
-                  border: "2px solid #1976d2",
-                  backgroundColor: comment.isVisibleToStudents ? "#1976d2" : "#ffffff",
-                  color: comment.isVisibleToStudents ? "#ffffff" : "#1976d2",
+                  border: "none",
+                  backgroundColor: comment.isVisibleToStudents
+                    ? "var(--pdf-toolbar-variant-pin-visible-fill)"
+                    : "var(--pdf-toolbar-variant-pin-hidden-fill)",
+                  color: comment.isVisibleToStudents
+                    ? "var(--pdf-toolbar-variant-pin-visible-glyph)"
+                    : "var(--pdf-toolbar-variant-pin-hidden-glyph)",
+                  boxShadow: comment.isVisibleToStudents
+                    ? "none"
+                    : "inset 0 0 0 var(--size-marker) var(--pdf-toolbar-variant-pin-hidden-ring)",
                   cursor: "grab",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  boxShadow: "0 2px 6px rgba(25, 118, 210, 0.3)",
                   userSelect: "none",
-                  fontSize: "12px",
-                  transition: "all 0.2s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translate(-50%, -50%) scale(1.15)";
-                  e.currentTarget.style.boxShadow = "0 4px 10px rgba(25, 118, 210, 0.5)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translate(-50%, -50%) scale(1)";
-                  e.currentTarget.style.boxShadow = "0 2px 6px rgba(25, 118, 210, 0.3)";
                 }}
               >
-                💬
+                <CommentPinIcon aria-hidden sx={{ fontSize: "var(--pdf-toolbar-pin-glyph)" }} />
               </button>
 
               {activeCommentId === comment.id && (
                 <Paper
                   data-selection-ignore="true"
-                  elevation={8}
+                  elevation={0}
+                  // A floating editor: the sheet, its hairline edge and --shadow-2.
                   sx={{
                     position: "fixed",
                     left: "50%",
@@ -759,6 +758,8 @@ export const AnnotateDocument: React.FC = () => {
                     gap: 1.5,
                     zIndex: 1000,
                     backgroundColor: "background.paper",
+                    border: "1px solid var(--border)",
+                    boxShadow: "var(--shadow-2)",
                   }}
                 >
                   <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
@@ -827,7 +828,8 @@ export const AnnotateDocument: React.FC = () => {
         {pendingCommentForPage && (
           <Paper
             data-selection-ignore="true"
-            elevation={8}
+            elevation={0}
+            // A floating editor: the sheet, its hairline edge and --shadow-2.
             sx={{
               position: "fixed",
               left: "50%",
@@ -840,6 +842,8 @@ export const AnnotateDocument: React.FC = () => {
               gap: 1.5,
               zIndex: 1000,
               backgroundColor: "background.paper",
+              border: "1px solid var(--border)",
+              boxShadow: "var(--shadow-2)",
             }}
           >
             <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
@@ -1444,7 +1448,7 @@ export const AnnotateDocument: React.FC = () => {
               borderRight: "1px solid",
               borderColor: "divider",
               p: 1.5,
-              backgroundColor: "grey.50",
+              backgroundColor: "action.hover",
             }}
           >
             <Typography
@@ -1561,9 +1565,10 @@ export const AnnotateDocument: React.FC = () => {
               <Table stickyHeader size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: 600, backgroundColor: "grey.50" }}>Text</TableCell>
-                    <TableCell sx={{ fontWeight: 600, backgroundColor: "grey.50", width: 100 }}>Type</TableCell>
-                    <TableCell sx={{ fontWeight: 600, backgroundColor: "grey.50", width: 120 }}>Actions</TableCell>
+                    {/* Sticky header: an opaque sunken band, so rows never show through it. */}
+                    <TableCell sx={{ fontWeight: 600, backgroundColor: "action.hover" }}>Text</TableCell>
+                    <TableCell sx={{ fontWeight: 600, backgroundColor: "action.hover", width: 100 }}>Type</TableCell>
+                    <TableCell sx={{ fontWeight: 600, backgroundColor: "action.hover", width: 120 }}>Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -1592,11 +1597,9 @@ export const AnnotateDocument: React.FC = () => {
                       key={chunk.element_id}
                       id={chunk.element_id}
                       hover
+                      // The theme draws the selected row: the selection tint and its 2 px marker.
+                      selected={selectedChunk === chunk.element_id}
                       sx={{
-                        backgroundColor: selectedChunk === chunk.element_id ? "rgba(25, 118, 210, 0.12)" : "inherit",
-                        "&:hover": {
-                          backgroundColor: selectedChunk === chunk.element_id ? "rgba(25, 118, 210, 0.18)" : "action.hover",
-                        },
                         cursor: "pointer",
                       }}
                       onClick={() => {
@@ -1627,8 +1630,6 @@ export const AnnotateDocument: React.FC = () => {
                         <Chip
                           label={chunk.type}
                           size="small"
-                          color={chunk.type === "Image" ? "secondary" : "default"}
-                          variant="outlined"
                         />
                       </TableCell>
                       <TableCell>
@@ -1664,7 +1665,7 @@ export const AnnotateDocument: React.FC = () => {
               </Typography>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                 <Box sx={{ display: "flex", gap: 1 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, minWidth: 80 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 600, minWidth: 80 }}>
                     ID:
                   </Typography>
                   <Typography variant="body2" sx={{ wordBreak: "break-all", color: "text.secondary" }}>
@@ -1672,7 +1673,7 @@ export const AnnotateDocument: React.FC = () => {
                   </Typography>
                 </Box>
                 <Box sx={{ display: "flex", gap: 1 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, minWidth: 80 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 600, minWidth: 80 }}>
                     File Name:
                   </Typography>
                   <Typography variant="body2" sx={{ color: "text.secondary" }}>

@@ -1,9 +1,12 @@
 import React, { useState, FormEvent, useEffect } from "react";
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout/AuthLayout.tsx";
-import FormCard from "../components/FormCard/FormCard.tsx";
-import InstitutionLogo from "../components/Brand/InstitutionLogo.tsx";
-import { googleLoginEnabled, passwordLoginEnabled } from "../config/branding";
+import {
+  googleLoginEnabled,
+  passwordLoginEnabled,
+  SUPPORT_EMAIL,
+} from "../config/branding";
+import KiwiLogo from "../components/Brand/KiwiLogo.tsx";
 import KiwiWordmark from "../components/Brand/KiwiWordmark.tsx";
 import { GoogleLoginButton } from "../components/GoogleLoginButton/GoogleLoginButton.tsx";
 import {
@@ -22,6 +25,35 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useAuth } from "../auth/AuthContext.tsx";
 import apiClient, { apiClientWithoutMiddleWare } from "../utils/api.ts";
 
+/** The logo slot beside the display line: 96 px from md, 64 px below it (JOURNEY S-05). */
+const SIGN_IN_SLOT = {
+  xs: "var(--companion-slot-inline)",
+  md: "var(--companion-slot-signin)",
+};
+
+/**
+ * The sign-in failure in words (copy S-05.03, .04, .05 and .16): a refused
+ * sign-in, no response, a server error, or the generic line for anything else.
+ * The generated client throws a ResponseError (with the response) or a
+ * FetchError (no response). A refusal after the credentials were accepted (a
+ * later call) is not a wrong password, so it gets the generic line.
+ */
+const signInErrorMessage = (error: unknown, credentialsAccepted: boolean): string => {
+  const failure = error as { name?: string; response?: { status?: number } } | null;
+  const status = failure?.response?.status;
+  if (typeof status === "number") {
+    if (status === 401 && !credentialsAccepted) {
+      return "Couldn't sign you in. That email and password don't match. Check both and try again, or ask your administrator to reset your password.";
+    }
+    if (status >= 500) {
+      return `Couldn't sign you in. The server returned an error (${status}). Try again in a moment.`;
+    }
+  } else if (failure?.name === "FetchError") {
+    return "Couldn't sign you in. Kiwi couldn't reach the server. Check your connection, then try again.";
+  }
+  return "Couldn't sign you in. The server didn't respond as expected. Try again, or ask your administrator if it keeps happening.";
+};
+
 export const Login: React.FC = () => {
   const googleLoginOn = googleLoginEnabled();
   const passwordLoginOn = passwordLoginEnabled();
@@ -39,11 +71,13 @@ export const Login: React.FC = () => {
     event.preventDefault();
     setErrorMessage(null);
     setIsSubmitting(true);
+    let credentialsAccepted = false;
 
     try {
       const tokenResponse = await apiClientWithoutMiddleWare.authControllerLogin({
         loginDto: { email, password },
       });
+      credentialsAccepted = true;
       if (tokenResponse.accessToken) {
         localStorage.setItem("authToken", tokenResponse.accessToken);
       }
@@ -89,9 +123,7 @@ export const Login: React.FC = () => {
       }
     } catch (error) {
       console.error("Login failed", error);
-      setErrorMessage(
-        "Login failed. Please check your credentials and try again.",
-      );
+      setErrorMessage(signInErrorMessage(error, credentialsAccepted));
     } finally {
       setIsSubmitting(false);
     }
@@ -106,77 +138,42 @@ export const Login: React.FC = () => {
 
   return (
     <AuthLayout variant="split">
-      <FormCard appearance="plain">
-        {showTimeoutBanner && (
-          <Alert
-            severity="warning"
-            sx={{ width: "100%", mb: 3, borderRadius: 2 }}
-          >
-            Your session has expired. Please log in again.
-          </Alert>
-        )}
+      {showTimeoutBanner && (
+        <Alert severity="warning" sx={{ mb: "var(--space-5)" }}>
+          Your session has expired. Please log in again.
+        </Alert>
+      )}
 
-        <Box
+      <KiwiLogo
+        size="var(--companion-slot-signin)"
+        sx={{ width: SIGN_IN_SLOT, height: SIGN_IN_SLOT, mb: "var(--space-5)" }}
+      />
+      <Typography component="h1" variant="display" sx={{ overflowWrap: "anywhere" }}>
+        Sign in to{" "}
+        <KiwiWordmark
+          component="span"
           sx={{
-            width: "100%",
-            display: { xs: "flex", md: "none" },
-            justifyContent: "flex-start",
-            mb: 2,
+            fontSize: "inherit",
+            lineHeight: "inherit",
+            color: "var(--accent-text)",
+            whiteSpace: "nowrap",
+            pr: "0.08em",
           }}
-        >
-          <InstitutionLogo width={124} height={28} />
-        </Box>
-        <Typography
-          component="h1"
-          variant="h3"
-          sx={{
-            fontWeight: 700,
-            textAlign: "left",
-            width: "100%",
-            mt: 0,
-            fontSize: { xs: "1.75rem", sm: "2.1rem", md: "2.4rem" },
-            lineHeight: 1.15,
-            letterSpacing: "-0.035em",
-            whiteSpace: { xs: "normal", md: "nowrap" }
-          }}>
-          Welcome back to{" "}
-          <KiwiWordmark
-            component="span"
-            sx={{ fontSize: "inherit", lineHeight: "inherit" }}
-          />
-        </Typography>
-        <Typography
-          variant="body1"
-          sx={{
-            color: "text.secondary",
-            textAlign: "left",
-            width: "100%",
-            mt: 1.5,
-            mb: 6,
-            lineHeight: 1.6
-          }}>
-          Continue learning with AI-powered support.
-        </Typography>
+        />
+      </Typography>
+      <Typography sx={{ mt: "var(--space-2)", color: "text.secondary" }}>
+        Use the email address linked to your Kiwi account.
+      </Typography>
 
-        {errorMessage && (
-          <Alert
-            severity="error"
-            sx={{ width: "100%", mb: 2.5, borderRadius: 2 }}
-          >
-            {errorMessage}
-          </Alert>
-        )}
+      <Box sx={{ mt: "var(--space-6)", display: "grid", gap: "var(--space-stack)" }}>
+        {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
 
         {passwordLoginOn && (
           <Box
             component="form"
             onSubmit={handleSubmit}
-            sx={{
-              width: "100%",
-              display: "flex",
-              flexDirection: "column",
-              gap: 2
-            }}>
+            sx={{ display: "grid", gap: "var(--space-stack)" }}
+          >
             <TextField
               id="login-email"
               label="Email"
@@ -190,13 +187,7 @@ export const Login: React.FC = () => {
               required
               disabled={isSubmitting}
               fullWidth
-              variant="outlined"
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  bgcolor: "background.paper",
-                  borderRadius: 2,
-                },
-              }}
+              slotProps={{ inputLabel: { required: false } }}
             />
             <TextField
               id="login-password"
@@ -211,8 +202,8 @@ export const Login: React.FC = () => {
               required
               disabled={isSubmitting}
               fullWidth
-              variant="outlined"
               slotProps={{
+                inputLabel: { required: false },
                 input: {
                   endAdornment: (
                     <InputAdornment position="end">
@@ -221,7 +212,6 @@ export const Login: React.FC = () => {
                           showPassword ? "Hide password" : "Show password"
                         }
                         onClick={() => setShowPassword((visible) => !visible)}
-                        edge="end"
                         disabled={isSubmitting}
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
@@ -230,88 +220,60 @@ export const Login: React.FC = () => {
                   ),
                 },
               }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  bgcolor: "background.paper",
-                  borderRadius: 2,
-                },
-              }}
             />
 
             <Button
               type="submit"
               variant="contained"
-              color="primary"
               fullWidth
               disabled={isSubmitting}
-              sx={{
-                mt: 1,
-                minHeight: 48,
-                borderRadius: 999,
-                fontWeight: 700,
-                boxShadow: "none",
-                "&:hover": { boxShadow: "none" },
-              }}
             >
               {isSubmitting ? (
                 <>
-                  <CircularProgress size={18} color="inherit" sx={{ mr: 1 }} />
+                  <CircularProgress size={18} color="inherit" sx={{ mr: "var(--space-2)" }} />
                   Signing in…
                 </>
               ) : (
-                "Login"
+                "Sign in"
               )}
             </Button>
-
-            {googleLoginOn && (
-              <Divider sx={{ my: 1.5, color: "text.secondary", fontSize: 13 }}>
-                OR
-              </Divider>
-            )}
           </Box>
         )}
 
-        {googleLoginOn && (
-          <Box sx={{
-            width: "100%"
-          }}>
-            <GoogleLoginButton mode="login" appearance="neutral" />
-          </Box>
+        {passwordLoginOn && googleLoginOn && (
+          <Divider sx={{ color: "text.secondary", typography: "body2" }}>or</Divider>
         )}
+
+        {googleLoginOn && <GoogleLoginButton mode="login" appearance="neutral" />}
 
         {!passwordLoginOn && !googleLoginOn && (
-          <Alert severity="warning" sx={{ width: "100%", borderRadius: 2 }}>
-            No sign-in method is enabled. Unset VITE_DISABLE_PASSWORD_LOGIN or
-            set VITE_ENABLE_GOOGLE_LOGIN=true.
+          <Alert severity="warning">
+            Sign-in isn&apos;t available right now. No sign-in method is turned on
+            for this site.{" "}
+            {SUPPORT_EMAIL ? (
+              <>
+                Contact <Link href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</Link>, or
+                ask an administrator.
+              </>
+            ) : (
+              "Ask an administrator."
+            )}
           </Alert>
         )}
+      </Box>
 
-        <Typography
-          variant="body2"
-          sx={{
-            color: "text.secondary",
-            textAlign: "center",
-            mt: 4
-          }}>
-          {googleLoginOn ? (
-            <>
-              Don&apos;t have an account?{" "}
-              <Link
-                component={RouterLink}
-                to="/register"
-                underline="hover"
-                sx={{
-                  fontWeight: 700
-                }}
-              >
-                Create one
-              </Link>
-            </>
-          ) : (
-            <>Need an account? Ask your administrator.</>
-          )}
-        </Typography>
-      </FormCard>
+      <Typography sx={{ mt: "var(--space-6)", color: "text.secondary" }}>
+        {googleLoginOn ? (
+          <>
+            New to Kiwi?{" "}
+            <Link component={RouterLink} to="/register">
+              Create an account
+            </Link>
+          </>
+        ) : (
+          "New to Kiwi? Ask your administrator for an account."
+        )}
+      </Typography>
     </AuthLayout>
   );
 };

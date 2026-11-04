@@ -22,7 +22,7 @@ import {
   ChatGroup,
   classAnalyticsApi,
 } from "../../utils/classAnalyticsApi.ts";
-import { mono, tokens } from "./tokens.ts";
+import { numeric, tokens, typeRole } from "./tokens.ts";
 
 const PAGE_SIZE = 30;
 
@@ -160,13 +160,11 @@ export const ChatDetailDialog: React.FC<ChatDetailDialogProps> = ({
       onClose={onClose}
       maxWidth="md"
       fullWidth
+      // The theme draws the dialog sheet: hairline edge, sheet radius, --shadow-2.
       slotProps={{
         paper: {
           sx: {
-            borderRadius: 3,
-            border: `1px solid ${tokens.line}`,
             height: "80vh",
-            boxShadow: "0 24px 64px rgba(26, 21, 35, 0.18)",
           },
         }
       }}
@@ -175,7 +173,7 @@ export const ChatDetailDialog: React.FC<ChatDetailDialogProps> = ({
         sx={{
           px: 2.5,
           py: 1.5,
-          borderBottom: `1px solid ${tokens.line}`,
+          borderBottom: `1px solid ${tokens.rule}`,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -185,8 +183,7 @@ export const ChatDetailDialog: React.FC<ChatDetailDialogProps> = ({
         <Box sx={{ minWidth: 0 }}>
           <Typography
             sx={{
-              fontWeight: 600,
-              fontSize: 15,
+              ...typeRole("group-title"),
               color: tokens.ink,
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -195,7 +192,7 @@ export const ChatDetailDialog: React.FC<ChatDetailDialogProps> = ({
           >
             {title}
           </Typography>
-          <Typography sx={{ fontSize: 13, color: tokens.slate }}>
+          <Typography sx={{ ...typeRole("small"), ...numeric, color: tokens.slate }}>
             {total} {total === 1 ? "question" : "questions"}
             {mode === "student" && lectureId ? " in this lecture" : ""}
           </Typography>
@@ -213,7 +210,7 @@ export const ChatDetailDialog: React.FC<ChatDetailDialogProps> = ({
             ))}
           </Box>
         ) : chats.length === 0 ? (
-          <Typography sx={{ px: 2.5, py: 4, fontSize: 14, color: tokens.slate }}>
+          <Typography sx={{ px: 2.5, py: 4, ...typeRole("small"), color: tokens.slate }}>
             No questions here.
           </Typography>
         ) : (
@@ -226,7 +223,7 @@ export const ChatDetailDialog: React.FC<ChatDetailDialogProps> = ({
                   sx={{
                     px: 2.5,
                     py: 1.5,
-                    borderBottom: `1px solid ${tokens.line}`,
+                    borderBottom: `1px solid ${tokens.rule}`,
                   }}
                 >
                   <Box
@@ -240,9 +237,9 @@ export const ChatDetailDialog: React.FC<ChatDetailDialogProps> = ({
                   >
                     <Typography
                       sx={{
-                        fontSize: 12,
-                        fontWeight: 700,
-                        color: tokens.violetInk,
+                        ...typeRole("caption"),
+                        fontWeight: "var(--type-weight-emphasis)",
+                        color: tokens.ink,
                       }}
                     >
                       {chat.student}
@@ -258,15 +255,13 @@ export const ChatDetailDialog: React.FC<ChatDetailDialogProps> = ({
                         }
                         sx={{
                           height: 20,
-                          fontSize: 11,
-                          fontFamily: mono,
-                          backgroundColor: tokens.violetTrack,
-                          color: tokens.violetInk,
+                          ...typeRole("caption"),
+                          ...numeric,
                           maxWidth: 240,
                         }}
                       />
                     )}
-                    <Typography sx={{ fontSize: 12, color: tokens.faint }}>
+                    <Typography sx={{ ...typeRole("caption"), ...numeric, color: tokens.slate }}>
                       {new Date(chat.timestamp).toLocaleString()}
                     </Typography>
                   </Box>
@@ -274,7 +269,7 @@ export const ChatDetailDialog: React.FC<ChatDetailDialogProps> = ({
                   <Box sx={{ display: "flex", gap: 1, alignItems: "flex-start" }}>
                     <Typography
                       sx={{
-                        fontSize: 14,
+                        ...typeRole("body"),
                         color: tokens.ink,
                         whiteSpace: "pre-wrap",
                         flex: 1,
@@ -290,7 +285,7 @@ export const ChatDetailDialog: React.FC<ChatDetailDialogProps> = ({
                         aria-label={
                           answerState ? "Hide AI answer" : "Show AI answer"
                         }
-                        sx={{ color: tokens.slate, mt: -0.5 }}
+                        sx={{ mt: -0.5 }}
                       >
                         {answerState ? (
                           <ExpandLessIcon fontSize="small" />
@@ -302,21 +297,19 @@ export const ChatDetailDialog: React.FC<ChatDetailDialogProps> = ({
                   </Box>
 
                   <Collapse in={!!answerState} unmountOnExit>
+                    {/* Kiwi's stored answer, set off by the ruler's neutral 1 px rule. */}
                     <Box
                       sx={{
                         mt: 1,
                         pl: 1.5,
-                        borderLeft: `2px solid ${tokens.violetTrack}`,
+                        borderLeft: "1px solid var(--border-strong)",
                       }}
                     >
                       {answerState?.loading && (
-                        <CircularProgress
-                          size={16}
-                          sx={{ color: tokens.violet, my: 1 }}
-                        />
+                        <CircularProgress size={16} sx={{ my: 1 }} />
                       )}
                       {answerState?.error && (
-                        <Typography sx={{ fontSize: 13, color: tokens.red }}>
+                        <Typography sx={{ ...typeRole("small"), color: tokens.error }}>
                           {answerState.error}
                         </Typography>
                       )}
@@ -324,11 +317,9 @@ export const ChatDetailDialog: React.FC<ChatDetailDialogProps> = ({
                         <Box key={i} sx={{ mb: 1 }}>
                           <Typography
                             sx={{
-                              fontSize: 11,
-                              fontWeight: 700,
-                              letterSpacing: "0.08em",
-                              color: tokens.faint,
-                              textTransform: "uppercase",
+                              ...typeRole("caption"),
+                              fontWeight: "var(--type-weight-emphasis)",
+                              color: tokens.slate,
                               mb: 0.25,
                             }}
                           >
@@ -336,7 +327,7 @@ export const ChatDetailDialog: React.FC<ChatDetailDialogProps> = ({
                           </Typography>
                           <Typography
                             sx={{
-                              fontSize: 13.5,
+                              ...typeRole("body"),
                               color: tokens.slate,
                               whiteSpace: "pre-wrap",
                               maxHeight: 320,
@@ -351,7 +342,7 @@ export const ChatDetailDialog: React.FC<ChatDetailDialogProps> = ({
                         !answerState.loading &&
                         !answerState.error &&
                         (answerState.answers?.length ?? 0) === 0 && (
-                          <Typography sx={{ fontSize: 13, color: tokens.faint }}>
+                          <Typography sx={{ ...typeRole("small"), color: tokens.slate }}>
                             No stored answer for this question.
                           </Typography>
                         )}
@@ -367,11 +358,6 @@ export const ChatDetailDialog: React.FC<ChatDetailDialogProps> = ({
                   size="small"
                   onClick={loadMore}
                   disabled={loadingMore}
-                  sx={{
-                    textTransform: "none",
-                    color: tokens.violet,
-                    fontWeight: 600,
-                  }}
                 >
                   {loadingMore
                     ? "Loading…"

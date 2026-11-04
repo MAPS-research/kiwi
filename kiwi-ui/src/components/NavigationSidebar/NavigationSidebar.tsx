@@ -11,8 +11,8 @@ import {
   ListItemText,
   Tooltip,
   Typography,
-  useMediaQuery,
 } from '@mui/material';
+import { densityAttr } from '../AdminPage/regionDensity.ts';
 
 export interface NavigationSidebarItem {
   key: string;
@@ -34,25 +34,30 @@ export interface NavigationSidebarSection {
 interface NavigationSidebarProps {
   ariaLabel: string;
   open?: boolean;
-  width?: number;
-  collapsedWidth?: number;
+  /** The open rail's width: px, or a CSS length such as "var(--size-sidebar-drawer)". */
+  width?: number | string;
+  /** The collapsed rail's width: px, or a CSS length. */
+  collapsedWidth?: number | string;
   header?: ReactNode;
   footer?: ReactNode;
   sections: NavigationSidebarSection[];
 }
 
-// The icon must not move while the rail animates between `width` and
-// `collapsedWidth`. That rules out `justify-content` switching on `open`:
-// centering is resolved against the button's *current* width, so the icon jumps
-// to the middle of the still-wide button the instant you collapse and then
-// slides left for the rest of the transition. Instead the geometry is fixed —
-// items are always left-aligned, and the icon slot is sized and padded so that
-// its centre lands exactly on the collapsed rail's centre line. Nothing about
-// the icon's x position depends on `open`.
-const ICON_SLOT_WIDTH = 24;
-const EXPAND_ICON_WIDTH = 20;
-const ITEM_MARGIN_X = 8;
-const LABEL_GAP = 12;
+/** Child rows are 36 px in both densities (DESIGN.md, Density > the stated exceptions). */
+const CHILD_ROW_HEIGHT = 36;
+
+const cssLength = (value: number | string) => (typeof value === 'number' ? `${value}px` : value);
+
+/** Label type for every row: 14/20, 400 at rest and 600 on the current page. */
+const labelProps = (current: boolean) => ({
+  variant: 'body2' as const,
+  noWrap: true,
+  sx: {
+    fontSize: 'var(--type-label-size)',
+    lineHeight: 'var(--type-label-leading)',
+    fontWeight: current ? 'var(--weight-semibold)' : 'var(--weight-regular)',
+  },
+});
 
 const SidebarExpandIcon = ({ expanded, visible }: { expanded: boolean; visible: boolean }) => {
   // Start new arrows in the collapsed direction, then update after the first
@@ -70,73 +75,78 @@ const SidebarExpandIcon = ({ expanded, visible }: { expanded: boolean; visible: 
       data-testid="sidebar-expand-icon"
       aria-hidden="true"
       sx={{
-        width: EXPAND_ICON_WIDTH,
-        height: EXPAND_ICON_WIDTH,
+        width: 'var(--size-icon-sm)',
+        height: 'var(--size-icon-sm)',
         ml: 'auto',
         flexShrink: 0,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        color: 'var(--icon-default)',
         opacity: visible ? 1 : 0,
-        transform: animatedExpanded ? 'rotate(0deg)' : 'rotate(-90deg)',
-        transition: (theme) =>
-          theme.transitions.create(['transform', 'opacity'], {
-            duration: theme.transitions.duration.shorter,
-          }),
-        '@media (prefers-reduced-motion: reduce)': {
-          transition: 'none',
-        },
+        // Points down while the group is closed and up while it is open.
+        transform: animatedExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+        // Only transform and opacity move (DESIGN.md, Motion); the global
+        // reduced-motion rule stills them.
+        transition:
+          'transform var(--motion-micro) var(--motion-ease-toggle), opacity var(--motion-micro) var(--motion-ease-toggle)',
       }}
     >
-      <ExpandMoreIcon sx={{ fontSize: 18 }} />
+      <ExpandMoreIcon sx={{ fontSize: 'var(--size-icon-sm)' }} />
     </Box>
   );
 };
 
+/**
+ * The admin rail (SR-3; DESIGN.md, Sidebar items): a --surface column with a
+ * --border hairline on its right, rows of the sidebar-item tokens (36 px compact,
+ * 8 px side margins, 12 px padding, a 20 px glyph and an 8 px gap, the 6 px
+ * small radius). The theme draws each row's states on ListItemButton: hover is
+ * the tonal step, the current page the selection tint, the accent label and
+ * glyph and a 2 px inset marker. A group's children are 36 px rows whose labels
+ * align with the parent's; the current child carries a 6 px marker dot instead
+ * of the edge. Collapsed, the rail is icon-only rows the full rail width, each
+ * named by its label and a tooltip. Width changes are instant: width is never
+ * animated.
+ */
 const NavigationSidebar = ({
   ariaLabel,
   open = true,
-  width = 220,
-  collapsedWidth = 56,
+  width = 'var(--size-sidebar)',
+  collapsedWidth = 'var(--size-sidebar-collapsed)',
   header,
   footer,
   sections,
 }: NavigationSidebarProps) => {
-  const reduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
-  // Padding that centres the icon slot inside the collapsed rail.
-  const itemPaddingX = Math.max(
-    0,
-    (collapsedWidth - ITEM_MARGIN_X * 2 - ICON_SLOT_WIDTH) / 2,
-  );
-  const textInsetX = ITEM_MARGIN_X + itemPaddingX;
-  // Labels keep a fixed width instead of flexing, so they get clipped by the
-  // shrinking rail rather than re-wrapping or ellipsising on every frame.
-  const labelWidth = Math.max(
-    0,
-    width - ITEM_MARGIN_X * 2 - itemPaddingX * 2 - ICON_SLOT_WIDTH - LABEL_GAP,
-  );
-  const titleWidth = Math.max(0, width - textInsetX * 2);
+  // The collapsed rail's tooltips render in a portal: give them the rail's density.
+  const [tooltipAttr, setTooltipAttr] = useState<Record<string, string>>({});
+  // Open rows sit inside the rail with side margins; collapsed rows span it and
+  // centre their glyph.
+  const rowGeometry = open
+    ? {
+        mx: 'var(--sidebar-item-margin-x)',
+        px: 'var(--sidebar-item-padding-x)',
+      }
+    : {
+        mx: 0,
+        px: `calc((${cssLength(collapsedWidth)} - var(--sidebar-item-icon-size)) / 2)`,
+      };
 
   return (
     <Box
       component="aside"
       aria-label={ariaLabel}
       sx={{
-        width: open ? width : collapsedWidth,
+        width: cssLength(open ? width : collapsedWidth),
         height: '100%',
         minHeight: 0,
         flexShrink: 0,
         bgcolor: 'background.paper',
-        borderRight: '1px solid',
-        borderColor: 'divider',
+        borderRight: '1px solid var(--border)',
         display: 'flex',
         flexDirection: 'column',
         overflowX: 'hidden',
         overflowY: 'hidden',
-        transition: (theme) =>
-          theme.transitions.create('width', {
-            duration: theme.transitions.duration.shorter,
-          }),
       }}
     >
       {header && (
@@ -150,6 +160,7 @@ const NavigationSidebar = ({
         sx={{
           flexGrow: 1,
           minHeight: 0,
+          py: 'var(--space-2)',
           overflowY: 'auto',
           overflowX: 'hidden',
           overscrollBehavior: 'contain',
@@ -158,128 +169,91 @@ const NavigationSidebar = ({
       >
         {sections.map((section, sectionIndex) => (
           <Box key={section.title ?? sectionIndex}>
-            {sectionIndex > 0 && <Divider />}
+            {sectionIndex > 0 && <Divider sx={{ my: 'var(--space-2)' }} />}
             {section.title && (
               <Typography
                 variant="caption"
                 aria-hidden={!open}
+                noWrap
                 sx={{
-                  color: "text.secondary",
                   display: 'block',
-                  width: titleWidth,
-                  px: `${textInsetX}px`,
-                  pt: 1.5,
-                  pb: 0.5,
-                  fontWeight: 600,
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
+                  color: 'text.secondary',
+                  fontWeight: 'var(--weight-semibold)',
+                  px: 'calc(var(--sidebar-item-margin-x) + var(--sidebar-item-padding-x))',
+                  pt: 'var(--space-2)',
+                  pb: 'var(--space-1)',
                   opacity: open ? 1 : 0,
-
-                  transition: (theme) =>
-                    theme.transitions.create('opacity', {
-                      duration: theme.transitions.duration.shorter,
-                    })
-                }}>
+                }}
+              >
                 {section.title}
               </Typography>
             )}
-            <List sx={{ py: 1 }}>
+            <List disablePadding>
               {section.items.map((item) => {
                 const hasChildren = Boolean(item.children?.length);
                 const childrenExpanded = item.expanded ?? hasChildren;
                 const submenuOpen = open && childrenExpanded;
-                const itemLabelWidth = Math.max(
-                  0,
-                  labelWidth - (hasChildren ? EXPAND_ICON_WIDTH + LABEL_GAP : 0),
-                );
+                // Collapsed, a group's children are hidden, so the group's row
+                // stands for its current child and keeps the current look.
+                const current = Boolean(item.selected) || (!open && Boolean(item.active));
 
                 return (
-                  <Box key={item.key}>
-                    <ListItem disablePadding>
-                      <Tooltip title={open ? '' : item.label} placement="right">
-                        <ListItemButton
-                          selected={item.selected}
-                          onClick={item.onClick}
-                          aria-label={item.label}
-                          aria-current={item.selected ? 'page' : undefined}
-                          aria-expanded={hasChildren ? submenuOpen : undefined}
+                  <ListItem key={item.key} disablePadding sx={{ display: 'block' }}>
+                    <Tooltip
+                      title={open ? '' : item.label}
+                      placement="right"
+                      onOpen={(event) => setTooltipAttr(densityAttr(event.target as Element))}
+                      slotProps={{ popper: { ...tooltipAttr } }}
+                    >
+                      <ListItemButton
+                        selected={current}
+                        onClick={item.onClick}
+                        aria-label={item.label}
+                        aria-current={item.selected ? 'page' : undefined}
+                        aria-expanded={hasChildren ? submenuOpen : undefined}
+                        sx={{
+                          ...rowGeometry,
+                          gap: 'var(--sidebar-item-gap)',
+                          justifyContent: 'flex-start',
+                          // Clip the label to the row so it never bleeds past the rail.
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <ListItemIcon
                           sx={{
-                            minHeight: 44,
-                            mx: `${ITEM_MARGIN_X}px`,
-                            px: `${itemPaddingX}px`,
-                            gap: `${LABEL_GAP}px`,
-                            justifyContent: 'flex-start',
-                            borderRadius: 1.5,
-                            color: item.selected || item.active ? 'primary.main' : undefined,
-                            bgcolor: item.active ? 'action.selected' : undefined,
-                            // Clip the label to the button so it disappears with the
-                            // rail instead of bleeding past the rounded edge.
-                            overflow: 'hidden',
-                            '&.Mui-selected': {
-                              color: 'primary.main',
-                              bgcolor: 'action.selected',
-                              '&:hover': {
-                                bgcolor: 'action.selected',
-                              },
-                            },
+                            minWidth: 0,
+                            width: 'var(--sidebar-item-icon-size)',
+                            flexShrink: 0,
+                            justifyContent: 'center',
+                            '& .MuiSvgIcon-root': { fontSize: 'var(--sidebar-item-icon-size)' },
                           }}
                         >
-                          <ListItemIcon
-                            sx={{
-                              minWidth: 0,
-                              width: ICON_SLOT_WIDTH,
-                              flexShrink: 0,
-                              color: 'inherit',
-                              justifyContent: 'center',
-                              '& .MuiSvgIcon-root': { fontSize: 20 },
-                            }}
-                          >
-                            {item.icon}
-                          </ListItemIcon>
-                          <ListItemText
-                            primary={item.label}
-                            aria-hidden={!open}
-                            sx={{
-                              my: 0,
-                              width: itemLabelWidth,
-                              flexShrink: 0,
-                              opacity: open ? 1 : 0,
-                              transition: (theme) =>
-                                theme.transitions.create('opacity', {
-                                  duration: theme.transitions.duration.shorter,
-                                }),
-                            }}
-                            slotProps={{
-                              primary: {
-                                variant: 'body2',
-                                sx: { fontWeight: item.selected || item.active ? 600 : 500 },
-                                noWrap: true,
-                              },
-                            }}
-                          />
-                          {hasChildren && (
-                            <SidebarExpandIcon expanded={submenuOpen} visible={open} />
-                          )}
-                        </ListItemButton>
-                      </Tooltip>
-                    </ListItem>
+                          {item.icon}
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={item.label}
+                          aria-hidden={!open}
+                          sx={{ my: 0, minWidth: 0, opacity: open ? 1 : 0 }}
+                          slotProps={{ primary: labelProps(current) }}
+                        />
+                        {hasChildren && (
+                          <SidebarExpandIcon expanded={submenuOpen} visible={open} />
+                        )}
+                      </ListItemButton>
+                    </Tooltip>
 
                     {hasChildren && (
+                      // Opens and closes at once: height is never animated. The
+                      // exit still runs through Collapse, so onExited releases the
+                      // retained children after the group has closed.
                       <Collapse
                         in={submenuOpen}
-                        timeout={reduceMotion ? 0 : 'auto'}
-                        appear={!reduceMotion}
+                        timeout={0}
                         unmountOnExit
                         onExited={childrenExpanded ? undefined : item.onChildrenExited}
                         data-testid="sidebar-submenu"
                       >
-                        <List
-                          disablePadding
-                          sx={{
-                            ml: 0,
-                            mb: 0.5,
-                          }}
-                        >
+                        <List disablePadding>
                           {item.children!.map((child) => (
                             <ListItem key={child.key} disablePadding>
                               <ListItemButton
@@ -288,28 +262,22 @@ const NavigationSidebar = ({
                                 aria-label={child.label}
                                 aria-current={child.selected ? 'page' : undefined}
                                 sx={{
-                                  minHeight: 40,
-                                  mx: 1,
-                                  px: 1,
-                                  gap: `${LABEL_GAP}px`,
+                                  minHeight: CHILD_ROW_HEIGHT,
+                                  mx: 'var(--sidebar-item-margin-x)',
+                                  px: 'var(--sidebar-item-padding-x)',
+                                  gap: 'var(--sidebar-item-gap)',
                                   justifyContent: 'flex-start',
-                                  borderRadius: 1.5,
                                   overflow: 'hidden',
-                                  '&.Mui-selected': {
-                                    color: 'primary.main',
-                                    bgcolor: 'transparent',
-                                    '&:hover': {
-                                      bgcolor: 'action.hover',
-                                    },
-                                  },
+                                  // The current child's marker is its dot, not the inset edge.
+                                  '&.Mui-selected, &[aria-current="page"]': { boxShadow: 'none' },
                                 }}
                               >
                                 <Box
                                   component="span"
                                   aria-hidden="true"
                                   sx={{
-                                    width: ICON_SLOT_WIDTH,
-                                    height: ICON_SLOT_WIDTH,
+                                    width: 'var(--sidebar-item-icon-size)',
+                                    height: 'var(--sidebar-item-icon-size)',
                                     flexShrink: 0,
                                     display: 'flex',
                                     alignItems: 'center',
@@ -320,23 +288,19 @@ const NavigationSidebar = ({
                                     component="span"
                                     data-testid={`sidebar-child-indicator-${child.key}`}
                                     sx={{
-                                      width: 6,
-                                      height: 6,
+                                      width: 'var(--sidebar-item-child-dot)',
+                                      height: 'var(--sidebar-item-child-dot)',
                                       borderRadius: '50%',
-                                      bgcolor: child.selected ? 'primary.main' : 'transparent',
+                                      bgcolor: child.selected
+                                        ? 'var(--sidebar-item-variant-current-marker)'
+                                        : 'transparent',
                                     }}
                                   />
                                 </Box>
                                 <ListItemText
                                   primary={child.label}
                                   sx={{ my: 0, minWidth: 0 }}
-                                  slotProps={{
-                                    primary: {
-                                      variant: 'body2',
-                                      sx: { fontSize: 13, fontWeight: child.selected ? 600 : 500 },
-                                      noWrap: true,
-                                    },
-                                  }}
+                                  slotProps={{ primary: labelProps(Boolean(child.selected)) }}
                                 />
                               </ListItemButton>
                             </ListItem>
@@ -344,7 +308,7 @@ const NavigationSidebar = ({
                         </List>
                       </Collapse>
                     )}
-                  </Box>
+                  </ListItem>
                 );
               })}
             </List>
@@ -353,7 +317,7 @@ const NavigationSidebar = ({
       </Box>
 
       {footer && (
-        <Box sx={{ flexShrink: 0, borderTop: '1px solid', borderColor: 'divider' }}>
+        <Box sx={{ flexShrink: 0, borderTop: '1px solid var(--border-subtle)' }}>
           {footer}
         </Box>
       )}

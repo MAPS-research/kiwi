@@ -1,0 +1,71 @@
+{
+ "about": "A kept string is one the design leaves as it is because it already follows the guide (the `Kept as is` list of each page, and a kept row). check-copy.mjs (H17) runs the lints of a new string over every one: a statement that something could not be done (D2), an alternation of forms (D6), a count with a plural noun and no singular (C4), the marks and terms of C5 and C6, and the person of C8 (no we, our or I). A kept string that trips one is either fixed (it becomes a row) or listed here with the lint and the reason it is right.",
+ "exempt": [
+  {
+   "group": "A-05",
+   "text": "Failed",
+   "lint": "D2",
+   "why": "a filter option and a status name: it names the category of emails whose sending failed and asks nothing of the reader; the details dialog carries the message"
+  },
+  {
+   "group": "S-09",
+   "text": "I agree to participate",
+   "lint": "C8",
+   "why": "a label the reader speaks, in their own voice: C8's stated exception (as \"I've copied the secret\", A-08.32)"
+  },
+  {
+   "file": "src/pages/admin/KiwiAppsAdmin.tsx",
+   "text": "The registration secret cannot be viewed or changed. To issue a new secret, delete this entry and create a new one.",
+   "lint": "D2",
+   "why": "a helper that states a standing limitation and gives its way out in the next sentence; nothing has failed, so it is not an error row"
+  },
+  {
+   "file": "src/pages/admin/WebhookManagement.tsx",
+   "text": "API tokens are used to authenticate webhook requests. The token value is only shown once during creation and cannot be retrieved later.",
+   "lint": "D2",
+   "why": "a helper that states a standing limitation (a token's value is shown once); nothing has failed, so it is not an error row"
+  },
+  {
+   "file": "src/components/Email/RecipientSelector.tsx",
+   "text": "{x} • Pending in {x} class{x}",
+   "lint": "C1",
+   "why": "a bullet-separated line: each part starts with a capital, like the chips beside it (the first part is the role's label, A-04.69); the two forms of \"class\" come from the source's own count"
+  },
+  {
+   "group": "A-09",
+   "text": "Created:",
+   "lint": "C5",
+   "why": "a caption that introduces its value on the same line, so the colon is part of the pair (C5: a name takes none, a caption that introduces a value or a list does)"
+  },
+  {
+   "group": "A-16",
+   "text": "Recipients:",
+   "lint": "C5",
+   "why": "a caption that introduces its value on the same line, so the colon is part of the pair (C5: a name takes none, a caption that introduces a value or a list does)"
+  },
+  {
+   "group": "A-24",
+   "text": "ID:",
+   "lint": "C5",
+   "why": "a caption that introduces its value on the same line, so the colon is part of the pair (C5: a name takes none, a caption that introduces a value or a list does)"
+  },
+  {
+   "file": "src/components/PDFViewer/PDFViewerForStudent.tsx",
+   "text": "Added by:",
+   "lint": "C5",
+   "why": "a caption that introduces its value on the same line, so the colon is part of the pair (C5: a name takes none, a caption that introduces a value or a list does)"
+  },
+  {
+   "file": "src/pages/admin/ClassEnroll.tsx",
+   "text": "Managing enrollment for class:",
+   "lint": "C5",
+   "why": "a caption that introduces its value on the same line, so the colon is part of the pair (C5: a name takes none, a caption that introduces a value or a list does)"
+  },
+  {
+   "file": "src/components/Chat/ChatCommands.tsx",
+   "text": "Evaluate my answer",
+   "lint": "C8",
+   "why": "the name of a prompt template that the student sends in their own voice (it fills the box with \"I have the following solution…\"): C8's stated exception for a label the person speaks, as \"I agree to participate\" and \"I've copied the secret\""
+  }
+ ]
+}

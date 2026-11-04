@@ -1,12 +1,34 @@
 import * as React from "react";
-import { Box, Tabs, Tab, Button } from "@mui/material";
+import { Box, Tabs, Tab, Button, Chip, IconButton } from "@mui/material";
 import { useEffect } from "react";
 // import Grid from "@mui/material/Grid";
 // import { Link, useLocation } from "react-router-dom";
-import { Stack } from "@mui/material";
+import CloseOutlined from "@mui/icons-material/CloseOutlined";
+import CloudUploadOutlined from "@mui/icons-material/CloudUploadOutlined";
 import { IDEContext } from "../Chat/ChatComponent.tsx";
 import { VisuallyHiddenInput } from "./VisuallyHiddenInput.tsx";
-import {Close, CloudUpload} from "@mui/icons-material";
+import { CODE_TAB_LABEL } from "./codeTab.ts";
+
+/**
+ * A file in the sandbox (preview SPEC § 6, the file chip): the filter chip's
+ * sheet, edge and ink from the theme, in the 12/16 monospace of a file name, with
+ * a hit area that grows to 44 px on coarse pointers.
+ */
+const FILE_CHIP = {
+  position: "relative",
+  fontFamily: "var(--font-mono)",
+  fontSize: "var(--text-xs)",
+  lineHeight: "var(--leading-xs)",
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    left: "50%",
+    top: "50%",
+    width: "max(100%, var(--chip-hit))",
+    height: "var(--chip-hit)",
+    transform: "translate(-50%, -50%)",
+  },
+} as const;
 
 // interface TabPanelProps {
 //   children?: React.ReactNode;
@@ -72,7 +94,7 @@ export const BasicTabs: React.FC<BasicTabsProps> = ({
   } = React.useContext(IDEContext);
 
   // const [tabs, setTabs] = React.useState([
-  //   { label: "Code Space", content: "Code space" },
+  //   { label: CODE_TAB_LABEL, content: CODE_TAB_LABEL },
   // ]);
   // const [value, setValue] = React.useState(0);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -88,7 +110,7 @@ export const BasicTabs: React.FC<BasicTabsProps> = ({
     if (tabs[newValue].label) {
       value_change(tabs[newValue].label);
     } else {
-      value_change("Code Space");
+      value_change(CODE_TAB_LABEL);
     }
     // This should be a label name
   };
@@ -96,7 +118,7 @@ export const BasicTabs: React.FC<BasicTabsProps> = ({
   const handleAddTab = (name: string) => {
     const newTab = {
       label: `${name}`,
-      content: `The file ${name}`,
+      content: name,
     };
     setTabs([...tabs, newTab]);
   };
@@ -107,7 +129,7 @@ export const BasicTabs: React.FC<BasicTabsProps> = ({
       setTabs(updatedTabs);
       if (value === index) {
         setValue(0);
-        value_change("Code Space");
+        value_change(CODE_TAB_LABEL);
       } else if (value > index) {
         setValue(value - 1);
         value_change(tabs[value - 1].label);
@@ -153,105 +175,85 @@ export const BasicTabs: React.FC<BasicTabsProps> = ({
   // };
 
   return (
-    <Box sx={{
-      width: "100%"
-    }}>
-      <Box
-        sx={{
-          width: "100%",
-          minHeight: "50px",
-          overflow: "auto"
-        }}>
-        <Box>
-          <Tabs
-            value={value}
-            variant="scrollable"
-            scrollButtons="auto"
-            onChange={handleChange}
-            aria-label="basic tabs example"
-          >
-            {tabs.map((tab, index) => (
-              <Tab
-                key={index}
-                {...a11yProps(index)}
-                onDoubleClick={() => handleDeleteTab(index)}
-                sx={{ height: '10px' }}
-                label={
-                  <div>
-                    {tab.label}
-                    {index !== 0 && (
-                      <Button
-                        endIcon={<Close />}
-                        onClick={() => handleDeleteTab(index)}
-                      />
-                    )}
-                  </div>
-                }
-              />
-            ))}
-          </Tabs>
-        </Box>
+    <Box sx={{ width: "100%" }}>
+      {/* The file-tab bar: compact tool chrome on its hairline rule. */}
+      <Box data-density="compact" sx={{ borderBottom: "1px solid var(--border-subtle)" }}>
+        <Tabs
+          value={value}
+          variant="scrollable"
+          scrollButtons="auto"
+          onChange={handleChange}
+          aria-label="Open files"
+        >
+          {tabs.map((tab, index) => (
+            <Tab
+              key={index}
+              {...a11yProps(index)}
+              onDoubleClick={() => handleDeleteTab(index)}
+              label={
+                <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: "var(--space-1)" }}>
+                  {tab.label}
+                  {index !== 0 && (
+                    // WHY: a span, not a <button>: the tab itself is a button and buttons cannot nest.
+                    <IconButton component="span" onClick={() => handleDeleteTab(index)}>
+                      <CloseOutlined />
+                    </IconButton>
+                  )}
+                </Box>
+              }
+            />
+          ))}
+        </Tabs>
       </Box>
 
+      {/* The upload row: compact tool chrome; one chip per file in the sandbox. */}
       <Box
+        data-density="compact"
         sx={{
-          height: "45px",
-          width: "100%"
-        }}>
-        <Stack
-          direction="row"
-          spacing={1}
-          sx={{
-            overflow: "auto",
-            minWidth: 0
-          }}>
-          <Button
-            size="small"
-            component="label"
-            role={undefined}
-            variant="outlined"
-            tabIndex={-1}
-            sx={{
-              height: "30px",
-              minWidth: "100px",
-            }}
-            startIcon={<CloudUpload />}
-          >
-            Upload
-            <VisuallyHiddenInput
-              type="file"
-              multiple
-              onChange={handleManyFileChange}
-            />
-          </Button>
-          {fileNames &&
-            fileNames.map((name, index) => {
-              return (
-                <Button
-                  key={index}
-                  variant="contained"
-                  sx={{
-                    height: "30px",
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                  }}
-                  onClick={() => {
-                    handleAddTab(name);
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          gap: "var(--space-2)",
+          pt: "var(--space-3)",
+          pb: "var(--space-2)",
+        }}
+      >
+        <Button
+          component="label"
+          role={undefined}
+          variant="outlined"
+          tabIndex={-1}
+          startIcon={<CloudUploadOutlined />}
+        >
+          Upload files
+          <VisuallyHiddenInput
+            type="file"
+            multiple
+            onChange={handleManyFileChange}
+          />
+        </Button>
+        {fileNames &&
+          fileNames.map((name, index) => {
+            return (
+              <Chip
+                key={index}
+                variant="outlined"
+                label={name}
+                sx={FILE_CHIP}
+                onClick={() => {
+                  handleAddTab(name);
 
-                    const Interaction: Interaction = {
-                      type: `frontend-interaction-ide-addfile`,
-                      context: {
-                        fileName: name
-                      }
-                    };
-                    addCodeInterpreterActions(Interaction);
-                  }}
-                >
-                  {name}
-                </Button>
-              );
-            })}
-        </Stack>
+                  const Interaction: Interaction = {
+                    type: `frontend-interaction-ide-addfile`,
+                    context: {
+                      fileName: name
+                    }
+                  };
+                  addCodeInterpreterActions(Interaction);
+                }}
+              />
+            );
+          })}
       </Box>
     </Box>
   );

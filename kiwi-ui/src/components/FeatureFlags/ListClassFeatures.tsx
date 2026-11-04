@@ -45,7 +45,7 @@ const ListClassFeatures: React.FC<ListClassFeaturesProps> = ({
   const activeClassId = hideClassSelection ? classes[0] : selectedClassId;
 
   return (
-    <Card variant="outlined" sx={{ borderRadius: 2, height: "100%" }}>
+    <Card variant="outlined" sx={{ height: "100%" }}>
       <CardContent sx={{ p: 0, "&:last-child": { pb: 0 } }}>
         <Stack
           direction={{ xs: "column", sm: "row" }}
@@ -119,7 +119,7 @@ const ListClassFeatures: React.FC<ListClassFeaturesProps> = ({
                   <TableRow key={`${feature.targetId}-${feature.featureName}`} hover>
                     <TableCell>
                       <Typography variant="body2" sx={{
-                        fontWeight: 500
+                        fontWeight: 600
                       }}>
                         {feature.featureName}
                       </Typography>

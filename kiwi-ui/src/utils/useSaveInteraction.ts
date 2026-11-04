@@ -16,7 +16,8 @@ export const useSaveInteraction = () => {
   // const interactionId = useSelector((state: RootState) => state.interactionId);
   // const dispatch = useDispatch();
 
-  const saveInteraction = useCallback(async (args: AddInteractionArguments) => {
+  /** Saves one interaction; resolves to whether the server stored it (errors are logged, never thrown). */
+  const saveInteraction = useCallback(async (args: AddInteractionArguments): Promise<boolean> => {
     const action = {
       type: args.type,
       context: args.context,
@@ -53,8 +54,10 @@ export const useSaveInteraction = () => {
           action: action,
         },
       });
+      return true;
     } catch (error) {
       console.error("Error saving interaction:", error);
+      return false;
     }
   }, []);
 

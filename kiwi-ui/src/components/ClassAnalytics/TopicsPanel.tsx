@@ -3,14 +3,13 @@ import {
   Box,
   Chip,
   IconButton,
-  LinearProgress,
   Skeleton,
   Tooltip,
   Typography,
 } from "@mui/material";
 import { RefreshOutlined as RefreshIcon } from "@mui/icons-material";
 import { TopicsResponse, TopicSummary } from "../../utils/classAnalyticsApi.ts";
-import { mono, tokens } from "./tokens.ts";
+import { numeric, tokens, typeRole } from "./tokens.ts";
 
 interface TopicsPanelProps {
   topics: TopicsResponse | null;
@@ -22,8 +21,8 @@ interface TopicsPanelProps {
 }
 
 const panelSx = {
-  border: `1px solid ${tokens.line}`,
-  borderRadius: 3,
+  border: `1px solid ${tokens.edge}`,
+  borderRadius: "var(--radius-sheet)",
   backgroundColor: tokens.paper,
   display: "flex",
   flexDirection: "column" as const,
@@ -50,25 +49,17 @@ export const TopicsPanel: React.FC<TopicsPanelProps> = ({
           px: 2.5,
           pt: 2,
           pb: 1.5,
-          borderBottom: `1px solid ${tokens.line}`,
+          borderBottom: `1px solid ${tokens.rule}`,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
         }}
       >
         <Box>
-          <Typography
-            sx={{
-              fontSize: 11,
-              fontWeight: 700,
-              letterSpacing: "0.12em",
-              color: tokens.slate,
-              textTransform: "uppercase",
-            }}
-          >
+          <Typography sx={{ ...typeRole("group-title"), color: tokens.ink }}>
             Topics
           </Typography>
-          <Typography sx={{ fontSize: 13, color: tokens.faint, mt: 0.25 }}>
+          <Typography sx={{ ...typeRole("small"), color: tokens.slate, mt: 0.25 }}>
             {lectureName
               ? `What students ask about in ${lectureName}`
               : "What students ask about across the class"}
@@ -88,25 +79,18 @@ export const TopicsPanel: React.FC<TopicsPanelProps> = ({
         </Tooltip>
       </Box>
 
+      {/* The analysis reports no fraction, so no progress bar: the in-progress note alone. */}
       {generating && (
-        <Box sx={{ px: 2.5, py: 1.5, borderBottom: `1px solid ${tokens.line}` }}>
-          <Typography sx={{ fontSize: 13, color: tokens.amber, mb: 0.75 }}>
+        <Box sx={{ px: 2.5, py: 1.5, borderBottom: `1px solid ${tokens.rule}` }}>
+          <Typography sx={{ ...typeRole("small"), color: tokens.inProgress }}>
             Analyzing student questions… this usually takes under a minute.
           </Typography>
-          <LinearProgress
-            sx={{
-              height: 3,
-              borderRadius: 2,
-              backgroundColor: tokens.violetTrack,
-              "& .MuiLinearProgress-bar": { backgroundColor: tokens.violet },
-            }}
-          />
         </Box>
       )}
 
       {topics?.error && !generating && (
-        <Box sx={{ px: 2.5, py: 1.5, borderBottom: `1px solid ${tokens.line}` }}>
-          <Typography sx={{ fontSize: 13, color: tokens.red }}>
+        <Box sx={{ px: 2.5, py: 1.5, borderBottom: `1px solid ${tokens.rule}` }}>
+          <Typography sx={{ ...typeRole("small"), color: tokens.error }}>
             Topic analysis failed: {topics.error}. Use the refresh button to
             retry.
           </Typography>
@@ -122,7 +106,7 @@ export const TopicsPanel: React.FC<TopicsPanelProps> = ({
           </Box>
         ) : list.length === 0 ? (
           <Box sx={{ px: 2.5, py: 4, textAlign: "center" }}>
-            <Typography sx={{ fontSize: 14, color: tokens.slate }}>
+            <Typography sx={{ ...typeRole("small"), color: tokens.slate }}>
               {generating
                 ? "Topics will appear here once analysis finishes."
                 : "No topics yet — they appear once students start asking questions."}
@@ -142,8 +126,9 @@ export const TopicsPanel: React.FC<TopicsPanelProps> = ({
                 px: 2.5,
                 py: 1.25,
                 cursor: "pointer",
-                outlineColor: tokens.violet,
-                "&:hover": { backgroundColor: tokens.violetSoft },
+                "&:hover": { backgroundColor: tokens.hover },
+                // The global ring, drawn inside the scrolling list so it is never clipped.
+                "&:focus-visible": { outlineOffset: "calc(-1 * var(--size-focus-ring))" },
               }}
             >
               <Box
@@ -156,8 +141,7 @@ export const TopicsPanel: React.FC<TopicsPanelProps> = ({
               >
                 <Typography
                   sx={{
-                    fontSize: 14,
-                    fontWeight: 600,
+                    ...typeRole("label"),
                     color: tokens.ink,
                     overflow: "hidden",
                     textOverflow: "ellipsis",
@@ -168,10 +152,9 @@ export const TopicsPanel: React.FC<TopicsPanelProps> = ({
                 </Typography>
                 <Typography
                   sx={{
-                    fontFamily: mono,
-                    fontSize: 13,
-                    color: tokens.violet,
-                    fontWeight: 600,
+                    ...typeRole("label"),
+                    ...numeric,
+                    color: tokens.ink,
                     flexShrink: 0,
                   }}
                 >
@@ -179,22 +162,13 @@ export const TopicsPanel: React.FC<TopicsPanelProps> = ({
                 </Typography>
               </Box>
 
-              {/* Proportional frequency bar */}
-              <Box
-                sx={{
-                  mt: 0.75,
-                  height: 4,
-                  borderRadius: 2,
-                  backgroundColor: tokens.violetTrack,
-                  overflow: "hidden",
-                }}
-              >
+              {/* Proportional frequency bar: from a common zero, one scale, no track. */}
+              <Box sx={{ mt: 0.75, height: 4 }}>
                 <Box
                   sx={{
                     width: `${(topic.questionCount / maxCount) * 100}%`,
                     height: "100%",
-                    borderRadius: 2,
-                    backgroundColor: tokens.violet,
+                    backgroundColor: tokens.bar,
                   }}
                 />
               </Box>
@@ -208,7 +182,7 @@ export const TopicsPanel: React.FC<TopicsPanelProps> = ({
                   flexWrap: "wrap",
                 }}
               >
-                <Typography sx={{ fontSize: 12, color: tokens.faint }}>
+                <Typography sx={{ ...typeRole("caption"), ...numeric, color: tokens.slate }}>
                   {topic.studentCount}{" "}
                   {topic.studentCount === 1 ? "student" : "students"}
                 </Typography>
@@ -223,11 +197,8 @@ export const TopicsPanel: React.FC<TopicsPanelProps> = ({
                     }}
                     sx={{
                       height: 20,
-                      fontSize: 11,
-                      fontFamily: mono,
-                      backgroundColor: tokens.violetTrack,
-                      color: tokens.violetInk,
-                      "&:hover": { backgroundColor: tokens.violetSoft },
+                      ...typeRole("caption"),
+                      ...numeric,
                     }}
                   />
                 ))}
@@ -242,15 +213,15 @@ export const TopicsPanel: React.FC<TopicsPanelProps> = ({
           sx={{
             px: 2.5,
             py: 1,
-            borderTop: `1px solid ${tokens.line}`,
+            borderTop: `1px solid ${tokens.rule}`,
             display: "flex",
             justifyContent: "space-between",
           }}
         >
-          <Typography sx={{ fontSize: 12, color: tokens.faint }}>
+          <Typography sx={{ ...typeRole("caption"), ...numeric, color: tokens.slate }}>
             {list.length} topics · {topics.questionCount} questions analyzed
           </Typography>
-          <Typography sx={{ fontSize: 12, color: tokens.faint }}>
+          <Typography sx={{ ...typeRole("caption"), color: tokens.slate }}>
             Updated {new Date(topics.updatedAt).toLocaleString()}
           </Typography>
         </Box>

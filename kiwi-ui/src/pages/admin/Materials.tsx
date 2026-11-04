@@ -451,7 +451,7 @@ export const Materials: React.FC = () => {
         description="Upload a lecture or a recitation here; add its answer key and any reference material from the material itself. Processing runs on the server, so you can close this page once files are queued."
       />
 
-      <Card variant="outlined" sx={{ borderRadius: 2, mb: 4 }}>
+      <Card variant="outlined" sx={{ mb: 4 }}>
         <CardContent sx={{ p: 0, "&:last-child": { pb: 0 } }}>
         <Stack
           direction={{ xs: "column", sm: "row" }}
@@ -564,7 +564,7 @@ export const Materials: React.FC = () => {
                             <Typography
                               variant="caption"
                               sx={{
-                                color: "warning.main",
+                                color: "var(--status-warning-text)",
                                 display: "block",
                                 mt: 0.5
                               }}>
@@ -575,7 +575,7 @@ export const Materials: React.FC = () => {
                           {misfiled && (
                             <Box sx={{ mt: 0.5 }}>
                               <Typography variant="caption" sx={{
-                                color: "warning.main"
+                                color: "var(--status-warning-text)"
                               }}>
                                 Looks like the answer key for “{misfiled.title}”.
                                 As a new material, students would see the
@@ -689,7 +689,7 @@ export const Materials: React.FC = () => {
         }}
       />
 
-      <Card variant="outlined" sx={{ borderRadius: 2, mb: 4 }}>
+      <Card variant="outlined" sx={{ mb: 4 }}>
         <CardContent sx={{ p: 0, "&:last-child": { pb: 0 } }}>
         <Stack
           direction="row"

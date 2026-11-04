@@ -351,21 +351,6 @@ export const ClassKiwiAppsSettings: React.FC = () => {
     }
   };
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case "productivity":
-        return "primary";
-      case "analytics":
-        return "secondary";
-      case "communication":
-        return "info";
-      case "visualization":
-        return "success";
-      default:
-        return "default";
-    }
-  };
-
   return (
     <AdminPage>
       <AdminPageHeader
@@ -474,7 +459,7 @@ export const ClassKiwiAppsSettings: React.FC = () => {
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" sx={{
-                      fontWeight: 500
+                      fontWeight: 600
                     }}>
                       {app.name}
                     </Typography>
@@ -485,29 +470,28 @@ export const ClassKiwiAppsSettings: React.FC = () => {
                     </Typography>
                   </TableCell>
                   <TableCell>
+                    {/* A category is a neutral role chip, never a status hue. */}
                     <Chip
                       label={app.category}
                       size="small"
-                      color={getCategoryColor(app.category) as any}
                     />
                   </TableCell>
                   <TableCell>
                     <Box sx={{ display: "flex", gap: 0.5, flexWrap: "wrap" }}>
                       {app.capabilities.slice(0, 3).map((cap) => (
-                        <Chip key={cap} label={cap} size="small" variant="outlined" />
+                        <Chip key={cap} label={cap} size="small" />
                       ))}
                       {app.capabilities.length > 3 && (
                         <Chip
                           label={`+${app.capabilities.length - 3}`}
                           size="small"
-                          variant="outlined"
                         />
                       )}
                     </Box>
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2">
-                      {app.tabLabel || <em style={{ color: "#999" }}>Default</em>}
+                      {app.tabLabel || <em style={{ color: "var(--text-secondary)" }}>Default</em>}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
@@ -579,7 +563,6 @@ export const ClassKiwiAppsSettings: React.FC = () => {
                           <Chip
                             label={app.category}
                             size="small"
-                            color={getCategoryColor(app.category) as any}
                           />
                         </Box>
                       }
@@ -648,9 +631,7 @@ export const ClassKiwiAppsSettings: React.FC = () => {
             <Divider sx={{ my: 3 }} />
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
               <SecurityIcon fontSize="small" color="action" />
-              <Typography variant="subtitle1" sx={{
-                fontWeight: 500
-              }}>
+              <Typography variant="subtitle1">
                 Enabled Scopes
               </Typography>
             </Box>
@@ -695,24 +676,21 @@ export const ClassKiwiAppsSettings: React.FC = () => {
                           alignItems: "center",
                           justifyContent: "space-between",
                           p: 1,
-                          bgcolor: "grey.50",
-                          borderRadius: 1,
+                          bgcolor: "action.hover",
+                          borderRadius: "var(--radius-small)",
                         }}
                       >
                         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                          {/* Labels: the switch beside them carries the on and off state. */}
                           <Chip
                             label={scope}
                             size="small"
-                            color={isEnabled ? "primary" : "default"}
-                            variant={isEnabled ? "filled" : "outlined"}
                           />
                           {isPromptScope && (
                             <Chip
                               label="from prompt"
                               size="small"
-                              color="secondary"
-                              variant="outlined"
-                              sx={{ fontSize: 10 }}
+                              sx={{ fontSize: "var(--type-caption-size)" }}
                             />
                           )}
                         </Box>

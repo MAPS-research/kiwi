@@ -1,10 +1,10 @@
 import React from "react";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, SvgIcon, Typography } from "@mui/material";
 import {
-  CheckCircle as CheckCircleIcon,
-  Search as SearchIcon,
-  Code as CodeIcon,
-  Build as BuildIcon,
+  Check as CheckIcon,
+  SearchOutlined as SearchIcon,
+  CodeOutlined as CodeIcon,
+  BuildOutlined as BuildIcon,
 } from "@mui/icons-material";
 
 export interface ToolStatusIndicatorProps {
@@ -15,81 +15,71 @@ export interface ToolStatusIndicatorProps {
 const getToolIcon = (toolName: string) => {
   const lowerName = toolName.toLowerCase();
   if (lowerName.includes("rag") || lowerName.includes("search")) {
-    return <SearchIcon fontSize="small" />;
+    return <SearchIcon fontSize="inherit" />;
   }
   if (lowerName.includes("code") || lowerName.includes("interpreter")) {
-    return <CodeIcon fontSize="small" />;
+    return <CodeIcon fontSize="inherit" />;
   }
-  return <BuildIcon fontSize="small" />;
+  return <BuildIcon fontSize="inherit" />;
 };
 
-const getDisplayName = (toolName: string): string => {
-  // Clean up tool names for display
+/** A tool's name for people: the two Kiwi tools by name, any other in sentence case. */
+export const getDisplayName = (toolName: string): string => {
   if (toolName.toLowerCase().includes("rag")) {
-    return "RAG Search";
+    return "Materials search";
   }
   if (toolName.toLowerCase().includes("code interpreter")) {
-    return "Code Interpreter";
+    return "Code interpreter";
   }
-  // Capitalize first letter of each word
-  return toolName
-    .split(/[\s_-]+/)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(" ");
+  const words = toolName.split(/[\s_-]+/).filter(Boolean).map((word) => word.toLowerCase());
+  if (!words.length) return toolName;
+  words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1);
+  return words.join(" ");
 };
 
+/** The static dashed ring of work in progress: never a spinner (kiwi-ui/DESIGN.md, Functional colour usage). */
+const InProgressRing = () => (
+  <SvgIcon aria-hidden viewBox="0 0 16 16" sx={{ fontSize: "inherit" }}>
+    <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="2.4 2" />
+  </SvgIcon>
+);
+
+/**
+ * The tool pill: Kiwi running one of its own tools away from the page. In
+ * progress is neutral (the in-progress surface and text, the dashed ring), and
+ * a finished tool keeps a quiet check; neither borrows a status colour.
+ */
 export const ToolStatusIndicator: React.FC<ToolStatusIndicatorProps> = ({
   toolName,
   status,
 }) => {
   const displayName = getDisplayName(toolName);
-  const icon = getToolIcon(toolName);
 
   return (
     <Box
       sx={{
         display: "inline-flex",
         alignItems: "center",
-        gap: 1,
-        px: 1.5,
-        py: 0.75,
-        mb: 1.5,
-        borderRadius: 1,
-        bgcolor: status === "running" ? "action.hover" : "success.light",
-        border: 1,
-        borderColor: status === "running" ? "divider" : "success.main",
-        transition: "all 0.3s ease",
+        gap: "var(--space-2)",
+        px: "var(--space-3)",
+        minHeight: "var(--size-chip)",
+        mb: "var(--tutor-message-block-gap)",
+        borderRadius: "var(--radius-control)",
+        bgcolor: "var(--in-progress-surface)",
+        color: "var(--in-progress-text)",
+        fontSize: "var(--size-icon-sm)",
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          color: status === "running" ? "primary.main" : "success.dark",
-        }}
-      >
-        {icon}
+      <Box component="span" aria-hidden sx={{ display: "flex", alignItems: "center" }}>
+        {getToolIcon(toolName)}
       </Box>
 
-      <Typography
-        variant="body2"
-        sx={{
-          fontWeight: 500,
-          color: status === "running" ? "text.primary" : "success.dark",
-        }}
-      >
-        {status === "running" ? `Using ${displayName}...` : displayName}
+      <Typography variant="body2" component="span" sx={{ color: "inherit" }}>
+        {status === "running" ? `Using ${displayName}…` : displayName}
       </Typography>
 
-      <Box sx={{ display: "flex", alignItems: "center", ml: 0.5 }}>
-        {status === "running" ? (
-          <CircularProgress size={14} thickness={4} />
-        ) : (
-          <CheckCircleIcon
-            fontSize="small"
-            sx={{ color: "success.main", fontSize: 16 }}
-          />
-        )}
+      <Box component="span" sx={{ display: "flex", alignItems: "center" }}>
+        {status === "running" ? <InProgressRing /> : <CheckIcon aria-hidden fontSize="inherit" />}
       </Box>
     </Box>
   );

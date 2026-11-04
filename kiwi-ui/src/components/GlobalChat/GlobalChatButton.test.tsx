@@ -27,7 +27,7 @@ const RIGHT_EDGE = VIEWPORT_WIDTH - FAB_SIZE - EDGE_MARGIN; // 960
 const BOTTOM_EDGE = VIEWPORT_HEIGHT - FAB_SIZE - EDGE_MARGIN; // 704
 
 const getWrapper = () => screen.getByTestId('global-chat-button-draggable');
-const getFab = () => screen.getByRole('button', { name: /open chat/i });
+const getFab = () => screen.getByRole('button', { name: 'Open Kiwi chat' });
 
 /** Drive a full mouse gesture through react-draggable's document listeners. */
 function drag(from: { x: number; y: number }, to: { x: number; y: number }) {
@@ -58,7 +58,7 @@ describe('GlobalChatButton', () => {
 
   it('renders nothing when not visible', () => {
     render(<GlobalChatButton visible={false} />);
-    expect(screen.queryByRole('button', { name: /open chat/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Open Kiwi chat' })).not.toBeInTheDocument();
   });
 
   it('rests in the bottom-right corner by default', () => {

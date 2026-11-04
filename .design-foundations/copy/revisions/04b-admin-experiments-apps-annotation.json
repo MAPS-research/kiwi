@@ -1,0 +1,2006 @@
+[
+ {
+  "id": "A-19",
+  "name": "Experiments",
+  "route": "/admin/class/:classID/experiments",
+  "file": "src/pages/admin/experiments/ExperimentList.tsx",
+  "kept": [
+   "No experiments yet",
+   "Untitled experiment",
+   "Draft, Active, Completed (status chips)"
+  ],
+  "note": "SF-30: one vocabulary. A group is the students assigned to a variant; a variant is a chat setup (a model and instructions). \"Engine\" is \"model\", \"prompt\" is \"instructions\", and \"config\" is \"setup\". The empty state's mascot replaces the flask icon (Companion); the assistant's auto-open is Stage 2.",
+  "rows": [
+   [
+    "Learning Experiments",
+    "Experiments",
+    "heading",
+    "SF-30",
+    "The title equals the sidebar label (C7).",
+    "Learning Experiments"
+   ],
+   [
+    "Split students into variant groups, each with its own chat model and prompts.",
+    "Split students into groups. Each group chats with its own model and instructions.",
+    "helper",
+    "SF-30",
+    "",
+    "Split students into variant groups"
+   ],
+   [
+    "New Experiment",
+    "New experiment",
+    "button",
+    "SF-60",
+    "",
+    "New Experiment"
+   ],
+   [
+    "Create one to assign students to variant groups with different chat configs — or ask the AI assistant to draft it for you.",
+    "Create one to put students in groups that chat with different models or instructions, or ask the assistant to draft it.",
+    "empty",
+    "SF-30",
+    "No em dash; plain words for \"variant groups\" and \"configs\".",
+    "Create one to assign students to variant groups"
+   ],
+   [
+    "Create your first experiment",
+    "Create first experiment",
+    "button",
+    "SF-60",
+    "The same wording as the other empty states' first action.",
+    "Create your first experiment"
+   ],
+   [
+    "Variant groups",
+    "Groups",
+    "tooltip",
+    "SF-30",
+    "",
+    "title=\"Variant groups\""
+   ],
+   {
+    "o": "{n} groups",
+    "n": "{n: count group}",
+    "k": "format",
+    "refs": "SF-30",
+    "t": "A count chip needs a real singular (C4): the count picks its noun, 1 group or {n} groups.",
+    "m": "} groups`",
+    "r": "C4"
+   },
+   {
+    "k": "label",
+    "refs": "SF-30",
+    "t": "The model's display name comes from one table (`DESIGN.md § Terminology › Model names`: `openai` is ChatGPT, `qwen` is Qwen), as the chat's select shows it; a raw lowercase id in a chip before. Drop the chip's `textTransform: lowercase`, which would turn ChatGPT into chatgpt.",
+    "m": ".engine",
+    "lk": "engine",
+    "r": "C6"
+   },
+   [
+    "new Date(exp.createdAt).toLocaleDateString()",
+    "17 Oct 2026",
+    "format",
+    "TD-24",
+    "One date format (C3).",
+    "toLocaleDateString()",
+    "",
+    "C3"
+   ],
+   {
+    "k": "error",
+    "o": "{error}",
+    "what": "Couldn't load experiments.",
+    "c": "server",
+    "why": "The server said: \"{error}\".",
+    "fix": "Try again.",
+    "m": "setExperiments(await experimentApi.list(classID)); } catch (e: any) { setError(e.message);",
+    "t": "When the response body has a message: the helper `experimentApi.ts` throws an Error whose message is the body's text (`:95`, `:124`). A response whose body has none carries only the status's reason phrase, which is not the server's words, so the helper keeps it out of `message` and sets `status`; that form is A-19.16 (§ Errors 2 and 3). The alert showed the raw message alone, with no retry.",
+    "br": "srv"
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't update the experiment.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Try again.",
+    "m": "await fn(); await load(); } catch (e: any) { setError(e.message);",
+    "br": "srv",
+    "t": "When the response body has a message: the helper `experimentApi.ts` throws an Error whose message is the body's text (`:95`, `:124`). A response whose body has none carries only the status's reason phrase, which is not the server's words, so the helper keeps it out of `message` and sets `status`; that form is A-19.17 (§ Errors 2 and 3). The shared handler of the Activate, Re-activate and Turn off buttons.",
+    "nosafe": "a button on a saved experiment; nothing was typed (ExperimentList.tsx:57-63)"
+   },
+   {
+    "k": "button",
+    "o": "Edit",
+    "n": "Edit experiment",
+    "f": "src/pages/admin/experiments/ExperimentList.tsx",
+    "r": "C2",
+    "t": "A button is a verb and an object (C2); the carve-out is closed.",
+    "ln": 216
+   },
+   {
+    "k": "button",
+    "o": "Activate",
+    "n": "Activate experiment",
+    "f": "src/pages/admin/experiments/ExperimentList.tsx",
+    "r": "C2",
+    "t": "A button is a verb and an object (C2).",
+    "ln": 220
+   },
+   {
+    "k": "button",
+    "o": "Re-activate",
+    "n": "Reactivate experiment",
+    "m": "Re-activate",
+    "f": "src/pages/admin/experiments/ExperimentList.tsx",
+    "r": "C2,C18",
+    "t": "A button is a verb and an object (C2); one word, \"Reactivate\" (C18)."
+   },
+   {
+    "k": "button",
+    "o": "Turn off",
+    "n": "Turn off experiment",
+    "m": "Turn off",
+    "f": "src/pages/admin/experiments/ExperimentList.tsx",
+    "r": "C2",
+    "t": "\"Turn off\" had no object; it sits beside \"Activate experiment\" and \"Edit experiment\"."
+   },
+   {
+    "k": "error",
+    "o": "{error}",
+    "what": "Couldn't load experiments.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "m": "setExperiments(await experimentApi.list(classID)); } catch (e: any) { setError(e.message);",
+    "br": "http",
+    "r": "C9",
+    "t": "When the response has no body message (the previous form is A-19.10): the reason phrase (\"Internal Server Error\") is not quoted; the status code stands in for words as a support reference, the cause line of § Errors 3. `{error}` is the old text and is dropped; `{status}` replaces it."
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't update the experiment.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "m": "await fn(); await load(); } catch (e: any) { setError(e.message);",
+    "br": "http",
+    "r": "C9",
+    "t": "When the response has no body message (the previous form is A-19.11): the reason phrase (\"Internal Server Error\") is not quoted; the status code stands in for words as a support reference, the cause line of § Errors 3. `{message}` is the old text and is dropped; `{status}` replaces it.",
+    "nosafe": "a button on a saved experiment; nothing was typed (ExperimentList.tsx:57-63)"
+   }
+  ]
+ },
+ {
+  "id": "A-20",
+  "name": "Experiment form",
+  "route": "/admin/class/:classID/experiments/new",
+  "file": "src/pages/admin/experiments/ExperimentForm.tsx",
+  "kept": [
+   "Basics",
+   "Variants",
+   "Manual lists",
+   "Paste student emails for each group",
+   "Seeded split",
+   "Seed",
+   "Student groups",
+   "Random assign",
+   "Add variant",
+   "Customized",
+   "Using default",
+   "Apply JSON",
+   "Import file",
+   "Export JSON",
+   "Activate immediately",
+   "Activate after saving",
+   "Cancel",
+   "Key, Label, Allocation",
+   "Back to Experiments (a page referred to by its label)",
+   "From the email lists below.",
+   "Assigned server-side at activation."
+  ],
+  "note": "The red \"changed\" marker (SF-15) is described without a colour, because the marker's colour is Phase 3's. The submit labels say what happens to the experiment: it is saved, as a draft or active.",
+  "rows": [
+   [
+    "Edit Experiment",
+    "Edit experiment",
+    "heading",
+    "TD-21",
+    "",
+    "\"Edit Experiment\""
+   ],
+   [
+    "New Experiment",
+    "New experiment",
+    "heading",
+    "TD-21",
+    "",
+    "\"New Experiment\""
+   ],
+   [
+    "Update groups, assignment, and prompts. Active experiments use saved changes on future chats.",
+    "Update the groups, the assignment and the instructions. An active experiment uses saved changes in future chats.",
+    "helper",
+    "SF-30",
+    "",
+    "Update groups, assignment, and prompts."
+   ],
+   [
+    "Design variant groups, then review and submit. The AI assistant can draft this for you.",
+    "Design the groups, then review and save. The assistant can draft this for you.",
+    "helper",
+    "SF-30",
+    "",
+    "Design variant groups, then review and submit."
+   ],
+   [
+    "Group Assignment",
+    "Group assignment",
+    "heading",
+    "",
+    "",
+    "Group Assignment"
+   ],
+   [
+    "The random seed. Keep it to reproduce the same split; edit it or click Reshuffle for a new one.",
+    "Keep this seed to reproduce the same split. Edit it, or select Reshuffle for a new split.",
+    "helper",
+    "",
+    "\"Select\", not \"click\".",
+    "The random seed. Keep it to reproduce the same split"
+   ],
+   [
+    "System prompt",
+    "Instructions",
+    "heading",
+    "SF-30",
+    "The same word the class form uses (C6).",
+    "System prompt",
+    [
+     "src/pages/admin/experiments/ExperimentForm.tsx",
+     "src/pages/admin/experiments/experimentUi.tsx"
+    ]
+   ],
+   [
+    "remove variant",
+    "Remove variant",
+    "aria",
+    "",
+    "",
+    "aria-label=\"remove variant\""
+   ],
+   [
+    "",
+    "An experiment needs at least 2 variants.",
+    "helper",
+    "",
+    "The reason Remove is disabled at two variants.",
+    "aria-label=\"remove variant\""
+   ],
+   [
+    "",
+    "Allocations must add up to 1.00.",
+    "helper",
+    "",
+    "No text said what the Σ chip must show.",
+    "Σ ${allocationSum"
+   ],
+   {
+    "o": "Members — {n} student(s)",
+    "n": "Members: {n: count student}",
+    "k": "label",
+    "t": "No em dash; the helper writes the noun: \"Members: 1 student\" (C4).",
+    "m": "Members —",
+    "r": "C4"
+   },
+   [
+    "Invalid email format (ignored): {list}",
+    "Not valid email addresses, so skipped: {list}",
+    "helper",
+    "",
+    "No \"Invalid\".",
+    "Invalid email format (ignored):"
+   ],
+   [
+    "Not enrolled in this class (ignored): {list}",
+    "Not enrolled in this class, so skipped: {list}",
+    "helper",
+    "",
+    "",
+    "Not enrolled in this class (ignored):"
+   ],
+   [
+    "Import / export config JSON",
+    "Import or export JSON",
+    "heading",
+    "",
+    "\"Config\" is developer vocabulary.",
+    "Import / export config JSON"
+   ],
+   {
+    "k": "button",
+    "o": "Submit (draft)",
+    "n": "Save as draft",
+    "m": "Submit${activateOnSubmit ? \" & activate\" : \" (draft)\"}",
+    "t": "The button names what happens to the experiment.",
+    "ax": "the label is a template: \"Submit\" or \"Save\", then \" & activate\" or \" (draft)\" as the checkbox says, drawn on this line"
+   },
+   {
+    "k": "button",
+    "o": "Submit & activate",
+    "n": "Save and activate",
+    "m": "Submit${activateOnSubmit ? \" & activate\" : \" (draft)\"}",
+    "ax": "the label is a template: \"Submit\" or \"Save\", then \" & activate\" or \" (draft)\" as the checkbox says, drawn on this line"
+   },
+   {
+    "k": "button",
+    "o": "Save & activate",
+    "n": "Save and activate",
+    "m": "Save${activateOnSubmit ? \" & activate\" : \"\"}",
+    "ax": "the label is a template: \"Submit\" or \"Save\", then \" & activate\" or \" (draft)\" as the checkbox says, drawn on this line"
+   },
+   [
+    "Submitting…",
+    "Saving…",
+    "status",
+    "",
+    "",
+    "\"Submitting…\""
+   ],
+   [
+    "Form filled from chat. Anything you change is marked red until you submit.",
+    "Form filled from chat. Anything you change is highlighted until you save.",
+    "status",
+    "SF-15",
+    "No colour named: the marker's colour is not an error colour (G1).",
+    "Form filled from chat."
+   ],
+   [
+    "Drafted by the assistant. Anything you change is marked red until you submit.",
+    "Drafted by the assistant. Anything you change is highlighted until you save.",
+    "status",
+    "SF-15",
+    "",
+    "Drafted by the assistant."
+   ],
+   [
+    "Applied pasted JSON. Review before approving.",
+    "Applied the pasted JSON. Review it before you save.",
+    "status",
+    "",
+    "",
+    "Applied pasted JSON."
+   ],
+   [
+    "Imported {file}. Review before approving.",
+    "Imported {file}. Review it before you save.",
+    "status",
+    "",
+    "",
+    "Imported ${file.name}."
+   ],
+   {
+    "k": "error",
+    "o": "Failed to load the class roster.",
+    "what": "Couldn't load the class roster.",
+    "c": "unknown",
+    "fix": "Reload the page to try again.",
+    "m": "Failed to load the class roster."
+   },
+   {
+    "k": "error",
+    "o": "No students on the class roster to assign.",
+    "what": "There are no students to assign.",
+    "c": "input",
+    "why": "The class roster is empty.",
+    "fix": "Enroll students first.",
+    "m": "No students on the class roster to assign."
+   },
+   {
+    "k": "error",
+    "o": "Invalid JSON: {message}",
+    "what": "That JSON isn't valid.",
+    "c": "input",
+    "why": "JSON needs each comma, quote and bracket in place, with none extra.",
+    "fix": "Check the text near character {n}, then apply it again.",
+    "m": "Invalid JSON: ${e.message}",
+    "br": "dev",
+    "r": "C9,C16",
+    "t": "When the browser's parser gives a position (`error.message` ends \"at position {n}\"): the parser's own text is developer text and is never shown (C16), so the row names where the problem is in plain words. `{message}` is the old text and is dropped. The next row is the form for a parser that gives none. The why states the rule JSON follows (every comma, quote and bracket in place, none extra), so it does not repeat the first sentence (C9)."
+   },
+   {
+    "k": "error",
+    "o": "Invalid JSON file: {message}",
+    "what": "That file isn't valid JSON.",
+    "c": "input",
+    "why": "JSON needs each comma, quote and bracket in place, with none extra.",
+    "fix": "Check the text near character {n}, then import it again.",
+    "m": "Invalid JSON file: ${e.message}",
+    "br": "dev",
+    "r": "C9,C16",
+    "t": "When the browser's parser gives a position (the same as A-20.25, for an imported file): the parser's text is never shown (C16). `{message}` is the old text and is dropped. The row after the pasted-text one is the form with no position. The text comes from `error.message`. The why states the rule JSON follows, as in A-20.25."
+   },
+   {
+    "k": "error",
+    "o": "Couldn't load the class roster: {rosterError}. Group preview is unavailable until it loads.",
+    "what": "Couldn't load the class roster.",
+    "c": "server",
+    "why": "The server said: \"{rosterError}\". The group preview is unavailable until it loads.",
+    "fix": "Reload the page to try again.",
+    "m": "Group preview is unavailable until it loads."
+   },
+   {
+    "k": "error",
+    "o": "Invalid experiment config",
+    "what": "Couldn't save the experiment.",
+    "c": "input",
+    "why": "It needs a name, each variant needs its own key (lowercase letters, digits and underscores), and an automatic split needs allocations that add up to 1.00.",
+    "fix": "Check each, then save again.",
+    "m": "Invalid experiment config",
+    "f": "../kiwi/src/experiment/experiment.service.ts",
+    "t": "The server's generic message told the instructor nothing, and the page cannot tell which rule failed, so the line names the rules a person can break here. They are the backend's validation (`experiment/interfaces/experiment-config.ts:68-113`): a name, at least two variants (A-20.09 states that minimum), a key for each variant that uses only lowercase letters, digits and underscores and is not used twice, and allocations that sum to 1 unless the groups are manual lists (A-20.10).",
+    "safe": "the page leaves only after a save (ExperimentForm.tsx:595) and the catch only sets the message (ExperimentForm.tsx:596-598)"
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't load the experiment.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Reload the page to try again.",
+    "m": "if (!ignore) setError(e.message)",
+    "br": "srv",
+    "t": "When the response body has a message: the helper `experimentApi.ts` throws an Error whose message is the body's text (`:95`, `:124`). A response whose body has none carries only the status's reason phrase, which is not the server's words, so the helper keeps it out of `message` and sets `status`; that form is A-20.52 (§ Errors 2 and 3)."
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't load the class roster.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Reload the page to try again.",
+    "m": "e?.message || \"Failed to load the class roster.\"",
+    "br": "srv",
+    "t": "When the response body has a message: the helper `experimentApi.ts` throws an Error whose message is the body's text (`:95`, `:124`). A response whose body has none carries only the status's reason phrase, which is not the server's words, so the helper keeps it out of `message` and sets `status`; that form is A-20.53 (§ Errors 2 and 3). A-20.27 is the same message where it is shown, under the form."
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't save the experiment.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Check the setup, then try again.",
+    "m": "} catch (e: any) { setError(e.message); } finally { setSubmitting(false);",
+    "br": "srv",
+    "t": "When the response body has a message: the helper `experimentApi.ts` throws an Error whose message is the body's text (`:95`, `:124`). A response whose body has none carries only the status's reason phrase, which is not the server's words, so the helper keeps it out of `message` and sets `status`; that form is A-20.54 (§ Errors 2 and 3).",
+    "safe": "the page leaves only after a save (ExperimentForm.tsx:595) and the catch only sets the message (ExperimentForm.tsx:596-598)"
+   },
+   {
+    "k": "label",
+    "m": "label={v.config.engine}",
+    "refs": "SF-30",
+    "t": "The variant chips show the model by its display name from the one table (`§ Terminology › Model names`), never the raw id.",
+    "lk": "engine",
+    "r": "C6"
+   },
+   {
+    "k": "label",
+    "o": "Engine",
+    "n": "Model",
+    "m": "label=\"Engine\"",
+    "refs": "SF-30",
+    "r": "C6",
+    "t": "One word for the model: \"model\", as the chat's select and the analytics heading say (C6)."
+   },
+   {
+    "k": "label",
+    "m": "{eng}",
+    "refs": "SF-30",
+    "r": "C6",
+    "t": "The select's options show the model by its display name from the one table (`§ Terminology › Model names`: ChatGPT, Qwen); the value stays the id.",
+    "lk": "engine"
+   },
+   {
+    "k": "helper",
+    "o": "Reproducible — matches what students actually get.",
+    "n": "Reproducible. Matches what students actually get.",
+    "m": "Reproducible",
+    "f": "src/pages/admin/experiments/ExperimentForm.tsx",
+    "r": "C5",
+    "t": "No em dash; two short sentences."
+   },
+   {
+    "k": "body",
+    "o": "\"Random on first chat\" is decided on the server when you activate, so it can't be shown as a stable list here. To fix each student's group (and which config they get) before they chat, use Seeded split above.",
+    "n": "\"Random on first chat\" is decided on the server when you activate, so there is no list to show here. To fix each student's group (and the chat setup it brings) before they chat, use Seeded split above.",
+    "m": "is decided on the server when you activate",
+    "f": "src/pages/admin/experiments/ExperimentForm.tsx",
+    "r": "C5,C6",
+    "t": "The source has curly quotes and apostrophes (straight quotes only, C5), and says \"config\" (setup, C6). The two control names stay as the screen spells them."
+   },
+   {
+    "k": "placeholder",
+    "o": "student emails, comma or newline separated",
+    "n": "e.g. student1@example.edu, student2@example.edu",
+    "m": "student emails, comma or newline separated",
+    "f": "src/pages/admin/experiments/ExperimentForm.tsx",
+    "r": "C14,C1",
+    "t": "An example, not a description; the format moves to a helper."
+   },
+   {
+    "k": "helper",
+    "o": "",
+    "n": "Separate emails with commas or new lines.",
+    "m": "placeholder=\"student emails, comma or newline separated\"",
+    "f": "src/pages/admin/experiments/ExperimentForm.tsx",
+    "r": "C14",
+    "t": "The format the placeholder used to carry."
+   },
+   {
+    "k": "label",
+    "o": "{n} / {m} assigned",
+    "n": "{n} of {m} assigned",
+    "m": "} assigned`",
+    "f": "src/pages/admin/experiments/ExperimentForm.tsx",
+    "r": "C4",
+    "t": "\"{n} of {m}\", the form every other pair uses."
+   },
+   {
+    "k": "label",
+    "o": "Σ {sum}",
+    "n": "Total {sum}",
+    "m": "`Σ ",
+    "f": "src/pages/admin/experiments/ExperimentForm.tsx",
+    "r": "C8",
+    "t": "A word, not a mathematical symbol that a screen reader speaks as \"sigma\"."
+   },
+   {
+    "k": "status",
+    "o": "Randomly assigned {n} students across {k} groups.",
+    "n": "Randomly assigned {n: count student} across {k: count group}.",
+    "m": "Randomly assigned",
+    "f": "src/pages/admin/experiments/ExperimentForm.tsx",
+    "r": "C4",
+    "t": "1 student across 1 group."
+   },
+   {
+    "k": "label",
+    "o": "{n} students",
+    "n": "{n: count student}",
+    "m": "`${members.length} students`",
+    "f": "src/pages/admin/experiments/ExperimentForm.tsx",
+    "r": "C4",
+    "t": "The chip in manual mode; 1 student."
+   },
+   {
+    "k": "label",
+    "o": "{n} students · target {p}%",
+    "n": "{n: count student} · target {p}%",
+    "m": "`${members.length} students · target",
+    "f": "src/pages/admin/experiments/ExperimentForm.tsx",
+    "r": "C4",
+    "t": "The chip in the other modes; 1 student."
+   },
+   {
+    "k": "button",
+    "o": "Reset",
+    "n": "Reset to default",
+    "f": "src/pages/admin/experiments/ExperimentForm.tsx",
+    "r": "C2",
+    "t": "It puts the field's text back to the default shown beside it.",
+    "ln": 1091
+   },
+   {
+    "k": "button",
+    "o": "Reshuffle",
+    "n": "Reshuffle groups",
+    "m": "\"Reshuffle\"",
+    "f": "src/pages/admin/experiments/ExperimentForm.tsx",
+    "r": "C2",
+    "t": "When the strategy is Seeded split: the button names what it re-rolls (the student groups above it)."
+   },
+   {
+    "k": "button",
+    "o": "Recompute",
+    "n": "Recompute groups",
+    "m": "\"Recompute\"",
+    "f": "src/pages/admin/experiments/ExperimentForm.tsx",
+    "r": "C2",
+    "t": "When the groups are the manual lists: it recomputes the counts from the member lists."
+   },
+   {
+    "k": "helper",
+    "o": "Random split by your allocation %, exact counts. Same seed reproduces it; Reshuffle re-rolls.",
+    "n": "Splits students at random by your allocation, with exact counts. The same seed gives the same split; Reshuffle groups makes a new one.",
+    "m": "Random split by your allocation %",
+    "f": "src/pages/admin/experiments/ExperimentForm.tsx",
+    "r": "C14,C1",
+    "t": "The caption points to the button by the name the screen now spells (\"Reshuffle groups\", C1); plain words for \"re-rolls\"."
+   },
+   {
+    "k": "helper",
+    "o": "set by roster",
+    "n": "Not used, because this group's members come from its list.",
+    "m": "set by roster",
+    "f": "src/pages/admin/experiments/ExperimentForm.tsx",
+    "r": "C14,C1",
+    "t": "When the groups are the manual lists, the Allocation field is disabled because the backend ignores it and assigns by the member lists (`experiment/experiment.service.ts:77`, `:415`; the field is disabled at `ExperimentForm.tsx:938`). A helper is a sentence with a capital and a full stop, and \"roster\" is the class roster elsewhere (A-16), so the lists are named instead."
+   },
+   {
+    "k": "body",
+    "o": "Paste or import a config JSON to fill the form (this is also how the chat assistant fills it). Exported JSON contains no student group detail — member lists are stripped; the seed is kept.",
+    "n": "Paste or import JSON to fill the form. The experiment assistant fills it the same way. The export leaves out student group detail: member lists are removed and the seed is kept.",
+    "m": "Paste or import a config JSON to fill the form",
+    "f": "src/pages/admin/experiments/ExperimentForm.tsx",
+    "r": "C5,C6",
+    "t": "No em dash (C5); \"config JSON\" is developer wording and the section is already called Import or export JSON (A-20.14), and the chat assistant is the experiment assistant (SR-7) (C6)."
+   },
+   {
+    "k": "error",
+    "o": "Invalid JSON: {message}",
+    "what": "That JSON isn't valid.",
+    "c": "input",
+    "why": "JSON needs each comma, quote and bracket in place, with none extra.",
+    "fix": "Look through the text for one that is missing or extra, then apply it again.",
+    "m": "Invalid JSON: ${e.message}",
+    "br": "dev",
+    "r": "C9,C16",
+    "t": "When the parser gives no position (Safari's `error.message` and some Firefox ones carry none): a generic hint instead of the parser's text (C16). Pasted text; A-20.25 is the form with a position. `{message}` is the old text and is dropped. The why states the rule JSON follows (every comma, quote and bracket in place, none extra), so it does not repeat the first sentence (C9)."
+   },
+   {
+    "k": "error",
+    "o": "Invalid JSON file: {message}",
+    "what": "That file isn't valid JSON.",
+    "c": "input",
+    "why": "JSON needs each comma, quote and bracket in place, with none extra.",
+    "fix": "Open the file and look for one that is missing or extra, then import it again.",
+    "m": "Invalid JSON file: ${e.message}",
+    "br": "dev",
+    "r": "C9,C16",
+    "t": "When the parser gives no position: a generic hint instead of the parser's text (C16). An imported file; A-20.26 is the form with a position. `{message}` is the old text and is dropped. The text comes from `error.message`. The why states the rule JSON follows, as in A-20.50."
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't load the experiment.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "m": "if (!ignore) setError(e.message)",
+    "br": "http",
+    "r": "C9",
+    "t": "When the response has no body message (the previous form is A-20.29): the reason phrase (\"Internal Server Error\") is not quoted; the status code stands in for words as a support reference, the cause line of § Errors 3. `{message}` is the old text and is dropped; `{status}` replaces it.",
+    "fix": "Reload the page to try again."
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't load the class roster.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "m": "e?.message || \"Failed to load the class roster.\"",
+    "br": "http",
+    "r": "C9",
+    "t": "When the response has no body message (the previous form is A-20.30): the reason phrase (\"Internal Server Error\") is not quoted; the status code stands in for words as a support reference, the cause line of § Errors 3. `{message}` is the old text and is dropped; `{status}` replaces it.",
+    "fix": "Reload the page to try again."
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't save the experiment.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "m": "} catch (e: any) { setError(e.message); } finally { setSubmitting(false);",
+    "br": "http",
+    "r": "C9",
+    "t": "When the response has no body message (the previous form is A-20.31): the reason phrase (\"Internal Server Error\") is not quoted; the status code stands in for words as a support reference, the cause line of § Errors 3. `{message}` is the old text and is dropped; `{status}` replaces it.",
+    "safe": "the page leaves only after a save (ExperimentForm.tsx:595) and the catch only sets the message (ExperimentForm.tsx:596-598)"
+   }
+  ]
+ },
+ {
+  "id": "A-21",
+  "name": "Experiment detail",
+  "route": "/admin/class/:classID/experiments/:experimentId",
+  "file": "src/pages/admin/experiments/ExperimentDetail.tsx",
+  "kept": [
+   "Export JSON",
+   "Students in this group",
+   "No students",
+   "Variants · {n}",
+   "Back to Experiments (a page referred to by its label)"
+  ],
+  "note": "Activate, Re-activate and Turn off have no confirmation on the page today; adding one is a flow change (Stage 2), so no confirmation copy is invented here.",
+  "rows": [
+   [
+    "System prompt",
+    "Instructions",
+    "heading",
+    "SF-30",
+    "",
+    "System prompt"
+   ],
+   [
+    "(empty — class default applies)",
+    "(empty: the class instructions apply)",
+    "label",
+    "",
+    "No em dash.",
+    "(empty — class default applies)"
+   ],
+   {
+    "k": "error",
+    "o": "Not found",
+    "what": "Couldn't find this experiment.",
+    "c": "missing",
+    "why": "It isn't in this class, or the link is wrong.",
+    "fix": "Go back to experiments.",
+    "refs": "SF-31",
+    "m": "Not found",
+    "t": "A not-found has two real causes: the link names an experiment of another class, or it is wrong. No experiment can be deleted in the product (the controller has create, update, activate and complete, and no delete route), so \"it may have been deleted\" said what cannot happen (C16)."
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't load the experiment.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Try again.",
+    "m": ": null, ); } catch (e: any) { setError(e.message);",
+    "br": "srv",
+    "t": "When the response body has a message: the helper `experimentApi.ts` throws an Error whose message is the body's text (`:95`, `:124`). A response whose body has none carries only the status's reason phrase, which is not the server's words, so the helper keeps it out of `message` and sets `status`; that form is A-21.13 (§ Errors 2 and 3)."
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't update the experiment.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Try again.",
+    "m": "await fn(); await load(); } catch (e: any) { setError(e.message);",
+    "br": "srv",
+    "t": "When the response body has a message: the helper `experimentApi.ts` throws an Error whose message is the body's text (`:95`, `:124`). A response whose body has none carries only the status's reason phrase, which is not the server's words, so the helper keeps it out of `message` and sets `status`; that form is A-21.14 (§ Errors 2 and 3). The shared handler of the Activate, Re-activate and Turn off buttons.",
+    "nosafe": "a button on a saved experiment; nothing was typed (ExperimentDetail.tsx:127-133)"
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't export the experiment.",
+    "c": "server",
+    "why": "The server said: \"{message}\".",
+    "fix": "Try again.",
+    "m": "URL.revokeObjectURL(url); } catch (e: any) { setError(e.message);",
+    "br": "srv",
+    "t": "When the response body has a message: the helper `experimentApi.ts` throws an Error whose message is the body's text (`:95`, `:124`). A response whose body has none carries only the status's reason phrase, which is not the server's words, so the helper keeps it out of `message` and sets `status`; that form is A-21.15 (§ Errors 2 and 3)."
+   },
+   {
+    "k": "label",
+    "m": "label={v.config.engine}",
+    "refs": "SF-30",
+    "t": "The variant chips show the model by its display name from the one table (`§ Terminology › Model names`), never the raw id.",
+    "lk": "engine",
+    "r": "C6"
+   },
+   {
+    "k": "label",
+    "o": "{n} students",
+    "n": "{n: count student}",
+    "m": "} students`",
+    "f": "src/pages/admin/experiments/ExperimentDetail.tsx",
+    "r": "C4",
+    "t": "The group chip; 1 student."
+   },
+   {
+    "k": "button",
+    "o": "Edit",
+    "n": "Edit experiment",
+    "f": "src/pages/admin/experiments/ExperimentDetail.tsx",
+    "r": "C2",
+    "t": "A button is a verb and an object (C2).",
+    "ln": 221
+   },
+   {
+    "k": "button",
+    "o": "Activate",
+    "n": "Activate experiment",
+    "f": "src/pages/admin/experiments/ExperimentDetail.tsx",
+    "r": "C2",
+    "t": "A button is a verb and an object (C2).",
+    "ln": 225
+   },
+   {
+    "k": "button",
+    "o": "Re-activate",
+    "n": "Reactivate experiment",
+    "m": "Re-activate",
+    "f": "src/pages/admin/experiments/ExperimentDetail.tsx",
+    "r": "C2,C18",
+    "t": "A button is a verb and an object (C2); one word, \"Reactivate\" (C18)."
+   },
+   {
+    "k": "button",
+    "o": "Turn off",
+    "n": "Turn off experiment",
+    "m": "Turn off",
+    "f": "src/pages/admin/experiments/ExperimentDetail.tsx",
+    "r": "C2",
+    "t": "\"Turn off\" had no object; it sits beside \"Activate experiment\" and \"Edit experiment\"."
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't load the experiment.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "m": ": null, ); } catch (e: any) { setError(e.message);",
+    "br": "http",
+    "r": "C9",
+    "t": "When the response has no body message (the previous form is A-21.04): the reason phrase (\"Internal Server Error\") is not quoted; the status code stands in for words as a support reference, the cause line of § Errors 3. `{message}` is the old text and is dropped; `{status}` replaces it."
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't update the experiment.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "m": "await fn(); await load(); } catch (e: any) { setError(e.message);",
+    "br": "http",
+    "r": "C9",
+    "t": "When the response has no body message (the previous form is A-21.05): the reason phrase (\"Internal Server Error\") is not quoted; the status code stands in for words as a support reference, the cause line of § Errors 3. `{message}` is the old text and is dropped; `{status}` replaces it.",
+    "nosafe": "a button on a saved experiment; nothing was typed (ExperimentDetail.tsx:127-133)"
+   },
+   {
+    "k": "error",
+    "o": "{message}",
+    "what": "Couldn't export the experiment.",
+    "c": "server",
+    "why": "The server returned an error ({status}).",
+    "m": "URL.revokeObjectURL(url); } catch (e: any) { setError(e.message);",
+    "br": "http",
+    "r": "C9",
+    "t": "When the response has no body message (the previous form is A-21.06): the reason phrase (\"Internal Server Error\") is not quoted; the status code stands in for words as a support reference, the cause line of § Errors 3. `{message}` is the old text and is dropped; `{status}` replaces it."
+   }
+  ]
+ },
+ {
+  "id": "A-22",
+  "name": "Class MCP and tools",
+  "route": "/admin/class/:classID/mcp-settings",
+  "file": "src/pages/admin/ClassMCPSettings.tsx",
+  "kept": [
+   "Configure MCP servers and manage tool availability for this class.",
+   "Refresh",
+   "Name",
+   "Transport",
+   "Enabled",
+   "OAuth",
+   "Actions",
+   "Type",
+   "Priority",
+   "Requires user OAuth authentication",
+   "Enable or disable tools available to students in the chat. Higher priority tools are preferred when multiple tools can handle the same request."
+  ],
+  "note": "The Unassign confirmation's button read \"Delete\" while its title and body said \"unassign\" (SF-40); the shared dialog now takes its verb from the page. \"RAG\" is internal vocabulary, so the chip names what the tool does.",
+  "rows": [
+   [
+    "MCP Settings",
+    "Class MCP and tools",
+    "heading",
+    "TD-21",
+    "The title equals the sidebar label (C7).",
+    "MCP Settings"
+   ],
+   [
+    "MCP Servers",
+    "MCP servers",
+    "label",
+    "",
+    "",
+    "MCP Servers"
+   ],
+   [
+    "Tool Configuration",
+    "Tool configuration",
+    "label",
+    "",
+    "",
+    "Tool Configuration"
+   ],
+   [
+    "Assign Servers",
+    "Assign MCP servers",
+    "button",
+    "SF-39",
+    "On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "Assign Servers"
+   ],
+   [
+    "Create New Server",
+    "Create MCP server",
+    "button",
+    "SF-39",
+    "The same wording as A-07; one create wording, with the empty state's. On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "Create New Server"
+   ],
+   [
+    "Global Status",
+    "Global status",
+    "label",
+    "",
+    "",
+    "Global Status"
+   ],
+   [
+    "No MCP Servers Assigned",
+    "No MCP servers assigned",
+    "heading",
+    "",
+    "",
+    "No MCP Servers Assigned"
+   ],
+   [
+    "Assign existing servers or create a new one to enable AI tool integrations for this class.",
+    "Assign an existing MCP server or create one so Kiwi can use its tools in this class.",
+    "empty",
+    "",
+    "Says what the first step gives the class (C12), without \"AI tool integrations\". On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "Assign existing servers or create a new one"
+   ],
+   [
+    "Assign Existing Servers",
+    "Assign existing MCP servers",
+    "button",
+    "SF-39",
+    "On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "Assign Existing Servers"
+   ],
+   [
+    "Test Connection",
+    "Test connection",
+    "tooltip",
+    "",
+    "",
+    "Test Connection"
+   ],
+   [
+    "Edit Server",
+    "Edit MCP server",
+    "tooltip",
+    "",
+    "On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "Edit Server"
+   ],
+   [
+    "Unassign from Class",
+    "Unassign from class",
+    "tooltip",
+    "",
+    "",
+    "Unassign from Class"
+   ],
+   [
+    "Unassign MCP Server",
+    "Unassign this MCP server?",
+    "heading",
+    "SF-40",
+    "A confirmation title asks the question (C11).",
+    "Unassign MCP Server"
+   ],
+   [
+    "Are you sure you want to unassign \"{name}\" from this class? The server will remain available globally and can be reassigned later.",
+    "\"{name}\" stops being available in this class, and its tool settings in this class are removed. It stays in the registry, and you can assign it again.",
+    "confirm",
+    "SF-40",
+    "Consequence first, then the way back (C11). Unassigning deletes the class's tool settings for the server together with the assignment (`mcp.service.ts:584`), so assigning it again starts those settings over; the server itself stays in the registry.",
+    "Are you sure you want to unassign"
+   ],
+   [
+    "Delete",
+    "Unassign MCP server",
+    "cbutton",
+    "SF-40",
+    "When the dialog unassigns a server (A-07.15 is the delete form of this line; both sit on DeleteConfirmDialog.tsx:46). The confirm button names the real action. On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "Delete",
+    "src/components/MCP/DeleteConfirmDialog.tsx"
+   ],
+   [
+    "Assign MCP Servers",
+    "Assign MCP servers",
+    "heading",
+    "",
+    "",
+    "Assign MCP Servers"
+   ],
+   [
+    "Loading servers...",
+    "Loading MCP servers…",
+    "status",
+    "",
+    "On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "Loading servers..."
+   ],
+   [
+    "No global servers available. Create a new server first.",
+    "No global MCP servers yet. Create one first.",
+    "empty",
+    "",
+    "On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "No global servers available. Create a new server first."
+   ],
+   [
+    "",
+    "Unchecking an MCP server unassigns it from this class.",
+    "helper",
+    "SF-40",
+    "The modal also unassigns, with no warning. On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "Loading servers..."
+   ],
+   [
+    "Save Assignments",
+    "Save assignments",
+    "button",
+    "",
+    "",
+    "Save Assignments"
+   ],
+   [
+    "Built-in Tools",
+    "Built-in tools",
+    "heading",
+    "",
+    "",
+    "Built-in Tools",
+    "src/components/MCP/ToolConfigPanel.tsx"
+   ],
+   [
+    "MCP Tools",
+    "MCP tools",
+    "heading",
+    "",
+    "",
+    "MCP Tools",
+    "src/components/MCP/ToolConfigPanel.tsx"
+   ],
+   [
+    "Tool Name",
+    "Tool name",
+    "label",
+    "",
+    "",
+    "Tool Name",
+    "src/components/MCP/ToolConfigPanel.tsx"
+   ],
+   [
+    "Chat Types",
+    "Chat types",
+    "label",
+    "",
+    "",
+    "Chat Types",
+    "src/components/MCP/ToolConfigPanel.tsx"
+   ],
+   [
+    "RAG",
+    "Materials search",
+    "label",
+    "",
+    "\"RAG\" is internal vocabulary for what the tool does.",
+    "return \"RAG\"",
+    "src/components/MCP/ToolConfigPanel.tsx"
+   ],
+   {
+    "o": "Code Interpreter",
+    "n": "Code interpreter",
+    "k": "label",
+    "m": "Code Interpreter",
+    "f": "src/components/MCP/ToolConfigPanel.tsx",
+    "t": "The name also sits inside the sentence at :122 (\"Built-in tools (RAG and Code Interpreter) should appear automatically.\"); it is lowercase there too."
+   },
+   [
+    "MCP Tool",
+    "MCP tool",
+    "label",
+    "",
+    "",
+    "MCP Tool",
+    "src/components/MCP/ToolConfigPanel.tsx"
+   ],
+   [
+    "Click to disable",
+    "Disable tool",
+    "tooltip",
+    "",
+    "\"Select\" or a plain verb phrase, not \"click\".",
+    "Click to disable",
+    "src/components/MCP/ToolConfigPanel.tsx"
+   ],
+   [
+    "Click to enable",
+    "Enable tool",
+    "tooltip",
+    "",
+    "",
+    "Click to enable",
+    "src/components/MCP/ToolConfigPanel.tsx"
+   ],
+   [
+    "No Tools Available",
+    "No tools available",
+    "heading",
+    "",
+    "",
+    "No Tools Available",
+    "src/components/MCP/ToolConfigPanel.tsx"
+   ],
+   [
+    "Add MCP servers to enable additional tools for this class. Built-in tools (RAG and Code Interpreter) should appear automatically.",
+    "Add MCP servers for more tools in this class. The built-in tools, materials search and the code interpreter, appear automatically.",
+    "empty",
+    "",
+    "Three tests query the tool's name \"Code Interpreter\" (`ToolConfigPanel.test.tsx:90`, `ToolConfigPanel.test.tsx:105` and `ClassMCPSettings.test.tsx:241`), which this sentence merely contains: they find the name and the badge that other elements draw, and an exact query cannot match the sentence, so they are not references to it and the Tests cell does not list them. Only the regular-expression query at `ToolConfigPanel.test.tsx:80` reads the sentence.",
+    "Add MCP servers to enable additional tools for this class.",
+    "src/components/MCP/ToolConfigPanel.tsx"
+   ],
+   [
+    "Server unassigned from class successfully",
+    "MCP server unassigned from this class",
+    "status",
+    "",
+    "On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "Server unassigned from class successfully"
+   ],
+   [
+    "MCP server created and assigned successfully",
+    "MCP server created and assigned",
+    "status",
+    "",
+    "",
+    "MCP server created and assigned successfully"
+   ],
+   [
+    "Server assignments updated successfully",
+    "MCP server assignments updated",
+    "status",
+    "",
+    "On the MCP pages the record is \"MCP server\" in full (§ Terminology).",
+    "Server assignments updated successfully"
+   ],
+   {
+    "o": "Tool {enabled or disabled} successfully",
+    "n": "Tool enabled",
+    "k": "status",
+    "m": "Tool ${enabled ?",
+    "t": "When a tool is switched on. \"Successfully\" adds nothing; the next row is the switch-off form."
+   },
+   {
+    "k": "error",
+    "o": "Failed to load MCP servers",
+    "what": "Couldn't load MCP servers.",
+    "c": "unknown",
+    "fix": "Select Refresh.",
+    "m": "Failed to load MCP servers",
+    "v": "mcp",
+    "t": "The cause line names Kiwi's server, so it cannot be read as the MCP server (§ Errors, the MCP pages)."
+   },
+   {
+    "k": "error",
+    "o": "Failed to load global servers",
+    "what": "Couldn't load the global MCP servers.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to load global servers",
+    "v": "mcp",
+    "t": "The cause line names Kiwi's server, so it cannot be read as the MCP server (§ Errors, the MCP pages)."
+   },
+   {
+    "k": "error",
+    "o": "Failed to load tool configurations",
+    "what": "Couldn't load the tool settings.",
+    "c": "unknown",
+    "fix": "Select Refresh.",
+    "m": "Failed to load tool configurations",
+    "v": "mcp",
+    "t": "The cause line names Kiwi's server, so it cannot be read as the MCP server (§ Errors, the MCP pages)."
+   },
+   {
+    "k": "error",
+    "o": "Failed to load server details",
+    "what": "Couldn't load the MCP server's details.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to load server details",
+    "v": "mcp",
+    "t": "The cause line names Kiwi's server, so it cannot be read as the MCP server (§ Errors, the MCP pages)."
+   },
+   {
+    "k": "error",
+    "o": "Failed to unassign server",
+    "what": "Couldn't unassign the MCP server.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to unassign server",
+    "v": "mcp",
+    "t": "The cause line names Kiwi's server, so it cannot be read as the MCP server (§ Errors, the MCP pages)."
+   },
+   {
+    "k": "error",
+    "o": "Failed to test server connection",
+    "what": "Couldn't test the connection.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to test server connection",
+    "v": "mcp",
+    "t": "The cause line names Kiwi's server, so it cannot be read as the MCP server (§ Errors, the MCP pages)."
+   },
+   {
+    "k": "error",
+    "o": "Failed to save MCP server",
+    "what": "Couldn't save the MCP server.",
+    "c": "unknown",
+    "fix": "Check the details and try again.",
+    "m": "Failed to save MCP server",
+    "v": "mcp",
+    "t": "The cause line names Kiwi's server, so it cannot be read as the MCP server (§ Errors, the MCP pages).",
+    "safe": "the dialog closes only after the save (ClassMCPSettings.tsx:297) and the catch only shows the message (ClassMCPSettings.tsx:298-301)"
+   },
+   {
+    "k": "error",
+    "o": "Failed to update server assignments",
+    "what": "Couldn't update the assignments.",
+    "c": "partial",
+    "why": "Kiwi's server didn't respond as expected, and some may already have changed.",
+    "fix": "Refresh the list, then try again.",
+    "m": "Failed to update server assignments",
+    "t": "Assignments run one by one, so a failure part way leaves earlier ones applied. The cause line names Kiwi's server, so it cannot be read as the MCP server (§ Errors, the MCP pages).",
+    "r": "C9",
+    "nosafe": "a loop that stopped partway, and the fix says to refresh the list, which drops the selection (ClassMCPSettings.tsx:335-373)"
+   },
+   {
+    "k": "error",
+    "o": "Failed to update server status",
+    "what": "Couldn't change the MCP server's status.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to update server status",
+    "v": "mcp",
+    "t": "The cause line names Kiwi's server, so it cannot be read as the MCP server (§ Errors, the MCP pages).",
+    "nosafe": "a switch; nothing was typed (ClassMCPSettings.tsx:382-401)"
+   },
+   {
+    "k": "error",
+    "o": "Failed to update tool configuration",
+    "what": "Couldn't change the tool setting.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to update tool configuration",
+    "v": "mcp",
+    "t": "The cause line names Kiwi's server, so it cannot be read as the MCP server (§ Errors, the MCP pages).",
+    "nosafe": "a switch; nothing was typed (ClassMCPSettings.tsx:406-422)"
+   },
+   {
+    "k": "status",
+    "o": "Saving...",
+    "n": "Saving…",
+    "m": "\"Saving...\"",
+    "f": "src/pages/admin/ClassMCPSettings.tsx",
+    "r": "C5",
+    "t": "The busy label of the button: the ellipsis character (C5, C13)."
+   },
+   {
+    "k": "status",
+    "o": "MCP server updated successfully",
+    "n": "MCP server updated",
+    "m": "MCP server updated successfully",
+    "r": "C13",
+    "t": "The same change as its siblings A-22.32 to A-22.35: \"successfully\" adds nothing (the Success tone)."
+   },
+   {
+    "k": "status",
+    "o": "Tool {enabled or disabled} successfully",
+    "n": "Tool disabled",
+    "m": "Tool ${enabled ?",
+    "f": "src/pages/admin/ClassMCPSettings.tsx",
+    "r": "C13",
+    "t": "When a tool is switched off (A-22.35 is switched on)."
+   },
+   {
+    "k": "status",
+    "o": "Deleting...",
+    "n": "Unassigning…",
+    "m": "\"Deleting...\"",
+    "f": "src/components/MCP/DeleteConfirmDialog.tsx",
+    "r": "C5,C11",
+    "t": "The busy label of the button, when the dialog unassigns a server: the shared component shows its delete wording whatever the dialog does, so the verb follows the action (A-07.68 is the delete form of this line; both sit on DeleteConfirmDialog.tsx:46). The ellipsis character (C5, C13)."
+   },
+   {
+    "k": "status",
+    "o": "Server {enabled or disabled} for this class",
+    "n": "MCP server enabled for this class",
+    "m": "Server ${updated.isEnabled",
+    "f": "src/pages/admin/ClassMCPSettings.tsx",
+    "r": "C13,C6",
+    "t": "When an MCP server is switched on for the class (`ClassMCPSettings.tsx:395`; the next row is the switch-off form). A value that alternates is one row per value, each saying when it shows (C4). On the MCP pages the record is \"MCP server\" in full (§ Terminology)."
+   },
+   {
+    "k": "status",
+    "o": "Server {enabled or disabled} for this class",
+    "n": "MCP server disabled for this class",
+    "m": "Server ${updated.isEnabled",
+    "f": "src/pages/admin/ClassMCPSettings.tsx",
+    "r": "C13,C6",
+    "t": "When an MCP server is switched off for the class (the previous row is the switch-on form; both sit on `ClassMCPSettings.tsx:395`). On the MCP pages the record is \"MCP server\" in full (§ Terminology)."
+   }
+  ]
+ },
+ {
+  "id": "A-23",
+  "name": "Class apps",
+  "route": "/admin/class/:classID/kiwi-apps",
+  "file": "src/pages/admin/ClassKiwiAppsSettings.tsx",
+  "kept": [
+   "Manage which apps are available for students in this class.",
+   "Refresh",
+   "Order",
+   "App",
+   "Category",
+   "Capabilities",
+   "Actions",
+   "Default",
+   "Enable apps to give students access to additional tools and features in this class.",
+   "Custom label for the app tab. Leave empty to use the app's default name.",
+   "from prompt",
+   "Cancel",
+   "App order updated"
+  ],
+  "note": "The Enable dialog's Save also disables the apps that were unchecked, so its label and a helper say so (SF-39). The two reorder arrows had no name at all.",
+  "rows": [
+   [
+    "Kiwi Apps",
+    "Class apps",
+    "heading",
+    "TD-21",
+    "The title equals the sidebar label (C7).",
+    "Kiwi Apps"
+   ],
+   [
+    "Enable Apps",
+    "Enable apps",
+    "button",
+    "SF-62",
+    "",
+    "Enable Apps"
+   ],
+   [
+    "Tab Label",
+    "Tab label",
+    "label",
+    "",
+    "",
+    "Tab Label"
+   ],
+   [
+    "No Apps Enabled",
+    "No apps enabled",
+    "heading",
+    "",
+    "",
+    "No Apps Enabled"
+   ],
+   [
+    "Edit",
+    "Edit app",
+    "tooltip",
+    "",
+    "An icon-only row action names its object (C15).",
+    "title=\"Edit\""
+   ],
+   [
+    "Disable",
+    "Disable app",
+    "tooltip",
+    "",
+    "",
+    "title=\"Disable\""
+   ],
+   [
+    "",
+    "Move {app} up",
+    "aria",
+    "",
+    "The reorder arrows had no name or tooltip.",
+    "<ArrowUpIcon"
+   ],
+   [
+    "",
+    "Move {app} down",
+    "aria",
+    "",
+    "",
+    "<ArrowDownIcon"
+   ],
+   [
+    "Loading available apps...",
+    "Loading available apps…",
+    "status",
+    "",
+    "",
+    "Loading available apps..."
+   ],
+   [
+    "No registered apps available. Apps must be registered in the system first.",
+    "No registered apps yet. Register an app in the app registry first.",
+    "empty",
+    "",
+    "",
+    "No registered apps available."
+   ],
+   [
+    "Save",
+    "Save changes",
+    "button",
+    "SF-39",
+    "The dialog also disables unchecked apps, so \"Save\" alone understates it.",
+    "Save\n"
+   ],
+   [
+    "",
+    "Unchecking an app disables it for this class.",
+    "helper",
+    "SF-39",
+    "",
+    "Loading available apps..."
+   ],
+   [
+    "Edit App Settings",
+    "Edit app settings",
+    "heading",
+    "",
+    "",
+    "Edit App Settings"
+   ],
+   [
+    "Enabled Scopes",
+    "Enabled scopes",
+    "heading",
+    "",
+    "",
+    "Enabled Scopes"
+   ],
+   [
+    "Loading scopes...",
+    "Loading scopes…",
+    "status",
+    "",
+    "",
+    "Loading scopes..."
+   ],
+   [
+    "No scopes defined for this app. The app's whitelist entry may not have any maxScopes configured.",
+    "This app has no scopes. Its allowlist entry may not list any maximum scopes.",
+    "empty",
+    "TD-38",
+    "No \"whitelist\" and no code name.",
+    "No scopes defined for this app."
+   ],
+   [
+    "Select which scopes this app can use in this class. If none are selected, all max scopes are allowed.",
+    "Choose which scopes this app can use in this class. If you choose none, all of its maximum scopes are allowed.",
+    "helper",
+    "SF-39",
+    "One name for the maximum scopes.",
+    "Select which scopes this app can use in this class."
+   ],
+   [
+    "Disable App",
+    "Disable this app?",
+    "heading",
+    "",
+    "A confirmation title asks the question (C11).",
+    "Disable App"
+   ],
+   [
+    "Are you sure you want to disable \"{name}\" for this class? Students will no longer have access to this app.",
+    "Students lose access to \"{name}\" in this class. You can enable it again, and its settings in this class are kept.",
+    "confirm",
+    "",
+    "Consequence first, then the way back (C11). Disabling only switches the app off for the class (`kiwi-app.service.ts:650`: isEnabled = false), and enabling it again keeps its tab label, scopes and settings (`:597`).",
+    "Are you sure you want to disable"
+   ],
+   [
+    "Disable",
+    "Disable app",
+    "cbutton",
+    "",
+    "",
+    "Disable\n"
+   ],
+   [
+    "Disabling...",
+    "Disabling…",
+    "status",
+    "",
+    "",
+    "Disabling..."
+   ],
+   [
+    "App assignments updated successfully",
+    "App assignments updated",
+    "status",
+    "",
+    "",
+    "App assignments updated successfully"
+   ],
+   [
+    "App updated successfully",
+    "App updated",
+    "status",
+    "",
+    "",
+    "App updated successfully"
+   ],
+   [
+    "App disabled successfully",
+    "App disabled",
+    "status",
+    "",
+    "",
+    "App disabled successfully"
+   ],
+   {
+    "k": "error",
+    "o": "Failed to load enabled apps",
+    "what": "Couldn't load the enabled apps.",
+    "c": "unknown",
+    "fix": "Select Refresh.",
+    "m": "Failed to load enabled apps"
+   },
+   {
+    "k": "error",
+    "o": "Failed to load available apps",
+    "what": "Couldn't load the available apps.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to load available apps"
+   },
+   {
+    "k": "error",
+    "o": "Failed to update app assignments",
+    "what": "Couldn't update the apps.",
+    "c": "partial",
+    "why": "The server didn't respond as expected, and some may already have changed.",
+    "fix": "Refresh the list, then try again.",
+    "m": "Failed to update app assignments",
+    "t": "Apps are saved one by one, so a failure part way leaves a partial change.",
+    "r": "C9",
+    "nosafe": "a loop that stopped partway, and the fix says to refresh the list, which drops the selection (ClassKiwiAppsSettings.tsx:168-204)"
+   },
+   {
+    "k": "error",
+    "o": "Failed to update app",
+    "what": "Couldn't update the app.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to update app\"",
+    "safe": "the dialog closes only after the save (ClassKiwiAppsSettings.tsx:261) and the catch only shows the message (ClassKiwiAppsSettings.tsx:262-265)"
+   },
+   {
+    "k": "error",
+    "o": "Failed to disable app",
+    "what": "Couldn't disable the app.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to disable app"
+   },
+   {
+    "k": "error",
+    "o": "Failed to reorder apps",
+    "what": "Couldn't reorder the apps.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Failed to reorder apps"
+   },
+   {
+    "k": "status",
+    "o": "Saving...",
+    "n": "Saving…",
+    "m": "\"Saving...\"",
+    "f": "src/pages/admin/ClassKiwiAppsSettings.tsx",
+    "r": "C5",
+    "t": "The busy label of the button: the ellipsis character (C5, C13)."
+   },
+   {
+    "k": "label",
+    "o": "Enabled: {n} of {m} scopes",
+    "n": "Enabled: {n} of {m: count scope}",
+    "m": "} scopes",
+    "f": "src/pages/admin/ClassKiwiAppsSettings.tsx",
+    "r": "C4",
+    "t": "1 of 1 scope."
+   },
+   {
+    "k": "label",
+    "lk": "category",
+    "m": "label={app.category}",
+    "f": "src/pages/admin/ClassKiwiAppsSettings.tsx",
+    "r": "C6",
+    "t": "The app cards' category chips drew the lowercase word."
+   }
+  ]
+ },
+ {
+  "id": "A-24",
+  "name": "PDF annotation",
+  "route": "/admin/class/:classID/:materialID/:documentID",
+  "file": "src/pages/admin/AnnotateDocument.tsx",
+  "kept": [
+   "Viewing page {n} of {fileName}.",
+   "Page {n}",
+   "No chunks",
+   "No chunks found on this page",
+   "Text, Type, Actions",
+   "ID:",
+   "Comment",
+   "Visibility",
+   "Hidden from students",
+   "Visible to students",
+   "Cancel",
+   "Close",
+   "Search",
+   "Thumbnails",
+   "First",
+   "Previous",
+   "Next",
+   "Last",
+   "Fit width",
+   "Fullscreen",
+   "Search PDF",
+   "Find",
+   "Next match",
+   "No matches",
+   "Summary {n}",
+   "Save summary",
+   "Back to Materials (a page referred to by its label)"
+  ],
+  "note": "Chunk, comment and summary edits and deletes have no confirmation and no feedback today (SF-49), which is a flow change. The three silent-failure messages below are copy for the alert pattern the implementation adds; they are written, not placed.",
+  "rows": [
+   [
+    "Document Annotation",
+    "Document annotation",
+    "heading",
+    "",
+    "",
+    "Document Annotation"
+   ],
+   [
+    "Add Document Summary",
+    "Add document summary",
+    "button",
+    "",
+    "",
+    "Add Document Summary"
+   ],
+   {
+    "o": "Page {page} Chunks ({k})",
+    "n": "Page {page} chunks ({k})",
+    "k": "heading",
+    "m": "Chunks (",
+    "t": "The {page} is the page number, not a count, so it is not named {n}; the {k} is the number of chunks on it, drawn bare in parentheses. For one chunk the heading reads \"Page 3 chunks (1)\" and \"1 chunk\" never leads (C4)."
+   },
+   [
+    "Select a region on the PDF to create a new chunk",
+    "Select a region on the PDF to create a new chunk.",
+    "helper",
+    "",
+    "",
+    "Select a region on the PDF to create a new chunk"
+   ],
+   [
+    "Document Information",
+    "Document information",
+    "heading",
+    "",
+    "",
+    "Document Information"
+   ],
+   [
+    "File Name:",
+    "File name:",
+    "label",
+    "",
+    "The caption of a value that follows it on the same line, so it keeps its colon (C5).",
+    "File Name:",
+    "",
+    "",
+    [
+     "takes no colon"
+    ]
+   ],
+   [
+    "Edit Comment",
+    "Edit comment",
+    "heading",
+    "",
+    "",
+    "Edit Comment"
+   ],
+   {
+    "k": "cbutton",
+    "o": "Delete",
+    "n": "Delete comment",
+    "m": "Delete\n",
+    "t": "The button repeats the verb and the object; there is no confirmation to hold it (flow change, Stage 2). The anchor is the comment's own button; `AnnotateDocument.tsx:1648` is the chunk's \"Delete chunk\" tooltip, another control, and stays.",
+    "refs": "SF-49",
+    "ln": 811
+   },
+   [
+    "Enter the new value:",
+    "Enter the new text for this chunk:",
+    "body",
+    "SF-49",
+    "Native prompt, copy only.",
+    "Enter the new value:"
+   ],
+   [
+    "",
+    "Filled pins are visible to students. Outlined pins are hidden.",
+    "helper",
+    "",
+    "The pins had no legend (a Stage 1 hook in the page spec).",
+    "pinPosition"
+   ],
+   {
+    "k": "error",
+    "o": "Search failed. Try again.",
+    "what": "Couldn't search this PDF.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "m": "Search failed. Try again.",
+    "f": "src/components/PDFViewer/PdfSearch.tsx"
+   },
+   [
+    "Open / print",
+    "Open or print",
+    "tooltip",
+    "",
+    "No slash between two verbs.",
+    "Open / print",
+    "src/components/PDFViewer/PDFViewer.tsx"
+   ],
+   [
+    "Please select a file",
+    "Choose a file to open.",
+    "empty",
+    "",
+    "",
+    "Please select a file",
+    "src/components/PDFViewer/PDFViewer.tsx"
+   ],
+   [
+    "Add Chunk",
+    "Add chunk",
+    "button",
+    "",
+    "",
+    "Add Chunk",
+    "src/components/ClickToSelect/ClickToSelect.tsx"
+   ],
+   [
+    "Add Comments",
+    "Add comment",
+    "button",
+    "",
+    "One comment is added; no plural.",
+    "Add Comments",
+    "src/components/ClickToSelect/ClickToSelect.tsx"
+   ],
+   [
+    "Document Summaries",
+    "Document summaries",
+    "heading",
+    "",
+    "",
+    "Document Summaries",
+    "src/components/DocumentSummaryDialog/DocumentSummaryDialog.tsx"
+   ],
+   [
+    "Added Summaries ({n})",
+    "Added summaries ({n})",
+    "label",
+    "",
+    "",
+    "Added Summaries",
+    "src/components/DocumentSummaryDialog/DocumentSummaryDialog.tsx"
+   ],
+   [
+    "Add New Summary",
+    "Add a summary",
+    "heading",
+    "",
+    "",
+    "Add New Summary",
+    "src/components/DocumentSummaryDialog/DocumentSummaryDialog.tsx"
+   ],
+   [
+    "Summary Content",
+    "Summary content",
+    "label",
+    "",
+    "",
+    "Summary Content",
+    "src/components/DocumentSummaryDialog/DocumentSummaryDialog.tsx"
+   ],
+   [
+    "Save Summary",
+    "Save summary",
+    "button",
+    "",
+    "",
+    "Save Summary",
+    "src/components/DocumentSummaryDialog/DocumentSummaryDialog.tsx"
+   ],
+   [
+    "Enter summary for this document...",
+    "e.g. A short overview of what this document covers",
+    "placeholder",
+    "",
+    "",
+    "Enter summary for this document...",
+    "src/components/DocumentSummaryDialog/DocumentSummaryDialog.tsx"
+   ],
+   [
+    "No summaries for this document yet. Click the plus icon to create one.",
+    "No summaries for this document yet. Select the plus icon to add one.",
+    "empty",
+    "",
+    "\"Select\", not \"click\".",
+    "No summaries for this document yet.",
+    "src/components/DocumentSummaryDialog/DocumentSummaryDialog.tsx"
+   ],
+   [
+    "new Date(summary.createdAt).toLocaleString()",
+    "17 Oct 2026, 14:05",
+    "format",
+    "TD-24",
+    "One date and time format in the viewer's time zone (C3).",
+    "toLocaleString()",
+    "src/components/DocumentSummaryDialog/DocumentSummaryDialog.tsx",
+    "C3"
+   ],
+   {
+    "k": "error",
+    "o": "Couldn't load this PDF.",
+    "what": "Couldn't load this PDF.",
+    "c": "net",
+    "why": "Your connection may be slow or unstable.",
+    "fix": "Check it, then select Retry.",
+    "m": "Couldn't load this PDF.",
+    "f": "src/components/PDFViewer/PDFViewer.tsx",
+    "t": "The shared viewer's error, as on S-09 and A-18."
+   },
+   {
+    "k": "error",
+    "o": "",
+    "what": "Couldn't save the comment.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "refs": "SF-49",
+    "m": "Failed to save document comment:",
+    "t": "A failed save silently removed the new pin; the message is for the alert the implementation adds.",
+    "nosafe": "the page removes the pin and clears the typed comment after a failed save (AnnotateDocument.tsx:1046-1054)"
+   },
+   {
+    "k": "error",
+    "o": "",
+    "what": "Couldn't save the chunk.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "refs": "SF-49",
+    "m": "Failed to add chunk:",
+    "t": "Chunk add, edit and delete only logged a failure.",
+    "nosafe": "a region drawn on the page; nothing was typed and the page keeps no draft of it (AnnotateDocument.tsx:934-936)"
+   },
+   {
+    "k": "error",
+    "o": "",
+    "what": "Couldn't save the summary.",
+    "c": "unknown",
+    "fix": "Try again.",
+    "refs": "SF-49",
+    "m": "Failed to create summary:",
+    "f": "src/components/DocumentSummaryDialog/DocumentSummaryDialog.tsx",
+    "safe": "the box is cleared only after the call returns (DocumentSummaryDialog.tsx:116-118) and the page's handler rethrows (AnnotateDocument.tsx:407)"
+   },
+   {
+    "k": "status",
+    "o": "Saving...",
+    "n": "Saving…",
+    "m": "\"Saving...\"",
+    "f": "src/components/DocumentSummaryDialog/DocumentSummaryDialog.tsx",
+    "r": "C5",
+    "t": "The busy label of the button: the ellipsis character (C5, C13)."
+   },
+   {
+    "k": "placeholder",
+    "o": "Update summary content",
+    "n": "e.g. A short overview of what this document covers",
+    "m": "Update summary content",
+    "f": "src/components/DocumentSummaryDialog/DocumentSummaryDialog.tsx",
+    "r": "C14",
+    "t": "An example, as in the new-summary field (A-24.21)."
+   },
+   {
+    "k": "aria",
+    "o": "edit",
+    "n": "Edit summary",
+    "m": "aria-label=\"edit\"",
+    "f": "src/components/DocumentSummaryDialog/DocumentSummaryDialog.tsx",
+    "r": "C15",
+    "t": "An icon button's name is a verb phrase that names its object."
+   },
+   {
+    "k": "aria",
+    "o": "delete",
+    "n": "Delete summary",
+    "m": "aria-label=\"delete\"",
+    "f": "src/components/DocumentSummaryDialog/DocumentSummaryDialog.tsx",
+    "r": "C15",
+    "t": "An icon button's name is a verb phrase that names its object."
+   },
+   {
+    "k": "button",
+    "o": "Save",
+    "n": "Save summary",
+    "f": "src/components/DocumentSummaryDialog/DocumentSummaryDialog.tsx",
+    "r": "C2",
+    "t": "The inline edit of a summary.",
+    "ln": 303
+   },
+   {
+    "k": "button",
+    "o": "Save",
+    "n": "Save comment",
+    "f": "src/pages/admin/AnnotateDocument.tsx",
+    "r": "C2",
+    "t": "The inline edit of a comment.",
+    "ln": 818
+   },
+   {
+    "k": "button",
+    "o": "Save",
+    "n": "Save comment",
+    "f": "src/pages/admin/AnnotateDocument.tsx",
+    "r": "C2",
+    "t": "The form for a new comment.",
+    "ln": 879
+   },
+   {
+    "k": "status",
+    "o": "{n} matching pages",
+    "n": "{n: count matching page}",
+    "m": "matching pages",
+    "f": "src/components/PDFViewer/PdfSearch.tsx",
+    "r": "C4",
+    "t": "The search panel's result line when there are matches (`PdfSearch.tsx:41`), in the annotation viewer and in the student's (the component is shared): the count picks its noun, \"1 matching page\" and \"3 matching pages\" (C4). The source writes the plural whatever the count."
+   },
+   {
+    "k": "format",
+    "o": "–",
+    "n": "—",
+    "m": "numPages || \"–\"",
+    "f": "src/components/PDFViewer/PDFViewer.tsx",
+    "x": [
+     "em dash"
+    ],
+    "r": "C5,C6",
+    "t": "The page count shows an en dash while it is unknown (\"3 / –\", `:158`); the one glyph for an empty value is the em dash (DS.53), so the same meaning reads the same on every page (C6)."
+   },
+   {
+    "k": "aria",
+    "o": "",
+    "n": "No value",
+    "m": "numPages || \"–\"",
+    "f": "src/components/PDFViewer/PDFViewer.tsx",
+    "r": "C5",
+    "t": "The page count's glyph takes the accessible name \"No value\" (DS.54)."
+   }
+  ]
+ }
+]

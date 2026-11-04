@@ -36,7 +36,7 @@ describe("AddNewClassDialog", () => {
   it("renders the new class form inside an accessible dialog", () => {
     renderDialog();
 
-    expect(screen.getByRole("dialog", { name: "Create New Class" })).toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Create class" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Basic information" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Course image" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Class preview" })).toBeInTheDocument();
@@ -92,7 +92,7 @@ describe("AddNewClassDialog", () => {
     fireEvent.change(screen.getByLabelText(/description/i), {
       target: { value: " Introductory biology. " },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Create New Class" }));
+    fireEvent.click(screen.getByRole("button", { name: "Create class" }));
 
     await waitFor(() => {
       expect(mockApiClient.classControllerAdd).toHaveBeenCalledWith({
@@ -135,7 +135,7 @@ describe("AddNewClassDialog", () => {
 
     const file = new File(["image bytes"], "cover.png", { type: "image/png" });
     const input = screen
-      .getByRole("dialog", { name: "Create New Class" })
+      .getByRole("dialog", { name: "Create class" })
       .querySelector('input[type="file"]') as HTMLInputElement;
     fireEvent.change(input, { target: { files: [file] } });
 
@@ -157,7 +157,7 @@ describe("AddNewClassDialog", () => {
     fireEvent.change(screen.getByLabelText(/description/i), {
       target: { value: "Introductory biology." },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Create New Class" }));
+    fireEvent.click(screen.getByRole("button", { name: "Create class" }));
 
     await waitFor(() => {
       expect(mockApiClient.classControllerAdd).toHaveBeenCalledWith(
@@ -187,7 +187,7 @@ describe("AddNewClassDialog", () => {
     fireEvent.change(screen.getByLabelText(/professor email/i), {
       target: { value: "green@example.edu" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Create New Class" }));
+    fireEvent.click(screen.getByRole("button", { name: "Create class" }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "The class could not be created. Request failed",
